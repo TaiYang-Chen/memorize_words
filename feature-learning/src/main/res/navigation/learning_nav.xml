@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/learning_nav.xml"
+    app:startDestination="@id/learningMainFragment">
+
+    <fragment
+        android:id="@+id/learningMainFragment"
+        android:name="com.chen.memorizewords.feature.learning.ui.learning.LearningMainFragment"
+        android:label="@string/learning_nav_main_title">
+
+        <argument
+            android:name="extra_learning_type"
+            android:defaultValue="0"
+            app:argType="integer" />
+        <argument
+            android:name="extra_learning_count"
+            android:defaultValue="15"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_learningMainFragment_to_learningDoneFragment"
+            app:destination="@id/learningDoneFragment" />
+        <action
+            android:id="@+id/action_learningMainFragment_to_wordEntryDetailFragment"
+            app:destination="@id/wordEntryDetailFragment" />
+        <action
+            android:id="@+id/action_learningMainFragment_to_wordExamPracticeFragment"
+            app:destination="@id/wordExamPracticeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/learningDoneFragment"
+        android:name="com.chen.memorizewords.feature.learning.ui.done.LearningDoneFragment"
+        android:label="@string/learning_nav_done_title">
+        <argument
+            android:name="sessionType"
+            android:defaultValue="0"
+            app:argType="integer" />
+        <argument
+            android:name="sessionWordCount"
+            android:defaultValue="0"
+            app:argType="integer" />
+        <argument
+            android:name="answeredCount"
+            android:defaultValue="0"
+            app:argType="integer" />
+        <argument
+            android:name="correctCount"
+            android:defaultValue="0"
+            app:argType="integer" />
+        <argument
+            android:name="wrongCount"
+            android:defaultValue="0"
+            app:argType="integer" />
+        <argument
+            android:name="studyDurationMs"
+            android:defaultValue="0L"
+            app:argType="long" />
+        <argument
+            android:name="words"
+            app:argType="long[]"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_learningDoneFragment_to_learningCheckInFragment"
+            app:destination="@id/learningCheckInFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/learningCheckInFragment"
+        android:name="com.chen.memorizewords.feature.learning.ui.checkin.LearningCheckInFragment"
+        android:label="@string/learning_nav_check_in_title" />
+
+    <fragment
+        android:id="@+id/wordExamPracticeFragment"
+        android:name="com.chen.memorizewords.feature.learning.ui.exam.WordExamPracticeFragment"
+        android:label="真题练习">
+        <argument
+            android:name="wordId"
+            android:defaultValue="-1L"
+            app:argType="long" />
+        <argument
+            android:name="wordText"
+            android:defaultValue=""
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/wordEntryDetailFragment"
+        android:name="com.chen.memorizewords.feature.learning.ui.fragment.WordEntryDetailFragment"
+        android:label="@string/learning_nav_word_detail_title">
+        <argument
+            android:name="fromFloating"
+            android:defaultValue="false"
+            app:argType="boolean" />
+        <argument
+            android:name="wordId"
+            android:defaultValue="-1L"
+            app:argType="long" />
+        <argument
+            android:name="wordText"
+            android:defaultValue=""
+            app:argType="string" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_wordEntryDetailFragment"
+        app:destination="@id/wordEntryDetailFragment" />
+</navigation>

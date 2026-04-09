@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/module_floating_review_nav"
+    app:startDestination="@id/floatingReviewSettingsFragment">
+
+    <fragment
+        android:id="@+id/floatingReviewSettingsFragment"
+        android:name="com.chen.memorizewords.feature.floatingreview.ui.settings.FloatingReviewSettingsFragment"
+        android:label="@string/module_floating_review_settings_title" />
+</navigation>

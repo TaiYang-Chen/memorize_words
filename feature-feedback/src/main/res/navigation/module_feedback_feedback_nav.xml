@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/feedback_nav"
+    app:startDestination="@id/feedbackFragment">
+
+    <fragment
+        android:id="@+id/feedbackFragment"
+        android:name="com.chen.memorizewords.feature.feedback.ui.feedback.FeedbackFragment"
+        android:label="@string/module_feedback_nav_feedback_title">
+        <deepLink app:uri="myapp://feedback" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.chen.memorizewords.feature.feedback.ui.about.AboutFragment"
+        android:label="@string/module_feedback_nav_about_title">
+        <deepLink app:uri="myapp://about" />
+    </fragment>
+</navigation>

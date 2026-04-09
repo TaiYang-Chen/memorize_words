@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/module_floating_review_bg_popup_card"
+    android:orientation="vertical"
+    android:maxWidth="@dimen/module_floating_review_card_width"
+    android:padding="14dp">
+
+    <LinearLayout
+        android:id="@+id/module_floating_review_floating_fields_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_gravity="end"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/module_floating_review_btn_close"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:background="@drawable/module_floating_review_bg_floating_button"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:text="@string/module_floating_review_close"
+            android:textColor="#0F172A"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/module_floating_review_btn_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/module_floating_review_bg_floating_button"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:text="@string/module_floating_review_refresh"
+            android:textColor="#0F172A"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/module_floating_review_btn_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/module_floating_review_bg_floating_button"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:text="@string/module_floating_review_detail"
+            android:textColor="#0F172A"
+            android:textSize="12sp" />
+    </LinearLayout>
+</LinearLayout>

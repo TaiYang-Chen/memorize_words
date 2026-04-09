@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="module_wordbook_window_back">#fcfbf7</color>
+    <color name="module_wordbook_light_gray">#F5F5F5</color>
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="module_feedback_bg">#F7F7F5</color>
+    <color name="module_feedback_primary_text">#0F1724</color>
+    <color name="module_feedback_muted_text">#7A8896</color>
+    <color name="module_feedback_accent">#F6F7C9</color>
+    <color name="module_feedback_card_bg">#FFFFFF</color>
+    <color name="module_feedback_icon_bg">#FFF9D6</color>
+    <color name="module_feedback_primary">#11507B</color>
+    <color name="module_feedback_chevron">#C9D4DC</color>
+</resources>

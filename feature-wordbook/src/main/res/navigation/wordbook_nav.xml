@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/wordbook_nav_graph"
+    app:startDestination="@id/studyPlanSettingFragment">
+
+    <!-- 我的词书 -->
+    <fragment
+        android:id="@+id/myWordBooksFragment"
+        android:name="com.chen.memorizewords.feature.wordbook.my.MyWordBooksFragment"
+        android:label="@string/module_wordbook_nav_my_books_title">
+        <deepLink app:uri="myapp://wordbook/my-books" />
+        <deepLink app:uri="myapp://wordbook/my-books?source={source}" />
+        <action
+            android:id="@+id/action_myWordBooks_to_shop"
+            app:destination="@id/shopFragment" />
+    </fragment>
+
+    <!-- 词书商城 -->
+    <fragment
+        android:id="@+id/shopFragment"
+        android:name="com.chen.memorizewords.feature.wordbook.shop.BookShopFragment"
+        android:label="@string/module_wordbook_nav_shop_title">
+        <deepLink app:uri="myapp://wordbook/shop" />
+    </fragment>
+
+    <!-- 学习计划设置：外部只能进入这里 -->
+    <fragment
+        android:id="@+id/studyPlanSettingFragment"
+        android:name="com.chen.memorizewords.feature.wordbook.plan.StudyPlanSettingFragment"
+        android:label="@string/module_wordbook_nav_study_plan_title">
+        <!-- 学习计划可以去 词表 / 我的词书 -->
+        <action
+            android:id="@+id/action_studyPlan_to_wordList"
+            app:destination="@id/wordListFragment">
+            <argument
+                android:name="bookId"
+                app:argType="long" />
+        </action>
+        <action
+            android:id="@+id/action_studyPlan_to_myWordBooks"
+            app:destination="@id/myWordBooksFragment" />
+        <action
+            android:id="@+id/action_studyPlan_to_modifyPlan"
+            app:destination="@id/modifyPlanDialogFragment" />
+    </fragment>
+
+    <!-- 词表页面（可从学习计划打开）-->
+    <fragment
+        android:id="@+id/wordListFragment"
+        android:name="com.chen.memorizewords.feature.wordbook.wordlist.WordListFragment"
+        android:label="@string/module_wordbook_nav_word_list_title">
+        <argument
+            android:name="bookId"
+            android:defaultValue="-1L"
+            app:argType="long" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/modifyPlanDialogFragment"
+        android:name="com.chen.memorizewords.feature.wordbook.plan.ModifyPlanDialogFragment">
+        <argument
+            android:name="newCount"
+            app:argType="integer" />
+
+        <argument
+            android:name="reviewCount"
+            app:argType="integer" />
+    </dialog>
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="com.chen.memorizewords.feature.wordbook.favorites.FavoritesFragment"
+        android:label="@string/module_wordbook_nav_favorites_title">
+        <deepLink app:uri="myapp://favorites" />
+    </fragment>
+
+</navigation>

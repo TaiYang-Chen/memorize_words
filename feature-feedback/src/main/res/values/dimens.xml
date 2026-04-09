@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="module_feedback_padding_small">8dp</dimen>
+    <dimen name="module_feedback_padding">16dp</dimen>
+    <dimen name="module_feedback_padding_large">24dp</dimen>
+    <dimen name="module_feedback_avatar_size">120dp</dimen>
+    <dimen name="module_feedback_icon_size">20dp</dimen>
+    <dimen name="module_feedback_card_radius">16dp</dimen>
+</resources>

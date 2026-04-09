@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="BottomNavigationTheme" parent="Widget.MaterialComponents.BottomNavigationView">
+        <!-- 设置选中/未选中状态的颜色 -->
+        <item name="itemIconTint">@color/bottom_nav_color_state</item>
+        <item name="itemTextColor">@color/bottom_nav_color_state</item>
+
+        <!-- 移除点击波浪效果 -->
+        <item name="itemBackground">@android:color/transparent</item>
+
+        <!-- 设置图标大小 -->
+        <item name="itemIconSize">24dp</item>
+
+        <!-- 设置文字样式（选中时显示） -->
+        <item name="itemTextAppearanceActive">@style/BottomNavTextActive</item>
+    </style>
+
+    <style name="BottomNavTextActive" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="BottomNavTextInactive" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+</resources>

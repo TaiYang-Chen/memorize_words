@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="module_feedback_app_name">小白背单词</string>
+    <string name="module_feedback_about_title">关于我们</string>
+    <string name="module_feedback_mission_title">我们的使命</string>
+    <string name="module_feedback_mission_text">我们致力于通过简洁设计与智能技术，为用户提供稳定、轻量、专注的背词体验。</string>
+    <string name="module_feedback_check_update">检查更新</string>
+    <string name="module_feedback_rate_us">去评分</string>
+    <string name="module_feedback_terms">服务条款</string>
+    <string name="module_feedback_privacy">隐私政策</string>
+    <string name="module_feedback_version_label">版本 %1$s</string>
+    <string name="module_feedback_company_copyright">© 2023 小白背单词 版权所有</string>
+    <string name="module_feedback_update_unavailable">暂未开放</string>
+    <string name="module_feedback_app_icon_desc">应用图标</string>
+    <string name="module_feedback_back">返回</string>
+    <string name="module_feedback_avatar_text">小白</string>
+    <string name="module_feedback_feedback_title">意见反馈</string>
+    <string name="module_feedback_feedback_description">我们要如何改进？期待您的宝贵建议。</string>
+    <string name="module_feedback_feedback_hint">请输入您的反馈意见…</string>
+    <string name="module_feedback_add_image">添加截图</string>
+    <string name="module_feedback_char_count">%1$d/200</string>
+    <string name="module_feedback_contact_hint">联系方式（邮箱、手机号）</string>
+    <string name="module_feedback_feedback_send">发送</string>
+    <string name="module_feedback_feedback_sending">发送中…</string>
+    <string name="module_feedback_feedback_max_images">最多支持上传 3 张图片</string>
+    <string name="module_feedback_feedback_content_required">请输入反馈内容</string>
+    <string name="module_feedback_feedback_submit_success">反馈提交成功</string>
+    <string name="module_feedback_feedback_submit_failed">反馈提交失败</string>
+    <string name="module_feedback_feedback_read_image_failed">读取所选图片失败</string>
+    <string name="module_feedback_feedback_single_image_too_large">单张图片过大，请选择 5MB 以内的图片</string>
+    <string name="module_feedback_feedback_total_images_too_large">图片总体积超出限制，请重新选择</string>
+    <string name="module_feedback_image_preview">反馈图片预览</string>
+    <string name="module_feedback_delete_image">删除图片</string>
+    <string name="module_feedback_nav_feedback_title">意见反馈</string>
+    <string name="module_feedback_nav_about_title">关于我们</string>
+</resources>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_module_login.xml"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.chen.memorizewords.feature.user.ui.login.LoginFragment"
+        android:label="@string/module_user_nav_login_title">
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_wechatOneTapLoginFragment"
+            app:destination="@id/wechatOneTapLoginFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_qqOneTapLoginFragment"
+            app:destination="@id/qqOneTapLoginFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_smsCodeLoginFragment"
+            app:destination="@id/smsCodeLoginFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.chen.memorizewords.feature.user.ui.register.RegisterFragment"
+        android:label="@string/module_user_nav_register_title">
+        <action
+            android:id="@+id/action_registerFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/wechatOneTapLoginFragment"
+        android:name="com.chen.memorizewords.feature.user.ui.login.wechat.WeChatOneTapLoginFragment"
+        android:label="@string/module_user_nav_wechat_login_title" />
+
+    <fragment
+        android:id="@+id/qqOneTapLoginFragment"
+        android:name="com.chen.memorizewords.feature.user.ui.login.qq.QQOneTapLoginFragment"
+        android:label="@string/module_user_nav_qq_login_title" />
+
+    <fragment
+        android:id="@+id/smsCodeLoginFragment"
+        android:name="com.chen.memorizewords.feature.user.ui.login.sms.SmsCodeLoginFragment"
+        android:label="@string/module_user_nav_sms_login_title" />
+
+    <fragment
+        android:id="@+id/module_login_profilefragment"
+        android:name="com.chen.memorizewords.feature.user.ui.profile.ProfileFragment"
+        android:label="@string/module_user_nav_profile_title">
+        <action
+            android:id="@+id/action_module_login_profilefragment_to_changePasswordFragment"
+            app:destination="@id/changePasswordFragment" />
+        <action
+            android:id="@+id/action_module_login_profilefragment_to_bindPhoneFragment"
+            app:destination="@id/bindPhoneFragment" />
+        <action
+            android:id="@+id/action_module_login_profilefragment_to_deleteAccountConfirmFragment"
+            app:destination="@id/deleteAccountConfirmFragment" />
+        <action
+            android:id="@+id/action_module_login_profilefragment_to_avatarPreviewFragment"
+            app:destination="@id/avatarPreviewFragment" />
+        <deepLink app:uri="myapp://user/profile" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="com.chen.memorizewords.feature.user.ui.profile.password.ChangePasswordFragment"
+        android:label="@string/module_user_nav_change_password_title">
+        <action
+            android:id="@+id/action_changePasswordFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/bindPhoneFragment"
+        android:name="com.chen.memorizewords.feature.user.ui.profile.phone.BindPhoneFragment"
+        android:label="@string/module_user_nav_bind_phone_title" />
+
+    <fragment
+        android:id="@+id/deleteAccountConfirmFragment"
+        android:name="com.chen.memorizewords.feature.user.ui.profile.account.DeleteAccountConfirmFragment"
+        android:label="@string/module_user_nav_delete_account_title" />
+
+    <fragment
+        android:id="@+id/avatarPreviewFragment"
+        android:name="com.chen.memorizewords.feature.user.ui.profile.avatar.AvatarPreviewFragment"
+        android:label="@string/module_user_nav_avatar_preview_title">
+        <argument
+            android:name="avatarSource"
+            app:argType="string"
+            android:defaultValue="" />
+    </fragment>
+</navigation>

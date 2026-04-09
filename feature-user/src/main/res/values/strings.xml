@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="profile">个人信息</string>
+
+    <string name="module_user_login_title">欢迎登录</string>
+    <string name="module_user_login_go_register">没有账号？立即注册</string>
+    <string name="module_user_login_account_hint">请输入手机号</string>
+    <string name="module_user_login_password_hint">请输入密码</string>
+    <string name="module_user_login_button">登录</string>
+    <string name="module_user_login_by_sms">验证码登录</string>
+
+    <string name="module_user_sms_login_title">手机验证码登录</string>
+    <string name="module_user_sms_code_hint">请输入验证码</string>
+    <string name="module_user_back_to_password_login">返回账号密码登录</string>
+
+    <string name="module_user_wechat_one_tap_title">微信一键登录</string>
+    <string name="module_user_wechat_one_tap_desc">授权微信后可快速登录，首次使用会自动创建账号。</string>
+    <string name="module_user_wechat_authorize_button">使用微信授权登录</string>
+
+    <string name="module_user_qq_one_tap_title">QQ一键登录</string>
+    <string name="module_user_qq_one_tap_desc">授权QQ后可快速登录，首次使用会自动创建账号。</string>
+    <string name="module_user_qq_authorize_button">使用QQ授权登录</string>
+
+    <string name="module_user_common_back">返回</string>
+    <string name="module_user_send_code">发送验证码</string>
+    <string name="module_user_resend_code">重新发送</string>
+    <string name="module_user_countdown_seconds">%1$d秒</string>
+
+    <string name="module_user_login_success">登录成功</string>
+    <string name="module_user_login_failed">登录失败</string>
+    <string name="module_user_login_phone_required">请输入手机号</string>
+    <string name="module_user_login_password_required">请输入密码</string>
+    <string name="module_user_login_sms_sent">验证码已发送</string>
+    <string name="module_user_login_sms_required">请输入验证码</string>
+    <string name="module_user_send_code_failed">验证码发送失败</string>
+    <string name="module_user_register_failed">注册失败</string>
+    <string name="module_user_qq_auth_failed">QQ授权失败</string>
+    <string name="module_user_wechat_auth_failed">微信授权失败</string>
+    <string name="module_user_qq_login_failed">QQ登录失败</string>
+    <string name="module_user_wechat_login_failed">微信登录失败</string>
+
+    <string name="module_user_bind_phone_title">绑定手机号</string>
+    <string name="module_user_bind_phone_phone_hint">手机号</string>
+    <string name="module_user_bind_phone_sms_hint">验证码</string>
+    <string name="module_user_bind_phone_confirm">确认绑定</string>
+    <string name="module_user_bind_phone_phone_invalid">请输入正确的手机号</string>
+    <string name="module_user_bind_phone_code_invalid">请输入正确的验证码</string>
+    <string name="module_user_bind_phone_sms_coming_soon">绑定手机验证码功能即将上线</string>
+    <string name="module_user_bind_phone_feature_coming_soon">绑定手机号功能即将上线</string>
+    <string name="module_user_bind_phone_unavailable_notice">绑定手机号暂未开放，当前版本仅保留入口展示，后续接入真实能力后再开放填写与验证码操作。</string>
+
+    <string name="module_user_change_password_title">修改密码</string>
+    <string name="module_user_change_password_old_hint">旧密码</string>
+    <string name="module_user_change_password_new_hint">新密码</string>
+    <string name="module_user_change_password_confirm_new_hint">确认新密码</string>
+    <string name="module_user_change_password_submit">提交</string>
+    <string name="module_user_change_pwd_old_required">请输入旧密码</string>
+    <string name="module_user_change_pwd_new_required">请输入新密码</string>
+    <string name="module_user_change_pwd_confirm_required">请确认新密码</string>
+    <string name="module_user_change_pwd_min_length">新密码至少6位</string>
+    <string name="module_user_change_pwd_diff_old">新密码不能与旧密码相同</string>
+    <string name="module_user_change_pwd_not_match">两次输入的密码不一致</string>
+    <string name="module_user_change_pwd_success_relogin">密码修改成功，请重新登录</string>
+    <string name="module_user_change_pwd_coming_soon">修改密码功能即将上线</string>
+    <string name="module_user_change_pwd_failed">修改密码失败</string>
+
+    <string name="module_user_delete_account_title">注销账号</string>
+    <string name="module_user_delete_account_desc">确认后，账号将进入14天冷静期。冷静期内再次登录可取消注销。</string>
+    <string name="module_user_delete_account_confirm_countdown">确认注销（%1$d秒）</string>
+    <string name="module_user_delete_account_confirm">确认注销</string>
+    <string name="module_user_delete_account_deleting">注销中...</string>
+    <string name="module_user_delete_account_submitted">已提交注销申请</string>
+    <string name="module_user_delete_account_failed">注销失败</string>
+
+    <string name="module_user_profile_nickname_title">昵称</string>
+    <string name="module_user_profile_update_success">修改成功</string>
+    <string name="module_user_profile_avatar_update_success">头像更新成功</string>
+    <string name="module_user_profile_avatar_coming_soon">头像功能即将上线</string>
+    <string name="module_user_profile_avatar_update_failed">头像更新失败</string>
+    <string name="module_user_profile_bind_success">绑定成功</string>
+    <string name="module_user_profile_bind_coming_soon">绑定功能即将上线</string>
+    <string name="module_user_profile_bind_failed">绑定失败</string>
+    <string name="module_user_profile_get_cropped_avatar_failed">获取裁剪头像失败</string>
+    <string name="module_user_profile_crop_avatar_failed">头像裁剪失败</string>
+    <string name="module_user_profile_create_camera_file_failed">创建拍照文件失败</string>
+    <string name="module_user_profile_create_crop_file_failed">创建裁剪文件失败</string>
+    <string name="module_user_profile_crop_avatar_toolbar">裁剪头像</string>
+    <string name="module_user_profile_process_avatar_failed">处理头像图片失败</string>
+    <string name="module_user_profile_bind_wechat_failed">微信绑定失败</string>
+    <string name="module_user_profile_bind_qq_failed">QQ绑定失败</string>
+    <string name="module_user_profile_no_avatar">暂无头像</string>
+
+    <string name="module_user_social_qq_authorize_cancelled">QQ授权已取消</string>
+    <string name="module_user_social_qq_config_missing">QQ配置缺失</string>
+    <string name="module_user_social_qq_sdk_init_failed">QQ授权组件初始化失败</string>
+    <string name="module_user_social_qq_response_empty">QQ授权返回为空</string>
+    <string name="module_user_social_qq_authorize_failed">QQ授权失败</string>
+    <string name="module_user_social_qq_launch_failed">无法启动QQ授权，错误码：%1$d</string>
+    <string name="module_user_social_wechat_config_missing">微信配置缺失</string>
+    <string name="module_user_social_wechat_not_installed">未安装微信</string>
+    <string name="module_user_social_wechat_launch_failed">无法启动微信授权</string>
+    <string name="module_user_social_wechat_authorize_cancelled">微信授权已取消</string>
+    <string name="module_user_nav_login_title">登录</string>
+    <string name="module_user_nav_register_title">注册</string>
+    <string name="module_user_nav_wechat_login_title">微信授权登录</string>
+    <string name="module_user_nav_qq_login_title">QQ授权登录</string>
+    <string name="module_user_nav_sms_login_title">验证码登录</string>
+    <string name="module_user_nav_profile_title">个人信息</string>
+    <string name="module_user_nav_change_password_title">修改密码</string>
+    <string name="module_user_nav_bind_phone_title">绑定手机号</string>
+    <string name="module_user_nav_delete_account_title">注销账号</string>
+    <string name="module_user_nav_avatar_preview_title">头像预览</string>
+</resources>

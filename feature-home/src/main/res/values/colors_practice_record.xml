@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="practice_record_icon_bg">#EFF6FF</color>
+    <color name="practice_record_icon_listening">#3B82F6</color>
+    <color name="practice_record_icon_shadowing">#F97316</color>
+    <color name="practice_record_icon_spelling">#22C55E</color>
+    <color name="practice_record_icon_audio_loop">#8B5CF6</color>
+    <color name="practice_record_icon_exam">#0F766E</color>
+    <color name="practice_record_subtitle">#64748B</color>
+    <color name="practice_record_empty">#94A3B8</color>
+</resources>

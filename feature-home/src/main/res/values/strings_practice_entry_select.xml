@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="practice_entry_title">选择练习用词</string>
+    <string name="practice_entry_subtitle">随机从已学复习词中抽取，或自主选择单词进行专项练习</string>
+    <string name="practice_entry_count_label">练习词量</string>
+    <string name="practice_entry_count_hint">随机数量（默认20）</string>
+    <string name="practice_entry_count_unit">词</string>
+    <string name="practice_entry_tip">提示：系统将优先选择记忆模糊的单词</string>
+    <string name="practice_entry_random_btn">随机选词</string>
+    <string name="practice_entry_self_btn">自主选词</string>
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="practice_entry_primary">#2D6AE3</color>
+    <color name="practice_entry_outline">#E2E8F0</color>
+    <color name="practice_entry_card_bg">#F8FAFC</color>
+    <color name="practice_entry_handle">#E2E8F0</color>
+</resources>

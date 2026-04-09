@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="module_wordbook_download">下载</string>
+    <string name="module_wordbook_downloaded">已下载</string>
+    <string name="module_wordbook_retry">重试</string>
+    <string name="module_wordbook_public">公开</string>
+    <string name="module_wordbook_private">私有</string>
+    <string name="module_wordbook_shop_word_count">词汇数：%1$d</string>
+    <string name="module_wordbook_shop_title">词书商城</string>
+    <string name="module_wordbook_shop_search_hint">搜索词书</string>
+    <string name="module_wordbook_notify_permission_denied">通知权限已关闭，将仅在页面显示下载进度</string>
+    <string name="module_wordbook_network_error">网络错误，请重试</string>
+    <string name="module_wordbook_empty_books">暂无词书</string>
+    <string name="module_wordbook_study_mode">学习模式</string>
+    <string name="module_wordbook_unknown_book">未知词书</string>
+    <string name="module_wordbook_nav_my_books_title">我的词书</string>
+    <string name="module_wordbook_nav_shop_title">词书商城</string>
+    <string name="module_wordbook_nav_study_plan_title">学习计划</string>
+    <string name="module_wordbook_nav_word_list_title">单词列表</string>
+    <string name="module_wordbook_nav_favorites_title">收藏夹</string>
+</resources>

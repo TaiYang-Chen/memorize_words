@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="learning_done_title">学习完成</string>
+    <string name="learning_done_subtitle_new">本组新词学习已完成，继续保持节奏，再学一组。</string>
+    <string name="learning_done_subtitle_review">本组复习已完成，趁热打铁，再复习一组。</string>
+    <string name="learning_done_tag_new">新词学习</string>
+    <string name="learning_done_tag_review">复习任务</string>
+
+    <string name="learning_done_metric_completed">完成词数</string>
+    <string name="learning_done_metric_duration">本次时长</string>
+    <string name="learning_done_metric_accuracy">正确率</string>
+    <string name="learning_done_metric_quality">学习质量</string>
+    <string name="learning_done_metric_answered">答题次数</string>
+    <string name="learning_done_metric_wrong">错误次数</string>
+    <string name="learning_done_metric_efficiency">学习效率</string>
+    <string name="learning_done_duration_minutes">%1$d分钟</string>
+    <string name="learning_done_duration_hours_minutes">%1$d小时%2$d分钟</string>
+    <string name="learning_done_accuracy_format">%.1f%%</string>
+    <string name="learning_done_efficiency_format">%.1f 词/分钟</string>
+
+    <string name="learning_done_continue">继续学习</string>
+    <string name="learning_done_back_home">返回首页</string>
+    <string name="learning_done_list_title">本次学习单词</string>
+    <string name="learning_done_word_action">查看详情</string>
+
+    <string name="learning_done_no_book">当前未选择词书，请先选择词书。</string>
+    <string name="learning_done_no_more_words">当前没有可继续学习的单词。</string>
+
+    <string name="practice_permission_denied">请授予录音权限以进行跟读练习</string>
+    <string name="practice_please_record_first">请先完成录音</string>
+    <string name="practice_tts_not_ready">语音引擎尚未就绪，请稍后重试</string>
+    <string name="practice_stop_recording">停止录音</string>
+    <string name="practice_start_recording">开始录音</string>
+    <string name="practice_score_format">总分 %1$d / 发音 %2$d / 流利度 %3$d</string>
+    <string name="practice_my_pronunciation">我的发音: %1$s</string>
+    <string name="practice_next_question">下一题</string>
+    <string name="practice_next_word">下一词</string>
+    <string name="practice_completed">已完成</string>
+    <string name="practice_session_completed">本轮练习已完成</string>
+    <string name="practice_audio_unavailable">音频暂不可用</string>
+    <string name="practice_clear">清空</string>
+
+    <string name="practice_spelling_progress_default">今日已练: 0/0</string>
+    <string name="practice_spelling_progress_text">今日已练: %1$d/%2$d</string>
+    <string name="practice_spelling_word_length_default">目标长度:</string>
+    <string name="practice_spelling_word_length_empty">目标长度: -</string>
+    <string name="practice_spelling_word_length_hint">目标长度: %1$d</string>
+    <string name="practice_spelling_play_audio">点击发音</string>
+    <string name="practice_spelling_meaning_placeholder">释义:</string>
+    <string name="practice_spelling_meaning_loading">释义：加载中...</string>
+    <string name="practice_spelling_meaning_format">释义：%1$s %2$s</string>
+    <string name="practice_spelling_meaning_fallback">释义：根据释义拼写单词</string>
+    <string name="practice_spelling_handwriting_hint">仅辅助记忆，不参与判题</string>
+    <string name="practice_spelling_submit_answer">提交答案</string>
+    <string name="practice_spelling_input_hint">键盘输入答案或点击字母池</string>
+    <string name="practice_spelling_hint">提示</string>
+    <string name="practice_spelling_attempt_status_default">尝试 0 次 · 提示 0 次</string>
+    <string name="practice_spelling_attempt_status">尝试 %1$d 次 · 提示 %2$d 次</string>
+    <string name="practice_spelling_summary_title">本次结果</string>
+    <string name="practice_spelling_summary">完成 %1$d/%2$d · 正确 %3$d · 正确率 %4$d%% · 提交 %5$d 次</string>
+    <string name="practice_spelling_empty">暂无可练习单词</string>
+    <string name="practice_spelling_correct">拼写正确</string>
+    <string name="practice_spelling_revealed_answer">再试一次后仍未答对，正确答案：%1$s</string>
+    <string name="practice_spelling_retry_feedback">还有 %1$d 处需要调整，请再试一次</string>
+    <string name="practice_spelling_hint_applied">已提示第 %1$d/%2$d 个字符</string>
+
+    <string name="practice_word_picker_title">自主选词</string>
+    <string name="practice_word_picker_search_hint">搜索单词</string>
+    <string name="practice_word_picker_select_all_visible">全选可见</string>
+    <string name="practice_word_picker_clear_selection">清空选择</string>
+    <string name="practice_word_picker_selected_count_default">已选 0 个</string>
+    <string name="practice_word_picker_selected_count">已选 %1$d 个</string>
+    <string name="practice_word_picker_confirm">确定</string>
+    <string name="practice_word_picker_confirm_empty">请至少选择一个单词</string>
+    <string name="practice_word_picker_empty">暂无可选单词</string>
+
+    <string name="practice_mode_title_listening">听力</string>
+    <string name="practice_mode_title_shadowing">跟读</string>
+    <string name="practice_mode_title_spelling">拼写</string>
+    <string name="practice_mode_title_audio_loop">随身听</string>
+    <string name="practice_word_picker_search_empty">未找到匹配的单词</string>
+    <string name="practice_stop_recording_first">请先停止录音</string>
+    <string name="practice_audio_loop_notification_channel">随身听播放</string>
+    <string name="practice_audio_loop_notification_title">随身听运行中</string>
+    <string name="practice_audio_loop_notification_ready">准备开始播放</string>
+    <string name="practice_audio_loop_notification_playing">正在播放：%1$s</string>
+    <string name="practice_listening_feedback_correct">回答正确</string>
+    <string name="practice_listening_feedback_wrong">回答错误</string>
+    <string name="practice_listening_feedback_completed">本轮听力已完成</string>
+    <string name="practice_listening_feedback_empty">暂无可练习题目</string>
+    <string name="practice_shadowing_scoring_unavailable">暂时无法评分</string>
+    <string name="practice_shadowing_empty">暂无可练习单词</string>
+    <string name="practice_audio_loop_no_book_selected">当前未选择词书</string>
+    <string name="practice_audio_loop_book_fallback">词书 #%1$d</string>
+    <string name="word_detail_unavailable">单词详情暂不可用</string>
+    <string name="learning_nav_main_title">学习</string>
+    <string name="learning_nav_done_title">学习完成</string>
+    <string name="learning_nav_check_in_title">打卡结果</string>
+    <string name="learning_nav_word_detail_title">单词详情</string>
+    <string name="learning_share_sheet_title">分享单词</string>
+    <string name="learning_share_action_copy">复制</string>
+    <string name="learning_share_copied">已复制到剪贴板</string>
+    <string name="learning_share_empty_content">当前暂无可分享内容</string>
+    <string name="learning_share_empty_phonetic">暂无</string>
+    <string name="learning_share_empty_definitions">暂无释义</string>
+    <string name="learning_share_empty_examples">暂无例句</string>
+    <string name="learning_share_us_phonetic">美音</string>
+    <string name="learning_share_uk_phonetic">英音</string>
+    <string name="learning_share_definitions_title">释义</string>
+    <string name="learning_share_examples_title">例句</string>
+</resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="learning_check_in_loading_title">正在完成今日打卡</string>
+    <string name="learning_check_in_loading_subtitle">请稍候，正在同步你的最新打卡结果</string>
+    <string name="learning_check_in_success_title">今日打卡完成</string>
+    <string name="learning_check_in_success_subtitle">连续坚持一点点，积累会很快出现</string>
+    <string name="learning_check_in_signed_date">%1$s 已打卡</string>
+    <string name="learning_check_in_streak_label">连续打卡</string>
+    <string name="learning_check_in_total_duration_label">累计学习时长</string>
+    <string name="learning_check_in_total_words_label">累计学习单词数</string>
+    <string name="learning_check_in_total_duration_minutes">%1$d分钟</string>
+    <string name="learning_check_in_total_duration_hours_minutes">%1$d小时%2$d分钟</string>
+    <string name="learning_check_in_share_button">分享</string>
+    <string name="learning_check_in_back_home">返回首页</string>
+    <string name="learning_check_in_failed">打卡失败，请稍后重试</string>
+    <string name="learning_check_in_share_chooser">分享打卡</string>
+    <string name="learning_check_in_share_text">我在 %1$s 完成了今日打卡，已经连续打卡 %2$s 天，累计学习时长 %3$s，累计学习单词 %4$s 个。</string>
+</resources>

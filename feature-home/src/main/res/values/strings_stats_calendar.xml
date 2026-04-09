@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_back_today">今天</string>
+    <string name="home_calendar_future_disabled">已是当前月份</string>
+    <string name="home_day_detail_empty">当天未学习，0新学0复习0分钟</string>
+    <string name="home_day_detail_new_words">新学词条</string>
+    <string name="home_day_detail_review_words">复习词条</string>
+    <string name="home_day_detail_new_empty">当天无新学词条</string>
+    <string name="home_day_detail_review_empty">当天无复习词条</string>
+    <string name="home_day_detail_new_count">新学 %1$d</string>
+    <string name="home_day_detail_review_count">复习 %1$d</string>
+    <string name="home_day_detail_duration">学习时长 %1$s</string>
+    <string name="home_day_detail_plan_all_done">新学计划、复习计划均已完成</string>
+    <string name="home_day_detail_plan_new_done">新学计划已完成，复习未完成</string>
+    <string name="home_day_detail_plan_review_done">复习计划已完成，新学未完成</string>
+    <string name="home_day_detail_plan_none_done">当天计划未全部完成</string>
+    <string name="home_day_detail_date">%1$s 学习详情</string>
+</resources>

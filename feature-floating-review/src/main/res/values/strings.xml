@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="module_floating_review_settings_title">桌面悬浮球</string>
+    <string name="module_floating_review_settings_subtitle">集中管理悬浮复习的内容、排序和展示方式。</string>
+    <string name="module_floating_review_back">返回</string>
+    <string name="module_floating_review_auto_start">启动应用时启动悬浮球</string>
+    <string name="module_floating_review_card_opacity_title">卡片透明度</string>
+    <string name="module_floating_review_card_opacity_value">%1$d%%</string>
+    <string name="module_floating_review_source_title">词源</string>
+    <string name="module_floating_review_source_current">当前词书复习词</string>
+    <string name="module_floating_review_source_self">自选单词</string>
+    <string name="module_floating_review_pick_words">选择单词</string>
+    <string name="module_floating_review_selected_count">已选 %1$d 个</string>
+    <string name="module_floating_review_order_title">排序方式</string>
+    <string name="module_floating_review_order_random">随机</string>
+    <string name="module_floating_review_order_memory">记忆曲线推荐</string>
+    <string name="module_floating_review_order_alpha_asc">首字母升序</string>
+    <string name="module_floating_review_order_alpha_desc">首字母降序</string>
+    <string name="module_floating_review_order_length_asc">长度升序</string>
+    <string name="module_floating_review_order_length_desc">长度降序</string>
+    <string name="module_floating_review_fields_title">字段配置</string>
+    <string name="module_floating_review_field_word">单词</string>
+    <string name="module_floating_review_field_phonetic">音标</string>
+    <string name="module_floating_review_field_meaning">释义</string>
+    <string name="module_floating_review_field_pos">词性</string>
+    <string name="module_floating_review_field_example">例句</string>
+    <string name="module_floating_review_field_note">笔记</string>
+    <string name="module_floating_review_field_image">图片</string>
+    <string name="module_floating_review_notification_channel">悬浮复习卡</string>
+    <string name="module_floating_review_notification_title">悬浮复习卡运行中</string>
+    <string name="module_floating_review_notification_ready">点击悬浮球开始复习</string>
+    <string name="module_floating_review_detail">查看详情</string>
+    <string name="module_floating_review_empty">暂无可复习单词</string>
+    <string name="module_floating_review_close">关闭悬浮</string>
+    <string name="module_floating_review_preview_permission_required">请先授予悬浮窗权限后再预览卡片透明度</string>
+    <string name="module_floating_review_phonetic_both">美 [%1$s]  英 [%2$s]</string>
+    <string name="module_floating_review_phonetic_us_only">美 [%1$s]</string>
+    <string name="module_floating_review_phonetic_uk_only">英 [%1$s]</string>
+</resources>

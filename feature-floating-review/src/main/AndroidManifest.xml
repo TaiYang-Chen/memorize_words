@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <activity
+            android:name=".FloatingReviewActivity"
+            android:exported="false" />
+        <service
+            android:name=".ui.floating.FloatingWordService"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":floating"
+            android:stopWithTask="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="floating_word_overlay" />
+        </service>
+    </application>
+</manifest>

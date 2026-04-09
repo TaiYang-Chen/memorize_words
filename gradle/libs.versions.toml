@@ -1,0 +1,107 @@
+[versions]
+agp = "8.12.3"
+kotlin = "2.2.0"
+coreKtx = "1.17.0"
+appcompat = "1.7.1"
+loggingInterceptor = "4.12.0"
+material = "1.13.0"
+activity = "1.11.0"
+constraintlayout = "2.2.1"
+navigationFragmentKtx = "2.9.5"
+hilt = "2.57.2"
+navigationSafeargs = "2.9.5"
+ksp = "2.2.0-2.0.2"
+room = "2.8.3"
+mmkv = "2.3.0"
+javaxInject = "1"
+activityKtx = "1.8.2"
+fragmentKtx = "1.6.2"
+lifecycleViewmodelKtx = "2.7.0"
+lifecycleRuntimeKtx = "2.8.6"
+navigationKtx = "2.9.5"
+retrofit = "2.11.0"
+moshi = "1.15.2"
+okhttp = "4.12.0"
+kotlinxCoroutines = "1.8.1"
+paging = "3.3.0"
+leanbackPaging = "1.1.0"
+swiperefreshlayout = "1.1.0"
+coil = "2.6.0"
+workRuntime = "2.10.0"
+material3 = "1.4.0"
+ui = "1.10.2"
+uiToolingPreview = "1.10.2"
+uiTooling = "1.10.2"
+runtime = "1.10.2"
+gridlayout = "1.1.0"
+viewpager2 = "1.1.0"
+gson = "2.13.2"
+wechatSdk = "6.8.0"
+qqOpenSdk = "9.9.5.4.2"
+uCrop = "2.2.8"
+wheelPicker = "1.2.0"
+glide = "4.16.0"
+debugDb = "1.0.7"
+splashscreen = "1.0.1"
+profileinstaller = "1.4.1"
+
+[libraries]
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+androidx-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+tencent-mmkv-static = { group = "com.tencent", name = "mmkv-static", version.ref = "mmkv" }
+javax-inject = { group = "javax.inject", name = "javax.inject", version.ref = "javaxInject" }
+androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activityKtx" }
+androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragmentKtx" }
+androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationKtx" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "ui" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+retrofit-converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "retrofit" }
+moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi" }
+moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshi" }
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
+androidx-paging-common = { group = "androidx.paging", name = "paging-common", version.ref = "paging" }
+androidx-paging-runtime-ktx = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "paging" }
+androidx-leanback-paging = { group = "androidx.leanback", name = "leanback-paging", version.ref = "leanbackPaging" }
+androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
+androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workRuntime" }
+coil = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "uiToolingPreview" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "uiTooling" }
+androidx-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "runtime" }
+androidx-compose-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtime" }
+androidx-gridlayout = { group = "androidx.gridlayout", name = "gridlayout", version.ref = "gridlayout" }
+androidx-viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "viewpager2" }
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+wechat-sdk-android = { group = "com.tencent.mm.opensdk", name = "wechat-sdk-android-without-mta", version.ref = "wechatSdk" }
+qq-open-sdk = { group = "com.tencent.tauth", name = "qqopensdk", version.ref = "qqOpenSdk" }
+yalantis-ucrop = { group = "com.github.yalantis", name = "ucrop", version.ref = "uCrop" }
+wheel-picker = { group = "dev.aige.pub", name = "WheelPicker", version.ref = "wheelPicker" }
+glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+debug-db = { group = "com.github.amitshekhariitbhu.Android-Debug-Database", name = "debug-db", version.ref = "debugDb" }
+androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
+androidx-profileinstaller = { group = "androidx.profileinstaller", name = "profileinstaller", version.ref = "profileinstaller" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigationSafeargs" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+

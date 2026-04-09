@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="practice_record_detail_title">练习记录详情</string>
+    <string name="practice_record_detail_empty">暂无词表</string>
+    <string name="practice_record_mode_listening">听力</string>
+    <string name="practice_record_mode_shadowing">跟读</string>
+    <string name="practice_record_mode_spelling">拼写</string>
+    <string name="practice_record_mode_audio_loop">随身听</string>
+    <string name="practice_record_mode_exam">真题</string>
+    <string name="practice_record_word_phonetic_empty">暂无音标</string>
+    <string name="practice_record_word_definition_empty">暂无释义</string>
+    <string name="practice_record_percentage">%1$d%%</string>
+    <string name="practice_record_not_available">暂无</string>
+    <string name="practice_record_spelling_summary">完成 %1$d/%2$d · 完成率 %3$d%% · 正确 %4$d · 结算正确率 %5$s · 提交 %6$d 次</string>
+    <string name="practice_record_spelling_summary_brief">完成率 %1$d%% · 结算正确率 %2$s</string>
+</resources>

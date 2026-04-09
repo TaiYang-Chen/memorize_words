@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 按下状态 -->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <!-- 按下时颜色加深 -->
+            <solid android:color="#F57C00" />
+            <!-- 圆角 -->
+            <corners android:radius="24dp" />
+            <!-- 按下时阴影减小 -->
+            <padding
+                android:bottom="1dp"
+                android:left="1dp"
+                android:right="1dp"
+                android:top="1dp" />
+        </shape>
+    </item>
+
+    <!-- 默认状态 -->
+    <item>
+        <shape android:shape="rectangle">
+            <!-- 正常状态颜色 -->
+            <solid android:color="#FF9800" />
+            <!-- 圆角 -->
+            <corners android:radius="24dp" />
+            <!-- 轻微内边距用于按下效果 -->
+            <padding
+                android:bottom="2dp"
+                android:left="2dp"
+                android:right="2dp"
+                android:top="2dp" />
+        </shape>
+    </item>
+</selector>

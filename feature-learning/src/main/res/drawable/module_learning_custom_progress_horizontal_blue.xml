@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 进度条背景（未完成部分） -->
+    <item android:id="@android:id/background">
+        <shape>
+            <corners android:radius="6dp" />
+            <solid android:color="#E0E0E0" />
+        </shape>
+    </item>
+
+    <!-- 二级进度（可选） -->
+    <item android:id="@android:id/secondaryProgress">
+        <clip>
+            <shape>
+                <corners android:radius="6dp" />
+                <solid android:color="#BBDEFB" />
+            </shape>
+        </clip>
+    </item>
+
+    <!-- 主进度（已完成部分） -->
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape>
+                <corners android:radius="6dp" />
+                <gradient
+                    android:angle="0"
+                    android:centerColor="#137fec"
+                    android:endColor="#137fec"
+                    android:startColor="#137fec" />
+            </shape>
+        </clip>
+    </item>
+
+</layer-list>

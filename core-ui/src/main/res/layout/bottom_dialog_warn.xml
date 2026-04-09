@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bottom_dialog_bg"
+        android:orientation="vertical">
+
+        <!-- 拖拽条 -->
+        <View
+            android:layout_width="40dp"
+            android:layout_height="6dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_drag_handle" />
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="24dp"
+            android:src="@drawable/ic_warn" />
+
+        <TextView
+            android:id="@+id/title"
+            tools:text="确认重置进度"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#000"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/message"
+            tools:text="重置后，当前的单词学习进度将被完全清空，所有已掌握单词将恢复为未学状态。此操作无法撤销。"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="40dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:lineHeight="25sp"
+            android:textColor="#949494"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/confirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:backgroundTint="@null"
+            android:background="@drawable/button_orange_selector"
+            android:elevation="4dp"
+            android:text="确定"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="16dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:padding="8dp"
+            android:stateListAnimator="@null" />
+
+        <TextView
+            android:id="@+id/cancel"
+            android:text="我在想想"
+            android:layout_width="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:textSize="14sp"
+            android:textColor="#9a9a9a"
+            android:textStyle="bold"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</layout>

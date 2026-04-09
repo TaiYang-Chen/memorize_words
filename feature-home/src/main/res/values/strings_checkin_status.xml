@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_day_detail_checkin_auto">已自动打卡</string>
+    <string name="home_day_detail_checkin_makeup">已补签</string>
+    <string name="home_day_detail_checkin_available">可补签</string>
+</resources>

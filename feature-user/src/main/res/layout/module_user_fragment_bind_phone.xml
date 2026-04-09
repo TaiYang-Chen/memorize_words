@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.chen.memorizewords.feature.user.ui.profile.phone.BindPhoneViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:padding="20dp">
+
+        <ImageView
+            android:id="@+id/ivBack"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:contentDescription="@string/module_user_common_back"
+            android:onClick="@{() -> viewModel.back()}"
+            android:src="@drawable/ic_arrow_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/module_user_bind_phone_title"
+            android:textColor="#111111"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/ivBack"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/ivBack" />
+
+        <TextView
+            android:id="@+id/tvUnavailableNotice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/module_user_login_bg_edit_text"
+            android:padding="14dp"
+            android:text="@string/module_user_bind_phone_unavailable_notice"
+            android:textColor="#6B7280"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivBack" />
+
+        <EditText
+            android:id="@+id/etPhone"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/module_user_login_bg_edit_text"
+            android:enabled="@{viewModel.isFormEnabled}"
+            android:hint="@string/module_user_bind_phone_phone_hint"
+            android:inputType="phone"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:text="@={viewModel.phoneNumber}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvUnavailableNotice" />
+
+        <EditText
+            android:id="@+id/etSmsCode"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/module_user_login_bg_edit_text"
+            android:enabled="@{viewModel.isFormEnabled}"
+            android:hint="@string/module_user_bind_phone_sms_hint"
+            android:inputType="number"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:text="@={viewModel.smsCode}"
+            app:layout_constraintEnd_toStartOf="@id/btnSendCode"
+            app:layout_constraintStart_toStartOf="@id/etPhone"
+            app:layout_constraintTop_toBottomOf="@id/etPhone" />
+
+        <Button
+            android:id="@+id/btnSendCode"
+            android:layout_width="104dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:enabled="@{viewModel.isSendCodeEnabled}"
+            android:onClick="@{() -> viewModel.sendCode()}"
+            android:text="@{viewModel.sendCodeText}"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toBottomOf="@id/etSmsCode"
+            app:layout_constraintEnd_toEndOf="@id/etPhone"
+            app:layout_constraintTop_toTopOf="@id/etSmsCode" />
+
+        <Button
+            android:id="@+id/btnConfirm"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/module_user_login_bg_login_btn"
+            android:enabled="@{viewModel.isConfirmEnabled}"
+            android:onClick="@{() -> viewModel.confirmBind()}"
+            android:text="@string/module_user_bind_phone_confirm"
+            android:textColor="@android:color/white"
+            app:layout_constraintEnd_toEndOf="@id/etPhone"
+            app:layout_constraintStart_toStartOf="@id/etPhone"
+            app:layout_constraintTop_toBottomOf="@id/etSmsCode" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/module_floating_review_ball_size"
+    android:layout_height="@dimen/module_floating_review_ball_size"
+    android:background="@drawable/module_floating_review_bg_floating_ball"
+    android:clickable="true"
+    android:focusable="true">
+
+    <ImageView
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_gravity="center"
+        android:rotationY="180"
+        app:tint="#FFFFFF"
+        android:src="@drawable/module_floating_review_ic_assignment"
+        />
+</FrameLayout>

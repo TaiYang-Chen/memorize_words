@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="6dp"
+    android:paddingTop="8dp"
+    android:paddingEnd="6dp"
+    android:paddingBottom="8dp">
+
+    <TextView
+        android:id="@+id/tvDragHandle"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:gravity="center"
+        android:text="::"
+        android:textColor="#94A3B8"
+        android:textSize="16sp" />
+
+    <CheckBox
+        android:id="@+id/cbEnable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tvFieldLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_weight="1"
+        android:textColor="#0F172A"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/btnSizeMinus"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:gravity="center"
+        android:text="-"
+        android:textColor="#0F172A"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tvSizeValue"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="#0F172A"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/btnSizePlus"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:gravity="center"
+        android:text="+"
+        android:textColor="#0F172A"
+        android:textSize="16sp" />
+</LinearLayout>

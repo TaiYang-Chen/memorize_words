@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MultiProgressView">
+        <attr name="max" format="integer" />
+        <attr name="progress1" format="integer" />
+        <attr name="progress2" format="integer" />
+        <attr name="bgColor" format="color" />
+        <attr name="progress1Color" format="color" />
+        <attr name="progress2Color" format="color" />
+    </declare-styleable>
+</resources>

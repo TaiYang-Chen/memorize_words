@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.chen.memorizewords.feature.wordbook.my.MyWordBooksViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        android:padding="@dimen/page_margin">
+
+        <FrameLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/title_height"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:onClick="@{()->viewModel.back()}"
+                android:src="@drawable/ic_arrow_back" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:text="我的词汇书"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </FrameLayout>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/updateBannerCard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
+            app:cardBackgroundColor="#FFF7E8"
+            app:cardCornerRadius="18dp"
+            app:cardElevation="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/header">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/updateBannerTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="当前词书有新版本"
+                    android:textColor="#1D1D1F"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    tools:text="考研核心词汇有新版本" />
+
+                <TextView
+                    android:id="@+id/updateBannerSummary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textColor="#5F4B32"
+                    android:textSize="13sp"
+                    tools:text="新增 12 个单词，修改 6 个单词，删除 2 个单词" />
+
+                <TextView
+                    android:id="@+id/updateBannerMeta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:textColor="#8A6A45"
+                    android:textSize="12sp"
+                    tools:text="版本 6 -> 7 · 预计下载 128 KB" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnUpdateNow"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/module_wordbook_selector_ff8000_radius"
+                        android:onClick="@{()->viewModel.onUpdateNowClick()}"
+                        android:text="更新"
+                        android:textColor="#FFFFFF" />
+
+                    <Button
+                        android:id="@+id/btnRemindLater"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/module_wordbook_white_radio_16dp_not_border"
+                        android:onClick="@{()->viewModel.onRemindLaterClick()}"
+                        android:text="稍后提醒"
+                        android:textColor="#5F4B32" />
+
+                    <ImageButton
+                        android:id="@+id/btnToggleSettings"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="更新设置"
+                        android:onClick="@{()->viewModel.onToggleSettings()}"
+                        android:src="@android:drawable/ic_menu_manage" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/btnToggleDetails"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="@{()->viewModel.onToggleDetails()}"
+                        android:paddingVertical="6dp"
+                        android:text="查看更新详情"
+                        android:textColor="#FF8C00"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/updateStatusText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:textColor="#8A6A45"
+                        android:textSize="12sp"
+                        tools:text="下载中 45%" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:id="@+id/updateDetailsPanel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/module_wordbook_white_radio_16dp_not_border"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/updateBannerCard">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="更新详情"
+                android:textColor="#1D1D1F"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/updateDetailsText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="#4D4D4D"
+                android:textSize="13sp"
+                tools:text="新增 12 个单词&#10;修改 6 个单词&#10;删除 2 个单词&#10;示例单词：abandon、align、anchor" />
+
+            <TextView
+                android:id="@+id/btnIgnoreVersion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:onClick="@{()->viewModel.onIgnoreVersionClick()}"
+                android:text="忽略此版本"
+                android:textColor="#C16B00"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/updateSettingsPanel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/module_wordbook_white_radio_16dp_not_border"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/updateDetailsPanel">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="更新提醒设置"
+                android:textColor="#1D1D1F"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchForegroundAlerts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="前台提醒"
+                android:textColor="#333333" />
+
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchSilentUpdate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="仅 Wi-Fi 静默更新"
+                android:textColor="#333333" />
+        </LinearLayout>
+
+        <RadioGroup
+            android:id="@+id/radioGroupFilter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/module_wordbook_toggle_background"
+            android:orientation="horizontal"
+            android:padding="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/updateSettingsPanel">
+
+            <RadioButton
+                android:id="@+id/btnAll"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/module_wordbook_toggle_item_selector"
+                android:button="@null"
+                android:checked="true"
+                android:gravity="center"
+                android:padding="4dp"
+                android:text="全部"
+                android:textColor="@drawable/module_wordbook_toggle_text_selector" />
+
+            <RadioButton
+                android:id="@+id/btnStudying"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/module_wordbook_toggle_item_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:text="正在学习"
+                android:textColor="@drawable/module_wordbook_toggle_text_selector" />
+
+            <RadioButton
+                android:id="@+id/btnCompleted"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/module_wordbook_toggle_item_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:text="已完成"
+                android:textColor="@drawable/module_wordbook_toggle_text_selector" />
+        </RadioGroup>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/radioGroupFilter"
+            tools:listitem="@layout/module_wordbook_item_wordbook" />
+
+        <Button
+            android:id="@+id/btnAddWordBook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/module_wordbook_selector_ff8000_radius"
+            android:onClick="@{()->viewModel.onPickShopFragment()}"
+            android:padding="4dp"
+            android:text="添加词汇书"
+            android:textColor="#fff"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
