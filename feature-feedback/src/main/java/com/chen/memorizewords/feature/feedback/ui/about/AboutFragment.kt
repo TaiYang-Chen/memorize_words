@@ -20,7 +20,7 @@ class AboutFragment : BaseFragment<AboutViewModel, ModuleFeedbackFragmentAboutBi
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        databind.btnBack.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
+        databind.viewModel = viewModel
         databind.tvAppName.text = getString(R.string.module_feedback_app_name)
         databind.tvVersion.text = getString(
             R.string.module_feedback_version_label,

@@ -10,13 +10,15 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class FavoritesFragment : BaseFragment<FavoritesViewModel, ModuleWordbookFragmentFavoritesBinding>() {
+class FavoritesFragment :
+    BaseFragment<FavoritesViewModel, ModuleWordbookFragmentFavoritesBinding>() {
 
     override val viewModel: FavoritesViewModel by lazy {
         ViewModelProvider(this)[FavoritesViewModel::class.java]
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+        databind.viewModel = viewModel
         databind.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         databind.recyclerView.adapter = adapter
         databind.recyclerView.addItemDecoration(

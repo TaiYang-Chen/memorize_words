@@ -300,12 +300,6 @@
                 android:orientation="horizontal"
                 android:padding="12dp">
 
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/feature_home_bg_floating_ball"
-                    android:contentDescription="@string/feature_home_floating_section_title" />
-
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

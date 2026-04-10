@@ -45,6 +45,8 @@ class FeedbackFragment : BaseFragment<FeedbackViewModel, ModuleFeedbackFragmentF
             }
         }
         viewModel.addImages(uris)
+
+        databind.viewModel = viewModel
     }
 
     override fun initView(savedInstanceState: Bundle?) {
@@ -52,10 +54,6 @@ class FeedbackFragment : BaseFragment<FeedbackViewModel, ModuleFeedbackFragmentF
     }
 
     private fun setupUi() {
-        databind.btnBack.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
-
         databind.etFeedback.filters = arrayOf(InputFilter.LengthFilter(200))
         databind.etFeedback.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {

@@ -51,6 +51,7 @@
 
             <ImageView
                 android:id="@+id/imageView3"
+                android:onClick="@{()->viewModel.toUserInfo()}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/feature_home_settings_172337"
@@ -105,12 +106,6 @@
                     android:textSize="12sp"
                     tools:text="编号：--" />
             </LinearLayout>
-
-            <ImageView
-                android:layout_width="24dp"
-                android:onClick="@{()->viewModel.toUserInfo()}"
-                android:layout_height="24dp"
-                android:src="@drawable/module_home_edit_calendar_6b46c1" />
         </LinearLayout>
 
         <LinearLayout

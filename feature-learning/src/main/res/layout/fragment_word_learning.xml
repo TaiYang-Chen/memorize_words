@@ -57,7 +57,7 @@
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:src="@{viewModel.uiState.isFavorite ?   @drawable/module_learning_favorite_24dp_444f5f  : @drawable/module_learning_favorite_en_24dp_444f5f}" />
+                    android:src="@{viewModel.uiState.isFavorite ? @drawable/module_learning_favorite_en_24dp_444f5f : @drawable/module_learning_favorite_24dp_444f5f}" />
 
                 <TextView
                     android:layout_width="wrap_content"

@@ -18,7 +18,7 @@ open class BaseViewModel : ViewModel() {
         const val DEFAULT_LOADING_MESSAGE = "\u52A0\u8F7D\u4E2D..."
     }
 
-    private val _uiEvent = MutableSharedFlow<UiEvent>(extraBufferCapacity = 1)
+    private val _uiEvent = MutableSharedFlow<UiEvent>(extraBufferCapacity = 16)
     val uiEvent = _uiEvent.asSharedFlow()
 
     private val loadingCounter = AtomicInteger(0)

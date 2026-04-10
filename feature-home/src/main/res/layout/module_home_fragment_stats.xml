@@ -10,451 +10,459 @@
             type="com.chen.memorizewords.feature.home.ui.stats.StatsViewModel" />
     </data>
 
-    <androidx.core.widget.NestedScrollView
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/module_home_bg_home">
+        android:background="@drawable/module_home_bg_home"
+        android:orientation="vertical"
+        android:padding="@dimen/page_margin">
 
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/page_margin">
+            android:layout_marginTop="36dp"
+            android:gravity="center"
+            android:text="@string/home_stats_title"
+            android:textColor="#000"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="36dp"
-                android:gravity="center"
-                android:text="@string/home_stats_title"
-                android:textColor="#000"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/tvAchievementDays"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:includeFontPadding="false"
-                    android:text="124"
-                    android:textColor="#005B60"
-                    android:textSize="88sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/tv_days_unit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginBottom="16dp"
-                    android:text="天"
-                    android:textColor="#424242"
-                    android:textSize="24sp"
-                    app:layout_constraintBottom_toBottomOf="@id/tvAchievementDays"
-                    app:layout_constraintStart_toEndOf="@id/tvAchievementDays" />
-
-                <TextView
-                    android:id="@+id/tv_description"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:lineSpacingExtra="6dp"
-                    android:textColor="#616161"
-                    android:textSize="14sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvAchievementDays"
-                    tools:text="你已与词相伴 120 余日，语言在你身上，缓慢生长。" />
-
-                <TextView
-                    android:id="@+id/tv_focus_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:text="累计时长"
-                    android:textColor="#757575"
-                    android:textSize="14sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_description" />
-
-                <TextView
-                    android:id="@+id/tvAchievementDuration"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:includeFontPadding="false"
-                    android:text="312"
-                    android:textColor="#212121"
-                    android:textSize="36sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_focus_title" />
-
-                <TextView
-                    android:id="@+id/tv_focus_unit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="小时"
-                    android:textColor="#424242"
-                    android:textSize="14sp"
-                    app:layout_constraintBaseline_toBaselineOf="@id/tvAchievementDuration"
-                    app:layout_constraintStart_toEndOf="@id/tvAchievementDuration" />
-
-
-                <TextView
-                    android:id="@+id/tv_words_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="掌握单词"
-                    android:textColor="#757575"
-                    android:textSize="14sp"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_focus_title"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_focus_title" />
-
-                <TextView
-                    android:id="@+id/tv_words_unit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="词"
-                    android:textColor="#424242"
-                    android:textSize="14sp"
-                    app:layout_constraintBaseline_toBaselineOf="@id/tvAchievementDuration"
-                    app:layout_constraintEnd_toEndOf="parent" />
-
-                <TextView
-                    android:id="@+id/tvAchievementWords"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:includeFontPadding="false"
-                    android:text="4,892"
-                    android:textColor="#212121"
-                    android:textSize="36sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBaseline_toBaselineOf="@id/tvAchievementDuration"
-                    app:layout_constraintEnd_toStartOf="@id/tv_words_unit" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="vertical">
-
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content">
 
                     <TextView
+                        android:id="@+id/tvAchievementDays"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:includeFontPadding="false"
+                        android:text="124"
+                        android:textColor="#005B60"
+                        android:textSize="88sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_days_unit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginBottom="16dp"
+                        android:text="天"
+                        android:textColor="#424242"
+                        android:textSize="24sp"
+                        app:layout_constraintBottom_toBottomOf="@id/tvAchievementDays"
+                        app:layout_constraintStart_toEndOf="@id/tvAchievementDays" />
+
+                    <TextView
+                        android:id="@+id/tv_description"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/home_learning_calendar"
-                        android:textColor="#0F172A"
+                        android:lineSpacingExtra="6dp"
+                        android:textColor="#616161"
                         android:textSize="14sp"
-                        android:textStyle="bold" />
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvAchievementDays"
+                        tools:text="你已与词相伴 120 余日，语言在你身上，缓慢生长。" />
 
                     <TextView
-                        android:id="@+id/btnBackToday"
+                        android:id="@+id/tv_focus_title"
                         android:layout_width="wrap_content"
-                        android:layout_height="28dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:text="累计时长"
+                        android:textColor="#757575"
+                        android:textSize="14sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tv_description" />
+
+                    <TextView
+                        android:id="@+id/tvAchievementDuration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:includeFontPadding="false"
+                        android:text="312"
+                        android:textColor="#212121"
+                        android:textSize="36sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tv_focus_title" />
+
+                    <TextView
+                        android:id="@+id/tv_focus_unit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="小时"
+                        android:textColor="#424242"
+                        android:textSize="14sp"
+                        app:layout_constraintBaseline_toBaselineOf="@id/tvAchievementDuration"
+                        app:layout_constraintStart_toEndOf="@id/tvAchievementDuration" />
+
+
+                    <TextView
+                        android:id="@+id/tv_words_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="掌握单词"
+                        android:textColor="#757575"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="@id/tv_focus_title"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/tv_focus_title" />
+
+                    <TextView
+                        android:id="@+id/tv_words_unit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="词"
+                        android:textColor="#424242"
+                        android:textSize="14sp"
+                        app:layout_constraintBaseline_toBaselineOf="@id/tvAchievementDuration"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tvAchievementWords"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
-                        android:background="@drawable/module_home_stats_filter_selector"
-                        android:gravity="center"
-                        android:onClick="@{() -> viewModel.backToToday()}"
-                        android:paddingStart="10dp"
-                        android:paddingEnd="10dp"
-                        android:text="@string/home_back_today"
-                        android:textColor="@color/stats_filter_text_selector"
-                        android:textSize="11sp" />
+                        android:includeFontPadding="false"
+                        android:text="4,892"
+                        android:textColor="#212121"
+                        android:textSize="36sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBaseline_toBaselineOf="@id/tvAchievementDuration"
+                        app:layout_constraintEnd_toStartOf="@id/tv_words_unit" />
 
-                    <ImageView
-                        android:id="@+id/btnPrevMonth"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:background="@drawable/module_home_stats_nav_btn_bg"
-                        android:padding="8dp"
-                        android:rotationY="180"
-                        android:src="@drawable/module_home_ic_right_black" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <TextView
-                        android:id="@+id/tvMonthValue"
-                        android:layout_width="88dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:textColor="#0F172A"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                    <ImageView
-                        android:id="@+id/btnNextMonth"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:background="@drawable/module_home_stats_nav_btn_bg"
-                        android:padding="8dp"
-                        android:src="@drawable/module_home_ic_right_black" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/home_learning_calendar"
+                            android:textColor="#0F172A"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/btnBackToday"
+                            android:layout_width="wrap_content"
+                            android:layout_height="28dp"
+                            android:layout_marginEnd="8dp"
+                            android:background="@drawable/module_home_stats_filter_selector"
+                            android:gravity="center"
+                            android:onClick="@{() -> viewModel.backToToday()}"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:text="@string/home_back_today"
+                            android:textColor="@color/stats_filter_text_selector"
+                            android:textSize="11sp" />
+
+                        <ImageView
+                            android:id="@+id/btnPrevMonth"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:background="@drawable/module_home_stats_nav_btn_bg"
+                            android:padding="8dp"
+                            android:rotationY="180"
+                            android:src="@drawable/module_home_ic_right_black" />
+
+                        <TextView
+                            android:id="@+id/tvMonthValue"
+                            android:layout_width="88dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="#0F172A"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/btnNextMonth"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:background="@drawable/module_home_stats_nav_btn_bg"
+                            android:padding="8dp"
+                            android:src="@drawable/module_home_ic_right_black" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/home_week_mon"
+                            android:textColor="#64748B"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/home_week_tue"
+                            android:textColor="#64748B"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/home_week_wed"
+                            android:textColor="#64748B"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/home_week_thu"
+                            android:textColor="#64748B"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/home_week_fri"
+                            android:textColor="#64748B"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/home_week_sat"
+                            android:textColor="#64748B"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/home_week_sun"
+                            android:textColor="#64748B"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/vpCalendar"
+                        android:layout_width="match_parent"
+                        android:layout_height="260dp"
+                        android:layout_marginTop="6dp"
+                        android:overScrollMode="never" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
+                            android:background="@drawable/feature_home_stats_day_bg_studied" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:text="@string/home_calendar_legend_studied"
+                            android:textColor="#64748B"
+                            android:textSize="10sp" />
+
+                        <View
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
+                            android:layout_marginStart="10dp"
+                            android:background="@drawable/feature_home_stats_day_bg_new_done" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:text="@string/home_calendar_legend_new_done"
+                            android:textColor="#64748B"
+                            android:textSize="10sp" />
+
+                        <View
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
+                            android:layout_marginStart="10dp"
+                            android:background="@drawable/feature_home_stats_day_bg_review_done" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:text="@string/home_calendar_legend_review_done"
+                            android:textColor="#64748B"
+                            android:textSize="10sp" />
+
+                        <View
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
+                            android:layout_marginStart="10dp"
+                            android:background="@drawable/feature_home_stats_day_bg_all_done" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:text="@string/home_calendar_legend_all_done"
+                            android:textColor="#64748B"
+                            android:textSize="10sp" />
+
+                        <View
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
+                            android:layout_marginStart="10dp"
+                            android:background="@drawable/feature_home_stats_day_bg_checked_in" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:text="@string/home_calendar_legend_checked_in"
+                            android:textColor="#64748B"
+                            android:textSize="10sp" />
+                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="24dp"
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/home_week_mon"
-                        android:textColor="#64748B"
-                        android:textSize="11sp" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/home_week_tue"
-                        android:textColor="#64748B"
-                        android:textSize="11sp" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/home_weekly_word_bars"
+                            android:textColor="#0F172A"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/home_week_wed"
-                        android:textColor="#64748B"
-                        android:textSize="11sp" />
+                        <TextView
+                            android:id="@+id/btnFilterAll"
+                            android:layout_width="wrap_content"
+                            android:layout_height="28dp"
+                            android:background="@drawable/module_home_stats_filter_selector"
+                            android:gravity="center"
+                            android:onClick="@{() -> viewModel.selectAllWords()}"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:text="@string/home_filter_all"
+                            android:textColor="@color/stats_filter_text_selector"
+                            android:textSize="11sp" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/home_week_thu"
-                        android:textColor="#64748B"
-                        android:textSize="11sp" />
+                        <TextView
+                            android:id="@+id/btnFilterNew"
+                            android:layout_width="wrap_content"
+                            android:layout_height="28dp"
+                            android:layout_marginStart="6dp"
+                            android:background="@drawable/module_home_stats_filter_selector"
+                            android:gravity="center"
+                            android:onClick="@{() -> viewModel.selectNewWords()}"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:text="@string/home_filter_new"
+                            android:textColor="@color/stats_filter_text_selector"
+                            android:textSize="11sp" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/home_week_fri"
-                        android:textColor="#64748B"
-                        android:textSize="11sp" />
+                        <TextView
+                            android:id="@+id/btnFilterReview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="28dp"
+                            android:layout_marginStart="6dp"
+                            android:background="@drawable/module_home_stats_filter_selector"
+                            android:gravity="center"
+                            android:onClick="@{() -> viewModel.selectReviewWords()}"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:text="@string/home_filter_review"
+                            android:textColor="@color/stats_filter_text_selector"
+                            android:textSize="11sp" />
+                    </LinearLayout>
 
-                    <TextView
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:id="@+id/llWeekWordBars"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/home_week_sat"
-                        android:textColor="#64748B"
-                        android:textSize="11sp" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/home_week_sun"
-                        android:textColor="#64748B"
-                        android:textSize="11sp" />
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal" />
                 </LinearLayout>
-
-                <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/vpCalendar"
-                    android:layout_width="match_parent"
-                    android:layout_height="260dp"
-                    android:layout_marginTop="6dp"
-                    android:overScrollMode="never" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <View
-                        android:layout_width="8dp"
-                        android:layout_height="8dp"
-                        android:background="@drawable/feature_home_stats_day_bg_studied" />
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:text="@string/home_calendar_legend_studied"
-                        android:textColor="#64748B"
-                        android:textSize="10sp" />
-
-                    <View
-                        android:layout_width="8dp"
-                        android:layout_height="8dp"
-                        android:layout_marginStart="10dp"
-                        android:background="@drawable/feature_home_stats_day_bg_new_done" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:text="@string/home_calendar_legend_new_done"
-                        android:textColor="#64748B"
-                        android:textSize="10sp" />
-
-                    <View
-                        android:layout_width="8dp"
-                        android:layout_height="8dp"
-                        android:layout_marginStart="10dp"
-                        android:background="@drawable/feature_home_stats_day_bg_review_done" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:text="@string/home_calendar_legend_review_done"
-                        android:textColor="#64748B"
-                        android:textSize="10sp" />
-
-                    <View
-                        android:layout_width="8dp"
-                        android:layout_height="8dp"
-                        android:layout_marginStart="10dp"
-                        android:background="@drawable/feature_home_stats_day_bg_all_done" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:text="@string/home_calendar_legend_all_done"
-                        android:textColor="#64748B"
-                        android:textSize="10sp" />
-
-                    <View
-                        android:layout_width="8dp"
-                        android:layout_height="8dp"
-                        android:layout_marginStart="10dp"
-                        android:background="@drawable/feature_home_stats_day_bg_checked_in" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:text="@string/home_calendar_legend_checked_in"
-                        android:textColor="#64748B"
-                        android:textSize="10sp" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/home_weekly_word_bars"
+                        android:text="@string/home_weekly_duration_bars"
                         android:textColor="#0F172A"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/btnFilterAll"
-                        android:layout_width="wrap_content"
-                        android:layout_height="28dp"
-                        android:background="@drawable/module_home_stats_filter_selector"
-                        android:gravity="center"
-                        android:onClick="@{() -> viewModel.selectAllWords()}"
-                        android:paddingStart="10dp"
-                        android:paddingEnd="10dp"
-                        android:text="@string/home_filter_all"
-                        android:textColor="@color/stats_filter_text_selector"
-                        android:textSize="11sp" />
-
-                    <TextView
-                        android:id="@+id/btnFilterNew"
-                        android:layout_width="wrap_content"
-                        android:layout_height="28dp"
-                        android:layout_marginStart="6dp"
-                        android:background="@drawable/module_home_stats_filter_selector"
-                        android:gravity="center"
-                        android:onClick="@{() -> viewModel.selectNewWords()}"
-                        android:paddingStart="10dp"
-                        android:paddingEnd="10dp"
-                        android:text="@string/home_filter_new"
-                        android:textColor="@color/stats_filter_text_selector"
-                        android:textSize="11sp" />
-
-                    <TextView
-                        android:id="@+id/btnFilterReview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="28dp"
-                        android:layout_marginStart="6dp"
-                        android:background="@drawable/module_home_stats_filter_selector"
-                        android:gravity="center"
-                        android:onClick="@{() -> viewModel.selectReviewWords()}"
-                        android:paddingStart="10dp"
-                        android:paddingEnd="10dp"
-                        android:text="@string/home_filter_review"
-                        android:textColor="@color/stats_filter_text_selector"
-                        android:textSize="11sp" />
+                    <LinearLayout
+                        android:id="@+id/llWeekDurationBars"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/llWeekWordBars"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal" />
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="20dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/home_weekly_duration_bars"
-                    android:textColor="#0F172A"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <LinearLayout
-                    android:id="@+id/llWeekDurationBars"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal" />
-            </LinearLayout>
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
 </layout>

@@ -92,10 +92,6 @@ class FloatingReviewSettingsFragment : Fragment() {
         val switchAutoStart = view.findViewById<SwitchMaterial>(R.id.switchFloatingAutoStart)
         val seekCardOpacity = view.findViewById<SeekBar>(R.id.seekCardOpacity)
 
-        view.findViewById<View>(R.id.btnBack).setOnClickListener {
-            requireActivity().finish()
-        }
-
         rgSource.setOnCheckedChangeListener { _, checkedId ->
             if (ignoreViewUpdates) return@setOnCheckedChangeListener
             viewModel.onSourceTypeChanged(
