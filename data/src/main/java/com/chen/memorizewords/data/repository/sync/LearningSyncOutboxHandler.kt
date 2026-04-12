@@ -9,6 +9,7 @@ import com.chen.memorizewords.domain.model.floating.FloatingWordFieldConfig
 import com.chen.memorizewords.domain.model.floating.FloatingWordOrderType
 import com.chen.memorizewords.domain.model.floating.FloatingWordSettings
 import com.chen.memorizewords.domain.model.floating.FloatingWordSourceType
+import com.chen.memorizewords.domain.model.practice.AudioLoopPlaybackMode
 import com.chen.memorizewords.domain.model.practice.PracticeEntryType
 import com.chen.memorizewords.domain.model.practice.PracticeMode
 import com.chen.memorizewords.domain.model.practice.PracticeSessionRecord
@@ -72,8 +73,12 @@ class LearningSyncOutboxHandler @Inject constructor(
                         selectedBookId = payload.selectedBookId,
                         intervalSeconds = payload.intervalSeconds,
                         loopEnabled = payload.loopEnabled,
-                        playWordSpelling = payload.playWordSpelling,
-                        playChineseMeaning = payload.playChineseMeaning
+                        showPhonetic = payload.showPhonetic,
+                        showMeaning = payload.showMeaning,
+                        playbackMode = runCatching {
+                            AudioLoopPlaybackMode.valueOf(payload.playbackMode)
+                        }.getOrDefault(AudioLoopPlaybackMode.WORD_ONLY),
+                        playTimes = payload.playTimes.coerceAtLeast(1)
                     )
                 ).getOrThrow()
             }

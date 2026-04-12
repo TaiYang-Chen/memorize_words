@@ -2,8 +2,8 @@ package com.chen.memorizewords.feature.learning.ui.exam
 
 import android.os.SystemClock
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.domain.model.practice.ExamCategory
 import com.chen.memorizewords.domain.model.practice.ExamPracticeAnswerSubmission
 import com.chen.memorizewords.domain.model.practice.ExamPracticeSessionSubmission
@@ -66,7 +66,7 @@ class WordExamPracticeViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val examPracticeRepository: ExamPracticeRepository,
     private val practiceFacade: PracticeFacade
-) : ViewModel() {
+) : BaseViewModel() {
 
     private val wordId: Long = savedStateHandle.get<Long>(ARG_WORD_ID) ?: -1L
     private val fallbackWordText: String = savedStateHandle.get<String>(ARG_WORD_TEXT).orEmpty()

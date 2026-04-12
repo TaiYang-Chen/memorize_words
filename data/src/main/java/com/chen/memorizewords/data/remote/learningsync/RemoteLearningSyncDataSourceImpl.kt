@@ -10,6 +10,7 @@ import com.chen.memorizewords.domain.model.floating.FloatingWordFieldType
 import com.chen.memorizewords.domain.model.floating.FloatingWordOrderType
 import com.chen.memorizewords.domain.model.floating.FloatingWordSettings
 import com.chen.memorizewords.domain.model.floating.FloatingWordSourceType
+import com.chen.memorizewords.domain.model.practice.AudioLoopPlaybackMode
 import com.chen.memorizewords.domain.model.practice.PracticeSessionRecord
 import com.chen.memorizewords.domain.model.practice.PracticeSettings
 import com.chen.memorizewords.network.api.learningsync.FloatingDisplayRecordDto
@@ -48,8 +49,10 @@ class RemoteLearningSyncDataSourceImpl @Inject constructor(
                     selectedBookId = settings.selectedBookId,
                     intervalSeconds = settings.intervalSeconds,
                     loopEnabled = settings.loopEnabled,
-                    playWordSpelling = settings.playWordSpelling,
-                    playChineseMeaning = settings.playChineseMeaning,
+                    showPhonetic = settings.showPhonetic,
+                    showMeaning = settings.showMeaning,
+                    playbackMode = settings.playbackMode.name,
+                    playTimes = settings.playTimes.coerceAtLeast(1),
                     provider = LEGACY_BACKEND_DEFAULT_PROVIDER
                 )
             )
@@ -165,8 +168,11 @@ internal fun PracticeSettingsDto.toDomain(): PracticeSettings {
         selectedBookId = selectedBookId,
         intervalSeconds = intervalSeconds,
         loopEnabled = loopEnabled,
-        playWordSpelling = playWordSpelling,
-        playChineseMeaning = playChineseMeaning
+        showPhonetic = showPhonetic,
+        showMeaning = showMeaning,
+        playbackMode = runCatching { AudioLoopPlaybackMode.valueOf(playbackMode) }
+            .getOrDefault(AudioLoopPlaybackMode.WORD_ONLY),
+        playTimes = playTimes.coerceAtLeast(1)
     )
 }
 

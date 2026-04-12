@@ -1,7 +1,7 @@
 package com.chen.memorizewords.feature.learning.ui.practice
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.domain.model.words.word.Word
 import com.chen.memorizewords.domain.practice.PracticeWordProvider
@@ -39,7 +39,7 @@ class SpellingPracticeViewModel @Inject constructor(
     private val synthesizeSpeech: SynthesizeSpeechUseCase,
     private val wordProvider: PracticeWordProvider,
     private val resourceProvider: ResourceProvider
-) : ViewModel() {
+) : BaseViewModel() {
 
     private val sessionEngine = SpellingSessionEngine(resourceProvider)
     private val assetLoader by lazy(LazyThreadSafetyMode.NONE) {

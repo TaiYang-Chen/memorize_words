@@ -24,7 +24,8 @@ sealed interface SpeechTask {
     data class EvaluateShadowing(
         val referenceText: String,
         val audioInput: SpeechAudioInput,
-        val locale: String = "en-US"
+        val locale: String = "en-US",
+        val recordingMetadata: ShadowingRecordingMetadata = ShadowingRecordingMetadata()
     ) : SpeechTask {
         override val requiredCapability: SpeechCapability = SpeechCapability.SHADOWING_EVALUATION
     }

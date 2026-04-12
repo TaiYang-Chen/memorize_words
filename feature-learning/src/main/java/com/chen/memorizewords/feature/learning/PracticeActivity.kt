@@ -3,6 +3,7 @@ package com.chen.memorizewords.feature.learning
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.core.os.bundleOf
 import com.chen.memorizewords.domain.model.practice.PracticeEntryType
 import com.chen.memorizewords.domain.model.practice.PracticeMode
@@ -43,6 +44,10 @@ class PracticeActivity : AppCompatActivity() {
         practiceMode = intent.getStringExtra(EXTRA_PRACTICE_MODE)
             ?.let { runCatching { PracticeMode.valueOf(it) }.getOrNull() }
             ?: PracticeMode.LISTENING
+        binding.topAppBar.isVisible =
+            practiceMode != PracticeMode.LISTENING &&
+                practiceMode != PracticeMode.SHADOWING &&
+                practiceMode != PracticeMode.AUDIO_LOOP
         val selectedIds = intent.getLongArrayExtra(EXTRA_SELECTED_WORD_IDS)
         val randomCount = intent.getIntExtra(EXTRA_RANDOM_COUNT, 20)
         val entryType = intent.getStringExtra(EXTRA_ENTRY_TYPE)

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_learning_audio_loop_title">随身听</string>
+    <string name="feature_learning_audio_loop_empty_title">暂无可播放内容</string>
+    <string name="feature_learning_audio_loop_empty_hint">请先选择单词或确认当前词书里有可练习内容。</string>
+    <string name="feature_learning_audio_loop_progress">%1$d/%2$d</string>
+    <string name="feature_learning_audio_loop_status_empty">无内容</string>
+    <string name="feature_learning_audio_loop_status_waiting">等待中</string>
+    <string name="feature_learning_audio_loop_status_playing">播放中</string>
+    <string name="feature_learning_audio_loop_status_paused">暂停中</string>
+    <string name="feature_learning_audio_loop_repeat_progress">第 %1$d/%2$d 次</string>
+    <string name="feature_learning_audio_loop_repeat_idle">第 0/%1$d 次</string>
+    <string name="feature_learning_audio_loop_mode_word_only">仅单词</string>
+    <string name="feature_learning_audio_loop_mode_word_with_example">单词 + 例句</string>
+    <string name="feature_learning_audio_loop_settings_title">播放设置</string>
+    <string name="feature_learning_audio_loop_settings_mode_title">练习模式</string>
+    <string name="feature_learning_audio_loop_settings_play_times">播放次数</string>
+    <string name="feature_learning_audio_loop_settings_interval">播放间隔</string>
+    <string name="feature_learning_audio_loop_settings_interval_value">%1$d 秒</string>
+    <string name="feature_learning_audio_loop_settings_play_times_value">%1$d 次</string>
+    <string name="feature_learning_audio_loop_settings_loop">循环播放</string>
+    <string name="feature_learning_audio_loop_settings_phonetic">显示单词拼读</string>
+    <string name="feature_learning_audio_loop_settings_meaning">显示中文释义</string>
+    <string name="feature_learning_audio_loop_settings_save">保存</string>
+    <string name="feature_learning_audio_loop_playlist_title">播放列表</string>
+    <string name="feature_learning_audio_loop_playlist_current">当前播放</string>
+    <string name="feature_learning_audio_loop_action_playlist">播放列表</string>
+    <string name="feature_learning_audio_loop_action_previous">上一项</string>
+    <string name="feature_learning_audio_loop_action_next">下一项</string>
+    <string name="feature_learning_audio_loop_action_toggle">播放或暂停</string>
+    <string name="feature_learning_audio_loop_action_settings">打开设置</string>
+    <string name="feature_learning_audio_loop_audio_skipped">音频播放失败，已跳过：%1$s</string>
+    <string name="feature_learning_audio_loop_round_failed">本轮音频均播放失败，已停止播放</string>
+    <string name="feature_learning_audio_loop_supporting_word">%1$s</string>
+    <string name="feature_learning_audio_loop_supporting_example">%1$s</string>
+    <string name="feature_learning_audio_loop_supporting_example_translation">%1$s</string>
+</resources>

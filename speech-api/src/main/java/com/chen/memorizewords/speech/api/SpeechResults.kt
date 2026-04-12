@@ -41,7 +41,14 @@ data class ShadowingEvaluationResult(
     val totalScore: Int,
     val pronunciationScore: Int,
     val fluencyScore: Int,
-    val recognizedText: String
+    val recognizedText: String,
+    val intonationScore: Int? = null,
+    val stressScore: Int? = null,
+    val speedScore: Int? = null,
+    val audioIssues: List<ShadowingAudioIssue> = emptyList(),
+    val analysisSource: ShadowingAnalysisSource = ShadowingAnalysisSource.PROVIDER_ONLY,
+    val detailSourceNote: String? = null,
+    val guidanceText: String? = null
 ) : SpeechSuccess
 
 data class DefaultSpeechFailureResult(

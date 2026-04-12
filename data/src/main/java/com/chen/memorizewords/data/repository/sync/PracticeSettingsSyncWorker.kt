@@ -24,17 +24,17 @@ class PracticeSettingsSyncWorker(
         val selectedBookId = inputData.getLong(SyncWorkConstants.KEY_PRACTICE_SELECTED_BOOK_ID, 0L)
         val intervalSeconds = inputData.getInt(SyncWorkConstants.KEY_PRACTICE_INTERVAL_SECONDS, 0)
         val loopEnabled = inputData.getBoolean(SyncWorkConstants.KEY_PRACTICE_LOOP_ENABLED, true)
-        val playWordSpelling =
-            inputData.getBoolean(SyncWorkConstants.KEY_PRACTICE_PLAY_WORD_SPELLING, true)
-        val playChineseMeaning =
-            inputData.getBoolean(SyncWorkConstants.KEY_PRACTICE_PLAY_CHINESE_MEANING, false)
+        val showPhonetic =
+            inputData.getBoolean(SyncWorkConstants.KEY_PRACTICE_SHOW_PHONETIC, true)
+        val showMeaning =
+            inputData.getBoolean(SyncWorkConstants.KEY_PRACTICE_SHOW_MEANING, false)
 
         val settings = PracticeSettings(
             selectedBookId = selectedBookId,
-            intervalSeconds = intervalSeconds.coerceAtLeast(1),
+            intervalSeconds = intervalSeconds.coerceAtLeast(0),
             loopEnabled = loopEnabled,
-            playWordSpelling = playWordSpelling,
-            playChineseMeaning = playChineseMeaning
+            showPhonetic = showPhonetic,
+            showMeaning = showMeaning
         )
 
         return try {

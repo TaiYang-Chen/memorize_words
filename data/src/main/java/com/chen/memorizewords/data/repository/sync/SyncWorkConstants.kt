@@ -99,8 +99,8 @@ object SyncWorkConstants {
     const val KEY_PRACTICE_SELECTED_BOOK_ID = "practice_selected_book_id"
     const val KEY_PRACTICE_INTERVAL_SECONDS = "practice_interval_seconds"
     const val KEY_PRACTICE_LOOP_ENABLED = "practice_loop_enabled"
-    const val KEY_PRACTICE_PLAY_WORD_SPELLING = "practice_play_word_spelling"
-    const val KEY_PRACTICE_PLAY_CHINESE_MEANING = "practice_play_chinese_meaning"
+    const val KEY_PRACTICE_SHOW_PHONETIC = "practice_show_phonetic"
+    const val KEY_PRACTICE_SHOW_MEANING = "practice_show_meaning"
 
     const val TAG_PRACTICE_DURATION_SYNC = "practice_duration_sync"
     private const val WORK_PRACTICE_DURATION_SYNC_PREFIX = "work_practice_duration_sync_"

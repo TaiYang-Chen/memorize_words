@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="practice_shadowing_title_compare">跟读对比</string>
+    <string name="practice_shadowing_phonetic_format">美 [%1$s]</string>
+    <string name="practice_shadowing_empty_phonetic">暂无音标</string>
+    <string name="practice_shadowing_meaning_format">%1$s %2$s</string>
+    <string name="practice_shadowing_empty_meaning">暂无释义</string>
+    <string name="practice_shadowing_guide_title">发音指导</string>
+    <string name="practice_shadowing_dialog_recognized">识别结果：%1$s</string>
+
+    <string name="practice_shadowing_status_waiting_title">准备开始跟读</string>
+    <string name="practice_shadowing_status_waiting_subtitle">先听原声，再按住节奏完整跟读一遍。</string>
+    <string name="practice_shadowing_status_retry_subtitle">上一条录音已保留，可以继续重录对比进步。</string>
+    <string name="practice_shadowing_status_recording_title">正在录音...</string>
+    <string name="practice_shadowing_status_recording_subtitle">保持安静环境，跟着单词原声完整读完。</string>
+    <string name="practice_shadowing_status_evaluating_title">跟读对比中...</string>
+    <string name="practice_shadowing_status_evaluating_subtitle">录音已完成，正在评分并准备自动回放。</string>
+    <string name="practice_shadowing_status_feedback_title">跟读对比完成</string>
+    <string name="practice_shadowing_finish_title">本轮跟读已完成</string>
+    <string name="practice_shadowing_finish_subtitle">可以结束本轮训练，或者返回继续查看结果。</string>
+    <string name="practice_shadowing_finish_action">完成</string>
+
+    <string name="practice_shadowing_feedback_waiting_title">先听一遍，再开始录音</string>
+    <string name="practice_shadowing_feedback_waiting_body">录音完成后会自动播放原声和你的发音，方便直接对比。</string>
+    <string name="practice_shadowing_feedback_excellent_title">发音很稳</string>
+    <string name="practice_shadowing_feedback_good_title">整体不错</string>
+    <string name="practice_shadowing_feedback_retry_title">再试一次会更好</string>
+    <string name="practice_shadowing_feedback_recognized_mismatch">识别结果和目标单词还有差距，注意把词尾和重音收紧一些：%1$s</string>
+
+    <string name="practice_shadowing_guidance_excellent">节奏和清晰度都不错，可以继续保持现在的语速。</string>
+    <string name="practice_shadowing_guidance_pron_fluency">先放慢一点，把音节读清楚，再连成完整的一次发音。</string>
+    <string name="practice_shadowing_guidance_pronunciation">发音清晰度还可以再加强，建议对照音标把重音位置读得更明确。</string>
+    <string name="practice_shadowing_guidance_fluency">单词基本读对了，再把停顿缩短一点，让整次发音更连贯。</string>
+    <string name="practice_shadowing_guidance_good">主体发音已经接近目标，可以再把节奏和气口收得更自然。</string>
+
+    <string name="practice_shadowing_summary_format">已练 %1$d/%2$d · 录音 %3$d 次 · 达标 %4$d 个</string>
+    <string name="practice_shadowing_pending_review_format">待复习 %1$d 个</string>
+    <string name="practice_shadowing_score_brief_format">%1$d分</string>
+    <string name="practice_shadowing_score_detail_format">总分 %1$d · 发音 %2$d · 流利度 %3$d</string>
+    <string name="practice_shadowing_score_breakdown_format">语调 %1$d · 重音 %2$d · 语速 %3$d</string>
+    <string name="practice_shadowing_detected_issues_format">检测：%1$s</string>
+    <string name="practice_shadowing_detail_note_placeholder">语调/重音/语速与静音噪音检测当前为本地占位分析，后续可替换为服务端评测 API。</string>
+    <string name="practice_shadowing_issue_low_volume">录音音量偏低</string>
+    <string name="practice_shadowing_issue_mostly_silent">有效人声偏少</string>
+    <string name="practice_shadowing_issue_too_fast">语速偏快</string>
+    <string name="practice_shadowing_issue_too_slow">语速偏慢</string>
+    <string name="practice_shadowing_issue_environment_noise">环境底噪偏高</string>
+    <string name="practice_shadowing_reviewing_tag">复习中</string>
+    <string name="practice_shadowing_review_flagged_tag">已标记复习</string>
+    <string name="practice_shadowing_recognized_format">我的发音：%1$s</string>
+    <string name="practice_shadowing_history_title_format">第%1$d次</string>
+    <string name="practice_shadowing_history_no_score">未评分</string>
+
+    <string name="practice_shadowing_record">开始录音</string>
+    <string name="practice_shadowing_stop_record">结束录音</string>
+    <string name="practice_shadowing_rerecord">重新录音</string>
+    <string name="practice_shadowing_enable_permission">开启权限</string>
+    <string name="practice_shadowing_reference_audio">单词原声</string>
+    <string name="practice_shadowing_my_audio">我的发音</string>
+    <string name="practice_shadowing_quota_text">今日跟读单词数已用完</string>
+    <string name="practice_shadowing_quota_action">立即解锁</string>
+    <string name="practice_shadowing_open_settings">请到系统设置中开启麦克风权限</string>
+    <string name="practice_shadowing_permission_blocked">麦克风权限未开启</string>
+    <string name="practice_shadowing_recorder_failed">录音启动失败，请稍后重试</string>
+    <string name="practice_shadowing_recording_missing">录音文件生成失败</string>
+    <string name="practice_shadowing_wait_for_feedback">正在评分，请稍候</string>
+    <string name="practice_shadowing_unlock_soon">解锁能力稍后接入</string>
+    <string name="practice_shadowing_waveform_content">跟读音频波形</string>
+</resources>

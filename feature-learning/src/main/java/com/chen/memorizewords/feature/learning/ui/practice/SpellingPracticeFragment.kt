@@ -5,36 +5,32 @@ import android.graphics.Color
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.GridLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.chen.memorizewords.core.ui.fragment.BaseVmDbFragment
 import com.chen.memorizewords.feature.learning.PracticeActivity
 import com.chen.memorizewords.feature.learning.R
 import com.chen.memorizewords.feature.learning.databinding.FragmentPracticeSpellingBinding
-import com.chen.memorizewords.speech.api.SpeechAudioOutput
 import com.chen.memorizewords.feature.learning.ui.speech.setSpeechDataSource
+import com.chen.memorizewords.speech.api.SpeechAudioOutput
 import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SpellingPracticeFragment : Fragment() {
+class SpellingPracticeFragment :
+    BaseVmDbFragment<SpellingPracticeViewModel, FragmentPracticeSpellingBinding>() {
 
-    private var _binding: FragmentPracticeSpellingBinding? = null
-    private val binding get() = _binding!!
-    private val viewModel: SpellingPracticeViewModel by viewModels()
+    override val viewModel: SpellingPracticeViewModel by viewModels()
     private val sessionViewModel: PracticeSessionViewModel by activityViewModels()
 
     private var mediaPlayer: MediaPlayer? = null
@@ -44,13 +40,26 @@ class SpellingPracticeFragment : Fragment() {
     private val letterButtons = mutableListOf<MaterialButton>()
     private var deleteButton: MaterialButton? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentPracticeSpellingBinding.inflate(inflater, container, false)
-        return binding.root
+    override fun setLayout(): Int = R.layout.fragment_practice_spelling
+
+    override fun initView(savedInstanceState: Bundle?) {
+        databind.btnSubmit.setOnClickListener { viewModel.onSubmit() }
+        databind.btnNextWord.setOnClickListener { viewModel.nextWord() }
+        databind.btnHint.setOnClickListener { viewModel.onHint() }
+        databind.btnClearHandwriting.setOnClickListener { databind.handwritingView.clearCanvas() }
+        databind.btnPlayAudio.setOnClickListener { playAudio(showMissingAudioToast = true) }
+        databind.etAnswer.doAfterTextChangedCompat { text ->
+            if (!isUpdatingAnswerText) {
+                viewModel.onKeyboardInputChanged(text)
+            }
+        }
+        val selectedIds = arguments?.getLongArray(PracticeActivity.ARG_SELECTED_WORD_IDS)
+        val randomCount = arguments?.getInt(PracticeActivity.ARG_RANDOM_COUNT, 20) ?: 20
+        viewModel.loadWithSelection(selectedIds, randomCount)
+    }
+
+    override fun createObserver() {
+        observeUi()
     }
 
     override fun onDestroyView() {
@@ -58,26 +67,7 @@ class SpellingPracticeFragment : Fragment() {
         slotViews.clear()
         letterButtons.clear()
         deleteButton = null
-        _binding = null
         super.onDestroyView()
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.btnSubmit.setOnClickListener { viewModel.onSubmit() }
-        binding.btnNextWord.setOnClickListener { viewModel.nextWord() }
-        binding.btnHint.setOnClickListener { viewModel.onHint() }
-        binding.btnClearHandwriting.setOnClickListener { binding.handwritingView.clearCanvas() }
-        binding.btnPlayAudio.setOnClickListener { playAudio(showMissingAudioToast = true) }
-        binding.etAnswer.doAfterTextChangedCompat { text ->
-            if (!isUpdatingAnswerText) {
-                viewModel.onKeyboardInputChanged(text)
-            }
-        }
-        observeUi()
-        val selectedIds = arguments?.getLongArray(PracticeActivity.ARG_SELECTED_WORD_IDS)
-        val randomCount = arguments?.getInt(PracticeActivity.ARG_RANDOM_COUNT, 20) ?: 20
-        viewModel.loadWithSelection(selectedIds, randomCount)
     }
 
     private fun playAudio(showMissingAudioToast: Boolean) {
@@ -87,7 +77,7 @@ class SpellingPracticeFragment : Fragment() {
                 viewLifecycleOwner.lifecycleScope.launch {
                     val retriedOutput = viewModel.ensureCurrentSpeech()?.audioOutput
                         ?: viewModel.uiState.value.speech?.audioOutput
-                    if (retriedOutput != null && context != null && _binding != null) {
+                    if (retriedOutput != null && context != null && view != null) {
                         playResolvedAudio(retriedOutput, showMissingAudioToast = true)
                     } else {
                         context?.let {
@@ -150,28 +140,29 @@ class SpellingPracticeFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     viewModel.uiState.collect { state ->
-                        binding.tvMeaning.text = state.meaning
-                        binding.tvWordLength.text = state.wordLengthHint
-                        binding.tvProgress.text = state.progressText
-                        binding.progressPractice.max = state.progressMax.coerceAtLeast(1)
-                        binding.progressPractice.progress = state.progressValue.coerceAtLeast(0)
-                        binding.tvResult.isVisible = state.feedback.isNotBlank()
-                        binding.tvResult.text = state.feedback
-                        binding.layoutSummary.isVisible = state.isCompleted && state.summaryText.isNotBlank()
-                        binding.tvSummary.text = state.summaryText
-                        binding.btnSubmit.isEnabled = state.canSubmit
-                        binding.btnNextWord.isEnabled = state.canNext
-                        binding.btnHint.isEnabled = state.canHint
-                        binding.etAnswer.isEnabled = state.canEditAnswer
-                        binding.inputAnswerLayout.isEnabled = state.canEditAnswer
-                        binding.btnNextWord.text = getString(
+                        databind.tvMeaning.text = state.meaning
+                        databind.tvWordLength.text = state.wordLengthHint
+                        databind.tvProgress.text = state.progressText
+                        databind.progressPractice.max = state.progressMax.coerceAtLeast(1)
+                        databind.progressPractice.progress = state.progressValue.coerceAtLeast(0)
+                        databind.tvResult.isVisible = state.feedback.isNotBlank()
+                        databind.tvResult.text = state.feedback
+                        databind.layoutSummary.isVisible =
+                            state.isCompleted && state.summaryText.isNotBlank()
+                        databind.tvSummary.text = state.summaryText
+                        databind.btnSubmit.isEnabled = state.canSubmit
+                        databind.btnNextWord.isEnabled = state.canNext
+                        databind.btnHint.isEnabled = state.canHint
+                        databind.etAnswer.isEnabled = state.canEditAnswer
+                        databind.inputAnswerLayout.isEnabled = state.canEditAnswer
+                        databind.btnNextWord.text = getString(
                             if (state.isCompleted) {
                                 R.string.practice_completed
                             } else {
                                 R.string.practice_next_word
                             }
                         )
-                        binding.tvAttemptStatus.text = getString(
+                        databind.tvAttemptStatus.text = getString(
                             R.string.practice_spelling_attempt_status,
                             state.attemptCount,
                             state.hintCount
@@ -201,15 +192,15 @@ class SpellingPracticeFragment : Fragment() {
     }
 
     private fun syncAnswerInput(answer: String) {
-        if (binding.etAnswer.text?.toString() == answer) return
+        if (databind.etAnswer.text?.toString() == answer) return
         isUpdatingAnswerText = true
-        binding.etAnswer.setText(answer)
-        binding.etAnswer.setSelection(binding.etAnswer.text?.length ?: 0)
+        databind.etAnswer.setText(answer)
+        databind.etAnswer.setSelection(databind.etAnswer.text?.length ?: 0)
         isUpdatingAnswerText = false
     }
 
     private fun renderSlots(slots: List<SpellingPracticeViewModel.AnswerSlot>) {
-        val container = binding.layoutSlots
+        val container = databind.layoutSlots
         if (slots.isEmpty()) {
             container.removeAllViews()
             slotViews.clear()
@@ -241,8 +232,11 @@ class SpellingPracticeFragment : Fragment() {
             )
             view.background = ContextCompat.getDrawable(
                 requireContext(),
-                if (slot.isHintLocked) R.drawable.module_learning_bg_practice_handwriting
-                else R.drawable.module_learning_bg_practice_slot
+                if (slot.isHintLocked) {
+                    R.drawable.module_learning_bg_practice_handwriting
+                } else {
+                    R.drawable.module_learning_bg_practice_slot
+                }
             )
         }
     }
@@ -253,18 +247,19 @@ class SpellingPracticeFragment : Fragment() {
                 button.text?.toString() != item.letter.toString()
             }
         if (needsRebuild) {
-            binding.gridLetters.removeAllViews()
+            databind.gridLetters.removeAllViews()
             letterButtons.clear()
             letters.forEach { item ->
                 val button = createLetterButton(item.letter.toString())
-                binding.gridLetters.addView(button, createGridLayoutParams())
+                databind.gridLetters.addView(button, createGridLayoutParams())
                 letterButtons += button
             }
             deleteButton = createLetterButton("").also { button ->
-                button.icon = ContextCompat.getDrawable(requireContext(), R.drawable.module_learning_clear)
+                button.icon =
+                    ContextCompat.getDrawable(requireContext(), R.drawable.module_learning_clear)
                 button.iconTint = ColorStateList.valueOf(Color.parseColor("#64748B"))
                 button.iconPadding = 0
-                binding.gridLetters.addView(button, createGridLayoutParams())
+                databind.gridLetters.addView(button, createGridLayoutParams())
             }
         }
         letters.forEachIndexed { index, item ->

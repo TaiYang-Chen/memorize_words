@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="feature_learning_shadowing_bg">#FFFFFF</color>
+    <color name="feature_learning_shadowing_text_primary">#101114</color>
+    <color name="feature_learning_shadowing_text_secondary">#737882</color>
+    <color name="feature_learning_shadowing_chip_bg">#F5F5F3</color>
+    <color name="feature_learning_shadowing_chip_text">#616771</color>
+    <color name="feature_learning_shadowing_card_bg">#D5D5D2</color>
+    <color name="feature_learning_shadowing_banner_bg">#F4F4F1</color>
+    <color name="feature_learning_shadowing_banner_action_bg">#2A2A2A</color>
+    <color name="feature_learning_shadowing_banner_action_text">#FFE100</color>
+    <color name="feature_learning_shadowing_record_bg">#FFD900</color>
+    <color name="feature_learning_shadowing_wave_idle">#1C1C1C</color>
+    <color name="feature_learning_shadowing_wave_active">#4A4A4A</color>
+    <color name="feature_learning_shadowing_wave_live">#111111</color>
+    <color name="feature_learning_shadowing_feedback_bg">#F7F7F5</color>
+    <color name="feature_learning_shadowing_feedback_score">#111111</color>
+    <color name="feature_learning_shadowing_feedback_pass">#1F9D57</color>
+    <color name="feature_learning_shadowing_feedback_retry">#D97706</color>
+    <color name="feature_learning_shadowing_history_bg">#F1F2EE</color>
+    <color name="feature_learning_shadowing_disabled">#B6BBC3</color>
+</resources>

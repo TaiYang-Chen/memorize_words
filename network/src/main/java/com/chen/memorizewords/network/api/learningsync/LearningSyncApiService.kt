@@ -16,8 +16,10 @@ data class PracticeSettingsSyncRequest(
     val selectedBookId: Long,
     val intervalSeconds: Int,
     val loopEnabled: Boolean,
-    val playWordSpelling: Boolean,
-    val playChineseMeaning: Boolean,
+    val showPhonetic: Boolean,
+    val showMeaning: Boolean,
+    val playbackMode: String = "WORD_ONLY",
+    val playTimes: Int = 1,
     val provider: String
 )
 
@@ -26,8 +28,10 @@ data class PracticeSettingsDto(
     val selectedBookId: Long,
     val intervalSeconds: Int,
     val loopEnabled: Boolean,
-    val playWordSpelling: Boolean,
-    val playChineseMeaning: Boolean,
+    val showPhonetic: Boolean,
+    val showMeaning: Boolean,
+    val playbackMode: String = "WORD_ONLY",
+    val playTimes: Int = 1,
     val provider: String
 )
 

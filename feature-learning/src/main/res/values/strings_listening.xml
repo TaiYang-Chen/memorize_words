@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="practice_listening_mode_random">随机模式</string>
+    <string name="practice_listening_mode_random_desc">每题随机切换拼写题和释义选择题，降低疲劳感。</string>
+    <string name="practice_listening_mode_spelling">拼写模式</string>
+    <string name="practice_listening_mode_spelling_desc">所有题目均为听音拼写，重点训练单词书写能力。</string>
+    <string name="practice_listening_mode_meaning">释义选择模式</string>
+    <string name="practice_listening_mode_meaning_desc">所有题目均为听音辨义，重点训练释义理解能力。</string>
+    <string name="practice_listening_mode_mixed">混合模式</string>
+    <string name="practice_listening_mode_mixed_desc">拼写与释义选择交替出现，保持练习节奏和新鲜感。</string>
+    <string name="practice_listening_mode_advanced">进阶复习模式</string>
+    <string name="practice_listening_mode_advanced_desc">优先推送未掌握和易错单词，并提升高频错词的复习强度。</string>
+
+    <string name="practice_listening_select_mode_first">开始前先选择本轮练习模式</string>
+    <string name="practice_listening_select_mode_hint">右上角可以随时切换模式，切换后会重新开始当前听力练习。</string>
+    <string name="practice_listening_loading">正在生成本轮听力练习…</string>
+    <string name="practice_listening_empty_report">当前没有可练习的单词，换一组再试试。</string>
+
+    <string name="practice_listening_progress_format">%1$d/%2$d</string>
+    <string name="practice_listening_review_progress_format">待复习 %1$d / %2$d</string>
+    <string name="practice_listening_review_badge">复习中 · 连对 %1$d/%2$d</string>
+    <string name="practice_listening_new_word_badge">新词题</string>
+
+    <string name="practice_listening_prompt_meaning">从下列 4 个选项中选择正确的释义</string>
+    <string name="practice_listening_prompt_spelling">请根据发音拼写出正确单词</string>
+    <string name="practice_listening_prompt_spelling_hint">输入时不区分大小写，可多次重听后再提交。</string>
+
+    <string name="practice_listening_feedback_reveal_answer">已查看答案，先学习后再回来复习</string>
+    <string name="practice_listening_feedback_review_progress">继续保持，复习进度 %1$d/%2$d</string>
+    <string name="practice_listening_feedback_skipped">本题已跳过，稍后会重新复习</string>
+
+    <string name="practice_listening_study_status_first_wrong">首次错误已加入复习队列，需要连续答对 %2$d 次。当前进度 %1$d/%2$d</string>
+    <string name="practice_listening_study_status_review">复习题答错后已重置进度，需要重新连续答对 %2$d 次。当前进度 %1$d/%2$d</string>
+    <string name="practice_listening_continue_practice">继续练习</string>
+
+    <string name="practice_listening_report_title">本轮听力练习报告</string>
+    <string name="practice_listening_report_hint">所有单词已完成当前轮次练习，下面是这次训练的结果概览。</string>
+    <string name="practice_listening_report_accuracy">正确率 %1$d%%</string>
+    <string name="practice_listening_report_summary">完成 %1$d/%2$d 个单词，累计作答 %3$d 次，答对 %4$d 次。</string>
+
+    <string name="practice_listening_phonetic_empty">暂无音标</string>
+    <string name="practice_listening_phonetic_chip">美音 | [%1$s]</string>
+
+    <string name="practice_listening_settings_title">听力练习设置</string>
+    <string name="practice_listening_settings_message">切换模式会重新开始当前这一轮练习。</string>
+    <string name="practice_listening_settings_confirm">切换模式</string>
+    <string name="practice_listening_settings_start">开始练习</string>
+    <string name="practice_listening_settings_cancel">暂不切换</string>
+
+    <string name="practice_listening_action_reveal">查看答案</string>
+    <string name="practice_listening_action_skip">跳过此题</string>
+    <string name="practice_listening_submit">提交答案</string>
+    <string name="practice_listening_input_hint">请输入听到的单词</string>
+
+    <string name="practice_listening_report_metric_reviewed">已进入复习</string>
+    <string name="practice_listening_report_metric_skipped">跳过次数</string>
+    <string name="practice_listening_report_metric_unfinished">未完成复习目标</string>
+    <string name="practice_listening_report_metric_none">无</string>
+    <string name="practice_listening_report_reviewed_words">本轮重点复习单词</string>
+</resources>

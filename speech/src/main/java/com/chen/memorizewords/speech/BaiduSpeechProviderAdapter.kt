@@ -1,5 +1,13 @@
 package com.chen.memorizewords.speech
 
+import com.chen.memorizewords.network.api.practice.PracticeSpeechRequest
+import com.chen.memorizewords.network.api.practice.ShadowingAudioIssueDto
+import com.chen.memorizewords.network.api.practice.ShadowingEvaluateResponseDto
+import com.chen.memorizewords.network.util.NetworkResult
+import com.chen.memorizewords.speech.api.ShadowingAnalysisSource
+import com.chen.memorizewords.speech.api.ShadowingAudioIssue
+import com.chen.memorizewords.speech.api.ShadowingAudioIssueSeverity
+import com.chen.memorizewords.speech.api.ShadowingAudioIssueType
 import com.chen.memorizewords.speech.api.ShadowingEvaluationResult
 import com.chen.memorizewords.speech.api.SentenceAudioResult
 import com.chen.memorizewords.speech.api.SpeechAudioInput
@@ -19,7 +27,8 @@ class BaiduSpeechProviderAdapter @Inject constructor(
     private val speechCacheStore: SpeechCacheStore,
     private val ttsClient: BaiduTtsClient,
     private val shadowingClient: BaiduShadowingClient,
-    private val shadowingScorer: BaiduShadowingScorer
+    private val shadowingScorer: BaiduShadowingScorer,
+    private val practiceSpeechRequest: PracticeSpeechRequest
 ) : SpeechProviderAdapter {
 
     override val provider: SpeechProviderType = SpeechProviderType.BAIDU
@@ -121,6 +130,17 @@ class BaiduSpeechProviderAdapter @Inject constructor(
                 )
             }
         }
+        val remoteResult = practiceSpeechRequest.evaluateShadowing(
+            word = task.referenceText,
+            provider = provider.name,
+            audioFilePath = normalizedInput.filePath
+        )
+        if (remoteResult is NetworkResult.Success) {
+            return remoteResult.data.toSpeechResult(
+                provider = provider,
+                traceId = traceId
+            )
+        }
         return runCatching {
             val recognized = shadowingClient.recognize(
                 audioInput = normalizedInput,
@@ -128,7 +148,8 @@ class BaiduSpeechProviderAdapter @Inject constructor(
             )
             val scores = shadowingScorer.score(
                 referenceText = task.referenceText,
-                recognizedText = recognized.recognizedText
+                recognizedText = recognized.recognizedText,
+                recordingMetadata = task.recordingMetadata
             )
             ShadowingEvaluationResult(
                 provider = provider,
@@ -136,7 +157,14 @@ class BaiduSpeechProviderAdapter @Inject constructor(
                 totalScore = scores.totalScore,
                 pronunciationScore = scores.pronunciationScore,
                 fluencyScore = scores.fluencyScore,
-                recognizedText = recognized.recognizedText
+                recognizedText = recognized.recognizedText,
+                intonationScore = scores.intonationScore,
+                stressScore = scores.stressScore,
+                speedScore = scores.speedScore,
+                audioIssues = scores.audioIssues,
+                analysisSource = scores.analysisSource,
+                detailSourceNote = scores.detailSourceNote,
+                guidanceText = null
             )
         }.getOrElse { error ->
             mapError(traceId, error)
@@ -176,4 +204,53 @@ class BaiduSpeechProviderAdapter @Inject constructor(
             )
         }
     }
+}
+
+private fun ShadowingEvaluateResponseDto.toSpeechResult(
+    provider: SpeechProviderType,
+    traceId: String
+): ShadowingEvaluationResult {
+    return ShadowingEvaluationResult(
+        provider = provider,
+        traceId = traceId,
+        totalScore = totalScore.coerceIn(0, 100),
+        pronunciationScore = pronunciationScore.coerceIn(0, 100),
+        fluencyScore = fluencyScore.coerceIn(0, 100),
+        recognizedText = recognizedText,
+        intonationScore = intonationScore?.coerceIn(0, 100),
+        stressScore = stressScore?.coerceIn(0, 100),
+        speedScore = speedScore?.coerceIn(0, 100),
+        audioIssues = audioIssues.orEmpty().mapNotNull { it.toDomainIssue() },
+        analysisSource = analysisSource.toAnalysisSource(),
+        detailSourceNote = detailSourceNote,
+        guidanceText = guidanceText
+    )
+}
+
+private fun String?.toAnalysisSource(): ShadowingAnalysisSource {
+    return when (this?.trim()?.uppercase()) {
+        ShadowingAnalysisSource.LOCAL_PLACEHOLDER.name -> ShadowingAnalysisSource.LOCAL_PLACEHOLDER
+        ShadowingAnalysisSource.PROVIDER_PLUS_LOCAL.name -> ShadowingAnalysisSource.PROVIDER_PLUS_LOCAL
+        else -> ShadowingAnalysisSource.PROVIDER_ONLY
+    }
+}
+
+private fun ShadowingAudioIssueDto.toDomainIssue(): ShadowingAudioIssue? {
+    val issueType = when (type?.trim()?.uppercase()) {
+        ShadowingAudioIssueType.LOW_VOLUME.name -> ShadowingAudioIssueType.LOW_VOLUME
+        ShadowingAudioIssueType.MOSTLY_SILENT.name -> ShadowingAudioIssueType.MOSTLY_SILENT
+        ShadowingAudioIssueType.TOO_FAST.name -> ShadowingAudioIssueType.TOO_FAST
+        ShadowingAudioIssueType.TOO_SLOW.name -> ShadowingAudioIssueType.TOO_SLOW
+        ShadowingAudioIssueType.ENVIRONMENT_NOISE.name -> ShadowingAudioIssueType.ENVIRONMENT_NOISE
+        else -> null
+    } ?: return null
+    val issueSeverity = when (severity?.trim()?.uppercase()) {
+        ShadowingAudioIssueSeverity.WARNING.name -> ShadowingAudioIssueSeverity.WARNING
+        else -> ShadowingAudioIssueSeverity.INFO
+    }
+    return ShadowingAudioIssue(
+        type = issueType,
+        severity = issueSeverity,
+        message = message?.takeIf { it.isNotBlank() }
+    )
 }

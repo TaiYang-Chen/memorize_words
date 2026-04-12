@@ -3,16 +3,12 @@ package com.chen.memorizewords.feature.floatingreview.ui.settings
 import android.app.Activity
 import android.os.Bundle
 import android.provider.Settings
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.SeekBar
 import android.widget.RadioGroup
+import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
-import com.chen.memorizewords.core.navigation.FloatingWordActions
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -20,23 +16,27 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.chen.memorizewords.core.navigation.FloatingWordActions
 import com.chen.memorizewords.core.navigation.FloatingWordEntry
 import com.chen.memorizewords.core.navigation.PracticeEntry
+import com.chen.memorizewords.core.ui.fragment.BaseVmDbFragment
 import com.chen.memorizewords.core.ui.vm.UiEvent
 import com.chen.memorizewords.domain.model.floating.FloatingWordFieldType
 import com.chen.memorizewords.domain.model.floating.FloatingWordOrderType
 import com.chen.memorizewords.domain.model.floating.FloatingWordSettings
 import com.chen.memorizewords.domain.model.floating.FloatingWordSourceType
 import com.chen.memorizewords.feature.floatingreview.R
+import com.chen.memorizewords.feature.floatingreview.databinding.ModuleFloatingReviewFragmentSettingsBinding
 import com.google.android.material.switchmaterial.SwitchMaterial
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class FloatingReviewSettingsFragment : Fragment() {
+class FloatingReviewSettingsFragment :
+    BaseVmDbFragment<FloatingReviewSettingsViewModel, ModuleFloatingReviewFragmentSettingsBinding>() {
 
-    private val viewModel: FloatingReviewSettingsViewModel by lazy {
+    override val viewModel: FloatingReviewSettingsViewModel by lazy {
         ViewModelProvider(this)[FloatingReviewSettingsViewModel::class.java]
     }
 
@@ -62,17 +62,30 @@ class FloatingReviewSettingsFragment : Fragment() {
         viewModel.onSelectedWordIdsChanged(ids)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return inflater.inflate(R.layout.module_floating_review_fragment_settings, container, false)
+    override fun setLayout(): Int = R.layout.module_floating_review_fragment_settings
+
+    override fun initView(savedInstanceState: Bundle?) {
+        databind.viewModel = viewModel
+        databind.lifecycleOwner = viewLifecycleOwner
+        bindView(databind.root)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        bindView(view)
-        collectState()
+    override fun createObserver() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.settings.collect(::renderSettings)
+            }
+        }
+    }
+
+    override fun onNavigationRoute(event: UiEvent.Navigation.Route) {
+        val target =
+            event.target as? FloatingReviewSettingsViewModel.Route.DispatchFloatingAction ?: return
+        if (target.action == FloatingWordActions.ACTION_PREVIEW_CARD) {
+            ensureCardOpacityPreview()
+        } else {
+            floatingWordEntry.dispatchServiceAction(requireContext(), target.action)
+        }
     }
 
     override fun onStop() {
@@ -134,29 +147,6 @@ class FloatingReviewSettingsFragment : Fragment() {
         }
 
         setupFieldConfigs(view)
-    }
-
-    private fun collectState() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    viewModel.settings.collect(::renderSettings)
-                }
-                launch {
-                    viewModel.uiEvent.collect { event ->
-                        val route = event as? UiEvent.Navigation.Route ?: return@collect
-                        val target =
-                            route.target as? FloatingReviewSettingsViewModel.Route.DispatchFloatingAction
-                                ?: return@collect
-                        if (target.action == FloatingWordActions.ACTION_PREVIEW_CARD) {
-                            ensureCardOpacityPreview()
-                        } else {
-                            floatingWordEntry.dispatchServiceAction(requireContext(), target.action)
-                        }
-                    }
-                }
-            }
-        }
     }
 
     private fun renderSettings(updated: FloatingWordSettings) {

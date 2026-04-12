@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
+import androidx.lifecycle.ViewModelProvider
+import com.chen.memorizewords.domain.model.practice.AudioLoopPlaybackMode
 import com.chen.memorizewords.domain.model.practice.PracticeSettings
+import com.chen.memorizewords.feature.learning.R
 import com.chen.memorizewords.feature.learning.databinding.DialogPracticeAudioLoopSettingsBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
@@ -13,14 +15,20 @@ class AudioLoopSettingsDialogFragment : BottomSheetDialogFragment() {
 
     companion object {
         const val TAG = "audio_loop_settings_dialog"
+        private const val MIN_PLAY_TIMES = 1
+        private const val MAX_PLAY_TIMES = 10
+        private const val MIN_INTERVAL_SECONDS = 0
+        private const val MAX_INTERVAL_SECONDS = 10
     }
 
     private var _binding: DialogPracticeAudioLoopSettingsBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: AudioLoopPracticeViewModel by lazy {
-        androidx.lifecycle.ViewModelProvider(requireActivity())[AudioLoopPracticeViewModel::class.java]
+        ViewModelProvider(requireParentFragment())[AudioLoopPracticeViewModel::class.java]
     }
+
+    private var draftSettings: PracticeSettings = PracticeSettings()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,48 +46,84 @@ class AudioLoopSettingsDialogFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val state = viewModel.uiState.value
-        val settings = state.settings
-        val bookItems = mutableListOf(0L to "当前词书")
-        bookItems.addAll(state.books.map { it.bookId to it.title })
+        draftSettings = viewModel.uiState.value.persistedSettings
+        bindActions()
+        renderDraft()
+    }
 
-        binding.switchWordSpelling.isChecked = settings.playWordSpelling
-        binding.switchChineseMeaning.isChecked = settings.playChineseMeaning
-        binding.switchLoop.isChecked = settings.loopEnabled
-        binding.seekInterval.progress = (settings.intervalSeconds - 1).coerceIn(0, 9)
-        binding.tvInterval.text = "播放间隔：${settings.intervalSeconds}秒"
-
-        binding.seekInterval.setOnSeekBarChangeListener(object : android.widget.SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: android.widget.SeekBar?, progress: Int, fromUser: Boolean) {
-                binding.tvInterval.text = "播放间隔：${progress + 1}秒"
-            }
-
-            override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) = Unit
-            override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) = Unit
-        })
-
-        val adapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            bookItems.map { it.second }
-        ).apply {
-            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        }
-        binding.spinnerBook.adapter = adapter
-        val selectedIndex = bookItems.indexOfFirst { it.first == settings.selectedBookId }.takeIf { it >= 0 } ?: 0
-        binding.spinnerBook.setSelection(selectedIndex, false)
-
-        binding.btnSave.setOnClickListener {
-            val selectedBookId = bookItems.getOrNull(binding.spinnerBook.selectedItemPosition)?.first ?: 0L
-            val updated = PracticeSettings(
-                selectedBookId = selectedBookId,
-                intervalSeconds = binding.seekInterval.progress + 1,
-                loopEnabled = binding.switchLoop.isChecked,
-                playWordSpelling = binding.switchWordSpelling.isChecked,
-                playChineseMeaning = binding.switchChineseMeaning.isChecked
+    private fun bindActions() {
+        binding.radioGroupMode.setOnCheckedChangeListener { _, checkedId ->
+            draftSettings = draftSettings.copy(
+                playbackMode = if (checkedId == R.id.radio_word_with_example) {
+                    AudioLoopPlaybackMode.WORD_WITH_EXAMPLE
+                } else {
+                    AudioLoopPlaybackMode.WORD_ONLY
+                }
             )
-            viewModel.saveSettings(updated)
+        }
+        binding.btnPlayTimesMinus.setOnClickListener {
+            draftSettings = draftSettings.copy(
+                playTimes = (draftSettings.playTimes - 1).coerceAtLeast(MIN_PLAY_TIMES)
+            )
+            renderDraft()
+        }
+        binding.btnPlayTimesPlus.setOnClickListener {
+            draftSettings = draftSettings.copy(
+                playTimes = (draftSettings.playTimes + 1).coerceAtMost(MAX_PLAY_TIMES)
+            )
+            renderDraft()
+        }
+        binding.btnIntervalMinus.setOnClickListener {
+            draftSettings = draftSettings.copy(
+                intervalSeconds = (draftSettings.intervalSeconds - 1)
+                    .coerceAtLeast(MIN_INTERVAL_SECONDS)
+            )
+            renderDraft()
+        }
+        binding.btnIntervalPlus.setOnClickListener {
+            draftSettings = draftSettings.copy(
+                intervalSeconds = (draftSettings.intervalSeconds + 1)
+                    .coerceAtMost(MAX_INTERVAL_SECONDS)
+            )
+            renderDraft()
+        }
+        binding.switchLoop.setOnCheckedChangeListener { _, isChecked ->
+            draftSettings = draftSettings.copy(loopEnabled = isChecked)
+        }
+        binding.switchWordSpelling.setOnCheckedChangeListener { _, isChecked ->
+            draftSettings = draftSettings.copy(showPhonetic = isChecked)
+        }
+        binding.switchChineseMeaning.setOnCheckedChangeListener { _, isChecked ->
+            draftSettings = draftSettings.copy(showMeaning = isChecked)
+        }
+        binding.btnSave.setOnClickListener {
+            viewModel.saveSettings(draftSettings)
             dismiss()
         }
+    }
+
+    private fun renderDraft() {
+        binding.radioWordOnly.isChecked =
+            draftSettings.playbackMode == AudioLoopPlaybackMode.WORD_ONLY
+        binding.radioWordWithExample.isChecked =
+            draftSettings.playbackMode == AudioLoopPlaybackMode.WORD_WITH_EXAMPLE
+
+        binding.tvPlayTimesValue.text = getString(
+            R.string.feature_learning_audio_loop_settings_play_times_value,
+            draftSettings.playTimes
+        )
+        binding.tvIntervalValue.text = getString(
+            R.string.feature_learning_audio_loop_settings_interval_value,
+            draftSettings.intervalSeconds
+        )
+
+        binding.switchLoop.isChecked = draftSettings.loopEnabled
+        binding.switchWordSpelling.isChecked = draftSettings.showPhonetic
+        binding.switchChineseMeaning.isChecked = draftSettings.showMeaning
+
+        binding.btnPlayTimesMinus.isEnabled = draftSettings.playTimes > MIN_PLAY_TIMES
+        binding.btnPlayTimesPlus.isEnabled = draftSettings.playTimes < MAX_PLAY_TIMES
+        binding.btnIntervalMinus.isEnabled = draftSettings.intervalSeconds > MIN_INTERVAL_SECONDS
+        binding.btnIntervalPlus.isEnabled = draftSettings.intervalSeconds < MAX_INTERVAL_SECONDS
     }
 }

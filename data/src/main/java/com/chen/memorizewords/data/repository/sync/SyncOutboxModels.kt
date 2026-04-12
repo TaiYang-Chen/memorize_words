@@ -119,8 +119,10 @@ data class PracticeSettingsSyncPayload(
     val selectedBookId: Long,
     val intervalSeconds: Int,
     val loopEnabled: Boolean,
-    val playWordSpelling: Boolean,
-    val playChineseMeaning: Boolean,
+    val showPhonetic: Boolean,
+    val showMeaning: Boolean,
+    val playbackMode: String = "WORD_ONLY",
+    val playTimes: Int = 1,
     val provider: String = "BACKEND_DEFAULT"
 )
 

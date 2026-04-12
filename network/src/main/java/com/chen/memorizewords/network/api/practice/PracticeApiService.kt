@@ -30,11 +30,25 @@ data class ShadowingEvaluateRequestDto(
 )
 
 @JsonClass(generateAdapter = false)
+data class ShadowingAudioIssueDto(
+    val type: String?,
+    val severity: String?,
+    val message: String?
+)
+
+@JsonClass(generateAdapter = false)
 data class ShadowingEvaluateResponseDto(
     val totalScore: Int,
     val pronunciationScore: Int,
     val fluencyScore: Int,
-    val recognizedText: String
+    val recognizedText: String,
+    val intonationScore: Int? = null,
+    val stressScore: Int? = null,
+    val speedScore: Int? = null,
+    val guidanceText: String? = null,
+    val analysisSource: String? = null,
+    val detailSourceNote: String? = null,
+    val audioIssues: List<ShadowingAudioIssueDto>? = null
 )
 
 @JsonClass(generateAdapter = false)
