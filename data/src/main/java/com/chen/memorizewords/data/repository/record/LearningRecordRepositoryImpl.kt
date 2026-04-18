@@ -25,8 +25,8 @@ import com.chen.memorizewords.data.repository.sync.DailyStudyDurationSyncPayload
 import com.chen.memorizewords.data.repository.sync.StudyRecordSyncPayload
 import com.chen.memorizewords.data.repository.sync.SyncOutboxBizType
 import com.chen.memorizewords.data.repository.sync.SyncOutboxOperation
+import com.chen.memorizewords.data.repository.sync.SyncOutboxStore
 import com.chen.memorizewords.data.repository.sync.SyncOutboxWorkScheduler
-import com.chen.memorizewords.data.repository.sync.syncOutboxEntity
 import com.chen.memorizewords.domain.model.study.record.CalendarDayStats
 import com.chen.memorizewords.domain.model.study.record.CheckInRecord
 import com.chen.memorizewords.domain.model.study.record.CheckInType
@@ -58,6 +58,7 @@ class LearningRecordRepositoryImpl @Inject constructor(
     private val checkInConfigDataSource: CheckInConfigDataSource,
     private val checkInBusinessCalendar: CheckInBusinessCalendar,
     private val syncOutboxDao: SyncOutboxDao,
+    private val syncOutboxStore: SyncOutboxStore,
     private val syncOutboxWorkScheduler: SyncOutboxWorkScheduler,
     private val gson: Gson
 ) : LearningRecordRepository {
@@ -97,37 +98,33 @@ class LearningRecordRepositoryImpl @Inject constructor(
                 updatedAt = System.currentTimeMillis()
             )
 
-            syncOutboxDao.upsert(
-                syncOutboxEntity(
-                    bizType = SyncOutboxBizType.STUDY_RECORD,
-                    bizKey = buildStudyRecordBizKey(today, word.id, isNewWord),
-                    operation = SyncOutboxOperation.UPSERT,
-                    payload = gson.toJson(
-                        StudyRecordSyncPayload(
-                            date = today,
-                            wordId = word.id,
-                            word = word.word,
-                            definition = definition,
-                            isNewWord = isNewWord
-                        )
+            syncOutboxStore.enqueueLatest(
+                bizType = SyncOutboxBizType.STUDY_RECORD,
+                bizKey = buildStudyRecordBizKey(today, word.id, isNewWord),
+                operation = SyncOutboxOperation.UPSERT,
+                payload = gson.toJson(
+                    StudyRecordSyncPayload(
+                        date = today,
+                        wordId = word.id,
+                        word = word.word,
+                        definition = definition,
+                        isNewWord = isNewWord
                     )
                 )
             )
 
             dailyStudyDurationDao.getByDate(today)?.let { duration ->
-                syncOutboxDao.upsert(
-                    syncOutboxEntity(
-                        bizType = SyncOutboxBizType.DAILY_STUDY_DURATION,
-                        bizKey = buildDailyStudyDurationBizKey(duration.date),
-                        operation = SyncOutboxOperation.UPSERT,
-                        payload = gson.toJson(
-                            DailyStudyDurationSyncPayload(
-                                date = duration.date,
-                                totalDurationMs = duration.totalDurationMs,
-                                updatedAt = duration.updatedAt,
-                                isNewPlanCompleted = duration.isNewPlanCompleted,
-                                isReviewPlanCompleted = duration.isReviewPlanCompleted
-                            )
+                syncOutboxStore.enqueueLatest(
+                    bizType = SyncOutboxBizType.DAILY_STUDY_DURATION,
+                    bizKey = buildDailyStudyDurationBizKey(duration.date),
+                    operation = SyncOutboxOperation.UPSERT,
+                    payload = gson.toJson(
+                        DailyStudyDurationSyncPayload(
+                            date = duration.date,
+                            totalDurationMs = duration.totalDurationMs,
+                            updatedAt = duration.updatedAt,
+                            isNewPlanCompleted = duration.isNewPlanCompleted,
+                            isReviewPlanCompleted = duration.isReviewPlanCompleted
                         )
                     )
                 )
@@ -148,19 +145,17 @@ class LearningRecordRepositoryImpl @Inject constructor(
             )
 
             dailyStudyDurationDao.getByDate(date)?.let { duration ->
-                syncOutboxDao.upsert(
-                    syncOutboxEntity(
-                        bizType = SyncOutboxBizType.DAILY_STUDY_DURATION,
-                        bizKey = buildDailyStudyDurationBizKey(duration.date),
-                        operation = SyncOutboxOperation.UPSERT,
-                        payload = gson.toJson(
-                            DailyStudyDurationSyncPayload(
-                                date = duration.date,
-                                totalDurationMs = duration.totalDurationMs,
-                                updatedAt = duration.updatedAt,
-                                isNewPlanCompleted = duration.isNewPlanCompleted,
-                                isReviewPlanCompleted = duration.isReviewPlanCompleted
-                            )
+                syncOutboxStore.enqueueLatest(
+                    bizType = SyncOutboxBizType.DAILY_STUDY_DURATION,
+                    bizKey = buildDailyStudyDurationBizKey(duration.date),
+                    operation = SyncOutboxOperation.UPSERT,
+                    payload = gson.toJson(
+                        DailyStudyDurationSyncPayload(
+                            date = duration.date,
+                            totalDurationMs = duration.totalDurationMs,
+                            updatedAt = duration.updatedAt,
+                            isNewPlanCompleted = duration.isNewPlanCompleted,
+                            isReviewPlanCompleted = duration.isReviewPlanCompleted
                         )
                     )
                 )
@@ -316,13 +311,11 @@ class LearningRecordRepositoryImpl @Inject constructor(
         )
         appDatabase.withTransaction {
             checkInRecordDao.upsert(entity)
-            syncOutboxDao.upsert(
-                syncOutboxEntity(
-                    bizType = SyncOutboxBizType.CHECKIN_RECORD,
-                    bizKey = buildCheckInRecordBizKey(date),
-                    operation = SyncOutboxOperation.UPSERT,
-                    payload = gson.toJson(entity.toSyncPayload())
-                )
+            syncOutboxStore.enqueueLatest(
+                bizType = SyncOutboxBizType.CHECKIN_RECORD,
+                bizKey = buildCheckInRecordBizKey(date),
+                operation = SyncOutboxOperation.UPSERT,
+                payload = gson.toJson(entity.toSyncPayload())
             )
         }
         syncOutboxWorkScheduler.scheduleDrain()
@@ -349,13 +342,11 @@ class LearningRecordRepositoryImpl @Inject constructor(
         )
         appDatabase.withTransaction {
             checkInRecordDao.upsert(entity)
-            syncOutboxDao.upsert(
-                syncOutboxEntity(
-                    bizType = SyncOutboxBizType.CHECKIN_RECORD,
-                    bizKey = buildCheckInRecordBizKey(today),
-                    operation = SyncOutboxOperation.UPSERT,
-                    payload = gson.toJson(entity.toSyncPayload())
-                )
+            syncOutboxStore.enqueueLatest(
+                bizType = SyncOutboxBizType.CHECKIN_RECORD,
+                bizKey = buildCheckInRecordBizKey(today),
+                operation = SyncOutboxOperation.UPSERT,
+                payload = gson.toJson(entity.toSyncPayload())
             )
         }
         syncOutboxWorkScheduler.scheduleDrain()

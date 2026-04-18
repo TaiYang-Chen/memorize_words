@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
+import com.chen.memorizewords.core.navigation.OnboardingGuardDelegate
 import androidx.navigation.fragment.NavHostFragment
 import com.chen.memorizewords.core.ui.activity.BaseVmDbActivity
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
@@ -28,6 +29,9 @@ import javax.inject.Singleton
 class LearningActivity :
     BaseVmDbActivity<BaseViewModel, ActivityLearningBinding>() {
 
+    @Inject
+    lateinit var onboardingGuardDelegate: OnboardingGuardDelegate
+
     override val viewModel: BaseViewModel by lazy {
         ViewModelProvider(this)[BaseViewModel::class.java]
     }
@@ -45,6 +49,7 @@ class LearningActivity :
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+        if (onboardingGuardDelegate.guard(this)) return
         if (savedInstanceState != null) return
         val wordId = intent.getLongExtra(EXTRA_OPEN_WORD_ID, -1L)
         if (wordId <= 0L) return
@@ -60,6 +65,11 @@ class LearningActivity :
                 )
             )
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        onboardingGuardDelegate.guard(this)
     }
 
     override fun navControllerId() = R.id.nav_host_fragment_activity_learning

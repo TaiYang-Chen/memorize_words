@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="@color/feature_onboarding_goal_icon_tint"
+        android:pathData="M7.1,8.4h7.25l-1.35,-1.35a0.8,0.8 0 1,1 1.13,-1.13l2.72,2.72a0.8,0.8 0 0,1 0,1.13l-2.72,2.72a0.8,0.8 0 0,1 -1.13,-1.13l1.35,-1.35H7.1a0.8,0.8 0 1,1 0,-1.6z" />
+    <path
+        android:fillColor="@color/feature_onboarding_goal_icon_tint"
+        android:pathData="M16.9,13.95H9.65l1.35,1.35a0.8,0.8 0 1,1 -1.13,1.13l-2.72,-2.72a0.8,0.8 0 0,1 0,-1.13l2.72,-2.72a0.8,0.8 0 1,1 1.13,1.13l-1.35,1.35h7.25a0.8,0.8 0 1,1 0,1.6z" />
+</vector>

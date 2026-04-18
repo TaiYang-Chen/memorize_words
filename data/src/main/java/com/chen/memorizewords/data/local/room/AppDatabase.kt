@@ -104,7 +104,7 @@ import com.chen.memorizewords.data.local.room.model.words.root.rootword.RootWord
         // ========== Floating ==========
         FloatingWordDisplayRecordEntity::class
     ],
-    version = 10
+    version = 1
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {

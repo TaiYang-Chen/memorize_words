@@ -3,6 +3,8 @@ package com.chen.memorizewords.data.repository.sync
 import com.chen.memorizewords.data.local.mmkv.checkin.CheckInConfigDataSource
 import com.chen.memorizewords.data.local.room.model.sync.SyncOutboxEntity
 import com.chen.memorizewords.data.remote.datasync.RemoteUserSyncDataSource
+import com.chen.memorizewords.domain.model.onboarding.OnboardingPhase
+import com.chen.memorizewords.domain.model.onboarding.OnboardingSnapshot
 import com.chen.memorizewords.domain.model.learning.LearningTestMode
 import com.chen.memorizewords.domain.model.study.StudyPlan
 import com.chen.memorizewords.domain.model.study.favorites.WordFavorites
@@ -27,6 +29,7 @@ class UserSyncOutboxHandler @Inject constructor(
         SyncOutboxBizType.WORD_STATE_DELETE_BY_BOOK,
         SyncOutboxBizType.WORD_BOOK_SELECTION,
         SyncOutboxBizType.STUDY_PLAN,
+        SyncOutboxBizType.ONBOARDING_STATE,
         SyncOutboxBizType.CHECKIN_RECORD
     )
 
@@ -129,6 +132,20 @@ class UserSyncOutboxHandler @Inject constructor(
                             .getOrDefault(LearningTestMode.MEANING_CHOICE),
                         wordOrderType = runCatching { WordOrderType.valueOf(payload.wordOrderType) }
                             .getOrDefault(WordOrderType.RANDOM)
+                    )
+                ).getOrThrow()
+            }
+
+            SyncOutboxBizType.ONBOARDING_STATE -> {
+                val payload = gson.fromJson(entity.payload, OnboardingStateSyncPayload::class.java)
+                remoteUserSyncDataSource.updateOnboardingState(
+                    OnboardingSnapshot(
+                        phase = runCatching { OnboardingPhase.valueOf(payload.phase) }
+                            .getOrDefault(OnboardingPhase.NEEDS_WORD_BOOK),
+                        selectedWordBookId = payload.selectedWordBookId,
+                        revision = payload.revision,
+                        updatedAt = payload.updatedAt,
+                        completedAt = payload.completedAt
                     )
                 ).getOrThrow()
             }

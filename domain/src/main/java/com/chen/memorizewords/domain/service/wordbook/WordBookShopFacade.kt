@@ -20,8 +20,13 @@ class WordBookShopFacade @Inject constructor(
 
     suspend fun downloadBook(
         book: WordBook,
-        forceRefresh: Boolean = false
-    ): DownloadCommandResult = remoteWordBookRepository.downloadBook(book, forceRefresh)
+        forceRefresh: Boolean = false,
+        runInForeground: Boolean = true
+    ): DownloadCommandResult = remoteWordBookRepository.downloadBook(
+        book = book,
+        forceRefresh = forceRefresh,
+        runInForeground = runInForeground
+    )
 
     suspend fun cancelDownload(bookId: Long) {
         remoteWordBookRepository.cancelDownload(bookId)

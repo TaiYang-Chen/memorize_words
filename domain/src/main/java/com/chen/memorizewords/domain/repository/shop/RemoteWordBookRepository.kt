@@ -12,7 +12,8 @@ interface RemoteWordBookRepository {
     fun observeDownloadStates(): Flow<Map<Long, DownloadState>>
     suspend fun downloadBook(
         book: WordBook,
-        forceRefresh: Boolean = false
+        forceRefresh: Boolean = false,
+        runInForeground: Boolean = true
     ): DownloadCommandResult
     suspend fun cancelDownload(bookId: Long)
 }

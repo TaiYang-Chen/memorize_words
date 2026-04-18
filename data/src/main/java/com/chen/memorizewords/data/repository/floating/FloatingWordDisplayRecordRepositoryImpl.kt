@@ -5,12 +5,11 @@ import com.chen.memorizewords.data.local.room.AppDatabase
 import com.chen.memorizewords.data.local.mmkv.checkin.CheckInBusinessCalendar
 import com.chen.memorizewords.data.local.room.model.floating.FloatingWordDisplayRecordDao
 import com.chen.memorizewords.data.local.room.model.floating.FloatingWordDisplayRecordEntity
-import com.chen.memorizewords.data.local.room.model.sync.SyncOutboxDao
 import com.chen.memorizewords.data.repository.sync.FloatingDisplayRecordSyncPayload
 import com.chen.memorizewords.data.repository.sync.SyncOutboxBizType
 import com.chen.memorizewords.data.repository.sync.SyncOutboxOperation
+import com.chen.memorizewords.data.repository.sync.SyncOutboxStore
 import com.chen.memorizewords.data.repository.sync.SyncOutboxWorkScheduler
-import com.chen.memorizewords.data.repository.sync.syncOutboxEntity
 import com.chen.memorizewords.domain.model.floating.FloatingWordDisplayRecord
 import com.chen.memorizewords.domain.repository.floating.FloatingWordDisplayRecordRepository
 import com.google.gson.Gson
@@ -20,7 +19,7 @@ class FloatingWordDisplayRecordRepositoryImpl @Inject constructor(
     private val appDatabase: AppDatabase,
     private val dao: FloatingWordDisplayRecordDao,
     private val checkInBusinessCalendar: CheckInBusinessCalendar,
-    private val syncOutboxDao: SyncOutboxDao,
+    private val syncOutboxStore: SyncOutboxStore,
     private val syncOutboxWorkScheduler: SyncOutboxWorkScheduler,
     private val gson: Gson
 ) : FloatingWordDisplayRecordRepository {
@@ -45,18 +44,16 @@ class FloatingWordDisplayRecordRepositoryImpl @Inject constructor(
                 )
             }
             dao.upsert(updated)
-            syncOutboxDao.upsert(
-                syncOutboxEntity(
-                    bizType = SyncOutboxBizType.FLOATING_DISPLAY_RECORD,
-                    bizKey = "floating_display_record:${updated.date}",
-                    operation = SyncOutboxOperation.UPSERT,
-                    payload = gson.toJson(
-                        FloatingDisplayRecordSyncPayload(
-                            date = updated.date,
-                            displayCount = updated.displayCount,
-                            wordIds = updated.wordIds,
-                            updatedAt = updated.updatedAt
-                        )
+            syncOutboxStore.enqueueLatest(
+                bizType = SyncOutboxBizType.FLOATING_DISPLAY_RECORD,
+                bizKey = "floating_display_record:${updated.date}",
+                operation = SyncOutboxOperation.UPSERT,
+                payload = gson.toJson(
+                    FloatingDisplayRecordSyncPayload(
+                        date = updated.date,
+                        displayCount = updated.displayCount,
+                        wordIds = updated.wordIds,
+                        updatedAt = updated.updatedAt
                     )
                 )
             )

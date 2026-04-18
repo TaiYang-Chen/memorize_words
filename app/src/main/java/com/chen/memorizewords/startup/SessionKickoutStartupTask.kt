@@ -2,7 +2,7 @@ package com.chen.memorizewords.startup
 
 import android.app.Application
 import android.content.Intent
-import com.chen.memorizewords.core.navigation.AuthEntry
+import com.chen.memorizewords.core.navigation.AppLaunchEntry
 import com.chen.memorizewords.domain.orchestrator.startup.StartupOrchestrator
 import javax.inject.Inject
 import javax.inject.Provider
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 @Singleton
 class SessionKickoutStartupTask @Inject constructor(
     private val startupOrchestratorProvider: Provider<StartupOrchestrator>,
-    private val authEntryProvider: Provider<AuthEntry>
+    private val appLaunchEntryProvider: Provider<AppLaunchEntry>
 ) : ApplicationStartupTask {
     override val name: String = TASK_NAME
 
@@ -25,7 +25,7 @@ class SessionKickoutStartupTask @Inject constructor(
             }
             startupOrchestrator.sessionKickoutNotifier.events.collectLatest {
                 tracer.trace(stageName = "session_kickout_received")
-                val loginIntent = authEntryProvider.get().createAuthIntent(application).apply {
+                val loginIntent = appLaunchEntryProvider.get().createLaunchIntent(application).apply {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 }
                 application.startActivity(loginIntent)

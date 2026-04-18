@@ -1,5 +1,6 @@
 package com.chen.memorizewords.data.remote.datasync
 
+import com.chen.memorizewords.domain.model.onboarding.OnboardingSnapshot
 import com.chen.memorizewords.domain.model.study.favorites.WordFavorites
 import com.chen.memorizewords.network.api.datasync.CheckInConfigDto
 import com.chen.memorizewords.network.api.datasync.CheckInRecordDto
@@ -19,6 +20,8 @@ import com.chen.memorizewords.network.dto.wordstate.WordStateDto
 import com.chen.memorizewords.network.model.PageData
 
 interface RemoteUserSyncDataSource {
+    suspend fun getOnboardingState(): Result<OnboardingSnapshot?>
+    suspend fun updateOnboardingState(snapshot: OnboardingSnapshot): Result<Unit>
     suspend fun getStudyPlan(): Result<StudyPlan?>
     suspend fun updateStudyPlan(studyPlan: StudyPlan): Result<Unit>
     suspend fun getMyWordBooks(): Result<List<WordBookDto>>

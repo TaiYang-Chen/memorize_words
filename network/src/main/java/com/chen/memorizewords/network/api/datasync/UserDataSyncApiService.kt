@@ -23,6 +23,15 @@ data class StudyPlanDto(
 )
 
 @JsonClass(generateAdapter = false)
+data class OnboardingStateDto(
+    val phase: String,
+    val selectedWordBookId: Long?,
+    val revision: Long,
+    val updatedAt: Long,
+    val completedAt: Long?
+)
+
+@JsonClass(generateAdapter = false)
 data class AddMyWordBookRequest(
     val bookId: Long
 )
@@ -217,6 +226,7 @@ data class CheckInRecordDto(
 interface UserDataSyncApiService {
     companion object {
         const val PATH_STUDY_PLAN = "me/study-plan"
+        const val PATH_ONBOARDING = "me/onboarding"
         const val PATH_MY_WORD_BOOKS = "me/wordbooks"
         const val PATH_WORD_STATES = "me/wordbooks/{bookId}/word-states"
         const val PATH_WORD_STATE_ITEM = "me/wordbooks/{bookId}/word-states/{wordId}"
@@ -249,6 +259,12 @@ interface UserDataSyncApiService {
 
     @PUT(PATH_STUDY_PLAN)
     fun updateStudyPlan(@Body request: StudyPlanDto): Call<ApiResponse<Unit>>
+
+    @GET(PATH_ONBOARDING)
+    fun getOnboardingState(): Call<ApiResponse<OnboardingStateDto?>>
+
+    @PUT(PATH_ONBOARDING)
+    fun updateOnboardingState(@Body request: OnboardingStateDto): Call<ApiResponse<Unit>>
 
     @GET(PATH_MY_WORD_BOOKS)
     fun getMyWordBooks(): Call<ApiResponse<List<WordBookDto>>>

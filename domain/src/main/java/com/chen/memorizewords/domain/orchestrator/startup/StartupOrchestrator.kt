@@ -6,6 +6,8 @@ import com.chen.memorizewords.domain.auth.SessionKickoutNotifier
 import com.chen.memorizewords.domain.auth.TokenProvider
 import com.chen.memorizewords.domain.repository.floating.FloatingWordSettingsRepository
 import com.chen.memorizewords.domain.repository.user.AuthRepository
+import com.chen.memorizewords.domain.usecase.onboarding.GetCurrentOnboardingStepUseCase
+import com.chen.memorizewords.domain.model.onboarding.OnboardingStep
 import javax.inject.Inject
 
 class StartupOrchestrator @Inject constructor(
@@ -13,11 +15,12 @@ class StartupOrchestrator @Inject constructor(
     private val tokenProvider: TokenProvider,
     private val authRepository: AuthRepository,
     private val floatingWordSettingsRepository: FloatingWordSettingsRepository,
+    private val getCurrentOnboardingStepUseCase: GetCurrentOnboardingStepUseCase,
     val sessionKickoutNotifier: SessionKickoutNotifier
 ) {
     fun resolveLaunchDestinationFast(): StartupLaunchDestination {
         return if (authStateProvider.isAuthenticated()) {
-            StartupLaunchDestination.HOME
+            resolveAuthenticatedDestination()
         } else {
             StartupLaunchDestination.AUTH
         }
@@ -33,9 +36,9 @@ class StartupOrchestrator @Inject constructor(
 
         return when {
             !isAuthenticated -> StartupLaunchDestination.AUTH
-            !hasNetwork -> StartupLaunchDestination.HOME
-            accessTokenState is AccessTokenState.Available -> StartupLaunchDestination.HOME
-            accessTokenState is AccessTokenState.TemporarilyUnavailable -> StartupLaunchDestination.HOME
+            !hasNetwork -> resolveAuthenticatedDestination()
+            accessTokenState is AccessTokenState.Available -> resolveAuthenticatedDestination()
+            accessTokenState is AccessTokenState.TemporarilyUnavailable -> resolveAuthenticatedDestination()
             accessTokenState == AccessTokenState.NoSession -> StartupLaunchDestination.AUTH
             accessTokenState == AccessTokenState.InvalidSession -> StartupLaunchDestination.AUTH
             else -> StartupLaunchDestination.AUTH
@@ -53,9 +56,18 @@ class StartupOrchestrator @Inject constructor(
         val settings = floatingWordSettingsRepository.getSettings()
         return settings.enabled && settings.autoStartOnAppLaunch
     }
+
+    private fun resolveAuthenticatedDestination(): StartupLaunchDestination {
+        return when (getCurrentOnboardingStepUseCase()) {
+            OnboardingStep.COMPLETED -> StartupLaunchDestination.HOME
+            OnboardingStep.SELECT_WORD_BOOK,
+            OnboardingStep.SET_STUDY_PLAN -> StartupLaunchDestination.ONBOARDING
+        }
+    }
 }
 
 enum class StartupLaunchDestination {
     HOME,
+    ONBOARDING,
     AUTH
 }

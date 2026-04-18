@@ -42,8 +42,9 @@
     <string name="home_plan_remaining_new_only">复习计划已完成，剩余新学%1$d词</string>
     <string name="home_plan_completed">今日计划已完成</string>
     <string name="home_plan_not_started">今日尚未开始学习</string>
-    <string name="home_sync_banner_offline">当前无网络，还有 %1$d 条数据没有更新到远程</string>
-    <string name="home_sync_banner_failed">远程同步失败，还有 %1$d 条数据待重试</string>
+    <string name="home_sync_banner_offline">当前离线，还有 %1$d 条数据待上传</string>
+    <string name="home_sync_banner_pending">还有 %1$d 条数据待上传，系统会自动重试</string>
+    <string name="home_sync_banner_blocked">还有 %1$d 条数据待上传，当前需要处理异常后才能继续上传</string>
     <string name="home_duration_hours_minutes">%1$d小时%2$d分钟</string>
     <string name="home_duration_minutes">%1$d分钟</string>
     <string name="home_duration_hours">%1$d小时</string>

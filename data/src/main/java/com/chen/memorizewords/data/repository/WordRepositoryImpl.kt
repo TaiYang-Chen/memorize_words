@@ -5,7 +5,6 @@ import androidx.room.withTransaction
 import com.chen.memorizewords.data.local.room.AppDatabase
 import com.chen.memorizewords.data.local.room.model.study.progress.word.WordLearningStateDao
 import com.chen.memorizewords.data.local.room.model.study.progress.word.WordLearningStateEntity
-import com.chen.memorizewords.data.local.room.model.sync.SyncOutboxDao
 import com.chen.memorizewords.data.local.room.model.words.word.WordDao
 import com.chen.memorizewords.data.local.room.model.words.word.toDomain
 import com.chen.memorizewords.data.local.room.model.words.word.toAntonymEntities as wordToAntonymEntities
@@ -33,9 +32,9 @@ import com.chen.memorizewords.data.local.room.model.words.root.rootword.toRelati
 import com.chen.memorizewords.data.remote.wordbook.RemoteWordBookDataSource
 import com.chen.memorizewords.data.repository.sync.SyncOutboxBizType
 import com.chen.memorizewords.data.repository.sync.SyncOutboxOperation
+import com.chen.memorizewords.data.repository.sync.SyncOutboxStore
 import com.chen.memorizewords.data.repository.sync.SyncOutboxWorkScheduler
 import com.chen.memorizewords.data.repository.sync.WordStateUpsertSyncPayload
-import com.chen.memorizewords.data.repository.sync.syncOutboxEntity
 import com.chen.memorizewords.domain.model.words.word.Word
 import com.chen.memorizewords.domain.model.words.word.WordDefinitions
 import com.chen.memorizewords.domain.model.words.word.WordExample
@@ -65,7 +64,7 @@ class WordRepositoryImpl @Inject constructor(
     private val wordUserMetaDao: WordUserMetaDao,
     private val stateDao: WordLearningStateDao,
     private val dao: WordDao,
-    private val syncOutboxDao: SyncOutboxDao,
+    private val syncOutboxStore: SyncOutboxStore,
     private val syncOutboxWorkScheduler: SyncOutboxWorkScheduler,
     private val gson: Gson
 ) : WordRepository {
@@ -376,13 +375,11 @@ class WordRepositoryImpl @Inject constructor(
             interval = interval,
             efactor = efactor
         )
-        syncOutboxDao.upsert(
-            syncOutboxEntity(
-                bizType = SyncOutboxBizType.WORD_STATE_UPSERT,
-                bizKey = "word_state:$bookId:$wordId",
-                operation = SyncOutboxOperation.UPSERT,
-                payload = gson.toJson(payload)
-            )
+        syncOutboxStore.enqueueLatest(
+            bizType = SyncOutboxBizType.WORD_STATE_UPSERT,
+            bizKey = "word_state:$bookId:$wordId",
+            operation = SyncOutboxOperation.UPSERT,
+            payload = gson.toJson(payload)
         )
         syncOutboxWorkScheduler.scheduleDrain()
     }

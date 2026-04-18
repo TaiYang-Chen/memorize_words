@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/onboarding_nav_graph"
+    app:startDestination="@id/onboardingSelectWordBookFragment">
+
+    <fragment
+        android:id="@+id/onboardingSelectWordBookFragment"
+        android:name="com.chen.memorizewords.feature.onboarding.OnboardingSelectWordBookFragment"
+        android:label="@string/feature_onboarding_select_book_title" />
+
+    <fragment
+        android:id="@+id/onboardingStudyPlanFragment"
+        android:name="com.chen.memorizewords.feature.onboarding.OnboardingStudyPlanFragment"
+        android:label="@string/feature_onboarding_plan_title" />
+</navigation>

@@ -3,13 +3,17 @@ package com.chen.memorizewords.feature.user.ui
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
+import com.chen.memorizewords.core.navigation.AppLaunchEntry
+import com.chen.memorizewords.core.navigation.HomeEntry
+import com.chen.memorizewords.core.navigation.OnboardingEntry
 import com.chen.memorizewords.core.ui.activity.BaseVmDbActivity
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.domain.auth.AuthStateProvider
+import com.chen.memorizewords.domain.orchestrator.startup.StartupLaunchDestination
+import com.chen.memorizewords.domain.orchestrator.startup.StartupOrchestrator
 import com.chen.memorizewords.feature.user.auth.social.QQAuthProvider
 import com.chen.memorizewords.feature.user.databinding.ModuleUserActivityAuthBinding
 import com.chen.memorizewords.core.navigation.AuthEntry
-import com.chen.memorizewords.core.navigation.HomeEntry
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -32,7 +36,16 @@ class AuthActivity : BaseVmDbActivity<BaseViewModel, ModuleUserActivityAuthBindi
     lateinit var qqAuthProvider: QQAuthProvider
 
     @Inject
+    lateinit var appLaunchEntry: AppLaunchEntry
+
+    @Inject
     lateinit var homeEntry: HomeEntry
+
+    @Inject
+    lateinit var onboardingEntry: OnboardingEntry
+
+    @Inject
+    lateinit var startupOrchestrator: StartupOrchestrator
 
     private var relaunching = false
 
@@ -54,21 +67,17 @@ class AuthActivity : BaseVmDbActivity<BaseViewModel, ModuleUserActivityAuthBindi
         }
 
         if (isTaskRoot && authStateProvider.isAuthenticated()) {
-            val homeIntent = homeEntry.createHomeIntent(this).apply {
+            val launchIntent = when (startupOrchestrator.resolveLaunchDestinationFast()) {
+                StartupLaunchDestination.HOME -> homeEntry.createHomeIntent(this)
+                StartupLaunchDestination.ONBOARDING ->
+                    onboardingEntry.createOnboardingIntent(this)
+                StartupLaunchDestination.AUTH -> appLaunchEntry.createLaunchIntent(this)
+            }.apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             }
-            val launchIntent = packageManager.getLaunchIntentForPackage(packageName)?.apply {
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            }
-            val targetIntent = when {
-                homeIntent.resolveActivity(packageManager) != null -> homeIntent
-                launchIntent != null -> launchIntent
-                else -> null
-            }
-
-            if (targetIntent != null) {
+            if (launchIntent.resolveActivity(packageManager) != null) {
                 relaunching = true
-                startActivity(targetIntent)
+                startActivity(launchIntent)
             }
         }
         super.finish()

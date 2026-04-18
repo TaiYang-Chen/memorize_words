@@ -60,6 +60,7 @@ dependencies {
     implementation(project(":feature-floating-review"))
     implementation(project(":feature-home"))
     implementation(project(":feature-learning"))
+    implementation(project(":feature-onboarding"))
     implementation(project(":feature-user"))
     implementation(project(":feature-wordbook"))
 

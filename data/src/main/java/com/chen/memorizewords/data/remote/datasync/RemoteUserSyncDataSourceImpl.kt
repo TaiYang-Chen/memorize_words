@@ -1,5 +1,7 @@
 package com.chen.memorizewords.data.remote.datasync
 
+import com.chen.memorizewords.domain.model.onboarding.OnboardingPhase
+import com.chen.memorizewords.domain.model.onboarding.OnboardingSnapshot
 import com.chen.memorizewords.data.remote.RemoteResultAdapter
 import com.chen.memorizewords.domain.model.learning.LearningTestMode
 import com.chen.memorizewords.domain.model.study.StudyPlan
@@ -10,6 +12,7 @@ import com.chen.memorizewords.network.api.datasync.CheckInRecordDto
 import com.chen.memorizewords.network.api.datasync.CheckInStatusDto
 import com.chen.memorizewords.network.api.datasync.DailyStudyDurationDto
 import com.chen.memorizewords.network.api.datasync.FavoriteDto
+import com.chen.memorizewords.network.api.datasync.OnboardingStateDto
 import com.chen.memorizewords.network.api.datasync.PendingWordBookUpdateDto
 import com.chen.memorizewords.network.api.datasync.StudyRecordDto
 import com.chen.memorizewords.network.api.datasync.StudyPlanDto
@@ -28,6 +31,36 @@ class RemoteUserSyncDataSourceImpl @Inject constructor(
     private val request: UserDataSyncRequest,
     private val remoteResultAdapter: RemoteResultAdapter
 ) : RemoteUserSyncDataSource {
+
+    override suspend fun getOnboardingState(): Result<OnboardingSnapshot?> {
+        return remoteResultAdapter.toResult { request.getOnboardingState() }
+            .map { dto ->
+                dto?.let {
+                    OnboardingSnapshot(
+                        phase = runCatching { OnboardingPhase.valueOf(it.phase) }
+                            .getOrDefault(OnboardingPhase.NEEDS_WORD_BOOK),
+                        selectedWordBookId = it.selectedWordBookId,
+                        revision = it.revision,
+                        updatedAt = it.updatedAt,
+                        completedAt = it.completedAt
+                    )
+                }
+            }
+    }
+
+    override suspend fun updateOnboardingState(snapshot: OnboardingSnapshot): Result<Unit> {
+        return remoteResultAdapter.toResult {
+            request.updateOnboardingState(
+                OnboardingStateDto(
+                    phase = snapshot.phase.name,
+                    selectedWordBookId = snapshot.selectedWordBookId,
+                    revision = snapshot.revision,
+                    updatedAt = snapshot.updatedAt,
+                    completedAt = snapshot.completedAt
+                )
+            )
+        }
+    }
 
     override suspend fun getStudyPlan(): Result<StudyPlan?> {
         return remoteResultAdapter.toResult { request.getStudyPlan() }

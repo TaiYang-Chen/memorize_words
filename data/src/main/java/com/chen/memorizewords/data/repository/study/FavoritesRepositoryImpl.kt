@@ -5,12 +5,11 @@ import com.chen.memorizewords.data.local.room.AppDatabase
 import com.chen.memorizewords.data.local.room.model.study.favorites.WordFavoritesDao
 import com.chen.memorizewords.data.local.room.model.study.favorites.toDomain
 import com.chen.memorizewords.data.local.room.model.study.favorites.toEntity
-import com.chen.memorizewords.data.local.room.model.sync.SyncOutboxDao
 import com.chen.memorizewords.data.repository.sync.FavoriteSyncPayload
 import com.chen.memorizewords.data.repository.sync.SyncOutboxBizType
 import com.chen.memorizewords.data.repository.sync.SyncOutboxOperation
+import com.chen.memorizewords.data.repository.sync.SyncOutboxStore
 import com.chen.memorizewords.data.repository.sync.SyncOutboxWorkScheduler
-import com.chen.memorizewords.data.repository.sync.syncOutboxEntity
 import com.chen.memorizewords.domain.model.common.PageSlice
 import com.chen.memorizewords.domain.model.study.favorites.WordFavorites
 import com.chen.memorizewords.domain.repository.word.FavoritesRepository
@@ -20,7 +19,7 @@ import javax.inject.Inject
 class FavoritesRepositoryImpl @Inject constructor(
     private val appDatabase: AppDatabase,
     private val favoritesDao: WordFavoritesDao,
-    private val syncOutboxDao: SyncOutboxDao,
+    private val syncOutboxStore: SyncOutboxStore,
     private val syncOutboxWorkScheduler: SyncOutboxWorkScheduler,
     private val gson: Gson
 ) : FavoritesRepository {
@@ -28,19 +27,17 @@ class FavoritesRepositoryImpl @Inject constructor(
     override suspend fun addFavorite(favorites: WordFavorites) {
         appDatabase.withTransaction {
             favoritesDao.upsert(favorites.toEntity())
-            syncOutboxDao.upsert(
-                syncOutboxEntity(
-                    bizType = SyncOutboxBizType.FAVORITE,
-                    bizKey = "favorite:${favorites.wordId}",
-                    operation = SyncOutboxOperation.UPSERT,
-                    payload = gson.toJson(
-                        FavoriteSyncPayload(
-                            wordId = favorites.wordId,
-                            word = favorites.word,
-                            definitions = favorites.definitions,
-                            phonetic = favorites.phonetic,
-                            addedDate = favorites.addedDate
-                        )
+            syncOutboxStore.enqueueLatest(
+                bizType = SyncOutboxBizType.FAVORITE,
+                bizKey = "favorite:${favorites.wordId}",
+                operation = SyncOutboxOperation.UPSERT,
+                payload = gson.toJson(
+                    FavoriteSyncPayload(
+                        wordId = favorites.wordId,
+                        word = favorites.word,
+                        definitions = favorites.definitions,
+                        phonetic = favorites.phonetic,
+                        addedDate = favorites.addedDate
                     )
                 )
             )
@@ -51,13 +48,11 @@ class FavoritesRepositoryImpl @Inject constructor(
     override suspend fun removeFavorite(wordId: Long) {
         appDatabase.withTransaction {
             favoritesDao.deleteByWordId(wordId)
-            syncOutboxDao.upsert(
-                syncOutboxEntity(
-                    bizType = SyncOutboxBizType.FAVORITE,
-                    bizKey = "favorite:$wordId",
-                    operation = SyncOutboxOperation.DELETE,
-                    payload = gson.toJson(FavoriteSyncPayload(wordId = wordId))
-                )
+            syncOutboxStore.enqueueLatest(
+                bizType = SyncOutboxBizType.FAVORITE,
+                bizKey = "favorite:$wordId",
+                operation = SyncOutboxOperation.DELETE,
+                payload = gson.toJson(FavoriteSyncPayload(wordId = wordId))
             )
         }
         syncOutboxWorkScheduler.scheduleDrain()

@@ -31,17 +31,26 @@ class SyncRepositoryImpl @Inject constructor(
         .distinctUntilChanged()
         .stateIn(scope, SharingStarted.Eagerly, 0)
 
+    private val retryableCountFlow = syncOutboxDao.observeRetryableCount()
+        .distinctUntilChanged()
+        .stateIn(scope, SharingStarted.Eagerly, 0)
+
+    private val blockedCountFlow = syncOutboxDao.observeBlockedCount()
+        .distinctUntilChanged()
+        .stateIn(scope, SharingStarted.Eagerly, 0)
+
     private val syncBannerStateFlow = combine(
         pendingCountFlow,
-        syncOutboxDao.observeFailedCount(),
+        retryableCountFlow,
+        blockedCountFlow,
         networkMonitor.isOnline
-    ) { pendingCount, failedCount, hasNetwork ->
-        when {
-            pendingCount <= 0 -> SyncBannerState.Hidden
-            !hasNetwork -> SyncBannerState.Offline(pendingCount)
-            failedCount > 0 -> SyncBannerState.Failed(pendingCount)
-            else -> SyncBannerState.Hidden
-        }
+    ) { pendingCount, retryableCount, blockedCount, hasNetwork ->
+        resolveSyncBannerState(
+            pendingCount = pendingCount,
+            retryableCount = retryableCount,
+            blockedCount = blockedCount,
+            hasNetwork = hasNetwork
+        )
     }.distinctUntilChanged()
         .stateIn(scope, SharingStarted.Eagerly, SyncBannerState.Hidden)
 
@@ -51,10 +60,10 @@ class SyncRepositoryImpl @Inject constructor(
 
     init {
         scope.launch {
-            combine(pendingCountFlow, networkMonitor.isOnline) { pendingCount, hasNetwork ->
-                pendingCount to hasNetwork
-            }.collect { (pendingCount, hasNetwork) ->
-                if (hasNetwork && pendingCount > 0) {
+            combine(retryableCountFlow, networkMonitor.isOnline) { retryableCount, hasNetwork ->
+                retryableCount to hasNetwork
+            }.collect { (retryableCount, hasNetwork) ->
+                if (hasNetwork && retryableCount > 0) {
                     syncOutboxWorkScheduler.scheduleDrain()
                 }
             }
@@ -86,5 +95,20 @@ class SyncRepositoryImpl @Inject constructor(
 
     override fun triggerDrain() {
         syncOutboxWorkScheduler.scheduleDrain()
+    }
+}
+
+internal fun resolveSyncBannerState(
+    pendingCount: Int,
+    retryableCount: Int,
+    blockedCount: Int,
+    hasNetwork: Boolean
+): SyncBannerState {
+    return when {
+        pendingCount <= 0 -> SyncBannerState.Hidden
+        !hasNetwork -> SyncBannerState.Offline(pendingCount)
+        retryableCount > 0 -> SyncBannerState.Pending(pendingCount)
+        blockedCount > 0 -> SyncBannerState.Blocked(pendingCount)
+        else -> SyncBannerState.Pending(pendingCount)
     }
 }

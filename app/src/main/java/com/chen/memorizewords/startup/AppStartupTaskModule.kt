@@ -33,6 +33,13 @@ abstract class AppStartupTaskModule {
         impl: ForegroundWordBookStartupTask
     ): ApplicationStartupTask
 
+    @Binds
+    @IntoSet
+    @Singleton
+    abstract fun bindForegroundSyncStartupTask(
+        impl: ForegroundSyncStartupTask
+    ): ApplicationStartupTask
+
     companion object {
         @Provides
         @Singleton

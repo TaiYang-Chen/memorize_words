@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="app_splash_background">#FFFFFFFF</color>
+    <color name="app_splash_logo_card_fill">#FFFFFFFF</color>
+    <color name="app_splash_logo_card_stroke">#E6EAF0</color>
+    <color name="app_splash_logo_icon_tint">#7B8898</color>
+    <color name="app_splash_brand_title">#1E252B</color>
+    <color name="app_splash_brand_subtitle">#B5BBC2</color>
+    <color name="app_splash_quote_title">#4A525B</color>
+    <color name="app_splash_quote_subtitle">#B9BEC6</color>
+    <color name="app_splash_divider">#EEF1F5</color>
+</resources>

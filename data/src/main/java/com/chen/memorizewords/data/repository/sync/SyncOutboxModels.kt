@@ -1,7 +1,5 @@
 ﻿package com.chen.memorizewords.data.repository.sync
 
-import com.chen.memorizewords.data.local.room.model.sync.SyncOutboxEntity
-
 object SyncOutboxBizType {
     const val STUDY_RECORD = "STUDY_RECORD"
     const val DAILY_STUDY_DURATION = "DAILY_STUDY_DURATION"
@@ -13,6 +11,7 @@ object SyncOutboxBizType {
     const val WORD_STATE_DELETE_BY_BOOK = "WORD_STATE_DELETE_BY_BOOK"
     const val WORD_BOOK_SELECTION = "WORD_BOOK_SELECTION"
     const val STUDY_PLAN = "STUDY_PLAN"
+    const val ONBOARDING_STATE = "ONBOARDING_STATE"
     const val PRACTICE_SETTINGS = "PRACTICE_SETTINGS"
     const val FLOATING_SETTINGS = "FLOATING_SETTINGS"
     const val FLOATING_DISPLAY_RECORD = "FLOATING_DISPLAY_RECORD"
@@ -25,9 +24,19 @@ object SyncOutboxOperation {
 }
 
 object SyncOutboxState {
-    const val PENDING = "PENDING"
-    const val SYNCING = "SYNCING"
-    const val FAILED = "FAILED"
+    const val QUEUED = "QUEUED"
+    const val IN_FLIGHT = "IN_FLIGHT"
+    const val RETRY_WAITING = "RETRY_WAITING"
+    const val BLOCKED = "BLOCKED"
+}
+
+object SyncOutboxFailureKind {
+    const val NETWORK = "NETWORK"
+    const val AUTH = "AUTH"
+    const val SERVER = "SERVER"
+    const val RATE_LIMIT = "RATE_LIMIT"
+    const val CLIENT = "CLIENT"
+    const val UNKNOWN = "UNKNOWN"
 }
 
 data class StudyRecordSyncPayload(
@@ -115,6 +124,14 @@ data class StudyPlanSyncPayload(
     val wordOrderType: String
 )
 
+data class OnboardingStateSyncPayload(
+    val phase: String,
+    val selectedWordBookId: Long?,
+    val revision: Long,
+    val updatedAt: Long,
+    val completedAt: Long?
+)
+
 data class PracticeSettingsSyncPayload(
     val selectedBookId: Long,
     val intervalSeconds: Int,
@@ -154,22 +171,3 @@ data class CheckInRecordSyncPayload(
     val signedAt: Long,
     val updatedAt: Long
 )
-
-fun syncOutboxEntity(
-    bizType: String,
-    bizKey: String,
-    operation: String,
-    payload: String,
-    updatedAt: Long = System.currentTimeMillis()
-): SyncOutboxEntity {
-    return SyncOutboxEntity(
-        bizType = bizType,
-        bizKey = bizKey,
-        operation = operation,
-        payload = payload,
-        state = SyncOutboxState.PENDING,
-        retryCount = 0,
-        lastError = null,
-        updatedAt = updatedAt
-    )
-}

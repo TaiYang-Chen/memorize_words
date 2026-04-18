@@ -10,6 +10,9 @@ import com.chen.memorizewords.data.session.LocalUserDataOwnerDataSource
 import com.chen.memorizewords.data.session.LocalAuthStateCleaner
 import com.chen.memorizewords.data.session.SessionManager
 import com.chen.memorizewords.data.session.UserDataCleaner
+import com.chen.memorizewords.domain.model.onboarding.OnboardingPhase
+import com.chen.memorizewords.domain.model.onboarding.OnboardingSnapshot
+import com.chen.memorizewords.domain.repository.onboarding.OnboardingRepository
 import com.chen.memorizewords.domain.repository.sync.SyncRepository
 import com.chen.memorizewords.domain.model.user.SmsCodeMeta
 import com.chen.memorizewords.domain.model.user.User
@@ -20,6 +23,7 @@ import com.chen.memorizewords.network.api.auth.RegisterRequest
 import com.chen.memorizewords.network.api.auth.SendSmsCodeRequest
 import com.chen.memorizewords.network.api.auth.ChangePasswordRequest
 import com.chen.memorizewords.network.api.auth.BindSocialRequest
+import com.chen.memorizewords.network.api.datasync.OnboardingStateDto
 import com.chen.memorizewords.network.dto.LoginResponseDto
 import com.chen.memorizewords.network.dto.ProfileDto
 import kotlinx.coroutines.Dispatchers
@@ -37,7 +41,8 @@ class AuthRepositoryImpl @Inject constructor(
     private val userDataCleaner: UserDataCleaner,
     private val syncOutboxDao: SyncOutboxDao,
     private val syncRepository: SyncRepository,
-    private val syncOutboxProcessor: SyncOutboxProcessor
+    private val syncOutboxProcessor: SyncOutboxProcessor,
+    private val onboardingRepository: OnboardingRepository
 ) : AuthRepository {
 
     override suspend fun login(
@@ -167,6 +172,9 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun logout(force: Boolean): Result<Unit> = withContext(Dispatchers.IO) {
         if (!force && authStateProvider.isAuthenticated()) {
             bestEffortFlushPendingSync()
+            if (shouldAbortLogoutAfterFlush(force, syncOutboxDao.getPendingCountValue())) {
+                return@withContext Result.failure(LogoutDataLossRiskException())
+            }
         }
         val remoteResult = runCatching {
             remote.logout().getOrThrow()
@@ -201,12 +209,18 @@ class AuthRepositoryImpl @Inject constructor(
             emailVerified = user.emailVerified
         )
 
-        val previousUserId = resolveExistingLocalDataOwnerUserId(
-            authenticatedUserId = authLocal.getUserId(),
-            retainedOwnerUserId = localUserDataOwnerDataSource.getOwnerUserId()
-        )
-        if (shouldBlockAccountSwitch(previousUserId, localUser.userId, hasBlockingPendingSyncData())) {
-            throw LogoutDataLossRiskException()
+        when (
+            resolveLoginLocalDataAction(
+                isAuthenticated = authStateProvider.isAuthenticated(),
+                authenticatedUserId = authLocal.getUserId(),
+                retainedOwnerUserId = localUserDataOwnerDataSource.getOwnerUserId(),
+                incomingUserId = localUser.userId,
+                hasUnsyncedUserData = hasBlockingPendingSyncData()
+            )
+        ) {
+            LoginLocalDataAction.Block -> throw LogoutDataLossRiskException()
+            LoginLocalDataAction.Clear -> userDataCleaner.clearUserLearningData()
+            LoginLocalDataAction.Keep -> Unit
         }
 
         sessionManager.save(
@@ -216,11 +230,12 @@ class AuthRepositoryImpl @Inject constructor(
                 expiresAt = System.currentTimeMillis() + response.expiresIn * 1000L
             )
         )
-        if (shouldClearRetainedUserData(previousUserId, localUser.userId)) {
-            userDataCleaner.clearUserLearningData()
-        }
         authLocal.saveUser(localUser)
         localUserDataOwnerDataSource.saveOwnerUserId(localUser.userId)
+        onboardingRepository.initializeSnapshotForUser(
+            userId = localUser.userId,
+            snapshot = response.onboarding?.toDomain()
+        )
         syncRepository.startPostLoginBootstrap()
         return localUser
     }
@@ -275,28 +290,79 @@ internal fun hasBlockingPendingSyncData(
     return pendingSyncCount > 0
 }
 
-internal fun resolveExistingLocalDataOwnerUserId(
-    authenticatedUserId: Long?,
-    retainedOwnerUserId: Long?
-): Long? {
-    return authenticatedUserId ?: retainedOwnerUserId
-}
-
-internal fun shouldClearRetainedUserData(
-    existingOwnerUserId: Long?,
-    incomingUserId: Long
+internal fun shouldAbortLogoutAfterFlush(
+    force: Boolean,
+    pendingSyncCount: Int
 ): Boolean {
-    return existingOwnerUserId != null && existingOwnerUserId != incomingUserId
+    return !force && hasBlockingPendingSyncData(pendingSyncCount)
 }
 
-internal fun shouldBlockAccountSwitch(
-    previousUserId: Long?,
+internal enum class LoginLocalDataAction {
+    Keep,
+    Clear,
+    Block
+}
+
+internal fun resolveLoginLocalDataAction(
+    isAuthenticated: Boolean,
+    authenticatedUserId: Long?,
+    retainedOwnerUserId: Long?,
+    incomingUserId: Long,
+    hasUnsyncedUserData: Boolean
+): LoginLocalDataAction {
+    return when {
+        shouldBlockAuthenticatedAccountSwitchBeforeLogin(
+            isAuthenticated = isAuthenticated,
+            authenticatedUserId = authenticatedUserId,
+            incomingUserId = incomingUserId,
+            hasUnsyncedUserData = hasUnsyncedUserData
+        ) -> LoginLocalDataAction.Block
+
+        shouldClearLocalUserDataBeforeLogin(
+            isAuthenticated = isAuthenticated,
+            authenticatedUserId = authenticatedUserId,
+            retainedOwnerUserId = retainedOwnerUserId,
+            incomingUserId = incomingUserId
+        ) -> LoginLocalDataAction.Clear
+
+        else -> LoginLocalDataAction.Keep
+    }
+}
+
+internal fun shouldBlockAuthenticatedAccountSwitchBeforeLogin(
+    isAuthenticated: Boolean,
+    authenticatedUserId: Long?,
     incomingUserId: Long,
     hasUnsyncedUserData: Boolean
 ): Boolean {
-    return previousUserId != null &&
-        previousUserId != incomingUserId &&
+    return isAuthenticated &&
+        authenticatedUserId != null &&
+        authenticatedUserId != incomingUserId &&
         hasUnsyncedUserData
 }
 
+internal fun shouldClearLocalUserDataBeforeLogin(
+    isAuthenticated: Boolean,
+    authenticatedUserId: Long?,
+    retainedOwnerUserId: Long?,
+    incomingUserId: Long
+): Boolean {
+    return if (isAuthenticated) {
+        authenticatedUserId != null && authenticatedUserId != incomingUserId
+    } else {
+        retainedOwnerUserId != null && retainedOwnerUserId != incomingUserId
+    }
+}
+
 private const val MAX_LOGOUT_SYNC_DRAIN_ROUNDS = 5
+
+private fun OnboardingStateDto.toDomain(): OnboardingSnapshot {
+    return OnboardingSnapshot(
+        phase = runCatching { OnboardingPhase.valueOf(phase) }
+            .getOrDefault(OnboardingPhase.NEEDS_WORD_BOOK),
+        selectedWordBookId = selectedWordBookId,
+        revision = revision,
+        updatedAt = updatedAt,
+        completedAt = completedAt
+    )
+}

@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
+import com.chen.memorizewords.core.navigation.OnboardingGuardDelegate
 import com.chen.memorizewords.core.ui.activity.BaseVmDbActivity
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.feature.wordbook.databinding.ActivityWordBookBinding
@@ -22,6 +23,9 @@ import javax.inject.Singleton
 @AndroidEntryPoint
 class WordBookActivity : BaseVmDbActivity<BaseViewModel, ActivityWordBookBinding>() {
 
+    @Inject
+    lateinit var onboardingGuardDelegate: OnboardingGuardDelegate
+
     override val viewModel: BaseViewModel by lazy {
         ViewModelProvider(this)[BaseViewModel::class.java]
     }
@@ -30,6 +34,7 @@ class WordBookActivity : BaseVmDbActivity<BaseViewModel, ActivityWordBookBinding
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+        if (onboardingGuardDelegate.guard(this)) return
         enableEdgeToEdge()
         handleDeepLink()
     }
@@ -38,6 +43,7 @@ class WordBookActivity : BaseVmDbActivity<BaseViewModel, ActivityWordBookBinding
         super.onNewIntent(intent)
         if (intent == null) return
         setIntent(intent)
+        if (onboardingGuardDelegate.guard(this)) return
         handleDeepLink()
     }
 
@@ -46,6 +52,11 @@ class WordBookActivity : BaseVmDbActivity<BaseViewModel, ActivityWordBookBinding
             .findFragmentById(R.id.nav_host_fragment_activity_wordbook) as? NavHostFragment
             ?: return
         navHost.navController.handleDeepLink(intent)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        onboardingGuardDelegate.guard(this)
     }
 }
 

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/feature_onboarding_book_card_spacing">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardCanvas"
+            android:layout_width="@dimen/feature_onboarding_book_card_design_width"
+            android:layout_height="@dimen/feature_onboarding_book_card_design_height"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            app:cardBackgroundColor="@color/feature_onboarding_book_card_background"
+            app:cardCornerRadius="@dimen/feature_onboarding_book_card_corner_radius"
+            app:cardElevation="@dimen/feature_onboarding_book_card_unselected_elevation"
+            app:rippleColor="@color/feature_onboarding_book_card_ripple"
+            app:strokeColor="@android:color/transparent"
+            app:strokeWidth="0dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingStart="@dimen/feature_onboarding_book_card_padding_horizontal"
+                android:paddingTop="@dimen/feature_onboarding_book_card_padding_vertical"
+                android:paddingEnd="@dimen/feature_onboarding_book_card_padding_horizontal"
+                android:paddingBottom="@dimen/feature_onboarding_book_card_padding_vertical">
+
+                <FrameLayout
+                    android:id="@+id/coverContainer"
+                    android:layout_width="@dimen/feature_onboarding_book_cover_width"
+                    android:layout_height="@dimen/feature_onboarding_book_cover_height"
+                    android:background="@drawable/feature_onboarding_bg_word_book_cover"
+                    android:padding="@dimen/feature_onboarding_book_cover_inner_padding"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/ivCover"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@null"
+                        android:scaleType="fitCenter"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/ivCoverFallback"
+                        android:layout_width="@dimen/feature_onboarding_book_cover_fallback_size"
+                        android:layout_height="@dimen/feature_onboarding_book_cover_fallback_size"
+                        android:layout_gravity="center"
+                        android:contentDescription="@null"
+                        android:src="@drawable/feature_onboarding_ic_book"
+                        app:tint="@color/feature_onboarding_book_cover_fallback_tint" />
+                </FrameLayout>
+
+                <ImageView
+                    android:id="@+id/ivSelected"
+                    android:layout_width="@dimen/feature_onboarding_book_selected_icon_size"
+                    android:layout_height="@dimen/feature_onboarding_book_selected_icon_size"
+                    android:contentDescription="@null"
+                    android:src="@drawable/feature_onboarding_ic_selected_check"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/feature_onboarding_book_card_content_spacing"
+                    android:layout_marginEnd="@dimen/feature_onboarding_book_selected_icon_spacing"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/feature_onboarding_book_card_title"
+                    android:textSize="@dimen/feature_onboarding_book_title_text_size"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@id/ivSelected"
+                    app:layout_constraintStart_toEndOf="@id/coverContainer"
+                    app:layout_constraintTop_toTopOf="@id/coverContainer" />
+
+                <TextView
+                    android:id="@+id/tvDescription"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/feature_onboarding_book_card_content_spacing"
+                    android:layout_marginTop="@dimen/feature_onboarding_book_description_margin_top"
+                    android:layout_marginEnd="@dimen/feature_onboarding_book_description_end_spacing"
+                    android:ellipsize="end"
+                    android:lineSpacingExtra="2dp"
+                    android:maxLines="2"
+                    android:textColor="@color/feature_onboarding_book_card_description"
+                    android:textSize="@dimen/feature_onboarding_book_description_text_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/coverContainer"
+                    app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+
+                <TextView
+                    android:id="@+id/tvCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/feature_onboarding_book_badge_height"
+                    android:layout_marginStart="@dimen/feature_onboarding_book_card_content_spacing"
+                    android:background="@drawable/feature_onboarding_bg_word_book_count_badge"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:minWidth="@dimen/feature_onboarding_book_badge_min_width"
+                    android:paddingStart="@dimen/feature_onboarding_book_badge_padding_horizontal"
+                    android:paddingEnd="@dimen/feature_onboarding_book_badge_padding_horizontal"
+                    android:textColor="@color/feature_onboarding_book_badge_text"
+                    android:textSize="@dimen/feature_onboarding_book_badge_text_size"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/coverContainer"
+                    app:layout_constraintStart_toEndOf="@id/coverContainer" />
+
+                <TextView
+                    android:id="@+id/tvLearnerCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/feature_onboarding_book_learner_spacing"
+                    android:includeFontPadding="false"
+                    android:textColor="@color/feature_onboarding_book_card_meta"
+                    android:textSize="@dimen/feature_onboarding_book_learner_text_size"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/tvCount"
+                    app:layout_constraintStart_toEndOf="@id/tvCount" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </FrameLayout>
+</layout>

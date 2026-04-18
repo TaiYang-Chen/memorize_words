@@ -1,12 +1,11 @@
 package com.chen.memorizewords.data.repository.study
 
 import com.chen.memorizewords.data.local.mmkv.plan.StudyPlanDataSource
-import com.chen.memorizewords.data.local.room.model.sync.SyncOutboxDao
 import com.chen.memorizewords.data.repository.sync.StudyPlanSyncPayload
 import com.chen.memorizewords.data.repository.sync.SyncOutboxBizType
 import com.chen.memorizewords.data.repository.sync.SyncOutboxOperation
+import com.chen.memorizewords.data.repository.sync.SyncOutboxStore
 import com.chen.memorizewords.data.repository.sync.SyncOutboxWorkScheduler
-import com.chen.memorizewords.data.repository.sync.syncOutboxEntity
 import com.chen.memorizewords.domain.model.study.StudyPlan
 import com.chen.memorizewords.domain.repository.StudyPlanRepository
 import com.google.gson.Gson
@@ -17,7 +16,7 @@ import javax.inject.Inject
 
 class StudyPlanRepositoryImpl @Inject constructor(
     private val studyPlanDataSource: StudyPlanDataSource,
-    private val syncOutboxDao: SyncOutboxDao,
+    private val syncOutboxStore: SyncOutboxStore,
     private val syncOutboxWorkScheduler: SyncOutboxWorkScheduler,
     private val gson: Gson
 ) : StudyPlanRepository {
@@ -25,18 +24,16 @@ class StudyPlanRepositoryImpl @Inject constructor(
     override suspend fun saveStudyPlan(studyPlan: StudyPlan) {
         withContext(Dispatchers.IO) {
             studyPlanDataSource.saveStudyPlan(studyPlan)
-            syncOutboxDao.upsert(
-                syncOutboxEntity(
-                    bizType = SyncOutboxBizType.STUDY_PLAN,
-                    bizKey = "study_plan",
-                    operation = SyncOutboxOperation.UPSERT,
-                    payload = gson.toJson(
-                        StudyPlanSyncPayload(
-                            dailyNewWords = studyPlan.dailyNewCount,
-                            dailyReviewWords = studyPlan.dailyReviewCount,
-                            testMode = studyPlan.testMode.name,
-                            wordOrderType = studyPlan.wordOrderType.name
-                        )
+            syncOutboxStore.enqueueLatest(
+                bizType = SyncOutboxBizType.STUDY_PLAN,
+                bizKey = "study_plan",
+                operation = SyncOutboxOperation.UPSERT,
+                payload = gson.toJson(
+                    StudyPlanSyncPayload(
+                        dailyNewWords = studyPlan.dailyNewCount,
+                        dailyReviewWords = studyPlan.dailyReviewCount,
+                        testMode = studyPlan.testMode.name,
+                        wordOrderType = studyPlan.wordOrderType.name
                     )
                 )
             )
@@ -56,18 +53,16 @@ class StudyPlanRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             studyPlanDataSource.saveStudyCount(dailyNewCount, dailyReviewCount)
             val plan = studyPlanDataSource.getStudyPlan()
-            syncOutboxDao.upsert(
-                syncOutboxEntity(
-                    bizType = SyncOutboxBizType.STUDY_PLAN,
-                    bizKey = "study_plan",
-                    operation = SyncOutboxOperation.UPSERT,
-                    payload = gson.toJson(
-                        StudyPlanSyncPayload(
-                            dailyNewWords = dailyNewCount,
-                            dailyReviewWords = dailyReviewCount,
-                            testMode = plan.testMode.name,
-                            wordOrderType = plan.wordOrderType.name
-                        )
+            syncOutboxStore.enqueueLatest(
+                bizType = SyncOutboxBizType.STUDY_PLAN,
+                bizKey = "study_plan",
+                operation = SyncOutboxOperation.UPSERT,
+                payload = gson.toJson(
+                    StudyPlanSyncPayload(
+                        dailyNewWords = dailyNewCount,
+                        dailyReviewWords = dailyReviewCount,
+                        testMode = plan.testMode.name,
+                        wordOrderType = plan.wordOrderType.name
                     )
                 )
             )

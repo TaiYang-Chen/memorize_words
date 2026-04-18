@@ -1,5 +1,6 @@
 package com.chen.memorizewords.network.dto
 
+import com.chen.memorizewords.network.api.datasync.OnboardingStateDto
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = false)
@@ -9,7 +10,8 @@ data class LoginResponseDto(
     val tokenType: String,
     val user: UserDto,
     val expiresIn: Long,
-    val refreshTokenExpiresIn: Long
+    val refreshTokenExpiresIn: Long,
+    val onboarding: OnboardingStateDto? = null
 )
 
 @JsonClass(generateAdapter = false)

@@ -10,6 +10,7 @@ import com.chen.memorizewords.data.repository.download.DownloadRepositoryImpl
 import com.chen.memorizewords.data.repository.feedback.FeedbackRepositoryImpl
 import com.chen.memorizewords.data.repository.floating.FloatingWordDisplayRecordRepositoryImpl
 import com.chen.memorizewords.data.repository.floating.FloatingWordSettingsRepositoryImpl
+import com.chen.memorizewords.data.repository.onboarding.OnboardingRepositoryImpl
 import com.chen.memorizewords.data.repository.practice.PracticeRecordRepositoryImpl
 import com.chen.memorizewords.data.repository.practice.ExamPracticeRepositoryImpl
 import com.chen.memorizewords.data.repository.practice.PracticeSessionRecordRepositoryImpl
@@ -18,6 +19,7 @@ import com.chen.memorizewords.data.repository.record.LearningRecordRepositoryImp
 import com.chen.memorizewords.data.repository.study.FavoritesRepositoryImpl
 import com.chen.memorizewords.data.repository.study.StudyPlanRepositoryImpl
 import com.chen.memorizewords.data.repository.sync.SyncRepositoryImpl
+import com.chen.memorizewords.data.repository.sync.SyncAuthenticatedRequestSuccessReporter
 import com.chen.memorizewords.data.repository.wordbook.update.WordBookUpdateCoordinatorImpl
 import com.chen.memorizewords.data.repository.user.AuthRepositoryImpl
 import com.chen.memorizewords.data.repository.user.UserRepositoryImpl
@@ -30,6 +32,7 @@ import com.chen.memorizewords.domain.repository.WordLearningRepository
 import com.chen.memorizewords.domain.repository.download.DownloadRepository
 import com.chen.memorizewords.domain.repository.floating.FloatingWordDisplayRecordRepository
 import com.chen.memorizewords.domain.repository.floating.FloatingWordSettingsRepository
+import com.chen.memorizewords.domain.repository.onboarding.OnboardingRepository
 import com.chen.memorizewords.domain.repository.practice.PracticeRecordRepository
 import com.chen.memorizewords.domain.repository.practice.ExamPracticeRepository
 import com.chen.memorizewords.domain.repository.practice.PracticeSessionRecordRepository
@@ -41,6 +44,7 @@ import com.chen.memorizewords.domain.repository.word.WordRepository
 import com.chen.memorizewords.domain.repository.sync.SyncRepository
 import com.chen.memorizewords.domain.repository.user.AuthRepository
 import com.chen.memorizewords.domain.repository.user.UserRepository
+import com.chen.memorizewords.domain.service.sync.AuthenticatedRequestSuccessReporter
 import com.chen.memorizewords.domain.service.wordbook.WordBookUpdateCoordinator
 import dagger.Binds
 import dagger.Module
@@ -88,6 +92,14 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindSyncRepository(impl: SyncRepositoryImpl): SyncRepository
+
+    @Binds
+    abstract fun bindOnboardingRepository(impl: OnboardingRepositoryImpl): OnboardingRepository
+
+    @Binds
+    abstract fun bindAuthenticatedRequestSuccessReporter(
+        impl: SyncAuthenticatedRequestSuccessReporter
+    ): AuthenticatedRequestSuccessReporter
 
     @Binds
     abstract fun bindFeedbackRepository(impl: FeedbackRepositoryImpl): FeedbackRepository

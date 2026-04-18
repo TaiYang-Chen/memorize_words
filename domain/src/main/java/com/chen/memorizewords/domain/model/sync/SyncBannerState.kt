@@ -7,7 +7,11 @@ sealed interface SyncBannerState {
         val pendingCount: Int
     ) : SyncBannerState
 
-    data class Failed(
+    data class Pending(
+        val pendingCount: Int
+    ) : SyncBannerState
+
+    data class Blocked(
         val pendingCount: Int
     ) : SyncBannerState
 }
@@ -15,5 +19,6 @@ sealed interface SyncBannerState {
 data class PendingSyncSummary(
     val totalCount: Int,
     val hasNetwork: Boolean,
-    val hasRetriableFailure: Boolean
+    val hasRetriableFailure: Boolean,
+    val hasBlockedFailure: Boolean
 )

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="titleText"
+            type="String" />
+
+        <variable
+            name="subtitleText"
+            type="String" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvHeaderTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxWidth="@dimen/feature_onboarding_header_title_max_width"
+            android:text="@{titleText}"
+            android:textColor="@color/feature_onboarding_header_title"
+            android:textSize="@dimen/feature_onboarding_header_title_text_size"
+            android:textStyle="bold"
+            tools:text="选择你的学习目标" />
+
+        <TextView
+            android:id="@+id/tvHeaderSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/feature_onboarding_header_subtitle_margin_top"
+            android:gravity="center"
+            android:lineSpacingExtra="@dimen/feature_onboarding_header_subtitle_line_spacing"
+            android:maxWidth="@dimen/feature_onboarding_header_subtitle_max_width"
+            android:text="@{subtitleText}"
+            android:textColor="@color/feature_onboarding_header_subtitle"
+            android:textSize="@dimen/feature_onboarding_header_subtitle_text_size"
+            tools:text="挑选一本词汇书，开启你的词汇进阶之旅。你可以随时在设置中更改。" />
+    </LinearLayout>
+</layout>

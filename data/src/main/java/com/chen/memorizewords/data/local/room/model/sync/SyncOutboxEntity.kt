@@ -10,6 +10,8 @@ import androidx.room.PrimaryKey
     indices = [
         Index(value = ["biz_key"], unique = true),
         Index(value = ["state"]),
+        Index(value = ["next_retry_at"]),
+        Index(value = ["lease_expires_at"]),
         Index(value = ["updated_at"])
     ]
 )
@@ -37,6 +39,21 @@ data class SyncOutboxEntity(
 
     @ColumnInfo(name = "last_error")
     val lastError: String?,
+
+    @ColumnInfo(name = "failure_kind")
+    val failureKind: String?,
+
+    @ColumnInfo(name = "last_attempt_at")
+    val lastAttemptAt: Long,
+
+    @ColumnInfo(name = "next_retry_at")
+    val nextRetryAt: Long,
+
+    @ColumnInfo(name = "lease_token")
+    val leaseToken: String?,
+
+    @ColumnInfo(name = "lease_expires_at")
+    val leaseExpiresAt: Long,
 
     @ColumnInfo(name = "updated_at")
     val updatedAt: Long

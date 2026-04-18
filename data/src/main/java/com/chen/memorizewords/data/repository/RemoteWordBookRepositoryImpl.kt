@@ -124,7 +124,8 @@ class RemoteWordBookRepositoryImpl @Inject constructor(
 
     override suspend fun downloadBook(
         book: WordBook,
-        forceRefresh: Boolean
+        forceRefresh: Boolean,
+        runInForeground: Boolean
     ): DownloadCommandResult {
         val workManager = workManagerOrNull()
         val existing = wordBookDao.getWordBookById(book.id)
@@ -151,7 +152,8 @@ class RemoteWordBookRepositoryImpl @Inject constructor(
                     WordBookDownloadWorkConstants.KEY_TOTAL_WORDS to book.totalWords,
                     WordBookDownloadWorkConstants.KEY_REPORT_MY_BOOK to true,
                     WordBookDownloadWorkConstants.KEY_FORCE_REFRESH to forceRefresh,
-                    WordBookDownloadWorkConstants.KEY_TARGET_VERSION to remoteUpdatedAt
+                    WordBookDownloadWorkConstants.KEY_TARGET_VERSION to remoteUpdatedAt,
+                    WordBookDownloadWorkConstants.KEY_RUN_IN_FOREGROUND to runInForeground
                 )
             )
             .addTag(WordBookDownloadWorkConstants.TAG_DOWNLOAD)

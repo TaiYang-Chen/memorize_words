@@ -58,6 +58,8 @@ class WordBookDownloadWorker(
         val reportMyBook = inputData.getBoolean(WordBookDownloadWorkConstants.KEY_REPORT_MY_BOOK, false)
         val forceRefresh = inputData.getBoolean(WordBookDownloadWorkConstants.KEY_FORCE_REFRESH, false)
         val targetVersion = inputData.getLong(WordBookDownloadWorkConstants.KEY_TARGET_VERSION, 0L)
+        val runInForeground =
+            inputData.getBoolean(WordBookDownloadWorkConstants.KEY_RUN_IN_FOREGROUND, true)
 
         if (bookId <= 0L) {
             return Result.failure(
@@ -96,7 +98,9 @@ class WordBookDownloadWorker(
             var total = expectedTotal
             var pageSize = resolvePageSize(total)
 
-            updateForeground(notificationId, bookTitle, downloadedCount, total)
+            if (runInForeground) {
+                updateForeground(notificationId, bookTitle, downloadedCount, total)
+            }
 
             if (total !in 1..downloadedCount) {
                 var page = downloadedCount / pageSize
@@ -127,7 +131,9 @@ class WordBookDownloadWorker(
                             .putInt(WordBookDownloadWorkConstants.KEY_PROGRESS, progress)
                             .build()
                     )
-                    updateForeground(notificationId, bookTitle, downloadedCount, total)
+                    if (runInForeground) {
+                        updateForeground(notificationId, bookTitle, downloadedCount, total)
+                    }
 
                     if (total > 0 && downloadedCount >= total) break
                     page++

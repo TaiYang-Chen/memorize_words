@@ -11,8 +11,16 @@ interface HomeEntry {
     fun createHomeIntent(context: Context): Intent
 }
 
+interface AppLaunchEntry {
+    fun createLaunchIntent(context: Context): Intent
+}
+
 interface AuthEntry {
     fun createAuthIntent(context: Context): Intent
+}
+
+interface OnboardingEntry {
+    fun createOnboardingIntent(context: Context): Intent
 }
 
 interface WordBookEntry {

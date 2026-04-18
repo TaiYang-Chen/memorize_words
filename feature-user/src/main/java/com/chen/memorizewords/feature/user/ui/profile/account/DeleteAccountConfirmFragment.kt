@@ -3,10 +3,10 @@ package com.chen.memorizewords.feature.user.ui.profile.account
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
+import com.chen.memorizewords.core.navigation.AuthEntry
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.core.ui.vm.UiEffect
 import com.chen.memorizewords.feature.user.databinding.ModuleUserFragmentDeleteAccountConfirmBinding
-import com.chen.memorizewords.core.navigation.AuthEntry
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

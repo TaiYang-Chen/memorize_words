@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="feature_onboarding_page_padding">24dp</dimen>
+    <dimen name="feature_onboarding_header_margin_top">28dp</dimen>
+    <dimen name="feature_onboarding_header_label_text_size">16sp</dimen>
+    <dimen name="feature_onboarding_header_title_margin_top">32dp</dimen>
+    <dimen name="feature_onboarding_header_title_text_size">22sp</dimen>
+    <dimen name="feature_onboarding_header_title_max_width">320dp</dimen>
+    <dimen name="feature_onboarding_header_subtitle_margin_top">8dp</dimen>
+    <dimen name="feature_onboarding_header_subtitle_text_size">14sp</dimen>
+    <dimen name="feature_onboarding_header_subtitle_line_spacing">6dp</dimen>
+    <dimen name="feature_onboarding_header_subtitle_max_width">330dp</dimen>
+    <dimen name="feature_onboarding_body_margin_top">24dp</dimen>
+    <dimen name="feature_onboarding_select_book_hero_margin_top">52dp</dimen>
+
+    <dimen name="feature_onboarding_section_spacing_compact">12dp</dimen>
+    <dimen name="feature_onboarding_section_spacing_large">20dp</dimen>
+    <dimen name="feature_onboarding_card_spacing_compact">10dp</dimen>
+
+    <dimen name="feature_onboarding_goal_card_min_height">92dp</dimen>
+    <dimen name="feature_onboarding_goal_card_padding_horizontal">18dp</dimen>
+    <dimen name="feature_onboarding_goal_card_padding_vertical">14dp</dimen>
+    <dimen name="feature_onboarding_goal_card_title_text_size">14sp</dimen>
+    <dimen name="feature_onboarding_goal_card_value_margin_top">10dp</dimen>
+    <dimen name="feature_onboarding_goal_card_value_text_size">20sp</dimen>
+    <dimen name="feature_onboarding_goal_card_unit_margin_start">6dp</dimen>
+    <dimen name="feature_onboarding_goal_card_unit_margin_bottom">2dp</dimen>
+    <dimen name="feature_onboarding_goal_card_unit_text_size">12sp</dimen>
+    <dimen name="feature_onboarding_goal_panel_corner_radius">28dp</dimen>
+    <dimen name="feature_onboarding_goal_panel_padding">18dp</dimen>
+    <dimen name="feature_onboarding_goal_panel_icon_size">24dp</dimen>
+    <dimen name="feature_onboarding_goal_panel_icon_inner_size">24dp</dimen>
+    <dimen name="feature_onboarding_goal_panel_header_spacing">12dp</dimen>
+    <dimen name="feature_onboarding_goal_panel_subtitle_margin_top">4dp</dimen>
+    <dimen name="feature_onboarding_goal_panel_title_text_size">18sp</dimen>
+    <dimen name="feature_onboarding_goal_panel_subtitle_text_size">14sp</dimen>
+    <dimen name="feature_onboarding_goal_control_height">64dp</dimen>
+    <dimen name="feature_onboarding_goal_control_corner_radius">28dp</dimen>
+    <dimen name="feature_onboarding_goal_control_padding_horizontal">8dp</dimen>
+    <dimen name="feature_onboarding_goal_control_button_size">24dp</dimen>
+    <dimen name="feature_onboarding_goal_control_button_corner_radius">14dp</dimen>
+    <dimen name="feature_onboarding_goal_control_value_text_size">14sp</dimen>
+    <dimen name="feature_onboarding_goal_button_size">36dp</dimen>
+    <dimen name="feature_onboarding_goal_button_padding">4dp</dimen>
+    <dimen name="feature_onboarding_goal_button_spacing">14dp</dimen>
+
+    <dimen name="feature_onboarding_test_mode_card_min_height">60dp</dimen>
+    <dimen name="feature_onboarding_test_mode_card_padding_horizontal">10dp</dimen>
+    <dimen name="feature_onboarding_test_mode_card_padding_vertical">10dp</dimen>
+    <dimen name="feature_onboarding_test_mode_card_spacing">10dp</dimen>
+    <dimen name="feature_onboarding_test_mode_icon_size">18dp</dimen>
+    <dimen name="feature_onboarding_test_mode_text_margin_top">8dp</dimen>
+    <dimen name="feature_onboarding_test_mode_text_size">12sp</dimen>
+
+    <dimen name="feature_onboarding_book_card_spacing">14dp</dimen>
+    <dimen name="feature_onboarding_book_card_design_width">343dp</dimen>
+    <dimen name="feature_onboarding_book_card_design_height">146dp</dimen>
+    <dimen name="feature_onboarding_book_card_corner_radius">18dp</dimen>
+    <dimen name="feature_onboarding_book_card_padding_horizontal">16dp</dimen>
+    <dimen name="feature_onboarding_book_card_padding_vertical">14dp</dimen>
+    <dimen name="feature_onboarding_book_card_content_spacing">14dp</dimen>
+    <dimen name="feature_onboarding_book_card_selected_stroke_width">2dp</dimen>
+    <dimen name="feature_onboarding_book_card_unselected_elevation">0dp</dimen>
+    <dimen name="feature_onboarding_book_card_selected_elevation">0dp</dimen>
+
+    <dimen name="feature_onboarding_book_cover_width">88dp</dimen>
+    <dimen name="feature_onboarding_book_cover_height">104dp</dimen>
+    <dimen name="feature_onboarding_book_cover_inner_padding">10dp</dimen>
+    <dimen name="feature_onboarding_book_cover_fallback_size">26dp</dimen>
+
+    <dimen name="feature_onboarding_book_selected_icon_size">24dp</dimen>
+    <dimen name="feature_onboarding_book_selected_icon_spacing">10dp</dimen>
+    <dimen name="feature_onboarding_book_title_text_size">18sp</dimen>
+    <dimen name="feature_onboarding_book_description_margin_top">8dp</dimen>
+    <dimen name="feature_onboarding_book_description_end_spacing">8dp</dimen>
+    <dimen name="feature_onboarding_book_description_text_size">15sp</dimen>
+
+    <dimen name="feature_onboarding_book_badge_height">26dp</dimen>
+    <dimen name="feature_onboarding_book_badge_min_width">56dp</dimen>
+    <dimen name="feature_onboarding_book_badge_padding_horizontal">10dp</dimen>
+    <dimen name="feature_onboarding_book_badge_text_size">12sp</dimen>
+    <dimen name="feature_onboarding_book_learner_spacing">10dp</dimen>
+    <dimen name="feature_onboarding_book_learner_text_size">12sp</dimen>
+</resources>

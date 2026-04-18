@@ -5,12 +5,11 @@ import com.chen.memorizewords.data.local.room.AppDatabase
 import com.chen.memorizewords.data.local.mmkv.checkin.CheckInBusinessCalendar
 import com.chen.memorizewords.data.local.room.model.practice.session.PracticeSessionRecordDao
 import com.chen.memorizewords.data.local.room.model.practice.session.PracticeSessionRecordEntity
-import com.chen.memorizewords.data.local.room.model.sync.SyncOutboxDao
 import com.chen.memorizewords.data.repository.sync.PracticeSessionSyncPayload
 import com.chen.memorizewords.data.repository.sync.SyncOutboxBizType
 import com.chen.memorizewords.data.repository.sync.SyncOutboxOperation
+import com.chen.memorizewords.data.repository.sync.SyncOutboxStore
 import com.chen.memorizewords.data.repository.sync.SyncOutboxWorkScheduler
-import com.chen.memorizewords.data.repository.sync.syncOutboxEntity
 import com.chen.memorizewords.domain.model.practice.PracticeEntryType
 import com.chen.memorizewords.domain.model.practice.PracticeMode
 import com.chen.memorizewords.domain.model.practice.PracticeSessionRecord
@@ -28,7 +27,7 @@ class PracticeSessionRecordRepositoryImpl @Inject constructor(
     private val appDatabase: AppDatabase,
     private val practiceSessionRecordDao: PracticeSessionRecordDao,
     private val checkInBusinessCalendar: CheckInBusinessCalendar,
-    private val syncOutboxDao: SyncOutboxDao,
+    private val syncOutboxStore: SyncOutboxStore,
     private val syncOutboxWorkScheduler: SyncOutboxWorkScheduler,
     private val gson: Gson
 ) : PracticeSessionRecordRepository {
@@ -39,13 +38,11 @@ class PracticeSessionRecordRepositoryImpl @Inject constructor(
             val recordId = practiceSessionRecordDao.insert(record.toEntity(date))
             val targetId = if (recordId > 0L) recordId else record.id
             if (targetId > 0L) {
-                syncOutboxDao.upsert(
-                    syncOutboxEntity(
-                        bizType = SyncOutboxBizType.PRACTICE_SESSION,
-                        bizKey = "practice_session:$targetId",
-                        operation = SyncOutboxOperation.UPSERT,
-                        payload = gson.toJson(record.toSyncPayload(id = targetId, date = date))
-                    )
+                syncOutboxStore.enqueueLatest(
+                    bizType = SyncOutboxBizType.PRACTICE_SESSION,
+                    bizKey = "practice_session:$targetId",
+                    operation = SyncOutboxOperation.UPSERT,
+                    payload = gson.toJson(record.toSyncPayload(id = targetId, date = date))
                 )
             }
         }

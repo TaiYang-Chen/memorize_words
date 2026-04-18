@@ -4,12 +4,11 @@ import androidx.room.withTransaction
 import com.chen.memorizewords.data.local.room.AppDatabase
 import com.chen.memorizewords.data.local.mmkv.checkin.CheckInBusinessCalendar
 import com.chen.memorizewords.data.local.room.model.practice.daily.DailyPracticeDurationDao
-import com.chen.memorizewords.data.local.room.model.sync.SyncOutboxDao
 import com.chen.memorizewords.data.repository.sync.PracticeDurationSyncPayload
 import com.chen.memorizewords.data.repository.sync.SyncOutboxBizType
 import com.chen.memorizewords.data.repository.sync.SyncOutboxOperation
+import com.chen.memorizewords.data.repository.sync.SyncOutboxStore
 import com.chen.memorizewords.data.repository.sync.SyncOutboxWorkScheduler
-import com.chen.memorizewords.data.repository.sync.syncOutboxEntity
 import com.chen.memorizewords.domain.model.practice.PracticeDailyDurationStats
 import com.chen.memorizewords.domain.repository.practice.PracticeRecordRepository
 import javax.inject.Inject
@@ -25,7 +24,7 @@ class PracticeRecordRepositoryImpl @Inject constructor(
     private val appDatabase: AppDatabase,
     private val dailyPracticeDurationDao: DailyPracticeDurationDao,
     private val checkInBusinessCalendar: CheckInBusinessCalendar,
-    private val syncOutboxDao: SyncOutboxDao,
+    private val syncOutboxStore: SyncOutboxStore,
     private val syncOutboxWorkScheduler: SyncOutboxWorkScheduler,
     private val gson: Gson
 ) : PracticeRecordRepository {
@@ -40,17 +39,15 @@ class PracticeRecordRepositoryImpl @Inject constructor(
                 updatedAt = System.currentTimeMillis()
             )
             dailyPracticeDurationDao.getByDate(today)?.let { duration ->
-                syncOutboxDao.upsert(
-                    syncOutboxEntity(
-                        bizType = SyncOutboxBizType.PRACTICE_DURATION,
-                        bizKey = "practice_duration:${duration.date}",
-                        operation = SyncOutboxOperation.UPSERT,
-                        payload = gson.toJson(
-                            PracticeDurationSyncPayload(
-                                date = duration.date,
-                                totalDurationMs = duration.totalDurationMs,
-                                updatedAt = duration.updatedAt
-                            )
+                syncOutboxStore.enqueueLatest(
+                    bizType = SyncOutboxBizType.PRACTICE_DURATION,
+                    bizKey = "practice_duration:${duration.date}",
+                    operation = SyncOutboxOperation.UPSERT,
+                    payload = gson.toJson(
+                        PracticeDurationSyncPayload(
+                            date = duration.date,
+                            totalDurationMs = duration.totalDurationMs,
+                            updatedAt = duration.updatedAt
                         )
                     )
                 )

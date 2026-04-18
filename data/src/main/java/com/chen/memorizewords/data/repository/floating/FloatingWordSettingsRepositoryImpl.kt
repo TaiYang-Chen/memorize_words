@@ -1,11 +1,10 @@
 ﻿package com.chen.memorizewords.data.repository.floating
 
-import com.chen.memorizewords.data.local.room.model.sync.SyncOutboxDao
 import com.chen.memorizewords.data.repository.sync.FloatingSettingsSyncPayload
 import com.chen.memorizewords.data.repository.sync.SyncOutboxBizType
 import com.chen.memorizewords.data.repository.sync.SyncOutboxOperation
+import com.chen.memorizewords.data.repository.sync.SyncOutboxStore
 import com.chen.memorizewords.data.repository.sync.SyncOutboxWorkScheduler
-import com.chen.memorizewords.data.repository.sync.syncOutboxEntity
 import com.chen.memorizewords.domain.model.floating.FloatingDockConfig
 import com.chen.memorizewords.domain.model.floating.FloatingDockState
 import com.chen.memorizewords.domain.model.floating.FloatingWordFieldConfig
@@ -29,7 +28,7 @@ internal fun normalizeCardOpacityPercent(value: Int): Int = value.coerceIn(0, 10
 @Singleton
 class FloatingWordSettingsRepositoryImpl @Inject constructor(
     private val mmkv: MMKV,
-    private val syncOutboxDao: SyncOutboxDao,
+    private val syncOutboxStore: SyncOutboxStore,
     private val syncOutboxWorkScheduler: SyncOutboxWorkScheduler,
     private val gson: Gson
 ) : FloatingWordSettingsRepository {
@@ -225,26 +224,24 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
     }
 
     private suspend fun persistOutbox(settings: FloatingWordSettings) {
-        syncOutboxDao.upsert(
-            syncOutboxEntity(
-                bizType = SyncOutboxBizType.FLOATING_SETTINGS,
-                bizKey = "floating_settings",
-                operation = SyncOutboxOperation.UPSERT,
-                payload = gson.toJson(
-                    FloatingSettingsSyncPayload(
-                        enabled = settings.enabled,
-                        sourceType = settings.sourceType.name,
-                        orderType = settings.orderType.name,
-                        fieldConfigsJson = gson.toJson(settings.fieldConfigs),
-                        selectedWordIdsJson = gson.toJson(settings.selectedWordIds),
-                        floatingBallX = settings.floatingBallX,
-                        floatingBallY = settings.floatingBallY,
-                        autoStartOnBoot = settings.autoStartOnBoot,
-                        autoStartOnAppLaunch = settings.autoStartOnAppLaunch,
-                        cardOpacityPercent = settings.cardOpacityPercent,
-                        dockConfigJson = gson.toJson(settings.dockConfig),
-                        dockStateJson = settings.dockState?.let(gson::toJson)
-                    )
+        syncOutboxStore.enqueueLatest(
+            bizType = SyncOutboxBizType.FLOATING_SETTINGS,
+            bizKey = "floating_settings",
+            operation = SyncOutboxOperation.UPSERT,
+            payload = gson.toJson(
+                FloatingSettingsSyncPayload(
+                    enabled = settings.enabled,
+                    sourceType = settings.sourceType.name,
+                    orderType = settings.orderType.name,
+                    fieldConfigsJson = gson.toJson(settings.fieldConfigs),
+                    selectedWordIdsJson = gson.toJson(settings.selectedWordIds),
+                    floatingBallX = settings.floatingBallX,
+                    floatingBallY = settings.floatingBallY,
+                    autoStartOnBoot = settings.autoStartOnBoot,
+                    autoStartOnAppLaunch = settings.autoStartOnAppLaunch,
+                    cardOpacityPercent = settings.cardOpacityPercent,
+                    dockConfigJson = gson.toJson(settings.dockConfig),
+                    dockStateJson = settings.dockState?.let(gson::toJson)
                 )
             )
         )

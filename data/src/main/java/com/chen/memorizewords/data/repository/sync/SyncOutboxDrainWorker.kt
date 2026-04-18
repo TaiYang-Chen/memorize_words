@@ -24,10 +24,12 @@ class SyncOutboxDrainWorker(
             return Result.success()
         }
 
-        return when (entryPoint.syncOutboxProcessor().drainBatch()) {
-            SyncOutboxProcessor.DrainResult.Empty -> Result.success()
-            SyncOutboxProcessor.DrainResult.Drained -> Result.success()
-            SyncOutboxProcessor.DrainResult.RetryNeeded -> Result.retry()
+        while (true) {
+            when (entryPoint.syncOutboxProcessor().drainBatch()) {
+                SyncOutboxProcessor.DrainResult.Empty -> return Result.success()
+                SyncOutboxProcessor.DrainResult.Drained -> Unit
+                SyncOutboxProcessor.DrainResult.RetryNeeded -> return Result.retry()
+            }
         }
     }
 }

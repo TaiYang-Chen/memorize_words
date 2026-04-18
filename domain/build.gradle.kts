@@ -19,4 +19,6 @@ dependencies {
     implementation(project(":speech-api"))
     implementation(libs.javax.inject)
     implementation(libs.kotlinx.coroutines.core)
+
+    testImplementation("junit:junit:4.13.2")
 }

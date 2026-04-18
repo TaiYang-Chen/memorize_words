@@ -141,6 +141,9 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onStartLearningClick() {
+        if (!ensureWordBookSelected()) {
+            return
+        }
         val plan = studyPlan.value
         val completedNewPlan = plan.dailyNewCount > 0 && todayNewCount.value >= plan.dailyNewCount
         if (!completedNewPlan) {
@@ -165,37 +168,51 @@ class HomeViewModel @Inject constructor(
     }
 
     fun toLearningReviewActivity() {
-        wordBookInfo.value?.let { bookInfo ->
-            viewModelScope.launch {
-                val route = learningLauncher.createReviewRoute(
-                    bookId = bookInfo.bookId,
-                    count = resolveReviewWordCount(studyPlan.value),
-                    orderType = studyPlan.value.wordOrderType
-                )
-                if (route == null) {
-                    showToast(resourceProvider.getString(R.string.home_learning_no_words))
-                    return@launch
-                }
-                navigateRoute(route)
+        val bookInfo = wordBookInfo.value
+        if (bookInfo == null) {
+            showToast(resourceProvider.getString(R.string.home_practice_no_book))
+            return
+        }
+        viewModelScope.launch {
+            val route = learningLauncher.createReviewRoute(
+                bookId = bookInfo.bookId,
+                count = resolveReviewWordCount(studyPlan.value),
+                orderType = studyPlan.value.wordOrderType
+            )
+            if (route == null) {
+                showToast(resourceProvider.getString(R.string.home_learning_no_words))
+                return@launch
             }
+            navigateRoute(route)
         }
     }
 
     private fun navigateToNewLearning(count: Int) {
-        wordBookInfo.value?.let { bookInfo ->
-            viewModelScope.launch {
-                val route = learningLauncher.createNewRoute(
-                    bookId = bookInfo.bookId,
-                    count = count,
-                    orderType = studyPlan.value.wordOrderType
-                )
-                if (route == null) {
-                    showToast(resourceProvider.getString(R.string.home_learning_no_words))
-                    return@launch
-                }
-                navigateRoute(route)
-            }
+        val bookInfo = wordBookInfo.value
+        if (bookInfo == null) {
+            showToast(resourceProvider.getString(R.string.home_practice_no_book))
+            return
         }
+        viewModelScope.launch {
+            val route = learningLauncher.createNewRoute(
+                bookId = bookInfo.bookId,
+                count = count,
+                orderType = studyPlan.value.wordOrderType
+            )
+            if (route == null) {
+                showToast(resourceProvider.getString(R.string.home_learning_no_words))
+                return@launch
+            }
+            navigateRoute(route)
+        }
+    }
+
+    private fun ensureWordBookSelected(): Boolean {
+        if (wordBookInfo.value != null) {
+            return true
+        }
+        showToast(resourceProvider.getString(R.string.home_practice_no_book))
+        return false
     }
 }
 

@@ -6,6 +6,8 @@ import com.chen.memorizewords.data.local.mmkv.auth.AuthLocalDataSourceImpl
 import com.chen.memorizewords.data.local.mmkv.checkin.CheckInConfigDataSource
 import com.chen.memorizewords.data.local.mmkv.checkin.CheckInConfigDataSourceImpl
 import com.chen.memorizewords.data.local.mmkv.download.UpdateDownloadStore
+import com.chen.memorizewords.data.local.mmkv.onboarding.OnboardingSnapshotDataSource
+import com.chen.memorizewords.data.local.mmkv.onboarding.OnboardingSnapshotDataSourceImpl
 import com.chen.memorizewords.data.local.mmkv.plan.StudyPlanDataSource
 import com.chen.memorizewords.data.local.mmkv.plan.StudyPlanDataSourceImpl
 import com.chen.memorizewords.data.remote.RemoteResultAdapter
@@ -70,6 +72,15 @@ object DataModule {
     @Singleton
     fun provideAuthLocalDataSource(mmkv: MMKV): AuthLocalDataSource {
         return AuthLocalDataSourceImpl(mmkv)
+    }
+
+    @Provides
+    @Singleton
+    fun provideOnboardingSnapshotDataSource(
+        mmkv: MMKV,
+        gson: Gson
+    ): OnboardingSnapshotDataSource {
+        return OnboardingSnapshotDataSourceImpl(mmkv, gson)
     }
 
     @Provides

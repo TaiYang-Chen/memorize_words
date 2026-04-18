@@ -6,6 +6,8 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.chen.memorizewords.core.navigation.AppLaunchEntry
+import com.chen.memorizewords.core.navigation.OnboardingGuardDelegate
 import com.chen.memorizewords.core.navigation.WordBookEntryDestination
 import com.chen.memorizewords.core.ui.activity.BaseVmDbActivity
 import com.chen.memorizewords.core.ui.vm.UiEvent
@@ -14,7 +16,6 @@ import com.chen.memorizewords.feature.home.ui.home.HomeFragment
 import com.chen.memorizewords.feature.home.ui.practice.PracticeFragment
 import com.chen.memorizewords.feature.home.ui.profile.ProfileFragment
 import com.chen.memorizewords.feature.home.ui.stats.StatsFragment
-import com.chen.memorizewords.core.navigation.AuthEntry
 import com.chen.memorizewords.core.navigation.WordBookEntry
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -32,10 +33,13 @@ class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBindi
     }
 
     @Inject
-    lateinit var authEntry: AuthEntry
+    lateinit var appLaunchEntry: AppLaunchEntry
 
     @Inject
     lateinit var wordBookEntry: WordBookEntry
+
+    @Inject
+    lateinit var onboardingGuardDelegate: OnboardingGuardDelegate
 
     private val homeTag = "home_fragment"
     private val practiceTag = "practice_fragment"
@@ -48,23 +52,15 @@ class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBindi
             viewModel.loginState.collect { logged ->
                 logged ?: return@collect
                 if (!logged) {
-                    startActivity(authEntry.createAuthIntent(this@HomeActivity))
+                    startActivity(appLaunchEntry.createLaunchIntent(this@HomeActivity))
                     finish()
-                }
-            }
-        }
-        lifecycleScope.launch {
-            viewModel.wordbookState.collect { isSelected ->
-                isSelected ?: return@collect
-                if (viewModel.loginState.value != true) return@collect
-                if (!isSelected) {
-                    startActivity(wordBookEntry.createWordBookIntent(this@HomeActivity))
                 }
             }
         }
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+        if (onboardingGuardDelegate.guard(this)) return
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 handleExitBackPress()
@@ -74,7 +70,16 @@ class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBindi
         viewModel.checkAutoLogin()
     }
 
+    override fun onResume() {
+        super.onResume()
+        onboardingGuardDelegate.guard(this)
+    }
+
     private fun setupBottomNav(selectDefault: Boolean) {
+        if (selectDefault) {
+            showHome(immediate = true)
+            databind.bottomNav.menu.findItem(R.id.menu_home).isChecked = true
+        }
         databind.bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.menu_home -> showHome()
@@ -84,13 +89,10 @@ class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBindi
             }
             true
         }
-        if (selectDefault) {
-            databind.bottomNav.selectedItemId = R.id.menu_home
-        }
     }
 
-    private fun showHome() {
-        showFragment(homeTag) { HomeFragment() }
+    private fun showHome(immediate: Boolean = false) {
+        showFragment(homeTag, immediate) { HomeFragment() }
     }
 
     private fun showProfile() {
@@ -105,7 +107,11 @@ class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBindi
         showFragment(statsTag) { StatsFragment() }
     }
 
-    private fun showFragment(tag: String, factory: () -> androidx.fragment.app.Fragment) {
+    private fun showFragment(
+        tag: String,
+        immediate: Boolean = false,
+        factory: () -> androidx.fragment.app.Fragment
+    ) {
         val fragmentManager = supportFragmentManager
         val homeFragment = fragmentManager.findFragmentByTag(homeTag)
         val practiceFragment = fragmentManager.findFragmentByTag(practiceTag)
@@ -123,7 +129,13 @@ class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBindi
             } else {
                 add(R.id.home_fragment_container, target, tag)
             }
-        }.commit()
+        }.run {
+            if (immediate) {
+                commitNow()
+            } else {
+                commit()
+            }
+        }
     }
 
     override fun onNavigationRoute(event: UiEvent.Navigation.Route) {

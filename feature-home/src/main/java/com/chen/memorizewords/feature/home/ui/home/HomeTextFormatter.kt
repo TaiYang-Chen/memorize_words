@@ -77,8 +77,13 @@ internal class HomeTextFormatter(
                 state.pendingCount
             )
 
-            is SyncBannerState.Failed -> resourceProvider.getString(
-                R.string.home_sync_banner_failed,
+            is SyncBannerState.Pending -> resourceProvider.getString(
+                R.string.home_sync_banner_pending,
+                state.pendingCount
+            )
+
+            is SyncBannerState.Blocked -> resourceProvider.getString(
+                R.string.home_sync_banner_blocked,
                 state.pendingCount
             )
         }

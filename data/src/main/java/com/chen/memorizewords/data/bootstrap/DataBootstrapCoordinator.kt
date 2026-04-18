@@ -44,11 +44,26 @@ import com.chen.memorizewords.data.repository.practice.PracticeSettingsRepositor
 import com.chen.memorizewords.data.repository.download.WordBookDownloadWorkConstants
 import com.chen.memorizewords.data.repository.download.WordBookDownloadWorker
 import com.chen.memorizewords.data.repository.sync.CheckInRecordSyncPayload
+import com.chen.memorizewords.data.repository.sync.DailyStudyDurationSyncPayload
+import com.chen.memorizewords.data.repository.sync.FavoriteSyncPayload
+import com.chen.memorizewords.data.repository.sync.FloatingDisplayRecordSyncPayload
+import com.chen.memorizewords.data.repository.sync.FloatingSettingsSyncPayload
+import com.chen.memorizewords.data.repository.sync.OnboardingStateSyncPayload
+import com.chen.memorizewords.data.repository.sync.PracticeDurationSyncPayload
+import com.chen.memorizewords.data.repository.sync.PracticeSettingsSyncPayload
+import com.chen.memorizewords.data.repository.sync.PracticeSessionSyncPayload
+import com.chen.memorizewords.data.repository.sync.StudyPlanSyncPayload
+import com.chen.memorizewords.data.repository.sync.SyncOutboxOperation
 import com.chen.memorizewords.data.repository.sync.SyncOutboxBizType
 import com.chen.memorizewords.data.repository.sync.SyncWorkConstants
+import com.chen.memorizewords.data.repository.sync.WordBookProgressSyncPayload
+import com.chen.memorizewords.data.repository.sync.WordBookSelectionSyncPayload
 import com.chen.memorizewords.data.repository.sync.WordStateDeleteByBookSyncPayload
 import com.chen.memorizewords.data.repository.sync.WordStateUpsertSyncPayload
 import com.chen.memorizewords.data.repository.wordbook.persistWordBookPage
+import com.chen.memorizewords.domain.model.onboarding.OnboardingPhase
+import com.chen.memorizewords.domain.model.onboarding.OnboardingSnapshot
+import com.chen.memorizewords.domain.repository.onboarding.OnboardingRepository
 import com.chen.memorizewords.network.api.datasync.CheckInRecordDto
 import com.chen.memorizewords.network.api.datasync.DailyStudyDurationDto
 import com.chen.memorizewords.network.api.datasync.FavoriteDto
@@ -90,6 +105,7 @@ class DataBootstrapCoordinator @Inject constructor(
     private val checkInConfigDataSource: CheckInConfigDataSource,
     private val practiceSettingsRepository: PracticeSettingsRepositoryImpl,
     private val floatingWordSettingsRepository: FloatingWordSettingsRepositoryImpl,
+    private val onboardingRepository: OnboardingRepository,
     private val wordBookSyncStateStore: WordBookSyncStateStore,
     private val mmkv: MMKV,
     private val gson: Gson
@@ -103,6 +119,7 @@ class DataBootstrapCoordinator @Inject constructor(
     suspend fun bootstrapMyBooksAndEnqueueDownloads() {
         val remoteSync = remoteUserSyncDataSourceProvider.get()
 
+        syncOnboardingFromServer(remoteSync)
         syncStudyPlanFromServer(remoteSync)
 
         val remoteBooks = remoteSync.getMyWordBooks().getOrThrow()
@@ -129,6 +146,7 @@ class DataBootstrapCoordinator @Inject constructor(
         val remoteLearningSync = remoteLearningSyncDataSourceProvider.get()
         val remoteWordBook = remoteWordBookDataSourceProvider.get()
 
+        syncOnboardingFromServer(remoteSync)
         syncStudyPlanFromServer(remoteSync)
 
         val remoteBooks = remoteSync.getMyWordBooks().getOrThrow()
@@ -224,6 +242,7 @@ class DataBootstrapCoordinator @Inject constructor(
         } else {
             wordBookDao.deselectPreviousWordBook()
         }
+        applyPendingLocalWordBookSelectionOverride()
     }
 
     private fun enqueueBookPipeline(book: WordBookEntity) {
@@ -343,6 +362,7 @@ class DataBootstrapCoordinator @Inject constructor(
             wordBookDao.getAllWordBookIds().forEach { bookId ->
                 wordBookProgressDao.ensureProgressRow(bookId)
             }
+            applyPendingLocalWordBookProgressOverrides()
         }
     }
 
@@ -373,6 +393,7 @@ class DataBootstrapCoordinator @Inject constructor(
             if (favorites.isNotEmpty()) {
                 wordFavoritesDao.upsertAll(favorites)
             }
+            applyPendingLocalFavoriteOverrides()
         }
     }
 
@@ -406,9 +427,7 @@ class DataBootstrapCoordinator @Inject constructor(
         val remoteSettings = remoteLearningSyncDataSource.getPracticeSettings().getOrThrow()
             ?: com.chen.memorizewords.domain.model.practice.PracticeSettings()
         practiceSettingsRepository.overwriteFromRemote(remoteSettings)
-        appDatabase.withTransaction {
-            syncOutboxDao.deleteByBizTypes(PRACTICE_SETTINGS_OUTBOX_TYPES)
-        }
+        applyPendingLocalPracticeSettingsOverride()
     }
 
     private suspend fun syncPracticeHistory(
@@ -459,7 +478,7 @@ class DataBootstrapCoordinator @Inject constructor(
             if (sessions.isNotEmpty()) {
                 practiceSessionRecordDao.upsertAll(sessions)
             }
-            syncOutboxDao.deleteByBizTypes(PRACTICE_HISTORY_OUTBOX_TYPES)
+            applyPendingLocalPracticeHistoryOverrides()
         }
     }
 
@@ -473,9 +492,7 @@ class DataBootstrapCoordinator @Inject constructor(
             canDrawOverlays = Settings.canDrawOverlays(appContext)
         )
         floatingWordSettingsRepository.overwriteFromRemote(localSettings)
-        appDatabase.withTransaction {
-            syncOutboxDao.deleteByBizTypes(FLOATING_SETTINGS_OUTBOX_TYPES)
-        }
+        applyPendingLocalFloatingSettingsOverride()
     }
 
     private suspend fun syncFloatingDisplayRecords(
@@ -504,7 +521,7 @@ class DataBootstrapCoordinator @Inject constructor(
             if (records.isNotEmpty()) {
                 floatingWordDisplayRecordDao.upsertAll(records)
             }
-            syncOutboxDao.deleteByBizTypes(FLOATING_HISTORY_OUTBOX_TYPES)
+            applyPendingLocalFloatingDisplayRecordOverrides()
         }
     }
 
@@ -554,6 +571,7 @@ class DataBootstrapCoordinator @Inject constructor(
             }
             page++
         }
+        applyPendingLocalDailyStudyDurationOverrides()
     }
 
     private suspend fun syncCheckInConfig(
@@ -718,6 +736,280 @@ class DataBootstrapCoordinator @Inject constructor(
             .onFailure { throwable ->
                 Log.w(TAG, "skip study plan sync after login", throwable)
             }
+        applyPendingLocalStudyPlanOverride()
+    }
+
+    private suspend fun syncOnboardingFromServer(
+        remoteUserSyncDataSource: RemoteUserSyncDataSource
+    ) {
+        remoteUserSyncDataSource.getOnboardingState()
+            .onSuccess { remoteSnapshot ->
+                onboardingRepository.replaceCurrentSnapshot(remoteSnapshot)
+            }
+            .onFailure { throwable ->
+                Log.w(TAG, "skip onboarding sync after login", throwable)
+            }
+        applyPendingLocalOnboardingOverride()
+    }
+
+    private suspend fun applyPendingLocalStudyPlanOverride() {
+        val pendingPlan = syncOutboxDao.getByBizType(SyncOutboxBizType.STUDY_PLAN)
+            .lastOrNull()
+            ?.let { entity ->
+                runCatching {
+                    gson.fromJson(entity.payload, StudyPlanSyncPayload::class.java)
+                }.getOrNull()
+            } ?: return
+
+        studyPlanDataSource.saveStudyPlan(
+            com.chen.memorizewords.domain.model.study.StudyPlan(
+                dailyNewCount = pendingPlan.dailyNewWords,
+                dailyReviewCount = pendingPlan.dailyReviewWords,
+                testMode = runCatching {
+                    com.chen.memorizewords.domain.model.learning.LearningTestMode.valueOf(
+                        pendingPlan.testMode
+                    )
+                }.getOrDefault(com.chen.memorizewords.domain.model.learning.LearningTestMode.MEANING_CHOICE),
+                wordOrderType = runCatching {
+                    com.chen.memorizewords.domain.repository.WordOrderType.valueOf(
+                        pendingPlan.wordOrderType
+                    )
+                }.getOrDefault(com.chen.memorizewords.domain.repository.WordOrderType.RANDOM)
+            )
+        )
+    }
+
+    private suspend fun applyPendingLocalOnboardingOverride() {
+        val pendingState = syncOutboxDao.getByBizType(SyncOutboxBizType.ONBOARDING_STATE)
+            .lastOrNull()
+            ?.let { entity ->
+                runCatching {
+                    gson.fromJson(entity.payload, OnboardingStateSyncPayload::class.java)
+                }.getOrNull()
+            } ?: return
+
+        onboardingRepository.replaceCurrentSnapshot(
+            OnboardingSnapshot(
+                phase = runCatching { OnboardingPhase.valueOf(pendingState.phase) }
+                    .getOrDefault(OnboardingPhase.NEEDS_WORD_BOOK),
+                selectedWordBookId = pendingState.selectedWordBookId,
+                revision = pendingState.revision,
+                updatedAt = pendingState.updatedAt,
+                completedAt = pendingState.completedAt
+            )
+        )
+    }
+
+    private suspend fun applyPendingLocalWordBookSelectionOverride() {
+        val pendingSelection = syncOutboxDao.getByBizType(SyncOutboxBizType.WORD_BOOK_SELECTION)
+            .lastOrNull()
+            ?.let { entity ->
+                runCatching {
+                    gson.fromJson(entity.payload, WordBookSelectionSyncPayload::class.java)
+                }.getOrNull()
+            } ?: return
+        wordBookDao.setCurrentWordBook(pendingSelection.bookId)
+    }
+
+    private suspend fun applyPendingLocalWordBookProgressOverrides() {
+        syncOutboxDao.getByBizType(SyncOutboxBizType.WORD_BOOK_PROGRESS)
+            .mapNotNull { entity ->
+                runCatching {
+                    gson.fromJson(entity.payload, WordBookProgressSyncPayload::class.java)
+                }.getOrNull()
+            }
+            .forEach { payload ->
+                wordBookProgressDao.upsert(
+                    com.chen.memorizewords.data.local.room.model.study.progress.wordbook.WordBookProgressEntity(
+                        wordBookId = payload.bookId,
+                        learnedCount = payload.learnedCount,
+                        masteredCount = payload.masteredCount,
+                        correctCount = payload.correctCount,
+                        wrongCount = payload.wrongCount,
+                        studyDayCount = payload.studyDayCount,
+                        lastStudyDate = payload.lastStudyDate
+                    )
+                )
+            }
+    }
+
+    private suspend fun applyPendingLocalFavoriteOverrides() {
+        syncOutboxDao.getByBizType(SyncOutboxBizType.FAVORITE)
+            .forEach { entity ->
+                val payload = runCatching {
+                    gson.fromJson(entity.payload, FavoriteSyncPayload::class.java)
+                }.getOrNull() ?: return@forEach
+
+                when (entity.operation) {
+                    SyncOutboxOperation.UPSERT -> {
+                        val addedDate = payload.addedDate.orEmpty()
+                        if (addedDate.isNotBlank()) {
+                            wordFavoritesDao.upsert(
+                                WordFavoriteEntity(
+                                    wordId = payload.wordId,
+                                    addedDate = addedDate
+                                )
+                            )
+                        }
+                    }
+
+                    SyncOutboxOperation.DELETE -> {
+                        wordFavoritesDao.deleteByWordId(payload.wordId)
+                    }
+                }
+            }
+    }
+
+    private suspend fun applyPendingLocalPracticeSettingsOverride() {
+        val payload = syncOutboxDao.getByBizType(SyncOutboxBizType.PRACTICE_SETTINGS)
+            .lastOrNull()
+            ?.let { entity ->
+                runCatching {
+                    gson.fromJson(entity.payload, PracticeSettingsSyncPayload::class.java)
+                }.getOrNull()
+            } ?: return
+
+        practiceSettingsRepository.overwriteFromRemote(
+            com.chen.memorizewords.domain.model.practice.PracticeSettings(
+                selectedBookId = payload.selectedBookId,
+                intervalSeconds = payload.intervalSeconds,
+                loopEnabled = payload.loopEnabled,
+                showPhonetic = payload.showPhonetic,
+                showMeaning = payload.showMeaning,
+                playbackMode = runCatching {
+                    com.chen.memorizewords.domain.model.practice.AudioLoopPlaybackMode.valueOf(
+                        payload.playbackMode
+                    )
+                }.getOrDefault(com.chen.memorizewords.domain.model.practice.AudioLoopPlaybackMode.WORD_ONLY),
+                playTimes = payload.playTimes.coerceAtLeast(1)
+            )
+        )
+    }
+
+    private suspend fun applyPendingLocalPracticeHistoryOverrides() {
+        syncOutboxDao.getByBizType(SyncOutboxBizType.PRACTICE_DURATION)
+            .mapNotNull { entity ->
+                runCatching {
+                    gson.fromJson(entity.payload, PracticeDurationSyncPayload::class.java)
+                }.getOrNull()
+            }
+            .forEach { payload ->
+                dailyPracticeDurationDao.upsertAll(
+                    listOf(
+                        DailyPracticeDurationEntity(
+                            date = payload.date,
+                            totalDurationMs = payload.totalDurationMs,
+                            updatedAt = payload.updatedAt
+                        )
+                    )
+                )
+            }
+
+        syncOutboxDao.getByBizType(SyncOutboxBizType.PRACTICE_SESSION)
+            .mapNotNull { entity ->
+                runCatching {
+                    gson.fromJson(entity.payload, PracticeSessionSyncPayload::class.java)
+                }.getOrNull()
+            }
+            .forEach { payload ->
+                practiceSessionRecordDao.upsertAll(
+                    listOf(
+                        PracticeSessionRecordEntity(
+                            id = payload.id,
+                            date = payload.date,
+                            mode = payload.mode,
+                            entryType = payload.entryType,
+                            entryCount = payload.entryCount,
+                            durationMs = payload.durationMs,
+                            createdAt = payload.createdAt,
+                            wordIds = payload.wordIds,
+                            questionCount = payload.questionCount,
+                            completedCount = payload.completedCount,
+                            correctCount = payload.correctCount,
+                            submitCount = payload.submitCount
+                        )
+                    )
+                )
+            }
+    }
+
+    private suspend fun applyPendingLocalFloatingSettingsOverride() {
+        val payload = syncOutboxDao.getByBizType(SyncOutboxBizType.FLOATING_SETTINGS)
+            .lastOrNull()
+            ?.let { entity ->
+                runCatching {
+                    gson.fromJson(entity.payload, FloatingSettingsSyncPayload::class.java)
+                }.getOrNull()
+            } ?: return
+
+        val fieldConfigType = object : com.google.gson.reflect.TypeToken<List<com.chen.memorizewords.domain.model.floating.FloatingWordFieldConfig>>() {}.type
+        val selectedIdsType = object : com.google.gson.reflect.TypeToken<List<Long>>() {}.type
+        floatingWordSettingsRepository.overwriteFromRemote(
+            com.chen.memorizewords.domain.model.floating.FloatingWordSettings(
+                enabled = payload.enabled,
+                sourceType = runCatching {
+                    com.chen.memorizewords.domain.model.floating.FloatingWordSourceType.valueOf(payload.sourceType)
+                }.getOrDefault(com.chen.memorizewords.domain.model.floating.FloatingWordSourceType.CURRENT_BOOK),
+                orderType = runCatching {
+                    com.chen.memorizewords.domain.model.floating.FloatingWordOrderType.valueOf(payload.orderType)
+                }.getOrDefault(com.chen.memorizewords.domain.model.floating.FloatingWordOrderType.RANDOM),
+                fieldConfigs = gson.fromJson(payload.fieldConfigsJson, fieldConfigType) ?: emptyList(),
+                selectedWordIds = gson.fromJson(payload.selectedWordIdsJson, selectedIdsType) ?: emptyList(),
+                floatingBallX = payload.floatingBallX,
+                floatingBallY = payload.floatingBallY,
+                autoStartOnBoot = payload.autoStartOnBoot,
+                autoStartOnAppLaunch = payload.autoStartOnAppLaunch,
+                cardOpacityPercent = payload.cardOpacityPercent,
+                dockConfig = payload.dockConfigJson?.let {
+                    gson.fromJson(it, com.chen.memorizewords.domain.model.floating.FloatingDockConfig::class.java)
+                } ?: com.chen.memorizewords.domain.model.floating.FloatingDockConfig(),
+                dockState = payload.dockStateJson?.let {
+                    gson.fromJson(it, com.chen.memorizewords.domain.model.floating.FloatingDockState::class.java)
+                }
+            )
+        )
+    }
+
+    private suspend fun applyPendingLocalFloatingDisplayRecordOverrides() {
+        syncOutboxDao.getByBizType(SyncOutboxBizType.FLOATING_DISPLAY_RECORD)
+            .mapNotNull { entity ->
+                runCatching {
+                    gson.fromJson(entity.payload, FloatingDisplayRecordSyncPayload::class.java)
+                }.getOrNull()
+            }
+            .forEach { payload ->
+                floatingWordDisplayRecordDao.upsertAll(
+                    listOf(
+                        FloatingWordDisplayRecordEntity(
+                            date = payload.date,
+                            displayCount = payload.displayCount,
+                            wordIds = payload.wordIds,
+                            updatedAt = payload.updatedAt
+                        )
+                    )
+                )
+            }
+    }
+
+    private suspend fun applyPendingLocalDailyStudyDurationOverrides() {
+        val pendingDurations = syncOutboxDao.getByBizType(SyncOutboxBizType.DAILY_STUDY_DURATION)
+            .mapNotNull { entity ->
+                runCatching {
+                    gson.fromJson(entity.payload, DailyStudyDurationSyncPayload::class.java)
+                }.getOrNull()
+            }
+            .map { payload ->
+                DailyStudyDurationEntity(
+                    date = payload.date,
+                    totalDurationMs = payload.totalDurationMs,
+                    updatedAt = payload.updatedAt,
+                    isNewPlanCompleted = payload.isNewPlanCompleted,
+                    isReviewPlanCompleted = payload.isReviewPlanCompleted
+                )
+            }
+        if (pendingDurations.isNotEmpty()) {
+            dailyStudyDurationDao.upsertAll(pendingDurations)
+        }
     }
 
     private fun cleanAndLoadPausedBookIds(validBookIds: Set<Long>): Set<Long> {

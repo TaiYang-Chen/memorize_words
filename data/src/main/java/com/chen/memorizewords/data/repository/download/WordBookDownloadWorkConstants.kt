@@ -18,6 +18,7 @@ object WordBookDownloadWorkConstants {
     const val KEY_REPORT_MY_BOOK = "report_my_book"
     const val KEY_FORCE_REFRESH = "force_refresh"
     const val KEY_TARGET_VERSION = "target_version"
+    const val KEY_RUN_IN_FOREGROUND = "run_in_foreground"
 
     fun uniqueWorkName(bookId: Long): String = "$WORK_NAME_PREFIX$bookId"
     fun bookTag(bookId: Long): String = "$TAG_BOOK_PREFIX$bookId"

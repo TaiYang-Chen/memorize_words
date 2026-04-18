@@ -1,11 +1,10 @@
 package com.chen.memorizewords.data.repository.practice
 
-import com.chen.memorizewords.data.local.room.model.sync.SyncOutboxDao
 import com.chen.memorizewords.data.repository.sync.PracticeSettingsSyncPayload
 import com.chen.memorizewords.data.repository.sync.SyncOutboxBizType
 import com.chen.memorizewords.data.repository.sync.SyncOutboxOperation
+import com.chen.memorizewords.data.repository.sync.SyncOutboxStore
 import com.chen.memorizewords.data.repository.sync.SyncOutboxWorkScheduler
-import com.chen.memorizewords.data.repository.sync.syncOutboxEntity
 import com.chen.memorizewords.domain.model.practice.PracticeSettings
 import com.chen.memorizewords.domain.model.practice.AudioLoopPlaybackMode
 import com.chen.memorizewords.domain.repository.practice.PracticeSettingsRepository
@@ -20,7 +19,7 @@ import kotlinx.coroutines.flow.asStateFlow
 @Singleton
 class PracticeSettingsRepositoryImpl @Inject constructor(
     private val mmkv: MMKV,
-    private val syncOutboxDao: SyncOutboxDao,
+    private val syncOutboxStore: SyncOutboxStore,
     private val syncOutboxWorkScheduler: SyncOutboxWorkScheduler,
     private val gson: Gson
 ) : PracticeSettingsRepository {
@@ -48,22 +47,20 @@ class PracticeSettingsRepositoryImpl @Inject constructor(
         writeSettingsToLocal(normalized)
         state.value = normalized
 
-        syncOutboxDao.upsert(
-            syncOutboxEntity(
-                bizType = SyncOutboxBizType.PRACTICE_SETTINGS,
-                bizKey = "practice_settings",
-                operation = SyncOutboxOperation.UPSERT,
-                payload = gson.toJson(
-                    PracticeSettingsSyncPayload(
-                        selectedBookId = normalized.selectedBookId,
-                        intervalSeconds = normalized.intervalSeconds,
-                        loopEnabled = normalized.loopEnabled,
-                        showPhonetic = normalized.showPhonetic,
-                        showMeaning = normalized.showMeaning,
-                        playbackMode = normalized.playbackMode.name,
-                        playTimes = normalized.playTimes,
-                        provider = LEGACY_SYNC_PROVIDER
-                    )
+        syncOutboxStore.enqueueLatest(
+            bizType = SyncOutboxBizType.PRACTICE_SETTINGS,
+            bizKey = "practice_settings",
+            operation = SyncOutboxOperation.UPSERT,
+            payload = gson.toJson(
+                PracticeSettingsSyncPayload(
+                    selectedBookId = normalized.selectedBookId,
+                    intervalSeconds = normalized.intervalSeconds,
+                    loopEnabled = normalized.loopEnabled,
+                    showPhonetic = normalized.showPhonetic,
+                    showMeaning = normalized.showMeaning,
+                    playbackMode = normalized.playbackMode.name,
+                    playTimes = normalized.playTimes,
+                    provider = LEGACY_SYNC_PROVIDER
                 )
             )
         )

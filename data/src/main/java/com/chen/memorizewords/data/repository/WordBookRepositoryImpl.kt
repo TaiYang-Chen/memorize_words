@@ -2,7 +2,6 @@ package com.chen.memorizewords.data.repository
 
 import androidx.room.withTransaction
 import com.chen.memorizewords.data.local.room.AppDatabase
-import com.chen.memorizewords.data.local.room.model.sync.SyncOutboxDao
 import com.chen.memorizewords.data.local.room.model.study.progress.word.WordLearningStateDao
 import com.chen.memorizewords.data.local.room.model.study.progress.wordbook.WordBookProgressDao
 import com.chen.memorizewords.data.local.room.model.study.progress.wordbook.WordBookProgressEntity
@@ -14,10 +13,10 @@ import com.chen.memorizewords.data.local.room.model.words.word.WordDao
 import com.chen.memorizewords.data.local.room.model.words.word.toDomain
 import com.chen.memorizewords.data.repository.sync.SyncOutboxBizType
 import com.chen.memorizewords.data.repository.sync.SyncOutboxOperation
+import com.chen.memorizewords.data.repository.sync.SyncOutboxStore
 import com.chen.memorizewords.data.repository.sync.SyncOutboxWorkScheduler
 import com.chen.memorizewords.data.repository.sync.WordBookProgressSyncPayload
 import com.chen.memorizewords.data.repository.sync.WordBookSelectionSyncPayload
-import com.chen.memorizewords.data.repository.sync.syncOutboxEntity
 import com.chen.memorizewords.domain.model.common.PageSlice
 import com.chen.memorizewords.domain.model.wordbook.WordBook
 import com.chen.memorizewords.domain.model.wordbook.WordBookInfo
@@ -42,7 +41,7 @@ class WordBookRepositoryImpl @Inject constructor(
     private val bookWordsDao: BookWordItemDao,
     private val wordDao: WordDao,
     private val wordBookDao: WordBookDao,
-    private val syncOutboxDao: SyncOutboxDao,
+    private val syncOutboxStore: SyncOutboxStore,
     private val syncOutboxWorkScheduler: SyncOutboxWorkScheduler,
     private val gson: Gson
 ) : WordBookRepository {
@@ -90,13 +89,11 @@ class WordBookRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             appDatabase.withTransaction {
                 wordBookDao.setCurrentWordBook(bookId)
-                syncOutboxDao.upsert(
-                    syncOutboxEntity(
-                        bizType = SyncOutboxBizType.WORD_BOOK_SELECTION,
-                        bizKey = "word_book_selection",
-                        operation = SyncOutboxOperation.UPSERT,
-                        payload = gson.toJson(WordBookSelectionSyncPayload(bookId = bookId))
-                    )
+                syncOutboxStore.enqueueLatest(
+                    bizType = SyncOutboxBizType.WORD_BOOK_SELECTION,
+                    bizKey = "word_book_selection",
+                    operation = SyncOutboxOperation.UPSERT,
+                    payload = gson.toJson(WordBookSelectionSyncPayload(bookId = bookId))
                 )
             }
             syncOutboxWorkScheduler.scheduleDrain()
@@ -233,23 +230,21 @@ class WordBookRepositoryImpl @Inject constructor(
         val learnedCount = wordLearningStateDao.getLearnedCountByBookId(bookId)
         val masteredCount = wordLearningStateDao.getMasteredCountByBookId(bookId)
         appDatabase.withTransaction {
-            syncOutboxDao.upsert(
-                syncOutboxEntity(
-                    bizType = SyncOutboxBizType.WORD_BOOK_PROGRESS,
-                    bizKey = "word_book_progress:$bookId",
-                    operation = SyncOutboxOperation.UPSERT,
-                    payload = gson.toJson(
-                        WordBookProgressSyncPayload(
-                            bookId = bookId,
-                            bookName = bookName,
-                            learnedCount = learnedCount,
-                            masteredCount = masteredCount,
-                            totalCount = totalWords,
-                            correctCount = progress.correctCount,
-                            wrongCount = progress.wrongCount,
-                            studyDayCount = progress.studyDayCount,
-                            lastStudyDate = progress.lastStudyDate
-                        )
+            syncOutboxStore.enqueueLatest(
+                bizType = SyncOutboxBizType.WORD_BOOK_PROGRESS,
+                bizKey = "word_book_progress:$bookId",
+                operation = SyncOutboxOperation.UPSERT,
+                payload = gson.toJson(
+                    WordBookProgressSyncPayload(
+                        bookId = bookId,
+                        bookName = bookName,
+                        learnedCount = learnedCount,
+                        masteredCount = masteredCount,
+                        totalCount = totalWords,
+                        correctCount = progress.correctCount,
+                        wrongCount = progress.wrongCount,
+                        studyDayCount = progress.studyDayCount,
+                        lastStudyDate = progress.lastStudyDate
                     )
                 )
             )

@@ -17,6 +17,17 @@ class UserDataSyncRequest @Inject constructor(
     private val apiService: UserDataSyncApiService,
     private val requestExecutor: NetworkRequestExecutor
 ) {
+    suspend fun getOnboardingState(): NetworkResult<OnboardingStateDto?> = requestExecutor.executeAuthenticated {
+        apiService.getOnboardingState()
+            .awaitNullable<ApiResponse<OnboardingStateDto?>, OnboardingStateDto>()
+    }
+
+    suspend fun updateOnboardingState(request: OnboardingStateDto): NetworkResult<Unit> =
+        requestExecutor.executeAuthenticated {
+            apiService.updateOnboardingState(request)
+                .await<ApiResponse<Unit>, Unit>()
+        }
+
     suspend fun getStudyPlan(): NetworkResult<StudyPlanDto?> = requestExecutor.executeAuthenticated {
         apiService.getStudyPlan()
             .awaitNullable<ApiResponse<StudyPlanDto?>, StudyPlanDto>()
