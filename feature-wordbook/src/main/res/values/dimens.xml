@@ -1,3 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="feature_wordbook_shop_search_height">44dp</dimen>
+    <dimen name="feature_wordbook_shop_search_cancel_spacing">16dp</dimen>
+
+    <dimen name="feature_wordbook_shop_card_spacing">14dp</dimen>
+    <dimen name="feature_wordbook_shop_card_design_width">343dp</dimen>
+    <dimen name="feature_wordbook_shop_card_design_height">154dp</dimen>
+    <dimen name="feature_wordbook_shop_card_corner_radius">18dp</dimen>
+    <dimen name="feature_wordbook_shop_card_stroke_width">1dp</dimen>
+    <dimen name="feature_wordbook_shop_card_padding_horizontal">16dp</dimen>
+    <dimen name="feature_wordbook_shop_card_padding_vertical">14dp</dimen>
+    <dimen name="feature_wordbook_shop_card_content_spacing">14dp</dimen>
+
+    <dimen name="feature_wordbook_shop_cover_width">88dp</dimen>
+    <dimen name="feature_wordbook_shop_cover_height">104dp</dimen>
+    <dimen name="feature_wordbook_shop_cover_inner_padding">10dp</dimen>
+    <dimen name="feature_wordbook_shop_cover_fallback_size">26dp</dimen>
+
+    <dimen name="feature_wordbook_shop_title_text_size">18sp</dimen>
+    <dimen name="feature_wordbook_shop_description_margin_top">8dp</dimen>
+    <dimen name="feature_wordbook_shop_description_text_size">15sp</dimen>
+    <dimen name="feature_wordbook_shop_description_end_spacing">8dp</dimen>
+    <dimen name="feature_wordbook_shop_meta_margin_start">10dp</dimen>
+    <dimen name="feature_wordbook_shop_meta_text_size">12sp</dimen>
+
+    <dimen name="feature_wordbook_shop_badge_height">26dp</dimen>
+    <dimen name="feature_wordbook_shop_badge_min_width">56dp</dimen>
+    <dimen name="feature_wordbook_shop_badge_padding_horizontal">10dp</dimen>
+    <dimen name="feature_wordbook_shop_badge_text_size">12sp</dimen>
+
+    <dimen name="feature_wordbook_shop_action_min_height">32dp</dimen>
+    <dimen name="feature_wordbook_shop_action_min_width">88dp</dimen>
+
+    <dimen name="feature_wordbook_my_book_card_min_height">158dp</dimen>
+    <dimen name="feature_wordbook_my_book_card_corner_radius">12dp</dimen>
+    <dimen name="feature_wordbook_my_book_card_stroke_width">1dp</dimen>
+    <dimen name="feature_wordbook_my_book_card_elevation">8dp</dimen>
+    <dimen name="feature_wordbook_my_book_card_padding_horizontal">8dp</dimen>
+    <dimen name="feature_wordbook_my_book_card_padding_vertical">16dp</dimen>
+    <dimen name="feature_wordbook_my_book_content_spacing">16dp</dimen>
+
+    <dimen name="feature_wordbook_my_book_cover_width">84dp</dimen>
+    <dimen name="feature_wordbook_my_book_cover_height">112dp</dimen>
+    <dimen name="feature_wordbook_my_book_cover_corner_radius">16dp</dimen>
+    <dimen name="feature_wordbook_my_book_cover_fallback_size">32dp</dimen>
+
+    <dimen name="feature_wordbook_my_book_title_text_size">15sp</dimen>
+    <dimen name="feature_wordbook_my_book_subtitle_margin_top">8dp</dimen>
+    <dimen name="feature_wordbook_my_book_subtitle_text_size">12sp</dimen>
+
+    <dimen name="feature_wordbook_my_book_status_height">34dp</dimen>
+    <dimen name="feature_wordbook_my_book_status_min_width">72dp</dimen>
+    <dimen name="feature_wordbook_my_book_status_corner_radius">10dp</dimen>
+    <dimen name="feature_wordbook_my_book_status_padding_horizontal">8dp</dimen>
+    <dimen name="feature_wordbook_my_book_status_text_size">8sp</dimen>
+
+    <dimen name="feature_wordbook_my_book_stats_margin_top">18dp</dimen>
+    <dimen name="feature_wordbook_my_book_stats_text_size">11sp</dimen>
+    <dimen name="feature_wordbook_my_book_progress_height">6dp</dimen>
+    <dimen name="feature_wordbook_my_book_progress_margin_top">12dp</dimen>
+    <dimen name="feature_wordbook_my_book_progress_corner_radius">999dp</dimen>
+    <dimen name="feature_wordbook_my_books_filter_height">40dp</dimen>
+    <dimen name="feature_wordbook_my_books_filter_min_width">86dp</dimen>
+    <dimen name="feature_wordbook_my_books_filter_corner_radius">20dp</dimen>
+    <dimen name="feature_wordbook_my_books_filter_padding_horizontal">12dp</dimen>
+    <dimen name="feature_wordbook_my_books_filter_spacing">16dp</dimen>
+    <dimen name="feature_wordbook_my_books_filter_text_size">15sp</dimen>
+    <dimen name="feature_wordbook_my_books_filter_margin_top">28dp</dimen>
+
+    <dimen name="feature_wordbook_my_books_page_padding">16dp</dimen>
+    <dimen name="feature_wordbook_my_books_section_spacing">16dp</dimen>
+    <dimen name="feature_wordbook_my_books_panel_spacing">8dp</dimen>
+    <dimen name="feature_wordbook_my_books_panel_padding">14dp</dimen>
+    <dimen name="feature_wordbook_my_books_panel_corner_radius">16dp</dimen>
+    <dimen name="feature_wordbook_my_books_panel_inner_spacing">10dp</dimen>
+    <dimen name="feature_wordbook_my_books_inline_spacing">6dp</dimen>
+    <dimen name="feature_wordbook_my_books_small_action_height">36dp</dimen>
+    <dimen name="feature_wordbook_my_books_primary_action_height">58dp</dimen>
+    <dimen name="feature_wordbook_my_books_primary_action_margin_bottom">16dp</dimen>
+    <dimen name="feature_wordbook_my_books_primary_action_text_size">17sp</dimen>
+    <dimen name="feature_wordbook_my_books_content_to_button_spacing">18dp</dimen>
+    <dimen name="feature_wordbook_my_books_list_item_spacing">16dp</dimen>
+    <dimen name="feature_wordbook_my_books_list_top_spacing">18dp</dimen>
+    <dimen name="feature_wordbook_my_books_list_bottom_spacing">16dp</dimen>
 </resources>

@@ -21,4 +21,9 @@ data class DailyStudyDurationEntity(
 
     @ColumnInfo(name = "is_review_plan_completed")
     val isReviewPlanCompleted: Boolean = false
-)
+) {
+    init {
+        require(totalDurationMs >= 0L) { "totalDurationMs must be non-negative" }
+        require(updatedAt >= 0L) { "updatedAt must be non-negative" }
+    }
+}

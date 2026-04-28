@@ -7,7 +7,10 @@ import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "word_study_records",
-    indices = [Index(value = ["date", "word_id", "is_new_word"], unique = true)]
+    indices = [
+        Index(value = ["date", "word_id", "is_new_word"], unique = true),
+        Index("word_id")
+    ]
 )
 data class WordStudyRecordsEntity(
     @PrimaryKey(autoGenerate = true)

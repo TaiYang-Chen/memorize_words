@@ -1,9 +1,16 @@
 package com.chen.memorizewords.feature.wordbook.shop
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -20,6 +27,7 @@ import com.chen.memorizewords.feature.wordbook.databinding.ModuleWordbookFragmen
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -31,6 +39,12 @@ class BookShopFragment :
     }
 
     private var pendingDownloadActionItem: BookShopUi? = null
+
+    private val backPressedCallback = object : OnBackPressedCallback(false) {
+        override fun handleOnBackPressed() {
+            cancelSearchFromUi()
+        }
+    }
 
     private val requestNotificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -48,7 +62,6 @@ class BookShopFragment :
             onActionClick = { item ->
                 when (item.downloadState) {
                     is DownloadState.NotDownloaded,
-                    is DownloadState.UpdateAvailable,
                     is DownloadState.Failed,
                     is DownloadState.Paused -> {
                         requestNotificationPermissionIfNeeded(item)
@@ -61,6 +74,10 @@ class BookShopFragment :
                     is DownloadState.Downloaded -> {
                         viewModel.showToast(getString(R.string.module_wordbook_downloaded))
                     }
+
+                    is DownloadState.UpdateAvailable -> {
+                        viewModel.showToast(getString(R.string.module_wordbook_downloaded))
+                    }
                 }
             }
         )
@@ -69,10 +86,12 @@ class BookShopFragment :
     override fun initView(savedInstanceState: Bundle?) {
         databind.viewModel = viewModel
         databind.lifecycleOwner = viewLifecycleOwner
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
         setupRecyclerView()
         setupTabs()
         setupSearch()
         setupSwipeRefresh()
+        observeSearchMode()
         observePaging()
         observeLoadState()
     }
@@ -110,31 +129,70 @@ class BookShopFragment :
     }
 
     private fun setupTabs() {
-        val categories = listOf(
-            "全部",
-            "大学",
-            "高中",
-            "初中"
-        )
-        categories.forEach { category ->
-            databind.tabLayout.addTab(
-                databind.tabLayout.newTab().setText(category).setTag(category)
-            )
+        BOOK_SHOP_CATEGORIES.forEachIndexed { index, category ->
+            val tab = databind.tabLayout.newTab()
+                .setTag(category)
+                .setCustomView(createTabView(category))
+            databind.tabLayout.addTab(tab, index == 0)
+            updateTabStyle(tab, index == 0)
         }
 
         databind.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
-                viewModel.setCategory(tab.tag as String)
+                updateTabStyle(tab, true)
+                viewModel.setCategory(tab.tag as? String ?: DEFAULT_CATEGORY)
             }
 
-            override fun onTabUnselected(tab: TabLayout.Tab) = Unit
+            override fun onTabUnselected(tab: TabLayout.Tab) {
+                updateTabStyle(tab, false)
+            }
+
             override fun onTabReselected(tab: TabLayout.Tab) = Unit
         })
     }
 
+    private fun createTabView(category: String): TextView {
+        val tabView = LayoutInflater.from(databind.tabLayout.context)
+            .inflate(R.layout.feature_wordbook_item_tab_text, databind.tabLayout, false) as TextView
+        tabView.text = category
+        return tabView
+    }
+
+    private fun updateTabStyle(tab: TabLayout.Tab, isSelected: Boolean) {
+        (tab.customView as? TextView)?.apply {
+            setTextColor(
+                requireContext().getColor(
+                    if (isSelected) {
+                        R.color.feature_wordbook_shop_tab_text_selected
+                    } else {
+                        R.color.feature_wordbook_shop_tab_text_unselected
+                    }
+                )
+            )
+            typeface = Typeface.create(
+                if (isSelected) "sans-serif-medium" else "sans-serif",
+                Typeface.NORMAL
+            )
+        }
+    }
+
     private fun setupSearch() {
+        databind.searchLayout.setOnClickListener {
+            enterSearchModeFromUi(requestFocus = true)
+        }
+        databind.etSearch.setOnClickListener {
+            enterSearchModeFromUi()
+        }
+        databind.etSearch.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                viewModel.enterSearchMode()
+            }
+        }
         databind.etSearch.doAfterTextChanged { text ->
             viewModel.setKeyword(text?.toString().orEmpty())
+        }
+        databind.btnCancel.setOnClickListener {
+            cancelSearchFromUi()
         }
     }
 
@@ -144,6 +202,15 @@ class BookShopFragment :
         }
         databind.btnStateAction.setOnClickListener {
             adapter.retry()
+        }
+    }
+
+    private fun observeSearchMode() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.currentSearchState.collectLatest { searchState ->
+                backPressedCallback.isEnabled = searchState.isSearchMode
+                renderSearchMode(searchState.isSearchMode)
+            }
         }
     }
 
@@ -157,23 +224,93 @@ class BookShopFragment :
 
     private fun observeLoadState() {
         viewLifecycleOwner.lifecycleScope.launch {
-            adapter.loadStateFlow.collectLatest { loadStates ->
-                databind.swipeRefresh.isRefreshing = loadStates.refresh is androidx.paging.LoadState.Loading
-                val isError = loadStates.refresh is androidx.paging.LoadState.Error
+            combine(adapter.loadStateFlow, viewModel.currentSearchState) { loadStates, searchState ->
+                loadStates to searchState
+            }.collectLatest { (loadStates, searchState) ->
+                val trimmedKeyword = searchState.keyword.trim()
+                val isBlankSearchPrompt = searchState.isSearchMode && trimmedKeyword.isBlank()
+                val isLoading =
+                    loadStates.refresh is androidx.paging.LoadState.Loading && !isBlankSearchPrompt
+                val isError =
+                    loadStates.refresh is androidx.paging.LoadState.Error && !isBlankSearchPrompt
                 val isEmpty =
                     loadStates.refresh is androidx.paging.LoadState.NotLoading && adapter.itemCount == 0
+                val showSearchNoResults =
+                    searchState.isSearchMode && trimmedKeyword.isNotBlank() && isEmpty && !isError
+                val showDefaultEmpty = !searchState.isSearchMode && isEmpty && !isError
+                val showStateOverlay =
+                    isError || isBlankSearchPrompt || showSearchNoResults || showDefaultEmpty
+                val showList = !showStateOverlay && (adapter.itemCount > 0 || isLoading)
 
-                databind.stateGroup.isVisible = isError || isEmpty
+                databind.swipeRefresh.isRefreshing = isLoading
+                databind.swipeRefresh.isEnabled = !isBlankSearchPrompt
+                databind.rvBooks.isVisible = showList
+                databind.stateGroup.isVisible = showStateOverlay
                 databind.btnStateAction.isVisible = isError
+                databind.tvStateMessage.text = when {
+                    isBlankSearchPrompt -> {
+                        getString(R.string.module_wordbook_shop_search_empty_keyword)
+                    }
 
-                if (isError) {
-                    val error = (loadStates.refresh as? androidx.paging.LoadState.Error)?.error
-                    databind.tvStateMessage.text =
+                    isError -> {
+                        val error = (loadStates.refresh as? androidx.paging.LoadState.Error)?.error
                         error?.message ?: getString(R.string.module_wordbook_network_error)
-                } else if (isEmpty) {
-                    databind.tvStateMessage.text = getString(R.string.module_wordbook_empty_books)
+                    }
+
+                    showSearchNoResults -> {
+                        getString(R.string.module_wordbook_shop_search_no_results)
+                    }
+
+                    showDefaultEmpty -> {
+                        getString(R.string.module_wordbook_empty_books)
+                    }
+
+                    else -> ""
                 }
             }
         }
     }
+
+    private fun enterSearchModeFromUi(requestFocus: Boolean = false) {
+        viewModel.enterSearchMode()
+        if (requestFocus) {
+            databind.etSearch.requestFocus()
+            showKeyboard(databind.etSearch)
+        }
+    }
+
+    private fun cancelSearchFromUi() {
+        databind.etSearch.setText("")
+        databind.etSearch.clearFocus()
+        hideKeyboard(databind.etSearch)
+        viewModel.cancelSearch()
+    }
+
+    private fun renderSearchMode(isSearchMode: Boolean) {
+        databind.btnCancel.isVisible = isSearchMode
+        databind.tabLayout.isVisible = !isSearchMode
+    }
+
+    private fun showKeyboard(view: View) {
+        val inputMethodManager =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        view.post {
+            inputMethodManager?.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+        }
+    }
+
+    private fun hideKeyboard(view: View) {
+        val inputMethodManager =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        inputMethodManager?.hideSoftInputFromWindow(view.windowToken, 0)
+    }
 }
+
+private const val DEFAULT_CATEGORY = "\u5168\u90E8"
+
+private val BOOK_SHOP_CATEGORIES = listOf(
+    DEFAULT_CATEGORY,
+    "\u5927\u5B66",
+    "\u9AD8\u4E2D",
+    "\u521D\u4E2D"
+)

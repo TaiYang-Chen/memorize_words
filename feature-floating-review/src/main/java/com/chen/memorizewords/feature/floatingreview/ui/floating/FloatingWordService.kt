@@ -1,7 +1,6 @@
 ﻿package com.chen.memorizewords.feature.floatingreview.ui.floating
 
 import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -20,7 +19,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
-import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -29,7 +27,6 @@ import androidx.core.app.NotificationCompat
 import coil.load
 import com.chen.memorizewords.core.navigation.FloatingWordActions
 import com.chen.memorizewords.core.navigation.LearningEntry
-import com.chen.memorizewords.domain.model.floating.FloatingDockState
 import com.chen.memorizewords.domain.model.floating.FloatingWordFieldType
 import com.chen.memorizewords.domain.model.floating.FloatingWordOrderType
 import com.chen.memorizewords.domain.model.floating.FloatingWordSettings
@@ -70,6 +67,10 @@ internal fun resolveCardAlpha(cardOpacityPercent: Int): Float {
     return cardOpacityPercent.coerceIn(0, 100) / 100f
 }
 
+internal fun resolveBallAlpha(ballOpacityPercent: Int): Float {
+    return ballOpacityPercent.coerceIn(0, 100) / 100f
+}
+
 internal fun advanceFloatingWordSequence(
     words: List<Word>,
     currentIndex: Int,
@@ -97,6 +98,31 @@ internal fun advanceFloatingWordSequence(
         words = nextWords,
         nextIndex = if (reachedEnd) 0 else resolvedIndex + 1,
         word = currentWord
+    )
+}
+
+internal fun resolveBallPositionForSettings(
+    settings: FloatingWordSettings,
+    bounds: FloatingMovementBounds,
+    previousBounds: FloatingMovementBounds?,
+    dockManager: FloatingDockManager = FloatingDockManager()
+): FloatingBallPosition {
+    if (previousBounds != null) {
+        dockManager.resolveAnchoredFreePosition(
+            previousBounds = previousBounds,
+            newBounds = bounds,
+            x = settings.floatingBallX,
+            y = settings.floatingBallY
+        )?.let { anchoredPosition ->
+            return anchoredPosition
+        }
+    }
+    if (settings.floatingBallX != 0 || settings.floatingBallY != 0) {
+        return dockManager.clampToFree(bounds, settings.floatingBallX, settings.floatingBallY)
+    }
+    return FloatingBallPosition(
+        x = bounds.freeRight,
+        y = ((bounds.freeTop + bounds.freeBottom) / 2f).roundToInt()
     )
 }
 
@@ -129,7 +155,6 @@ class FloatingWordService : Service() {
     private var ballParams: WindowManager.LayoutParams? = null
     private var cardParams: WindowManager.LayoutParams? = null
     private var rotationAnimator: ObjectAnimator? = null
-    private var positionAnimator: ValueAnimator? = null
     private var settingsJob: Job? = null
 
     private var words: List<Word> = emptyList()
@@ -152,7 +177,7 @@ class FloatingWordService : Service() {
         settingsJob = serviceScope.launch {
             floatingWordController.observeSettings().collect { settings ->
                 currentSettings = settings
-                applyCardOpacity()
+                applyFloatingAppearance()
                 if (ballView != null && !isDragging) {
                     reconcileBallPosition(persistIfNeeded = false)
                 }
@@ -228,7 +253,7 @@ class FloatingWordService : Service() {
         windowManager.addView(ballView, ballParams)
         windowManager.addView(cardView, cardParams)
 
-        applyCardOpacity()
+        applyFloatingAppearance()
         restoreBallPosition()
         startRotation()
         configureBallGestures()
@@ -246,58 +271,29 @@ class FloatingWordService : Service() {
     private fun reconcileBallPosition(persistIfNeeded: Boolean) {
         val params = ballParams ?: return
         val movementBounds = getMovementBounds(currentSettings)
-        val resolved = resolvePositionForSettings(
+        val position = resolveBallPositionForSettings(
             settings = currentSettings,
             bounds = movementBounds,
-            previousBounds = lastMovementBounds
+            previousBounds = lastMovementBounds,
+            dockManager = dockManager
         )
-        val shouldPersist = persistIfNeeded && needsPersistence(resolved.position, resolved.dockState)
-        params.x = resolved.position.x
-        params.y = resolved.position.y
+        val shouldPersist = persistIfNeeded && needsPersistence(position)
+        params.x = position.x
+        params.y = position.y
         ballView?.let { runCatching { windowManager.updateViewLayout(it, params) } }
-        updateLocalBallState(resolved.position, resolved.dockState)
+        updateLocalBallState(position)
         lastMovementBounds = movementBounds
         if (isCardVisible()) {
             updateCardPosition()
         }
         if (shouldPersist) {
-            persistBallPosition(resolved.position, resolved.dockState)
+            persistBallPosition(position)
         }
-    }
-
-    private fun resolvePositionForSettings(
-        settings: FloatingWordSettings,
-        bounds: FloatingMovementBounds,
-        previousBounds: FloatingMovementBounds?
-    ): FloatingDockResult {
-        val normalizedDockState = settings.dockState?.normalized(settings.dockConfig)
-        if (normalizedDockState != null) {
-            dockManager.resolveDocked(bounds, settings.dockConfig, normalizedDockState)?.let { return it }
-        }
-        if (previousBounds != null) {
-            dockManager.resolveAnchoredFreePosition(
-                previousBounds = previousBounds,
-                newBounds = bounds,
-                x = settings.floatingBallX,
-                y = settings.floatingBallY
-            )?.let { anchoredPosition ->
-                return FloatingDockResult(position = anchoredPosition, dockState = null)
-            }
-        }
-        if (settings.floatingBallX != 0 || settings.floatingBallY != 0) {
-            return FloatingDockResult(
-                position = dockManager.clampToFree(bounds, settings.floatingBallX, settings.floatingBallY),
-                dockState = null
-            )
-        }
-        return dockManager.buildInitialState(bounds, settings.dockConfig)
     }
 
     private fun removeViews() {
         rotationAnimator?.cancel()
         rotationAnimator = null
-        positionAnimator?.cancel()
-        positionAnimator = null
         ballView?.let { runCatching { windowManager.removeView(it) } }
         cardView?.let { runCatching { windowManager.removeView(it) } }
         ballView = null
@@ -362,11 +358,6 @@ class FloatingWordService : Service() {
                     handleBallSingleTap()
                     return true
                 }
-
-                override fun onDoubleTap(e: MotionEvent): Boolean {
-                    handleBallDoubleTap()
-                    return true
-                }
             }
         )
     }
@@ -379,7 +370,6 @@ class FloatingWordService : Service() {
             gestureDetector?.onTouchEvent(event)
             when (event.actionMasked) {
                 MotionEvent.ACTION_DOWN -> {
-                    positionAnimator?.cancel()
                     isDragging = false
                     touchDownX = event.rawX
                     touchDownY = event.rawY
@@ -393,19 +383,6 @@ class FloatingWordService : Service() {
                     val dy = event.rawY - touchDownY
                     if (!isDragging && (abs(dx) > threshold || abs(dy) > threshold)) {
                         isDragging = true
-                        if (currentSettings.dockState != null) {
-                            val revealed = dockManager.revealDockedPosition(
-                                getMovementBounds(currentSettings),
-                                currentSettings.dockConfig,
-                                currentSettings.dockState ?: return@setOnTouchListener false
-                            )
-                            if (revealed != null) {
-                                applyBallPosition(revealed)
-                                updateLocalBallState(revealed, null)
-                                startX = revealed.x
-                                startY = revealed.y
-                            }
-                        }
                     }
                     if (isDragging) {
                         val target = dockManager.clampToFree(
@@ -438,13 +415,11 @@ class FloatingWordService : Service() {
             y = params.y
         )
         isDragging = false
-        persistBallPosition(position, null)
+        persistBallPosition(position)
     }
 
     private fun handleBallSingleTap() {
-        when (resolveSingleTapAction(currentSettings.dockState != null, isCardVisible())) {
-            FloatingBallSingleTapAction.NoOp -> Unit
-
+        when (resolveSingleTapAction(isCardVisible())) {
             FloatingBallSingleTapAction.ShowCard -> {
                 showNextWord()
             }
@@ -455,81 +430,12 @@ class FloatingWordService : Service() {
         }
     }
 
-    private fun handleBallDoubleTap() {
-        when (resolveDoubleTapAction(currentSettings.dockState != null)) {
-            FloatingBallDoubleTapAction.RevealDocked -> {
-                val reveal = revealDockedBall() ?: return
-                updateLocalBallState(reveal, null)
-                animateBallTo(reveal) {
-                    persistBallPosition(reveal, null)
-                }
-            }
-
-            FloatingBallDoubleTapAction.HideToNearestEdge -> hideBallToNearestEdge()
-        }
-    }
-
-    private fun revealDockedBall(): FloatingBallPosition? {
-        val dockState = currentSettings.dockState ?: return null
-        val normalizedConfig = currentSettings.dockConfig.normalized()
-        return dockManager.revealDockedPosition(
-            getMovementBounds(currentSettings),
-            normalizedConfig,
-            dockState
-        )
-    }
-
-    private fun hideBallToNearestEdge() {
-        cardView?.visibility = View.GONE
-        val params = ballParams ?: return
-        val result = dockManager.dockToNearestEdge(
-            bounds = getMovementBounds(currentSettings),
-            config = currentSettings.dockConfig.normalized(),
-            x = params.x,
-            y = params.y
-        )
-        updateLocalBallState(result.position, result.dockState)
-        animateBallTo(result.position) {
-            persistBallPosition(result.position, result.dockState)
-        }
-    }
-
     private fun applyBallPosition(position: FloatingBallPosition) {
         val params = ballParams ?: return
         params.x = position.x
         params.y = position.y
         ballView?.let { windowManager.updateViewLayout(it, params) }
         if (isCardVisible()) updateCardPosition()
-    }
-
-    private fun animateBallTo(target: FloatingBallPosition, onEnd: () -> Unit) {
-        val params = ballParams ?: return
-        positionAnimator?.cancel()
-        val startX = params.x
-        val startY = params.y
-        if (startX == target.x && startY == target.y) {
-            applyBallPosition(target)
-            onEnd()
-            return
-        }
-        positionAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
-            duration = currentSettings.dockConfig.normalized().snapAnimationDurationMs
-            interpolator = DecelerateInterpolator()
-            addUpdateListener { animator ->
-                val fraction = animator.animatedFraction
-                applyBallPosition(
-                    FloatingBallPosition(
-                        x = (startX + (target.x - startX) * fraction).roundToInt(),
-                        y = (startY + (target.y - startY) * fraction).roundToInt()
-                    )
-                )
-            }
-            doOnEnd {
-                applyBallPosition(target)
-                onEnd()
-            }
-            start()
-        }
     }
 
     private fun bindCardActions() {
@@ -549,7 +455,7 @@ class FloatingWordService : Service() {
     private fun previewCard() {
         serviceScope.launch {
             currentSettings = floatingWordController.getSettings()
-            applyCardOpacity()
+            applyFloatingAppearance()
             val word = currentWord
             if (word != null) {
                 val content = floatingWordController.loadCardContent(word, currentSettings)
@@ -807,25 +713,34 @@ class FloatingWordService : Service() {
         cardView?.alpha = resolveCardAlpha(currentSettings.cardOpacityPercent)
     }
 
-    private fun persistBallPosition(position: FloatingBallPosition, dockState: FloatingDockState?) {
-        updateLocalBallState(position, dockState)
+    private fun applyBallOpacity() {
+        ballView?.alpha = resolveBallAlpha(currentSettings.ballOpacityPercent)
+    }
+
+    private fun applyFloatingAppearance() {
+        applyBallOpacity()
+        applyCardOpacity()
+    }
+
+    private fun persistBallPosition(position: FloatingBallPosition) {
+        updateLocalBallState(position)
         serviceScope.launch {
-            floatingWordController.updateBallPosition(position.x, position.y, dockState)
+            floatingWordController.updateBallPosition(position.x, position.y, null)
         }
     }
 
-    private fun updateLocalBallState(position: FloatingBallPosition, dockState: FloatingDockState?) {
+    private fun updateLocalBallState(position: FloatingBallPosition) {
         currentSettings = currentSettings.copy(
             floatingBallX = position.x,
             floatingBallY = position.y,
-            dockState = dockState
+            dockState = null
         )
     }
 
-    private fun needsPersistence(position: FloatingBallPosition, dockState: FloatingDockState?): Boolean {
+    private fun needsPersistence(position: FloatingBallPosition): Boolean {
         return position.x != currentSettings.floatingBallX ||
             position.y != currentSettings.floatingBallY ||
-            dockState != currentSettings.dockState
+            currentSettings.dockState != null
     }
 
     private fun openWordDetail(word: Word) {
@@ -925,15 +840,6 @@ class FloatingWordService : Service() {
             .setOngoing(true)
             .setOnlyAlertOnce(true)
             .build()
-    }
-
-    private fun ValueAnimator.doOnEnd(block: () -> Unit) {
-        addListener(object : android.animation.Animator.AnimatorListener {
-            override fun onAnimationStart(animation: android.animation.Animator) = Unit
-            override fun onAnimationEnd(animation: android.animation.Animator) = block()
-            override fun onAnimationCancel(animation: android.animation.Animator) = Unit
-            override fun onAnimationRepeat(animation: android.animation.Animator) = Unit
-        })
     }
 }
 

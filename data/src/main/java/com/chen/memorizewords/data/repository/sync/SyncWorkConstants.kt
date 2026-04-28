@@ -127,6 +127,7 @@ object SyncWorkConstants {
     const val KEY_FLOATING_BALL_Y = "floating_ball_y"
     const val KEY_FLOATING_AUTO_START_ON_BOOT = "floating_auto_start_on_boot"
     const val KEY_FLOATING_AUTO_START_ON_APP_LAUNCH = "floating_auto_start_on_app_launch"
+    const val KEY_FLOATING_BALL_OPACITY_PERCENT = "floating_ball_opacity_percent"
     const val KEY_FLOATING_CARD_OPACITY_PERCENT = "floating_card_opacity_percent"
     const val KEY_FLOATING_DOCK_CONFIG = "floating_dock_config"
     const val KEY_FLOATING_DOCK_STATE = "floating_dock_state"

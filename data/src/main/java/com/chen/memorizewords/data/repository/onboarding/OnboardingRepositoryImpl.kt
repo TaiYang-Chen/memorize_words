@@ -2,6 +2,7 @@ package com.chen.memorizewords.data.repository.onboarding
 
 import com.chen.memorizewords.data.local.mmkv.auth.AuthLocalDataSource
 import com.chen.memorizewords.data.local.mmkv.onboarding.OnboardingSnapshotDataSource
+import com.chen.memorizewords.data.local.room.model.wordbook.current.CurrentWordBookSelectionDao
 import com.chen.memorizewords.data.local.room.model.wordbook.wordbook.WordBookDao
 import com.chen.memorizewords.data.repository.sync.OnboardingStateSyncPayload
 import com.chen.memorizewords.data.repository.sync.SyncOutboxBizType
@@ -28,6 +29,7 @@ class OnboardingRepositoryImpl @Inject constructor(
     private val authLocalDataSource: AuthLocalDataSource,
     private val onboardingSnapshotDataSource: OnboardingSnapshotDataSource,
     private val wordBookDao: WordBookDao,
+    private val currentWordBookSelectionDao: CurrentWordBookSelectionDao,
     private val syncOutboxStore: SyncOutboxStore,
     private val syncOutboxWorkScheduler: SyncOutboxWorkScheduler,
     private val gson: Gson
@@ -107,7 +109,8 @@ class OnboardingRepositoryImpl @Inject constructor(
     }
 
     private suspend fun inferCompatSnapshot(): OnboardingSnapshot {
-        val currentWordBook = wordBookDao.getCurrentWordBook()
+        val selection = currentWordBookSelectionDao.getById()
+        val currentWordBook = selection?.let { wordBookDao.getWordBookById(it.bookId) }
         if (currentWordBook != null) {
             val now = System.currentTimeMillis()
             return OnboardingSnapshot(

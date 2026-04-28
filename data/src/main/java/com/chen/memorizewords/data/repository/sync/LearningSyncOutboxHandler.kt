@@ -2,6 +2,8 @@
 
 import com.chen.memorizewords.data.local.room.model.sync.SyncOutboxEntity
 import com.chen.memorizewords.data.remote.learningsync.RemoteLearningSyncDataSource
+import com.chen.memorizewords.data.repository.practice.parsePracticeEntryType
+import com.chen.memorizewords.data.repository.practice.parsePracticeMode
 import com.chen.memorizewords.domain.model.floating.FloatingDockConfig
 import com.chen.memorizewords.domain.model.floating.FloatingDockState
 import com.chen.memorizewords.domain.model.floating.FloatingWordDisplayRecord
@@ -50,10 +52,8 @@ class LearningSyncOutboxHandler @Inject constructor(
                     PracticeSessionRecord(
                         id = payload.id,
                         date = payload.date,
-                        mode = runCatching { PracticeMode.valueOf(payload.mode) }
-                            .getOrDefault(PracticeMode.LISTENING),
-                        entryType = runCatching { PracticeEntryType.valueOf(payload.entryType) }
-                            .getOrDefault(PracticeEntryType.RANDOM),
+                        mode = parsePracticeMode(payload.mode),
+                        entryType = parsePracticeEntryType(payload.entryType),
                         entryCount = payload.entryCount,
                         durationMs = payload.durationMs,
                         createdAt = payload.createdAt,
@@ -101,6 +101,7 @@ class LearningSyncOutboxHandler @Inject constructor(
                         floatingBallY = payload.floatingBallY,
                         autoStartOnBoot = payload.autoStartOnBoot,
                         autoStartOnAppLaunch = payload.autoStartOnAppLaunch,
+                        ballOpacityPercent = payload.ballOpacityPercent,
                         cardOpacityPercent = payload.cardOpacityPercent,
                         dockConfig = payload.dockConfigJson?.let {
                             gson.fromJson(it, FloatingDockConfig::class.java)

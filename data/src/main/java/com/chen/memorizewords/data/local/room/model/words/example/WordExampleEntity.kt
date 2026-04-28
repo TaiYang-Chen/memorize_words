@@ -2,11 +2,28 @@ package com.chen.memorizewords.data.local.room.model.words.example
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.chen.memorizewords.data.local.room.model.words.definition.WordDefinitionEntity
+import com.chen.memorizewords.data.local.room.model.words.word.WordEntity
 
 @Entity(
     tableName = "word_examples",
+    foreignKeys = [
+        ForeignKey(
+            entity = WordEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["word_id"],
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = WordDefinitionEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["definition_id"],
+            onDelete = ForeignKey.SET_NULL
+        )
+    ],
     indices = [
         Index("word_id"),
         Index("definition_id"),
@@ -14,31 +31,27 @@ import androidx.room.PrimaryKey
     ]
 )
 data class WordExampleEntity(
-
     @PrimaryKey
     @ColumnInfo(name = "id")
     val id: Long,
-
-    // ==== 关联信息 ====
     @ColumnInfo(name = "word_id")
-    val wordId: Long,  // 关联的单词ID
-
+    val wordId: Long,
     @ColumnInfo(name = "definition_id")
-    val definitionId: Long? = null,  // 关联的释义ID（可以为空）
-
-    // ==== 例句内容 ====
+    val definitionId: Long? = null,
     @ColumnInfo(name = "english_sentence")
-    val englishSentence: String,  // 英文例句
-
+    val englishSentence: String,
     @ColumnInfo(name = "chinese_translation")
-    val chineseTranslation: String? = null,  // 中文翻译
-
-    // ==== 难度和质量 ====
+    val chineseTranslation: String? = null,
     @ColumnInfo(name = "difficulty_level")
-    val difficultyLevel: DifficultyLevel = DifficultyLevel.MEDIUM,  // 例句难度
+    val difficultyLevel: DifficultyLevel = DifficultyLevel.MEDIUM,
 ) {
     enum class DifficultyLevel {
-        VERY_EASY, EASY, MEDIUM, HARD, VERY_HARD, EXPERT;
+        VERY_EASY,
+        EASY,
+        MEDIUM,
+        HARD,
+        VERY_HARD,
+        EXPERT;
 
         companion object {
             fun fromInt(value: Int): DifficultyLevel {

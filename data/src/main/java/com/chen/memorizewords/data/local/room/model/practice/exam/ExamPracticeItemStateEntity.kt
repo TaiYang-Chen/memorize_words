@@ -2,9 +2,21 @@ package com.chen.memorizewords.data.local.room.model.practice.exam
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.chen.memorizewords.domain.model.practice.ExamItemLastResult
 
-@Entity(tableName = "exam_practice_item_state")
+@Entity(
+    tableName = "exam_practice_item_state",
+    foreignKeys = [
+        ForeignKey(
+            entity = ExamPracticeItemEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["exam_item_id"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
+)
 data class ExamPracticeItemStateEntity(
     @PrimaryKey
     @ColumnInfo(name = "exam_item_id")
@@ -18,7 +30,13 @@ data class ExamPracticeItemStateEntity(
     @ColumnInfo(name = "correct_count")
     val correctCount: Int = 0,
     @ColumnInfo(name = "last_result")
-    val lastResult: String? = null,
+    val lastResult: ExamItemLastResult? = null,
     @ColumnInfo(name = "last_answered_at")
     val lastAnsweredAt: Long? = null
-)
+) {
+    init {
+        require(attemptCount >= 0) { "attemptCount must be non-negative" }
+        require(correctCount >= 0) { "correctCount must be non-negative" }
+        require(lastAnsweredAt == null || lastAnsweredAt >= 0L) { "lastAnsweredAt must be non-negative" }
+    }
+}

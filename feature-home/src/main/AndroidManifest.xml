@@ -5,6 +5,9 @@
 
     <application>
         <activity
+            android:name="com.chen.memorizewords.feature.home.ui.sync.PendingSyncDetailActivity"
+            android:exported="false" />
+        <activity
             android:name="com.chen.memorizewords.feature.home.HomeActivity"
             android:exported="false" />
     </application>

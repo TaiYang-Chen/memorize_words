@@ -21,9 +21,34 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
+internal const val DEFAULT_BALL_OPACITY_PERCENT = 100
 internal const val DEFAULT_CARD_OPACITY_PERCENT = 100
 
+internal fun normalizeBallOpacityPercent(value: Int): Int = value.coerceIn(0, 100)
 internal fun normalizeCardOpacityPercent(value: Int): Int = value.coerceIn(0, 100)
+internal fun sanitizeDockState(): FloatingDockState? = null
+
+internal fun normalizeFieldConfigs(
+    configs: List<FloatingWordFieldConfig>
+): List<FloatingWordFieldConfig> {
+    val defaults = FloatingWordSettings.defaultFieldConfigs()
+    if (configs.isEmpty()) return defaults
+    val existing = configs.map { it.copy(fontSizeSp = it.fontSizeSp.coerceAtLeast(8)) }
+    val existingTypes = existing.map { it.type }.toSet()
+    val missing = defaults.filter { it.type !in existingTypes }
+    return existing + missing
+}
+
+internal fun normalizeFloatingWordSettings(settings: FloatingWordSettings): FloatingWordSettings {
+    val normalizedDockConfig = settings.dockConfig.normalized()
+    return settings.copy(
+        fieldConfigs = normalizeFieldConfigs(settings.fieldConfigs),
+        ballOpacityPercent = normalizeBallOpacityPercent(settings.ballOpacityPercent),
+        cardOpacityPercent = normalizeCardOpacityPercent(settings.cardOpacityPercent),
+        dockConfig = normalizedDockConfig,
+        dockState = sanitizeDockState()
+    )
+}
 
 @Singleton
 class FloatingWordSettingsRepositoryImpl @Inject constructor(
@@ -45,6 +70,7 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
         private const val KEY_BALL_Y = "floating_word_ball_y"
         private const val KEY_DOCK_CONFIG = "floating_word_dock_config"
         private const val KEY_DOCK_STATE = "floating_word_dock_state"
+        private const val KEY_BALL_OPACITY_PERCENT = "floating_word_ball_opacity_percent"
         private const val KEY_CARD_OPACITY_PERCENT = "floating_word_card_opacity_percent"
         private const val KEY_SIZE_MIGRATED = "floating_word_size_migrated"
     }
@@ -100,6 +126,7 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
             KEY_BALL_Y,
             KEY_DOCK_CONFIG,
             KEY_DOCK_STATE,
+            KEY_BALL_OPACITY_PERCENT,
             KEY_CARD_OPACITY_PERCENT,
             KEY_SIZE_MIGRATED
         ).forEach(mmkv::removeValueForKey)
@@ -131,11 +158,8 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
         val dockConfig = runCatching {
             gson.fromJson(dockConfigJson, FloatingDockConfig::class.java)
         }.getOrNull() ?: FloatingDockConfig()
-        val dockState = runCatching {
-            gson.fromJson(dockStateJson, FloatingDockState::class.java)
-        }.getOrNull()
 
-        val settings = normalizeSettings(
+        val settings = normalizeFloatingWordSettings(
             FloatingWordSettings(
                 enabled = mmkv.decodeBool(KEY_ENABLED, false),
                 autoStartOnBoot = mmkv.decodeBool(KEY_AUTO_START_ON_BOOT, false),
@@ -146,36 +170,27 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
                 selectedWordIds = selectedIds,
                 floatingBallX = mmkv.decodeInt(KEY_BALL_X, 0),
                 floatingBallY = mmkv.decodeInt(KEY_BALL_Y, 0),
+                ballOpacityPercent = mmkv.decodeInt(
+                    KEY_BALL_OPACITY_PERCENT,
+                    DEFAULT_BALL_OPACITY_PERCENT
+                ),
                 cardOpacityPercent = mmkv.decodeInt(
                     KEY_CARD_OPACITY_PERCENT,
                     DEFAULT_CARD_OPACITY_PERCENT
                 ),
                 dockConfig = dockConfig,
-                dockState = dockState
+                dockState = sanitizeDockState()
             )
         )
-        return maybeMigrateSizes(settings)
+        val migrated = maybeMigrateSizes(settings)
+        if (dockStateJson != null) {
+            persistSettings(migrated, normalize = false)
+        }
+        return migrated
     }
 
     private fun normalizeSettings(settings: FloatingWordSettings): FloatingWordSettings {
-        val normalizedDockConfig = settings.dockConfig.normalized()
-        return settings.copy(
-            fieldConfigs = normalizeFieldConfigs(settings.fieldConfigs),
-            cardOpacityPercent = normalizeCardOpacityPercent(settings.cardOpacityPercent),
-            dockConfig = normalizedDockConfig,
-            dockState = settings.dockState?.normalized(normalizedDockConfig)
-        )
-    }
-
-    private fun normalizeFieldConfigs(
-        configs: List<FloatingWordFieldConfig>
-    ): List<FloatingWordFieldConfig> {
-        val defaults = FloatingWordSettings.defaultFieldConfigs()
-        if (configs.isEmpty()) return defaults
-        val existing = configs.map { it.copy(fontSizeSp = it.fontSizeSp.coerceAtLeast(8)) }
-        val existingTypes = existing.map { it.type }.toSet()
-        val missing = defaults.filter { it.type !in existingTypes }
-        return existing + missing
+        return normalizeFloatingWordSettings(settings)
     }
 
     private fun maybeMigrateSizes(settings: FloatingWordSettings): FloatingWordSettings {
@@ -215,6 +230,7 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
         mmkv.encode(KEY_SELECTED_IDS, gson.toJson(target.selectedWordIds))
         mmkv.encode(KEY_BALL_X, target.floatingBallX)
         mmkv.encode(KEY_BALL_Y, target.floatingBallY)
+        mmkv.encode(KEY_BALL_OPACITY_PERCENT, target.ballOpacityPercent)
         mmkv.encode(KEY_CARD_OPACITY_PERCENT, target.cardOpacityPercent)
         mmkv.encode(KEY_DOCK_CONFIG, gson.toJson(target.dockConfig))
         mmkv.encode(KEY_DOCK_STATE, target.dockState?.let(gson::toJson))
@@ -239,6 +255,7 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
                     floatingBallY = settings.floatingBallY,
                     autoStartOnBoot = settings.autoStartOnBoot,
                     autoStartOnAppLaunch = settings.autoStartOnAppLaunch,
+                    ballOpacityPercent = settings.ballOpacityPercent,
                     cardOpacityPercent = settings.cardOpacityPercent,
                     dockConfigJson = gson.toJson(settings.dockConfig),
                     dockStateJson = settings.dockState?.let(gson::toJson)

@@ -12,4 +12,9 @@ data class DailyPracticeDurationEntity(
     val totalDurationMs: Long,
     @ColumnInfo(name = "updated_at")
     val updatedAt: Long
-)
+) {
+    init {
+        require(totalDurationMs >= 0L) { "totalDurationMs must be non-negative" }
+        require(updatedAt >= 0L) { "updatedAt must be non-negative" }
+    }
+}

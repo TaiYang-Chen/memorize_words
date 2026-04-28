@@ -30,6 +30,7 @@ class PracticeActivity : AppCompatActivity() {
 
         const val ARG_SELECTED_WORD_IDS = PracticeEntryExtras.ARG_SELECTED_WORD_IDS
         const val ARG_RANDOM_COUNT = PracticeEntryExtras.ARG_RANDOM_COUNT
+        const val ARG_PRACTICE_MODE = "arg_practice_mode"
     }
 
     private lateinit var binding: ActivityPracticeBinding
@@ -89,7 +90,8 @@ class PracticeActivity : AppCompatActivity() {
             }
             fragment.arguments = bundleOf(
                 ARG_SELECTED_WORD_IDS to selectedIds,
-                ARG_RANDOM_COUNT to randomCount
+                ARG_RANDOM_COUNT to randomCount,
+                ARG_PRACTICE_MODE to practiceMode.name
             )
             supportFragmentManager.beginTransaction()
                 .replace(R.id.practice_fragment_container, fragment, practiceMode.name)
@@ -132,4 +134,8 @@ class PracticeActivity : AppCompatActivity() {
             PracticeMode.EXAM -> "真题练习"
         }
     }
+}
+
+internal fun shouldUseListeningCustomHeader(mode: PracticeMode): Boolean {
+    return mode == PracticeMode.LISTENING
 }

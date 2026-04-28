@@ -25,8 +25,8 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:onClick="@{()->vm.back()}"
                 android:src="@drawable/ic_arrow_back"
                 app:layout_constraintBottom_toBottomOf="@+id/textView13"
@@ -40,7 +40,7 @@
                 android:layout_marginTop="@dimen/title_height"
                 android:text="@{vm.bookName}"
                 android:textColor="#000"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -4,6 +4,7 @@ data class FloatingWordSettings(
     val enabled: Boolean = false,
     val autoStartOnBoot: Boolean = false,
     val autoStartOnAppLaunch: Boolean = false,
+    val ballOpacityPercent: Int = 100,
     val cardOpacityPercent: Int = 100,
     val sourceType: FloatingWordSourceType = FloatingWordSourceType.CURRENT_BOOK,
     val orderType: FloatingWordOrderType = FloatingWordOrderType.RANDOM,

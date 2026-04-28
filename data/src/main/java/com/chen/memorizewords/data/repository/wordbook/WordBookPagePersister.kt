@@ -13,6 +13,7 @@ import com.chen.memorizewords.data.local.room.model.words.word.toUserMetaEntity 
 import com.chen.memorizewords.data.local.room.model.words.definition.toEntity as definitionToEntity
 import com.chen.memorizewords.data.local.room.model.words.example.toEntity as exampleToEntity
 import com.chen.memorizewords.data.local.room.model.words.form.toEntity as formToEntity
+import com.chen.memorizewords.data.local.room.model.words.root.root.toTagEntities as rootToTagEntities
 import com.chen.memorizewords.data.local.room.model.words.root.root.toEntity as wordRootToEntity
 import com.chen.memorizewords.data.local.room.model.words.root.rootword.toRelationEntity
 
@@ -28,6 +29,7 @@ internal suspend fun AppDatabase.persistWordBookPage(
     val wordExampleDao = wordExampleDao()
     val wordFormDao = wordFormDao()
     val wordRootDao = wordRootDao()
+    val rootTagDao = rootTagDao()
     val rootWordDao = rootWordDao()
     val wordRelationDao = wordRelationDao()
     val wordUserMetaDao = wordUserMetaDao()
@@ -47,6 +49,7 @@ internal suspend fun AppDatabase.persistWordBookPage(
             val examples = word.exampleDtos.map { it.exampleToEntity() }
             val forms = word.wordFormDtos.map { it.formToEntity() }
             val roots = word.rootWords.map { it.wordRootToEntity() }
+            val rootTags = word.rootWords.flatMap { it.rootToTagEntities() }
             val rootRelations = word.rootWords.mapIndexed { index, root ->
                 root.toRelationEntity(wordId = word.id, sequence = index + 1)
             }
@@ -62,6 +65,12 @@ internal suspend fun AppDatabase.persistWordBookPage(
             wordExampleDao.insert(examples)
             wordFormDao.insert(forms)
             wordRootDao.insertRoots(roots)
+            if (roots.isNotEmpty()) {
+                rootTagDao.deleteByRootIds(roots.map { it.id })
+            }
+            if (rootTags.isNotEmpty()) {
+                rootTagDao.insertAll(rootTags)
+            }
             rootWordDao.deleteByWordId(word.id)
             rootWordDao.insert(rootRelations)
 

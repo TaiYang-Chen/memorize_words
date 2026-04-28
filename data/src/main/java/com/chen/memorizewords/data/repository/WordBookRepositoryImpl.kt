@@ -5,6 +5,8 @@ import com.chen.memorizewords.data.local.room.AppDatabase
 import com.chen.memorizewords.data.local.room.model.study.progress.word.WordLearningStateDao
 import com.chen.memorizewords.data.local.room.model.study.progress.wordbook.WordBookProgressDao
 import com.chen.memorizewords.data.local.room.model.study.progress.wordbook.WordBookProgressEntity
+import com.chen.memorizewords.data.local.room.model.wordbook.current.CurrentWordBookSelectionDao
+import com.chen.memorizewords.data.local.room.model.wordbook.current.CurrentWordBookSelectionEntity
 import com.chen.memorizewords.data.local.room.model.wordbook.wordbook.WordBookDao
 import com.chen.memorizewords.data.local.room.model.wordbook.wordbook.toDomain
 import com.chen.memorizewords.data.local.room.model.wordbook.words.BookWordItemDao
@@ -30,6 +32,7 @@ import com.google.gson.Gson
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -41,54 +44,61 @@ class WordBookRepositoryImpl @Inject constructor(
     private val bookWordsDao: BookWordItemDao,
     private val wordDao: WordDao,
     private val wordBookDao: WordBookDao,
+    private val currentWordBookSelectionDao: CurrentWordBookSelectionDao,
     private val syncOutboxStore: SyncOutboxStore,
     private val syncOutboxWorkScheduler: SyncOutboxWorkScheduler,
     private val gson: Gson
 ) : WordBookRepository {
 
     override fun getMyWordBooksMinimalFlow(): Flow<List<WordBookInfo>> {
-        return wordBookDao.getMyWordBooksFlow()
-            .map { list ->
-                list.map { bookEntity ->
-                    WordBookInfo(
-                        bookId = bookEntity.id,
-                        title = bookEntity.title,
-                        category = bookEntity.category,
-                        imgUrl = bookEntity.imgUrl,
-                        description = bookEntity.description,
-                        totalWords = bookEntity.totalWords,
-                        isSelected = bookEntity.isSelected,
-                        studyDayCount = 0,
-                        createdByUserId = bookEntity.createdByUserId
-                    )
-                }
+        return combine(
+            wordBookDao.getMyWordBooksFlow(),
+            currentWordBookSelectionDao.observeById()
+        ) { books, selection ->
+            val selectedBookId = selection?.bookId
+            books.map { bookEntity ->
+                WordBookInfo(
+                    bookId = bookEntity.id,
+                    title = bookEntity.title,
+                    category = bookEntity.category,
+                    imgUrl = bookEntity.imgUrl,
+                    description = bookEntity.description,
+                    totalWords = bookEntity.totalWords,
+                    isSelected = bookEntity.id == selectedBookId,
+                    studyDayCount = 0,
+                    createdByUserId = bookEntity.createdByUserId
+                )
             }
-            .distinctUntilChanged()
+        }.distinctUntilChanged()
     }
 
     override fun getCurrentWordBookMinimalFlow(): Flow<WordBookInfo?> {
-        return wordBookDao.getCurrentWordBookFlow()
-            .map { bookEntity ->
-                bookEntity?.let {
-                    WordBookInfo(
-                        bookId = it.id,
-                        title = it.title,
-                        category = it.category,
-                        imgUrl = it.imgUrl,
-                        description = it.description,
-                        totalWords = it.totalWords,
-                        studyDayCount = 0,
-                        createdByUserId = it.createdByUserId
-                    )
-                }
+        return combine(
+            wordBookDao.getAllWordBooksFlow(),
+            currentWordBookSelectionDao.observeById()
+        ) { books, selection ->
+            val selected = selection ?: return@combine null
+            books.firstOrNull { it.id == selected.bookId }?.let {
+                WordBookInfo(
+                    bookId = it.id,
+                    title = it.title,
+                    category = it.category,
+                    imgUrl = it.imgUrl,
+                    description = it.description,
+                    totalWords = it.totalWords,
+                    studyDayCount = 0,
+                    isSelected = true,
+                    createdByUserId = it.createdByUserId
+                )
             }
-            .distinctUntilChanged()
+        }.distinctUntilChanged()
     }
 
     override suspend fun setCurrentWordBook(bookId: Long) {
         withContext(Dispatchers.IO) {
+            if (!wordBookDao.exists(bookId)) return@withContext
             appDatabase.withTransaction {
-                wordBookDao.setCurrentWordBook(bookId)
+                currentWordBookSelectionDao.upsert(CurrentWordBookSelectionEntity(bookId = bookId))
                 syncOutboxStore.enqueueLatest(
                     bizType = SyncOutboxBizType.WORD_BOOK_SELECTION,
                     bizKey = "word_book_selection",
@@ -101,7 +111,9 @@ class WordBookRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getCurrentWordBook(): WordBook? {
-        return wordBookDao.getCurrentWordBook()?.toDomain()
+        val selection = currentWordBookSelectionDao.getById() ?: return null
+        val book = wordBookDao.getWordBookById(selection.bookId) ?: return null
+        return book.toDomain(isSelected = true)
     }
 
     override suspend fun getBookNameById(bookId: Long): String? {
@@ -155,8 +167,6 @@ class WordBookRepositoryImpl @Inject constructor(
                 wordBookProgressDao.upsert(
                     WordBookProgressEntity(
                         wordBookId = bookId,
-                        learnedCount = 0,
-                        masteredCount = 0,
                         correctCount = 0,
                         wrongCount = 0,
                         studyDayCount = 1,
@@ -244,7 +254,7 @@ class WordBookRepositoryImpl @Inject constructor(
                         correctCount = progress.correctCount,
                         wrongCount = progress.wrongCount,
                         studyDayCount = progress.studyDayCount,
-                        lastStudyDate = progress.lastStudyDate
+                        lastStudyDate = progress.lastStudyDate.orEmpty()
                     )
                 )
             )

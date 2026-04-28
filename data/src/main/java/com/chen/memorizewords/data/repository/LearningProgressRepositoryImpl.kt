@@ -1,7 +1,6 @@
 package com.chen.memorizewords.data.repository
 
 import com.chen.memorizewords.data.local.room.model.study.progress.word.WordLearningStateDao
-import com.chen.memorizewords.data.local.room.model.study.progress.word.toDomain
 import com.chen.memorizewords.data.local.room.model.study.progress.wordbook.WordBookProgressDao
 import com.chen.memorizewords.data.local.room.model.wordbook.wordbook.WordBookDao
 import com.chen.memorizewords.data.model.study.progress.wordbook.toDomain

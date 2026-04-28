@@ -8,6 +8,9 @@
     <string name="module_wordbook_shop_word_count">词汇数：%1$d</string>
     <string name="module_wordbook_shop_title">词书商城</string>
     <string name="module_wordbook_shop_search_hint">搜索词书</string>
+    <string name="module_wordbook_cancel">取消</string>
+    <string name="module_wordbook_shop_search_empty_keyword">输入词书名称开始搜索</string>
+    <string name="module_wordbook_shop_search_no_results">未找到相关词书</string>
     <string name="module_wordbook_notify_permission_denied">通知权限已关闭，将仅在页面显示下载进度</string>
     <string name="module_wordbook_network_error">网络错误，请重试</string>
     <string name="module_wordbook_empty_books">暂无词书</string>
@@ -18,4 +21,17 @@
     <string name="module_wordbook_nav_study_plan_title">学习计划</string>
     <string name="module_wordbook_nav_word_list_title">单词列表</string>
     <string name="module_wordbook_nav_favorites_title">收藏夹</string>
+    <string name="module_wordbook_study_mode_all">全部模式</string>
+    <string name="module_wordbook_study_mode_sheet_title">选择学习模式</string>
+    <string name="module_wordbook_study_mode_current_default">当前默认</string>
+    <string name="module_wordbook_study_mode_meaning_title">释义选择</string>
+    <string name="module_wordbook_study_mode_meaning_desc">根据中文或英文释义选择正确单词，适合初次学习时使用。</string>
+    <string name="module_wordbook_study_mode_spelling_title">拼写测试</string>
+    <string name="module_wordbook_study_mode_spelling_desc">根据中文或发音写出完整单词，强化记忆，减少提笔忘字。</string>
+    <string name="module_wordbook_study_mode_listening_title">听力辨义</string>
+    <string name="module_wordbook_study_mode_listening_desc">听取英文发音，选择正确释义，提升听力敏感度与反应速度。</string>
+
+    <string name="feature_wordbook_my_book_status_studying">正在学习</string>
+    <string name="feature_wordbook_my_book_progress_label">已学: %1$d / %2$d</string>
+    <string name="feature_wordbook_my_book_mastered_label">熟练: %1$d</string>
 </resources>

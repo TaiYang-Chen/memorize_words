@@ -1,10 +1,12 @@
 package com.chen.memorizewords.data.repository.floating
 
 import androidx.room.withTransaction
-import com.chen.memorizewords.data.local.room.AppDatabase
 import com.chen.memorizewords.data.local.mmkv.checkin.CheckInBusinessCalendar
+import com.chen.memorizewords.data.local.room.AppDatabase
 import com.chen.memorizewords.data.local.room.model.floating.FloatingWordDisplayRecordDao
 import com.chen.memorizewords.data.local.room.model.floating.FloatingWordDisplayRecordEntity
+import com.chen.memorizewords.data.local.room.model.floating.FloatingWordDisplayRecordWithWords
+import com.chen.memorizewords.data.local.room.model.floating.FloatingWordDisplayWordEntity
 import com.chen.memorizewords.data.repository.sync.FloatingDisplayRecordSyncPayload
 import com.chen.memorizewords.data.repository.sync.SyncOutboxBizType
 import com.chen.memorizewords.data.repository.sync.SyncOutboxOperation
@@ -29,21 +31,26 @@ class FloatingWordDisplayRecordRepositoryImpl @Inject constructor(
         val date = checkInBusinessCalendar.currentBusinessDate()
         appDatabase.withTransaction {
             val current = dao.getByDate(date)
+            val currentWordIds = current?.words?.sortedBy { it.sequence }?.map { it.wordId }.orEmpty()
             val updated = if (current == null) {
                 FloatingWordDisplayRecordEntity(
                     date = date,
                     displayCount = 1,
-                    wordIds = listOf(wordId),
                     updatedAt = System.currentTimeMillis()
                 )
             } else {
-                current.copy(
-                    displayCount = current.displayCount + 1,
-                    wordIds = current.wordIds + wordId,
+                current.record.copy(
+                    displayCount = current.record.displayCount + 1,
                     updatedAt = System.currentTimeMillis()
                 )
             }
+            val updatedWordIds = currentWordIds + wordId
             dao.upsert(updated)
+            dao.deleteWordsByDates(listOf(date))
+            val words = updatedWordIds.toDisplayWordEntities(date)
+            if (words.isNotEmpty()) {
+                dao.upsertWords(words)
+            }
             syncOutboxStore.enqueueLatest(
                 bizType = SyncOutboxBizType.FLOATING_DISPLAY_RECORD,
                 bizKey = "floating_display_record:${updated.date}",
@@ -52,7 +59,7 @@ class FloatingWordDisplayRecordRepositoryImpl @Inject constructor(
                     FloatingDisplayRecordSyncPayload(
                         date = updated.date,
                         displayCount = updated.displayCount,
-                        wordIds = updated.wordIds,
+                        wordIds = updatedWordIds,
                         updatedAt = updated.updatedAt
                     )
                 )
@@ -63,11 +70,25 @@ class FloatingWordDisplayRecordRepositoryImpl @Inject constructor(
 
     override suspend fun getRecordByDate(date: String): FloatingWordDisplayRecord? {
         val entity = dao.getByDate(date) ?: return null
-        return FloatingWordDisplayRecord(
-            date = entity.date,
-            displayCount = entity.displayCount,
-            wordIds = entity.wordIds,
-            updatedAt = entity.updatedAt
+        return entity.toDomain()
+    }
+}
+
+internal fun FloatingWordDisplayRecordWithWords.toDomain(): FloatingWordDisplayRecord {
+    return FloatingWordDisplayRecord(
+        date = record.date,
+        displayCount = record.displayCount,
+        wordIds = words.sortedBy { it.sequence }.map { it.wordId },
+        updatedAt = record.updatedAt
+    )
+}
+
+internal fun List<Long>.toDisplayWordEntities(date: String): List<FloatingWordDisplayWordEntity> {
+    return mapIndexed { index, wordId ->
+        FloatingWordDisplayWordEntity(
+            recordDate = date,
+            sequence = index,
+            wordId = wordId
         )
     }
 }

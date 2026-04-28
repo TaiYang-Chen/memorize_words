@@ -1,10 +1,12 @@
 package com.chen.memorizewords.data.repository.practice
 
 import androidx.room.withTransaction
-import com.chen.memorizewords.data.local.room.AppDatabase
 import com.chen.memorizewords.data.local.mmkv.checkin.CheckInBusinessCalendar
+import com.chen.memorizewords.data.local.room.AppDatabase
 import com.chen.memorizewords.data.local.room.model.practice.session.PracticeSessionRecordDao
 import com.chen.memorizewords.data.local.room.model.practice.session.PracticeSessionRecordEntity
+import com.chen.memorizewords.data.local.room.model.practice.session.PracticeSessionRecordWithWords
+import com.chen.memorizewords.data.local.room.model.practice.session.PracticeSessionWordEntity
 import com.chen.memorizewords.data.repository.sync.PracticeSessionSyncPayload
 import com.chen.memorizewords.data.repository.sync.SyncOutboxBizType
 import com.chen.memorizewords.data.repository.sync.SyncOutboxOperation
@@ -14,13 +16,13 @@ import com.chen.memorizewords.domain.model.practice.PracticeEntryType
 import com.chen.memorizewords.domain.model.practice.PracticeMode
 import com.chen.memorizewords.domain.model.practice.PracticeSessionRecord
 import com.chen.memorizewords.domain.repository.practice.PracticeSessionRecordRepository
+import com.google.gson.Gson
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
-import com.google.gson.Gson
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class PracticeSessionRecordRepositoryImpl @Inject constructor(
@@ -38,6 +40,11 @@ class PracticeSessionRecordRepositoryImpl @Inject constructor(
             val recordId = practiceSessionRecordDao.insert(record.toEntity(date))
             val targetId = if (recordId > 0L) recordId else record.id
             if (targetId > 0L) {
+                practiceSessionRecordDao.deleteWordsBySessionIds(listOf(targetId))
+                val words = record.wordIds.toWordEntities(targetId)
+                if (words.isNotEmpty()) {
+                    practiceSessionRecordDao.upsertWords(words)
+                }
                 syncOutboxStore.enqueueLatest(
                     bizType = SyncOutboxBizType.PRACTICE_SESSION,
                     bizKey = "practice_session:$targetId",
@@ -68,12 +75,11 @@ internal fun PracticeSessionRecord.toEntity(date: String): PracticeSessionRecord
     return PracticeSessionRecordEntity(
         id = id,
         date = date,
-        mode = mode.name,
-        entryType = entryType.name,
+        mode = mode,
+        entryType = entryType,
         entryCount = entryCount,
         durationMs = durationMs,
         createdAt = createdAt,
-        wordIds = wordIds,
         questionCount = questionCount,
         completedCount = completedCount,
         correctCount = correctCount,
@@ -98,22 +104,33 @@ internal fun PracticeSessionRecord.toSyncPayload(id: Long, date: String): Practi
     )
 }
 
-internal fun PracticeSessionRecordEntity.toDomain(): PracticeSessionRecord {
-    val mode = runCatching { PracticeMode.valueOf(mode) }.getOrDefault(PracticeMode.LISTENING)
-    val entryType = runCatching { PracticeEntryType.valueOf(entryType) }
-        .getOrDefault(PracticeEntryType.RANDOM)
+internal fun PracticeSessionRecordWithWords.toDomain(): PracticeSessionRecord {
     return PracticeSessionRecord(
-        id = id,
-        date = date,
-        mode = mode,
-        entryType = entryType,
-        entryCount = entryCount,
-        durationMs = durationMs,
-        createdAt = createdAt,
-        wordIds = wordIds,
-        questionCount = questionCount,
-        completedCount = completedCount,
-        correctCount = correctCount,
-        submitCount = submitCount
+        id = record.id,
+        date = record.date,
+        mode = record.mode,
+        entryType = record.entryType,
+        entryCount = record.entryCount,
+        durationMs = record.durationMs,
+        createdAt = record.createdAt,
+        wordIds = words.sortedBy { it.sequence }.map { it.wordId },
+        questionCount = record.questionCount,
+        completedCount = record.completedCount,
+        correctCount = record.correctCount,
+        submitCount = record.submitCount
     )
 }
+
+internal fun List<Long>.toWordEntities(sessionId: Long): List<PracticeSessionWordEntity> {
+    return mapIndexed { index, wordId ->
+        PracticeSessionWordEntity(
+            sessionId = sessionId,
+            sequence = index,
+            wordId = wordId
+        )
+    }
+}
+
+internal fun parsePracticeMode(value: String): PracticeMode = PracticeMode.valueOf(value)
+
+internal fun parsePracticeEntryType(value: String): PracticeEntryType = PracticeEntryType.valueOf(value)

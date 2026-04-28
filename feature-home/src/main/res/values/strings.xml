@@ -90,4 +90,12 @@
     <string name="feature_home_wordbook_update_ignored">已忽略本次词书更新提醒</string>
     <string name="feature_home_wordbook_remind_later_action">暂不更新</string>
     <string name="feature_home_wordbook_update_remind_later">已设置稍后提醒</string>
+    <string name="feature_home_pending_sync_title">待上传数据</string>
+    <string name="feature_home_pending_sync_count">%1$d 条待上传数据</string>
+    <string name="feature_home_pending_sync_empty">当前没有待上传数据</string>
+    <string name="feature_home_pending_sync_expand">展开详情</string>
+    <string name="feature_home_pending_sync_collapse">收起详情</string>
+    <string name="feature_home_pending_sync_detail_fields">业务字段</string>
+    <string name="feature_home_pending_sync_raw_payload">原始 JSON</string>
+    <string name="feature_home_pending_sync_parse_failed">字段解析失败，仅展示原始内容</string>
 </resources>

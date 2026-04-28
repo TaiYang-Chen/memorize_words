@@ -18,25 +18,25 @@ object SyncOutboxBizType {
     const val CHECKIN_RECORD = "CHECKIN_RECORD"
 }
 
-object SyncOutboxOperation {
-    const val UPSERT = "UPSERT"
-    const val DELETE = "DELETE"
+enum class SyncOutboxOperation {
+    UPSERT,
+    DELETE
 }
 
-object SyncOutboxState {
-    const val QUEUED = "QUEUED"
-    const val IN_FLIGHT = "IN_FLIGHT"
-    const val RETRY_WAITING = "RETRY_WAITING"
-    const val BLOCKED = "BLOCKED"
+enum class SyncOutboxState {
+    QUEUED,
+    IN_FLIGHT,
+    RETRY_WAITING,
+    BLOCKED
 }
 
-object SyncOutboxFailureKind {
-    const val NETWORK = "NETWORK"
-    const val AUTH = "AUTH"
-    const val SERVER = "SERVER"
-    const val RATE_LIMIT = "RATE_LIMIT"
-    const val CLIENT = "CLIENT"
-    const val UNKNOWN = "UNKNOWN"
+enum class SyncOutboxFailureKind {
+    NETWORK,
+    AUTH,
+    SERVER,
+    RATE_LIMIT,
+    CLIENT,
+    UNKNOWN
 }
 
 data class StudyRecordSyncPayload(
@@ -81,7 +81,8 @@ data class FavoriteSyncPayload(
     val word: String? = null,
     val definitions: String? = null,
     val phonetic: String? = null,
-    val addedDate: String? = null
+    val addedDate: String? = null,
+    val addedAt: Long? = null
 )
 
 data class WordBookProgressSyncPayload(
@@ -153,6 +154,7 @@ data class FloatingSettingsSyncPayload(
     val floatingBallY: Int,
     val autoStartOnBoot: Boolean,
     val autoStartOnAppLaunch: Boolean,
+    val ballOpacityPercent: Int,
     val cardOpacityPercent: Int,
     val dockConfigJson: String? = null,
     val dockStateJson: String? = null

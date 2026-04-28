@@ -3,7 +3,6 @@ package com.chen.memorizewords.feature.floatingreview.ui.settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -11,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.chen.memorizewords.domain.model.floating.FloatingWordFieldConfig
 import com.chen.memorizewords.domain.model.floating.FloatingWordFieldType
 import com.chen.memorizewords.feature.floatingreview.R
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class FloatingWordFieldConfigAdapter(
     items: List<FloatingWordFieldConfig>,
@@ -47,7 +47,7 @@ class FloatingWordFieldConfigAdapter(
     }
 
     inner class FieldConfigViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val cbEnable: CheckBox = view.findViewById(R.id.cbEnable)
+        private val switchEnable: SwitchMaterial = view.findViewById(R.id.switchEnable)
         private val tvLabel: TextView = view.findViewById(R.id.tvFieldLabel)
         private val tvSize: TextView = view.findViewById(R.id.tvSizeValue)
         private val btnMinus: TextView = view.findViewById(R.id.btnSizeMinus)
@@ -56,9 +56,9 @@ class FloatingWordFieldConfigAdapter(
         fun bind(item: FloatingWordFieldConfig) {
             tvLabel.text = labelProvider(item.type)
             tvSize.text = item.fontSizeSp.toString()
-            cbEnable.setOnCheckedChangeListener(null)
-            cbEnable.isChecked = item.enabled
-            cbEnable.setOnCheckedChangeListener { _, isChecked ->
+            switchEnable.setOnCheckedChangeListener(null)
+            switchEnable.isChecked = item.enabled
+            switchEnable.setOnCheckedChangeListener { _, isChecked ->
                 updateItem(item.copy(enabled = isChecked))
             }
             btnMinus.setOnClickListener { updateFontSize(item, -sizeStep(item.type)) }

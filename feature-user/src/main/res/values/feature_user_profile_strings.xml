@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_user_profile_title">个人信息</string>
+    <string name="feature_user_profile_back">返回</string>
+    <string name="feature_user_profile_more">更多</string>
+    <string name="feature_user_profile_avatar">头像</string>
+    <string name="feature_user_profile_change_avatar">更换头像</string>
+    <string name="feature_user_profile_label_nickname">昵称</string>
+    <string name="feature_user_profile_label_member_status">会员状态</string>
+    <string name="feature_user_profile_label_account_id">账号 ID</string>
+    <string name="feature_user_profile_label_gender">性别</string>
+    <string name="feature_user_profile_label_phone">手机号</string>
+    <string name="feature_user_profile_label_wechat">微信号</string>
+    <string name="feature_user_profile_label_qq">QQ号</string>
+    <string name="feature_user_profile_member_gold">黄金会员</string>
+    <string name="feature_user_profile_change_password">修改密码</string>
+    <string name="feature_user_profile_delete_account">注销账户</string>
+    <string name="feature_user_profile_copy_account_id">复制账号 ID</string>
+    <string name="feature_user_profile_account_id_copied">账号 ID 已复制</string>
+</resources>

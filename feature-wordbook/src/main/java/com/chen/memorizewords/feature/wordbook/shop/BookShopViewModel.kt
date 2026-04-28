@@ -8,18 +8,22 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.chen.memorizewords.core.common.paging.PageSlicePagingSource
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
-import com.chen.memorizewords.domain.service.wordbook.WordBookShopFacade
 import com.chen.memorizewords.domain.model.wordbook.shop.DownloadState
 import com.chen.memorizewords.domain.model.wordbook.shop.ShopBooksQuery
+import com.chen.memorizewords.domain.service.wordbook.WordBookShopFacade
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -29,38 +33,59 @@ class BookShopViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private val category = MutableStateFlow(DEFAULT_CATEGORY)
-    private val keyword = MutableStateFlow("")
+    private val searchState = MutableStateFlow(BookShopSearchState())
 
-    @OptIn(FlowPreview::class)
+    val currentSearchState = searchState.asStateFlow()
+
     private val queryFlow = combine(
         category,
-        keyword.debounce(300)
-    ) { currentCategory, currentKeyword ->
-        currentCategory to currentKeyword.trim()
+        searchState
+    ) { currentCategory, currentSearchState ->
+        BookShopQueryState(
+            category = currentCategory,
+            searchState = currentSearchState
+        )
     }.distinctUntilChanged()
 
     private val downloadStateFlow = wordBookShopFacade.observeDownloadStates()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val pagingData: Flow<PagingData<BookShopUi>> =
-        queryFlow.flatMapLatest { (currentCategory, currentKeyword) ->
-            Pager(
-                config = PagingConfig(
-                    pageSize = SHOP_PAGE_SIZE,
-                    enablePlaceholders = false
-                ),
-                pagingSourceFactory = {
-                    PageSlicePagingSource { pageIndex, pageSize ->
-                        wordBookShopFacade.getShopBooks(
-                            ShopBooksQuery(
-                                pageIndex = pageIndex,
-                                pageSize = pageSize,
-                                category = currentCategory,
-                                keyword = currentKeyword
-                            )
-                        )
+        queryFlow.flatMapLatest { queryState ->
+            val isSearchMode = queryState.searchState.isSearchMode
+            val trimmedKeyword = queryState.searchState.keyword.trim()
+            val effectiveCategory = if (isSearchMode) DEFAULT_CATEGORY else queryState.category
+            val effectiveKeyword = if (isSearchMode) trimmedKeyword else ""
+
+            if (isSearchMode && effectiveKeyword.isBlank()) {
+                flowOf(PagingData.empty())
+            } else {
+                flow {
+                    if (isSearchMode) {
+                        delay(SEARCH_DEBOUNCE_MS)
                     }
+                    emitAll(
+                        Pager(
+                            config = PagingConfig(
+                                pageSize = SHOP_PAGE_SIZE,
+                                enablePlaceholders = false
+                            ),
+                            pagingSourceFactory = {
+                                PageSlicePagingSource { pageIndex, pageSize ->
+                                    wordBookShopFacade.getShopBooks(
+                                        ShopBooksQuery(
+                                            pageIndex = pageIndex,
+                                            pageSize = pageSize,
+                                            category = effectiveCategory,
+                                            keyword = effectiveKeyword
+                                        )
+                                    )
+                                }
+                            }
+                        ).flow
+                    )
                 }
-            ).flow
+            }
         }.cachedIn(viewModelScope)
             .combine(downloadStateFlow) { paging, stateMap ->
                 paging.map { book ->
@@ -74,15 +99,22 @@ class BookShopViewModel @Inject constructor(
     }
 
     fun setKeyword(value: String) {
-        keyword.value = value
+        searchState.value = searchState.value.copy(keyword = value)
+    }
+
+    fun enterSearchMode() {
+        if (searchState.value.isSearchMode) return
+        searchState.value = searchState.value.copy(isSearchMode = true)
+    }
+
+    fun cancelSearch() {
+        searchState.value = BookShopSearchState()
     }
 
     fun onDownload(book: BookShopUi) {
         viewModelScope.launch {
-            val forceRefresh = book.downloadState is DownloadState.UpdateAvailable
             val result = wordBookShopFacade.downloadBook(
-                book.book,
-                forceRefresh = forceRefresh
+                book.book
             )
             showToast(result.message)
         }
@@ -95,7 +127,18 @@ class BookShopViewModel @Inject constructor(
     }
 
     private companion object {
-        const val DEFAULT_CATEGORY = "全部"
+        const val DEFAULT_CATEGORY = "\u5168\u90E8"
         const val SHOP_PAGE_SIZE = 20
+        const val SEARCH_DEBOUNCE_MS = 300L
     }
 }
+
+data class BookShopSearchState(
+    val isSearchMode: Boolean = false,
+    val keyword: String = ""
+)
+
+private data class BookShopQueryState(
+    val category: String,
+    val searchState: BookShopSearchState
+)

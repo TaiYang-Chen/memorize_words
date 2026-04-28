@@ -1,20 +1,26 @@
 package com.chen.memorizewords.feature.user.ui.profile
 
 import android.app.Activity
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.widget.ImageView
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import coil.load
-import coil.transform.CircleCropTransformation
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.core.ui.vm.UiEvent
 import com.chen.memorizewords.feature.user.R
@@ -86,8 +92,9 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ModuleUserFragmentProfile
 
     override fun initView(savedInstanceState: Bundle?) {
         databind.viewModel = viewModel
-        databind.ivAvatar.clipToOutline = true
-        observeAvatar()
+        databind.lifecycleOwner = viewLifecycleOwner
+        bindStaticActions()
+        observeUser()
     }
 
     override fun createObserver() {
@@ -144,20 +151,55 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ModuleUserFragmentProfile
         super.onConfirmEditDialog(event, value)
     }
 
-    private fun observeAvatar() {
+    private fun observeUser() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.user.collect { user ->
-                    databind.ivAvatar.load(user?.avatarUrl) {
-                        crossfade(true)
-                        transformations(CircleCropTransformation())
-                        placeholder(R.drawable.module_user_ic_avatar_placeholder)
-                        error(R.drawable.module_user_ic_avatar_placeholder)
-                        fallback(R.drawable.module_user_ic_avatar_placeholder)
-                    }
+                    databind.user = user
+                    renderAvatar(user?.avatarUrl)
                 }
             }
         }
+    }
+
+    private fun renderAvatar(avatarUrl: String?) {
+        val source = avatarUrl?.trim().orEmpty()
+        if (source.isBlank()) {
+            showDefaultAvatar()
+            return
+        }
+        databind.ivAvatar.scaleType = ImageView.ScaleType.CENTER_CROP
+        databind.ivAvatar.load(source) {
+            crossfade(true)
+            listener(
+                onError = { _, _ ->
+                    showDefaultAvatar()
+                }
+            )
+        }
+    }
+
+    private fun showDefaultAvatar() {
+        databind.ivAvatar.scaleType = ImageView.ScaleType.FIT_CENTER
+        databind.ivAvatar.setImageResource(R.drawable.feature_user_ic_profile_avatar_default)
+    }
+
+    private fun bindStaticActions() {
+        databind.accountIdRow.setOnClickListener { copyAccountId() }
+        databind.ivCopyAccountId.setOnClickListener { copyAccountId() }
+    }
+
+    private fun copyAccountId() {
+        val accountId = viewModel.displayAccountId(databind.user)
+        if (accountId.isBlank()) return
+        val clipboardManager =
+            requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipData = ClipData.newPlainText(
+            getString(R.string.feature_user_profile_label_account_id),
+            accountId
+        )
+        clipboardManager.setPrimaryClip(clipData)
+        viewModel.showToast(getString(R.string.feature_user_profile_account_id_copied))
     }
 
     private fun showAvatarActions() {

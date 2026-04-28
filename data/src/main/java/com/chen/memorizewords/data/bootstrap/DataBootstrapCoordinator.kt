@@ -17,6 +17,7 @@ import com.chen.memorizewords.data.local.room.wordbook.WordBookSyncStateStore
 import com.chen.memorizewords.data.local.room.AppDatabase
 import com.chen.memorizewords.data.local.room.model.floating.FloatingWordDisplayRecordDao
 import com.chen.memorizewords.data.local.room.model.floating.FloatingWordDisplayRecordEntity
+import com.chen.memorizewords.data.local.room.model.wordbook.current.CurrentWordBookSelectionEntity
 import com.chen.memorizewords.data.local.room.model.practice.daily.DailyPracticeDurationDao
 import com.chen.memorizewords.data.local.room.model.practice.daily.DailyPracticeDurationEntity
 import com.chen.memorizewords.data.local.room.model.practice.session.PracticeSessionRecordDao
@@ -30,6 +31,7 @@ import com.chen.memorizewords.data.local.room.model.study.daily.WordStudyRecords
 import com.chen.memorizewords.data.local.room.model.study.daily.WordStudyRecordsEntity
 import com.chen.memorizewords.data.local.room.model.study.favorites.WordFavoritesDao
 import com.chen.memorizewords.data.local.room.model.study.favorites.WordFavoriteEntity
+import com.chen.memorizewords.data.local.room.model.study.favorites.parseFavoriteAddedAt
 import com.chen.memorizewords.data.local.room.model.study.progress.word.WordLearningStateEntity
 import com.chen.memorizewords.data.local.room.model.study.progress.word.WordLearningStateDao
 import com.chen.memorizewords.data.local.room.model.study.progress.wordbook.WordBookProgressDao
@@ -40,7 +42,11 @@ import com.chen.memorizewords.data.remote.datasync.RemoteUserSyncDataSource
 import com.chen.memorizewords.data.remote.learningsync.RemoteLearningSyncDataSource
 import com.chen.memorizewords.data.remote.wordbook.RemoteWordBookDataSource
 import com.chen.memorizewords.data.repository.floating.FloatingWordSettingsRepositoryImpl
+import com.chen.memorizewords.data.repository.floating.toDisplayWordEntities
 import com.chen.memorizewords.data.repository.practice.PracticeSettingsRepositoryImpl
+import com.chen.memorizewords.data.repository.practice.toWordEntities
+import com.chen.memorizewords.data.repository.practice.parsePracticeEntryType
+import com.chen.memorizewords.data.repository.practice.parsePracticeMode
 import com.chen.memorizewords.data.repository.download.WordBookDownloadWorkConstants
 import com.chen.memorizewords.data.repository.download.WordBookDownloadWorker
 import com.chen.memorizewords.data.repository.sync.CheckInRecordSyncPayload
@@ -63,6 +69,7 @@ import com.chen.memorizewords.data.repository.sync.WordStateUpsertSyncPayload
 import com.chen.memorizewords.data.repository.wordbook.persistWordBookPage
 import com.chen.memorizewords.domain.model.onboarding.OnboardingPhase
 import com.chen.memorizewords.domain.model.onboarding.OnboardingSnapshot
+import com.chen.memorizewords.domain.model.study.record.CheckInType
 import com.chen.memorizewords.domain.repository.onboarding.OnboardingRepository
 import com.chen.memorizewords.network.api.datasync.CheckInRecordDto
 import com.chen.memorizewords.network.api.datasync.DailyStudyDurationDto
@@ -238,9 +245,10 @@ class DataBootstrapCoordinator @Inject constructor(
                 wordBookProgressDao.ensureProgressRow(bookId = book.id)
             }
             val selectedBookId = remoteBooks.firstOrNull { it.isSelected }?.id ?: remoteBooks.first().id
-            wordBookDao.setCurrentWordBook(selectedBookId)
+            appDatabase.currentWordBookSelectionDao()
+                .upsert(CurrentWordBookSelectionEntity(bookId = selectedBookId))
         } else {
-            wordBookDao.deselectPreviousWordBook()
+            appDatabase.currentWordBookSelectionDao().deleteAll()
         }
         applyPendingLocalWordBookSelectionOverride()
     }
@@ -451,7 +459,7 @@ class DataBootstrapCoordinator @Inject constructor(
             page++
         }
 
-        val sessions = mutableListOf<PracticeSessionRecordEntity>()
+        val sessions = mutableListOf<PracticeSessionBundle>()
         page = 0
         loaded = 0
         while (true) {
@@ -461,7 +469,7 @@ class DataBootstrapCoordinator @Inject constructor(
             val items = pageData.items
             if (items.isEmpty()) break
 
-            sessions += items.map { it.toEntity() }
+            sessions += items.map { it.toBundle() }
             loaded += items.size
             if (pageData.total > 0 && loaded.toLong() >= pageData.total) {
                 break
@@ -476,7 +484,13 @@ class DataBootstrapCoordinator @Inject constructor(
             }
             practiceSessionRecordDao.deleteAll()
             if (sessions.isNotEmpty()) {
-                practiceSessionRecordDao.upsertAll(sessions)
+                practiceSessionRecordDao.upsertAll(sessions.map { it.record })
+                val words = sessions.flatMap { bundle ->
+                    bundle.wordIds.toWordEntities(bundle.record.id)
+                }
+                if (words.isNotEmpty()) {
+                    practiceSessionRecordDao.upsertWords(words)
+                }
             }
             applyPendingLocalPracticeHistoryOverrides()
         }
@@ -498,7 +512,7 @@ class DataBootstrapCoordinator @Inject constructor(
     private suspend fun syncFloatingDisplayRecords(
         remoteLearningSyncDataSource: RemoteLearningSyncDataSource
     ) {
-        val records = mutableListOf<FloatingWordDisplayRecordEntity>()
+        val records = mutableListOf<FloatingDisplayRecordBundle>()
         var page = 0
         var loaded = 0
         while (true) {
@@ -508,7 +522,7 @@ class DataBootstrapCoordinator @Inject constructor(
             val items = pageData.items
             if (items.isEmpty()) break
 
-            records += items.map { it.toEntity() }
+            records += items.map { it.toBundle() }
             loaded += items.size
             if (pageData.total > 0 && loaded.toLong() >= pageData.total) {
                 break
@@ -519,7 +533,13 @@ class DataBootstrapCoordinator @Inject constructor(
         appDatabase.withTransaction {
             floatingWordDisplayRecordDao.deleteAll()
             if (records.isNotEmpty()) {
-                floatingWordDisplayRecordDao.upsertAll(records)
+                floatingWordDisplayRecordDao.upsertAll(records.map { it.record })
+                val words = records.flatMap { bundle ->
+                    bundle.wordIds.toDisplayWordEntities(bundle.record.date)
+                }
+                if (words.isNotEmpty()) {
+                    floatingWordDisplayRecordDao.upsertWords(words)
+                }
             }
             applyPendingLocalFloatingDisplayRecordOverrides()
         }
@@ -698,7 +718,7 @@ class DataBootstrapCoordinator @Inject constructor(
     private fun FavoriteDto.toEntity(): WordFavoriteEntity {
         return WordFavoriteEntity(
             wordId = wordId,
-            addedDate = addedDate
+            addedAt = parseFavoriteAddedAt(addedDate)
         )
     }
 
@@ -808,7 +828,8 @@ class DataBootstrapCoordinator @Inject constructor(
                     gson.fromJson(entity.payload, WordBookSelectionSyncPayload::class.java)
                 }.getOrNull()
             } ?: return
-        wordBookDao.setCurrentWordBook(pendingSelection.bookId)
+        appDatabase.currentWordBookSelectionDao()
+            .upsert(CurrentWordBookSelectionEntity(bookId = pendingSelection.bookId))
     }
 
     private suspend fun applyPendingLocalWordBookProgressOverrides() {
@@ -822,8 +843,6 @@ class DataBootstrapCoordinator @Inject constructor(
                 wordBookProgressDao.upsert(
                     com.chen.memorizewords.data.local.room.model.study.progress.wordbook.WordBookProgressEntity(
                         wordBookId = payload.bookId,
-                        learnedCount = payload.learnedCount,
-                        masteredCount = payload.masteredCount,
                         correctCount = payload.correctCount,
                         wrongCount = payload.wrongCount,
                         studyDayCount = payload.studyDayCount,
@@ -842,12 +861,15 @@ class DataBootstrapCoordinator @Inject constructor(
 
                 when (entity.operation) {
                     SyncOutboxOperation.UPSERT -> {
-                        val addedDate = payload.addedDate.orEmpty()
-                        if (addedDate.isNotBlank()) {
+                        val addedAt = payload.addedAt
+                            ?: payload.addedDate
+                                ?.takeIf { it.isNotBlank() }
+                                ?.let(::parseFavoriteAddedAt)
+                        if (addedAt != null) {
                             wordFavoritesDao.upsert(
                                 WordFavoriteEntity(
                                     wordId = payload.wordId,
-                                    addedDate = addedDate
+                                    addedAt = addedAt
                                 )
                             )
                         }
@@ -912,24 +934,25 @@ class DataBootstrapCoordinator @Inject constructor(
                 }.getOrNull()
             }
             .forEach { payload ->
-                practiceSessionRecordDao.upsertAll(
-                    listOf(
-                        PracticeSessionRecordEntity(
-                            id = payload.id,
-                            date = payload.date,
-                            mode = payload.mode,
-                            entryType = payload.entryType,
-                            entryCount = payload.entryCount,
-                            durationMs = payload.durationMs,
-                            createdAt = payload.createdAt,
-                            wordIds = payload.wordIds,
-                            questionCount = payload.questionCount,
-                            completedCount = payload.completedCount,
-                            correctCount = payload.correctCount,
-                            submitCount = payload.submitCount
-                        )
-                    )
+                val record = PracticeSessionRecordEntity(
+                    id = payload.id,
+                    date = payload.date,
+                    mode = parsePracticeMode(payload.mode),
+                    entryType = parsePracticeEntryType(payload.entryType),
+                    entryCount = payload.entryCount,
+                    durationMs = payload.durationMs,
+                    createdAt = payload.createdAt,
+                    questionCount = payload.questionCount,
+                    completedCount = payload.completedCount,
+                    correctCount = payload.correctCount,
+                    submitCount = payload.submitCount
                 )
+                practiceSessionRecordDao.upsertAll(listOf(record))
+                practiceSessionRecordDao.deleteWordsBySessionIds(listOf(record.id))
+                val words = payload.wordIds.toWordEntities(record.id)
+                if (words.isNotEmpty()) {
+                    practiceSessionRecordDao.upsertWords(words)
+                }
             }
     }
 
@@ -959,6 +982,7 @@ class DataBootstrapCoordinator @Inject constructor(
                 floatingBallY = payload.floatingBallY,
                 autoStartOnBoot = payload.autoStartOnBoot,
                 autoStartOnAppLaunch = payload.autoStartOnAppLaunch,
+                ballOpacityPercent = payload.ballOpacityPercent,
                 cardOpacityPercent = payload.cardOpacityPercent,
                 dockConfig = payload.dockConfigJson?.let {
                     gson.fromJson(it, com.chen.memorizewords.domain.model.floating.FloatingDockConfig::class.java)
@@ -978,16 +1002,17 @@ class DataBootstrapCoordinator @Inject constructor(
                 }.getOrNull()
             }
             .forEach { payload ->
-                floatingWordDisplayRecordDao.upsertAll(
-                    listOf(
-                        FloatingWordDisplayRecordEntity(
-                            date = payload.date,
-                            displayCount = payload.displayCount,
-                            wordIds = payload.wordIds,
-                            updatedAt = payload.updatedAt
-                        )
-                    )
+                val record = FloatingWordDisplayRecordEntity(
+                    date = payload.date,
+                    displayCount = payload.displayCount,
+                    updatedAt = payload.updatedAt
                 )
+                floatingWordDisplayRecordDao.upsertAll(listOf(record))
+                floatingWordDisplayRecordDao.deleteWordsByDates(listOf(record.date))
+                val words = payload.wordIds.toDisplayWordEntities(record.date)
+                if (words.isNotEmpty()) {
+                    floatingWordDisplayRecordDao.upsertWords(words)
+                }
             }
     }
 
@@ -1064,7 +1089,7 @@ private val FLOATING_HISTORY_OUTBOX_TYPES = listOf(
 private fun CheckInRecordDto.toEntity(): CheckInRecordEntity {
     return CheckInRecordEntity(
         date = date,
-        type = type,
+        type = parseCheckInType(type),
         signedAt = signedAt,
         updatedAt = updatedAt
     )
@@ -1073,7 +1098,7 @@ private fun CheckInRecordDto.toEntity(): CheckInRecordEntity {
 private fun CheckInRecordSyncPayload.toEntity(): CheckInRecordEntity {
     return CheckInRecordEntity(
         date = date,
-        type = type,
+        type = parseCheckInType(type),
         signedAt = signedAt,
         updatedAt = updatedAt
     )
@@ -1087,40 +1112,56 @@ private fun PracticeDurationDto.toEntity(): DailyPracticeDurationEntity {
     )
 }
 
-private fun PracticeSessionDto.toEntity(): PracticeSessionRecordEntity {
-    return PracticeSessionRecordEntity(
-        id = id,
-        date = date,
-        mode = mode,
-        entryType = entryType,
-        entryCount = entryCount,
-        durationMs = durationMs,
-        createdAt = createdAt,
-        wordIds = wordIds,
-        questionCount = questionCount,
-        completedCount = completedCount,
-        correctCount = correctCount,
-        submitCount = submitCount
+private fun PracticeSessionDto.toBundle(): PracticeSessionBundle {
+    return PracticeSessionBundle(
+        record = PracticeSessionRecordEntity(
+            id = id,
+            date = date,
+            mode = parsePracticeMode(mode),
+            entryType = parsePracticeEntryType(entryType),
+            entryCount = entryCount,
+            durationMs = durationMs,
+            createdAt = createdAt,
+            questionCount = questionCount,
+            completedCount = completedCount,
+            correctCount = correctCount,
+            submitCount = submitCount
+        ),
+        wordIds = wordIds
     )
 }
 
-private fun FloatingDisplayRecordDto.toEntity(): FloatingWordDisplayRecordEntity {
-    return FloatingWordDisplayRecordEntity(
-        date = date,
-        displayCount = displayCount,
-        wordIds = wordIds,
-        updatedAt = updatedAt
+private fun FloatingDisplayRecordDto.toBundle(): FloatingDisplayRecordBundle {
+    return FloatingDisplayRecordBundle(
+        record = FloatingWordDisplayRecordEntity(
+            date = date,
+            displayCount = displayCount,
+            updatedAt = updatedAt
+        ),
+        wordIds = wordIds
     )
 }
 
 private fun WordBookProgressDto.toEntity() = com.chen.memorizewords.data.local.room.model.study.progress.wordbook.WordBookProgressEntity(
     wordBookId = bookId,
-    learnedCount = learnedCount,
-    masteredCount = masteredCount,
     correctCount = correctCount,
     wrongCount = wrongCount,
     studyDayCount = studyDayCount,
-    lastStudyDate = lastStudyDate
+    lastStudyDate = lastStudyDate.ifBlank { null }
+)
+
+private fun parseCheckInType(value: String): CheckInType {
+    return runCatching { CheckInType.valueOf(value) }.getOrDefault(CheckInType.AUTO)
+}
+
+private data class PracticeSessionBundle(
+    val record: PracticeSessionRecordEntity,
+    val wordIds: List<Long>
+)
+
+private data class FloatingDisplayRecordBundle(
+    val record: FloatingWordDisplayRecordEntity,
+    val wordIds: List<Long>
 )
 
 private fun WordStateUpsertSyncPayload.toEntity(): WordLearningStateEntity {

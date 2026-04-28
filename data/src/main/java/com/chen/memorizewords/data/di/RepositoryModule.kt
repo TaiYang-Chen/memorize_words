@@ -13,6 +13,9 @@ import com.chen.memorizewords.data.repository.floating.FloatingWordSettingsRepos
 import com.chen.memorizewords.data.repository.onboarding.OnboardingRepositoryImpl
 import com.chen.memorizewords.data.repository.practice.PracticeRecordRepositoryImpl
 import com.chen.memorizewords.data.repository.practice.ExamPracticeRepositoryImpl
+import com.chen.memorizewords.data.repository.practice.ListeningPracticePreferencesRepositoryImpl
+import com.chen.memorizewords.data.repository.practice.ListeningPracticePreferencesStore
+import com.chen.memorizewords.data.repository.practice.MmkvListeningPracticePreferencesStore
 import com.chen.memorizewords.data.repository.practice.PracticeSessionRecordRepositoryImpl
 import com.chen.memorizewords.data.repository.practice.PracticeSettingsRepositoryImpl
 import com.chen.memorizewords.data.repository.record.LearningRecordRepositoryImpl
@@ -35,6 +38,7 @@ import com.chen.memorizewords.domain.repository.floating.FloatingWordSettingsRep
 import com.chen.memorizewords.domain.repository.onboarding.OnboardingRepository
 import com.chen.memorizewords.domain.repository.practice.PracticeRecordRepository
 import com.chen.memorizewords.domain.repository.practice.ExamPracticeRepository
+import com.chen.memorizewords.domain.repository.practice.ListeningPracticePreferencesRepository
 import com.chen.memorizewords.domain.repository.practice.PracticeSessionRecordRepository
 import com.chen.memorizewords.domain.repository.practice.PracticeSettingsRepository
 import com.chen.memorizewords.domain.repository.record.LearningRecordRepository
@@ -116,6 +120,16 @@ abstract class RepositoryModule {
     abstract fun bindPracticeRecordRepository(
         impl: PracticeRecordRepositoryImpl
     ): PracticeRecordRepository
+
+    @Binds
+    abstract fun bindListeningPracticePreferencesStore(
+        impl: MmkvListeningPracticePreferencesStore
+    ): ListeningPracticePreferencesStore
+
+    @Binds
+    abstract fun bindListeningPracticePreferencesRepository(
+        impl: ListeningPracticePreferencesRepositoryImpl
+    ): ListeningPracticePreferencesRepository
 
     @Binds
     abstract fun bindExamPracticeRepository(

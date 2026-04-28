@@ -11,7 +11,6 @@ import androidx.work.WorkManager
 import com.chen.memorizewords.data.local.room.model.wordbook.wordbook.WordBookDao
 import com.chen.memorizewords.data.local.room.model.wordbook.wordbook.toEntity
 import com.chen.memorizewords.data.local.room.model.wordbook.words.BookWordItemDao
-import com.chen.memorizewords.data.local.room.wordbook.WordBookSyncStateStore
 import com.chen.memorizewords.data.remote.wordbook.RemoteWordBookDataSource
 import com.chen.memorizewords.data.repository.download.WordBookDownloadWorkConstants
 import com.chen.memorizewords.data.repository.download.WordBookDownloadWorker
@@ -24,8 +23,8 @@ import com.chen.memorizewords.domain.repository.shop.RemoteWordBookRepository
 import com.chen.memorizewords.network.dto.wordbook.WordBookDto
 import com.tencent.mmkv.MMKV
 import dagger.hilt.android.qualifiers.ApplicationContext
-import javax.inject.Inject
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
@@ -38,7 +37,6 @@ class RemoteWordBookRepositoryImpl @Inject constructor(
     private val remote: RemoteWordBookDataSource,
     private val wordBookDao: WordBookDao,
     private val bookWordItemDao: BookWordItemDao,
-    private val syncStateStore: WordBookSyncStateStore,
     private val mmkv: MMKV
 ) : RemoteWordBookRepository {
 
@@ -52,9 +50,8 @@ class RemoteWordBookRepositoryImpl @Inject constructor(
 
     override suspend fun getShopBooks(query: ShopBooksQuery): PageSlice<WordBook> {
         val dtoList = remote.getWordBooks().getOrThrow()
-        syncStateStore.updateRemoteVersions(dtoList.associate { it.id to it.contentVersion })
         val filteredBooks = dtoList
-            .map { it.toDomain() }
+            .map { it.toShopDomain() }
             .filter { book -> matchesShopQuery(book, query) }
         val safePageIndex = query.pageIndex.coerceAtLeast(0)
         val safePageSize = query.pageSize.coerceAtLeast(1)
@@ -83,41 +80,13 @@ class RemoteWordBookRepositoryImpl @Inject constructor(
             ->
             localBooks.associate { book ->
                 val downloadedCount = countMap[book.id] ?: 0
-                val totalWords = book.totalWords
-                val countProgress = toProgress(downloadedCount, totalWords)
                 val workState = workStates[book.id]
-                val remoteUpdatedAt = syncStateStore.getRemoteVersion(book.id)
-                val localUpdatedAt = syncStateStore.getLocalVersion(book.id)
-                val isDownloaded = totalWords in 1..downloadedCount
-                val updateAvailable = isDownloaded &&
-                    remoteUpdatedAt > 0L &&
-                    remoteUpdatedAt > localUpdatedAt
-
-                val state = when {
-                    workState?.isActive == true -> {
-                        val p = maxOf(countProgress, workState.progress)
-                        DownloadState.Downloading(p)
-                    }
-
-                    pausedIds.contains(book.id) && downloadedCount > 0 -> {
-                        DownloadState.Paused(countProgress)
-                    }
-
-                    workState?.hasFailed == true -> {
-                        DownloadState.Failed(workState.errorMessage ?: "下载失败")
-                    }
-
-                    isDownloaded -> {
-                        if (updateAvailable) DownloadState.UpdateAvailable else DownloadState.Downloaded
-                    }
-
-                    downloadedCount > 0 -> {
-                        DownloadState.Paused(countProgress)
-                    }
-
-                    else -> DownloadState.NotDownloaded
-                }
-                book.id to state
+                book.id to resolveShopDownloadState(
+                    downloadedCount = downloadedCount,
+                    totalWords = book.totalWords,
+                    workState = workState,
+                    isPaused = pausedIds.contains(book.id)
+                )
             }
         }
     }
@@ -128,16 +97,9 @@ class RemoteWordBookRepositoryImpl @Inject constructor(
         runInForeground: Boolean
     ): DownloadCommandResult {
         val workManager = workManagerOrNull()
-        val existing = wordBookDao.getWordBookById(book.id)
-        val isSelected = existing?.isSelected ?: book.isSelected
-        wordBookDao.insertWordBook(
-            book.toEntity(
-                isSelected = isSelected
-            )
-        )
+        wordBookDao.insertWordBook(book.toEntity())
         markPaused(book.id, paused = false)
 
-        val remoteUpdatedAt = syncStateStore.getRemoteVersion(book.id)
         val request = OneTimeWorkRequestBuilder<WordBookDownloadWorker>()
             .setConstraints(
                 Constraints.Builder()
@@ -152,7 +114,7 @@ class RemoteWordBookRepositoryImpl @Inject constructor(
                     WordBookDownloadWorkConstants.KEY_TOTAL_WORDS to book.totalWords,
                     WordBookDownloadWorkConstants.KEY_REPORT_MY_BOOK to true,
                     WordBookDownloadWorkConstants.KEY_FORCE_REFRESH to forceRefresh,
-                    WordBookDownloadWorkConstants.KEY_TARGET_VERSION to remoteUpdatedAt,
+                    WordBookDownloadWorkConstants.KEY_TARGET_VERSION to resolveShopTargetVersion(book),
                     WordBookDownloadWorkConstants.KEY_RUN_IN_FOREGROUND to runInForeground
                 )
             )
@@ -196,11 +158,6 @@ class RemoteWordBookRepositoryImpl @Inject constructor(
             )
             updated
         }
-    }
-
-    private fun toProgress(downloadedCount: Int, total: Int): Int {
-        if (total <= 0) return 0
-        return ((downloadedCount * 100) / total).coerceIn(0, 100)
     }
 
     private fun List<WorkInfo>.toBookWorkStateMap(): Map<Long, BookWorkState> {
@@ -252,22 +209,6 @@ class RemoteWordBookRepositoryImpl @Inject constructor(
         return progress.getInt(WordBookDownloadWorkConstants.KEY_PROGRESS, 0).coerceIn(0, 100)
     }
 
-    private fun WordBookDto.toDomain(): WordBook {
-        return WordBook(
-            id = id,
-            title = title,
-            category = category,
-            imgUrl = imgUrl,
-            description = description,
-            totalWords = totalWords,
-            isNew = isNew,
-            isHot = isHot,
-            isSelected = isSelected,
-            isPublic = isPublic,
-            createdByUserId = createdByUserId
-        )
-    }
-
     private fun matchesShopQuery(book: WordBook, query: ShopBooksQuery): Boolean {
         val normalizedCategory = query.category.trim()
         val categoryMatch = normalizedCategory.isBlank() ||
@@ -282,11 +223,55 @@ class RemoteWordBookRepositoryImpl @Inject constructor(
     }
 }
 
-private data class BookWorkState(
+internal data class BookWorkState(
     val isActive: Boolean,
     val progress: Int,
     val hasFailed: Boolean,
     val errorMessage: String?
 )
+
+internal fun WordBookDto.toShopDomain(): WordBook {
+    return WordBook(
+        id = id,
+        title = title,
+        category = category,
+        imgUrl = imgUrl,
+        description = description,
+        totalWords = totalWords,
+        contentVersion = contentVersion,
+        isNew = isNew,
+        isHot = isHot,
+        isSelected = isSelected,
+        isPublic = isPublic,
+        createdByUserId = createdByUserId
+    )
+}
+
+internal fun resolveShopDownloadState(
+    downloadedCount: Int,
+    totalWords: Int,
+    workState: BookWorkState?,
+    isPaused: Boolean
+): DownloadState {
+    val countProgress = toProgress(downloadedCount, totalWords)
+    val isDownloaded = totalWords in 1..downloadedCount
+    return when {
+        workState?.isActive == true -> DownloadState.Downloading(
+            maxOf(countProgress, workState.progress)
+        )
+        isPaused && downloadedCount > 0 -> DownloadState.Paused(countProgress)
+        workState?.hasFailed == true -> DownloadState.Failed(workState.errorMessage ?: "下载失败")
+        isDownloaded -> DownloadState.Downloaded
+        downloadedCount > 0 -> DownloadState.Paused(countProgress)
+        else -> DownloadState.NotDownloaded
+    }
+}
+
+internal fun resolveShopTargetVersion(book: WordBook): Long = book.contentVersion.coerceAtLeast(0L)
+
+private fun toProgress(downloadedCount: Int, total: Int): Int {
+    if (total <= 0) return 0
+    return ((downloadedCount * 100) / total).coerceIn(0, 100)
+}
 
 private const val DEFAULT_CATEGORY = "全部"

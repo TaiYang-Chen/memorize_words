@@ -2,8 +2,10 @@ package com.chen.memorizewords.data.repository.sync
 
 import com.chen.memorizewords.data.bootstrap.DataBootstrapCoordinator
 import com.chen.memorizewords.data.local.room.model.sync.SyncOutboxDao
+import com.chen.memorizewords.data.local.room.model.sync.SyncOutboxEntity
 import com.chen.memorizewords.domain.model.sync.PostLoginBootstrapState
 import com.chen.memorizewords.domain.model.sync.SyncBannerState
+import com.chen.memorizewords.domain.model.sync.SyncPendingRecord
 import com.chen.memorizewords.domain.repository.sync.SyncRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -14,6 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -38,6 +41,11 @@ class SyncRepositoryImpl @Inject constructor(
     private val blockedCountFlow = syncOutboxDao.observeBlockedCount()
         .distinctUntilChanged()
         .stateIn(scope, SharingStarted.Eagerly, 0)
+
+    private val pendingSyncRecordsFlow = syncOutboxDao.observeAllPending()
+        .map(::mapSyncPendingRecords)
+        .distinctUntilChanged()
+        .stateIn(scope, SharingStarted.Eagerly, emptyList())
 
     private val syncBannerStateFlow = combine(
         pendingCountFlow,
@@ -91,10 +99,49 @@ class SyncRepositoryImpl @Inject constructor(
 
     override fun observePendingSyncCount(): Flow<Int> = pendingCountFlow
 
+    override fun observePendingSyncRecords(): Flow<List<SyncPendingRecord>> = pendingSyncRecordsFlow
+
     override fun observeSyncBannerState(): Flow<SyncBannerState> = syncBannerStateFlow
 
     override fun triggerDrain() {
         syncOutboxWorkScheduler.scheduleDrain()
+    }
+}
+
+internal fun mapSyncPendingRecords(
+    entities: List<SyncOutboxEntity>
+): List<SyncPendingRecord> {
+    return entities
+        .sortedWith(
+            compareBy<SyncOutboxEntity> { syncOutboxStatePriority(it.state.name) }
+                .thenByDescending { it.updatedAt }
+                .thenByDescending { it.id }
+        )
+        .map { entity ->
+            SyncPendingRecord(
+                id = entity.id,
+                bizType = entity.bizType,
+                bizKey = entity.bizKey,
+                operation = entity.operation.name,
+                payload = entity.payload,
+                state = entity.state.name,
+                retryCount = entity.retryCount,
+                lastError = entity.lastError,
+                failureKind = entity.failureKind?.name,
+                lastAttemptAt = entity.lastAttemptAt,
+                nextRetryAt = entity.nextRetryAt,
+                updatedAt = entity.updatedAt
+            )
+        }
+}
+
+private fun syncOutboxStatePriority(state: String): Int {
+    return when (state) {
+        SyncOutboxState.BLOCKED.name -> 0
+        SyncOutboxState.RETRY_WAITING.name -> 1
+        SyncOutboxState.IN_FLIGHT.name -> 2
+        SyncOutboxState.QUEUED.name -> 3
+        else -> Int.MAX_VALUE
     }
 }
 

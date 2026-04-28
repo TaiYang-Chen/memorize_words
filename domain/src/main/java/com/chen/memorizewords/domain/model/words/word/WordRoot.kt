@@ -44,7 +44,7 @@ data class WordRoot(
     /**
      * 标签，可以为 null。
      */
-    val tags: String? = null,
+    val tags: List<String> = emptyList(),
     /**
      * 词根的含义列表，默认为空列表。
      */

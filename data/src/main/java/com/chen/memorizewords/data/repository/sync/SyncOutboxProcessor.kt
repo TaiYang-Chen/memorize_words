@@ -151,6 +151,6 @@ internal fun syncOutboxBackoffDelayMillis(attemptNumber: Int): Long {
 
 internal data class SyncOutboxFailureDecision(
     val shouldRetry: Boolean,
-    val failureKind: String,
+    val failureKind: SyncOutboxFailureKind,
     val persistedMessage: String
 )

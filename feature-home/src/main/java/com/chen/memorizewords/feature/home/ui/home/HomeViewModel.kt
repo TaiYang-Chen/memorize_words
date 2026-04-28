@@ -50,6 +50,7 @@ class HomeViewModel @Inject constructor(
 
     sealed interface Route {
         data object ToWordBook : Route
+        data object ToPendingSyncDetails : Route
         data class ToLearning(
             val request: LearningSessionRequest,
             val learningWords: List<Word> = emptyList()
@@ -138,6 +139,13 @@ class HomeViewModel @Inject constructor(
 
     fun toWordBookActivity() {
         navigateRoute(Route.ToWordBook)
+    }
+
+    fun onSyncBannerClicked() {
+        if (!canOpenPendingSyncDetails(syncBannerState.value)) {
+            return
+        }
+        navigateRoute(Route.ToPendingSyncDetails)
     }
 
     fun onStartLearningClick() {
@@ -261,4 +269,8 @@ internal fun createLearningRoute(
 internal object LearningSessionTypeContract {
     const val NEW: Int = 0
     const val REVIEW: Int = 1
+}
+
+internal fun canOpenPendingSyncDetails(state: SyncBannerState): Boolean {
+    return state != SyncBannerState.Hidden
 }

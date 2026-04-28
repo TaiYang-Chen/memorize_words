@@ -44,8 +44,12 @@ dependencies {
     implementation(libs.androidx.swiperefreshlayout)
     implementation(libs.androidx.viewpager2)
     implementation(libs.coil)
+    implementation(libs.gson)
 
     implementation(libs.hilt.android)
     implementation(libs.androidx.gridlayout)
     ksp(libs.hilt.compiler)
+
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
 }

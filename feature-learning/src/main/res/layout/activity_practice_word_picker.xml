@@ -11,6 +11,7 @@
         android:background="@android:color/white"
         android:navigationIcon="@drawable/ic_arrow_back"
         android:title="@string/practice_word_picker_title"
+        app:titleTextAppearance="@style/FeatureLearning.ToolbarTitle"
         android:titleTextColor="#0F172A"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

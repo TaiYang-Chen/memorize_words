@@ -13,6 +13,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:cardBackgroundColor="#F8FAFC"
         app:cardElevation="0dp"
         app:cardCornerRadius="8dp">
 
@@ -39,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:text="@{viewmodel.wordBookCardState.title}"
-                android:textColor="#000000"
+                android:textColor="@color/feature_wordbook_study_plan_text_primary"
                 android:textSize="18sp"
                 app:layout_constraintStart_toEndOf="@+id/linearLayout"
                 app:layout_constraintTop_toTopOf="parent"
@@ -51,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="@{viewmodel.wordBookCardState.totalWords+`词`}"
-                android:textColor="#838383"
+                android:textColor="@color/feature_wordbook_study_plan_text_secondary"
                 android:textSize="11sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/textView4"
@@ -66,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="4dp"
-                android:background="#fff2e5"
+                android:background="@color/feature_wordbook_study_plan_badge_warning_background"
                 android:padding="2dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
@@ -76,13 +77,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="#fff2e5"
+                    android:background="@color/feature_wordbook_study_plan_badge_warning_background"
                     android:paddingStart="8dp"
                     android:paddingTop="3dp"
                     android:paddingEnd="8dp"
                     android:paddingBottom="3dp"
                     android:text="考纲词汇"
-                    android:textColor="#ff8409"
+                    android:textColor="@color/feature_wordbook_study_plan_badge_warning_text"
                     android:textSize="11sp"
                     app:layout_constraintStart_toEndOf="@+id/linearLayout"
                     app:layout_constraintTop_toBottomOf="@+id/textView3"
@@ -92,7 +93,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#effdf3"
+                android:background="@color/feature_wordbook_study_plan_badge_success_background"
                 android:padding="2dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
@@ -103,13 +104,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="#effdf3"
+                    android:background="@color/feature_wordbook_study_plan_badge_success_background"
                     android:paddingStart="8dp"
                     android:paddingTop="3dp"
                     android:paddingEnd="8dp"
                     android:paddingBottom="3dp"
                     android:text="正在学习"
-                    android:textColor="#22c55e"
+                    android:textColor="@color/feature_wordbook_study_plan_badge_success_text"
                     android:textSize="11sp"
                     app:layout_constraintStart_toEndOf="@+id/linearLayout"
                     app:layout_constraintTop_toBottomOf="@+id/textView3"
@@ -146,7 +147,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif"
                             android:text="@{String.valueOf(viewmodel.wordBookCardState.masteredWords)}"
-                            android:textColor="#333333"
+                            android:textColor="@color/feature_wordbook_study_plan_text_primary"
                             android:textSize="16sp"
                             android:textStyle="bold"
                             tools:text="56" />
@@ -156,7 +157,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="掌握"
-                            android:textColor="#838383"
+                            android:textColor="@color/feature_wordbook_study_plan_text_secondary"
                             android:textSize="11sp" />
 
                     </LinearLayout>
@@ -168,7 +169,7 @@
                         android:layout_marginHorizontal="8dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
-                        android:background="#E0E0E0" />
+                        android:background="@color/feature_wordbook_study_plan_divider" />
 
                     <!-- 已学数据组 -->
                     <LinearLayout
@@ -184,7 +185,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif"
                             android:text="@{String.valueOf(viewmodel.wordBookCardState.learningWords)}"
-                            android:textColor="#333333"
+                            android:textColor="@color/feature_wordbook_study_plan_text_primary"
                             android:textSize="16sp"
                             android:textStyle="bold"
                             tools:text="71" />
@@ -194,7 +195,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="已学"
-                            android:textColor="#838383"
+                            android:textColor="@color/feature_wordbook_study_plan_text_secondary"
                             android:textSize="11sp" />
 
                     </LinearLayout>
@@ -206,7 +207,7 @@
                         android:layout_marginHorizontal="8dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
-                        android:background="#E0E0E0" />
+                        android:background="@color/feature_wordbook_study_plan_divider" />
 
                     <!-- 剩余数据组 -->
                     <LinearLayout
@@ -222,7 +223,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif"
                             android:text="@{String.valueOf(viewmodel.wordBookCardState.remainWords)}"
-                            android:textColor="#333333"
+                            android:textColor="@color/feature_wordbook_study_plan_text_primary"
                             android:textSize="16sp"
                             android:textStyle="bold"
                             tools:text="3151" />
@@ -232,7 +233,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="剩余"
-                            android:textColor="#838383"
+                            android:textColor="@color/feature_wordbook_study_plan_text_secondary"
                             android:textSize="11sp" />
 
                     </LinearLayout>
@@ -243,17 +244,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="8dp"
                     android:layout_marginTop="8dp"
+                    app:cardBackgroundColor="@color/feature_wordbook_study_plan_progress_track"
                     app:cardCornerRadius="5dp">
 
                     <com.chen.memorizewords.feature.wordbook.custom.MultiProgressView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        app:bgColor="#EEEEEE"
+                        app:bgColor="@color/feature_wordbook_study_plan_progress_track"
                         app:max="@{viewmodel.wordBookCardState.totalWords}"
                         app:progress1="@{viewmodel.wordBookCardState.masteredWords}"
-                        app:progress1Color="#FFA000"
+                        app:progress1Color="@color/feature_wordbook_study_plan_progress_mastered"
                         app:progress2="@{viewmodel.wordBookCardState.learningWords}"
-                        app:progress2Color="#FF6F00" />
+                        app:progress2Color="@color/feature_wordbook_study_plan_progress_learning" />
 
 
                 </androidx.cardview.widget.CardView>
@@ -295,7 +297,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="重置"
-                        android:textColor="@android:color/black"
+                        android:textColor="@color/feature_wordbook_study_plan_text_primary"
                         android:textSize="11sp" />
 
                 </LinearLayout>
@@ -326,7 +328,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="更换"
-                        android:textColor="@android:color/black"
+                        android:textColor="@color/feature_wordbook_study_plan_text_primary"
                         android:textSize="11sp" />
 
                 </LinearLayout>

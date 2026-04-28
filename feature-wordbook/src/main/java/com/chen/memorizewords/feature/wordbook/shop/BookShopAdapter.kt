@@ -7,7 +7,6 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
 import com.chen.memorizewords.domain.model.wordbook.WordBook
 import com.chen.memorizewords.domain.model.wordbook.shop.DownloadState
 import com.chen.memorizewords.feature.wordbook.R
@@ -43,7 +42,6 @@ class BookShopAdapter(
     class ShopViewHolder(
         private val binding: ModuleWordbookItemBookShopBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-
         private val progressDrawable: LayerDrawable? by lazy {
             AppCompatResources.getDrawable(
                 binding.root.context,
@@ -61,20 +59,14 @@ class BookShopAdapter(
 
         private fun bindBookInfo(book: WordBook) {
             binding.tvTitle.text = book.title
-            binding.tvCategory.text = book.category
-            binding.tvCount.text = binding.root.context.getString(
-                R.string.module_wordbook_shop_word_count,
-                book.totalWords
+            binding.tvDesc.text = book.description.ifBlank { DEFAULT_BOOK_DESCRIPTION }
+            binding.tvCount.text = formatBookShopWordCount(book.totalWords)
+            binding.tvMeta.text = formatBookShopMeta(binding.root.context, book)
+            BookShopWordBookImageLoader.load(
+                imageView = binding.ivCover,
+                fallbackView = binding.ivCoverFallback,
+                rawUrl = book.imgUrl
             )
-            binding.tvUsers.text =
-                if (book.isPublic) binding.root.context.getString(R.string.module_wordbook_public)
-                else binding.root.context.getString(R.string.module_wordbook_private)
-            binding.tvDesc.text = book.description
-
-            binding.ivCover.load(book.imgUrl) {
-                placeholder(R.drawable.module_wordbook_ic_book)
-                error(R.drawable.module_wordbook_ic_book)
-            }
         }
 
         fun bindAction(
@@ -98,7 +90,11 @@ class BookShopAdapter(
                     binding.btnAction.setBackgroundResource(R.drawable.module_wordbook_selector_fbfaf6_radius)
                 }
 
-                is DownloadState.UpdateAvailable,
+                is DownloadState.UpdateAvailable -> {
+                    binding.btnAction.setTextColor(0xFF888888.toInt())
+                    binding.btnAction.setBackgroundResource(R.drawable.module_wordbook_selector_fbfaf6_radius)
+                }
+
                 is DownloadState.NotDownloaded,
                 is DownloadState.Failed -> {
                     binding.btnAction.setTextColor(0xFFFFFFFF.toInt())
@@ -127,6 +123,7 @@ class BookShopAdapter(
 
     companion object {
         private const val PAYLOAD_DOWNLOAD_STATE = "payload_download_state"
+        private const val DEFAULT_BOOK_DESCRIPTION = "\u6682\u65e0\u7b80\u4ecb"
 
         private val DiffCallback = object : DiffUtil.ItemCallback<BookShopUi>() {
             override fun areItemsTheSame(oldItem: BookShopUi, newItem: BookShopUi): Boolean {
@@ -135,7 +132,7 @@ class BookShopAdapter(
 
             override fun areContentsTheSame(oldItem: BookShopUi, newItem: BookShopUi): Boolean {
                 return oldItem.book == newItem.book &&
-                        hasSameDownloadState(oldItem.downloadState, newItem.downloadState)
+                    hasSameDownloadState(oldItem.downloadState, newItem.downloadState)
             }
 
             override fun getChangePayload(oldItem: BookShopUi, newItem: BookShopUi): Any? {
@@ -148,7 +145,10 @@ class BookShopAdapter(
                 }
             }
 
-            private fun hasSameDownloadState(oldState: DownloadState, newState: DownloadState): Boolean {
+            private fun hasSameDownloadState(
+                oldState: DownloadState,
+                newState: DownloadState
+            ): Boolean {
                 return when {
                     oldState is DownloadState.Downloading && newState is DownloadState.Downloading -> {
                         oldState.progress == newState.progress

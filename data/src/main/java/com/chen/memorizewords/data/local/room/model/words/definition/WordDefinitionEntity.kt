@@ -1,28 +1,35 @@
 package com.chen.memorizewords.data.local.room.model.words.definition
 
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
+import com.chen.memorizewords.data.local.room.model.words.word.WordEntity
 import com.chen.memorizewords.domain.model.words.enums.PartOfSpeech
 
 @Entity(
-    tableName = "word_definitions"
+    tableName = "word_definitions",
+    foreignKeys = [
+        ForeignKey(
+            entity = WordEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["word_id"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
+    indices = [
+        Index("word_id")
+    ]
 )
 data class WordDefinitionEntity(
-
-    @ColumnInfo(name = "id")
     @PrimaryKey
+    @ColumnInfo(name = "id")
     val id: Long,
-
-    // ==== 关联信息 ====
-    @ColumnInfo(name = "word_id", index = true)
-    val wordId: Long,  // 关联的单词ID
-
-    // ==== 释义核心 ====
+    @ColumnInfo(name = "word_id")
+    val wordId: Long,
     @ColumnInfo(name = "part_of_speech")
-    val partOfSpeech: PartOfSpeech,  // 词�?
-
+    val partOfSpeech: PartOfSpeech,
     @ColumnInfo(name = "meaning_chinese")
-    val meaningChinese: String  // 中文释义
+    val meaningChinese: String
 )
-
-
-

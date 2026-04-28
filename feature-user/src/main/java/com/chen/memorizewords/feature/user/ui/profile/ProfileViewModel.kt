@@ -82,6 +82,8 @@ class ProfileViewModel @Inject constructor(
         emitEvent(UiEvent.Dialog.CustomConfirmDialog(DIALOG_AVATAR_ACTIONS))
     }
 
+    fun onMoreClick() = Unit
+
     fun openAvatarPreview() {
         navigateRoute(Route.ToAvatarPreview(user.value?.avatarUrl.orEmpty()))
     }
@@ -150,6 +152,39 @@ class ProfileViewModel @Inject constructor(
     fun bindQq(oauthCode: String, state: String?) {
         bindSocial(platform = "qq", oauthCode = oauthCode, state = state)
     }
+
+    fun displayNickname(user: User?): String = user?.nickname?.trim().orEmpty()
+
+    fun displayGender(user: User?): String {
+        val value = user?.gender?.trim().orEmpty()
+        return when {
+            value.isBlank() -> ""
+            value == "男" || value.equals("male", ignoreCase = true) ||
+                value.equals("man", ignoreCase = true) ||
+                value.equals("m", ignoreCase = true) -> "男"
+            value == "女" || value.equals("female", ignoreCase = true) ||
+                value.equals("woman", ignoreCase = true) ||
+                value.equals("f", ignoreCase = true) -> "女"
+            else -> value
+        }
+    }
+
+    fun displayPhone(user: User?): String {
+        val phone = user?.phone?.trim().orEmpty()
+        if (phone.length < 7) return phone
+        return buildString(phone.length) {
+            append(phone.take(3))
+            append("****")
+            append(phone.takeLast(4))
+        }
+    }
+
+    fun displayWechat(user: User?): String = user?.wechat?.trim().orEmpty()
+
+    fun displayQq(user: User?): String = user?.qq?.trim().orEmpty()
+
+    fun displayAccountId(user: User?): String =
+        user?.userId?.takeIf { it > 0 }?.toString().orEmpty()
 
     private fun bindSocial(platform: String, oauthCode: String, state: String?) {
         viewModelScope.launch {

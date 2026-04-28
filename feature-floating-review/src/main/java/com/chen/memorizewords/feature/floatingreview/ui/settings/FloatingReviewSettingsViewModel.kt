@@ -70,6 +70,15 @@ class FloatingReviewSettingsViewModel @Inject constructor(
         }
     }
 
+    fun onBallOpacityChanged(ballOpacityPercent: Int) {
+        updateSettings(
+            refreshFloatingContent = false,
+            previewCard = true
+        ) {
+            it.copy(ballOpacityPercent = ballOpacityPercent)
+        }
+    }
+
     fun onFieldConfigsChanged(configs: List<FloatingWordFieldConfig>) {
         updateSettings { it.copy(fieldConfigs = configs) }
     }

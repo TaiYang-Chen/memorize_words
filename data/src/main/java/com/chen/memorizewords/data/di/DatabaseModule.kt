@@ -2,7 +2,10 @@ package com.chen.memorizewords.data.di
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.chen.memorizewords.data.local.room.AppDatabase
+import com.chen.memorizewords.data.local.room.AppDatabaseMigrations
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,6 +17,18 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
 
+    private val runtimeConstraintCallback = object : RoomDatabase.Callback() {
+        override fun onCreate(db: SupportSQLiteDatabase) {
+            super.onCreate(db)
+            AppDatabaseMigrations.installRuntimeGuards(db)
+        }
+
+        override fun onOpen(db: SupportSQLiteDatabase) {
+            super.onOpen(db)
+            AppDatabaseMigrations.installRuntimeGuards(db)
+        }
+    }
+
     @Provides
     @Singleton
     fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
@@ -22,6 +37,13 @@ object DatabaseModule {
             AppDatabase::class.java,
             "memorize_words.db"
         )
+            .addMigrations(
+                AppDatabaseMigrations.MIGRATION_1_2,
+                AppDatabaseMigrations.MIGRATION_2_3,
+                AppDatabaseMigrations.MIGRATION_3_4,
+                AppDatabaseMigrations.MIGRATION_4_5
+            )
+            .addCallback(runtimeConstraintCallback)
             .enableMultiInstanceInvalidation()
             .build()
     }
@@ -55,6 +77,10 @@ object DatabaseModule {
 
     @Provides
     fun provideWordBookDao(appDatabase: AppDatabase) = appDatabase.wordBookDao()
+
+    @Provides
+    fun provideCurrentWordBookSelectionDao(appDatabase: AppDatabase) =
+        appDatabase.currentWordBookSelectionDao()
 
     @Provides
     fun provideWordBookSyncStateDao(appDatabase: AppDatabase) = appDatabase.wordBookSyncStateDao()

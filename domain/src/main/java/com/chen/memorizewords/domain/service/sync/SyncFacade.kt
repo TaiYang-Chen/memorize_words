@@ -2,6 +2,7 @@ package com.chen.memorizewords.domain.service.sync
 
 import com.chen.memorizewords.domain.model.sync.PostLoginBootstrapState
 import com.chen.memorizewords.domain.model.sync.SyncBannerState
+import com.chen.memorizewords.domain.model.sync.SyncPendingRecord
 import com.chen.memorizewords.domain.repository.sync.SyncRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -18,6 +19,9 @@ class SyncFacade @Inject constructor(
     fun startPostLoginBootstrap() {
         syncRepository.startPostLoginBootstrap()
     }
+
+    fun observePendingSyncRecords(): Flow<List<SyncPendingRecord>> =
+        syncRepository.observePendingSyncRecords()
 
     fun observeSyncBannerState(): Flow<SyncBannerState> = syncRepository.observeSyncBannerState()
 

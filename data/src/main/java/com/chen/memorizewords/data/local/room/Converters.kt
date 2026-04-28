@@ -3,7 +3,17 @@ package com.chen.memorizewords.data.local.room
 import androidx.room.TypeConverter
 import com.chen.memorizewords.data.local.room.model.words.example.WordExampleEntity
 import com.chen.memorizewords.data.local.room.model.words.form.WordFormEntity
+import com.chen.memorizewords.domain.model.practice.ExamCategory
+import com.chen.memorizewords.domain.model.practice.ExamItemLastResult
+import com.chen.memorizewords.domain.model.practice.ExamQuestionType
+import com.chen.memorizewords.domain.model.practice.PracticeEntryType
+import com.chen.memorizewords.domain.model.practice.PracticeMode
+import com.chen.memorizewords.data.repository.sync.SyncOutboxFailureKind
+import com.chen.memorizewords.data.repository.sync.SyncOutboxOperation
+import com.chen.memorizewords.data.repository.sync.SyncOutboxState
+import com.chen.memorizewords.domain.model.wordbook.WordBookUpdateTrigger
 import com.chen.memorizewords.domain.model.words.enums.PartOfSpeech
+import com.chen.memorizewords.domain.model.study.record.CheckInType
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlin.let
@@ -29,6 +39,66 @@ class Converters {
 
     @TypeConverter
     fun toFormType(value: String?): WordFormEntity.FormType? = WordFormEntity.FormType.fromString(value)
+
+    @TypeConverter
+    fun fromCheckInType(value: CheckInType?): String? = value?.name
+
+    @TypeConverter
+    fun toCheckInType(value: String?): CheckInType? = value?.let(CheckInType::valueOf)
+
+    @TypeConverter
+    fun fromExamQuestionType(value: ExamQuestionType?): String? = value?.name
+
+    @TypeConverter
+    fun toExamQuestionType(value: String?): ExamQuestionType? = value?.let(ExamQuestionType::valueOf)
+
+    @TypeConverter
+    fun fromExamCategory(value: ExamCategory?): String? = value?.name
+
+    @TypeConverter
+    fun toExamCategory(value: String?): ExamCategory? = value?.let(ExamCategory::valueOf)
+
+    @TypeConverter
+    fun fromExamItemLastResult(value: ExamItemLastResult?): String? = value?.name
+
+    @TypeConverter
+    fun toExamItemLastResult(value: String?): ExamItemLastResult? = value?.let(ExamItemLastResult::valueOf)
+
+    @TypeConverter
+    fun fromPracticeMode(value: PracticeMode?): String? = value?.name
+
+    @TypeConverter
+    fun toPracticeMode(value: String?): PracticeMode? = value?.let(PracticeMode::valueOf)
+
+    @TypeConverter
+    fun fromPracticeEntryType(value: PracticeEntryType?): String? = value?.name
+
+    @TypeConverter
+    fun toPracticeEntryType(value: String?): PracticeEntryType? = value?.let(PracticeEntryType::valueOf)
+
+    @TypeConverter
+    fun fromSyncOutboxOperation(value: SyncOutboxOperation?): String? = value?.name
+
+    @TypeConverter
+    fun toSyncOutboxOperation(value: String?): SyncOutboxOperation? = value?.let(SyncOutboxOperation::valueOf)
+
+    @TypeConverter
+    fun fromSyncOutboxState(value: SyncOutboxState?): String? = value?.name
+
+    @TypeConverter
+    fun toSyncOutboxState(value: String?): SyncOutboxState? = value?.let(SyncOutboxState::valueOf)
+
+    @TypeConverter
+    fun fromSyncOutboxFailureKind(value: SyncOutboxFailureKind?): String? = value?.name
+
+    @TypeConverter
+    fun toSyncOutboxFailureKind(value: String?): SyncOutboxFailureKind? = value?.let(SyncOutboxFailureKind::valueOf)
+
+    @TypeConverter
+    fun fromWordBookUpdateTrigger(value: WordBookUpdateTrigger?): String? = value?.name
+
+    @TypeConverter
+    fun toWordBookUpdateTrigger(value: String?): WordBookUpdateTrigger? = value?.let(WordBookUpdateTrigger::valueOf)
 
     // List<String> converter
     @TypeConverter

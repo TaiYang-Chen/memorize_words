@@ -2,4 +2,10 @@
 <resources>
     <dimen name="module_floating_review_ball_size">44dp</dimen>
     <dimen name="module_floating_review_card_width">240dp</dimen>
+    <dimen name="module_floating_review_page_horizontal_padding">16dp</dimen>
+    <dimen name="module_floating_review_section_spacing">16dp</dimen>
+    <dimen name="module_floating_review_card_radius">18dp</dimen>
+    <dimen name="module_floating_review_inner_card_padding">16dp</dimen>
+    <dimen name="module_floating_review_row_radius">16dp</dimen>
+    <dimen name="module_floating_review_field_item_radius">20dp</dimen>
 </resources>

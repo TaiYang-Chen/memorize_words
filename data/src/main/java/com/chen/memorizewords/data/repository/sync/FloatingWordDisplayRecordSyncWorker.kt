@@ -3,7 +3,7 @@ package com.chen.memorizewords.data.repository.sync
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.chen.memorizewords.domain.model.floating.FloatingWordDisplayRecord
+import com.chen.memorizewords.data.repository.floating.toDomain
 import dagger.hilt.android.EntryPointAccessors
 import java.io.IOException
 
@@ -27,16 +27,9 @@ class FloatingWordDisplayRecordSyncWorker(
         val entity = entryPoint.appDatabase().floatingWordDisplayRecordDao().getByDate(date)
             ?: return Result.success()
 
-        val record = FloatingWordDisplayRecord(
-            date = entity.date,
-            displayCount = entity.displayCount,
-            wordIds = entity.wordIds,
-            updatedAt = entity.updatedAt
-        )
-
         return try {
             entryPoint.remoteLearningSyncDataSource()
-                .upsertFloatingDisplayRecord(record)
+                .upsertFloatingDisplayRecord(entity.toDomain())
                 .getOrThrow()
             Result.success()
         } catch (_: IOException) {

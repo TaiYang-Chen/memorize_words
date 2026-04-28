@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.chen.memorizewords.domain.model.practice.PracticeEntryType
+import com.chen.memorizewords.domain.model.practice.PracticeMode
 
 @Entity(
     tableName = "practice_session_record",
@@ -16,17 +18,15 @@ data class PracticeSessionRecordEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val date: String,
-    val mode: String,
+    val mode: PracticeMode,
     @ColumnInfo(name = "entry_type")
-    val entryType: String,
+    val entryType: PracticeEntryType,
     @ColumnInfo(name = "entry_count")
     val entryCount: Int,
     @ColumnInfo(name = "duration_ms")
     val durationMs: Long,
     @ColumnInfo(name = "created_at")
     val createdAt: Long,
-    @ColumnInfo(name = "word_ids")
-    val wordIds: List<Long>,
     @ColumnInfo(name = "question_count")
     val questionCount: Int = 0,
     @ColumnInfo(name = "completed_count")

@@ -5,10 +5,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.feature.feedback.R
 import com.chen.memorizewords.feature.feedback.databinding.ModuleFeedbackFragmentAboutBinding
 import com.chen.memorizewords.feature.feedback.ui.util.AppInfoProvider
+import com.chen.memorizewords.feature.feedback.ui.util.setupFeedbackTabs
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -21,13 +23,28 @@ class AboutFragment : BaseFragment<AboutViewModel, ModuleFeedbackFragmentAboutBi
 
     override fun initView(savedInstanceState: Bundle?) {
         databind.viewModel = viewModel
-        databind.tvAppName.text = getString(R.string.module_feedback_app_name)
+        setupFeedbackTabs(databind.tabLayout, R.id.aboutFragment)
         databind.tvVersion.text = getString(
             R.string.module_feedback_version_label,
             AppInfoProvider.getVersionName(requireContext())
         )
         databind.rowCheckUpdate.setOnClickListener {
             viewModel.onCheckUpdateClicked()
+        }
+        databind.rowRateUs.setOnClickListener {
+            viewModel.onRateUsClicked()
+        }
+        databind.rowUserFeedback.setOnClickListener {
+            findNavController().navigate(R.id.feedbackFragment)
+        }
+        databind.rowOfficialWebsite.setOnClickListener {
+            viewModel.onOfficialWebsiteClicked()
+        }
+        databind.rowTerms.setOnClickListener {
+            viewModel.onTermsClicked()
+        }
+        databind.rowPrivacy.setOnClickListener {
+            viewModel.onPrivacyClicked()
         }
     }
 

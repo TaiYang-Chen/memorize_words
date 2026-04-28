@@ -31,8 +31,5 @@ data class WordRootEntity(
     val sourceLanguage: String,
 
     @ColumnInfo(name = "difficulty")
-    val difficulty: Int = 1,
-
-    @ColumnInfo(name = "tags")
-    val tags: String? = null
+    val difficulty: Int = 1
 )

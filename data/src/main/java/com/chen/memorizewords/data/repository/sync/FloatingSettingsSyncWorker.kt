@@ -45,6 +45,10 @@ class FloatingSettingsSyncWorker(
             SyncWorkConstants.KEY_FLOATING_AUTO_START_ON_APP_LAUNCH,
             false
         )
+        val ballOpacityPercent = inputData.getInt(
+            SyncWorkConstants.KEY_FLOATING_BALL_OPACITY_PERCENT,
+            100
+        )
         val cardOpacityPercent = inputData.getInt(
             SyncWorkConstants.KEY_FLOATING_CARD_OPACITY_PERCENT,
             100
@@ -81,6 +85,7 @@ class FloatingSettingsSyncWorker(
             dockConfig = dockConfigJson?.let {
                 runCatching { gson.fromJson(it, FloatingDockConfig::class.java) }.getOrNull()
             } ?: FloatingDockConfig(),
+            ballOpacityPercent = ballOpacityPercent,
             cardOpacityPercent = cardOpacityPercent,
             dockState = dockStateJson?.let {
                 runCatching { gson.fromJson(it, FloatingDockState::class.java) }.getOrNull()

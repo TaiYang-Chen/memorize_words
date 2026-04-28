@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="feature_user_profile_teal">#0B7B7A</color>
+    <color name="feature_user_profile_label">#5C656D</color>
+    <color name="feature_user_profile_value">#1E2329</color>
+    <color name="feature_user_profile_card_background">#F5F6F7</color>
+    <color name="feature_user_profile_chevron">#B9BEC4</color>
+    <color name="feature_user_profile_delete">#D53932</color>
+    <color name="feature_user_profile_delete_arrow">#D9A2A0</color>
+    <color name="feature_user_profile_vip_background">#FEF3DE</color>
+    <color name="feature_user_profile_vip_text">#D19A19</color>
+    <color name="feature_user_profile_avatar_stroke">#F1F3F5</color>
+</resources>

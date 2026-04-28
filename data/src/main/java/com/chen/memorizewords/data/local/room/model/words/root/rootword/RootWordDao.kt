@@ -39,7 +39,7 @@ interface RootWordDao {
      * @param wordId 单词的 ID。
      * @return 一个 Flow，它发出与该单词关联的 [RootWordEntity] 列表。
      */
-    @Query("SELECT * FROM word_root_relation WHERE wordId = :wordId ORDER BY sequence ASC")
+    @Query("SELECT * FROM word_root_relation WHERE word_id = :wordId ORDER BY sequence ASC")
     fun getRootsForWordId(wordId: Long): List<RootWordEntity>
 
     /**
@@ -48,10 +48,10 @@ interface RootWordDao {
      * @param rootId 词根的 ID。
      * @return 一个 Flow，它发出与该词根关联的 [RootWordEntity] 列表。
      */
-    @Query("SELECT * FROM word_root_relation WHERE rootId = :rootId")
+    @Query("SELECT * FROM word_root_relation WHERE root_id = :rootId")
     fun getWordsForRoot(rootId: Long): Flow<List<RootWordEntity>>
 
-    @Query("DELETE FROM word_root_relation WHERE wordId = :wordId")
+    @Query("DELETE FROM word_root_relation WHERE word_id = :wordId")
     suspend fun deleteByWordId(wordId: Long)
 
     /**
@@ -59,7 +59,7 @@ interface RootWordDao {
      *
      * @param rootWord 要删除的关联实体。
      */
-    @Query("DELETE FROM word_root_relation WHERE wordId = :wordId AND sequence = :sequence")
+    @Query("DELETE FROM word_root_relation WHERE word_id = :wordId AND sequence = :sequence")
     suspend fun delete(wordId: Long, sequence: Int)
 
     /**

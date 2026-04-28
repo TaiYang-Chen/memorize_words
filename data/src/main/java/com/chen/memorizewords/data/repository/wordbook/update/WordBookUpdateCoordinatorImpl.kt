@@ -258,8 +258,8 @@ class WordBookUpdateCoordinatorImpl @Inject constructor(
         if (candidate.forcePrompt) return true
         val state = syncStateStore.getState(candidate.bookId) ?: return true
         if (state.localVersion >= candidate.targetVersion) return false
-        if (state.ignoredVersion >= candidate.targetVersion) return false
-        if (state.deferredUntil > System.currentTimeMillis()) return false
+        if ((state.ignoredVersion ?: 0L) >= candidate.targetVersion) return false
+        if ((state.deferredUntil ?: 0L) > System.currentTimeMillis()) return false
         val running = uiState.value.jobState as? WordBookUpdateJobState.Running
         return running?.targetVersion != candidate.targetVersion
     }

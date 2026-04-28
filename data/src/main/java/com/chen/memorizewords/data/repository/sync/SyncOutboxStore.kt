@@ -17,7 +17,7 @@ class SyncOutboxStore @Inject constructor(
     suspend fun enqueueLatest(
         bizType: String,
         bizKey: String,
-        operation: String,
+        operation: SyncOutboxOperation,
         payload: String,
         updatedAt: Long = System.currentTimeMillis()
     ) {
@@ -67,7 +67,7 @@ internal fun buildQueuedOutboxEntity(
     existing: SyncOutboxEntity?,
     bizType: String,
     bizKey: String,
-    operation: String,
+    operation: SyncOutboxOperation,
     payload: String,
     updatedAt: Long
 ): SyncOutboxEntity {

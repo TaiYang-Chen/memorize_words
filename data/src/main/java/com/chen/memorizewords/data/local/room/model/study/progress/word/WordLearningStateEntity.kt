@@ -2,8 +2,10 @@ package com.chen.memorizewords.data.local.room.model.study.progress.word
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.Index
-import androidx.room.PrimaryKey
+import com.chen.memorizewords.data.local.room.model.wordbook.wordbook.WordBookEntity
+import com.chen.memorizewords.data.local.room.model.words.word.WordEntity
 
 /**
  * 这个单词现在处于什么学习状态
@@ -11,9 +13,26 @@ import androidx.room.PrimaryKey
 @Entity(
     tableName = "word_learning_state",
     primaryKeys = ["word_id", "book_id"],
+    foreignKeys = [
+        ForeignKey(
+            entity = WordEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["word_id"],
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = WordBookEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["book_id"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
     indices = [
         Index("word_id"),
-        Index("next_review_time")
+        Index("book_id"),
+        Index("next_review_time"),
+        Index(value = ["book_id", "user_status"]),
+        Index(value = ["book_id", "next_review_time"])
     ],
 )
 data class WordLearningStateEntity(
@@ -56,4 +75,15 @@ data class WordLearningStateEntity(
     /** SM-2 专用：易记因子 */
     @ColumnInfo(name = "efactor")
     val efactor: Double
-)
+) {
+    init {
+        require(totalLearnCount >= 0) { "totalLearnCount must be non-negative" }
+        require(lastLearnTime >= 0L) { "lastLearnTime must be non-negative" }
+        require(nextReviewTime >= 0L) { "nextReviewTime must be non-negative" }
+        require(masteryLevel in 0..5) { "masteryLevel must be between 0 and 5" }
+        require(userStatus in 0..2) { "userStatus must be between 0 and 2" }
+        require(interval >= 0L) { "interval must be non-negative" }
+        require(repetition >= 0) { "repetition must be non-negative" }
+        require(efactor >= 0.0) { "efactor must be non-negative" }
+    }
+}

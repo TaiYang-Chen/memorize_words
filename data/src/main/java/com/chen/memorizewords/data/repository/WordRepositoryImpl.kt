@@ -24,7 +24,9 @@ import com.chen.memorizewords.data.local.room.model.words.form.toDomain
 import com.chen.memorizewords.data.local.room.model.words.form.toEntity as formToEntity
 import com.chen.memorizewords.data.local.room.model.words.meta.WordUserMetaDao
 import com.chen.memorizewords.data.local.room.model.words.relation.WordRelationDao
+import com.chen.memorizewords.data.local.room.model.words.root.root.RootTagDao
 import com.chen.memorizewords.data.local.room.model.words.root.root.WordRootDao
+import com.chen.memorizewords.data.local.room.model.words.root.root.toTagEntities as rootToTagEntities
 import com.chen.memorizewords.data.local.room.model.words.root.root.toDomain as wordRootToDomain
 import com.chen.memorizewords.data.local.room.model.words.root.root.toEntity as wordRootToEntity
 import com.chen.memorizewords.data.local.room.model.words.root.rootword.RootWordDao
@@ -57,6 +59,7 @@ class WordRepositoryImpl @Inject constructor(
     private val remoteWordBookDataSource: RemoteWordBookDataSource,
     private val wordFormDao: WordFormDao,
     private val wordRootDao: WordRootDao,
+    private val rootTagDao: RootTagDao,
     private val rootWordDao: RootWordDao,
     private val wordDefinitionDao: WordDefinitionDao,
     private val wordExampleDao: WordExampleDao,
@@ -259,7 +262,15 @@ class WordRepositoryImpl @Inject constructor(
                     wordDefinitionDao.insert(remoteWordDto.definitionDtos.map { it.definitionToEntity() })
                     wordExampleDao.insert(remoteWordDto.exampleDtos.map { it.exampleToEntity() })
                     wordFormDao.insert(remoteWordDto.wordFormDtos.map { it.formToEntity() })
-                    wordRootDao.insertRoots(remoteWordDto.rootWords.map { it.wordRootToEntity() })
+                    val rootEntities = remoteWordDto.rootWords.map { it.wordRootToEntity() }
+                    val rootTags = remoteWordDto.rootWords.flatMap { it.rootToTagEntities() }
+                    wordRootDao.insertRoots(rootEntities)
+                    if (rootEntities.isNotEmpty()) {
+                        rootTagDao.deleteByRootIds(rootEntities.map { it.id })
+                    }
+                    if (rootTags.isNotEmpty()) {
+                        rootTagDao.insertAll(rootTags)
+                    }
                     rootWordDao.deleteByWordId(remoteWordDto.id)
                     rootWordDao.insert(
                         remoteWordDto.rootWords.mapIndexed { index, root ->
@@ -344,10 +355,12 @@ class WordRepositoryImpl @Inject constructor(
         val relations = rootWordDao.getRootsForWordId(wordId)
         if (relations.isEmpty()) return emptyList()
 
-        val rootsById = wordRootDao.getWordRootsByIds(relations.map { it.rootId }.distinct())
+        val rootIds = relations.map { it.rootId }.distinct()
+        val rootsById = wordRootDao.getWordRootsByIds(rootIds)
             .associateBy { it.id }
+        val tagsByRootId = rootTagDao.getByRootIds(rootIds).groupBy { it.rootId }
         return relations.mapNotNull { relation ->
-            rootsById[relation.rootId]?.wordRootToDomain()
+            rootsById[relation.rootId]?.wordRootToDomain(tagsByRootId[relation.rootId].orEmpty())
         }
     }
 

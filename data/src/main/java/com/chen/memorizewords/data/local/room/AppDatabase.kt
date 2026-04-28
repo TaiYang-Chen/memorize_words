@@ -17,16 +17,20 @@ import com.chen.memorizewords.data.local.room.model.practice.exam.ExamPracticeIt
 import com.chen.memorizewords.data.local.room.model.practice.exam.ExamPracticeWordMetaEntity
 import com.chen.memorizewords.data.local.room.model.practice.session.PracticeSessionRecordDao
 import com.chen.memorizewords.data.local.room.model.practice.session.PracticeSessionRecordEntity
+import com.chen.memorizewords.data.local.room.model.practice.session.PracticeSessionWordEntity
 import com.chen.memorizewords.data.local.room.model.sync.SyncOutboxDao
 import com.chen.memorizewords.data.local.room.model.sync.SyncOutboxEntity
 import com.chen.memorizewords.data.local.room.model.floating.FloatingWordDisplayRecordDao
 import com.chen.memorizewords.data.local.room.model.floating.FloatingWordDisplayRecordEntity
+import com.chen.memorizewords.data.local.room.model.floating.FloatingWordDisplayWordEntity
 import com.chen.memorizewords.data.local.room.model.study.favorites.WordFavoritesDao
 import com.chen.memorizewords.data.local.room.model.study.favorites.WordFavoriteEntity
 import com.chen.memorizewords.data.local.room.model.study.progress.word.WordLearningStateDao
 import com.chen.memorizewords.data.local.room.model.study.progress.word.WordLearningStateEntity
 import com.chen.memorizewords.data.local.room.model.study.progress.wordbook.WordBookProgressDao
 import com.chen.memorizewords.data.local.room.model.study.progress.wordbook.WordBookProgressEntity
+import com.chen.memorizewords.data.local.room.model.wordbook.current.CurrentWordBookSelectionDao
+import com.chen.memorizewords.data.local.room.model.wordbook.current.CurrentWordBookSelectionEntity
 import com.chen.memorizewords.data.local.room.model.wordbook.wordbook.WordBookDao
 import com.chen.memorizewords.data.local.room.model.wordbook.wordbook.WordBookEntity
 import com.chen.memorizewords.data.local.room.model.wordbook.syncstate.WordBookSyncStateDao
@@ -75,14 +79,15 @@ import com.chen.memorizewords.data.local.room.model.words.root.rootword.RootWord
 
         // ========== Root ==========
         WordRootEntity::class,
+        RootTagEntity::class,
         RootMeaningEntity::class,
         RootVariantEntity::class,
         RootExampleEntity::class,
-        RootTagEntity::class,
         RootWordEntity::class,
 
         // ========== WordBook ==========
         WordBookEntity::class,
+        CurrentWordBookSelectionEntity::class,
         WordBookSyncStateEntity::class,
         WordBookItemEntity::class,
 
@@ -99,12 +104,14 @@ import com.chen.memorizewords.data.local.room.model.words.root.rootword.RootWord
         ExamPracticeItemEntity::class,
         ExamPracticeItemStateEntity::class,
         PracticeSessionRecordEntity::class,
+        PracticeSessionWordEntity::class,
         SyncOutboxEntity::class,
 
         // ========== Floating ==========
-        FloatingWordDisplayRecordEntity::class
+        FloatingWordDisplayRecordEntity::class,
+        FloatingWordDisplayWordEntity::class
     ],
-    version = 1
+    version = 5
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -125,6 +132,7 @@ abstract class AppDatabase : RoomDatabase() {
 
     // ================== WordBook ==================
     abstract fun wordBookDao(): WordBookDao
+    abstract fun currentWordBookSelectionDao(): CurrentWordBookSelectionDao
     abstract fun wordBookSyncStateDao(): WordBookSyncStateDao
     abstract fun wordBookItemDao(): BookWordItemDao
 

@@ -125,8 +125,8 @@ private fun com.chen.memorizewords.network.api.practice.WordExamItemDto.toEntity
     return ExamPracticeItemEntity(
         id = id,
         wordId = wordId,
-        questionType = questionType,
-        examCategory = examCategory,
+        questionType = parseQuestionType(questionType),
+        examCategory = parseExamCategory(examCategory),
         paperName = paperName,
         difficultyLevel = difficultyLevel,
         sortOrder = sortOrder,
@@ -169,8 +169,8 @@ private fun ExamPracticeItemEntity.toDomain(state: ExamItemState?): WordExamItem
     return WordExamItem(
         id = id,
         wordId = wordId,
-        questionType = parseQuestionType(questionType),
-        examCategory = parseExamCategory(examCategory),
+        questionType = questionType,
+        examCategory = examCategory,
         paperName = paperName,
         difficultyLevel = difficultyLevel,
         sortOrder = sortOrder,
@@ -194,7 +194,7 @@ private fun ExamItemStateDto.toEntity(): ExamPracticeItemStateEntity {
         wrongBook = wrongBook,
         attemptCount = attemptCount,
         correctCount = correctCount,
-        lastResult = lastResult,
+        lastResult = lastResult?.let(::parseLastResult),
         lastAnsweredAt = lastAnsweredAt
     )
 }
@@ -206,7 +206,7 @@ private fun ExamPracticeItemStateEntity.toDomain(): ExamItemState {
         wrongBook = wrongBook,
         attemptCount = attemptCount,
         correctCount = correctCount,
-        lastResult = lastResult?.let(::parseLastResult),
+        lastResult = lastResult,
         lastAnsweredAt = lastAnsweredAt
     )
 }

@@ -3,6 +3,7 @@ package com.chen.memorizewords.data.repository.study
 import androidx.room.withTransaction
 import com.chen.memorizewords.data.local.room.AppDatabase
 import com.chen.memorizewords.data.local.room.model.study.favorites.WordFavoritesDao
+import com.chen.memorizewords.data.local.room.model.study.favorites.formatFavoriteAddedDate
 import com.chen.memorizewords.data.local.room.model.study.favorites.toDomain
 import com.chen.memorizewords.data.local.room.model.study.favorites.toEntity
 import com.chen.memorizewords.data.repository.sync.FavoriteSyncPayload
@@ -25,8 +26,10 @@ class FavoritesRepositoryImpl @Inject constructor(
 ) : FavoritesRepository {
 
     override suspend fun addFavorite(favorites: WordFavorites) {
+        val addedAt = System.currentTimeMillis()
+        val addedDate = formatFavoriteAddedDate(addedAt)
         appDatabase.withTransaction {
-            favoritesDao.upsert(favorites.toEntity())
+            favoritesDao.upsert(favorites.toEntity(addedAt = addedAt))
             syncOutboxStore.enqueueLatest(
                 bizType = SyncOutboxBizType.FAVORITE,
                 bizKey = "favorite:${favorites.wordId}",
@@ -37,7 +40,8 @@ class FavoritesRepositoryImpl @Inject constructor(
                         word = favorites.word,
                         definitions = favorites.definitions,
                         phonetic = favorites.phonetic,
-                        addedDate = favorites.addedDate
+                        addedDate = addedDate,
+                        addedAt = addedAt
                     )
                 )
             )

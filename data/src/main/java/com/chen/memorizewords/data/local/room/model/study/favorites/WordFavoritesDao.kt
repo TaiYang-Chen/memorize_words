@@ -28,7 +28,7 @@ interface WordFavoritesDao {
             f.word_id AS wordId,
             COALESCE(w.word, '') AS word,
             COALESCE(w.phonetic_us, w.phonetic_uk) AS phonetic,
-            f.added_date AS addedDate,
+            date(f.added_at / 1000, 'unixepoch', 'localtime') AS addedDate,
             COALESCE((
                 SELECT group_concat(part_of_speech || ' ' || meaning_chinese, ' ')
                 FROM word_definitions d
@@ -36,7 +36,7 @@ interface WordFavoritesDao {
             ), '') AS definitions
         FROM word_favorite f
         LEFT JOIN words w ON w.id = f.word_id
-        ORDER BY f.added_date DESC
+        ORDER BY f.added_at DESC, f.word_id DESC
         LIMIT :limit OFFSET :offset
         """
     )
@@ -48,7 +48,7 @@ interface WordFavoritesDao {
             f.word_id AS wordId,
             COALESCE(w.word, '') AS word,
             COALESCE(w.phonetic_us, w.phonetic_uk) AS phonetic,
-            f.added_date AS addedDate,
+            date(f.added_at / 1000, 'unixepoch', 'localtime') AS addedDate,
             COALESCE((
                 SELECT group_concat(part_of_speech || ' ' || meaning_chinese, ' ')
                 FROM word_definitions d
@@ -56,7 +56,7 @@ interface WordFavoritesDao {
             ), '') AS definitions
         FROM word_favorite f
         LEFT JOIN words w ON w.id = f.word_id
-        ORDER BY f.added_date DESC
+        ORDER BY f.added_at DESC, f.word_id DESC
         """
     )
     suspend fun getAllRows(): List<FavoriteWordRow>
@@ -67,7 +67,7 @@ interface WordFavoritesDao {
             f.word_id AS wordId,
             COALESCE(w.word, '') AS word,
             COALESCE(w.phonetic_us, w.phonetic_uk) AS phonetic,
-            f.added_date AS addedDate,
+            date(f.added_at / 1000, 'unixepoch', 'localtime') AS addedDate,
             COALESCE((
                 SELECT group_concat(part_of_speech || ' ' || meaning_chinese, ' ')
                 FROM word_definitions d
@@ -75,7 +75,7 @@ interface WordFavoritesDao {
             ), '') AS definitions
         FROM word_favorite f
         LEFT JOIN words w ON w.id = f.word_id
-        ORDER BY f.added_date DESC
+        ORDER BY f.added_at DESC, f.word_id DESC
         LIMIT :limit
         """
     )
@@ -87,14 +87,14 @@ interface WordFavoritesDao {
             f.word_id AS wordId,
             COALESCE(w.word, '') AS word,
             COALESCE(w.phonetic_us, w.phonetic_uk) AS phonetic,
-            f.added_date AS addedDate,
+            date(f.added_at / 1000, 'unixepoch', 'localtime') AS addedDate,
             COALESCE(group_concat(d.part_of_speech || ' ' || d.meaning_chinese, ' '), '') AS definitions
         FROM word_favorite f
         LEFT JOIN words w ON w.id = f.word_id
         LEFT JOIN word_definitions d ON d.word_id = f.word_id
         WHERE w.word LIKE :query OR d.meaning_chinese LIKE :query
         GROUP BY f.word_id
-        ORDER BY f.added_date DESC
+        ORDER BY f.added_at DESC, f.word_id DESC
         """
     )
     suspend fun search(query: String): List<FavoriteWordRow>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="module_wordbook_mode_and_order_title">模式与排序</string>
+    <string name="module_wordbook_word_order">排序方式</string>
+    <string name="module_wordbook_word_order_sheet_title">选择排序方式</string>
+    <string name="module_wordbook_word_order_random">随机乱序</string>
+    <string name="module_wordbook_word_order_alpha_asc">首字母升序</string>
+    <string name="module_wordbook_word_order_alpha_desc">首字母降序</string>
+    <string name="module_wordbook_word_order_length_asc">长度升序</string>
+    <string name="module_wordbook_word_order_length_desc">长度降序</string>
+</resources>

@@ -30,8 +30,6 @@ interface WordBookProgressDao {
         """
         INSERT OR IGNORE INTO word_book_progress (
             book_id,
-            learnedCount,
-            masteredCount,
             correct_count,
             wrong_count,
             study_day_count,
@@ -41,9 +39,7 @@ interface WordBookProgressDao {
             0,
             0,
             0,
-            0,
-            0,
-            ''
+            NULL
         )
         """
     )
@@ -78,38 +74,50 @@ interface WordBookProgressDao {
     @Query(
         """
         SELECT
-            p.book_id,
-            COALESCE((SELECT COUNT(*) FROM word_learning_state
-                     WHERE book_id = p.book_id AND user_status == 1), 0) AS masteredCount,
-            COALESCE((SELECT COUNT(*) FROM word_learning_state
-                     WHERE book_id = p.book_id AND user_status == 0), 0) AS learnedCount,
-            p.correct_count,
-            p.wrong_count,
-            p.study_day_count,
-            p.last_study_date
+            p.book_id AS wordBookId,
+            COALESCE((
+                SELECT COUNT(*)
+                FROM word_learning_state
+                WHERE book_id = p.book_id AND user_status = 0
+            ), 0) AS learningCount,
+            COALESCE((
+                SELECT COUNT(*)
+                FROM word_learning_state
+                WHERE book_id = p.book_id AND user_status = 1
+            ), 0) AS masteredCount,
+            p.correct_count AS correctCount,
+            p.wrong_count AS wrongCount,
+            p.study_day_count AS studyDayCount,
+            p.last_study_date AS lastStudyDate
         FROM word_book_progress p
         WHERE p.book_id = :bookId
         """
     )
-    fun getWordBookProgress(bookId: Long): Flow<WordBookProgressEntity?>
+    fun getWordBookProgress(bookId: Long): Flow<WordBookProgressSummary?>
 
     @Query(
         """
         SELECT
-            p.book_id,
-            COALESCE((SELECT COUNT(*) FROM word_learning_state
-                     WHERE book_id = p.book_id AND user_status == 1), 0) AS masteredCount,
-            COALESCE((SELECT COUNT(*) FROM word_learning_state
-                     WHERE book_id = p.book_id AND user_status == 0), 0) AS learnedCount,
-            p.correct_count,
-            p.wrong_count,
-            p.study_day_count,
-            p.last_study_date
+            p.book_id AS wordBookId,
+            COALESCE((
+                SELECT COUNT(*)
+                FROM word_learning_state
+                WHERE book_id = p.book_id AND user_status = 0
+            ), 0) AS learningCount,
+            COALESCE((
+                SELECT COUNT(*)
+                FROM word_learning_state
+                WHERE book_id = p.book_id AND user_status = 1
+            ), 0) AS masteredCount,
+            p.correct_count AS correctCount,
+            p.wrong_count AS wrongCount,
+            p.study_day_count AS studyDayCount,
+            p.last_study_date AS lastStudyDate
         FROM word_book_progress p
         WHERE p.book_id IN (:bookIds)
         """
     )
-    fun getWordBooksProgress(bookIds: List<Long>): Flow<List<WordBookProgressEntity>>
+    fun getWordBooksProgress(bookIds: List<Long>): Flow<List<WordBookProgressSummary>>
 
     @Query("DELETE FROM word_book_progress")
     suspend fun deleteAll()

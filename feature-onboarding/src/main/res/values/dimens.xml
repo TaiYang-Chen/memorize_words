@@ -12,6 +12,7 @@
     <dimen name="feature_onboarding_header_subtitle_max_width">330dp</dimen>
     <dimen name="feature_onboarding_body_margin_top">24dp</dimen>
     <dimen name="feature_onboarding_select_book_hero_margin_top">52dp</dimen>
+    <dimen name="feature_onboarding_search_cancel_spacing">16dp</dimen>
 
     <dimen name="feature_onboarding_section_spacing_compact">12dp</dimen>
     <dimen name="feature_onboarding_section_spacing_large">20dp</dimen>

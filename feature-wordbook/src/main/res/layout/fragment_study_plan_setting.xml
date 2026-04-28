@@ -5,12 +5,6 @@
 
     <data>
 
-        <import type="androidx.core.text.HtmlCompat" />
-
-        <import type="com.chen.memorizewords.domain.model.learning.LearningTestMode" />
-
-        <import type="com.chen.memorizewords.domain.repository.WordOrderType" />
-
         <variable
             name="viewmodel"
             type="com.chen.memorizewords.feature.wordbook.plan.StudyPlanSettingViewModel" />
@@ -21,7 +15,7 @@
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#F2F2F2"
+        android:background="@color/feature_wordbook_study_plan_page_background"
         android:padding="@dimen/page_margin"
         tools:context=".ui.home.HomeFragment">
 
@@ -50,8 +44,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:gravity="center"
-                    android:text="学习计划设置"
-                    android:textColor="#000000"
+                    android:text="@string/module_wordbook_nav_study_plan_title"
+                    android:textColor="@color/feature_wordbook_study_plan_text_primary"
                     android:textSize="16sp"
                     android:textStyle="bold" />
             </FrameLayout>
@@ -59,153 +53,142 @@
             <include
                 layout="@layout/include_study_plan_setting_book"
                 android:layout_width="match_parent"
-                android:layout_height="210dp"
+                android:layout_height="wrap_content"
                 android:layout_margin="2dp"
                 app:viewmodel="@{viewmodel}" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="每日计划"
+                android:textColor="@color/feature_wordbook_study_plan_text_primary"
+                android:textStyle="bold" />
 
             <include
                 layout="@layout/include_study_plan_setting_day_plan"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="12dp"
                 app:viewmodel="@{viewmodel}" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:textStyle="bold"
-                android:text="测试模式"
-                android:textColor="#2c2420" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@{viewmodel.planCountCardState.testMode == LearningTestMode.MEANING_CHOICE ? @drawable/module_wordbook_bg_multi_selected : @drawable/module_wordbook_bg_multi_white}"
-                    android:gravity="center"
-                    android:onClick="@{() -> viewmodel.onSelectTestMode(LearningTestMode.MEANING_CHOICE)}"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
-                    android:text="释义" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="12dp"
-                    android:layout_weight="1"
-                    android:background="@{viewmodel.planCountCardState.testMode == LearningTestMode.SPELLING ? @drawable/module_wordbook_bg_multi_selected : @drawable/module_wordbook_bg_multi_white}"
-                    android:gravity="center"
-                    android:onClick="@{() -> viewmodel.onSelectTestMode(LearningTestMode.SPELLING)}"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
-                    android:text="拼写" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@{viewmodel.planCountCardState.testMode == LearningTestMode.LISTENING ? @drawable/module_wordbook_bg_multi_selected : @drawable/module_wordbook_bg_multi_white}"
-                    android:gravity="center"
-                    android:onClick="@{() -> viewmodel.onSelectTestMode(LearningTestMode.LISTENING)}"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
-                    android:text="听力" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="单词提取顺序"
-                android:textColor="#2c2420"
+                android:text="@string/module_wordbook_mode_and_order_title"
+                android:textColor="@color/feature_wordbook_study_plan_text_primary"
                 android:textStyle="bold" />
 
-            <LinearLayout
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:orientation="horizontal">
+                app:cardBackgroundColor="@color/feature_wordbook_study_plan_option_unselected_background"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/feature_wordbook_study_plan_secondary_action_stroke"
+                app:strokeWidth="1dp">
 
-                <TextView
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@{viewmodel.planCountCardState.wordOrderType == WordOrderType.RANDOM ? @drawable/module_wordbook_bg_multi_selected : @drawable/module_wordbook_bg_multi_white}"
-                    android:gravity="center"
-                    android:onClick="@{() -> viewmodel.onSelectWordOrderType(WordOrderType.RANDOM)}"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
-                    android:text="随机" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="12dp"
-                    android:layout_weight="1"
-                    android:background="@{viewmodel.planCountCardState.wordOrderType == WordOrderType.ALPHABETIC_ASC ? @drawable/module_wordbook_bg_multi_selected : @drawable/module_wordbook_bg_multi_white}"
-                    android:gravity="center"
-                    android:onClick="@{() -> viewmodel.onSelectWordOrderType(WordOrderType.ALPHABETIC_ASC)}"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
-                    android:text="字母升序" />
+                    <LinearLayout
+                        android:id="@+id/layoutStudyModeAction"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_vertical"
+                        android:minHeight="56dp"
+                        android:orientation="horizontal"
+                        android:paddingStart="16dp"
+                        android:paddingTop="14dp"
+                        android:paddingEnd="12dp"
+                        android:paddingBottom="14dp">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@{viewmodel.planCountCardState.wordOrderType == WordOrderType.ALPHABETIC_DESC ? @drawable/module_wordbook_bg_multi_selected : @drawable/module_wordbook_bg_multi_white}"
-                    android:gravity="center"
-                    android:onClick="@{() -> viewmodel.onSelectWordOrderType(WordOrderType.ALPHABETIC_DESC)}"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
-                    android:text="字母降序" />
-            </LinearLayout>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/module_wordbook_study_mode"
+                            android:textColor="@color/feature_wordbook_study_plan_text_primary"
+                            android:textSize="15sp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/tvStudyModeValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:textColor="@color/feature_wordbook_study_plan_text_secondary"
+                            android:textSize="14sp"
+                            tools:text="英汉双解" />
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@{viewmodel.planCountCardState.wordOrderType == WordOrderType.LENGTH_ASC ? @drawable/module_wordbook_bg_multi_selected : @drawable/module_wordbook_bg_multi_white}"
-                    android:gravity="center"
-                    android:onClick="@{() -> viewmodel.onSelectWordOrderType(WordOrderType.LENGTH_ASC)}"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
-                    android:text="长度升序" />
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_marginStart="8dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/module_wordbook_ic_chevron_right" />
+                    </LinearLayout>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:layout_weight="1"
-                    android:background="@{viewmodel.planCountCardState.wordOrderType == WordOrderType.LENGTH_DESC ? @drawable/module_wordbook_bg_multi_selected : @drawable/module_wordbook_bg_multi_white}"
-                    android:gravity="center"
-                    android:onClick="@{() -> viewmodel.onSelectWordOrderType(WordOrderType.LENGTH_DESC)}"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
-                    android:text="长度降序" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@color/feature_wordbook_study_plan_divider" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-            </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/layoutWordOrderAction"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_vertical"
+                        android:minHeight="56dp"
+                        android:orientation="horizontal"
+                        android:paddingStart="16dp"
+                        android:paddingTop="14dp"
+                        android:paddingEnd="12dp"
+                        android:paddingBottom="14dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/module_wordbook_word_order"
+                            android:textColor="@color/feature_wordbook_study_plan_text_primary"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:id="@+id/tvWordOrderValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:textColor="@color/feature_wordbook_study_plan_text_secondary"
+                            android:textSize="14sp"
+                            tools:text="随机乱序" />
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_marginStart="8dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/module_wordbook_ic_chevron_right" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>
-
-
-

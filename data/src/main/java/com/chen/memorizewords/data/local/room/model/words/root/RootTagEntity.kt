@@ -2,11 +2,20 @@ package com.chen.memorizewords.data.local.room.model.words.root.root
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.Index
 
 @Entity(
     tableName = "root_tags",
     primaryKeys = ["root_id", "value"],
+    foreignKeys = [
+        ForeignKey(
+            entity = WordRootEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["root_id"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
     indices = [
         Index("root_id"),
         Index("normalized_value")

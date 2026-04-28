@@ -24,8 +24,6 @@ data class WordBookEntity(
     val isNew: Boolean,
     @ColumnInfo(name = "is_hot")
     val isHot: Boolean,
-    @ColumnInfo(name = "is_selected")
-    val isSelected: Boolean,
     @ColumnInfo(name = "is_public")
     val isPublic: Boolean,
     @ColumnInfo(name = "created_by_user_id")

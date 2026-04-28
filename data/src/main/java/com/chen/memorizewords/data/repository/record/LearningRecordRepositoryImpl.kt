@@ -305,7 +305,7 @@ class LearningRecordRepositoryImpl @Inject constructor(
         val now = System.currentTimeMillis()
         val entity = CheckInRecordEntity(
             date = date,
-            type = CheckInType.MAKEUP.name,
+            type = CheckInType.MAKEUP,
             signedAt = now,
             updatedAt = now
         )
@@ -336,7 +336,7 @@ class LearningRecordRepositoryImpl @Inject constructor(
         val now = System.currentTimeMillis()
         val entity = CheckInRecordEntity(
             date = today,
-            type = CheckInType.AUTO.name,
+            type = CheckInType.AUTO,
             signedAt = now,
             updatedAt = now
         )
@@ -439,7 +439,7 @@ private fun DailyStudySummaryProjection.toDomain(date: String): DailyStudySummar
 private fun CheckInRecordEntity.toDomain(): CheckInRecord {
     return CheckInRecord(
         date = date,
-        type = runCatching { CheckInType.valueOf(type) }.getOrDefault(CheckInType.AUTO),
+        type = type,
         signedAt = signedAt,
         updatedAt = updatedAt
     )
@@ -448,7 +448,7 @@ private fun CheckInRecordEntity.toDomain(): CheckInRecord {
 private fun CheckInRecordEntity.toSyncPayload(): CheckInRecordSyncPayload {
     return CheckInRecordSyncPayload(
         date = date,
-        type = type,
+        type = type.name,
         signedAt = signedAt,
         updatedAt = updatedAt
     )

@@ -12,6 +12,7 @@ import com.chen.memorizewords.domain.model.sync.SyncBannerState
 import com.chen.memorizewords.feature.home.databinding.FeatureHomeModuleHomeFragmentHomeBinding
 import com.chen.memorizewords.core.navigation.LearningEntry
 import com.chen.memorizewords.core.navigation.WordBookEntry
+import com.chen.memorizewords.feature.home.ui.sync.PendingSyncDetailActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.launch
@@ -32,6 +33,9 @@ class HomeFragment : BaseFragment<HomeViewModel, FeatureHomeModuleHomeFragmentHo
     override fun initView(savedInstanceState: Bundle?) {
         databind.viewModel = viewModel
         databind.lifecycleOwner = viewLifecycleOwner
+        databind.syncBannerContainer.setOnClickListener {
+            viewModel.onSyncBannerClicked()
+        }
     }
 
     override fun createObserver() {
@@ -84,6 +88,10 @@ class HomeFragment : BaseFragment<HomeViewModel, FeatureHomeModuleHomeFragmentHo
         when (val target = event.target) {
             HomeViewModel.Route.ToWordBook -> {
                 startActivity(wordBookEntry.createWordBookIntent(requireContext()))
+            }
+
+            HomeViewModel.Route.ToPendingSyncDetails -> {
+                startActivity(PendingSyncDetailActivity.createIntent(requireContext()))
             }
 
             is HomeViewModel.Route.ToLearning -> {

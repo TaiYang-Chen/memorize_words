@@ -17,6 +17,14 @@ class FloatingReviewSettingsViewModelTest {
     }
 
     @Test
+    fun `ball opacity-only change does not require floating content refresh`() {
+        val previous = FloatingWordSettings(ballOpacityPercent = 100)
+        val updated = previous.copy(ballOpacityPercent = 40)
+
+        assertFalse(shouldRefreshFloatingContent(previous, updated))
+    }
+
+    @Test
     fun `order change still requires floating content refresh`() {
         val previous = FloatingWordSettings(orderType = FloatingWordOrderType.RANDOM)
         val updated = previous.copy(orderType = FloatingWordOrderType.LENGTH_ASC)

@@ -2,11 +2,23 @@ package com.chen.memorizewords.data.local.room.model.practice.exam
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.chen.memorizewords.data.local.room.model.words.word.WordEntity
+import com.chen.memorizewords.domain.model.practice.ExamCategory
+import com.chen.memorizewords.domain.model.practice.ExamQuestionType
 
 @Entity(
     tableName = "exam_practice_item",
+    foreignKeys = [
+        ForeignKey(
+            entity = WordEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["word_id"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
     indices = [
         Index(value = ["word_id", "sort_order"]),
         Index(value = ["group_key"])
@@ -19,9 +31,9 @@ data class ExamPracticeItemEntity(
     @ColumnInfo(name = "word_id")
     val wordId: Long,
     @ColumnInfo(name = "question_type")
-    val questionType: String,
+    val questionType: ExamQuestionType,
     @ColumnInfo(name = "exam_category")
-    val examCategory: String,
+    val examCategory: ExamCategory,
     @ColumnInfo(name = "paper_name")
     val paperName: String,
     @ColumnInfo(name = "difficulty_level")
@@ -48,4 +60,10 @@ data class ExamPracticeItemEntity(
     val analysisText: String? = null,
     @ColumnInfo(name = "cached_at")
     val cachedAt: Long
-)
+) {
+    init {
+        require(difficultyLevel >= 0) { "difficultyLevel must be non-negative" }
+        require(sortOrder >= 0) { "sortOrder must be non-negative" }
+        require(cachedAt >= 0L) { "cachedAt must be non-negative" }
+    }
+}

@@ -4,7 +4,7 @@ import android.app.Activity
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
-import android.widget.RadioGroup
+import android.widget.RadioButton
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
@@ -35,6 +35,18 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class FloatingReviewSettingsFragment :
     BaseVmDbFragment<FloatingReviewSettingsViewModel, ModuleFloatingReviewFragmentSettingsBinding>() {
+
+    private data class SourceRowBinding(
+        val containerId: Int,
+        val radioId: Int,
+        val labelId: Int
+    )
+
+    private data class OrderRowBinding(
+        val containerId: Int,
+        val labelId: Int,
+        val checkId: Int
+    )
 
     override val viewModel: FloatingReviewSettingsViewModel by lazy {
         ViewModelProvider(this)[FloatingReviewSettingsViewModel::class.java]
@@ -82,7 +94,7 @@ class FloatingReviewSettingsFragment :
         val target =
             event.target as? FloatingReviewSettingsViewModel.Route.DispatchFloatingAction ?: return
         if (target.action == FloatingWordActions.ACTION_PREVIEW_CARD) {
-            ensureCardOpacityPreview()
+            ensureFloatingPreview()
         } else {
             floatingWordEntry.dispatchServiceAction(requireContext(), target.action)
         }
@@ -100,31 +112,38 @@ class FloatingReviewSettingsFragment :
     }
 
     private fun bindView(view: View) {
-        val rgSource = view.findViewById<RadioGroup>(R.id.rgSource)
-        val rgOrder = view.findViewById<RadioGroup>(R.id.rgOrder)
         val switchAutoStart = view.findViewById<SwitchMaterial>(R.id.switchFloatingAutoStart)
+        val seekBallOpacity = view.findViewById<SeekBar>(R.id.seekBallOpacity)
         val seekCardOpacity = view.findViewById<SeekBar>(R.id.seekCardOpacity)
 
-        rgSource.setOnCheckedChangeListener { _, checkedId ->
-            if (ignoreViewUpdates) return@setOnCheckedChangeListener
-            viewModel.onSourceTypeChanged(
-                if (checkedId == R.id.rbSourceSelf) {
-                    FloatingWordSourceType.SELF_SELECT
-                } else {
-                    FloatingWordSourceType.CURRENT_BOOK
-                }
-            )
+        view.findViewById<View>(R.id.layoutSourceCurrent).setOnClickListener {
+            viewModel.onSourceTypeChanged(FloatingWordSourceType.CURRENT_BOOK)
         }
-
-        rgOrder.setOnCheckedChangeListener { _, checkedId ->
-            if (ignoreViewUpdates) return@setOnCheckedChangeListener
-            viewModel.onOrderTypeChanged(idToOrder(checkedId))
+        view.findViewById<View>(R.id.layoutSourceSelf).setOnClickListener {
+            viewModel.onSourceTypeChanged(FloatingWordSourceType.SELF_SELECT)
         }
+        bindOrderClick(view, R.id.layoutOrderRandom, FloatingWordOrderType.RANDOM)
+        bindOrderClick(view, R.id.layoutOrderMemory, FloatingWordOrderType.MEMORY_CURVE)
+        bindOrderClick(view, R.id.layoutOrderAlphaAsc, FloatingWordOrderType.ALPHABETIC_ASC)
+        bindOrderClick(view, R.id.layoutOrderAlphaDesc, FloatingWordOrderType.ALPHABETIC_DESC)
+        bindOrderClick(view, R.id.layoutOrderLengthAsc, FloatingWordOrderType.LENGTH_ASC)
+        bindOrderClick(view, R.id.layoutOrderLengthDesc, FloatingWordOrderType.LENGTH_DESC)
 
         switchAutoStart.setOnCheckedChangeListener { _, isChecked ->
             if (ignoreViewUpdates) return@setOnCheckedChangeListener
             viewModel.onAutoStartChanged(isChecked)
         }
+
+        seekBallOpacity.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (ignoreViewUpdates || !fromUser) return
+                viewModel.onBallOpacityChanged(progress)
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) = Unit
+        })
 
         seekCardOpacity.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -161,21 +180,20 @@ class FloatingReviewSettingsFragment :
             R.string.module_floating_review_selected_count,
             updated.selectedWordIds.size
         )
-        root.findViewById<RadioGroup>(R.id.rgSource).check(
-            if (updated.sourceType == FloatingWordSourceType.SELF_SELECT) {
-                R.id.rbSourceSelf
-            } else {
-                R.id.rbSourceCurrent
-            }
-        )
-        root.findViewById<RadioGroup>(R.id.rgOrder).check(orderToId(updated.orderType))
         root.findViewById<SwitchMaterial>(R.id.switchFloatingAutoStart).isChecked =
             updated.autoStartOnAppLaunch
+        root.findViewById<SeekBar>(R.id.seekBallOpacity).progress = updated.ballOpacityPercent
+        root.findViewById<TextView>(R.id.tvBallOpacityValue).text = getString(
+            R.string.module_floating_review_card_opacity_value,
+            updated.ballOpacityPercent
+        )
         root.findViewById<SeekBar>(R.id.seekCardOpacity).progress = updated.cardOpacityPercent
         root.findViewById<TextView>(R.id.tvCardOpacityValue).text = getString(
             R.string.module_floating_review_card_opacity_value,
             updated.cardOpacityPercent
         )
+        renderSourceSelection(root, updated.sourceType)
+        renderOrderSelection(root, updated.orderType)
         if (::adapter.isInitialized) {
             adapter.replaceItems(updated.fieldConfigs)
         }
@@ -222,7 +240,7 @@ class FloatingReviewSettingsFragment :
             if (settings.sourceType == FloatingWordSourceType.SELF_SELECT) View.VISIBLE else View.GONE
     }
 
-    private fun ensureCardOpacityPreview() {
+    private fun ensureFloatingPreview() {
         val context = context ?: return
         if (!Settings.canDrawOverlays(context)) {
             if (!hasShownPreviewPermissionToast) {
@@ -244,26 +262,116 @@ class FloatingReviewSettingsFragment :
         floatingWordEntry.dispatchServiceAction(context, FloatingWordActions.ACTION_PREVIEW_CARD)
     }
 
-    private fun orderToId(orderType: FloatingWordOrderType): Int {
-        return when (orderType) {
-            FloatingWordOrderType.RANDOM -> R.id.rbOrderRandom
-            FloatingWordOrderType.MEMORY_CURVE -> R.id.rbOrderMemory
-            FloatingWordOrderType.ALPHABETIC_ASC -> R.id.rbOrderAlphaAsc
-            FloatingWordOrderType.ALPHABETIC_DESC -> R.id.rbOrderAlphaDesc
-            FloatingWordOrderType.LENGTH_ASC -> R.id.rbOrderLengthAsc
-            FloatingWordOrderType.LENGTH_DESC -> R.id.rbOrderLengthDesc
+    private fun bindOrderClick(view: View, containerId: Int, orderType: FloatingWordOrderType) {
+        view.findViewById<View>(containerId).setOnClickListener {
+            viewModel.onOrderTypeChanged(orderType)
         }
     }
 
-    private fun idToOrder(checkedId: Int): FloatingWordOrderType {
-        return when (checkedId) {
-            R.id.rbOrderMemory -> FloatingWordOrderType.MEMORY_CURVE
-            R.id.rbOrderAlphaAsc -> FloatingWordOrderType.ALPHABETIC_ASC
-            R.id.rbOrderAlphaDesc -> FloatingWordOrderType.ALPHABETIC_DESC
-            R.id.rbOrderLengthAsc -> FloatingWordOrderType.LENGTH_ASC
-            R.id.rbOrderLengthDesc -> FloatingWordOrderType.LENGTH_DESC
-            else -> FloatingWordOrderType.RANDOM
-        }
+    private fun renderSourceSelection(root: View, sourceType: FloatingWordSourceType) {
+        updateSourceRow(
+            root = root,
+            binding = SourceRowBinding(
+                containerId = R.id.layoutSourceCurrent,
+                radioId = R.id.rbSourceCurrent,
+                labelId = R.id.tvSourceCurrent
+            ),
+            selected = sourceType == FloatingWordSourceType.CURRENT_BOOK
+        )
+        updateSourceRow(
+            root = root,
+            binding = SourceRowBinding(
+                containerId = R.id.layoutSourceSelf,
+                radioId = R.id.rbSourceSelf,
+                labelId = R.id.tvSourceSelf
+            ),
+            selected = sourceType == FloatingWordSourceType.SELF_SELECT
+        )
+    }
+
+    private fun renderOrderSelection(root: View, orderType: FloatingWordOrderType) {
+        updateOrderRow(
+            root = root,
+            binding = OrderRowBinding(
+                containerId = R.id.layoutOrderRandom,
+                labelId = R.id.tvOrderRandom,
+                checkId = R.id.ivOrderRandomCheck
+            ),
+            selected = orderType == FloatingWordOrderType.RANDOM
+        )
+        updateOrderRow(
+            root = root,
+            binding = OrderRowBinding(
+                containerId = R.id.layoutOrderMemory,
+                labelId = R.id.tvOrderMemory,
+                checkId = R.id.ivOrderMemoryCheck
+            ),
+            selected = orderType == FloatingWordOrderType.MEMORY_CURVE
+        )
+        updateOrderRow(
+            root = root,
+            binding = OrderRowBinding(
+                containerId = R.id.layoutOrderAlphaAsc,
+                labelId = R.id.tvOrderAlphaAsc,
+                checkId = R.id.ivOrderAlphaAscCheck
+            ),
+            selected = orderType == FloatingWordOrderType.ALPHABETIC_ASC
+        )
+        updateOrderRow(
+            root = root,
+            binding = OrderRowBinding(
+                containerId = R.id.layoutOrderAlphaDesc,
+                labelId = R.id.tvOrderAlphaDesc,
+                checkId = R.id.ivOrderAlphaDescCheck
+            ),
+            selected = orderType == FloatingWordOrderType.ALPHABETIC_DESC
+        )
+        updateOrderRow(
+            root = root,
+            binding = OrderRowBinding(
+                containerId = R.id.layoutOrderLengthAsc,
+                labelId = R.id.tvOrderLengthAsc,
+                checkId = R.id.ivOrderLengthAscCheck
+            ),
+            selected = orderType == FloatingWordOrderType.LENGTH_ASC
+        )
+        updateOrderRow(
+            root = root,
+            binding = OrderRowBinding(
+                containerId = R.id.layoutOrderLengthDesc,
+                labelId = R.id.tvOrderLengthDesc,
+                checkId = R.id.ivOrderLengthDescCheck
+            ),
+            selected = orderType == FloatingWordOrderType.LENGTH_DESC
+        )
+    }
+
+    private fun updateSourceRow(root: View, binding: SourceRowBinding, selected: Boolean) {
+        root.findViewById<View>(binding.containerId).setBackgroundResource(
+            if (selected) {
+                R.drawable.module_floating_review_bg_settings_row_selected
+            } else {
+                R.drawable.module_floating_review_bg_settings_row_idle
+            }
+        )
+        root.findViewById<RadioButton>(binding.radioId).isChecked = selected
+        root.findViewById<TextView>(binding.labelId).setTextColor(
+            android.graphics.Color.parseColor(if (selected) "#111827" else "#4B5563")
+        )
+    }
+
+    private fun updateOrderRow(root: View, binding: OrderRowBinding, selected: Boolean) {
+        root.findViewById<View>(binding.containerId).setBackgroundResource(
+            if (selected) {
+                R.drawable.module_floating_review_bg_settings_row_selected
+            } else {
+                R.drawable.module_floating_review_bg_settings_row_idle
+            }
+        )
+        root.findViewById<TextView>(binding.labelId).setTextColor(
+            android.graphics.Color.parseColor(if (selected) "#0A5FD3" else "#4B5563")
+        )
+        root.findViewById<View>(binding.checkId).visibility = if (selected) View.VISIBLE else View.GONE
     }
 
     private fun fieldLabel(type: FloatingWordFieldType): String {

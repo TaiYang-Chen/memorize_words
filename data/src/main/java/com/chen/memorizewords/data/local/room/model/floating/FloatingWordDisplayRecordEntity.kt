@@ -10,8 +10,11 @@ data class FloatingWordDisplayRecordEntity(
     val date: String,
     @ColumnInfo(name = "display_count")
     val displayCount: Int,
-    @ColumnInfo(name = "word_ids")
-    val wordIds: List<Long>,
     @ColumnInfo(name = "updated_at")
     val updatedAt: Long
-)
+) {
+    init {
+        require(displayCount >= 0) { "displayCount must be non-negative" }
+        require(updatedAt >= 0L) { "updatedAt must be non-negative" }
+    }
+}

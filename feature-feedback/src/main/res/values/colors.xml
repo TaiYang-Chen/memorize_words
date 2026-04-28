@@ -8,4 +8,23 @@
     <color name="module_feedback_icon_bg">#FFF9D6</color>
     <color name="module_feedback_primary">#11507B</color>
     <color name="module_feedback_chevron">#C9D4DC</color>
+    <color name="module_feedback_tab_indicator">#007AFF</color>
+    <color name="module_feedback_tab_text_selected">#111827</color>
+    <color name="module_feedback_tab_text_unselected">#A0A8B8</color>
+
+    <color name="module_feedback_about_page_bg">#FFF</color>
+    <color name="module_feedback_about_card_bg">#FBFAF7</color>
+    <color name="module_feedback_about_pill_bg">#FDFCFA</color>
+    <color name="module_feedback_about_text_primary">#1F2733</color>
+    <color name="module_feedback_about_text_secondary">#55697C</color>
+    <color name="module_feedback_about_text_muted">#9FAAB4</color>
+    <color name="module_feedback_about_brand_icon">#50687A</color>
+    <color name="module_feedback_about_stroke">#ECE7E1</color>
+    <color name="module_feedback_about_divider">#F0ECE6</color>
+    <color name="module_feedback_about_header_divider">#F1ECE6</color>
+    <color name="module_feedback_about_version_bg">#FDFCFA</color>
+    <color name="module_feedback_about_version_stroke">#DDD7D0</color>
+    <color name="module_feedback_about_mission_badge_bg">#CAE7F7</color>
+    <color name="module_feedback_about_mission_orb">#F8F5F0</color>
+    <color name="module_feedback_about_chevron">#C8C3BD</color>
 </resources>

@@ -2,9 +2,21 @@ package com.chen.memorizewords.data.local.room.model.practice.exam
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.chen.memorizewords.data.local.room.model.words.word.WordEntity
 
-@Entity(tableName = "exam_practice_word_meta")
+@Entity(
+    tableName = "exam_practice_word_meta",
+    foreignKeys = [
+        ForeignKey(
+            entity = WordEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["word_id"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 data class ExamPracticeWordMetaEntity(
     @PrimaryKey
     @ColumnInfo(name = "word_id")

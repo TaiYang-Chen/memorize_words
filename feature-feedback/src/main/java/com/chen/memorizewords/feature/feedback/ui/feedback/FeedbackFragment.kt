@@ -18,6 +18,7 @@ import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.domain.model.feedback.FeedbackImagePayload
 import com.chen.memorizewords.feature.feedback.R
 import com.chen.memorizewords.feature.feedback.databinding.ModuleFeedbackFragmentFeedbackBinding
+import com.chen.memorizewords.feature.feedback.ui.util.setupFeedbackTabs
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,11 +46,11 @@ class FeedbackFragment : BaseFragment<FeedbackViewModel, ModuleFeedbackFragmentF
             }
         }
         viewModel.addImages(uris)
-
-        databind.viewModel = viewModel
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+        databind.viewModel = viewModel
+        setupFeedbackTabs(databind.tabLayout, R.id.feedbackFragment)
         setupUi()
     }
 

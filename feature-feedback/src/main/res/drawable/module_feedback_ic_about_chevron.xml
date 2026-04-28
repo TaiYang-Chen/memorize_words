@@ -1,0 +1,9 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp"
+    android:height="20dp"
+    android:viewportWidth="20"
+    android:viewportHeight="20">
+    <path
+        android:fillColor="@color/module_feedback_about_chevron"
+        android:pathData="M7.68,4.74c0.33,-0.33 0.87,-0.33 1.2,0l4.46,4.46c0.33,0.33 0.33,0.87 0,1.2l-4.46,4.46c-0.33,0.33 -0.87,0.33 -1.2,0 -0.33,-0.33 -0.33,-0.87 0,-1.2L11.54,9.8 7.68,5.94c-0.33,-0.33 -0.33,-0.87 0,-1.2z" />
+</vector>

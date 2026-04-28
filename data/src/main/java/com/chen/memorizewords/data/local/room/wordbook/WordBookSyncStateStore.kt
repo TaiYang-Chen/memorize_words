@@ -47,31 +47,31 @@ class WordBookSyncStateStore @Inject constructor(
     fun getPendingTargetVersion(bookId: Long): Long = getState(bookId)?.pendingTargetVersion ?: 0L
 
     fun setPendingTargetVersion(bookId: Long, version: Long) = synchronized(lock) {
-        upsert(bookId) { it.copy(pendingTargetVersion = version) }
+        upsert(bookId) { it.copy(pendingTargetVersion = version.takeIf { value -> value > 0L }) }
     }
 
     fun getLocalVersion(bookId: Long): Long = getState(bookId)?.localVersion ?: 0L
 
     fun setLocalVersion(bookId: Long, version: Long) = synchronized(lock) {
-        upsert(bookId) { it.copy(localVersion = version) }
+        upsert(bookId) { it.copy(localVersion = version.coerceAtLeast(0L)) }
     }
 
     fun getIgnoredVersion(bookId: Long): Long = getState(bookId)?.ignoredVersion ?: 0L
 
     fun setIgnoredVersion(bookId: Long, version: Long) = synchronized(lock) {
-        upsert(bookId) { it.copy(ignoredVersion = version) }
+        upsert(bookId) { it.copy(ignoredVersion = version.takeIf { value -> value > 0L }) }
     }
 
     fun getLastPromptedVersion(bookId: Long): Long = getState(bookId)?.lastPromptedVersion ?: 0L
 
     fun setLastPromptedVersion(bookId: Long, version: Long) = synchronized(lock) {
-        upsert(bookId) { it.copy(lastPromptedVersion = version) }
+        upsert(bookId) { it.copy(lastPromptedVersion = version.takeIf { value -> value > 0L }) }
     }
 
     fun getDeferredUntil(bookId: Long): Long = getState(bookId)?.deferredUntil ?: 0L
 
     fun setDeferredUntil(bookId: Long, timestamp: Long) = synchronized(lock) {
-        upsert(bookId) { it.copy(deferredUntil = timestamp) }
+        upsert(bookId) { it.copy(deferredUntil = timestamp.takeIf { value -> value > 0L }) }
     }
 
     fun setLastPrompt(
@@ -82,26 +82,27 @@ class WordBookSyncStateStore @Inject constructor(
     ) = synchronized(lock) {
         upsert(bookId) {
             it.copy(
-                lastPromptedVersion = version,
-                lastPromptAt = timestamp,
-                lastPromptSource = trigger.name
+                lastPromptedVersion = version.takeIf { value -> value > 0L },
+                lastPromptAt = timestamp.takeIf { value -> value > 0L },
+                lastPromptSource = trigger
             )
         }
     }
 
     fun setLastCheckedAt(bookId: Long, timestamp: Long) = synchronized(lock) {
-        upsert(bookId) { it.copy(lastCheckedAt = timestamp) }
+        upsert(bookId) { it.copy(lastCheckedAt = timestamp.takeIf { value -> value > 0L }) }
     }
 
     fun markCompleted(bookId: Long, version: Long, timestamp: Long) = synchronized(lock) {
         upsert(bookId) {
+            val normalizedVersion = version.coerceAtLeast(0L)
             it.copy(
-                localVersion = version,
-                remoteVersion = maxOf(it.remoteVersion, version),
-                pendingTargetVersion = 0L,
-                ignoredVersion = if (it.ignoredVersion == version) 0L else it.ignoredVersion,
-                deferredUntil = 0L,
-                lastCompletedAt = timestamp,
+                localVersion = normalizedVersion,
+                remoteVersion = maxOf(it.remoteVersion, normalizedVersion),
+                pendingTargetVersion = null,
+                ignoredVersion = if (it.ignoredVersion == normalizedVersion) null else it.ignoredVersion,
+                deferredUntil = null,
+                lastCompletedAt = timestamp.takeIf { value -> value > 0L },
                 lastFailureReason = null
             )
         }
@@ -116,7 +117,7 @@ class WordBookSyncStateStore @Inject constructor(
     }
 
     fun clearPendingTarget(bookId: Long) = synchronized(lock) {
-        upsert(bookId) { it.copy(pendingTargetVersion = 0L) }
+        upsert(bookId) { it.copy(pendingTargetVersion = null) }
     }
 
     fun deleteByBookIds(bookIds: List<Long>) = synchronized(lock) {
@@ -155,9 +156,10 @@ class WordBookSyncStateStore @Inject constructor(
             val merged = allBookIds.map { bookId ->
                 val current = stateByBookId[bookId] ?: WordBookSyncStateEntity(bookId = bookId)
                 current.copy(
-                    remoteVersion = remoteMap[bookId] ?: current.remoteVersion,
-                    localVersion = localMap[bookId] ?: current.localVersion,
-                    lastPromptedVersion = promptedMap[bookId] ?: current.lastPromptedVersion
+                    remoteVersion = (remoteMap[bookId] ?: current.remoteVersion).coerceAtLeast(0L),
+                    localVersion = (localMap[bookId] ?: current.localVersion).coerceAtLeast(0L),
+                    lastPromptedVersion = (promptedMap[bookId] ?: current.lastPromptedVersion)
+                        ?.takeIf { it > 0L }
                 )
             }
             merged.forEach { entity -> stateByBookId[entity.bookId] = entity }

@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.chen.memorizewords.data.repository.sync.SyncOutboxFailureKind
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -14,6 +15,14 @@ interface SyncOutboxDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(entities: List<SyncOutboxEntity>)
+
+    @Query(
+        """
+        SELECT *
+        FROM sync_outbox
+        """
+    )
+    fun observeAllPending(): Flow<List<SyncOutboxEntity>>
 
     @Query(
         """
@@ -119,7 +128,7 @@ interface SyncOutboxDao {
         id: Long,
         leaseToken: String,
         lastError: String?,
-        failureKind: String,
+        failureKind: SyncOutboxFailureKind,
         lastAttemptAt: Long,
         nextRetryAt: Long,
         updatedAt: Long
@@ -142,7 +151,7 @@ interface SyncOutboxDao {
         id: Long,
         leaseToken: String,
         lastError: String?,
-        failureKind: String,
+        failureKind: SyncOutboxFailureKind,
         lastAttemptAt: Long,
         updatedAt: Long
     ): Int
