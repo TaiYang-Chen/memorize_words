@@ -19,6 +19,7 @@ dependencies {
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.tencent.mmkv.static)
     implementation(libs.gson)
+    implementation(libs.moshi.kotlin)
     implementation(libs.okhttp)
     implementation(libs.retrofit)
     implementation(libs.hilt.android)

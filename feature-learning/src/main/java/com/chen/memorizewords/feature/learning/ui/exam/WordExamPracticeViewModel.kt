@@ -57,7 +57,7 @@ data class WordExamPracticeUiState(
     val items: List<WordExamPracticeItemUi> = emptyList(),
     val visibleItems: List<WordExamPracticeItemUi> = emptyList(),
     val selectedTypes: Set<ExamQuestionType> = emptySet(),
-    val selectedCategories: Set<ExamCategory> = emptySet(),
+    val selectedCategory: ExamCategory? = null,
     val statusFilter: ExamStatusFilter = ExamStatusFilter.ALL,
     val totalCount: Int = 0,
     val favoriteCount: Int = 0,
@@ -130,10 +130,16 @@ class WordExamPracticeViewModel @Inject constructor(
         }
     }
 
-    fun toggleCategory(category: ExamCategory) {
+    fun clearTypeFilters() {
         _uiState.update { state ->
-            val nextCategories = state.selectedCategories.toggle(category)
-            val nextState = state.copy(selectedCategories = nextCategories)
+            val nextState = state.copy(selectedTypes = emptySet())
+            nextState.copy(visibleItems = applyFilters(nextState))
+        }
+    }
+
+    fun setCategory(category: ExamCategory?) {
+        _uiState.update { state ->
+            val nextState = state.copy(selectedCategory = category)
             nextState.copy(visibleItems = applyFilters(nextState))
         }
     }
@@ -145,15 +151,12 @@ class WordExamPracticeViewModel @Inject constructor(
         }
     }
 
-    fun showAllAnswers() {
-        updateItems { item ->
-            if (item.item.questionType == ExamQuestionType.PASSAGE) item
-            else item.copy(showAnswer = true, viewedAnswer = true)
-        }
+    fun showVisibleAnswers() {
+        updateVisibleAnswers(showAnswer = true)
     }
 
-    fun hideAllAnswers() {
-        updateItems { item -> item.copy(showAnswer = false) }
+    fun hideVisibleAnswers() {
+        updateVisibleAnswers(showAnswer = false)
     }
 
     fun toggleAnswer(itemId: Long) {
@@ -334,20 +337,38 @@ class WordExamPracticeViewModel @Inject constructor(
         }
     }
 
+    private fun updateVisibleAnswers(showAnswer: Boolean) {
+        val visibleItemIds = uiState.value.visibleItems
+            .asSequence()
+            .filterNot { it.item.questionType == ExamQuestionType.PASSAGE }
+            .map { it.item.id }
+            .toSet()
+        if (visibleItemIds.isEmpty()) return
+        updateItems { item ->
+            if (item.item.id !in visibleItemIds) {
+                item
+            } else if (showAnswer) {
+                item.copy(showAnswer = true, viewedAnswer = true)
+            } else {
+                item.copy(showAnswer = false)
+            }
+        }
+    }
+
     private fun applyFilters(state: WordExamPracticeUiState): List<WordExamPracticeItemUi> {
         val showingPassageOnly = state.selectedTypes == setOf(ExamQuestionType.PASSAGE)
         val sorted = state.items.sortedWith(compareBy({ it.item.sortOrder }, { it.item.id }))
         if (showingPassageOnly) {
             return sorted.filter { item ->
                 item.item.questionType == ExamQuestionType.PASSAGE &&
-                    matchesCategory(item, state.selectedCategories)
+                    matchesCategory(item, state.selectedCategory)
             }
         }
 
         val answerableItems = sorted.filter { item ->
             item.item.questionType != ExamQuestionType.PASSAGE &&
                 matchesType(item, state.selectedTypes) &&
-                matchesCategory(item, state.selectedCategories) &&
+                matchesCategory(item, state.selectedCategory) &&
                 matchesStatus(item, state.statusFilter)
         }
         val groupKeys = answerableItems.mapNotNull { it.item.groupKey }.toSet()
@@ -370,9 +391,9 @@ class WordExamPracticeViewModel @Inject constructor(
 
     private fun matchesCategory(
         item: WordExamPracticeItemUi,
-        selectedCategories: Set<ExamCategory>
+        selectedCategory: ExamCategory?
     ): Boolean {
-        return selectedCategories.isEmpty() || item.item.examCategory in selectedCategories
+        return selectedCategory == null || item.item.examCategory == selectedCategory
     }
 
     private fun matchesStatus(item: WordExamPracticeItemUi, filter: ExamStatusFilter): Boolean {

@@ -3,8 +3,6 @@ package com.chen.memorizewords.core.navigation
 import android.content.Context
 import android.content.Intent
 import androidx.core.content.ContextCompat
-import com.chen.memorizewords.domain.practice.PracticeEntryType
-import com.chen.memorizewords.domain.practice.PracticeMode
 
 data class LearningSessionRequest(
     val initialLearnedCount: Int = 0,
@@ -45,9 +43,9 @@ interface LearningEntry {
 interface PracticeEntry {
     fun createPracticeIntent(
         context: Context,
-        mode: PracticeMode,
+        modeName: String,
         randomCount: Int,
-        entryType: PracticeEntryType,
+        entryTypeName: String,
         entryCount: Int,
         selectedIds: LongArray?
     ): Intent
@@ -78,6 +76,7 @@ interface WeChatAuthResultHandler {
 }
 
 object WordBookEntryDestination {
+    const val FAVORITES_DEEP_LINK = "myapp://favorites"
     const val SHOP_DEEP_LINK = "myapp://wordbook/shop"
     const val MY_BOOKS_DEEP_LINK = "myapp://wordbook/my-books"
 

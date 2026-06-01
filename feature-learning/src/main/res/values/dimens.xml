@@ -1,3 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="feature_learning_exam_page_horizontal_padding">16dp</dimen>
+    <dimen name="feature_learning_exam_page_vertical_padding">20dp</dimen>
+    <dimen name="feature_learning_exam_section_spacing">12dp</dimen>
+    <dimen name="feature_learning_exam_header_padding_horizontal">8dp</dimen>
+    <dimen name="feature_learning_exam_header_padding_vertical">10dp</dimen>
+    <dimen name="feature_learning_exam_header_title_side_inset">88dp</dimen>
+    <dimen name="feature_learning_exam_header_title_size">16sp</dimen>
+    <dimen name="feature_learning_exam_header_icon_touch">40dp</dimen>
+    <dimen name="feature_learning_exam_header_icon_size">22dp</dimen>
+
+    <dimen name="feature_learning_exam_filter_block_spacing">22dp</dimen>
+    <dimen name="feature_learning_exam_category_gap">28dp</dimen>
+    <dimen name="feature_learning_exam_category_text_size">24sp</dimen>
+    <dimen name="feature_learning_exam_type_gap">12dp</dimen>
+    <dimen name="feature_learning_exam_pill_horizontal_padding">18dp</dimen>
+    <dimen name="feature_learning_exam_pill_vertical_padding">10dp</dimen>
+    <dimen name="feature_learning_exam_pill_text_size">14sp</dimen>
+
+    <dimen name="feature_learning_exam_card_inner_padding">16dp</dimen>
+    <dimen name="feature_learning_exam_card_section_gap">12dp</dimen>
+    <dimen name="feature_learning_exam_block_padding">12dp</dimen>
+    <dimen name="feature_learning_exam_block_corner">12dp</dimen>
+    <dimen name="feature_learning_exam_banner_padding">16dp</dimen>
+    <dimen name="feature_learning_exam_empty_padding">24dp</dimen>
+
+    <dimen name="feature_learning_exam_status_gap">8dp</dimen>
+    <dimen name="feature_learning_exam_status_horizontal_padding">10dp</dimen>
+    <dimen name="feature_learning_exam_status_vertical_padding">4dp</dimen>
+    <dimen name="feature_learning_exam_status_text_size">12sp</dimen>
+    <dimen name="feature_learning_exam_choice_padding">12dp</dimen>
+    <dimen name="feature_learning_exam_choice_gap">8dp</dimen>
+    <dimen name="feature_learning_exam_cloze_gap">8dp</dimen>
+    <dimen name="feature_learning_exam_matching_column_gap">12dp</dimen>
+    <dimen name="feature_learning_exam_answer_gap">8dp</dimen>
 </resources>

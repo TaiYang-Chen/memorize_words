@@ -9,6 +9,10 @@
         android:id="@+id/myWordBooksFragment"
         android:name="com.chen.memorizewords.feature.wordbook.my.MyWordBooksFragment"
         android:label="@string/module_wordbook_nav_my_books_title">
+        <argument
+            android:name="source"
+            app:argType="string"
+            app:nullable="true" />
         <deepLink app:uri="myapp://wordbook/my-books" />
         <deepLink app:uri="myapp://wordbook/my-books?source={source}" />
         <action

@@ -18,6 +18,8 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.gson)
     implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.moshi.kotlin)
+    implementation(libs.retrofit)
     implementation(libs.tencent.mmkv.static)
     implementation(libs.hilt.android)
     ksp(libs.androidx.room.compiler)

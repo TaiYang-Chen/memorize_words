@@ -82,7 +82,7 @@
                 <LinearLayout
                     android:id="@+id/layout_practice_root"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
@@ -100,7 +100,7 @@
                         android:paddingBottom="5dp"
                         android:textColor="#20242D"
                         android:textSize="9sp"
-                        tools:text="褰撳墠妯″紡" />
+                        tools:text="当前模式：辨音选义" />
 
                     <FrameLayout
                         android:id="@+id/layout_audio_focus"
@@ -142,8 +142,9 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_marginTop="8dp"
+                        android:gravity="center"
                         android:orientation="vertical">
 
                         <TextView
@@ -152,7 +153,7 @@
                             android:layout_height="wrap_content"
                             android:textColor="#1F2937"
                             android:textSize="15sp"
-                            tools:text="Choose the correct meaning" />
+                            tools:text="请听发音，选出正确的释义" />
 
                         <TextView
                             android:id="@+id/tv_prompt_hint"
@@ -309,7 +310,7 @@
                                     android:textSize="13sp"
                                     android:textStyle="bold"
                                     android:visibility="gone"
-                                    tools:text="姝ｇ‘绛旀锛歭istening" />
+                                    tools:text="正确答案：listening" />
 
                                 <androidx.gridlayout.widget.GridLayout
                                     android:id="@+id/grid_spelling_letters"
@@ -408,7 +409,7 @@
                             android:layout_weight="1"
                             android:textColor="#475569"
                             android:textSize="14sp"
-                            tools:text="[蓹b藞z蓴藧rp蕛n]" />
+                            tools:text="/əbˈzɔːrpʃən/" />
 
                         <ImageView
                             android:id="@+id/btn_play_study_audio"
@@ -428,7 +429,7 @@
                         android:lineSpacingExtra="1dp"
                         android:textColor="#334155"
                         android:textSize="16sp"
-                        tools:text="n. 鍚告敹锛涘叏绁炶疮娉紱" />
+                        tools:text="n. 吸收；全神贯注；专注" />
 
                     <LinearLayout
                         android:id="@+id/card_study_examples"
@@ -568,7 +569,7 @@
                                         android:textColor="#12233F"
                                         android:textSize="14sp"
                                         android:textStyle="bold"
-                                        tools:text="Completed 20 words" />
+                                        tools:text="完成 20 个单词" />
 
                                     <TextView
                                         android:id="@+id/tv_report_summary_secondary"
@@ -578,7 +579,7 @@
                                         android:gravity="center"
                                         android:textColor="#667085"
                                         android:textSize="12sp"
-                                        tools:text="28 attempts, 21 correct" />
+                                        tools:text="累计作答 28 次，答对 21 次" />
                                 </LinearLayout>
                             </com.google.android.material.card.MaterialCardView>
                         </LinearLayout>

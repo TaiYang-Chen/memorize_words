@@ -62,6 +62,16 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ModuleHomeFragmentProfile
 
     override fun onNavigationRoute(event: UiEvent.Navigation.Route) {
         when (val target = event.target) {
+            is AppRoute.Feedback -> {
+                startActivity(
+                    feedbackEntry.createFeedbackIntent(requireContext(), target.deepLink)
+                )
+            }
+            is AppRoute.WordBook -> {
+                startActivity(
+                    wordBookEntry.createWordBookIntent(requireContext(), target.deepLink)
+                )
+            }
             is AppRoute -> routeNavigator.navigate(target)
             is ProfileViewModel.Route.OpenAuth -> {
                 startActivity(

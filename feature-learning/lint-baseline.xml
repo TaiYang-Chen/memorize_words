@@ -146,17 +146,6 @@
 
     <issue
         id="ResourceName"
-        message="Resource named &apos;`fragment_practice_listening`&apos; does not start with the project&apos;s resource prefix &apos;`feature_learning_`&apos;; rename to &apos;`feature_learning_fragment_practice_listening`&apos; ?"
-        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
-        errorLine2=" ~~~~~~">
-        <location
-            file="src/main/res/layout/fragment_practice_listening.xml"
-            line="2"
-            column="2"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
         message="Resource named &apos;`fragment_practice_shadowing`&apos; does not start with the project&apos;s resource prefix &apos;`feature_learning_`&apos;; rename to &apos;`feature_learning_fragment_practice_shadowing`&apos; ?"
         errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
         errorLine2=" ~~~~~~">
@@ -3626,18 +3615,18 @@
         errorLine1="                            &lt;LinearLayout"
         errorLine2="                             ~~~~~~~~~~~~">
         <location
-            file="src/main/res/layout/fragment_practice_listening.xml"
+            file="src/main/res/layout/feature_learning_fragment_practice_listening.xml"
             line="283"
             column="30"/>
     </issue>
 
     <issue
         id="TooDeepLayout"
-        message="`fragment_practice_listening.xml` has more than 10 levels, bad for performance"
+        message="`feature_learning_fragment_practice_listening.xml` has more than 10 levels, bad for performance"
         errorLine1="                                    &lt;TextView"
         errorLine2="                                     ~~~~~~~~">
         <location
-            file="src/main/res/layout/fragment_practice_listening.xml"
+            file="src/main/res/layout/feature_learning_fragment_practice_listening.xml"
             line="522"
             column="38"/>
     </issue>
@@ -3692,7 +3681,7 @@
         errorLine1="                        android:textSize=&quot;9sp&quot;"
         errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/res/layout/fragment_practice_listening.xml"
+            file="src/main/res/layout/feature_learning_fragment_practice_listening.xml"
             line="102"
             column="25"/>
     </issue>

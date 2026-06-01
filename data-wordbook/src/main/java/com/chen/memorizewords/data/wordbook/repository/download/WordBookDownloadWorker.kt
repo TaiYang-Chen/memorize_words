@@ -23,11 +23,12 @@ import androidx.work.NetworkType
 import androidx.work.WorkerParameters
 import com.chen.memorizewords.data.wordbook.local.WordBookDatabase
 import com.chen.memorizewords.data.wordbook.local.room.wordbook.WordBookSyncStateStore
-import com.chen.memorizewords.data.wordbook.local.room.model.study.progress.word.WordLearningStateEntity
 import com.chen.memorizewords.data.wordbook.remote.datasync.RemoteUserSyncDataSource
 import com.chen.memorizewords.data.wordbook.remote.wordbook.RemoteWordBookDataSource
+import com.chen.memorizewords.data.wordbook.repository.WordLearningStateMirror
 import com.chen.memorizewords.data.wordbook.repository.wordbook.persistWordBookPage
 import com.chen.memorizewords.data.wordbook.remoteapi.dto.wordstate.WordStateDto
+import com.chen.memorizewords.domain.study.model.progress.word.WordLearningState
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -69,8 +70,8 @@ class WordBookDownloadWorker(
         val remoteUserSyncDataSource = entryPoint.remoteUserSyncDataSource()
         val db = entryPoint.appDatabase()
         val syncStateStore = entryPoint.wordBookSyncStateStore()
+        val wordLearningStateMirror = entryPoint.wordLearningStateMirror()
         val bookWordItemDao = db.wordBookItemDao()
-        val wordLearningStateDao = db.wordLearningStateDao()
 
         val notificationId = buildNotificationId(bookId)
         ensureNotificationChannel()
@@ -79,7 +80,7 @@ class WordBookDownloadWorker(
             if (forceRefresh) {
                 db.withTransaction {
                     bookWordItemDao.deleteByBookId(bookId)
-                    wordLearningStateDao.deleteLearningWordByBookId(bookId)
+                    db.wordLearningStateDao().deleteLearningWordByBookId(bookId)
                 }
             }
 
@@ -133,8 +134,7 @@ class WordBookDownloadWorker(
                 bookId = bookId,
                 pageSize = pageSize,
                 remoteUserSyncDataSource = remoteUserSyncDataSource,
-                appDatabase = db,
-                wordLearningStateDao = wordLearningStateDao
+                wordLearningStateMirror = wordLearningStateMirror
             )
 
             if (reportMyBook) {
@@ -174,10 +174,9 @@ class WordBookDownloadWorker(
         bookId: Long,
         pageSize: Int,
         remoteUserSyncDataSource: RemoteUserSyncDataSource,
-        appDatabase: WordBookDatabase,
-        wordLearningStateDao: com.chen.memorizewords.data.wordbook.local.room.model.study.progress.word.WordLearningStateDao
+        wordLearningStateMirror: WordLearningStateMirror
     ) {
-        val states = mutableListOf<WordLearningStateEntity>()
+        val states = mutableListOf<WordLearningState>()
         var page = 0
         var loaded = 0
         while (true) {
@@ -189,7 +188,7 @@ class WordBookDownloadWorker(
             val items = pageData.items
             if (items.isEmpty()) break
 
-            states += items.map { it.toEntity(bookId) }
+            states += items.map { it.toDomainState(bookId) }
             loaded += items.size
 
             if (pageData.total > 0 && loaded.toLong() >= pageData.total) {
@@ -198,16 +197,11 @@ class WordBookDownloadWorker(
             page++
         }
 
-        appDatabase.withTransaction {
-            wordLearningStateDao.deleteLearningWordByBookId(bookId)
-            if (states.isNotEmpty()) {
-                wordLearningStateDao.upsertAll(states)
-            }
-        }
+        wordLearningStateMirror.overwriteLearningStatesForBookFromRemote(bookId, states)
     }
 
-    private fun WordStateDto.toEntity(fallbackBookId: Long): WordLearningStateEntity {
-        return WordLearningStateEntity(
+    private fun WordStateDto.toDomainState(fallbackBookId: Long): WordLearningState {
+        return WordLearningState(
             wordId = wordId,
             bookId = if (bookId > 0L) bookId else fallbackBookId,
             totalLearnCount = totalLearnCount,
@@ -347,6 +341,7 @@ interface WordBookDownloadWorkerEntryPoint {
     fun remoteUserSyncDataSource(): RemoteUserSyncDataSource
     fun appDatabase(): WordBookDatabase
     fun wordBookSyncStateStore(): WordBookSyncStateStore
+    fun wordLearningStateMirror(): WordLearningStateMirror
 }
 
 private const val DEFAULT_PAGE_SIZE = 50

@@ -33,6 +33,7 @@ import com.chen.memorizewords.domain.sync.OutboxTopic
 import com.chen.memorizewords.domain.sync.SyncOperation
 import com.chen.memorizewords.domain.sync.SyncOutboxWriter
 import com.chen.memorizewords.domain.sync.WordStateUpsertSyncPayload
+import com.chen.memorizewords.domain.study.model.progress.word.calculateSm2Review
 import com.chen.memorizewords.domain.study.model.progress.word.WordLearningState
 import com.chen.memorizewords.domain.study.repository.WordLearningStateStore
 import com.chen.memorizewords.domain.word.model.word.Word
@@ -46,8 +47,6 @@ import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-import kotlin.math.max
-import kotlin.math.round
 import java.util.concurrent.TimeUnit
 
 class WordRepositoryImpl @Inject constructor(
@@ -111,7 +110,7 @@ class WordRepositoryImpl @Inject constructor(
         val prevInterval = state?.interval ?: 1L
         val prevEFactor = state?.efactor ?: 2.5
         val prevRepetition = state?.repetition ?: 0
-        val result = sm2Calculate(prevInterval, prevEFactor, prevRepetition, quality)
+        val result = calculateSm2Review(prevInterval, prevEFactor, prevRepetition, quality)
         val now = System.currentTimeMillis()
         val nextReviewTime = now + TimeUnit.DAYS.toMillis(result.interval)
         val newTotalLearnCount = (state?.totalLearnCount ?: 0) + 1
@@ -155,7 +154,7 @@ class WordRepositoryImpl @Inject constructor(
         val prevInterval = state?.interval ?: 1L
         val prevEFactor = state?.efactor ?: 2.5
         val prevRepetition = state?.repetition ?: 0
-        val result = sm2Calculate(prevInterval, prevEFactor, prevRepetition, 5)
+        val result = calculateSm2Review(prevInterval, prevEFactor, prevRepetition, 5)
         val now = System.currentTimeMillis()
         val nextReviewTime = now + TimeUnit.DAYS.toMillis(result.interval)
         val newTotalLearnCount = (state?.totalLearnCount ?: 0) + 1
@@ -351,50 +350,4 @@ class WordRepositoryImpl @Inject constructor(
             payload = gson.toJson(payload)
         )
     }
-}
-
-data class Sm2Result(
-    val interval: Long,
-    val ef: Double,
-    val repetition: Int,
-    val mastery: Int
-)
-
-fun sm2Calculate(
-    prevInterval: Long,
-    prevEF: Double,
-    prevRepetition: Int,
-    q: Int
-): Sm2Result {
-    val quality = q.coerceIn(0, 5)
-    var ef = prevEF
-    ef += 0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)
-    if (ef < 1.3) ef = 1.3
-
-    var repetition = prevRepetition
-    val interval: Long = if (quality < 3) {
-        repetition = 0
-        1L
-    } else {
-        repetition++
-        when (repetition) {
-            1 -> 1L
-            2 -> 6L
-            else -> {
-                val raw = round(prevInterval * ef)
-                max(1L, raw.toLong())
-            }
-        }
-    }
-
-    val mastery = when {
-        repetition >= 6 && ef >= 2.6 -> 5
-        repetition >= 5 -> 4
-        repetition >= 3 -> 3
-        repetition >= 2 -> 2
-        repetition >= 1 -> 1
-        else -> 0
-    }
-
-    return Sm2Result(interval, ef, repetition, mastery)
 }

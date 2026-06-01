@@ -305,6 +305,14 @@ class ListeningPracticeViewModel @Inject constructor(
         return true
     }
 
+    fun showModeSwitchHintDialog() {
+        showSingleConfirmDialog(
+            title = "",
+            message = resourceProvider.getString(R.string.practice_listening_select_mode_hint),
+            confirmText = resourceProvider.getString(R.string.practice_word_picker_confirm)
+        )
+    }
+
     fun requestExitPracticeConfirm() {
         val fallbackProgressText = resourceProvider.getString(
             R.string.practice_listening_progress_format,

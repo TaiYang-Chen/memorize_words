@@ -14,8 +14,6 @@ import com.chen.memorizewords.core.navigation.OnboardingEntry
 import com.chen.memorizewords.core.navigation.PracticeEntry
 import com.chen.memorizewords.core.navigation.RouteNavigator
 import com.chen.memorizewords.core.navigation.WordBookEntry
-import com.chen.memorizewords.domain.practice.PracticeEntryType
-import com.chen.memorizewords.domain.practice.PracticeMode
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -73,9 +71,9 @@ class DefaultRouteNavigator @Inject constructor(
             )
             is AppRoute.Practice -> practiceEntry.createPracticeIntent(
                 context = context,
-                mode = PracticeMode.valueOf(route.modeName),
+                modeName = route.modeName,
                 randomCount = route.randomCount,
-                entryType = PracticeEntryType.valueOf(route.entryTypeName),
+                entryTypeName = route.entryTypeName,
                 entryCount = route.entryCount,
                 selectedIds = route.selectedIds
             )

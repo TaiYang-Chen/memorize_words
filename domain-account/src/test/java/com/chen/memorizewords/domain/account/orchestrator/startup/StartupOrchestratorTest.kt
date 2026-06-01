@@ -3,17 +3,7 @@ import com.chen.memorizewords.domain.account.auth.AccessTokenState
 import com.chen.memorizewords.domain.account.auth.AuthStateProvider
 import com.chen.memorizewords.domain.account.auth.SessionKickoutNotifier
 import com.chen.memorizewords.domain.account.auth.TokenProvider
-import com.chen.memorizewords.domain.floating.model.FloatingDockState
-import com.chen.memorizewords.domain.floating.model.FloatingWordSettings
-import com.chen.memorizewords.domain.wordbook.model.onboarding.OnboardingSnapshot
-import com.chen.memorizewords.domain.wordbook.model.onboarding.OnboardingStep
-import com.chen.memorizewords.domain.floating.repository.FloatingWordSettingsRepository
-import com.chen.memorizewords.domain.wordbook.repository.onboarding.OnboardingRepository
 import com.chen.memorizewords.domain.account.repository.user.AuthRepository
-import com.chen.memorizewords.domain.wordbook.service.onboarding.OnboardingStepResolver
-import com.chen.memorizewords.domain.wordbook.usecase.onboarding.GetCurrentOnboardingSnapshotUseCase
-import com.chen.memorizewords.domain.wordbook.usecase.onboarding.GetCurrentOnboardingStepUseCase
-import java.util.concurrent.atomic.AtomicReference
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.emptyFlow
@@ -27,7 +17,7 @@ class StartupOrchestratorTest {
     fun `resolveLaunchDestinationFast returns onboarding when authenticated but incomplete`() {
         val orchestrator = buildOrchestrator(
             isAuthenticated = true,
-            onboardingStep = OnboardingStep.SELECT_WORD_BOOK
+            onboardingCompleted = false
         )
 
         val destination = orchestrator.resolveLaunchDestinationFast()
@@ -39,7 +29,7 @@ class StartupOrchestratorTest {
     fun `resolveLaunchDestinationFast returns home when onboarding completed`() {
         val orchestrator = buildOrchestrator(
             isAuthenticated = true,
-            onboardingStep = OnboardingStep.COMPLETED
+            onboardingCompleted = true
         )
 
         val destination = orchestrator.resolveLaunchDestinationFast()
@@ -51,7 +41,7 @@ class StartupOrchestratorTest {
     fun `resolveLaunchDestination returns auth when session invalid`() = runBlocking {
         val orchestrator = buildOrchestrator(
             isAuthenticated = true,
-            onboardingStep = OnboardingStep.COMPLETED,
+            onboardingCompleted = true,
             accessTokenState = AccessTokenState.InvalidSession
         )
 
@@ -64,7 +54,7 @@ class StartupOrchestratorTest {
     fun `resolveLaunchDestination keeps onboarding on slow token refresh`() = runBlocking {
         val orchestrator = buildOrchestrator(
             isAuthenticated = true,
-            onboardingStep = OnboardingStep.SET_STUDY_PLAN,
+            onboardingCompleted = false,
             accessTokenState = AccessTokenState.TemporarilyUnavailable(RuntimeException("slow"))
         )
 
@@ -75,20 +65,15 @@ class StartupOrchestratorTest {
 
     private fun buildOrchestrator(
         isAuthenticated: Boolean,
-        onboardingStep: OnboardingStep,
+        onboardingCompleted: Boolean,
         accessTokenState: AccessTokenState = AccessTokenState.Available("token")
     ): StartupOrchestrator {
         return StartupOrchestrator(
             authStateProvider = FakeAuthStateProvider(isAuthenticated),
             tokenProvider = FakeTokenProvider(accessTokenState),
             authRepository = FakeAuthRepository(isAuthenticated),
-            floatingWordSettingsRepository = FakeFloatingWordSettingsRepository(),
-            getCurrentOnboardingStepUseCase = GetCurrentOnboardingStepUseCase(
-                getCurrentOnboardingSnapshotUseCase = GetCurrentOnboardingSnapshotUseCase(
-                    FakeOnboardingRepository(onboardingStep)
-                ),
-                onboardingStepResolver = OnboardingStepResolver()
-            ),
+            onboardingStateReader = FakeStartupOnboardingStateReader(onboardingCompleted),
+            floatingAutoStartReader = FakeStartupFloatingAutoStartReader(),
             sessionKickoutNotifier = FakeSessionKickoutNotifier()
         )
     }
@@ -112,26 +97,14 @@ private class FakeTokenProvider(
     }
 }
 
-private class FakeFloatingWordSettingsRepository : FloatingWordSettingsRepository {
-    private val settings = AtomicReference(FloatingWordSettings())
+private class FakeStartupOnboardingStateReader(
+    private val completed: Boolean
+) : StartupOnboardingStateReader {
+    override fun isOnboardingCompleted(): Boolean = completed
+}
 
-    override fun observeSettings(): Flow<FloatingWordSettings> = emptyFlow()
-
-    override suspend fun getSettings(): FloatingWordSettings = settings.get()
-
-    override suspend fun saveSettings(settings: FloatingWordSettings) {
-        this.settings.set(settings)
-    }
-
-    override suspend fun updateBallPosition(x: Int, y: Int, dockState: FloatingDockState?) {
-        settings.updateAndGet { current ->
-            current.copy(
-                floatingBallX = x,
-                floatingBallY = y,
-                dockState = dockState
-            )
-        }
-    }
+private class FakeStartupFloatingAutoStartReader : StartupFloatingAutoStartReader {
+    override suspend fun isAutoStartEnabled(): Boolean = false
 }
 
 private class FakeSessionKickoutNotifier : SessionKickoutNotifier {
@@ -176,31 +149,4 @@ private class FakeAuthRepository(
     override suspend fun getCurrentUser() = null
 
     override fun getUserFlow(): Flow<com.chen.memorizewords.domain.account.model.user.User?> = emptyFlow()
-}
-
-private class FakeOnboardingRepository(
-    step: OnboardingStep
-) : OnboardingRepository {
-    private val snapshot = when (step) {
-        OnboardingStep.SELECT_WORD_BOOK -> OnboardingSnapshot()
-        OnboardingStep.SET_STUDY_PLAN -> OnboardingSnapshot(selectedWordBookId = 1L)
-        OnboardingStep.COMPLETED -> OnboardingSnapshot(
-            phase = com.chen.memorizewords.domain.wordbook.model.onboarding.OnboardingPhase.COMPLETED,
-            selectedWordBookId = 1L,
-            completedAt = 100L
-        )
-    }
-
-    override fun getCurrentSnapshot(): OnboardingSnapshot = snapshot
-
-    override fun observeCurrentSnapshot(): Flow<OnboardingSnapshot> = emptyFlow()
-
-    override suspend fun initializeSnapshotForUser(userId: Long, snapshot: OnboardingSnapshot?) =
-        throw UnsupportedOperationException()
-
-    override suspend fun replaceCurrentSnapshot(snapshot: OnboardingSnapshot?) =
-        throw UnsupportedOperationException()
-
-    override suspend fun completeOnboarding(selectedWordBookId: Long): OnboardingSnapshot =
-        throw UnsupportedOperationException()
 }

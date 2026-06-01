@@ -14,18 +14,17 @@ import com.chen.memorizewords.core.ui.vm.UiEvent
 import com.chen.memorizewords.domain.practice.PracticeMode
 import com.chen.memorizewords.feature.learning.PracticeActivity
 import com.chen.memorizewords.feature.learning.R
-import com.chen.memorizewords.feature.learning.databinding.FragmentPracticeListeningBinding
+import com.chen.memorizewords.feature.learning.databinding.FeatureLearningFragmentPracticeListeningBinding
 import com.chen.memorizewords.feature.learning.shouldUseListeningCustomHeader
 import com.chen.memorizewords.feature.learning.ui.practice.listening.audio.ListeningAudioPlayer
 import com.chen.memorizewords.feature.learning.ui.practice.listening.renderer.ListeningPracticeRenderer
 import com.chen.memorizewords.domain.practice.speech.SpeechAudioOutput
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ListeningPracticeFragment :
-    BaseVmDbFragment<ListeningPracticeViewModel, FragmentPracticeListeningBinding>() {
+    BaseVmDbFragment<ListeningPracticeViewModel, FeatureLearningFragmentPracticeListeningBinding>() {
 
     override val viewModel: ListeningPracticeViewModel by viewModels()
     private val sessionViewModel: PracticeSessionViewModel by activityViewModels()
@@ -34,7 +33,7 @@ class ListeningPracticeFragment :
     private lateinit var renderer: ListeningPracticeRenderer
     private var practiceMode: PracticeMode = PracticeMode.LISTENING
 
-    override fun setLayout(): Int = R.layout.fragment_practice_listening
+    override fun setLayout(): Int = R.layout.feature_learning_fragment_practice_listening
 
     override fun initView(savedInstanceState: Bundle?) {
         val selectedIds = arguments?.getLongArray(PracticeActivity.ARG_SELECTED_WORD_IDS)
@@ -59,7 +58,7 @@ class ListeningPracticeFragment :
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.startSavedSession()
                 if (databind.layoutHeaderRoot.isVisible && viewModel.consumeModeSwitchHint()) {
-                    showModeSwitchHintDialog()
+                    viewModel.showModeSwitchHintDialog()
                 }
             }
         }
@@ -212,13 +211,6 @@ class ListeningPracticeFragment :
 
     private fun showModeDialog() {
         ListeningModeDialogFragment.show(this)
-    }
-
-    private fun showModeSwitchHintDialog() {
-        MaterialAlertDialogBuilder(requireContext())
-            .setMessage(R.string.practice_listening_select_mode_hint)
-            .setPositiveButton(R.string.practice_word_picker_confirm, null)
-            .show()
     }
 
     private fun handleExitRequest() {

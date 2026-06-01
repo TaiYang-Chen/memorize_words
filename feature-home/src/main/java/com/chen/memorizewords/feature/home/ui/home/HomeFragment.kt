@@ -91,6 +91,12 @@ class HomeFragment : BaseFragment<HomeViewModel, FeatureHomeModuleHomeFragmentHo
                 startActivity(PendingSyncDetailActivity.createIntent(requireContext()))
             }
 
+            is AppRoute.WordBook -> {
+                startActivity(
+                    wordBookEntry.createWordBookIntent(requireContext(), target.deepLink)
+                )
+            }
+
             is AppRoute -> routeNavigator.navigate(target)
             else -> super.onNavigationRoute(event)
         }

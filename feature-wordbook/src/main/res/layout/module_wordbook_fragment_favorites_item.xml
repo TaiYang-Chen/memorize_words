@@ -8,6 +8,8 @@
     </data>
 
     <LinearLayout
+        android:gravity="center"
+        android:layout_marginTop="16dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -23,22 +25,24 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#111"
+                tools:text="tender"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/tvMeaning"
-                android:textSize="14sp"
+                android:textSize="11sp"
                 android:textColor="#666"
-                android:layout_marginTop="4dp"
-                android:layout_width="wrap_content"
+                tools:text="adj. dsfisudhfue"
+                android:singleLine="true"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:src="@drawable/ic_arrow_back"
+            android:src="@drawable/module_wordbook_ic_chevron_right"
             app:tint="#CCC" />
     </LinearLayout>
 </layout>

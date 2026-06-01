@@ -30,7 +30,10 @@ import com.chen.memorizewords.domain.practice.speech.SpeechProviderType
 import com.chen.memorizewords.domain.practice.speech.SpeechResult
 import com.chen.memorizewords.domain.practice.speech.SpeechTask
 import com.chen.memorizewords.domain.practice.speech.WordAudioResult
+import com.chen.memorizewords.core.ui.vm.UiEvent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runCurrent
@@ -46,6 +49,32 @@ class ListeningPracticeViewModelTest {
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
+
+    @Test
+    fun `showing mode switch hint emits single confirm dialog event`() = runTest {
+        val viewModel = createViewModel()
+        val eventDeferred = backgroundScope.async { viewModel.uiEvent.first() }
+        runCurrent()
+
+        viewModel.showModeSwitchHintDialog()
+        advanceUntilIdle()
+
+        val event = eventDeferred.await() as UiEvent.Dialog.SingleConfirm
+        assertEquals("", event.title)
+        assertEquals(
+            "\u53f3\u4e0a\u89d2\u53ef\u4ee5\u968f\u65f6\u5207\u6362\u8fa8\u97f3\u9009\u4e49\u6216\u8fa8\u97f3\u62fc\u5199\uff0c\u5207\u6362\u540e\u4f1a\u91cd\u65b0\u5f00\u59cb\u5f53\u524d\u542c\u529b\u6d4b\u8bd5\u3002",
+            event.message
+        )
+        assertEquals("\u786e\u5b9a", event.confirmText)
+    }
+
+    @Test
+    fun `consume mode switch hint only returns true once`() = runTest {
+        val viewModel = createViewModel()
+
+        assertTrue(viewModel.consumeModeSwitchHint())
+        assertFalse(viewModel.consumeModeSwitchHint())
+    }
 
     @Test
     fun `selecting correct meaning keeps current card for 500ms before moving next`() = runTest {
@@ -741,6 +770,9 @@ class ListeningPracticeViewModelTest {
                 R.string.practice_listening_report_summary_attempts ->
                     "\u7d2f\u8ba1\u4f5c\u7b54 ${formatArgs[0]} \u6b21\uff0c\u7b54\u5bf9 ${formatArgs[1]} \u6b21"
                 R.string.practice_listening_report_complete -> "\u5b8c\u6210"
+                R.string.practice_word_picker_confirm -> "\u786e\u5b9a"
+                R.string.practice_listening_select_mode_hint ->
+                    "\u53f3\u4e0a\u89d2\u53ef\u4ee5\u968f\u65f6\u5207\u6362\u8fa8\u97f3\u9009\u4e49\u6216\u8fa8\u97f3\u62fc\u5199\uff0c\u5207\u6362\u540e\u4f1a\u91cd\u65b0\u5f00\u59cb\u5f53\u524d\u542c\u529b\u6d4b\u8bd5\u3002"
                 R.string.practice_listening_spelling_correct_answer ->
                     "\u6b63\u786e\u7b54\u6848\uff1a${formatArgs[0]}"
                 else -> {

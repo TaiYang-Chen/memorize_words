@@ -11,6 +11,7 @@ import com.chen.memorizewords.domain.account.usecase.user.GetUserFlowUseCase
 import com.chen.memorizewords.domain.account.usecase.user.LogoutUseCase
 import com.chen.memorizewords.feature.home.R
 import com.chen.memorizewords.core.navigation.AuthEntryDestination
+import com.chen.memorizewords.core.navigation.WordBookEntryDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -56,7 +57,7 @@ class ProfileViewModel @Inject constructor(
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), "--")
 
     fun toFavorites() {
-        navigate(AppRoute.WordBook(deepLink = "myapp://favorites"))
+        navigate(AppRoute.WordBook(deepLink = WordBookEntryDestination.FAVORITES_DEEP_LINK))
     }
 
     fun toFeedback() {

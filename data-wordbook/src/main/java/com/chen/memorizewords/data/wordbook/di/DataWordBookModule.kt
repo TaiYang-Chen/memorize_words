@@ -14,7 +14,10 @@ import com.chen.memorizewords.data.wordbook.remoteapi.api.datasync.UserDataSyncA
 import com.chen.memorizewords.data.wordbook.remoteapi.api.wordbook.WordBookApiService
 import com.chen.memorizewords.data.wordbook.repository.LearningProgressRepositoryImpl
 import com.chen.memorizewords.data.wordbook.repository.RemoteWordBookRepositoryImpl
+import com.chen.memorizewords.data.wordbook.repository.RoomWordBookTransactionRunner
+import com.chen.memorizewords.data.wordbook.repository.WordBookTransactionRunner
 import com.chen.memorizewords.data.wordbook.repository.WordBookRepositoryImpl
+import com.chen.memorizewords.data.wordbook.repository.WordRepositoryImpl
 import com.chen.memorizewords.data.wordbook.repository.bootstrap.WordBookSnapshotLocalStateStore
 import com.chen.memorizewords.data.wordbook.repository.WordBookUpdateRepositoryImpl
 import com.chen.memorizewords.data.wordbook.repository.onboarding.OnboardingRepositoryImpl
@@ -29,6 +32,7 @@ import com.chen.memorizewords.domain.wordbook.repository.WordBookUpdateRepositor
 import com.chen.memorizewords.domain.wordbook.repository.onboarding.OnboardingRepository
 import com.chen.memorizewords.domain.wordbook.repository.shop.RemoteWordBookRepository
 import com.chen.memorizewords.domain.wordbook.service.WordBookUpdateCoordinator
+import com.chen.memorizewords.domain.word.repository.WordRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -43,7 +47,15 @@ import retrofit2.Retrofit
 @InstallIn(SingletonComponent::class)
 abstract class DataWordBookModule {
     @Binds
+    abstract fun bindWordRepository(impl: WordRepositoryImpl): WordRepository
+
+    @Binds
     abstract fun bindWordBookRepository(impl: WordBookRepositoryImpl): WordBookRepository
+
+    @Binds
+    abstract fun bindWordBookTransactionRunner(
+        impl: RoomWordBookTransactionRunner
+    ): WordBookTransactionRunner
 
     @Binds
     abstract fun bindCurrentWordBookLocalStatePort(

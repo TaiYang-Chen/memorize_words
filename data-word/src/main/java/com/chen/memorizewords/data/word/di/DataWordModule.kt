@@ -7,8 +7,6 @@ import com.chen.memorizewords.data.word.local.WordDatabase
 import com.chen.memorizewords.data.word.remote.wordbook.RemoteWordBookDataSource
 import com.chen.memorizewords.data.word.remote.wordbook.RemoteWordBookDataSourceImpl
 import com.chen.memorizewords.data.word.remoteapi.api.wordbook.WordBookApiService
-import com.chen.memorizewords.data.word.repository.WordRepositoryImpl
-import com.chen.memorizewords.domain.word.repository.WordRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -21,9 +19,6 @@ import retrofit2.Retrofit
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class DataWordModule {
-    @Binds
-    abstract fun bindWordRepository(impl: WordRepositoryImpl): WordRepository
-
     @Binds
     abstract fun bindRemoteWordBookDataSource(
         impl: RemoteWordBookDataSourceImpl

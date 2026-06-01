@@ -25,7 +25,9 @@ import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.wordbook.t
 import com.chen.memorizewords.data.wordbook.local.room.wordbook.WordBookSyncStateStore
 import com.chen.memorizewords.data.wordbook.remote.datasync.RemoteUserSyncDataSource
 import com.chen.memorizewords.data.wordbook.remote.wordbook.RemoteWordBookDataSource
+import com.chen.memorizewords.data.wordbook.repository.WordLearningStateMirror
 import com.chen.memorizewords.data.wordbook.repository.wordbook.persistWordBookPage
+import com.chen.memorizewords.domain.study.model.progress.word.WordLearningState
 import com.chen.memorizewords.domain.wordbook.model.WordBookUpdateApplyMode
 import com.chen.memorizewords.domain.wordbook.model.WordBookUpdateExecutionMode
 import dagger.hilt.EntryPoint
@@ -63,6 +65,7 @@ class CurrentWordBookUpdateWorker(
         val appDatabase = entryPoint.appDatabase()
         val wordBookDao = entryPoint.wordBookDao()
         val syncStateStore = entryPoint.wordBookSyncStateStore()
+        val wordLearningStateMirror = entryPoint.wordLearningStateMirror()
 
         val bookName = wordBookDao.getWordBookById(bookId)?.title.orEmpty()
         val notificationId = buildNotificationId(bookId)
@@ -88,7 +91,8 @@ class CurrentWordBookUpdateWorker(
                     upsertWordCount = manifest.upsertWordCount,
                     pageSize = manifest.pageSize,
                     appDatabase = appDatabase,
-                    remoteUserSyncDataSource = remoteUserSyncDataSource
+                    remoteUserSyncDataSource = remoteUserSyncDataSource,
+                    wordLearningStateMirror = wordLearningStateMirror
                 )
 
                 WordBookUpdateApplyMode.FULL -> applyFullRefresh(
@@ -98,7 +102,8 @@ class CurrentWordBookUpdateWorker(
                     pageSize = manifest.pageSize,
                     appDatabase = appDatabase,
                     remoteWordBookDataSource = remoteWordBookDataSource,
-                    remoteUserSyncDataSource = remoteUserSyncDataSource
+                    remoteUserSyncDataSource = remoteUserSyncDataSource,
+                    wordLearningStateMirror = wordLearningStateMirror
                 )
             }
 
@@ -136,7 +141,8 @@ class CurrentWordBookUpdateWorker(
         upsertWordCount: Int,
         pageSize: Int,
         appDatabase: WordBookDatabase,
-        remoteUserSyncDataSource: RemoteUserSyncDataSource
+        remoteUserSyncDataSource: RemoteUserSyncDataSource,
+        wordLearningStateMirror: WordLearningStateMirror
     ) {
         val safePageSize = pageSize.coerceAtLeast(DEFAULT_PAGE_SIZE)
         val totalWork = max(removedWordIds.size + upsertWordCount, 1)
@@ -166,6 +172,13 @@ class CurrentWordBookUpdateWorker(
             }
             page++
         }
+
+        syncWordStates(
+            bookId = bookId,
+            pageSize = safePageSize,
+            remoteUserSyncDataSource = remoteUserSyncDataSource,
+            wordLearningStateMirror = wordLearningStateMirror
+        )
     }
 
     private suspend fun applyFullRefresh(
@@ -175,7 +188,8 @@ class CurrentWordBookUpdateWorker(
         pageSize: Int,
         appDatabase: WordBookDatabase,
         remoteWordBookDataSource: RemoteWordBookDataSource,
-        remoteUserSyncDataSource: RemoteUserSyncDataSource
+        remoteUserSyncDataSource: RemoteUserSyncDataSource,
+        wordLearningStateMirror: WordLearningStateMirror
     ) {
         val bookWordItemDao = appDatabase.wordBookItemDao()
         val wordLearningStateDao = appDatabase.wordLearningStateDao()
@@ -209,8 +223,8 @@ class CurrentWordBookUpdateWorker(
         syncWordStates(
             bookId = bookId,
             pageSize = resolveStatePageSize(total),
-            appDatabase = appDatabase,
-            remoteUserSyncDataSource = remoteUserSyncDataSource
+            remoteUserSyncDataSource = remoteUserSyncDataSource,
+            wordLearningStateMirror = wordLearningStateMirror
         )
         publishProgress(bookId, targetVersion, 100, 100)
     }
@@ -218,10 +232,10 @@ class CurrentWordBookUpdateWorker(
     private suspend fun syncWordStates(
         bookId: Long,
         pageSize: Int,
-        appDatabase: WordBookDatabase,
-        remoteUserSyncDataSource: RemoteUserSyncDataSource
+        remoteUserSyncDataSource: RemoteUserSyncDataSource,
+        wordLearningStateMirror: WordLearningStateMirror
     ) {
-        val states = mutableListOf<com.chen.memorizewords.data.wordbook.local.room.model.study.progress.word.WordLearningStateEntity>()
+        val states = mutableListOf<WordLearningState>()
         var page = 0
         var loaded = 0
         while (true) {
@@ -230,20 +244,7 @@ class CurrentWordBookUpdateWorker(
                 .getOrThrow()
             val items = pageData.items
             if (items.isEmpty()) break
-            states += items.map {
-                com.chen.memorizewords.data.wordbook.local.room.model.study.progress.word.WordLearningStateEntity(
-                    wordId = it.wordId,
-                    bookId = if (it.bookId > 0L) it.bookId else bookId,
-                    totalLearnCount = it.totalLearnCount,
-                    lastLearnTime = it.lastLearnTime,
-                    nextReviewTime = it.nextReviewTime,
-                    masteryLevel = it.masteryLevel,
-                    userStatus = it.userStatus,
-                    repetition = it.repetition,
-                    interval = it.interval,
-                    efactor = it.efactor
-                )
-            }
+            states += items.map { it.toDomainState(bookId) }
             loaded += items.size
             if (pageData.total > 0 && loaded.toLong() >= pageData.total) {
                 break
@@ -251,12 +252,24 @@ class CurrentWordBookUpdateWorker(
             page++
         }
 
-        appDatabase.withTransaction {
-            appDatabase.wordLearningStateDao().deleteLearningWordByBookId(bookId)
-            if (states.isNotEmpty()) {
-                appDatabase.wordLearningStateDao().upsertAll(states)
-            }
-        }
+        wordLearningStateMirror.overwriteLearningStatesForBookFromRemote(bookId, states)
+    }
+
+    private fun com.chen.memorizewords.data.wordbook.remoteapi.dto.wordstate.WordStateDto.toDomainState(
+        fallbackBookId: Long
+    ): WordLearningState {
+        return WordLearningState(
+            wordId = wordId,
+            bookId = if (bookId > 0L) bookId else fallbackBookId,
+            totalLearnCount = totalLearnCount,
+            lastLearnTime = lastLearnTime,
+            nextReviewTime = nextReviewTime,
+            masteryLevel = masteryLevel,
+            userStatus = userStatus,
+            repetition = repetition,
+            interval = interval,
+            efactor = efactor
+        )
     }
 
     private suspend fun upsertLatestBookMetadata(
@@ -414,6 +427,7 @@ interface CurrentWordBookUpdateWorkerEntryPoint {
     fun appDatabase(): WordBookDatabase
     fun wordBookDao(): WordBookDao
     fun wordBookSyncStateStore(): WordBookSyncStateStore
+    fun wordLearningStateMirror(): WordLearningStateMirror
 }
 
 private const val DEFAULT_PAGE_SIZE = 50

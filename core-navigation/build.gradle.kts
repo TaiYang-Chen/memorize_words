@@ -15,8 +15,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":domain-practice"))
-    implementation(project(":domain-wordbook"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.javax.inject)
 }

@@ -3,18 +3,15 @@ import com.chen.memorizewords.domain.account.auth.AccessTokenState
 import com.chen.memorizewords.domain.account.auth.AuthStateProvider
 import com.chen.memorizewords.domain.account.auth.SessionKickoutNotifier
 import com.chen.memorizewords.domain.account.auth.TokenProvider
-import com.chen.memorizewords.domain.wordbook.model.onboarding.OnboardingStep
-import com.chen.memorizewords.domain.floating.repository.FloatingWordSettingsRepository
 import com.chen.memorizewords.domain.account.repository.user.AuthRepository
-import com.chen.memorizewords.domain.wordbook.usecase.onboarding.GetCurrentOnboardingStepUseCase
 import javax.inject.Inject
 
 class StartupOrchestrator @Inject constructor(
     private val authStateProvider: AuthStateProvider,
     private val tokenProvider: TokenProvider,
     private val authRepository: AuthRepository,
-    private val floatingWordSettingsRepository: FloatingWordSettingsRepository,
-    private val getCurrentOnboardingStepUseCase: GetCurrentOnboardingStepUseCase,
+    private val onboardingStateReader: StartupOnboardingStateReader,
+    private val floatingAutoStartReader: StartupFloatingAutoStartReader,
     val sessionKickoutNotifier: SessionKickoutNotifier
 ) {
     fun resolveLaunchDestinationFast(): StartupLaunchDestination {
@@ -52,17 +49,24 @@ class StartupOrchestrator @Inject constructor(
     suspend fun shouldAutoStartFloating(canDrawOverlays: Boolean): Boolean {
         if (!canDrawOverlays) return false
         if (!authRepository.isLoggedIn()) return false
-        val settings = floatingWordSettingsRepository.getSettings()
-        return settings.enabled && settings.autoStartOnAppLaunch
+        return floatingAutoStartReader.isAutoStartEnabled()
     }
 
     private fun resolveAuthenticatedDestination(): StartupLaunchDestination {
-        return when (getCurrentOnboardingStepUseCase()) {
-            OnboardingStep.COMPLETED -> StartupLaunchDestination.HOME
-            OnboardingStep.SELECT_WORD_BOOK,
-            OnboardingStep.SET_STUDY_PLAN -> StartupLaunchDestination.ONBOARDING
+        return if (onboardingStateReader.isOnboardingCompleted()) {
+            StartupLaunchDestination.HOME
+        } else {
+            StartupLaunchDestination.ONBOARDING
         }
     }
+}
+
+interface StartupOnboardingStateReader {
+    fun isOnboardingCompleted(): Boolean
+}
+
+interface StartupFloatingAutoStartReader {
+    suspend fun isAutoStartEnabled(): Boolean
 }
 
 enum class StartupLaunchDestination {

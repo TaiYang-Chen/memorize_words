@@ -25,8 +25,15 @@ sealed interface UiEvent {
             val action: String? = null,
             val title: String,
             val message: String,
-            val confirmText: String = "确定",
-            val cancelText: String = "取消"
+            val confirmText: String = "\u786e\u5b9a",
+            val cancelText: String = "\u53d6\u6d88"
+        ) : Dialog
+
+        data class SingleConfirm(
+            val action: String? = null,
+            val title: String,
+            val message: String,
+            val confirmText: String = "\u786e\u5b9a"
         ) : Dialog
 
         data class ConfirmBottom(

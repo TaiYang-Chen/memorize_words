@@ -18,6 +18,8 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.hilt.android)
     implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.moshi.kotlin)
+    implementation(libs.retrofit)
     ksp(libs.androidx.room.compiler)
     ksp(libs.hilt.compiler)
 

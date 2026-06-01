@@ -21,7 +21,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.gridlayout.widget.GridLayout
 import com.chen.memorizewords.feature.learning.R
-import com.chen.memorizewords.feature.learning.databinding.FragmentPracticeListeningBinding
+import com.chen.memorizewords.feature.learning.databinding.FeatureLearningFragmentPracticeListeningBinding
 import com.chen.memorizewords.feature.learning.ui.practice.ListeningFeedbackTone
 import com.chen.memorizewords.feature.learning.ui.practice.ListeningFooterMode
 import com.chen.memorizewords.feature.learning.ui.practice.ListeningMeaningOptionFeedback
@@ -38,7 +38,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 
 internal class ListeningPracticeRenderer(
-    private val binding: FragmentPracticeListeningBinding,
+    private val binding: FeatureLearningFragmentPracticeListeningBinding,
     private val callbacks: Callbacks
 ) {
     interface Callbacks {

@@ -11,6 +11,7 @@ import com.chen.memorizewords.core.ui.dialog.loading.LoadingDialogController
 import com.chen.memorizewords.core.ui.dialog.prefabricated.ShowConfirmBottomDialog
 import com.chen.memorizewords.core.ui.dialog.prefabricated.ShowConfirmDialog
 import com.chen.memorizewords.core.ui.dialog.prefabricated.ShowConfirmEditDialog
+import com.chen.memorizewords.core.ui.dialog.prefabricated.ShowSingleConfirmDialog
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.core.ui.vm.UiEffect
 import com.chen.memorizewords.core.ui.vm.UiEvent
@@ -70,6 +71,12 @@ abstract class BaseVmActivity<VM : BaseViewModel> : AppCompatActivity() {
                                     onCancel = { onCancelDialog(event) }
                                 ).show(supportFragmentManager, "ShowConfirmDialog")
                             }
+                            is UiEvent.Dialog.SingleConfirm -> {
+                                ShowSingleConfirmDialog(
+                                    data = event,
+                                    onConfirm = { onSingleConfirmDialog(event) }
+                                ).show(supportFragmentManager, "ShowSingleConfirmDialog")
+                            }
                             is UiEvent.Dialog.ConfirmBottom -> {
                                 ShowConfirmBottomDialog(
                                     data = event,
@@ -111,6 +118,9 @@ abstract class BaseVmActivity<VM : BaseViewModel> : AppCompatActivity() {
     }
 
     open fun onCancelDialog(event: UiEvent.Dialog.Confirm) {
+    }
+
+    open fun onSingleConfirmDialog(event: UiEvent.Dialog.SingleConfirm) {
     }
 
     open fun onConfirmEditDialog(event: UiEvent.Dialog.ConfirmEdit, value: String) {

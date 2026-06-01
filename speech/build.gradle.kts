@@ -46,5 +46,8 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.javax.inject)
     implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.moshi.kotlin)
+    implementation(libs.okhttp)
+    implementation(libs.retrofit)
     ksp(libs.hilt.compiler)
 }

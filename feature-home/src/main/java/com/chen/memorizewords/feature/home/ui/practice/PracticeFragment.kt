@@ -174,9 +174,9 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
         startActivity(
             practiceEntry.createPracticeIntent(
                 context = requireContext(),
-                mode = mode,
+                modeName = mode.name,
                 randomCount = randomCount,
-                entryType = entryType,
+                entryTypeName = entryType.name,
                 entryCount = entryCount,
                 selectedIds = selectedIds
             )

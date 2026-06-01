@@ -101,10 +101,19 @@ open class BaseViewModel : ViewModel() {
         action: String? = null,
         title: String,
         message: String,
-        confirmText: String = "确定",
-        cancelText: String = "取消"
+        confirmText: String = "\u786e\u5b9a",
+        cancelText: String = "\u53d6\u6d88"
     ) {
         emitEvent(UiEvent.Dialog.Confirm(action, title, message, confirmText, cancelText))
+    }
+
+    fun showSingleConfirmDialog(
+        action: String? = null,
+        title: String,
+        message: String,
+        confirmText: String = "\u786e\u5b9a"
+    ) {
+        emitEvent(UiEvent.Dialog.SingleConfirm(action, title, message, confirmText))
     }
 
     override fun onCleared() {

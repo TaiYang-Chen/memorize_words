@@ -10,8 +10,6 @@ import androidx.navigation.fragment.NavHostFragment
 import com.chen.memorizewords.core.navigation.LearningSessionRequest
 import com.chen.memorizewords.core.ui.activity.BaseVmDbActivity
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
-import com.chen.memorizewords.domain.practice.PracticeEntryType
-import com.chen.memorizewords.domain.practice.PracticeMode
 import com.chen.memorizewords.feature.learning.databinding.ActivityLearningBinding
 import com.chen.memorizewords.core.navigation.LearningEntry
 import com.chen.memorizewords.core.navigation.LearningEntryExtras
@@ -111,16 +109,16 @@ class DefaultLearningEntry @Inject constructor() : LearningEntry {
 class DefaultPracticeEntry @Inject constructor() : PracticeEntry {
     override fun createPracticeIntent(
         context: Context,
-        mode: PracticeMode,
+        modeName: String,
         randomCount: Int,
-        entryType: PracticeEntryType,
+        entryTypeName: String,
         entryCount: Int,
         selectedIds: LongArray?
     ): Intent {
         return Intent(context, PracticeActivity::class.java).apply {
-            putExtra(PracticeEntryExtras.EXTRA_PRACTICE_MODE, mode.name)
+            putExtra(PracticeEntryExtras.EXTRA_PRACTICE_MODE, modeName)
             putExtra(PracticeEntryExtras.EXTRA_RANDOM_COUNT, randomCount)
-            putExtra(PracticeEntryExtras.EXTRA_ENTRY_TYPE, entryType.name)
+            putExtra(PracticeEntryExtras.EXTRA_ENTRY_TYPE, entryTypeName)
             putExtra(PracticeEntryExtras.EXTRA_ENTRY_COUNT, entryCount)
             selectedIds?.let { putExtra(PracticeEntryExtras.EXTRA_SELECTED_WORD_IDS, it) }
         }

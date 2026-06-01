@@ -5,7 +5,10 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph
 import androidx.navigation.fragment.NavHostFragment
 import com.chen.memorizewords.core.navigation.OnboardingGuardDelegate
 import com.chen.memorizewords.core.ui.activity.BaseVmDbActivity
@@ -36,7 +39,9 @@ class WordBookActivity : BaseVmDbActivity<BaseViewModel, ActivityWordBookBinding
     override fun initView(savedInstanceState: Bundle?) {
         if (onboardingGuardDelegate.guard(this)) return
         enableEdgeToEdge()
-        handleDeepLink()
+        if (savedInstanceState == null) {
+            initializeNavigation(intent)
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -44,19 +49,55 @@ class WordBookActivity : BaseVmDbActivity<BaseViewModel, ActivityWordBookBinding
         if (intent == null) return
         setIntent(intent)
         if (onboardingGuardDelegate.guard(this)) return
-        handleDeepLink()
+        initializeNavigation(intent)
     }
 
-    private fun handleDeepLink() {
+    private fun initializeNavigation(intent: Intent?) {
         val navHost = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment_activity_wordbook) as? NavHostFragment
             ?: return
-        navHost.navController.handleDeepLink(intent)
+        val navController = navHost.navController
+        val launchTarget = WordBookDeepLinkResolver.resolve(intent?.dataString)
+        navController.setGraph(
+            buildNavigationGraph(navController, launchTarget),
+            launchTarget.toStartArgs()
+        )
+    }
+
+    private fun buildNavigationGraph(
+        navController: NavController,
+        launchTarget: WordBookLaunchTarget?
+    ): NavGraph {
+        return navController.navInflater.inflate(R.navigation.wordbook_nav).apply {
+            launchTarget?.let {
+                setStartDestination(it.destination.toNavDestinationId())
+            }
+        }
     }
 
     override fun onResume() {
         super.onResume()
         onboardingGuardDelegate.guard(this)
+    }
+}
+
+private fun WordBookLaunchTarget?.toStartArgs(): Bundle? {
+    val target = this ?: return null
+    return when (target.destination) {
+        WordBookLaunchTarget.Destination.FAVORITES,
+        WordBookLaunchTarget.Destination.SHOP -> null
+
+        WordBookLaunchTarget.Destination.MY_WORD_BOOKS -> bundleOf(
+            "source" to target.source
+        )
+    }
+}
+
+private fun WordBookLaunchTarget.Destination.toNavDestinationId(): Int {
+    return when (this) {
+        WordBookLaunchTarget.Destination.FAVORITES -> R.id.favoritesFragment
+        WordBookLaunchTarget.Destination.MY_WORD_BOOKS -> R.id.myWordBooksFragment
+        WordBookLaunchTarget.Destination.SHOP -> R.id.shopFragment
     }
 }
 

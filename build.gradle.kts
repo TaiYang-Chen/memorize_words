@@ -144,6 +144,37 @@ tasks.register("verifyAppEntryBoundaries") {
     }
 }
 
+tasks.register("verifyAppCompositionBoundaries") {
+    group = "verification"
+    description = "Fail when app aggregates transitional or duplicate implementation modules."
+
+    doLast {
+        val appBuildFile = rootDir.resolve("app/build.gradle.kts")
+        if (!appBuildFile.exists()) return@doLast
+
+        val forbiddenProjectRefs = listOf(
+            "project(\":data-word\")"
+        )
+        val violations = mutableListOf<String>()
+
+        appBuildFile.readLines().forEachIndexed { index, line ->
+            if (forbiddenProjectRefs.any { token -> line.contains(token) }) {
+                val relPath = appBuildFile.relativeTo(rootDir).invariantSeparatorsPath
+                violations += "$relPath:${index + 1}: $line"
+            }
+        }
+
+        if (violations.isNotEmpty()) {
+            error(
+                buildString {
+                    appendLine("Found duplicate/transitional implementation modules aggregated by app:")
+                    violations.forEach { appendLine(it) }
+                }
+            )
+        }
+    }
+}
+
 tasks.register("verifyFeatureModuleProjectDependencies") {
     group = "verification"
     description = "Fail when feature modules depend on data/network implementation modules."
@@ -247,19 +278,30 @@ tasks.register("verifyNewArchitectureProjectDependencies") {
                 )
             }
 
-        listOf("core-common", "core-network", "core-database").forEach { moduleName ->
-            scanBuildFile(
-                moduleName = moduleName,
-                forbiddenProjectRefs = listOf(
-                    "project(\":app\")",
-                    "project(\":data",
-                    "project(\":network\")",
-                    "project(\":domain",
-                    "project(\":feature-",
-                    "project(\":feature_"
-                )
+        scanBuildFile(
+            moduleName = "domain-account",
+            forbiddenProjectRefs = listOf(
+                "project(\":domain-floating\")",
+                "project(\":domain-wordbook\")"
             )
-        }
+        )
+
+        rootDir.listFiles()
+            ?.filter { file -> file.isDirectory && file.name.startsWith("core-") }
+            .orEmpty()
+            .forEach { module ->
+                scanBuildFile(
+                    moduleName = module.name,
+                    forbiddenProjectRefs = listOf(
+                        "project(\":app\")",
+                        "project(\":data",
+                        "project(\":network\")",
+                        "project(\":domain",
+                        "project(\":feature-",
+                        "project(\":feature_"
+                    )
+                )
+            }
 
         if (violations.isNotEmpty()) {
             error(
@@ -833,6 +875,7 @@ subprojects {
         dependsOn(rootProject.tasks.named("verifyPresentationLayerBoundaries"))
         dependsOn(rootProject.tasks.named("verifyDomainLayerBoundaries"))
         dependsOn(rootProject.tasks.named("verifyAppEntryBoundaries"))
+        dependsOn(rootProject.tasks.named("verifyAppCompositionBoundaries"))
         dependsOn(rootProject.tasks.named("verifyFeatureModuleProjectDependencies"))
         dependsOn(rootProject.tasks.named("verifyNewArchitectureProjectDependencies"))
         dependsOn(rootProject.tasks.named("verifyDataModuleImportBoundaries"))

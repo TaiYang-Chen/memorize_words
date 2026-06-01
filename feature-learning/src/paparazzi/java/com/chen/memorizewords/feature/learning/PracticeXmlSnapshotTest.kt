@@ -22,7 +22,7 @@ class PracticeXmlSnapshotTest {
 
     @Test
     fun listeningMeaningPhone() {
-        val view = inflate(R.layout.fragment_practice_listening)
+        val view = inflate(R.layout.feature_learning_fragment_practice_listening)
         view.find<TextView>(R.id.tv_screen_title).text = "Listening"
         view.find<TextView>(R.id.tv_mode_badge).text = "Meaning"
         view.find<TextView>(R.id.tv_phonetic).text = "[əbˈzɔːpʃn]"
@@ -42,7 +42,7 @@ class PracticeXmlSnapshotTest {
 
     @Test
     fun listeningSpellingPhone() {
-        val view = inflate(R.layout.fragment_practice_listening)
+        val view = inflate(R.layout.feature_learning_fragment_practice_listening)
         view.find<TextView>(R.id.tv_screen_title).text = "Listening"
         view.find<TextView>(R.id.tv_mode_badge).text = "Spelling"
         view.find<TextView>(R.id.tv_phonetic).text = "[ˈmeməraɪz]"
@@ -70,7 +70,7 @@ class PracticeXmlSnapshotTest {
 
     @Test
     fun listeningReportPhone() {
-        val view = inflate(R.layout.fragment_practice_listening)
+        val view = inflate(R.layout.feature_learning_fragment_practice_listening)
         view.find<TextView>(R.id.tv_screen_title).text = "Listening"
         view.find<View>(R.id.layout_practice_root).visibility = View.GONE
         view.find<View>(R.id.layout_report_root).visibility = View.VISIBLE
