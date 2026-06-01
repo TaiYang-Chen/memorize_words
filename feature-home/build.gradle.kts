@@ -1,40 +1,33 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt)
+    id("memorize.android-hilt-library")
 }
 
 android {
     namespace = "com.chen.memorizewords.feature.home"
-    compileSdk = 36
-
-    defaultConfig {
-        minSdk = 25
-    }
-
     resourcePrefix("feature_home_")
     buildTypes {
         release {
             isMinifyEnabled = false
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
     buildFeatures{
         dataBinding = true
+    }
+    lint {
+        baseline = file("lint-baseline.xml")
     }
 }
 
 dependencies {
     implementation(project(":core-ui"))
     implementation(project(":core-navigation"))
-    implementation(project(":domain"))
+    implementation(project(":domain-account"))
+    implementation(project(":domain-floating"))
+    implementation(project(":domain-practice"))
+    implementation(project(":domain-study"))
+    implementation(project(":domain-sync"))
+    implementation(project(":domain-word"))
+    implementation(project(":domain-wordbook"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

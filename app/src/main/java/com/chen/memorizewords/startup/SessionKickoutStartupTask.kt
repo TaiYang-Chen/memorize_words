@@ -3,7 +3,7 @@ package com.chen.memorizewords.startup
 import android.app.Application
 import android.content.Intent
 import com.chen.memorizewords.core.navigation.AppLaunchEntry
-import com.chen.memorizewords.domain.orchestrator.startup.StartupOrchestrator
+import com.chen.memorizewords.domain.account.orchestrator.startup.StartupOrchestrator
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton

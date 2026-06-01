@@ -8,9 +8,9 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.chen.memorizewords.core.common.paging.PageSlicePagingSource
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
-import com.chen.memorizewords.domain.model.wordbook.shop.DownloadState
-import com.chen.memorizewords.domain.model.wordbook.shop.ShopBooksQuery
-import com.chen.memorizewords.domain.service.wordbook.WordBookShopFacade
+import com.chen.memorizewords.domain.wordbook.model.shop.DownloadState
+import com.chen.memorizewords.domain.wordbook.model.shop.ShopBooksQuery
+import com.chen.memorizewords.domain.wordbook.service.WordBookShopFacade
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.delay

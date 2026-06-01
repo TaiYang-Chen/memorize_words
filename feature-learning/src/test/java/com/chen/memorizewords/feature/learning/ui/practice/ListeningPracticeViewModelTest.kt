@@ -1,33 +1,35 @@
 package com.chen.memorizewords.feature.learning.ui.practice
 
 import com.chen.memorizewords.core.common.resource.ResourceProvider
-import com.chen.memorizewords.domain.model.study.progress.word.WordLearningState
-import com.chen.memorizewords.domain.model.words.enums.PartOfSpeech
-import com.chen.memorizewords.domain.model.words.word.PronunciationType
-import com.chen.memorizewords.domain.model.words.word.Word
-import com.chen.memorizewords.domain.model.words.word.WordDefinitions
-import com.chen.memorizewords.domain.model.words.word.WordExample
-import com.chen.memorizewords.domain.model.words.word.WordForm
-import com.chen.memorizewords.domain.model.words.word.WordQuickLookupResult
-import com.chen.memorizewords.domain.model.words.word.WordRoot
+import com.chen.memorizewords.domain.study.model.progress.word.WordLearningState
+import com.chen.memorizewords.domain.word.model.enums.PartOfSpeech
+import com.chen.memorizewords.domain.word.model.word.PronunciationType
+import com.chen.memorizewords.domain.word.model.word.Word
+import com.chen.memorizewords.domain.word.model.word.WordDefinitions
+import com.chen.memorizewords.domain.word.model.word.WordExample
+import com.chen.memorizewords.domain.word.model.word.WordForm
+import com.chen.memorizewords.domain.word.model.word.WordQuickLookupResult
+import com.chen.memorizewords.domain.word.model.word.WordRoot
 import com.chen.memorizewords.domain.practice.PracticeAvailability
+import com.chen.memorizewords.domain.practice.PracticeKind
+import com.chen.memorizewords.domain.practice.PracticeReportRepository
+import com.chen.memorizewords.domain.practice.PracticeSessionReportRecord
 import com.chen.memorizewords.domain.practice.PracticeWordProvider
-import com.chen.memorizewords.domain.query.word.WordReadFacade
-import com.chen.memorizewords.domain.repository.WordLearningRepository
-import com.chen.memorizewords.domain.repository.practice.ListeningPracticePreferencesRepository
-import com.chen.memorizewords.domain.repository.word.WordRepository
-import com.chen.memorizewords.domain.usecase.practice.SynthesizeSpeechUseCase
-import com.chen.memorizewords.domain.usecase.word.GenerateMultipleChoiceOptionsUseCase
-import com.chen.memorizewords.domain.usecase.word.study.GetWordLearningStatesByBookIdUseCase
+import com.chen.memorizewords.domain.word.query.WordReadFacade
+import com.chen.memorizewords.domain.study.repository.WordLearningRepository
+import com.chen.memorizewords.domain.practice.repository.ListeningPracticePreferencesRepository
+import com.chen.memorizewords.domain.word.repository.WordRepository
+import com.chen.memorizewords.domain.practice.usecase.SynthesizeSpeechUseCase
+import com.chen.memorizewords.domain.word.usecase.GenerateMultipleChoiceOptionsUseCase
+import com.chen.memorizewords.domain.study.usecase.word.study.GetWordLearningStatesByBookIdUseCase
 import com.chen.memorizewords.feature.learning.MainDispatcherRule
 import com.chen.memorizewords.feature.learning.R
-import com.chen.memorizewords.speech.api.SpeechCapability
-import com.chen.memorizewords.speech.api.SpeechAudioOutput
-import com.chen.memorizewords.speech.api.SpeechProviderType
-import com.chen.memorizewords.speech.api.SpeechResult
-import com.chen.memorizewords.speech.api.SpeechService
-import com.chen.memorizewords.speech.api.SpeechTask
-import com.chen.memorizewords.speech.api.WordAudioResult
+import com.chen.memorizewords.domain.practice.speech.SpeechAudioOutput
+import com.chen.memorizewords.domain.practice.speech.PracticeSpeechSynthesizer
+import com.chen.memorizewords.domain.practice.speech.SpeechProviderType
+import com.chen.memorizewords.domain.practice.speech.SpeechResult
+import com.chen.memorizewords.domain.practice.speech.SpeechTask
+import com.chen.memorizewords.domain.practice.speech.WordAudioResult
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -534,11 +536,100 @@ class ListeningPracticeViewModelTest {
         assertEquals("en-US", reportState.report.allWords.first().speechLocale)
     }
 
+    @Test
+    fun `revealing answer enters study state and persists revealed report semantics`() = runTest {
+        val harness = createHarness()
+        val viewModel = harness.viewModel
+
+        viewModel.loadWithSelection(longArrayOf(1L), 20)
+        viewModel.startSession(ListeningPracticeMode.MEANING)
+        advanceUntilIdle()
+
+        viewModel.onRevealAnswer()
+        advanceUntilIdle()
+
+        val studyState = viewModel.uiState.value
+        assertTrue(studyState.showStudyState)
+        assertFalse(studyState.showMeaningQuestion)
+        assertEquals("alpha", studyState.studyWord)
+
+        viewModel.onContinueAfterStudy()
+        advanceUntilIdle()
+
+        val reviewState = viewModel.uiState.value
+        assertTrue(reviewState.showMeaningQuestion)
+        assertFalse(reviewState.showStudyState)
+
+        repeat(3) {
+            val cycleState = viewModel.uiState.value
+            val correctIndex = cycleState.meaningOptions.indexOfFirst { it.isCorrect }
+            assertTrue(correctIndex >= 0)
+            viewModel.onMeaningOptionSelected(correctIndex)
+            advanceTimeBy(500)
+            advanceUntilIdle()
+        }
+
+        val reportState = viewModel.uiState.value
+        assertTrue(reportState.showReportState)
+        assertEquals(100, reportState.report.accuracyPercent)
+        assertEquals("0", reportState.report.skippedCountText)
+        assertEquals(1, reportState.report.focusedReviewWords.size)
+
+        val savedReport = harness.practiceReportRepository.savedRecords.single().report
+        assertEquals(3, savedReport.answeredCount)
+        assertEquals(3, savedReport.correctCount)
+        assertEquals(0, savedReport.wrongCount)
+        assertEquals(0, savedReport.skippedCount)
+        assertEquals(1, savedReport.revealedCount)
+        assertEquals(100, savedReport.accuracyPercent)
+    }
+
+    @Test
+    fun `skipping question keeps answered count at zero and persists skipped report semantics`() = runTest {
+        val harness = createHarness()
+        val viewModel = harness.viewModel
+
+        viewModel.loadWithSelection(longArrayOf(1L), 20)
+        viewModel.startSession(ListeningPracticeMode.MEANING)
+        advanceUntilIdle()
+
+        viewModel.onSkipQuestion()
+        advanceUntilIdle()
+
+        val reviewState = viewModel.uiState.value
+        assertTrue(reviewState.showMeaningQuestion)
+        assertFalse(reviewState.showReportState)
+
+        repeat(3) {
+            val cycleState = viewModel.uiState.value
+            val correctIndex = cycleState.meaningOptions.indexOfFirst { it.isCorrect }
+            assertTrue(correctIndex >= 0)
+            viewModel.onMeaningOptionSelected(correctIndex)
+            advanceTimeBy(500)
+            advanceUntilIdle()
+        }
+
+        val reportState = viewModel.uiState.value
+        assertTrue(reportState.showReportState)
+        assertEquals(100, reportState.report.accuracyPercent)
+        assertEquals("1", reportState.report.skippedCountText)
+        assertEquals(1, reportState.report.focusedReviewWords.size)
+
+        val savedReport = harness.practiceReportRepository.savedRecords.single().report
+        assertEquals(3, savedReport.answeredCount)
+        assertEquals(3, savedReport.correctCount)
+        assertEquals(0, savedReport.wrongCount)
+        assertEquals(1, savedReport.skippedCount)
+        assertEquals(0, savedReport.revealedCount)
+        assertEquals(100, savedReport.accuracyPercent)
+    }
+
     private fun createViewModel(): ListeningPracticeViewModel = createHarness().viewModel
 
     private data class TestHarness(
         val viewModel: ListeningPracticeViewModel,
-        val speechService: FakeSpeechService
+        val speechService: FakeSpeechService,
+        val practiceReportRepository: FakePracticeReportRepository
     )
 
     private fun createHarness(): TestHarness {
@@ -613,6 +704,7 @@ class ListeningPracticeViewModelTest {
         )
         val speechService = FakeSpeechService()
         val wordRepository = FakeWordRepository(words, definitions, examples)
+        val practiceReportRepository = FakePracticeReportRepository()
         return TestHarness(
             viewModel = ListeningPracticeViewModel(
                 resourceProvider = FakeResourceProvider(),
@@ -627,9 +719,11 @@ class ListeningPracticeViewModelTest {
                 getWordLearningStatesByBookId = GetWordLearningStatesByBookIdUseCase(
                     FakeWordLearningRepository()
                 ),
-                listeningPracticePreferencesRepository = FakeListeningPracticePreferencesRepository()
+                listeningPracticePreferencesRepository = FakeListeningPracticePreferencesRepository(),
+                practiceReportRepository = practiceReportRepository
             ),
-            speechService = speechService
+            speechService = speechService,
+            practiceReportRepository = practiceReportRepository
         )
     }
 
@@ -705,10 +799,28 @@ class ListeningPracticeViewModelTest {
         }
     }
 
-    private class FakeSpeechService : SpeechService {
+    private class FakePracticeReportRepository : PracticeReportRepository {
+        private val records = mutableListOf<PracticeSessionReportRecord>()
+        val savedRecords: List<PracticeSessionReportRecord>
+            get() = records.toList()
+
+        override suspend fun save(record: PracticeSessionReportRecord) {
+            records += record
+        }
+
+        override suspend fun getLatest(kind: PracticeKind): PracticeSessionReportRecord? {
+            return records.lastOrNull { it.kind == kind }
+        }
+
+        override suspend fun getBySessionId(sessionId: String): PracticeSessionReportRecord? {
+            return records.firstOrNull { it.sessionId == sessionId }
+        }
+    }
+
+    private class FakeSpeechService : PracticeSpeechSynthesizer {
         val wordRequests = mutableListOf<String>()
 
-        override suspend fun execute(task: SpeechTask): SpeechResult {
+        override suspend fun synthesize(task: SpeechTask): SpeechResult {
             return when (task) {
                 is SpeechTask.SynthesizeWord -> {
                     wordRequests += "${task.text}:${task.locale}"
@@ -733,10 +845,6 @@ class ListeningPracticeViewModelTest {
                     isFromCache = false
                 )
             }
-        }
-
-        override fun getCapabilities(provider: SpeechProviderType?): Set<SpeechCapability> {
-            return emptySet()
         }
     }
 

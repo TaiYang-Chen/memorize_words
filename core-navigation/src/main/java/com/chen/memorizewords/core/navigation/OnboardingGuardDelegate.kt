@@ -2,8 +2,8 @@ package com.chen.memorizewords.core.navigation
 
 import android.app.Activity
 import android.content.Intent
-import com.chen.memorizewords.domain.model.onboarding.OnboardingStep
-import com.chen.memorizewords.domain.usecase.onboarding.GetCurrentOnboardingStepUseCase
+import com.chen.memorizewords.domain.wordbook.model.onboarding.OnboardingStep
+import com.chen.memorizewords.domain.wordbook.usecase.onboarding.GetCurrentOnboardingStepUseCase
 import javax.inject.Inject
 
 class OnboardingGuardDelegate @Inject constructor(

@@ -15,7 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
-import com.chen.memorizewords.domain.model.feedback.FeedbackImagePayload
+import com.chen.memorizewords.domain.feedback.model.FeedbackImagePayload
 import com.chen.memorizewords.feature.feedback.R
 import com.chen.memorizewords.feature.feedback.databinding.ModuleFeedbackFragmentFeedbackBinding
 import com.chen.memorizewords.feature.feedback.ui.util.setupFeedbackTabs

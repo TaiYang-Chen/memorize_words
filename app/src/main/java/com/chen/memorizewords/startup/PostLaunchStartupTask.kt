@@ -7,8 +7,7 @@ import android.provider.Settings
 import com.chen.memorizewords.SplashActivity
 import com.chen.memorizewords.core.navigation.FloatingWordActions
 import com.chen.memorizewords.core.navigation.FloatingWordEntry
-import com.chen.memorizewords.data.repository.sync.NetworkMonitor
-import com.chen.memorizewords.domain.orchestrator.startup.StartupOrchestrator
+import com.chen.memorizewords.domain.account.orchestrator.startup.StartupOrchestrator
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton

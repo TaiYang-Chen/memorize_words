@@ -7,11 +7,11 @@ import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import com.chen.memorizewords.core.navigation.OnboardingGuardDelegate
 import androidx.navigation.fragment.NavHostFragment
+import com.chen.memorizewords.core.navigation.LearningSessionRequest
 import com.chen.memorizewords.core.ui.activity.BaseVmDbActivity
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
-import com.chen.memorizewords.domain.model.learning.LearningSessionRequest
-import com.chen.memorizewords.domain.model.practice.PracticeEntryType
-import com.chen.memorizewords.domain.model.practice.PracticeMode
+import com.chen.memorizewords.domain.practice.PracticeEntryType
+import com.chen.memorizewords.domain.practice.PracticeMode
 import com.chen.memorizewords.feature.learning.databinding.ActivityLearningBinding
 import com.chen.memorizewords.core.navigation.LearningEntry
 import com.chen.memorizewords.core.navigation.LearningEntryExtras

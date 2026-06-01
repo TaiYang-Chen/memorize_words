@@ -7,8 +7,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.chen.memorizewords.domain.model.floating.FloatingWordFieldConfig
-import com.chen.memorizewords.domain.model.floating.FloatingWordFieldType
+import com.chen.memorizewords.domain.floating.model.FloatingWordFieldConfig
+import com.chen.memorizewords.domain.floating.model.FloatingWordFieldType
 import com.chen.memorizewords.feature.floatingreview.R
 import com.google.android.material.switchmaterial.SwitchMaterial
 

@@ -2,7 +2,7 @@ package com.chen.memorizewords.feature.learning.ui.practice.listening.audio
 
 import android.media.MediaPlayer
 import com.chen.memorizewords.feature.learning.ui.speech.prepareSpeechOutputAsync
-import com.chen.memorizewords.speech.api.SpeechAudioOutput
+import com.chen.memorizewords.domain.practice.speech.SpeechAudioOutput
 
 internal class ListeningAudioPlayer {
     private var mediaPlayer: MediaPlayer? = null

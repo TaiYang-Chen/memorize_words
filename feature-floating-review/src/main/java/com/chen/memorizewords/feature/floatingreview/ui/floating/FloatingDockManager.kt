@@ -1,8 +1,8 @@
-﻿package com.chen.memorizewords.feature.floatingreview.ui.floating
+package com.chen.memorizewords.feature.floatingreview.ui.floating
 
-import com.chen.memorizewords.domain.model.floating.FloatingDockConfig
-import com.chen.memorizewords.domain.model.floating.FloatingDockEdge
-import com.chen.memorizewords.domain.model.floating.FloatingDockState
+import com.chen.memorizewords.domain.floating.model.FloatingDockConfig
+import com.chen.memorizewords.domain.floating.model.FloatingDockEdge
+import com.chen.memorizewords.domain.floating.model.FloatingDockState
 import kotlin.math.abs
 import kotlin.math.roundToInt
 

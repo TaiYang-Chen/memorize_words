@@ -1,15 +1,16 @@
 package com.chen.memorizewords.feature.home
 
 import androidx.lifecycle.viewModelScope
+import com.chen.memorizewords.core.navigation.AppRoute
 import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
-import com.chen.memorizewords.domain.model.sync.PostLoginBootstrapState
-import com.chen.memorizewords.domain.model.wordbook.WordBookUpdateCandidate
-import com.chen.memorizewords.domain.model.wordbook.WordBookUpdatePrompt
-import com.chen.memorizewords.domain.service.sync.SyncFacade
-import com.chen.memorizewords.domain.service.wordbook.WordBookUpdateCoordinator
-import com.chen.memorizewords.domain.usecase.user.IsLoggedInUseCase
-import com.chen.memorizewords.domain.usecase.wordbook.GetCurrentWordBookUseCase
+import com.chen.memorizewords.domain.sync.model.PostLoginBootstrapState
+import com.chen.memorizewords.domain.wordbook.model.WordBookUpdateCandidate
+import com.chen.memorizewords.domain.wordbook.model.WordBookUpdatePrompt
+import com.chen.memorizewords.domain.sync.service.SyncFacade
+import com.chen.memorizewords.domain.wordbook.service.WordBookUpdateCoordinator
+import com.chen.memorizewords.domain.account.usecase.user.IsLoggedInUseCase
+import com.chen.memorizewords.domain.wordbook.usecase.GetCurrentWordBookUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -33,7 +34,6 @@ class HomeViewModel @Inject constructor(
     }
 
     sealed interface Route {
-        data object ToWordBookUpdates : Route
     }
 
     private val _loginState = MutableStateFlow<Boolean?>(null)
@@ -105,7 +105,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             updateCoordinator.openUpdatePageFromPrompt()
             pendingPrompt = null
-            navigateRoute(Route.ToWordBookUpdates)
+            navigate(AppRoute.WordBook())
         }
     }
 

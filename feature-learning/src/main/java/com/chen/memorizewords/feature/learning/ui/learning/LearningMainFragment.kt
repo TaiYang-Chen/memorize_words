@@ -13,9 +13,9 @@ import androidx.navigation.fragment.findNavController
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.core.ui.vm.UiEffect
 import com.chen.memorizewords.core.ui.vm.UiEvent
-import com.chen.memorizewords.domain.model.learning.LearningTestMode
-import com.chen.memorizewords.domain.model.words.word.PronunciationType
-import com.chen.memorizewords.domain.usecase.practice.SynthesizeSpeechUseCase
+import com.chen.memorizewords.domain.wordbook.model.learning.LearningTestMode
+import com.chen.memorizewords.domain.word.model.word.PronunciationType
+import com.chen.memorizewords.domain.practice.usecase.SynthesizeSpeechUseCase
 import com.chen.memorizewords.feature.learning.LearningActivity
 import com.chen.memorizewords.feature.learning.R
 import com.chen.memorizewords.feature.learning.databinding.FragmentWordLearningBinding
@@ -23,8 +23,8 @@ import com.chen.memorizewords.feature.learning.ui.fragment.WordLearningDetailFra
 import com.chen.memorizewords.feature.learning.ui.fragment.WordLearningTestFragment
 import com.chen.memorizewords.feature.learning.ui.speech.audioOutputOrNull
 import com.chen.memorizewords.feature.learning.ui.speech.prepareSpeechOutputAsync
-import com.chen.memorizewords.speech.api.SpeechAudioOutput
-import com.chen.memorizewords.speech.api.SpeechTask
+import com.chen.memorizewords.domain.practice.speech.SpeechAudioOutput
+import com.chen.memorizewords.domain.practice.speech.SpeechTask
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.launch

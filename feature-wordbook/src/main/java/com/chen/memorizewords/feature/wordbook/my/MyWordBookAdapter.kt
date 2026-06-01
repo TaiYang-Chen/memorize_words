@@ -7,7 +7,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.chen.memorizewords.domain.model.wordbook.WordBookInfo
+import com.chen.memorizewords.domain.wordbook.model.WordBookInfo
 import com.chen.memorizewords.feature.wordbook.R
 import com.chen.memorizewords.feature.wordbook.databinding.ModuleWordbookItemWordbookBinding
 import com.chen.memorizewords.feature.wordbook.shop.BookShopWordBookImageLoader

@@ -8,8 +8,8 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.chen.memorizewords.core.common.paging.PageSlicePagingSource
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
-import com.chen.memorizewords.domain.model.study.favorites.WordFavorites
-import com.chen.memorizewords.domain.usecase.word.study.GetFavoritesPageUseCase
+import com.chen.memorizewords.domain.study.model.favorites.WordFavorites
+import com.chen.memorizewords.domain.study.usecase.word.study.GetFavoritesPageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow

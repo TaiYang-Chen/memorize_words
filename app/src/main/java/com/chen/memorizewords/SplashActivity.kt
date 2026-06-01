@@ -8,9 +8,9 @@ import androidx.lifecycle.lifecycleScope
 import com.chen.memorizewords.core.navigation.AuthEntry
 import com.chen.memorizewords.core.navigation.HomeEntry
 import com.chen.memorizewords.core.navigation.OnboardingEntry
-import com.chen.memorizewords.data.repository.sync.NetworkMonitor
-import com.chen.memorizewords.domain.orchestrator.startup.StartupLaunchDestination
-import com.chen.memorizewords.domain.orchestrator.startup.StartupOrchestrator
+import com.chen.memorizewords.domain.account.orchestrator.startup.StartupLaunchDestination
+import com.chen.memorizewords.domain.account.orchestrator.startup.StartupOrchestrator
+import com.chen.memorizewords.startup.NetworkMonitor
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.delay

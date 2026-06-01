@@ -1,10 +1,10 @@
 package com.chen.memorizewords.feature.home.ui.sync
 
-import com.chen.memorizewords.domain.model.sync.PostLoginBootstrapState
-import com.chen.memorizewords.domain.model.sync.SyncBannerState
-import com.chen.memorizewords.domain.model.sync.SyncPendingRecord
-import com.chen.memorizewords.domain.repository.sync.SyncRepository
-import com.chen.memorizewords.domain.service.sync.SyncFacade
+import com.chen.memorizewords.domain.sync.model.PostLoginBootstrapState
+import com.chen.memorizewords.domain.sync.model.SyncBannerState
+import com.chen.memorizewords.domain.sync.model.SyncPendingRecord
+import com.chen.memorizewords.domain.sync.repository.SyncRepository
+import com.chen.memorizewords.domain.sync.service.SyncFacade
 import com.chen.memorizewords.feature.home.MainDispatcherRule
 import com.google.gson.Gson
 import kotlinx.coroutines.ExperimentalCoroutinesApi

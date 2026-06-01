@@ -1,16 +1,15 @@
 package com.chen.memorizewords.feature.learning.ui.practice.listening.audio
 
-import com.chen.memorizewords.domain.usecase.practice.SynthesizeSpeechUseCase
-import com.chen.memorizewords.speech.api.DefaultSpeechFailureResult
-import com.chen.memorizewords.speech.api.SentenceAudioResult
-import com.chen.memorizewords.speech.api.SpeechAudioOutput
-import com.chen.memorizewords.speech.api.SpeechCapability
-import com.chen.memorizewords.speech.api.SpeechFailure
-import com.chen.memorizewords.speech.api.SpeechProviderType
-import com.chen.memorizewords.speech.api.SpeechResult
-import com.chen.memorizewords.speech.api.SpeechService
-import com.chen.memorizewords.speech.api.SpeechTask
-import com.chen.memorizewords.speech.api.WordAudioResult
+import com.chen.memorizewords.domain.practice.usecase.SynthesizeSpeechUseCase
+import com.chen.memorizewords.domain.practice.speech.DefaultSpeechFailureResult
+import com.chen.memorizewords.domain.practice.speech.PracticeSpeechSynthesizer
+import com.chen.memorizewords.domain.practice.speech.SentenceAudioResult
+import com.chen.memorizewords.domain.practice.speech.SpeechAudioOutput
+import com.chen.memorizewords.domain.practice.speech.SpeechFailure
+import com.chen.memorizewords.domain.practice.speech.SpeechProviderType
+import com.chen.memorizewords.domain.practice.speech.SpeechResult
+import com.chen.memorizewords.domain.practice.speech.SpeechTask
+import com.chen.memorizewords.domain.practice.speech.WordAudioResult
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -108,16 +107,12 @@ class ListeningSpeechControllerTest {
                 is SpeechTask.EvaluateShadowing -> error("Unexpected shadowing task")
             }
         }
-    ) : SpeechService {
+    ) : PracticeSpeechSynthesizer {
         val tasks = mutableListOf<SpeechTask>()
 
-        override suspend fun execute(task: SpeechTask): SpeechResult {
+        override suspend fun synthesize(task: SpeechTask): SpeechResult {
             tasks += task
             return resultFactory(task)
-        }
-
-        override fun getCapabilities(provider: SpeechProviderType?): Set<SpeechCapability> {
-            return setOf(SpeechCapability.WORD_TTS, SpeechCapability.SENTENCE_TTS)
         }
     }
 }

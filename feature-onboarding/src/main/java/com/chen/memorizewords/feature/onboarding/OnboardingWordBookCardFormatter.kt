@@ -1,6 +1,6 @@
 package com.chen.memorizewords.feature.onboarding
 
-import com.chen.memorizewords.domain.model.wordbook.WordBook
+import com.chen.memorizewords.domain.wordbook.model.WordBook
 import java.util.Locale
 import kotlin.math.absoluteValue
 

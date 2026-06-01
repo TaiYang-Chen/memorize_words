@@ -1,20 +1,11 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.hilt)
-    alias(libs.plugins.ksp)
+    id("memorize.android-application")
 }
 
 android {
     namespace = "com.chen.memorizewords"
-    compileSdk {
-        version = release(36)
-    }
-
     defaultConfig {
         applicationId = "com.chen.memorizewords"
-        minSdk = 25
-        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -37,13 +28,6 @@ android {
             )
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
     buildFeatures{
         dataBinding = true
         buildConfig = true
@@ -53,8 +37,18 @@ android {
 dependencies {
     implementation(project(":core-ui"))
     implementation(project(":core-navigation"))
-    implementation(project(":data"))
-    implementation(project(":domain"))
+    implementation(project(":data-account"))
+    implementation(project(":data-feedback"))
+    implementation(project(":data-floating"))
+    implementation(project(":data-practice"))
+    implementation(project(":data-study"))
+    implementation(project(":data-sync"))
+    implementation(project(":data-word"))
+    implementation(project(":data-wordbook"))
+    implementation(project(":domain-account"))
+    implementation(project(":domain-practice"))
+    implementation(project(":domain-sync"))
+    implementation(project(":domain-wordbook"))
     implementation(project(":speech"))
     implementation(project(":feature-feedback"))
     implementation(project(":feature-floating-review"))
@@ -72,7 +66,7 @@ dependencies {
     implementation(libs.androidx.profileinstaller)
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.material)
-
+    implementation(libs.tencent.mmkv.static)
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 

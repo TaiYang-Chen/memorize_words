@@ -7,8 +7,9 @@ import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.chen.memorizewords.core.navigation.AppLaunchEntry
+import com.chen.memorizewords.core.navigation.AppRoute
 import com.chen.memorizewords.core.navigation.OnboardingGuardDelegate
-import com.chen.memorizewords.core.navigation.WordBookEntryDestination
+import com.chen.memorizewords.core.navigation.RouteNavigator
 import com.chen.memorizewords.core.ui.activity.BaseVmDbActivity
 import com.chen.memorizewords.core.ui.vm.UiEvent
 import com.chen.memorizewords.feature.home.databinding.ModuleHomeActivityHomeBinding
@@ -16,7 +17,6 @@ import com.chen.memorizewords.feature.home.ui.home.HomeFragment
 import com.chen.memorizewords.feature.home.ui.practice.PracticeFragment
 import com.chen.memorizewords.feature.home.ui.profile.ProfileFragment
 import com.chen.memorizewords.feature.home.ui.stats.StatsFragment
-import com.chen.memorizewords.core.navigation.WordBookEntry
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -36,10 +36,10 @@ class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBindi
     lateinit var appLaunchEntry: AppLaunchEntry
 
     @Inject
-    lateinit var wordBookEntry: WordBookEntry
+    lateinit var onboardingGuardDelegate: OnboardingGuardDelegate
 
     @Inject
-    lateinit var onboardingGuardDelegate: OnboardingGuardDelegate
+    lateinit var routeNavigator: RouteNavigator
 
     private val homeTag = "home_fragment"
     private val practiceTag = "practice_fragment"
@@ -140,14 +140,7 @@ class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBindi
 
     override fun onNavigationRoute(event: UiEvent.Navigation.Route) {
         when (event.target) {
-            HomeViewModel.Route.ToWordBookUpdates -> {
-                startActivity(
-                    wordBookEntry.createWordBookIntent(
-                        context = this,
-                        deepLink = WordBookEntryDestination.myBooksDeepLink(source = "foreground")
-                    )
-                )
-            }
+            is AppRoute -> routeNavigator.navigate(event.target as AppRoute)
             else -> super.onNavigationRoute(event)
         }
     }

@@ -23,7 +23,7 @@ import com.chen.memorizewords.feature.learning.PracticeActivity
 import com.chen.memorizewords.feature.learning.R
 import com.chen.memorizewords.feature.learning.databinding.FragmentPracticeShadowingBinding
 import com.chen.memorizewords.feature.learning.ui.speech.prepareSpeechOutputAsync
-import com.chen.memorizewords.speech.api.SpeechAudioOutput
+import com.chen.memorizewords.domain.practice.speech.SpeechAudioOutput
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import kotlin.coroutines.resume

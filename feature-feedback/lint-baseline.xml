@@ -1,0 +1,1467 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.12.3" type="baseline" client="gradle" dependencies="false" name="AGP (8.12.3)" variant="all" version="8.12.3">
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_bg`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_bg`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_feedback_bg&quot;>#F7F7F5&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="3"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_primary_text`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_primary_text`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_feedback_primary_text&quot;>#0F1724&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="4"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_muted_text`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_muted_text`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_feedback_muted_text&quot;>#7A8896&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="5"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_accent`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_accent`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_feedback_accent&quot;>#F6F7C9&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="6"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_card_bg`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_card_bg`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_feedback_card_bg&quot;>#FFFFFF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="7"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_icon_bg`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_icon_bg`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_feedback_icon_bg&quot;>#FFF9D6&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="8"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_primary`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_primary`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_feedback_primary&quot;>#11507B&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="9"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_chevron`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_chevron`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_feedback_chevron&quot;>#C9D4DC&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="10"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_tab_indicator`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_tab_indicator`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_feedback_tab_indicator&quot;>#007AFF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="11"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_tab_text_selected`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_tab_text_selected`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_feedback_tab_text_selected&quot;>#111827&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="12"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_tab_text_unselected`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_tab_text_unselected`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_feedback_tab_text_unselected&quot;>#A0A8B8&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="13"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_page_bg`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_page_bg`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_feedback_about_page_bg&quot;>#FFF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="15"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_card_bg`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_card_bg`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_feedback_about_card_bg&quot;>#FBFAF7&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="16"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_pill_bg`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_pill_bg`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_feedback_about_pill_bg&quot;>#FDFCFA&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="17"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_text_primary`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_text_primary`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_feedback_about_text_primary&quot;>#1F2733&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="18"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_text_secondary`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_text_secondary`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_feedback_about_text_secondary&quot;>#55697C&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="19"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_text_muted`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_text_muted`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_feedback_about_text_muted&quot;>#9FAAB4&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="20"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_brand_icon`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_brand_icon`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_feedback_about_brand_icon&quot;>#50687A&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="21"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_stroke`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_stroke`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_feedback_about_stroke&quot;>#ECE7E1&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="22"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_divider`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_divider`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_feedback_about_divider&quot;>#F0ECE6&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="23"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_header_divider`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_header_divider`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_feedback_about_header_divider&quot;>#F1ECE6&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="24"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_version_bg`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_version_bg`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_feedback_about_version_bg&quot;>#FDFCFA&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="25"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_version_stroke`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_version_stroke`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_feedback_about_version_stroke&quot;>#DDD7D0&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="26"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_mission_badge_bg`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_mission_badge_bg`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_feedback_about_mission_badge_bg&quot;>#CAE7F7&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="27"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_mission_orb`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_mission_orb`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_feedback_about_mission_orb&quot;>#F8F5F0&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="28"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_chevron`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_chevron`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_feedback_about_chevron&quot;>#C8C3BD&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="29"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_padding_small`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_padding_small`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_padding_small&quot;>8dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="3"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_padding`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_padding`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_padding&quot;>16dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="4"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_padding_large`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_padding_large`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_padding_large&quot;>24dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="5"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_avatar_size`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_avatar_size`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_avatar_size&quot;>120dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="6"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_icon_size`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_icon_size`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_icon_size&quot;>20dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="7"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_card_radius`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_card_radius`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_card_radius&quot;>16dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="8"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_header_height`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_header_height`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_header_height&quot;>56dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="10"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_header_icon_touch`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_header_icon_touch`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_header_icon_touch&quot;>40dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="11"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_horizontal_margin`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_horizontal_margin`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_horizontal_margin&quot;>20dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="12"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_content_bottom_padding`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_content_bottom_padding`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_content_bottom_padding&quot;>32dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="13"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_hero_top_margin`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_hero_top_margin`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_hero_top_margin&quot;>48dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="14"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_hero_logo_card_size`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_hero_logo_card_size`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_hero_logo_card_size&quot;>88dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="15"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_hero_logo_card_radius`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_hero_logo_card_radius`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_hero_logo_card_radius&quot;>18dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="16"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_hero_logo_size`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_hero_logo_size`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_hero_logo_size&quot;>42dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="17"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_app_name_top_margin`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_app_name_top_margin`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_app_name_top_margin&quot;>30dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="18"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_app_name_size`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_app_name_size`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_app_name_size&quot;>24sp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="19"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_version_top_margin`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_version_top_margin`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_version_top_margin&quot;>10dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="20"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_version_size`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_version_size`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_version_size&quot;>13sp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="21"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_version_horizontal_padding`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_version_horizontal_padding`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_version_horizontal_padding&quot;>16dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="22"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_version_vertical_padding`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_version_vertical_padding`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_version_vertical_padding&quot;>6dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="23"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_card_radius`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_card_radius`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_card_radius&quot;>20dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="24"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_card_elevation`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_card_elevation`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_card_elevation&quot;>3dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="25"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_card_stroke_width`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_card_stroke_width`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_card_stroke_width&quot;>1dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="26"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_mission_top_margin`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_mission_top_margin`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_mission_top_margin&quot;>40dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="27"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_mission_card_padding`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_mission_card_padding`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_mission_card_padding&quot;>20dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="28"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_icon_circle_size`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_icon_circle_size`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_icon_circle_size&quot;>52dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="29"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_icon_circle_inner`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_icon_circle_inner`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_icon_circle_inner&quot;>22dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="30"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_mission_orb_size`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_mission_orb_size`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_mission_orb_size&quot;>92dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="31"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_body_size`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_body_size`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_body_size&quot;>14sp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="32"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_body_line_spacing`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_body_line_spacing`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_body_line_spacing&quot;>6dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="33"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_menu_top_margin`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_menu_top_margin`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_menu_top_margin&quot;>28dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="34"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_menu_row_height`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_menu_row_height`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_menu_row_height&quot;>64dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="35"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_menu_row_padding_horizontal`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_menu_row_padding_horizontal`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_menu_row_padding_horizontal&quot;>20dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="36"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_menu_icon_size`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_menu_icon_size`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_menu_icon_size&quot;>24dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="37"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_menu_chevron_size`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_menu_chevron_size`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_menu_chevron_size&quot;>20dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="38"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_menu_label_size`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_menu_label_size`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_menu_label_size&quot;>15sp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="39"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_status_size`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_status_size`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_status_size&quot;>14sp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="40"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_footer_top_margin`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_footer_top_margin`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_footer_top_margin&quot;>64dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="41"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_footer_size`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_footer_size`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_feedback_about_footer_size&quot;>12sp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="42"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_activity_feedback`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_activity_feedback`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_feedback_activity_feedback.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_bg_about_mission_badge`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_bg_about_mission_badge`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_feedback_bg_about_mission_badge.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_bg_about_mission_orb`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_bg_about_mission_orb`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_feedback_bg_about_mission_orb.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_bg_about_version_badge`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_bg_about_version_badge`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_feedback_bg_about_version_badge.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_feedback_nav`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_feedback_nav`&apos; ?"
+        errorLine1="&lt;navigation xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~~~~~">
+        <location
+            file="src/main/res/navigation/module_feedback_feedback_nav.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_fragment_about`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_fragment_about`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_feedback_fragment_about.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_fragment_feedback`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_fragment_feedback`&apos; ?"
+        errorLine1="&lt;layout xmlns:tools=&quot;http://schemas.android.com/tools&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_feedback_fragment_feedback.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_ic_about_chevron`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_ic_about_chevron`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_feedback_ic_about_chevron.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_ic_about_feedback`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_ic_about_feedback`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_feedback_ic_about_feedback.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_ic_about_globe`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_ic_about_globe`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_feedback_ic_about_globe.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_ic_about_lightbulb`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_ic_about_lightbulb`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_feedback_ic_about_lightbulb.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_ic_about_logo`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_ic_about_logo`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_feedback_ic_about_logo.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_ic_about_refresh`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_ic_about_refresh`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_feedback_ic_about_refresh.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_ic_add_image`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_ic_add_image`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_feedback_ic_add_image.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_ic_back`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_ic_back`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_feedback_ic_back.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_ic_chevron`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_ic_chevron`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_feedback_ic_chevron.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_ic_close_circle`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_ic_close_circle`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_feedback_ic_close_circle.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_ic_description`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_ic_description`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_feedback_ic_description.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_ic_lightbulb`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_ic_lightbulb`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_feedback_ic_lightbulb.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_ic_lock`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_ic_lock`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_feedback_ic_lock.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_ic_mail`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_ic_mail`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_feedback_ic_mail.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_ic_star`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_ic_star`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_feedback_ic_star.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_icon_circle_bg`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_icon_circle_bg`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:shape=&quot;oval&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_feedback_icon_circle_bg.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_item_feedback_image`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_item_feedback_image`&apos; ?"
+        errorLine1="&lt;FrameLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_feedback_item_feedback_image.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_item_tab_text`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_item_tab_text`&apos; ?"
+        errorLine1="&lt;TextView xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_feedback_item_tab_text.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_mobile_arrow_down`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_mobile_arrow_down`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_feedback_mobile_arrow_down.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_version_badge`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_version_badge`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:shape=&quot;rectangle&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_feedback_version_badge.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_app_name`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_app_name`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_app_name&quot;>小白背单词&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="3"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_about_title&quot;>关于我们&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="4"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_mission_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_mission_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_mission_title&quot;>我们的使命&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="5"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_mission_text`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_mission_text`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_mission_text&quot;>通过简洁设计与智能技术，为用户提供稳定、轻量、专注的背单词体验。&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="6"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_check_update`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_check_update`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_check_update&quot;>检查更新&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="7"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_rate_us`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_rate_us`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_rate_us&quot;>去评分&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="8"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_user_feedback`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_user_feedback`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_user_feedback&quot;>用户反馈&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="9"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_official_website`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_official_website`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_official_website&quot;>官方网站&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="10"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_terms`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_terms`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_terms&quot;>服务条款&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="11"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_privacy`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_privacy`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_privacy&quot;>隐私政策&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="12"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_version_label`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_version_label`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_version_label&quot;>版本 %1$s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="13"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_company_copyright`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_company_copyright`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_company_copyright&quot;>© 2026 小白背单词 版权所有&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="14"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_update_unavailable`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_update_unavailable`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_update_unavailable&quot;>暂未开放&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="15"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_latest_version`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_latest_version`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_latest_version&quot;>最新版&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="16"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_about_feature_pending`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_feature_pending`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_about_feature_pending&quot;>%1$s暂未开放&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="17"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_app_icon_desc`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_app_icon_desc`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_app_icon_desc&quot;>应用图标&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="18"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_back`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_back`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_back&quot;>返回&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="19"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_avatar_text`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_avatar_text`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_avatar_text&quot;>小白&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="20"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_feedback_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_feedback_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_feedback_title&quot;>意见反馈&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="21"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_feedback_description`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_feedback_description`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_feedback_description&quot;>我们要如何改进？期待您的宝贵建议。&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="22"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_feedback_hint`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_feedback_hint`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_feedback_hint&quot;>请输入您的反馈意见…&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="23"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_add_image`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_add_image`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_add_image&quot;>添加截图&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="24"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_char_count`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_char_count`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_char_count&quot;>%1$d/200&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="25"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_contact_hint`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_contact_hint`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_contact_hint&quot;>联系方式（邮箱、手机号）&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="26"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_feedback_send`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_feedback_send`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_feedback_send&quot;>发送&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="27"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_feedback_sending`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_feedback_sending`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_feedback_sending&quot;>发送中…&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="28"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_feedback_max_images`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_feedback_max_images`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_feedback_max_images&quot;>最多支持上传 3 张图片&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="29"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_feedback_content_required`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_feedback_content_required`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_feedback_content_required&quot;>请输入反馈内容&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="30"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_feedback_submit_success`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_feedback_submit_success`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_feedback_submit_success&quot;>反馈提交成功&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="31"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_feedback_submit_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_feedback_submit_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_feedback_submit_failed&quot;>反馈提交失败&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="32"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_feedback_read_image_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_feedback_read_image_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_feedback_read_image_failed&quot;>读取所选图片失败&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="33"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_feedback_single_image_too_large`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_feedback_single_image_too_large`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_feedback_single_image_too_large&quot;>单张图片过大，请选择 5MB 以内的图片&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="34"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_feedback_total_images_too_large`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_feedback_total_images_too_large`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_feedback_total_images_too_large&quot;>图片总体积超出限制，请重新选择&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="35"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_image_preview`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_image_preview`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_image_preview&quot;>反馈图片预览&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="36"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_delete_image`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_delete_image`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_delete_image&quot;>删除图片&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="37"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_nav_feedback_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_nav_feedback_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_nav_feedback_title&quot;>意见反馈&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="38"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_feedback_nav_about_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_nav_about_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_feedback_nav_about_title&quot;>关于我们&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="39"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="DataBindingWithoutKapt"
+        message="If you plan to use data binding in a Kotlin project, you should apply the kotlin-kapt plugin."
+        errorLine1="        dataBinding = true"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle.kts"
+            line="31"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (4217 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector."
+        errorLine1="        android:pathData=&quot;M872.4,493.4c-45.8,55.8 -152.2,45.4 -191.2,2.6 -59.2,-65.1 -153,-56.3 -190.6,10.7 11.2,-36 37.9,-70.2 74.2,-94a208.6,208.6 0,0 1,164.9 -27.9l1.9,-7.6a217,217 0,0 0,-171.1 29c-35.3,23.2 -61.2,54.8 -74.2,89.2 50.9,-311.5 462.8,-297.7 534.5,-13.2 -48.9,-48.4 -107.4,-38.6 -148.4,11.3zM810,369.2l-30.9,12.1 -24.3,-22.4 2.1,32.9 -28.9,16.2 32.1,8.2 6.5,32.5 17.8,-27.9 32.9,3.8 -21.1,-25.5 13.9,-29.9zM479.7,517.8c1.5,-7.6 3.7,-15.1 6.5,-22.5 -1.3,8 -2.6,16.1 -3.4,24.5 -1.1,-0.6 -2.1,-1.4 -3.2,-2zM468,510.5c3.8,2.7 7.7,5 11.7,7.2l-0.7,3.1a124.8,124.8 0,0 1,-11 -10.3zM401.5,411.3a206.7,206.7 0,0 1,24.3 -164.8l-6.7,-4.2a214.7,214.7 0,0 0,-25.2 171.1c11.3,41.2 33.9,75.8 63.2,98.8C174,368.3 314.5,-19.3 608.7,0.8c-61.2,31.4 -70,89.9 -35.1,144.1 39.1,60.7 -3.6,158.3 -56.5,182 -80.3,36 -101.1,127.2 -49.2,183.7 -30.7,-21.7 -55,-57.4 -66.4,-99.1zM441,222.8l6.4,32.4 17.9,-27.8 32.8,3.8 -21.1,-25.5 13.9,-30 -30.8,12.1 -24.3,-22.4 2,32.9 -28.8,16.1 32,8.3zM475.8,524.5a149.8,149.8 0,0 1,-18.6 -12.3c6.8,3.5 14,6.8 21.2,10l-2.7,2.3zM465.5,533.1c3.6,-2.8 7,-5.6 10.2,-8.6 0.9,0.5 1.7,1.3 2.6,1.7a118.2,118.2 0,0 1,-12.9 6.9zM350,565.6a208.4,208.4 0,0 1,-149.9 -73.9l-6,5a216.3,216.3 0,0 0,155.5 76.8c42.2,1.9 81.7,-8.4 112.6,-28.5 -224.9,222.1 -550,-30.3 -440.1,-302.5 11,67.7 64.1,94.2 126.6,77.8 70,-18.2 150,52.4 156.3,109.9 9.6,87.4 90.6,135.3 160.6,103 -30.3,22.5 -72.1,34.6 -115.6,32.5zM207.9,418.7l-30.8,12 -24.3,-22.4 2,33 -28.9,16.1 32,8.2 6.5,32.4 17.9,-27.8 32.8,3.8 -21.1,-25.4 14,-30zM480.8,530.4c-5.8,5.3 -12,10.2 -18.7,14.7 5.8,-5.8 11.6,-11.5 17.3,-17.9 0.5,1 0.9,2.2 1.4,3.3zM487.2,542.5a115.6,115.6 0,0 0,-6.4 -12.2c1,-0.6 2.2,-1.2 3.2,-1.9 1.5,4.7 2.4,9.4 3.2,14.1zM481.2,662.3a207.8,207.8 0,0 1,-116.8 119.2l2.9,7.2a215.8,215.8 0,0 0,121.2 -123.7c15,-39.4 17.3,-80.1 7.6,-115.5 142.5,281.8 -198.8,511.9 -424.6,323.6 68,10.4 109.6,-31.7 113.3,-96 4.1,-71.9 96.3,-125.9 153.2,-114 86.4,17.9 157.2,-44.2 147.8,-120.7 12.3,35.7 10.9,79.2 -4.5,119.9zM352.1,761.9l-30.9,12 -24.3,-22.4 2,33 -28.9,16.1 32,8.3 6.5,32.4 17.7,-27.8 33,3.8 -21.1,-25.4 13.9,-30zM487.9,527.4c3.2,7.1 6.1,14.5 8.2,22.1a379.8,379.8 0,0 0,-11.7 -21.8c1.2,-0.2 2.4,-0.3 3.5,-0.4zM501.2,528.7a64,64 0,0 0,-13.3 2.2c-0.4,-2 -0.6,-4.4 -1.1,-6.4a61.6,61.6 0,0 1,14.4 4.3zM691.6,715.3l7.9,-0.4a214.8,214.8 0,0 0,-80.5 -153.2c-33.1,-26.4 -71.2,-41.2 -108.2,-42.9 313.1,-48.1 427.3,346.6 177.8,502.4 31,-61.2 3.8,-113.7 -56.5,-137 -67.5,-26.1 -90.4,-130.2 -61.6,-180.5 43.8,-76.2 6.5,-162.4 -69.2,-177.3 37.8,-0.6 78.8,14.1 112.8,41.3a207.3,207.3 0,0 1,77.6 147.5zM674.3,778.2l6.4,32.4 17.9,-27.8 32.9,3.8 -21.1,-25.4 13.9,-30 -30.8,12 -24.3,-22.4 2,33 -28.8,16.1 32,8.2zM487.4,520.1c7.7,-1.3 15.6,-1.7 23.5,-1.2 -8,1.7 -16.1,3.6 -24.3,6.2 0.2,-1.7 0.6,-3.4 0.8,-5.1zM483.5,521.9c1.9,-0.3 3.8,-0.3 5.8,-0.5 -0.4,1.1 -1.1,2 -1.5,3.1a46,46 0,0 1,-4.2 -2.6zM485.2,526.5l-3.5,-6.2c2.1,-0.1 4.3,-0.1 6.4,-0.2 -0.8,2.2 -2.2,4.2 -2.8,6.4zM484.6,526.3l0.8,0.8h-0.1l-0.8,-0.8zM485.4,526.6l-1.1,0.5 1.2,-0.6 -0.1,0.1zM486,524l-4.2,6.4 -2.2,-1c2.1,-1.9 4.3,-3.5 6.4,-5.4zM488.1,530.4h-1.4l-4,-6.4c2.4,2.1 3.6,4.2 5.4,6.4zM485.9,526.8l-1.5,-0.2h0.1l1.4,0.2zM488,520.4l0.6,0.2 -6.4,6.1c1.7,-2.2 4,-4.2 5.8,-6.4zM488,522.2c0.3,1.2 0.4,2.5 0.8,3.7 -2.2,1 -4.2,1.5 -6.4,2.7l5.6,-6.4zM489.9,524.8c-0.1,0.9 -0.4,1.8 -0.6,2.7l-1,-2.4 1.7,-0.3zM491,529.4c-1.2,0 -2.2,-0.2 -3.5,-0.3 0.3,-1.7 0.8,-3.3 1.2,-5 0.8,1.8 1.5,3.6 2.3,5.3zM488.9,528.9l-6.3,-3.7c2.2,0.4 4.3,1.6 6.4,2.4l-0.1,1.3zM488.7,529.2l-1.9,1.3c-1.6,-2.1 -2.8,-4.2 -4.5,-6.4l6.4,5.1zM487.9,530.8l-2.1,0.3 1.5,-1.3 0.6,1.1zM484.2,533a70.3,70.3 0,0 1,-0.8 -3.8c1.9,-0.3 3.8,-0.2 5.8,-0.4 -1.7,1.4 -3.3,2.8 -4.9,4.3zM482.1,530.7c-0.4,-0.6 -0.6,-1.5 -0.9,-2.1l1.8,1.1 -0.9,1zM478.9,528.4l3.2,-1.9c0.8,1.7 1.3,3.5 2.1,5.1 -1.8,-1.2 -3.5,-2.3 -5.4,-3.2zM478.9,529.9l6.4,-5.8c-2,2.4 -4.2,4.3 -6.3,6.4l-0.1,-0.6zM478.4,526.3l0.4,-4c2,2.1 3.9,4.4 6,6.4l-6.4,-2.4zM480.5,525.2l1.7,-1.4 -0.4,2 -1.2,-0.6zM481.1,520.9c1,0.8 1.9,1.8 3.1,2.6 -1.5,1.3 -3.2,2.6 -4.7,3.8 0.4,-2.2 1.2,-4.2 1.6,-6.4zM479.8,521.2l6.1,6.4c-2.4,-1.9 -4.1,-4.2 -6.4,-6.1 0.1,0 0.2,-0.1 0.3,-0.3zM484.6,521.7l2.6,1.5c-0.9,0.2 -1.9,0.2 -2.8,0.3 0,-0.6 0.1,-1.2 0.2,-1.8zM490.6,506.7c-1.3,4.4 -2.4,8.6 -3.2,13l-3.2,0.3c1.9,-4.7 4,-9 6.4,-13.2z&quot; />"
+        errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/drawable/module_feedback_ic_about_logo.xml"
+            line="8"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageView"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_feedback_fragment_feedback.xml"
+            line="29"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="                android:clickable=&quot;true&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_feedback_fragment_feedback.xml"
+            line="30"
+            column="17"/>
+    </issue>
+
+</issues>

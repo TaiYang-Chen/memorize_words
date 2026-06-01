@@ -1,41 +1,27 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt)
+    id("memorize.android-hilt-library")
 }
 
 android {
     namespace = "com.chen.memorizewords.feature.feedback"
-    compileSdk = 36
-
-    defaultConfig {
-        minSdk = 25
-    }
-
     resourcePrefix("feature_feedback_")
     buildTypes {
         release {
             isMinifyEnabled = false
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
-
     buildFeatures{
         dataBinding = true
+    }
+    lint {
+        baseline = file("lint-baseline.xml")
     }
 }
 
 dependencies {
     implementation(project(":core-ui"))
     implementation(project(":core-navigation"))
-    implementation(project(":domain"))
+    implementation(project(":domain-feedback"))
 
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)

@@ -3,7 +3,7 @@ package com.chen.memorizewords.startup
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
-import com.chen.memorizewords.domain.service.sync.SyncFacade
+import com.chen.memorizewords.domain.sync.service.SyncFacade
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineScope

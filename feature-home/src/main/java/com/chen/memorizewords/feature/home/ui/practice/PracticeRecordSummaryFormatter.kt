@@ -1,8 +1,8 @@
 package com.chen.memorizewords.feature.home.ui.practice
 
 import com.chen.memorizewords.core.common.resource.ResourceProvider
-import com.chen.memorizewords.domain.model.practice.PracticeMode
-import com.chen.memorizewords.domain.model.practice.PracticeSessionRecord
+import com.chen.memorizewords.domain.practice.PracticeMode
+import com.chen.memorizewords.domain.practice.PracticeSessionRecord
 import com.chen.memorizewords.feature.home.R
 
 internal data class PracticeCompletionMetrics(

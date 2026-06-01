@@ -7,7 +7,7 @@ import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import com.chen.memorizewords.core.ui.bottomsheetdialogfragment.BaseBottomSheetDialogFragment
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
-import com.chen.memorizewords.domain.model.learning.LearningTestMode
+import com.chen.memorizewords.domain.wordbook.model.learning.LearningTestMode
 import com.chen.memorizewords.feature.wordbook.databinding.FeatureWordbookDialogStudyModePickerBinding
 import com.chen.memorizewords.feature.wordbook.databinding.FeatureWordbookItemStudyModeCardBinding
 import com.chen.memorizewords.feature.wordbook.plan.StudyPlanSettingFragment.Companion.KEY_SELECTED_STUDY_MODE

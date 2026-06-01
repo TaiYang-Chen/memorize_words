@@ -4,20 +4,28 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
-import com.chen.memorizewords.domain.model.study.progress.word.WordLearningState
-import com.chen.memorizewords.domain.model.words.word.PronunciationType
-import com.chen.memorizewords.domain.model.words.word.Word
-import com.chen.memorizewords.domain.model.words.word.WordDefinitions
-import com.chen.memorizewords.domain.model.words.word.WordExample
+import com.chen.memorizewords.domain.study.model.progress.word.WordLearningState
+import com.chen.memorizewords.domain.word.model.word.PronunciationType
+import com.chen.memorizewords.domain.word.model.word.Word
+import com.chen.memorizewords.domain.word.model.word.WordDefinitions
+import com.chen.memorizewords.domain.word.model.word.WordExample
+import com.chen.memorizewords.domain.practice.PracticeKind
+import com.chen.memorizewords.domain.practice.PracticeAnswerRecord
+import com.chen.memorizewords.domain.practice.PracticeAnswerStatus
+import com.chen.memorizewords.domain.practice.PracticeReport
+import com.chen.memorizewords.domain.practice.PracticeReportRepository
+import com.chen.memorizewords.domain.practice.PracticeQueueType
+import com.chen.memorizewords.domain.practice.PracticeReviewQueuePolicy
+import com.chen.memorizewords.domain.practice.PracticeSessionReportTracker
+import com.chen.memorizewords.domain.practice.PracticeSessionReportRecord
 import com.chen.memorizewords.domain.practice.PracticeWordProvider
-import com.chen.memorizewords.domain.query.word.WordReadFacade
-import com.chen.memorizewords.domain.repository.practice.ListeningPracticePreferencesRepository
-import com.chen.memorizewords.domain.usecase.practice.SynthesizeSpeechUseCase
-import com.chen.memorizewords.domain.usecase.word.study.GetWordLearningStatesByBookIdUseCase
+import com.chen.memorizewords.domain.word.query.WordReadFacade
+import com.chen.memorizewords.domain.practice.repository.ListeningPracticePreferencesRepository
+import com.chen.memorizewords.domain.practice.usecase.SynthesizeSpeechUseCase
+import com.chen.memorizewords.domain.study.usecase.word.study.GetWordLearningStatesByBookIdUseCase
 import com.chen.memorizewords.feature.learning.R
 import com.chen.memorizewords.feature.learning.ui.practice.listening.LISTENING_CORRECT_FEEDBACK_DURATION_MS
 import com.chen.memorizewords.feature.learning.ui.practice.listening.LISTENING_MEANING_SELECTION_TRANSITION_DELAY_MS
-import com.chen.memorizewords.feature.learning.ui.practice.listening.LISTENING_REVIEW_TARGET
 import com.chen.memorizewords.feature.learning.ui.practice.listening.LISTENING_SPEECH_LOCALE_US
 import com.chen.memorizewords.feature.learning.ui.practice.listening.LISTENING_WRONG_MEANING_SELECTION_TRANSITION_DELAY_MS
 import com.chen.memorizewords.feature.learning.ui.practice.listening.LISTENING_WRONG_SPELLING_FEEDBACK_DURATION_MS
@@ -26,17 +34,14 @@ import com.chen.memorizewords.feature.learning.ui.practice.listening.audio.Liste
 import com.chen.memorizewords.feature.learning.ui.practice.listening.audio.ListeningWordSpeechKey
 import com.chen.memorizewords.feature.learning.ui.practice.listening.ListeningAction
 import com.chen.memorizewords.feature.learning.ui.practice.listening.ListeningSessionConfig
+import com.chen.memorizewords.feature.learning.ui.practice.listening.ListeningScreenState
 import com.chen.memorizewords.feature.learning.ui.practice.listening.ListeningSessionState
-import com.chen.memorizewords.feature.learning.ui.practice.listening.engine.ListeningSessionEngine
-import com.chen.memorizewords.feature.learning.ui.practice.listening.policy.ListeningQueueType
-import com.chen.memorizewords.feature.learning.ui.practice.listening.policy.ReviewQueuePolicy
 import com.chen.memorizewords.feature.learning.ui.practice.listening.presentation.ListeningUiMapper
 import com.chen.memorizewords.feature.learning.ui.practice.listening.strategy.MeaningListeningQuestionStrategy
 import com.chen.memorizewords.feature.learning.ui.practice.listening.strategy.SpellingListeningQuestionStrategy
-import com.chen.memorizewords.speech.api.SpeechAudioSuccess
+import com.chen.memorizewords.domain.practice.speech.SpeechAudioSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlin.math.roundToInt
 import kotlin.random.Random
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
@@ -65,12 +70,6 @@ enum class ListeningPracticeMode(
 enum class ListeningQuestionType {
     MEANING,
     SPELLING
-}
-
-private enum class ListeningScreen {
-    PRACTICE,
-    STUDY,
-    REPORT
 }
 
 enum class ListeningFeedbackTone {
@@ -173,7 +172,8 @@ class ListeningPracticeViewModel @Inject constructor(
     private val synthesizeSpeech: SynthesizeSpeechUseCase,
     private val wordProvider: PracticeWordProvider,
     private val getWordLearningStatesByBookId: GetWordLearningStatesByBookIdUseCase,
-    private val listeningPracticePreferencesRepository: ListeningPracticePreferencesRepository
+    private val listeningPracticePreferencesRepository: ListeningPracticePreferencesRepository,
+    private val practiceReportRepository: PracticeReportRepository
 ) : BaseViewModel() {
 
     data class ListeningUiState(
@@ -248,7 +248,7 @@ class ListeningPracticeViewModel @Inject constructor(
 
     private data class ActiveCard(
         val wordId: Long,
-        val queueType: ListeningQueueType,
+        val queueType: PracticeQueueType,
         val questionType: ListeningQuestionType
     )
 
@@ -259,25 +259,22 @@ class ListeningPracticeViewModel @Inject constructor(
     val sessionWordIds: StateFlow<List<Long>> = _sessionWordIds.asStateFlow()
 
     private val runtimes = linkedMapOf<Long, WordRuntime>()
-    private val reviewQueuePolicy = ReviewQueuePolicy()
+    private val reviewQueuePolicy = PracticeReviewQueuePolicy()
     private val meaningStrategy = MeaningListeningQuestionStrategy()
     private val spellingStrategy = SpellingListeningQuestionStrategy()
-    private val sessionEngine = ListeningSessionEngine()
+    private val reportTracker = PracticeSessionReportTracker()
     private val uiMapper = ListeningUiMapper(resourceProvider)
     private val speechController = ListeningSpeechController(synthesizeSpeech)
 
     private var selectedWordIds: LongArray? = null
     private var selectedRandomCount: Int = 20
     private var loadKey: String? = null
+    private var engineSessionId: String = ""
     private var sessionState: ListeningSessionState = ListeningSessionState()
     private var activeCard: ActiveCard? = null
-    private var currentScreen: ListeningScreen = ListeningScreen.PRACTICE
     private var currentSpeechCacheKey: ListeningWordSpeechKey? = null
     private var speechRequestToken: Int = 0
     private var autoPlayRequestId: Int = 0
-    private var correctAttemptCount: Int = 0
-    private var gradedAttemptCount: Int = 0
-    private var skippedCount: Int = 0
     private var autoAdvanceJob: Job? = null
     private var wrongMeaningShakeRequestId: Int = 0
     private var wrongSpellingShakeRequestId: Int = 0
@@ -297,10 +294,7 @@ class ListeningPracticeViewModel @Inject constructor(
     fun onModeChanged(mode: ListeningPracticeMode) {
         viewModelScope.launch {
             listeningPracticePreferencesRepository.saveLastListeningPracticeModeName(mode.name)
-            sessionState = sessionEngine.reduce(
-                state = sessionState,
-                action = ListeningAction.ChangeMode(mode)
-            ).state
+            dispatchSession(ListeningAction.ChangeMode(mode))
             startSession(mode)
         }
     }
@@ -338,10 +332,8 @@ class ListeningPracticeViewModel @Inject constructor(
         )
         val newLoadKey = config.key
         if (loadKey == newLoadKey && _uiState.value.hasStarted) return
-        sessionState = sessionEngine.reduce(
-            state = sessionState,
-            action = ListeningAction.StartSession(config)
-        ).state
+        dispatchSession(ListeningAction.StartSession(config))
+        engineSessionId = "listening:${System.currentTimeMillis()}:$newLoadKey"
         loadKey = newLoadKey
         autoAdvanceJob?.cancel()
         viewModelScope.launch {
@@ -383,12 +375,10 @@ class ListeningPracticeViewModel @Inject constructor(
             speechController.clear()
             activeCard = null
             currentSpeechCacheKey = null
-            correctAttemptCount = 0
-            gradedAttemptCount = 0
-            skippedCount = 0
             autoPlayRequestId = 0
             nextSpellingLetterId = 1L
             spellingShuffleSeedCounter = 0L
+            reportTracker.clear()
 
             val runtimeList = buildRuntimeList(orderedWords, statesByWordId)
             runtimeList.forEach { runtime ->
@@ -410,16 +400,13 @@ class ListeningPracticeViewModel @Inject constructor(
     fun onMeaningOptionSelected(index: Int) {
         val state = _uiState.value
         val card = activeCard ?: return
-        if (currentScreen != ListeningScreen.PRACTICE) return
+        if (currentScreen != ListeningScreenState.PRACTICE) return
         if (card.questionType != ListeningQuestionType.MEANING) return
         if (state.isMeaningTransitionPending) return
         if (state.selectedMeaningIndex != null) return
         val runtime = runtimes[card.wordId] ?: return
         runtime.meaningOptions.getOrNull(index) ?: return
-        sessionState = sessionEngine.reduce(
-            state = sessionState,
-            action = ListeningAction.SelectMeaning(index)
-        ).state
+        dispatchSession(ListeningAction.SelectMeaning(index))
         if (meaningStrategy.isCorrect(runtime.meaningOptions, index)) {
             handleCorrectAnswer(
                 runtime = runtime,
@@ -434,7 +421,7 @@ class ListeningPracticeViewModel @Inject constructor(
     }
 
     fun onSpellingLetterSelected(letterId: Long) {
-        if (currentScreen != ListeningScreen.PRACTICE) return
+        if (currentScreen != ListeningScreenState.PRACTICE) return
         if (activeCard?.questionType != ListeningQuestionType.SPELLING) return
         val current = _uiState.value
         val change = spellingStrategy.selectLetter(
@@ -446,7 +433,7 @@ class ListeningPracticeViewModel @Inject constructor(
     }
 
     fun onSpellingDeleteLast() {
-        if (currentScreen != ListeningScreen.PRACTICE) return
+        if (currentScreen != ListeningScreenState.PRACTICE) return
         if (activeCard?.questionType != ListeningQuestionType.SPELLING) return
         val current = _uiState.value
         val change = spellingStrategy.deleteLast(
@@ -459,7 +446,7 @@ class ListeningPracticeViewModel @Inject constructor(
     fun submitSpellingAnswer() {
         val card = activeCard ?: return
         if (card.questionType != ListeningQuestionType.SPELLING) return
-        if (currentScreen != ListeningScreen.PRACTICE) return
+        if (currentScreen != ListeningScreenState.PRACTICE) return
         val runtime = runtimes[card.wordId] ?: return
         val input = _uiState.value.spellingInput
         if (input.isBlank()) return
@@ -473,19 +460,22 @@ class ListeningPracticeViewModel @Inject constructor(
     fun onRevealAnswer() {
         val card = activeCard ?: return
         val runtime = runtimes[card.wordId] ?: return
-        if (currentScreen != ListeningScreen.PRACTICE) return
+        if (currentScreen != ListeningScreenState.PRACTICE) return
         if (_uiState.value.isMeaningTransitionPending) return
         handleWrongAnswer(runtime, card, viewedAnswer = true)
     }
 
     fun onSkipQuestion() {
-        val runtime = activeCard?.let { runtimes[it.wordId] } ?: return
-        if (currentScreen != ListeningScreen.PRACTICE) return
+        val card = activeCard ?: return
+        val runtime = runtimes[card.wordId] ?: return
+        if (currentScreen != ListeningScreenState.PRACTICE) return
         if (_uiState.value.isMeaningTransitionPending) return
-        skippedCount += 1
-        runtime.reviewRequired = true
-        runtime.enteredReview = true
-        enqueueForReview(runtime.word.id)
+        recordAnswer(
+            runtime = runtime,
+            card = card,
+            status = PracticeAnswerStatus.SKIPPED
+        )
+        applyReviewOutcome(runtime, shouldPenalize = false)
         moveToNextQuestion(
             feedbackMessage = resourceProvider.getString(R.string.practice_listening_feedback_skipped),
             feedbackTone = ListeningFeedbackTone.INFO
@@ -493,12 +483,12 @@ class ListeningPracticeViewModel @Inject constructor(
     }
 
     fun onContinueAfterStudy() {
-        if (currentScreen != ListeningScreen.STUDY) return
+        if (currentScreen != ListeningScreenState.STUDY) return
         moveToNextQuestion()
     }
 
     fun onStudyPhoneticToggle() {
-        if (currentScreen != ListeningScreen.STUDY) return
+        if (currentScreen != ListeningScreenState.STUDY) return
         val card = activeCard ?: return
         val runtime = runtimes[card.wordId] ?: return
         val current = _uiState.value
@@ -524,9 +514,9 @@ class ListeningPracticeViewModel @Inject constructor(
 
     suspend fun ensureCurrentSpeech(): SpeechAudioSuccess? {
         val wordId = when (currentScreen) {
-            ListeningScreen.PRACTICE -> activeCard?.wordId
-            ListeningScreen.STUDY -> activeCard?.wordId
-            ListeningScreen.REPORT -> null
+            ListeningScreenState.PRACTICE -> activeCard?.wordId
+            ListeningScreenState.STUDY -> activeCard?.wordId
+            ListeningScreenState.REPORT -> null
         } ?: return null
         val locale = resolveCurrentSpeechLocale()
         val cacheKey = ListeningWordSpeechKey(wordId, locale)
@@ -551,7 +541,7 @@ class ListeningPracticeViewModel @Inject constructor(
     }
 
     suspend fun ensureStudyExampleSpeech(index: Int): SpeechAudioSuccess? {
-        if (currentScreen != ListeningScreen.STUDY) return null
+        if (currentScreen != ListeningScreenState.STUDY) return null
         val wordId = activeCard?.wordId ?: return null
         val example = _uiState.value.studyExamples.getOrNull(index) ?: return null
         val cacheKey = ListeningSentenceSpeechKey(
@@ -629,15 +619,15 @@ class ListeningPracticeViewModel @Inject constructor(
             queueType = queueType,
             questionType = questionType
         )
-        sessionState = sessionState.copy(
-            activeWordId = nextWordId,
-            activeQuestionType = questionType,
-            isTransitionPending = false
-        )
-        if (queueType == ListeningQueueType.REVIEW) {
+        if (queueType == PracticeQueueType.REVIEW) {
             runtime.reviewEnqueued = false
         }
-        currentScreen = ListeningScreen.PRACTICE
+        dispatchSession(
+            ListeningAction.PresentQuestion(
+                wordId = nextWordId,
+                questionType = questionType
+            )
+        )
         renderPracticeState(runtime, questionType, feedbackMessage, feedbackTone)
     }
 
@@ -711,7 +701,7 @@ class ListeningPracticeViewModel @Inject constructor(
                 resourceProvider.getString(
                     R.string.practice_listening_review_badge,
                     runtime.consecutiveCorrect,
-                    LISTENING_REVIEW_TARGET
+                    reviewQueuePolicy.reviewTarget()
                 )
             } else {
                 resourceProvider.getString(R.string.practice_listening_new_word_badge)
@@ -772,9 +762,13 @@ class ListeningPracticeViewModel @Inject constructor(
         markMeaningTransitionPending: Boolean = false
     ) {
         autoAdvanceJob?.cancel()
-        gradedAttemptCount += 1
-        correctAttemptCount += 1
-        val masteredNow = if (card.queueType == ListeningQueueType.REVIEW || runtime.reviewRequired) {
+        recordAnswer(
+            runtime = runtime,
+            card = card,
+            status = PracticeAnswerStatus.CORRECT,
+            selectedIndex = selectedIndex
+        )
+        val masteredNow = if (card.queueType == PracticeQueueType.REVIEW || runtime.reviewRequired) {
             runtime.consecutiveCorrect += 1
             if (reviewQueuePolicy.isReviewGoalMet(runtime.consecutiveCorrect)) {
                 runtime.reviewRequired = false
@@ -818,7 +812,7 @@ class ListeningPracticeViewModel @Inject constructor(
                 resourceProvider.getString(
                     R.string.practice_listening_feedback_review_progress,
                     runtime.consecutiveCorrect,
-                    LISTENING_REVIEW_TARGET
+                    reviewQueuePolicy.reviewTarget()
                 )
             },
             feedbackTone = ListeningFeedbackTone.SUCCESS,
@@ -826,7 +820,7 @@ class ListeningPracticeViewModel @Inject constructor(
         )
         autoAdvanceJob = viewModelScope.launch {
             delay(transitionDelayMs)
-            if (activeCard != card || currentScreen != ListeningScreen.PRACTICE) {
+            if (activeCard != card || currentScreen != ListeningScreenState.PRACTICE) {
                 return@launch
             }
             moveToNextQuestion()
@@ -839,9 +833,14 @@ class ListeningPracticeViewModel @Inject constructor(
         selectedIndex: Int
     ) {
         autoAdvanceJob?.cancel()
-        applyWrongAnswerOutcome(runtime)
+        recordAnswer(
+            runtime = runtime,
+            card = card,
+            status = PracticeAnswerStatus.WRONG,
+            selectedIndex = selectedIndex
+        )
+        applyReviewOutcome(runtime)
         activeCard = card
-        currentScreen = ListeningScreen.PRACTICE
         currentSpeechCacheKey = ListeningWordSpeechKey(runtime.word.id, resolvePracticeSpeechLocale())
         val progressText = resourceProvider.getString(
             R.string.practice_listening_progress_format,
@@ -873,7 +872,7 @@ class ListeningPracticeViewModel @Inject constructor(
         )
         autoAdvanceJob = viewModelScope.launch {
             delay(LISTENING_WRONG_MEANING_SELECTION_TRANSITION_DELAY_MS)
-            if (activeCard != card || currentScreen != ListeningScreen.PRACTICE) {
+            if (activeCard != card || currentScreen != ListeningScreenState.PRACTICE) {
                 return@launch
             }
             showStudyState(runtime, card, selectedIndex = selectedIndex)
@@ -887,10 +886,19 @@ class ListeningPracticeViewModel @Inject constructor(
         viewedAnswer: Boolean = false
     ) {
         autoAdvanceJob?.cancel()
-        applyWrongAnswerOutcome(runtime)
+        val status = if (viewedAnswer) {
+            PracticeAnswerStatus.REVEALED
+        } else {
+            PracticeAnswerStatus.WRONG
+        }
+        recordAnswer(
+            runtime = runtime,
+            card = card,
+            status = status
+        )
+        applyReviewOutcome(runtime, shouldPenalize = !viewedAnswer)
         activeCard = card
         if (card.questionType == ListeningQuestionType.SPELLING) {
-            currentScreen = ListeningScreen.PRACTICE
             val currentSlots = _uiState.value.spellingSlots
             val wrongSlots = if (viewedAnswer) {
                 spellingStrategy.resetFeedback(currentSlots)
@@ -921,7 +929,7 @@ class ListeningPracticeViewModel @Inject constructor(
             )
             autoAdvanceJob = viewModelScope.launch {
                 delay(LISTENING_WRONG_SPELLING_FEEDBACK_DURATION_MS)
-                if (activeCard != card || currentScreen != ListeningScreen.PRACTICE) {
+                if (activeCard != card || currentScreen != ListeningScreenState.PRACTICE) {
                     return@launch
                 }
                 showStudyState(runtime, card, selectedIndex = selectedIndex, viewedAnswer = viewedAnswer)
@@ -931,14 +939,18 @@ class ListeningPracticeViewModel @Inject constructor(
         showStudyState(runtime, card, selectedIndex = selectedIndex, viewedAnswer = viewedAnswer)
     }
 
-    private fun applyWrongAnswerOutcome(runtime: WordRuntime) {
-        gradedAttemptCount += 1
-        runtime.wrongCount += 1
+    private fun applyReviewOutcome(
+        runtime: WordRuntime,
+        shouldPenalize: Boolean = true
+    ) {
+        if (shouldPenalize) {
+            runtime.wrongCount += 1
+        }
         runtime.enteredReview = true
         runtime.reviewRequired = true
         runtime.mastered = false
         runtime.consecutiveCorrect = 0
-        enqueueForReview(runtime.word.id, prioritize = runtime.wrongCount >= 2)
+        enqueueForReview(runtime.word.id, prioritize = shouldPenalize && runtime.wrongCount >= 2)
     }
 
     private fun showStudyState(
@@ -947,7 +959,7 @@ class ListeningPracticeViewModel @Inject constructor(
         selectedIndex: Int? = null,
         viewedAnswer: Boolean = false
     ) {
-        currentScreen = ListeningScreen.STUDY
+        dispatchSession(ListeningAction.ShowStudy)
         val studyPhoneticUi = uiMapper.studyPronunciation(runtime.word)
         val studySpeechKey = ListeningWordSpeechKey(runtime.word.id, studyPhoneticUi.speechLocale)
         currentSpeechCacheKey = studySpeechKey
@@ -1027,29 +1039,22 @@ class ListeningPracticeViewModel @Inject constructor(
 
     private fun publishReport(emptySummary: String? = null) {
         autoAdvanceJob?.cancel()
-        currentScreen = ListeningScreen.REPORT
         currentSpeechCacheKey = null
         activeCard = null
-        sessionState = sessionState.copy(
-            activeWordId = null,
-            isTransitionPending = false
-        )
+        dispatchSession(ListeningAction.ShowReport)
         val focusedReviewWords = runtimes.values
             .filter { it.enteredReview }
             .map(::buildReportWordUi)
         val allWords = runtimes.values.map(::buildReportWordUi)
         val reviewedWords = focusedReviewWords
         val unfinishedWords = allWords
-        val accuracyPercent = if (gradedAttemptCount == 0) {
-            0
-        } else {
-            ((correctAttemptCount.toFloat() / gradedAttemptCount.toFloat()) * 100f).roundToInt()
-        }
+        val report = currentPracticeReport()
         val progressText = resourceProvider.getString(
             R.string.practice_listening_progress_format,
             runtimes.values.count { it.mastered },
             runtimes.size
         )
+        persistPracticeReport(report)
         _uiState.value = ListeningUiState(
             loading = false,
             hasStarted = true,
@@ -1106,11 +1111,11 @@ class ListeningPracticeViewModel @Inject constructor(
             report = ListeningReportUi(
                 accuracyText = resourceProvider.getString(
                     R.string.practice_listening_report_accuracy_value,
-                    accuracyPercent
+                    report.accuracyPercent
                 ),
-                accuracyPercent = accuracyPercent,
+                accuracyPercent = report.accuracyPercent,
                 reviewedCountText = reviewedWords.size.toString(),
-                skippedCountText = skippedCount.toString(),
+                skippedCountText = report.skippedCount.toString(),
                 summaryPrimaryText = emptySummary ?: resourceProvider.getString(
                     R.string.practice_listening_report_summary_completed,
                     runtimes.size
@@ -1118,8 +1123,8 @@ class ListeningPracticeViewModel @Inject constructor(
                 summarySecondaryText = if (emptySummary == null) {
                     resourceProvider.getString(
                         R.string.practice_listening_report_summary_attempts,
-                        gradedAttemptCount,
-                        correctAttemptCount
+                        report.answeredCount,
+                        report.correctCount
                     )
                 } else {
                     ""
@@ -1132,8 +1137,8 @@ class ListeningPracticeViewModel @Inject constructor(
                     R.string.practice_listening_report_summary,
                     runtimes.values.count { it.mastered },
                     runtimes.size,
-                    gradedAttemptCount,
-                    correctAttemptCount
+                    report.answeredCount,
+                    report.correctCount
                 )
             ),
             summary = buildSummary()
@@ -1146,6 +1151,25 @@ class ListeningPracticeViewModel @Inject constructor(
         reviewQueuePolicy.enqueueReview(wordId, prioritize)
     }
 
+    private fun persistPracticeReport(report: PracticeReport) {
+        val sessionId = engineSessionId.ifBlank {
+            "listening:${System.currentTimeMillis()}:${loadKey.orEmpty()}"
+        }
+        viewModelScope.launch {
+            practiceReportRepository.save(
+                PracticeSessionReportRecord(
+                    sessionId = sessionId,
+                    kind = when (_uiState.value.mode) {
+                        ListeningPracticeMode.MEANING -> PracticeKind.LISTENING_MEANING
+                        ListeningPracticeMode.SPELLING -> PracticeKind.LISTENING_SPELLING
+                    },
+                    report = report,
+                    completedAtMillis = System.currentTimeMillis()
+                )
+            )
+        }
+    }
+
     private fun buildReportWordUi(runtime: WordRuntime): ListeningReportWordUi {
         return ListeningReportWordUi(
             wordId = runtime.word.id,
@@ -1154,7 +1178,7 @@ class ListeningPracticeViewModel @Inject constructor(
                 ?.takeIf { it.isNotBlank() }
                 ?: resourceProvider.getString(R.string.learning_share_empty_definitions),
             speechLocale = uiMapper.resolveReportSpeechLocale(runtime.word),
-            progressText = "${runtime.consecutiveCorrect.coerceAtMost(LISTENING_REVIEW_TARGET)}/$LISTENING_REVIEW_TARGET",
+            progressText = "${runtime.consecutiveCorrect.coerceAtMost(reviewQueuePolicy.reviewTarget())}/${reviewQueuePolicy.reviewTarget()}",
             isCompleted = !runtime.reviewRequired
         )
     }
@@ -1218,21 +1242,128 @@ class ListeningPracticeViewModel @Inject constructor(
     }
 
     private fun buildSummary(): PracticeSessionSummary {
+        val report = currentPracticeReport()
         return PracticeSessionSummary(
             questionCount = runtimes.size,
             completedCount = runtimes.values.count { it.mastered },
-            correctCount = correctAttemptCount,
-            submitCount = gradedAttemptCount
+            correctCount = report.correctCount,
+            submitCount = report.answeredCount
         )
+    }
+
+    private fun currentPracticeReport(): PracticeReport {
+        return reportTracker.buildReport(totalQuestionCount = runtimes.size)
+    }
+
+    private fun recordAnswer(
+        runtime: WordRuntime,
+        card: ActiveCard,
+        status: PracticeAnswerStatus,
+        selectedIndex: Int? = null
+    ) {
+        val expectedAnswer = when (card.questionType) {
+            ListeningQuestionType.MEANING ->
+                runtime.meaningOptions.firstOrNull { it.isCorrect }?.content.orEmpty()
+            ListeningQuestionType.SPELLING -> runtime.word.word
+        }
+        val submittedAnswer = when (card.questionType) {
+            ListeningQuestionType.MEANING ->
+                selectedIndex?.let { index -> runtime.meaningOptions.getOrNull(index)?.content }
+            ListeningQuestionType.SPELLING ->
+                _uiState.value.spellingInput.takeIf { it.isNotBlank() }
+        }
+        reportTracker.record(
+            PracticeAnswerRecord(
+            questionId = buildQuestionId(card),
+            wordId = runtime.word.id,
+            status = status,
+            submittedAnswer = submittedAnswer,
+            expectedAnswer = expectedAnswer
+            )
+        )
+    }
+
+    private fun buildQuestionId(card: ActiveCard): String {
+        return "${card.questionType.name}:${card.queueType.name}:${card.wordId}:${reportTracker.nextOrdinal()}"
     }
 
     private fun resolvePracticeSpeechLocale(): String = LISTENING_SPEECH_LOCALE_US
 
     private fun resolveCurrentSpeechLocale(): String {
-        return if (currentScreen == ListeningScreen.STUDY) {
+        return if (currentScreen == ListeningScreenState.STUDY) {
             _uiState.value.studySpeechLocale.ifBlank { LISTENING_SPEECH_LOCALE_US }
         } else {
             resolvePracticeSpeechLocale()
+        }
+    }
+
+    private val currentScreen: ListeningScreenState
+        get() = sessionState.screen
+
+    private fun dispatchSession(action: ListeningAction) {
+        sessionState = when (action) {
+            is ListeningAction.StartSession -> {
+                ListeningSessionState(
+                    config = action.config,
+                    hasStarted = true,
+                    screen = ListeningScreenState.PRACTICE
+                )
+            }
+
+            is ListeningAction.ChangeMode -> {
+                sessionState.copy(
+                    config = sessionState.config?.copy(mode = action.mode),
+                    isTransitionPending = false
+                )
+            }
+
+            is ListeningAction.PresentQuestion -> {
+                sessionState.copy(
+                    screen = ListeningScreenState.PRACTICE,
+                    activeWordId = action.wordId,
+                    activeQuestionType = action.questionType,
+                    isTransitionPending = false
+                )
+            }
+
+            is ListeningAction.SelectMeaning -> {
+                if (
+                    sessionState.activeWordId == null ||
+                    sessionState.screen != ListeningScreenState.PRACTICE ||
+                    sessionState.activeQuestionType != ListeningQuestionType.MEANING
+                ) {
+                    sessionState
+                } else {
+                    sessionState.copy(isTransitionPending = true)
+                }
+            }
+
+            ListeningAction.ShowStudy -> {
+                if (sessionState.activeWordId == null) {
+                    sessionState
+                } else {
+                    sessionState.copy(
+                        screen = ListeningScreenState.STUDY,
+                        isTransitionPending = false
+                    )
+                }
+            }
+
+            ListeningAction.ShowReport -> {
+                sessionState.copy(
+                    screen = ListeningScreenState.REPORT,
+                    activeWordId = null,
+                    isTransitionPending = false
+                )
+            }
+
+            ListeningAction.DeleteLastSpellingLetter,
+            ListeningAction.SubmitSpelling,
+            ListeningAction.Skip,
+            ListeningAction.RevealAnswer,
+            ListeningAction.ContinueAfterStudy,
+            ListeningAction.ToggleStudyPronunciation,
+            is ListeningAction.SelectSpellingLetter -> sessionState
         }
     }
 

@@ -1,6 +1,6 @@
 package com.chen.memorizewords.feature.feedback.ui.feedback
 
-import com.chen.memorizewords.domain.model.feedback.FeedbackImagePayload
+import com.chen.memorizewords.domain.feedback.model.FeedbackImagePayload
 import java.util.Locale
 
 internal data class FeedbackImageSource(

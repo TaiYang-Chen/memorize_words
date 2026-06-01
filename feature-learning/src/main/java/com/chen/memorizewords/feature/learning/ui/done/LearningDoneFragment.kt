@@ -9,6 +9,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.chen.memorizewords.core.navigation.AppRoute
+import com.chen.memorizewords.core.navigation.RouteNavigator
 import com.chen.memorizewords.core.ui.ext.dpToPx
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.core.ui.vm.UiEvent
@@ -29,7 +31,7 @@ class LearningDoneFragment :
     }
 
     @Inject
-    lateinit var learningEntry: LearningEntry
+    lateinit var routeNavigator: RouteNavigator
 
     private val args: LearningDoneFragmentArgs by navArgs()
 
@@ -95,16 +97,14 @@ class LearningDoneFragment :
 
     override fun onNavigationRoute(event: UiEvent.Navigation.Route) {
         when (val target = event.target) {
-            is LearningDoneViewModel.Route.ToLearning -> {
-                startActivity(learningEntry.createLearningIntent(requireContext(), target.request))
-                if (target.replaceCurrent) {
-                    requireActivity().finish()
-                }
-            }
-
             LearningDoneViewModel.Route.ToCheckIn -> {
                 findNavController().navigate(R.id.action_learningDoneFragment_to_learningCheckInFragment)
             }
+            is AppRoute -> {
+                routeNavigator.navigate(target)
+                requireActivity().finish()
+            }
+            else -> super.onNavigationRoute(event)
         }
     }
 }

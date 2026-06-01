@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.chen.memorizewords.core.ui.dialog.prefabricated.ShowConfirmBottomDialog
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.core.ui.vm.UiEvent
-import com.chen.memorizewords.domain.model.practice.PracticeEntryType
-import com.chen.memorizewords.domain.model.practice.PracticeMode
+import com.chen.memorizewords.domain.practice.PracticeEntryType
+import com.chen.memorizewords.domain.practice.PracticeMode
 import com.chen.memorizewords.feature.home.R
 import com.chen.memorizewords.feature.home.databinding.ModuleHomeFragmentPracticeBinding
 import com.chen.memorizewords.core.navigation.FloatingWordEntry

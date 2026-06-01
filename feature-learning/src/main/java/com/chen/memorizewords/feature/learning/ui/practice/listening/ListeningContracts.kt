@@ -3,7 +3,6 @@ package com.chen.memorizewords.feature.learning.ui.practice.listening
 import com.chen.memorizewords.feature.learning.ui.practice.ListeningPracticeMode
 import com.chen.memorizewords.feature.learning.ui.practice.ListeningQuestionType
 
-internal const val LISTENING_REVIEW_TARGET = 3
 internal const val LISTENING_CORRECT_FEEDBACK_DURATION_MS = 650L
 internal const val LISTENING_MEANING_SELECTION_TRANSITION_DELAY_MS = 500L
 internal const val LISTENING_WRONG_MEANING_SELECTION_TRANSITION_DELAY_MS = 800L
@@ -37,7 +36,13 @@ internal data class ListeningSessionConfig(
 internal sealed interface ListeningAction {
     data class StartSession(val config: ListeningSessionConfig) : ListeningAction
     data class ChangeMode(val mode: ListeningPracticeMode) : ListeningAction
+    data class PresentQuestion(
+        val wordId: Long,
+        val questionType: ListeningQuestionType
+    ) : ListeningAction
     data class SelectMeaning(val index: Int) : ListeningAction
+    data object ShowStudy : ListeningAction
+    data object ShowReport : ListeningAction
     data class SelectSpellingLetter(val letterId: Long) : ListeningAction
     data object DeleteLastSpellingLetter : ListeningAction
     data object SubmitSpelling : ListeningAction
@@ -47,25 +52,17 @@ internal sealed interface ListeningAction {
     data object ToggleStudyPronunciation : ListeningAction
 }
 
-internal sealed interface ListeningEffect {
-    data object ShowExitConfirm : ListeningEffect
-    data class AutoPlayCurrentAudio(val requestId: Int) : ListeningEffect
-    data class DelayThenAdvance(
-        val delayMs: Long,
-        val expectedWordId: Long,
-        val expectedQuestionType: ListeningQuestionType
-    ) : ListeningEffect
-}
-
 internal data class ListeningSessionState(
     val config: ListeningSessionConfig? = null,
     val hasStarted: Boolean = false,
+    val screen: ListeningScreenState = ListeningScreenState.PRACTICE,
     val activeWordId: Long? = null,
     val activeQuestionType: ListeningQuestionType = ListeningQuestionType.MEANING,
     val isTransitionPending: Boolean = false
 )
 
-internal data class ListeningReduceResult(
-    val state: ListeningSessionState,
-    val effects: List<ListeningEffect> = emptyList()
-)
+internal enum class ListeningScreenState {
+    PRACTICE,
+    STUDY,
+    REPORT
+}

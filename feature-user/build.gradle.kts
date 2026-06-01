@@ -1,20 +1,11 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt)
+    id("memorize.android-hilt-library")
     alias(libs.plugins.navigation.safeargs)
 }
 
 android {
     namespace = "com.chen.memorizewords.feature.user"
-    compileSdk {
-        version = release(36)
-    }
-
     defaultConfig {
-        minSdk = 25
-
         val wxAppId = (project.findProperty("WX_APP_ID") as String?) ?: ""
         val wxUniversalLink = (project.findProperty("WX_UNIVERSAL_LINK") as String?) ?: ""
         val qqAppId = (project.findProperty("QQ_APP_ID") as String?) ?: ""
@@ -30,23 +21,19 @@ android {
             isMinifyEnabled = false
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
     buildFeatures{
         dataBinding = true
         buildConfig = true
+    }
+    lint {
+        baseline = file("lint-baseline.xml")
     }
 }
 
 dependencies {
     implementation(project(":core-ui"))
     implementation(project(":core-navigation"))
-    implementation(project(":domain"))
+    implementation(project(":domain-account"))
 
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.appcompat)
@@ -61,7 +48,6 @@ dependencies {
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
-
     implementation(libs.qq.open.sdk)
     implementation(libs.wechat.sdk.android)
     implementation(libs.wheel.picker)

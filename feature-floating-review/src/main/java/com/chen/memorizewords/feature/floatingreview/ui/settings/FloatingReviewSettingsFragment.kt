@@ -21,10 +21,10 @@ import com.chen.memorizewords.core.navigation.FloatingWordEntry
 import com.chen.memorizewords.core.navigation.PracticeEntry
 import com.chen.memorizewords.core.ui.fragment.BaseVmDbFragment
 import com.chen.memorizewords.core.ui.vm.UiEvent
-import com.chen.memorizewords.domain.model.floating.FloatingWordFieldType
-import com.chen.memorizewords.domain.model.floating.FloatingWordOrderType
-import com.chen.memorizewords.domain.model.floating.FloatingWordSettings
-import com.chen.memorizewords.domain.model.floating.FloatingWordSourceType
+import com.chen.memorizewords.domain.floating.model.FloatingWordFieldType
+import com.chen.memorizewords.domain.floating.model.FloatingWordOrderType
+import com.chen.memorizewords.domain.floating.model.FloatingWordSettings
+import com.chen.memorizewords.domain.floating.model.FloatingWordSourceType
 import com.chen.memorizewords.feature.floatingreview.R
 import com.chen.memorizewords.feature.floatingreview.databinding.ModuleFloatingReviewFragmentSettingsBinding
 import com.google.android.material.switchmaterial.SwitchMaterial

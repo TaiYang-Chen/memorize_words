@@ -1,6 +1,6 @@
 package com.chen.memorizewords.feature.home.ui.sync
 
-import com.chen.memorizewords.domain.model.sync.SyncPendingRecord
+import com.chen.memorizewords.domain.sync.model.SyncPendingRecord
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray

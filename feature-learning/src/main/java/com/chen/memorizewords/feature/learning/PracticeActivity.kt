@@ -6,8 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.os.bundleOf
 import com.chen.memorizewords.core.navigation.OnboardingGuardDelegate
-import com.chen.memorizewords.domain.model.practice.PracticeEntryType
-import com.chen.memorizewords.domain.model.practice.PracticeMode
+import com.chen.memorizewords.domain.practice.PracticeEntryType
+import com.chen.memorizewords.domain.practice.PracticeMode
 import com.chen.memorizewords.feature.learning.databinding.ActivityPracticeBinding
 import com.chen.memorizewords.feature.learning.ui.practice.AudioLoopPracticeFragment
 import com.chen.memorizewords.feature.learning.ui.practice.ListeningPracticeFragment

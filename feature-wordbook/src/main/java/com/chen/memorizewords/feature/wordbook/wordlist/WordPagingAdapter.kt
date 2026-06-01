@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.chen.memorizewords.domain.model.words.WordListRow
+import com.chen.memorizewords.domain.word.model.WordListRow
 import com.chen.memorizewords.feature.wordbook.R
 
 class WordPagingAdapter :

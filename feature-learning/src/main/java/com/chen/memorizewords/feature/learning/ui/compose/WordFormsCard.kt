@@ -19,8 +19,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.chen.memorizewords.domain.model.words.enums.FormType
-import com.chen.memorizewords.domain.model.words.word.WordForm
+import com.chen.memorizewords.domain.word.model.enums.FormType
+import com.chen.memorizewords.domain.word.model.word.WordForm
 import kotlin.collections.forEachIndexed
 
 @Composable

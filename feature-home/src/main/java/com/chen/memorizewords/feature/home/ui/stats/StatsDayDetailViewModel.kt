@@ -4,11 +4,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
-import com.chen.memorizewords.domain.model.study.record.DailyStudyDetail
-import com.chen.memorizewords.domain.model.study.record.CheckInType
-import com.chen.memorizewords.domain.model.study.record.MakeUpCheckInException
-import com.chen.memorizewords.domain.usecase.word.study.GetDayStudyDetailUseCase
-import com.chen.memorizewords.domain.usecase.word.study.MakeUpCheckInUseCase
+import com.chen.memorizewords.domain.study.model.record.DailyStudyDetail
+import com.chen.memorizewords.domain.study.model.record.CheckInType
+import com.chen.memorizewords.domain.study.model.record.MakeUpCheckInException
+import com.chen.memorizewords.domain.study.usecase.word.study.GetDayStudyDetailUseCase
+import com.chen.memorizewords.domain.study.usecase.word.study.MakeUpCheckInUseCase
 import com.chen.memorizewords.feature.home.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

@@ -1,19 +1,10 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt)
+    id("memorize.android-hilt-library")
     alias(libs.plugins.navigation.safeargs)
 }
 
 android {
     namespace = "com.chen.memorizewords.feature.onboarding"
-    compileSdk = 36
-
-    defaultConfig {
-        minSdk = 25
-    }
-
     resourcePrefix("feature_onboarding_")
 
     buildTypes {
@@ -22,24 +13,20 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-
-    kotlinOptions {
-        jvmTarget = "11"
-    }
-
     buildFeatures {
         dataBinding = true
+    }
+    lint {
+        baseline = file("lint-baseline.xml")
     }
 }
 
 dependencies {
     implementation(project(":core-ui"))
     implementation(project(":core-navigation"))
-    implementation(project(":domain"))
+    implementation(project(":domain-account"))
+    implementation(project(":domain-study"))
+    implementation(project(":domain-wordbook"))
 
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.coordinatorlayout)

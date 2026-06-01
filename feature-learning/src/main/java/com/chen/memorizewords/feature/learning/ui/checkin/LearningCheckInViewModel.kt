@@ -3,11 +3,11 @@ package com.chen.memorizewords.feature.learning.ui.checkin
 import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
-import com.chen.memorizewords.domain.model.study.record.CheckInRecord
-import com.chen.memorizewords.domain.usecase.word.study.AutoCheckInTodayIfEligibleUseCase
-import com.chen.memorizewords.domain.usecase.word.study.GetContinuousCheckInDaysUseCase
-import com.chen.memorizewords.domain.usecase.word.study.GetStudyTotalDurationUseCase
-import com.chen.memorizewords.domain.usecase.word.study.GetStudyTotalWordCountUseCase
+import com.chen.memorizewords.domain.study.model.record.CheckInRecord
+import com.chen.memorizewords.domain.study.usecase.word.study.AutoCheckInTodayIfEligibleUseCase
+import com.chen.memorizewords.domain.study.usecase.word.study.GetContinuousCheckInDaysUseCase
+import com.chen.memorizewords.domain.study.usecase.word.study.GetStudyTotalDurationUseCase
+import com.chen.memorizewords.domain.study.usecase.word.study.GetStudyTotalWordCountUseCase
 import com.chen.memorizewords.feature.learning.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

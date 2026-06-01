@@ -2,10 +2,10 @@ package com.chen.memorizewords.feature.learning.ui.fragment
 
 import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
-import com.chen.memorizewords.domain.query.word.WordReadFacade
-import com.chen.memorizewords.domain.model.learning.LearningTestMode
-import com.chen.memorizewords.domain.model.words.word.Word
-import com.chen.memorizewords.domain.model.words.word.WordDefinitions
+import com.chen.memorizewords.domain.word.query.WordReadFacade
+import com.chen.memorizewords.domain.wordbook.model.learning.LearningTestMode
+import com.chen.memorizewords.domain.word.model.word.Word
+import com.chen.memorizewords.domain.word.model.word.WordDefinitions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -8,8 +8,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.core.ui.vm.UiEvent
-import com.chen.memorizewords.domain.model.learning.LearningTestMode
-import com.chen.memorizewords.domain.repository.WordOrderType
+import com.chen.memorizewords.domain.wordbook.model.learning.LearningTestMode
+import com.chen.memorizewords.domain.wordbook.repository.WordOrderType
 import com.chen.memorizewords.feature.wordbook.R
 import com.chen.memorizewords.feature.wordbook.databinding.FragmentStudyPlanSettingBinding
 import dagger.hilt.android.AndroidEntryPoint

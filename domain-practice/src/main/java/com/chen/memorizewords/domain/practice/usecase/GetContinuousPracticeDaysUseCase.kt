@@ -1,0 +1,12 @@
+package com.chen.memorizewords.domain.practice.usecase
+import com.chen.memorizewords.domain.practice.PracticeRecordRepository
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+
+class GetContinuousPracticeDaysUseCase @Inject constructor(
+    private val practiceRecordRepository: PracticeRecordRepository
+) {
+    operator fun invoke(): Flow<Int> {
+        return practiceRecordRepository.getContinuousPracticeDays()
+    }
+}

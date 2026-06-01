@@ -43,7 +43,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.chen.memorizewords.domain.model.learning.LearningTestMode
+import com.chen.memorizewords.domain.wordbook.model.learning.LearningTestMode
 import com.chen.memorizewords.feature.learning.R
 import com.chen.memorizewords.feature.learning.ui.learning.LearningViewModel
 import dagger.hilt.android.AndroidEntryPoint

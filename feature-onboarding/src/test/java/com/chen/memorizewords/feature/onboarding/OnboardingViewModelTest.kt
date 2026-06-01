@@ -1,28 +1,28 @@
 package com.chen.memorizewords.feature.onboarding
 
-import com.chen.memorizewords.domain.model.common.PageSlice
-import com.chen.memorizewords.domain.model.onboarding.OnboardingSnapshot
-import com.chen.memorizewords.domain.model.onboarding.OnboardingStep
-import com.chen.memorizewords.domain.model.study.StudyPlan
-import com.chen.memorizewords.domain.model.wordbook.WordBook
-import com.chen.memorizewords.domain.model.wordbook.WordBookInfo
-import com.chen.memorizewords.domain.model.wordbook.WordListQuery
-import com.chen.memorizewords.domain.model.wordbook.shop.DownloadCommandResult
-import com.chen.memorizewords.domain.model.wordbook.shop.DownloadState
-import com.chen.memorizewords.domain.model.wordbook.shop.ShopBooksQuery
-import com.chen.memorizewords.domain.model.words.WordListRow
-import com.chen.memorizewords.domain.model.words.word.Word
-import com.chen.memorizewords.domain.repository.StudyPlanRepository
-import com.chen.memorizewords.domain.repository.WordBookRepository
-import com.chen.memorizewords.domain.repository.onboarding.OnboardingRepository
-import com.chen.memorizewords.domain.repository.shop.RemoteWordBookRepository
-import com.chen.memorizewords.domain.service.onboarding.OnboardingCoordinator
-import com.chen.memorizewords.domain.service.wordbook.WordBookShopFacade
-import com.chen.memorizewords.domain.usecase.onboarding.GetCurrentOnboardingSnapshotUseCase
-import com.chen.memorizewords.domain.usecase.onboarding.ObserveCurrentOnboardingSnapshotUseCase
-import com.chen.memorizewords.domain.usecase.wordbook.GetStudyPlanFlowUseCase
-import com.chen.memorizewords.domain.usecase.wordbook.SaveStudyPlanUseCase
-import com.chen.memorizewords.domain.usecase.wordbook.SetCurrentWordBookUseCase
+import com.chen.memorizewords.core.common.paging.PageSlice
+import com.chen.memorizewords.domain.wordbook.model.onboarding.OnboardingSnapshot
+import com.chen.memorizewords.domain.wordbook.model.onboarding.OnboardingStep
+import com.chen.memorizewords.domain.wordbook.model.study.StudyPlan
+import com.chen.memorizewords.domain.wordbook.model.WordBook
+import com.chen.memorizewords.domain.wordbook.model.WordBookInfo
+import com.chen.memorizewords.domain.wordbook.model.WordListQuery
+import com.chen.memorizewords.domain.wordbook.model.shop.DownloadCommandResult
+import com.chen.memorizewords.domain.wordbook.model.shop.DownloadState
+import com.chen.memorizewords.domain.wordbook.model.shop.ShopBooksQuery
+import com.chen.memorizewords.domain.word.model.WordListRow
+import com.chen.memorizewords.domain.word.model.word.Word
+import com.chen.memorizewords.domain.wordbook.repository.StudyPlanRepository
+import com.chen.memorizewords.domain.wordbook.repository.WordBookRepository
+import com.chen.memorizewords.domain.wordbook.repository.onboarding.OnboardingRepository
+import com.chen.memorizewords.domain.wordbook.repository.shop.RemoteWordBookRepository
+import com.chen.memorizewords.domain.wordbook.service.onboarding.OnboardingCoordinator
+import com.chen.memorizewords.domain.wordbook.service.WordBookShopFacade
+import com.chen.memorizewords.domain.wordbook.usecase.onboarding.GetCurrentOnboardingSnapshotUseCase
+import com.chen.memorizewords.domain.wordbook.usecase.onboarding.ObserveCurrentOnboardingSnapshotUseCase
+import com.chen.memorizewords.domain.wordbook.usecase.GetStudyPlanFlowUseCase
+import com.chen.memorizewords.domain.wordbook.usecase.SaveStudyPlanUseCase
+import com.chen.memorizewords.domain.wordbook.usecase.SetCurrentWordBookUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.Flow
@@ -115,7 +115,7 @@ private class FakeOnboardingRepository : OnboardingRepository {
 
     override suspend fun completeOnboarding(selectedWordBookId: Long): OnboardingSnapshot {
         return OnboardingSnapshot(
-            phase = com.chen.memorizewords.domain.model.onboarding.OnboardingPhase.COMPLETED,
+            phase = com.chen.memorizewords.domain.wordbook.model.onboarding.OnboardingPhase.COMPLETED,
             selectedWordBookId = selectedWordBookId
         ).also { snapshotFlow.value = it }
     }

@@ -1,0 +1,1980 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.12.3" type="baseline" client="gradle" dependencies="false" name="AGP (8.12.3)" variant="all" version="8.12.3">
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`activity_word_book`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_activity_word_book`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/activity_word_book.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`MultiProgressView`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`FeatureWordbookMultiProgressView`&apos; ?"
+        errorLine1="    &lt;declare-styleable name=&quot;MultiProgressView&quot;>"
+        errorLine2="                       ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/attrs.xml"
+            line="3"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`max`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_max`&apos; ?"
+        errorLine1="        &lt;attr name=&quot;max&quot; format=&quot;integer&quot; />"
+        errorLine2="              ~~~~~~~~~~">
+        <location
+            file="src/main/res/values/attrs.xml"
+            line="4"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`progress1`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_progress1`&apos; ?"
+        errorLine1="        &lt;attr name=&quot;progress1&quot; format=&quot;integer&quot; />"
+        errorLine2="              ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/attrs.xml"
+            line="5"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`progress2`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_progress2`&apos; ?"
+        errorLine1="        &lt;attr name=&quot;progress2&quot; format=&quot;integer&quot; />"
+        errorLine2="              ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/attrs.xml"
+            line="6"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`bgColor`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_bgColor`&apos; ?"
+        errorLine1="        &lt;attr name=&quot;bgColor&quot; format=&quot;color&quot; />"
+        errorLine2="              ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/attrs.xml"
+            line="7"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`progress1Color`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_progress1Color`&apos; ?"
+        errorLine1="        &lt;attr name=&quot;progress1Color&quot; format=&quot;color&quot; />"
+        errorLine2="              ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/attrs.xml"
+            line="8"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`progress2Color`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_progress2Color`&apos; ?"
+        errorLine1="        &lt;attr name=&quot;progress2Color&quot; format=&quot;color&quot; />"
+        errorLine2="              ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/attrs.xml"
+            line="9"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_window_back`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_window_back`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_wordbook_window_back&quot;>#FFFFFF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="3"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_light_gray`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_light_gray`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_wordbook_light_gray&quot;>#F5F7FA&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="4"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_study_mode_description`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_study_mode_description`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_wordbook_study_mode_description&quot;>#71808B&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="26"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_study_mode_badge_text`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_study_mode_badge_text`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_wordbook_study_mode_badge_text&quot;>#5F88A2&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="27"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_study_mode_icon_tint`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_study_mode_icon_tint`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_wordbook_study_mode_icon_tint&quot;>#33424D&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="28"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`dialog_wordbook_modify_plan`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_dialog_wordbook_modify_plan`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/dialog_wordbook_modify_plan.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`fragment_study_plan_setting`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_fragment_study_plan_setting`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_study_plan_setting.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`fragment_word_list`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_fragment_word_list`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_word_list.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`include_study_plan_setting_book`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_include_study_plan_setting_book`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_plan_setting_book.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`include_study_plan_setting_day_plan`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_include_study_plan_setting_day_plan`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_plan_setting_day_plan.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_bg_confirm`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_bg_confirm`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_bg_confirm.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_bg_count_box`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_bg_count_box`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_bg_count_box.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_bg_download_btn_progress`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_bg_download_btn_progress`&apos; ?"
+        errorLine1="&lt;layer-list xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_bg_download_btn_progress.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_bg_drag_handle`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_bg_drag_handle`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_bg_drag_handle.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_bg_multi_normal`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_bg_multi_normal`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_bg_multi_normal.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_bg_multi_selected`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_bg_multi_selected`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_bg_multi_selected.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_bg_multi_white`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_bg_multi_white`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_bg_multi_white.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_bg_plan_tag`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_bg_plan_tag`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_bg_plan_tag.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_bg_study_mode_badge`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_bg_study_mode_badge`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_bg_study_mode_badge.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_bg_study_mode_card_normal`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_bg_study_mode_card_normal`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_bg_study_mode_card_normal.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_bg_study_mode_card_selected`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_bg_study_mode_card_selected`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_bg_study_mode_card_selected.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_bg_study_mode_corner`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_bg_study_mode_corner`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:shape=&quot;oval&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_bg_study_mode_corner.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_bg_study_mode_icon_normal`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_bg_study_mode_icon_normal`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_bg_study_mode_icon_normal.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_bg_study_mode_icon_selected`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_bg_study_mode_icon_selected`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_bg_study_mode_icon_selected.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_bottom_dialog_bg`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_bottom_dialog_bg`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_bottom_dialog_bg.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_dot_green`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_dot_green`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_dot_green.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_dot_orange`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_dot_orange`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_dot_orange.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_fragment_book_shop`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_fragment_book_shop`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_wordbook_fragment_book_shop.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_fragment_favorites`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_fragment_favorites`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_wordbook_fragment_favorites.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_fragment_favorites_item`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_fragment_favorites_item`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_wordbook_fragment_favorites_item.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_fragment_my_word_books`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_fragment_my_word_books`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_wordbook_fragment_my_word_books.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_ic_add`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_ic_add`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_ic_add.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_ic_book`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_ic_book`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_ic_book.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_ic_check_circle`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_ic_check_circle`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_ic_check_circle.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_ic_chevron_right`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_ic_chevron_right`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_ic_chevron_right.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_ic_clockwise_direction`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_ic_clockwise_direction`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_ic_clockwise_direction.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_ic_edit`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_ic_edit`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_ic_edit.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_ic_list`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_ic_list`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_ic_list.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_ic_minus`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_ic_minus`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_ic_minus.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_ic_potted_plant`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_ic_potted_plant`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_ic_potted_plant.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_ic_reset`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_ic_reset`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_ic_reset.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_ic_study_mode_listening`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_ic_study_mode_listening`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_ic_study_mode_listening.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_ic_study_mode_meaning`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_ic_study_mode_meaning`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_ic_study_mode_meaning.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_ic_study_mode_spelling`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_ic_study_mode_spelling`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_ic_study_mode_spelling.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_item_book_shop`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_item_book_shop`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_wordbook_item_book_shop.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_item_load_state`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_item_load_state`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_wordbook_item_load_state.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_item_word`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_item_word`&apos; ?"
+        errorLine1="&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_wordbook_item_word.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_item_wordbook`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_item_wordbook`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_wordbook_item_wordbook.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_selector_fbfaf6_radius`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_selector_fbfaf6_radius`&apos; ?"
+        errorLine1="&lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_selector_fbfaf6_radius.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_selector_ff8000_radius`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_selector_ff8000_radius`&apos; ?"
+        errorLine1="&lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_selector_ff8000_radius.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_toggle_background`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_toggle_background`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_toggle_background.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_toggle_item_selector`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_toggle_item_selector`&apos; ?"
+        errorLine1="&lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_toggle_item_selector.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_toggle_text_selector`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_toggle_text_selector`&apos; ?"
+        errorLine1="&lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_toggle_text_selector.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_white_radio_16dp`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_white_radio_16dp`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_white_radio_16dp.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_white_radio_16dp_not_border`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_white_radio_16dp_not_border`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_wordbook_white_radio_16dp_not_border.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_download`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_download`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_download&quot;>下载&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="3"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_downloaded`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_downloaded`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_downloaded&quot;>已下载&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="4"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_retry`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_retry`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_retry&quot;>重试&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="5"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_public`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_public`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_public&quot;>公开&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="6"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_private`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_private`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_private&quot;>私有&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="7"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_shop_word_count`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_shop_word_count`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_shop_word_count&quot;>词汇数：%1$d&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="8"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_shop_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_shop_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_shop_title&quot;>词书商城&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="9"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_shop_search_hint`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_shop_search_hint`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_shop_search_hint&quot;>搜索词书&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="10"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_cancel`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_cancel`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_cancel&quot;>取消&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="11"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_shop_search_empty_keyword`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_shop_search_empty_keyword`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_shop_search_empty_keyword&quot;>输入词书名称开始搜索&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="12"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_shop_search_no_results`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_shop_search_no_results`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_shop_search_no_results&quot;>未找到相关词书&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="13"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_notify_permission_denied`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_notify_permission_denied`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_notify_permission_denied&quot;>通知权限已关闭，将仅在页面显示下载进度&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="14"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_network_error`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_network_error`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_network_error&quot;>网络错误，请重试&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="15"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_empty_books`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_empty_books`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_empty_books&quot;>暂无词书&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="16"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_study_mode`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_study_mode`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_study_mode&quot;>学习模式&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="17"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_unknown_book`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_unknown_book`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_unknown_book&quot;>未知词书&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="18"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_nav_my_books_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_nav_my_books_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_nav_my_books_title&quot;>我的词书&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="19"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_nav_shop_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_nav_shop_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_nav_shop_title&quot;>词书商城&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="20"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_nav_study_plan_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_nav_study_plan_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_nav_study_plan_title&quot;>学习计划&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="21"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_nav_word_list_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_nav_word_list_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_nav_word_list_title&quot;>单词列表&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="22"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_nav_favorites_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_nav_favorites_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_nav_favorites_title&quot;>收藏夹&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="23"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_study_mode_all`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_study_mode_all`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_study_mode_all&quot;>全部模式&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="24"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_study_mode_sheet_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_study_mode_sheet_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_study_mode_sheet_title&quot;>选择学习模式&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="25"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_study_mode_current_default`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_study_mode_current_default`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_study_mode_current_default&quot;>当前默认&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="26"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_study_mode_meaning_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_study_mode_meaning_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_study_mode_meaning_title&quot;>释义选择&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="27"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_study_mode_meaning_desc`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_study_mode_meaning_desc`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_study_mode_meaning_desc&quot;>根据中文或英文释义选择正确单词，适合初次学习时使用。&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="28"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_study_mode_spelling_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_study_mode_spelling_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_study_mode_spelling_title&quot;>拼写测试&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="29"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_study_mode_spelling_desc`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_study_mode_spelling_desc`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_study_mode_spelling_desc&quot;>根据中文或发音写出完整单词，强化记忆，减少提笔忘字。&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="30"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_study_mode_listening_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_study_mode_listening_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_study_mode_listening_title&quot;>听力辨义&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="31"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_study_mode_listening_desc`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_study_mode_listening_desc`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_study_mode_listening_desc&quot;>听取英文发音，选择正确释义，提升听力敏感度与反应速度。&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="32"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_mode_and_order_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_mode_and_order_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_mode_and_order_title&quot;>模式与排序&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_study_plan_setting.xml"
+            line="3"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_word_order`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_word_order`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_word_order&quot;>排序方式&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_study_plan_setting.xml"
+            line="4"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_word_order_sheet_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_word_order_sheet_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_word_order_sheet_title&quot;>选择排序方式&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_study_plan_setting.xml"
+            line="5"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_word_order_random`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_word_order_random`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_word_order_random&quot;>随机乱序&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_study_plan_setting.xml"
+            line="6"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_word_order_alpha_asc`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_word_order_alpha_asc`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_word_order_alpha_asc&quot;>首字母升序&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_study_plan_setting.xml"
+            line="7"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_word_order_alpha_desc`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_word_order_alpha_desc`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_word_order_alpha_desc&quot;>首字母降序&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_study_plan_setting.xml"
+            line="8"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_word_order_length_asc`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_word_order_length_asc`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_word_order_length_asc&quot;>长度升序&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_study_plan_setting.xml"
+            line="9"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_wordbook_word_order_length_desc`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_word_order_length_desc`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_wordbook_word_order_length_desc&quot;>长度降序&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_study_plan_setting.xml"
+            line="10"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`wordbook_nav`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_wordbook_nav`&apos; ?"
+        errorLine1="&lt;navigation xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~~~~~">
+        <location
+            file="src/main/res/navigation/wordbook_nav.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="        String lower = raw.toLowerCase();"
+        errorLine2="                           ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/wordbook/binding/WordBookBindingAdapters.java"
+            line="37"
+            column="28"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        message="Attribute `clipToOutline` is only used in API level 31 and higher (current min is 25)"
+        errorLine1="                android:clipToOutline=&quot;true&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_wordbook_item_wordbook.xml"
+            line="34"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="FragmentTagUsage"
+        message="Replace the &lt;fragment> tag with FragmentContainerView."
+        errorLine1="        &lt;fragment"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_word_book.xml"
+            line="14"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="DataBindingWithoutKapt"
+        message="If you plan to use data binding in a Kotlin project, you should apply the kotlin-kapt plugin."
+        errorLine1="        dataBinding = true"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle.kts"
+            line="31"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="DrawAllocation"
+        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
+        errorLine1="        val fullRect = RectF(0f, 0f, width.toFloat(), height.toFloat())"
+        errorLine2="                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/wordbook/custom/MultiProgressView.kt"
+            line="46"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="DrawAllocation"
+        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
+        errorLine1="                RectF(0f, 0f, p1Width, height.toFloat()),"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/wordbook/custom/MultiProgressView.kt"
+            line="57"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="DrawAllocation"
+        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
+        errorLine1="                RectF(0f, 0f, p2Width, height.toFloat()),"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/wordbook/custom/MultiProgressView.kt"
+            line="67"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="UnnecessaryArrayInit"
+        message="This initialization lambda (`{ 0f }`) is unnecessary and is less efficient"
+        errorLine1="        val radii = FloatArray(8) { 0f }"
+        errorLine2="                                  ~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/wordbook/wordlist/GroupCardDecoration.kt"
+            line="139"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="UseCompoundDrawables"
+        message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
+        errorLine1="        &lt;LinearLayout"
+        errorLine2="         ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_wordbook_item_word_order_option.xml"
+            line="13"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="UseCompoundDrawables"
+        message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
+        errorLine1="                        &lt;LinearLayout"
+        errorLine2="                         ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_plan_setting_day_plan.xml"
+            line="91"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="UseCompoundDrawables"
+        message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
+        errorLine1="                        &lt;LinearLayout"
+        errorLine2="                         ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_plan_setting_day_plan.xml"
+            line="172"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="DisableBaselineAlignment"
+        message="Set `android:baselineAligned=&quot;false&quot;` on this element for better performance"
+        errorLine1="            &lt;LinearLayout"
+        errorLine2="             ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_plan_setting_book.xml"
+            line="264"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        message="Avoid using sizes smaller than `11sp`: `10sp`"
+        errorLine1="            android:textSize=&quot;10sp&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_wordbook_item_study_mode_card.xml"
+            line="74"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toColorInt` instead?"
+        errorLine1="        color = Color.parseColor(&quot;#999999&quot;)"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/wordbook/favorites/DateGroupDecoration.kt"
+            line="17"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toColorInt` instead?"
+        errorLine1="        color = Color.parseColor(&quot;#999999&quot;)"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/wordbook/favorites/DateGroupDecoration.kt"
+            line="17"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toColorInt` instead?"
+        errorLine1="    private var bgColor = Color.parseColor(&quot;#EDEDED&quot;)"
+        errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/wordbook/custom/MultiProgressView.kt"
+            line="23"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toColorInt` instead?"
+        errorLine1="    private var progress1Color = Color.parseColor(&quot;#FFA000&quot;)"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/wordbook/custom/MultiProgressView.kt"
+            line="24"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toColorInt` instead?"
+        errorLine1="    private var progress2Color = Color.parseColor(&quot;#FF6F00&quot;)"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/wordbook/custom/MultiProgressView.kt"
+            line="25"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `Context.withStyledAttributes` instead?"
+        errorLine1="            val ta = context.obtainStyledAttributes(it, R.styleable.MultiProgressView)"
+        errorLine2="                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/wordbook/custom/MultiProgressView.kt"
+            line="31"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="                data = Uri.parse(it)"
+        errorLine2="                       ~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/wordbook/WordBookActivity.kt"
+            line="78"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="                data = Uri.parse(it)"
+        errorLine2="                       ~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/wordbook/WordBookActivity.kt"
+            line="78"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="UseTomlInstead"
+        message="Use version catalog instead"
+        errorLine1="    testImplementation(&quot;junit:junit:4.13.2&quot;)"
+        errorLine2="                       ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle.kts"
+            line="57"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view `FastIndexView` overrides `onTouchEvent` but not `performClick`"
+        errorLine1="    override fun onTouchEvent(event: MotionEvent): Boolean {"
+        errorLine2="                 ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/wordbook/custom/FastIndexView.kt"
+            line="59"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageView"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/dialog_wordbook_modify_plan.xml"
+            line="75"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageView"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/dialog_wordbook_modify_plan.xml"
+            line="99"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageView"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/dialog_wordbook_modify_plan.xml"
+            line="144"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageView"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/dialog_wordbook_modify_plan.xml"
+            line="166"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                &lt;ImageView"
+        errorLine2="                 ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_study_plan_setting.xml"
+            line="34"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageView"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_word_list.xml"
+            line="26"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageView"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_plan_setting_book.xml"
+            line="25"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                    &lt;ImageView"
+        errorLine2="                     ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_plan_setting_book.xml"
+            line="290"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                    &lt;ImageView"
+        errorLine2="                     ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_plan_setting_book.xml"
+            line="321"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                    &lt;ImageView"
+        errorLine2="                     ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_plan_setting_book.xml"
+            line="348"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                    &lt;ImageView"
+        errorLine2="                     ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_plan_setting_day_plan.xml"
+            line="57"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                            &lt;ImageView"
+        errorLine2="                             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_plan_setting_day_plan.xml"
+            line="98"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                            &lt;ImageView"
+        errorLine2="                             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_plan_setting_day_plan.xml"
+            line="179"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageView"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_wordbook_fragment_book_shop.xml"
+            line="26"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageView"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_wordbook_fragment_favorites.xml"
+            line="25"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="        &lt;ImageView"
+        errorLine2="         ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_wordbook_fragment_favorites_item.xml"
+            line="38"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageView"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_wordbook_fragment_my_word_books.xml"
+            line="27"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="LabelFor"
+        message="Missing accessibility label: provide either a view with an `android:labelFor` that references this view or provide an `android:hint`"
+        errorLine1="            &lt;EditText"
+        errorLine2="             ~~~~~~~~">
+        <location
+            file="src/main/res/layout/dialog_wordbook_modify_plan.xml"
+            line="84"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="LabelFor"
+        message="Missing accessibility label: provide either a view with an `android:labelFor` that references this view or provide an `android:hint`"
+        errorLine1="            &lt;EditText"
+        errorLine2="             ~~~~~~~~">
+        <location
+            file="src/main/res/layout/dialog_wordbook_modify_plan.xml"
+            line="152"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="            binding.tvMeaning.text = &quot;${item.partOfSpeech} ${item.meaning}&quot;"
+        errorLine2="                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/wordbook/favorites/FavoritesPagingAdapter.kt"
+            line="44"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="                        tvStatus.text = &quot;\u6b63\u5728\u5b66\u4e60&quot;"
+        errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/wordbook/my/MyWordBookAdapter.kt"
+            line="65"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="                        tvStatus.text = &quot;\u5df2\u5b8c\u6210&quot;"
+        errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/wordbook/my/MyWordBookAdapter.kt"
+            line="73"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="        tvMeaning.text = &quot;${item.partOfSpeech.abbr}. ${item.meanings}&quot;"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/wordbook/wordlist/WordPagingAdapter.kt"
+            line="48"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;修改计划&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;修改计划&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/dialog_wordbook_modify_plan.xml"
+            line="33"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;每日新词数&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;每日新词数&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/dialog_wordbook_modify_plan.xml"
+            line="51"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;推荐 15~30&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;推荐 15~30&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/dialog_wordbook_modify_plan.xml"
+            line="62"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;每日复习数&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;每日复习数&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/dialog_wordbook_modify_plan.xml"
+            line="121"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;推荐 30~60&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;推荐 30~60&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/dialog_wordbook_modify_plan.xml"
+            line="131"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;确认&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;确认&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/dialog_wordbook_modify_plan.xml"
+            line="186"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;每日计划&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;每日计划&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_study_plan_setting.xml"
+            line="65"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;全部&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;全部&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_word_list.xml"
+            line="75"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;掌握&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;掌握&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_word_list.xml"
+            line="86"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;已学&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;已学&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_word_list.xml"
+            line="97"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;未学&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;未学&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_word_list.xml"
+            line="108"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;考纲词汇&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;考纲词汇&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_plan_setting_book.xml"
+            line="85"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;正在学习&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;正在学习&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_plan_setting_book.xml"
+            line="112"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;掌握&quot;, should use `@string` resource"
+        errorLine1="                            android:text=&quot;掌握&quot;"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_plan_setting_book.xml"
+            line="159"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;已学&quot;, should use `@string` resource"
+        errorLine1="                            android:text=&quot;已学&quot;"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_plan_setting_book.xml"
+            line="197"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;剩余&quot;, should use `@string` resource"
+        errorLine1="                            android:text=&quot;剩余&quot;"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_plan_setting_book.xml"
+            line="235"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;重置&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;重置&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_plan_setting_book.xml"
+            line="299"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;更换&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;更换&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_plan_setting_book.xml"
+            line="330"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;查看词表&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;查看词表&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_plan_setting_book.xml"
+            line="357"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;新学单词&quot;, should use `@string` resource"
+        errorLine1="                                android:text=&quot;新学单词&quot;"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_plan_setting_day_plan.xml"
+            line="108"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot; 词/天&quot;, should use `@string` resource"
+        errorLine1="                                android:text=&quot; 词/天&quot;"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_plan_setting_day_plan.xml"
+            line="143"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;复习上线&quot;, should use `@string` resource"
+        errorLine1="                                android:text=&quot;复习上线&quot;"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_plan_setting_day_plan.xml"
+            line="189"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot; 词/天&quot;, should use `@string` resource"
+        errorLine1="                                android:text=&quot; 词/天&quot;"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_plan_setting_day_plan.xml"
+            line="226"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;我的收藏&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;我的收藏&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_wordbook_fragment_favorites.xml"
+            line="38"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;全部&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;&amp;#20840;&amp;#37096;&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_wordbook_fragment_my_word_books.xml"
+            line="71"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;正在学习&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;&amp;#27491;&amp;#22312;&amp;#23398;&amp;#20064;&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_wordbook_fragment_my_word_books.xml"
+            line="91"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;已完成&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;&amp;#24050;&amp;#23436;&amp;#25104;&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_wordbook_fragment_my_word_books.xml"
+            line="111"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;添加新词汇书&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;&amp;#28155;&amp;#21152;&amp;#26032;&amp;#35789;&amp;#27719;&amp;#20070;&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_wordbook_fragment_my_word_books.xml"
+            line="144"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;加载失败&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;加载失败&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_wordbook_item_load_state.xml"
+            line="24"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;重试&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;重试&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_wordbook_item_load_state.xml"
+            line="32"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;正在学习&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;&amp;#27491;&amp;#22312;&amp;#23398;&amp;#20064;&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_wordbook_item_wordbook.xml"
+            line="69"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="RtlEnabled"
+        message="The project references RTL attributes, but does not explicitly enable or disable RTL support with `android:supportsRtl` in the manifest">
+        <location
+            file="src/main/AndroidManifest.xml"/>
+    </issue>
+
+</issues>

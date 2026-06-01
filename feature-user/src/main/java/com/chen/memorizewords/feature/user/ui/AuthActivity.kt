@@ -8,9 +8,9 @@ import com.chen.memorizewords.core.navigation.HomeEntry
 import com.chen.memorizewords.core.navigation.OnboardingEntry
 import com.chen.memorizewords.core.ui.activity.BaseVmDbActivity
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
-import com.chen.memorizewords.domain.auth.AuthStateProvider
-import com.chen.memorizewords.domain.orchestrator.startup.StartupLaunchDestination
-import com.chen.memorizewords.domain.orchestrator.startup.StartupOrchestrator
+import com.chen.memorizewords.domain.account.auth.AuthStateProvider
+import com.chen.memorizewords.domain.account.orchestrator.startup.StartupLaunchDestination
+import com.chen.memorizewords.domain.account.orchestrator.startup.StartupOrchestrator
 import com.chen.memorizewords.feature.user.auth.social.QQAuthProvider
 import com.chen.memorizewords.feature.user.databinding.ModuleUserActivityAuthBinding
 import com.chen.memorizewords.core.navigation.AuthEntry

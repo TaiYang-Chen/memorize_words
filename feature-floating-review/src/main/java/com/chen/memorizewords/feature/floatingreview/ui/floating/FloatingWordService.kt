@@ -1,4 +1,4 @@
-﻿package com.chen.memorizewords.feature.floatingreview.ui.floating
+package com.chen.memorizewords.feature.floatingreview.ui.floating
 
 import android.animation.ObjectAnimator
 import android.app.Notification
@@ -27,12 +27,12 @@ import androidx.core.app.NotificationCompat
 import coil.load
 import com.chen.memorizewords.core.navigation.FloatingWordActions
 import com.chen.memorizewords.core.navigation.LearningEntry
-import com.chen.memorizewords.domain.model.floating.FloatingWordFieldType
-import com.chen.memorizewords.domain.model.floating.FloatingWordOrderType
-import com.chen.memorizewords.domain.model.floating.FloatingWordSettings
-import com.chen.memorizewords.domain.model.words.word.Word
-import com.chen.memorizewords.domain.model.words.word.WordDefinitions
-import com.chen.memorizewords.domain.model.words.word.WordExample
+import com.chen.memorizewords.domain.floating.model.FloatingWordFieldType
+import com.chen.memorizewords.domain.floating.model.FloatingWordOrderType
+import com.chen.memorizewords.domain.floating.model.FloatingWordSettings
+import com.chen.memorizewords.domain.word.model.word.Word
+import com.chen.memorizewords.domain.word.model.word.WordDefinitions
+import com.chen.memorizewords.domain.word.model.word.WordExample
 import com.chen.memorizewords.feature.floatingreview.R
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

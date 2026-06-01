@@ -3,7 +3,7 @@ package com.chen.memorizewords.feature.learning.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
-import com.chen.memorizewords.domain.model.words.word.WordRoot
+import com.chen.memorizewords.domain.word.model.word.WordRoot
 import com.chen.memorizewords.feature.learning.databinding.HomeRvItemRootsBinding
 
 class RootsAdapter :

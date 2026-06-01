@@ -1,7 +1,8 @@
 package com.chen.memorizewords.feature.home.ui.home
 
-import com.chen.memorizewords.domain.orchestrator.learning.LearningSessionFacade
-import com.chen.memorizewords.domain.repository.WordOrderType
+import com.chen.memorizewords.core.navigation.AppRoute
+import com.chen.memorizewords.domain.study.orchestrator.learning.LearningSessionFacade
+import com.chen.memorizewords.domain.wordbook.repository.WordOrderType
 
 internal class HomeLearningLauncher(
     private val learningSessionFacade: LearningSessionFacade
@@ -11,7 +12,7 @@ internal class HomeLearningLauncher(
         bookId: Long,
         count: Int,
         orderType: WordOrderType
-    ): HomeViewModel.Route.ToLearning? {
+    ): AppRoute.Learning? {
         return createLearningRoute(
             learningSessionFacade.createNewSessionRequest(
                 bookId = bookId,
@@ -25,7 +26,7 @@ internal class HomeLearningLauncher(
         bookId: Long,
         count: Int,
         orderType: WordOrderType
-    ): HomeViewModel.Route.ToLearning? {
+    ): AppRoute.Learning? {
         return createLearningRoute(
             learningSessionFacade.createReviewSessionRequest(
                 bookId = bookId,

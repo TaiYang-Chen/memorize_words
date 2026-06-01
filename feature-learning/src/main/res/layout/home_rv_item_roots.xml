@@ -6,7 +6,7 @@
 
         <variable
             name="data"
-            type="com.chen.memorizewords.domain.model.words.word.WordRoot" />
+            type="com.chen.memorizewords.domain.word.model.word.WordRoot" />
     </data>
 
     <LinearLayout

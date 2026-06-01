@@ -2,17 +2,18 @@ package com.chen.memorizewords.feature.learning.ui.done
 
 import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.common.resource.ResourceProvider
+import com.chen.memorizewords.core.navigation.AppRoute
+import com.chen.memorizewords.core.navigation.LearningSessionRequest
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
-import com.chen.memorizewords.domain.model.learning.LearningSessionRequest
-import com.chen.memorizewords.domain.orchestrator.learning.LearningSessionFacade
-import com.chen.memorizewords.domain.query.word.WordReadFacade
-import com.chen.memorizewords.domain.service.study.StudyStatsFacade
-import com.chen.memorizewords.domain.usecase.wordbook.GetCurrentWordBookUseCase
-import com.chen.memorizewords.domain.usecase.wordbook.GetStudyPlanUseCase
-import com.chen.memorizewords.domain.model.study.record.TodayCheckInEntryState
-import com.chen.memorizewords.domain.model.words.WordListRow
-import com.chen.memorizewords.domain.model.words.enums.PartOfSpeech
-import com.chen.memorizewords.domain.model.words.word.Word
+import com.chen.memorizewords.domain.study.orchestrator.learning.LearningSessionFacade
+import com.chen.memorizewords.domain.word.query.WordReadFacade
+import com.chen.memorizewords.domain.study.service.StudyStatsFacade
+import com.chen.memorizewords.domain.wordbook.usecase.GetCurrentWordBookUseCase
+import com.chen.memorizewords.domain.wordbook.usecase.GetStudyPlanUseCase
+import com.chen.memorizewords.domain.study.model.record.TodayCheckInEntryState
+import com.chen.memorizewords.domain.word.model.WordListRow
+import com.chen.memorizewords.domain.word.model.enums.PartOfSpeech
+import com.chen.memorizewords.domain.word.model.word.Word
 import com.chen.memorizewords.feature.learning.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -22,6 +23,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import com.chen.memorizewords.domain.study.model.learning.LearningSessionRequest as DomainLearningSessionRequest
 
 @HiltViewModel
 class LearningDoneViewModel @Inject constructor(
@@ -53,11 +55,6 @@ class LearningDoneViewModel @Inject constructor(
     }
 
     sealed interface Route {
-        data class ToLearning(
-            val request: LearningSessionRequest,
-            val replaceCurrent: Boolean = true
-        ) : Route
-
         data object ToCheckIn : Route
     }
 
@@ -180,7 +177,13 @@ class LearningDoneViewModel @Inject constructor(
                 return@launch
             }
 
-            navigateRoute(Route.ToLearning(request = nextSessionRequest))
+            navigate(
+                AppRoute.Learning(
+                    wordIds = nextSessionRequest.wordIds,
+                    sessionType = nextSessionRequest.sessionType,
+                    sessionWordCount = nextSessionRequest.sessionWordCount
+                )
+            )
         }
     }
 

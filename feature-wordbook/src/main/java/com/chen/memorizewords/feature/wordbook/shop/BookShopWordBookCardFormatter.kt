@@ -1,7 +1,7 @@
 package com.chen.memorizewords.feature.wordbook.shop
 
 import android.content.Context
-import com.chen.memorizewords.domain.model.wordbook.WordBook
+import com.chen.memorizewords.domain.wordbook.model.WordBook
 import com.chen.memorizewords.feature.wordbook.R
 import java.text.NumberFormat
 

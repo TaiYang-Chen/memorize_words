@@ -1,5 +1,7 @@
 package com.chen.memorizewords.speech
 
+import com.chen.memorizewords.domain.practice.speech.PracticeSpeechSynthesizer
+import com.chen.memorizewords.domain.practice.speech.ShadowingEvaluator
 import com.chen.memorizewords.speech.api.SpeechProviderSelector
 import com.chen.memorizewords.speech.api.SpeechProviderType
 import com.chen.memorizewords.speech.api.SpeechService
@@ -27,6 +29,16 @@ abstract class SpeechBindingModule {
 
     @Binds
     abstract fun bindSpeechService(impl: SpeechServiceImpl): SpeechService
+
+    @Binds
+    abstract fun bindPracticeSpeechSynthesizer(
+        impl: PracticeSpeechDomainAdapter
+    ): PracticeSpeechSynthesizer
+
+    @Binds
+    abstract fun bindShadowingEvaluator(
+        impl: PracticeSpeechDomainAdapter
+    ): ShadowingEvaluator
 
     @Binds
     abstract fun bindSpeechProviderSelector(

@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.chen.memorizewords.SplashActivity
-import com.chen.memorizewords.domain.service.wordbook.WordBookUpdateCoordinator
+import com.chen.memorizewords.domain.wordbook.service.WordBookUpdateCoordinator
 import com.chen.memorizewords.feature.home.notification.WordBookUpdateNotifier
 import javax.inject.Inject
 import javax.inject.Provider

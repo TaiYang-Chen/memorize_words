@@ -4,8 +4,8 @@ import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
-import com.chen.memorizewords.domain.model.feedback.FeedbackImagePayload
-import com.chen.memorizewords.domain.usecase.feedback.SubmitFeedbackUseCase
+import com.chen.memorizewords.domain.feedback.model.FeedbackImagePayload
+import com.chen.memorizewords.domain.feedback.usecase.SubmitFeedbackUseCase
 import com.chen.memorizewords.feature.feedback.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

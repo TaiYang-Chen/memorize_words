@@ -3,21 +3,23 @@ package com.chen.memorizewords.feature.home.ui.home
 import android.text.Html
 import android.text.Spanned
 import androidx.lifecycle.viewModelScope
+import com.chen.memorizewords.core.navigation.AppRoute
+import com.chen.memorizewords.core.navigation.LearningSessionRequest
 import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.core.ui.vm.UiEvent
-import com.chen.memorizewords.domain.model.learning.LearningSessionRequest
-import com.chen.memorizewords.domain.model.study.StudyPlan
-import com.chen.memorizewords.domain.model.sync.SyncBannerState
-import com.chen.memorizewords.domain.model.user.User
-import com.chen.memorizewords.domain.model.words.word.Word
-import com.chen.memorizewords.domain.model.wordbook.WordBookInfo
-import com.chen.memorizewords.domain.orchestrator.learning.LearningSessionFacade
-import com.chen.memorizewords.domain.service.study.StudyStatsFacade
-import com.chen.memorizewords.domain.service.sync.SyncFacade
-import com.chen.memorizewords.domain.usecase.user.GetCurrentUserUseCase
-import com.chen.memorizewords.domain.usecase.wordbook.GetCurrentWordBookInfoFlowUseCase
-import com.chen.memorizewords.domain.usecase.wordbook.GetStudyPlanFlowUseCase
+import com.chen.memorizewords.domain.study.model.learning.LearningSessionRequest as DomainLearningSessionRequest
+import com.chen.memorizewords.domain.wordbook.model.study.StudyPlan
+import com.chen.memorizewords.domain.sync.model.SyncBannerState
+import com.chen.memorizewords.domain.account.model.user.User
+import com.chen.memorizewords.domain.word.model.word.Word
+import com.chen.memorizewords.domain.wordbook.model.WordBookInfo
+import com.chen.memorizewords.domain.study.orchestrator.learning.LearningSessionFacade
+import com.chen.memorizewords.domain.study.service.StudyStatsFacade
+import com.chen.memorizewords.domain.sync.service.SyncFacade
+import com.chen.memorizewords.domain.account.usecase.user.GetCurrentUserUseCase
+import com.chen.memorizewords.domain.wordbook.usecase.GetCurrentWordBookInfoFlowUseCase
+import com.chen.memorizewords.domain.wordbook.usecase.GetStudyPlanFlowUseCase
 import com.chen.memorizewords.feature.home.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,18 +51,7 @@ class HomeViewModel @Inject constructor(
     }
 
     sealed interface Route {
-        data object ToWordBook : Route
         data object ToPendingSyncDetails : Route
-        data class ToLearning(
-            val request: LearningSessionRequest,
-            val learningWords: List<Word> = emptyList()
-        ) : Route {
-            val sessionType: Int
-                get() = request.sessionType
-
-            val sessionWordCount: Int
-                get() = request.sessionWordCount
-        }
     }
 
     val user: MutableStateFlow<User?> = MutableStateFlow(null)
@@ -138,7 +129,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun toWordBookActivity() {
-        navigateRoute(Route.ToWordBook)
+        navigate(AppRoute.WordBook())
     }
 
     fun onSyncBannerClicked() {
@@ -243,26 +234,27 @@ internal fun resolveReviewWordCount(plan: StudyPlan): Int {
 }
 
 internal fun createLearningRoute(
-    request: LearningSessionRequest?
-): HomeViewModel.Route.ToLearning? {
+    request: DomainLearningSessionRequest?
+): AppRoute.Learning? {
     val safeRequest = request ?: return null
     if (safeRequest.wordIds.isEmpty()) return null
-    return HomeViewModel.Route.ToLearning(safeRequest)
+    return AppRoute.Learning(
+        wordIds = safeRequest.wordIds,
+        sessionType = safeRequest.sessionType,
+        sessionWordCount = safeRequest.sessionWordCount
+    )
 }
 
 internal fun createLearningRoute(
     learningWords: List<Word>,
     sessionType: Int,
     sessionWordCount: Int
-): HomeViewModel.Route.ToLearning? {
+): AppRoute.Learning? {
     if (learningWords.isEmpty()) return null
-    return HomeViewModel.Route.ToLearning(
-        request = LearningSessionRequest(
-            wordIds = learningWords.map { it.id },
-            sessionType = sessionType,
-            sessionWordCount = sessionWordCount
-        ),
-        learningWords = learningWords
+    return AppRoute.Learning(
+        wordIds = learningWords.map { it.id },
+        sessionType = sessionType,
+        sessionWordCount = sessionWordCount
     )
 }
 

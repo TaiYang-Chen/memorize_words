@@ -3,8 +3,10 @@ package com.chen.memorizewords
 import android.app.ActivityManager
 import android.app.Application
 import android.os.Build
+import android.util.Log
 import androidx.work.Configuration
 import com.chen.memorizewords.startup.ApplicationStartupManager
+import com.chen.memorizewords.startup.LocalAssetResetter
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -17,7 +19,6 @@ import kotlinx.coroutines.SupervisorJob
 @HiltAndroidApp
 class MemorizeWordsApplication : Application(), Configuration.Provider {
 
-    // Application 只保留全局协程作用域和启动分发，不再直接组装各类启动任务依赖。
     private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private val appEntryPoint by lazy(LazyThreadSafetyMode.NONE) {
         EntryPointAccessors.fromApplication(
@@ -28,8 +29,11 @@ class MemorizeWordsApplication : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
-        // 浮窗服务运行在独立进程，跳过主进程的启动任务，避免重复初始化。
         if (isFloatingProcess()) return
+
+        val resetReport = LocalAssetResetter.resetLegacyAssetsIfNeeded(this)
+        Log.i("LocalAssetResetter", resetReport.summary())
+
         appEntryPoint.applicationStartupManager()
             .start(application = this, appScope = appScope)
     }

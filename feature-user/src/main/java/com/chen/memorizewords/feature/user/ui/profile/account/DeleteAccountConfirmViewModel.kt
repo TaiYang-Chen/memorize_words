@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.core.ui.vm.UiEffect
-import com.chen.memorizewords.domain.usecase.user.DeleteAccountUseCase
+import com.chen.memorizewords.domain.account.usecase.user.DeleteAccountUseCase
 import com.chen.memorizewords.feature.user.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject

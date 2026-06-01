@@ -2,7 +2,7 @@ package com.chen.memorizewords.feature.home.ui.sync
 
 import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
-import com.chen.memorizewords.domain.service.sync.SyncFacade
+import com.chen.memorizewords.domain.sync.service.SyncFacade
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow

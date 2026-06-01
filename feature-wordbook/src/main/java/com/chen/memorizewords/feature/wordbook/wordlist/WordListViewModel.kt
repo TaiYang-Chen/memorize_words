@@ -9,11 +9,11 @@ import androidx.paging.cachedIn
 import com.chen.memorizewords.core.common.paging.PageSlicePagingSource
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.feature.wordbook.R
-import com.chen.memorizewords.domain.model.wordbook.WordListQuery
-import com.chen.memorizewords.domain.model.words.WordListRow
-import com.chen.memorizewords.domain.model.words.enums.WordFilter
-import com.chen.memorizewords.domain.usecase.wordbook.GetBookNameByIdUseCase
-import com.chen.memorizewords.domain.usecase.wordbook.GetWordBookWordRowsPageUseCase
+import com.chen.memorizewords.domain.wordbook.model.WordListQuery
+import com.chen.memorizewords.domain.word.model.WordListRow
+import com.chen.memorizewords.domain.word.model.enums.WordFilter
+import com.chen.memorizewords.domain.wordbook.usecase.GetBookNameByIdUseCase
+import com.chen.memorizewords.domain.wordbook.usecase.GetWordBookWordRowsPageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi

@@ -2,7 +2,7 @@ package com.chen.memorizewords.feature.wordbook.plan
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.chen.memorizewords.domain.model.learning.LearningTestMode
+import com.chen.memorizewords.domain.wordbook.model.learning.LearningTestMode
 
 data class StudyModeUiModel(
     val mode: LearningTestMode,

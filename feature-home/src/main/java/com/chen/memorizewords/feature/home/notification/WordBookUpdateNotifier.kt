@@ -13,8 +13,8 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.chen.memorizewords.core.navigation.WordBookEntry
 import com.chen.memorizewords.core.navigation.WordBookEntryDestination
-import com.chen.memorizewords.domain.model.wordbook.WordBookUpdateImportance
-import com.chen.memorizewords.domain.model.wordbook.WordBookUpdatePrompt
+import com.chen.memorizewords.domain.wordbook.model.WordBookUpdateImportance
+import com.chen.memorizewords.domain.wordbook.model.WordBookUpdatePrompt
 import com.chen.memorizewords.feature.home.R
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject

@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
-import com.chen.memorizewords.domain.model.wordbook.shop.DownloadState
+import com.chen.memorizewords.domain.wordbook.model.shop.DownloadState
 import com.chen.memorizewords.feature.wordbook.R
 import com.chen.memorizewords.feature.wordbook.databinding.ModuleWordbookFragmentBookShopBinding
 import com.google.android.material.tabs.TabLayout

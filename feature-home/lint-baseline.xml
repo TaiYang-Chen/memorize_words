@@ -1,0 +1,3740 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.12.3" type="baseline" client="gradle" dependencies="false" name="AGP (8.12.3)" variant="all" version="8.12.3">
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`bottom_nav_color_state`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_bottom_nav_color_state`&apos; ?"
+        errorLine1="&lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~~~~">
+        <location
+            file="src/main/res/color/bottom_nav_color_state.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`btn_scale_animator`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_btn_scale_animator`&apos; ?"
+        errorLine1="&lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~~~~">
+        <location
+            file="src/main/res/animator/btn_scale_animator.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_entry_primary`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_entry_primary`&apos; ?"
+        errorLine1="    &lt;color name=&quot;practice_entry_primary&quot;>#2D6AE3&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors_practice_entry_select.xml"
+            line="3"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_entry_outline`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_entry_outline`&apos; ?"
+        errorLine1="    &lt;color name=&quot;practice_entry_outline&quot;>#E2E8F0&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors_practice_entry_select.xml"
+            line="4"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_entry_card_bg`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_entry_card_bg`&apos; ?"
+        errorLine1="    &lt;color name=&quot;practice_entry_card_bg&quot;>#F8FAFC&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors_practice_entry_select.xml"
+            line="5"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_entry_handle`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_entry_handle`&apos; ?"
+        errorLine1="    &lt;color name=&quot;practice_entry_handle&quot;>#E2E8F0&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors_practice_entry_select.xml"
+            line="6"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_record_icon_bg`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_record_icon_bg`&apos; ?"
+        errorLine1="    &lt;color name=&quot;practice_record_icon_bg&quot;>#EFF6FF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors_practice_record.xml"
+            line="3"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_record_icon_listening`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_record_icon_listening`&apos; ?"
+        errorLine1="    &lt;color name=&quot;practice_record_icon_listening&quot;>#3B82F6&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors_practice_record.xml"
+            line="4"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_record_icon_shadowing`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_record_icon_shadowing`&apos; ?"
+        errorLine1="    &lt;color name=&quot;practice_record_icon_shadowing&quot;>#F97316&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors_practice_record.xml"
+            line="5"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_record_icon_spelling`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_record_icon_spelling`&apos; ?"
+        errorLine1="    &lt;color name=&quot;practice_record_icon_spelling&quot;>#22C55E&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors_practice_record.xml"
+            line="6"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_record_icon_audio_loop`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_record_icon_audio_loop`&apos; ?"
+        errorLine1="    &lt;color name=&quot;practice_record_icon_audio_loop&quot;>#8B5CF6&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors_practice_record.xml"
+            line="7"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_record_icon_exam`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_record_icon_exam`&apos; ?"
+        errorLine1="    &lt;color name=&quot;practice_record_icon_exam&quot;>#0F766E&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors_practice_record.xml"
+            line="8"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_record_subtitle`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_record_subtitle`&apos; ?"
+        errorLine1="    &lt;color name=&quot;practice_record_subtitle&quot;>#64748B&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors_practice_record.xml"
+            line="9"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_record_empty`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_record_empty`&apos; ?"
+        errorLine1="    &lt;color name=&quot;practice_record_empty&quot;>#94A3B8&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors_practice_record.xml"
+            line="10"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`dialog_home_boost_new_words`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_dialog_home_boost_new_words`&apos; ?"
+        errorLine1="&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/dialog_home_boost_new_words.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`dialog_practice_entry_select`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_dialog_practice_entry_select`&apos; ?"
+        errorLine1="&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/dialog_practice_entry_select.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`include_daily_plan`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_include_daily_plan`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/include_daily_plan.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`include_study_button`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_include_study_button`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_button.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`include_word_book`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_include_word_book`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/include_word_book.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`item_calendar_day`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_item_calendar_day`&apos; ?"
+        errorLine1="&lt;FrameLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_calendar_day.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`item_calendar_month_page`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_item_calendar_month_page`&apos; ?"
+        errorLine1="&lt;com.chen.memorizewords.feature.home.ui.stats.CalendarMonthGridView xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_calendar_month_page.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`item_practice_record`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_item_practice_record`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/item_practice_record.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`item_practice_record_word`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_item_practice_record_word`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/item_practice_record_word.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`item_stats_day_word`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_item_stats_day_word`&apos; ?"
+        errorLine1="&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_stats_day_word.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`item_week_bar`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_item_week_bar`&apos; ?"
+        errorLine1="&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_week_bar.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_account_circle_1e293b`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_account_circle_1e293b`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_account_circle_1e293b.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_activity_home`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_activity_home`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_activity_home.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_auto_stories_4f46e5`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_auto_stories_4f46e5`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_auto_stories_4f46e5.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_bg_border_161f31`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_bg_border_161f31`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_bg_border_161f31.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_bg_circle_4ade80`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_bg_circle_4ade80`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_bg_circle_4ade80.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_bg_circle_60a5fa`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_bg_circle_60a5fa`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_bg_circle_60a5fa.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_bg_circle_fb9034`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_bg_circle_fb9034`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_bg_circle_fb9034.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_bg_home`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_bg_home`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_bg_home.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_bg_oval_f0fdf4`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_bg_oval_f0fdf4`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_bg_oval_f0fdf4.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_bg_oval_faf5ff`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_bg_oval_faf5ff`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_bg_oval_faf5ff.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_bg_oval_fff7ed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_bg_oval_fff7ed`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_bg_oval_fff7ed.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_bg_practice_entry_card`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_bg_practice_entry_card`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_bg_practice_entry_card.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_bg_practice_entry_handle`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_bg_practice_entry_handle`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_bg_practice_entry_handle.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_bg_practice_entry_input`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_bg_practice_entry_input`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_bg_practice_entry_input.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_bg_practice_entry_sheet`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_bg_practice_entry_sheet`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_bg_practice_entry_sheet.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_bg_practice_record_icon`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_bg_practice_record_icon`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_bg_practice_record_icon.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_bg_radius_13ec80`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_bg_radius_13ec80`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_bg_radius_13ec80.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_bg_radius_d5fbea`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_bg_radius_d5fbea`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_bg_radius_d5fbea.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_bottom_nav`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_bottom_nav`&apos; ?"
+        errorLine1="&lt;menu xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~">
+        <location
+            file="src/main/res/menu/module_home_bottom_nav.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_chevron_right_8364cc`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_chevron_right_8364cc`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:height=&quot;16dp&quot; android:viewportHeight=&quot;24&quot; android:viewportWidth=&quot;24&quot; android:width=&quot;16dp&quot;>"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_chevron_right_8364cc.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_dialog_practice_record_detail`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_dialog_practice_record_detail`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_dialog_practice_record_detail.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_dialog_stats_day_detail`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_dialog_stats_day_detail`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_dialog_stats_day_detail.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_edit_calendar_6b46c1`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_edit_calendar_6b46c1`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_edit_calendar_6b46c1.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_favorite_16a34a`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_favorite_16a34a`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_favorite_16a34a.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_feedback_ea580c`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_feedback_ea580c`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_feedback_ea580c.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_fragment_home`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_fragment_home`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_home.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_fragment_practice`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_fragment_practice`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_practice.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_fragment_profile`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_fragment_profile`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_fragment_stats`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_fragment_stats`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_history_1a978b`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_history_1a978b`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_history_1a978b.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_ic_home`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_ic_home`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:height=&quot;24dp&quot; android:viewportHeight=&quot;1024&quot; android:viewportWidth=&quot;1024&quot; android:width=&quot;24dp&quot;>"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_ic_home.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_ic_profile`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_ic_profile`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_ic_profile.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_ic_right`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_ic_right`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_ic_right.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_ic_right_black`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_ic_right_black`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_ic_right_black.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_info_9333ea`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_info_9333ea`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_info_9333ea.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_menu_1e293b`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_menu_1e293b`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_menu_1e293b.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_practice_circle_listening`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_practice_circle_listening`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_practice_circle_listening.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_practice_circle_shadowing`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_practice_circle_shadowing`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_practice_circle_shadowing.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_practice_circle_spelling`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_practice_circle_spelling`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_practice_circle_spelling.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_qr_code_scanner_172337`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_qr_code_scanner_172337`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_qr_code_scanner_172337.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_refresh_fff`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_refresh_fff`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_refresh_fff.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_select_border_gray`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_select_border_gray`&apos; ?"
+        errorLine1="&lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_select_border_gray.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_select_radius_black`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_select_radius_black`&apos; ?"
+        errorLine1="&lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_select_radius_black.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_stats_card_bg`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_stats_card_bg`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_stats_card_bg.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_stats_day_bg_selected`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_stats_day_bg_selected`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_stats_day_bg_selected.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_stats_day_today_dot`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_stats_day_today_dot`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_stats_day_today_dot.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_stats_filter_selector`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_stats_filter_selector`&apos; ?"
+        errorLine1="&lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_stats_filter_selector.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_stats_nav_btn_bg`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_stats_nav_btn_bg`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_home_stats_nav_btn_bg.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`stats_filter_text_selector`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_stats_filter_text_selector`&apos; ?"
+        errorLine1="&lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~~~~">
+        <location
+            file="src/main/res/color/stats_filter_text_selector.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;title&quot;>小白背单词&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="3"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`profile`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_profile`&apos; ?"
+        errorLine1="    &lt;string name=&quot;profile&quot;>个人中心&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="4"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_nav_home`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_nav_home`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_nav_home&quot;>首页&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="5"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_nav_practice`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_nav_practice`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_nav_practice&quot;>练习&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="6"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_nav_stats`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_nav_stats`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_nav_stats&quot;>统计&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="7"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_nav_profile`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_nav_profile`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_nav_profile&quot;>我的&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="8"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_stats_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_stats_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_stats_title&quot;>学习统计&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="10"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_learning_calendar`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_learning_calendar`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_learning_calendar&quot;>学习日历&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="11"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_week_mon`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_week_mon`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_week_mon&quot;>一&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="12"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_week_tue`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_week_tue`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_week_tue&quot;>二&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="13"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_week_wed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_week_wed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_week_wed&quot;>三&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="14"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_week_thu`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_week_thu`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_week_thu&quot;>四&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="15"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_week_fri`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_week_fri`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_week_fri&quot;>五&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="16"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_week_sat`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_week_sat`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_week_sat&quot;>六&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="17"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_week_sun`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_week_sun`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_week_sun&quot;>日&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="18"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_calendar_legend_studied`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_calendar_legend_studied`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_calendar_legend_studied&quot;>已学习&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="19"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_calendar_legend_new_done`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_calendar_legend_new_done`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_calendar_legend_new_done&quot;>新词完成&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="20"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_calendar_legend_review_done`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_calendar_legend_review_done`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_calendar_legend_review_done&quot;>复习完成&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="21"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_calendar_legend_all_done`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_calendar_legend_all_done`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_calendar_legend_all_done&quot;>全部完成&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="22"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_calendar_legend_checked_in`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_calendar_legend_checked_in`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_calendar_legend_checked_in&quot;>已打卡&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="23"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_learning_achievements`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_learning_achievements`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_learning_achievements&quot;>学习成就&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="24"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_days`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_days`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_days&quot;>天数&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="25"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_minutes_unit`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_minutes_unit`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_minutes_unit&quot;>分钟&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="26"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_days_unit`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_days_unit`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_days_unit&quot;>天&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="27"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_duration`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_duration`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_duration&quot;>时长&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="28"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_words`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_words`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_words&quot;>词数&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="29"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_weekly_word_bars`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_weekly_word_bars`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_weekly_word_bars&quot;>周词量柱状图&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="30"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_filter_all`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_filter_all`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_filter_all&quot;>全部&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="31"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_filter_new`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_filter_new`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_filter_new&quot;>新词&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="32"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_filter_review`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_filter_review`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_filter_review&quot;>复习&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="33"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_weekly_duration_bars`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_weekly_duration_bars`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_weekly_duration_bars&quot;>周时长柱状图&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="34"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_learn_button_start`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_learn_button_start`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_learn_button_start&quot;>开始学习&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="36"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_learn_button_continue`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_learn_button_continue`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_learn_button_continue&quot;>继续学习&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="37"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_learn_button_new_more`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_learn_button_new_more`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_learn_button_new_more&quot;>加量新学&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="38"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_learning_no_words`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_learning_no_words`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_learning_no_words&quot;>当前没有可学习的单词&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="39"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_plan_remaining_both`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_plan_remaining_both`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_plan_remaining_both&quot;>今日剩余：新学%1$d词，复习%2$d词&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="40"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_plan_remaining_review_only`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_plan_remaining_review_only`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_plan_remaining_review_only&quot;>新词计划已完成，剩余复习%1$d词&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="41"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_plan_remaining_new_only`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_plan_remaining_new_only`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_plan_remaining_new_only&quot;>复习计划已完成，剩余新学%1$d词&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="42"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_plan_completed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_plan_completed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_plan_completed&quot;>今日计划已完成&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="43"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_plan_not_started`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_plan_not_started`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_plan_not_started&quot;>今日尚未开始学习&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="44"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_sync_banner_offline`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_sync_banner_offline`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_sync_banner_offline&quot;>当前离线，还有 %1$d 条数据待上传&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="45"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_sync_banner_pending`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_sync_banner_pending`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_sync_banner_pending&quot;>还有 %1$d 条数据待上传，系统会自动重试&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="46"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_sync_banner_blocked`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_sync_banner_blocked`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_sync_banner_blocked&quot;>还有 %1$d 条数据待上传，当前需要处理异常后才能继续上传&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="47"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_duration_hours_minutes`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_duration_hours_minutes`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_duration_hours_minutes&quot;>%1$d小时%2$d分钟&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="48"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_duration_minutes`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_duration_minutes`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_duration_minutes&quot;>%1$d分钟&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="49"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_duration_hours`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_duration_hours`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_duration_hours&quot;>%1$d小时&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="50"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_exit_confirm`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_exit_confirm`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_exit_confirm&quot;>再按一次退出应用&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="51"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_logout_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_logout_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_logout_failed&quot;>退出登录失败&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="52"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_logout_risk_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_logout_risk_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_logout_risk_title&quot;>同步风险提示&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="53"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_logout_risk_message`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_logout_risk_message`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_logout_risk_message&quot;>当前有学习数据尚未同步，继续退出可能导致记录丢失，是否继续？&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="54"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_practice_overview`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_practice_overview`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_practice_overview&quot;>练习概览&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="55"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_practice_today_duration`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_practice_today_duration`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_practice_today_duration&quot;>今日练习时间&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="56"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_practice_increase`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_practice_increase`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_practice_increase&quot;>较昨日增加&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="57"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_practice_total_duration`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_practice_total_duration`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_practice_total_duration&quot;>累计练习时间&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="58"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_practice_streak_days`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_practice_streak_days`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_practice_streak_days&quot;>坚持练习天数&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="59"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_practice_records`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_practice_records`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_practice_records&quot;>练习记录&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="60"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_practice_records_empty`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_practice_records_empty`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_practice_records_empty&quot;>暂时还没有练习记录，\n选择您想练习的模式，\n开启今日的沉浸式学习旅程。&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="61"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_practice_record_today`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_practice_record_today`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_practice_record_today&quot;>今日&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="62"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_practice_mode_listening`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_practice_mode_listening`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_practice_mode_listening&quot;>听力&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="63"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_practice_mode_shadowing`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_practice_mode_shadowing`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_practice_mode_shadowing&quot;>跟读&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="64"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_practice_mode_spelling`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_practice_mode_spelling`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_practice_mode_spelling&quot;>拼写&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="65"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_practice_mode_audio_loop`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_practice_mode_audio_loop`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_practice_mode_audio_loop&quot;>随身听&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="66"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_practice_mode_exam`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_practice_mode_exam`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_practice_mode_exam&quot;>真题&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="67"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_practice_entry_self`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_practice_entry_self`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_practice_entry_self&quot;>自选%1$d个&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="68"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_practice_entry_random`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_practice_entry_random`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_practice_entry_random&quot;>随机%1$d个&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="69"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_practice_record_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_practice_record_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_practice_record_title&quot;>%1$s · %2$s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="70"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_practice_record_duration`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_practice_record_duration`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_practice_record_duration&quot;>练习时长 %1$s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="71"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_practice_no_book`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_practice_no_book`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_practice_no_book&quot;>请先选择词书&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="72"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_practice_no_words`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_practice_no_words`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_practice_no_words&quot;>当前没有可练习的单词&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="73"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_makeup_button`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_makeup_button`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_makeup_button&quot;>立即补签&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_checkin.xml"
+            line="3"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_makeup_button_with_count`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_makeup_button_with_count`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_makeup_button_with_count&quot;>补签(%1$d张)&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_checkin.xml"
+            line="4"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_makeup_button_pending`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_makeup_button_pending`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_makeup_button_pending&quot;>补签(待同步)&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_checkin.xml"
+            line="5"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_makeup_success`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_makeup_success`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_makeup_success&quot;>补签成功&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_checkin.xml"
+            line="6"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_makeup_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_makeup_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_makeup_failed&quot;>补签失败，请稍后重试&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_checkin.xml"
+            line="7"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_makeup_future_date`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_makeup_future_date`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_makeup_future_date&quot;>只能补签今天之前的日期&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_checkin.xml"
+            line="8"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_makeup_balance_unknown`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_makeup_balance_unknown`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_makeup_balance_unknown&quot;>补签卡余额未同步，请联网后重试&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_checkin.xml"
+            line="9"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_makeup_no_card`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_makeup_no_card`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_makeup_no_card&quot;>暂无可用补签卡&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_checkin.xml"
+            line="10"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_checkin_auto`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_checkin_auto`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_checkin_auto&quot;>已自动打卡&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_checkin_status.xml"
+            line="3"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_checkin_makeup`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_checkin_makeup`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_checkin_makeup&quot;>已补签&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_checkin_status.xml"
+            line="4"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_checkin_available`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_checkin_available`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_checkin_available&quot;>可补签&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_checkin_status.xml"
+            line="5"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_entry_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_entry_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;practice_entry_title&quot;>选择练习用词&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_practice_entry_select.xml"
+            line="3"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_entry_subtitle`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_entry_subtitle`&apos; ?"
+        errorLine1="    &lt;string name=&quot;practice_entry_subtitle&quot;>随机从已学复习词中抽取，或自主选择单词进行专项练习&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_practice_entry_select.xml"
+            line="4"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_entry_count_label`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_entry_count_label`&apos; ?"
+        errorLine1="    &lt;string name=&quot;practice_entry_count_label&quot;>练习词量&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_practice_entry_select.xml"
+            line="5"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_entry_count_hint`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_entry_count_hint`&apos; ?"
+        errorLine1="    &lt;string name=&quot;practice_entry_count_hint&quot;>随机数量（默认20）&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_practice_entry_select.xml"
+            line="6"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_entry_count_unit`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_entry_count_unit`&apos; ?"
+        errorLine1="    &lt;string name=&quot;practice_entry_count_unit&quot;>词&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_practice_entry_select.xml"
+            line="7"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_entry_tip`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_entry_tip`&apos; ?"
+        errorLine1="    &lt;string name=&quot;practice_entry_tip&quot;>提示：系统将优先选择记忆模糊的单词&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_practice_entry_select.xml"
+            line="8"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_entry_random_btn`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_entry_random_btn`&apos; ?"
+        errorLine1="    &lt;string name=&quot;practice_entry_random_btn&quot;>随机选词&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_practice_entry_select.xml"
+            line="9"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_entry_self_btn`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_entry_self_btn`&apos; ?"
+        errorLine1="    &lt;string name=&quot;practice_entry_self_btn&quot;>自主选词&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_practice_entry_select.xml"
+            line="10"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_record_detail_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_record_detail_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;practice_record_detail_title&quot;>练习记录详情&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_practice_record.xml"
+            line="3"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_record_detail_empty`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_record_detail_empty`&apos; ?"
+        errorLine1="    &lt;string name=&quot;practice_record_detail_empty&quot;>暂无词表&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_practice_record.xml"
+            line="4"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_record_mode_listening`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_record_mode_listening`&apos; ?"
+        errorLine1="    &lt;string name=&quot;practice_record_mode_listening&quot;>听力&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_practice_record.xml"
+            line="5"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_record_mode_shadowing`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_record_mode_shadowing`&apos; ?"
+        errorLine1="    &lt;string name=&quot;practice_record_mode_shadowing&quot;>跟读&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_practice_record.xml"
+            line="6"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_record_mode_spelling`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_record_mode_spelling`&apos; ?"
+        errorLine1="    &lt;string name=&quot;practice_record_mode_spelling&quot;>拼写&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_practice_record.xml"
+            line="7"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_record_mode_audio_loop`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_record_mode_audio_loop`&apos; ?"
+        errorLine1="    &lt;string name=&quot;practice_record_mode_audio_loop&quot;>随身听&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_practice_record.xml"
+            line="8"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_record_mode_exam`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_record_mode_exam`&apos; ?"
+        errorLine1="    &lt;string name=&quot;practice_record_mode_exam&quot;>真题&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_practice_record.xml"
+            line="9"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_record_word_phonetic_empty`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_record_word_phonetic_empty`&apos; ?"
+        errorLine1="    &lt;string name=&quot;practice_record_word_phonetic_empty&quot;>暂无音标&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_practice_record.xml"
+            line="10"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_record_word_definition_empty`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_record_word_definition_empty`&apos; ?"
+        errorLine1="    &lt;string name=&quot;practice_record_word_definition_empty&quot;>暂无释义&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_practice_record.xml"
+            line="11"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_record_percentage`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_record_percentage`&apos; ?"
+        errorLine1="    &lt;string name=&quot;practice_record_percentage&quot;>%1$d%%&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_practice_record.xml"
+            line="12"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_record_not_available`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_record_not_available`&apos; ?"
+        errorLine1="    &lt;string name=&quot;practice_record_not_available&quot;>暂无&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_practice_record.xml"
+            line="13"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_record_spelling_summary`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_record_spelling_summary`&apos; ?"
+        errorLine1="    &lt;string name=&quot;practice_record_spelling_summary&quot;>完成 %1$d/%2$d · 完成率 %3$d%% · 正确 %4$d · 结算正确率 %5$s · 提交 %6$d 次&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_practice_record.xml"
+            line="14"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`practice_record_spelling_summary_brief`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_practice_record_spelling_summary_brief`&apos; ?"
+        errorLine1="    &lt;string name=&quot;practice_record_spelling_summary_brief&quot;>完成率 %1$d%% · 结算正确率 %2$s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_practice_record.xml"
+            line="15"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_back_today`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_back_today`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_back_today&quot;>今天&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_calendar.xml"
+            line="3"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_calendar_future_disabled`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_calendar_future_disabled`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_calendar_future_disabled&quot;>已是当前月份&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_calendar.xml"
+            line="4"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_empty`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_empty`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_empty&quot;>当天未学习，0新学0复习0分钟&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_calendar.xml"
+            line="5"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_new_words`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_new_words`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_new_words&quot;>新学词条&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_calendar.xml"
+            line="6"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_review_words`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_review_words`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_review_words&quot;>复习词条&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_calendar.xml"
+            line="7"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_new_empty`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_new_empty`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_new_empty&quot;>当天无新学词条&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_calendar.xml"
+            line="8"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_review_empty`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_review_empty`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_review_empty&quot;>当天无复习词条&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_calendar.xml"
+            line="9"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_new_count`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_new_count`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_new_count&quot;>新学 %1$d&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_calendar.xml"
+            line="10"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_review_count`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_review_count`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_review_count&quot;>复习 %1$d&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_calendar.xml"
+            line="11"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_duration`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_duration`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_duration&quot;>学习时长 %1$s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_calendar.xml"
+            line="12"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_plan_all_done`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_plan_all_done`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_plan_all_done&quot;>新学计划、复习计划均已完成&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_calendar.xml"
+            line="13"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_plan_new_done`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_plan_new_done`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_plan_new_done&quot;>新学计划已完成，复习未完成&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_calendar.xml"
+            line="14"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_plan_review_done`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_plan_review_done`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_plan_review_done&quot;>复习计划已完成，新学未完成&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_calendar.xml"
+            line="15"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_plan_none_done`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_plan_none_done`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_plan_none_done&quot;>当天计划未全部完成&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_calendar.xml"
+            line="16"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_date`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_date`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_date&quot;>%1$s 学习详情&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_calendar.xml"
+            line="17"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`BottomNavigationTheme`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`FeatureHomeBottomNavigationTheme`&apos; ?"
+        errorLine1="    &lt;style name=&quot;BottomNavigationTheme&quot; parent=&quot;Widget.MaterialComponents.BottomNavigationView&quot;>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/styles.xml"
+            line="4"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`BottomNavTextActive`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`FeatureHomeBottomNavTextActive`&apos; ?"
+        errorLine1="    &lt;style name=&quot;BottomNavTextActive&quot; parent=&quot;TextAppearance.AppCompat.Caption&quot;>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/styles.xml"
+            line="19"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`BottomNavTextInactive`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`FeatureHomeBottomNavTextInactive`&apos; ?"
+        errorLine1="    &lt;style name=&quot;BottomNavTextInactive&quot; parent=&quot;TextAppearance.AppCompat.Caption&quot;>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/styles.xml"
+            line="24"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        message="Attribute `clipToOutline` is only used in API level 31 and higher (current min is 25)"
+        errorLine1="                android:clipToOutline=&quot;true&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="77"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains.kotlinx:kotlinx-coroutines-test than 1.8.1 is available: 1.10.2"
+        errorLine1="    testImplementation(&quot;org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1&quot;)"
+        errorLine2="                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle.kts"
+            line="63"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="SpUsage"
+        message="Should use &quot;`sp`&quot; instead of &quot;`dp`&quot; for text sizes"
+        errorLine1="            android:textSize=&quot;10dp&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
+            line="105"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="SpUsage"
+        message="Should use &quot;`sp`&quot; instead of &quot;`dp`&quot; for text sizes"
+        errorLine1="            android:textSize=&quot;10dp&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_home.xml"
+            line="102"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseCompatTextViewDrawableXml"
+        message="Use `app:drawableEndCompat` instead of `android:drawableEnd`"
+        errorLine1="                    android:drawableEnd=&quot;@drawable/module_home_chevron_right_8364cc&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_word_book.xml"
+            line="47"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="UseCompatTextViewDrawableXml"
+        message="Use `app:drawableStartCompat` instead of `android:drawableStart`"
+        errorLine1="                        android:drawableStart=&quot;@drawable/module_home_bg_circle_4ade80&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_word_book.xml"
+            line="78"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseCompatTextViewDrawableXml"
+        message="Use `app:drawableStartCompat` instead of `android:drawableStart`"
+        errorLine1="                        android:drawableStart=&quot;@drawable/module_home_bg_circle_60a5fa&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_word_book.xml"
+            line="103"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseCompatTextViewDrawableXml"
+        message="Use `app:drawableStartCompat` instead of `android:drawableStart`"
+        errorLine1="                        android:drawableStart=&quot;@drawable/module_home_bg_circle_fb9034&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_word_book.xml"
+            line="128"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseCompatTextViewDrawableXml"
+        message="Use `app:drawableStartCompat` instead of `android:drawableStart`"
+        errorLine1="                        android:drawableStart=&quot;@drawable/module_home_bg_circle_4ade80&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_word_book.xml"
+            line="161"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseCompatTextViewDrawableXml"
+        message="Use `app:drawableStartCompat` instead of `android:drawableStart`"
+        errorLine1="                        android:drawableStart=&quot;@drawable/module_home_bg_circle_60a5fa&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_word_book.xml"
+            line="186"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="        notifyDataSetChanged()"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/home/ui/stats/CalendarMonthPagerAdapter.kt"
+            line="18"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="        notifyDataSetChanged()"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/home/ui/stats/DayWordRecordAdapter.kt"
+            line="17"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseCompoundDrawables"
+        message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
+        errorLine1="                &lt;LinearLayout"
+        errorLine2="                 ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_practice.xml"
+            line="164"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="UseCompoundDrawables"
+        message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
+        errorLine1="                &lt;LinearLayout"
+        errorLine2="                 ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_practice.xml"
+            line="196"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="UseCompoundDrawables"
+        message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
+        errorLine1="                &lt;LinearLayout"
+        errorLine2="                 ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_practice.xml"
+            line="229"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="UseCompoundDrawables"
+        message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
+        errorLine1="                &lt;LinearLayout"
+        errorLine2="                 ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_practice.xml"
+            line="261"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="DisableBaselineAlignment"
+        message="Set `android:baselineAligned=&quot;false&quot;` on this element for better performance"
+        errorLine1="        &lt;LinearLayout"
+        errorLine2="         ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_button.xml"
+            line="32"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="DisableBaselineAlignment"
+        message="Set `android:baselineAligned=&quot;false&quot;` on this element for better performance"
+        errorLine1="            &lt;LinearLayout"
+        errorLine2="             ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_word_book.xml"
+            line="63"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="DisableBaselineAlignment"
+        message="Set `android:baselineAligned=&quot;false&quot;` on this element for better performance"
+        errorLine1="            &lt;LinearLayout"
+        errorLine2="             ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_word_book.xml"
+            line="145"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="DisableBaselineAlignment"
+        message="Set `android:baselineAligned=&quot;false&quot;` on this element for better performance"
+        errorLine1="    &lt;LinearLayout"
+        errorLine2="     ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_practice_record.xml"
+            line="7"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="DisableBaselineAlignment"
+        message="Set `android:baselineAligned=&quot;false&quot;` on this element for better performance"
+        errorLine1="            &lt;LinearLayout"
+        errorLine2="             ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_practice.xml"
+            line="158"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="InefficientWeight"
+        message="Use a `layout_height` of `0dp` instead of `wrap_content` for better performance"
+        errorLine1="            android:layout_height=&quot;wrap_content&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
+            line="132"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="InefficientWeight"
+        message="Use a `layout_height` of `0dp` instead of `wrap_content` for better performance"
+        errorLine1="            android:layout_height=&quot;wrap_content&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_home.xml"
+            line="129"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UselessLeaf"
+        message="This `LinearLayout` view is unnecessary (no children, no `background`, no `id`, no `style`)"
+        errorLine1="                &lt;LinearLayout"
+        errorLine2="                 ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_word_book.xml"
+            line="202"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        message="Avoid using sizes smaller than `11sp`: `10sp`"
+        errorLine1="                    android:textSize=&quot;10sp&quot; />"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_daily_plan.xml"
+            line="153"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        message="Avoid using sizes smaller than `11sp`: `10sp`"
+        errorLine1="                    android:textSize=&quot;10sp&quot; />"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_daily_plan.xml"
+            line="183"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        message="Avoid using sizes smaller than `11sp`: `10sp`"
+        errorLine1="                    android:textSize=&quot;10sp&quot; />"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_daily_plan.xml"
+            line="213"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        message="Avoid using sizes smaller than `11sp`: `10sp`"
+        errorLine1="                    android:textSize=&quot;10sp&quot; />"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_daily_plan.xml"
+            line="244"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        message="Avoid using sizes smaller than `11sp`: `10sp`"
+        errorLine1="                    android:textSize=&quot;10sp&quot; />"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_daily_plan.xml"
+            line="274"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        message="Avoid using sizes smaller than `11sp`: `10sp`"
+        errorLine1="                    android:textSize=&quot;10sp&quot; />"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_daily_plan.xml"
+            line="305"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        message="Avoid using sizes smaller than `11sp`: `10sp`"
+        errorLine1="        android:textSize=&quot;10sp&quot; />"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_week_bar.xml"
+            line="14"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        message="Avoid using sizes smaller than `11sp`: `10sp`"
+        errorLine1="        android:textSize=&quot;10sp&quot; />"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_week_bar.xml"
+            line="35"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        message="Avoid using sizes smaller than `11sp`: `10sp`"
+        errorLine1="                    android:textSize=&quot;10sp&quot; />"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="142"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        message="Avoid using sizes smaller than `11sp`: `10sp`"
+        errorLine1="                    android:textSize=&quot;10sp&quot; />"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="175"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        message="Avoid using sizes smaller than `11sp`: `10sp`"
+        errorLine1="                    android:textSize=&quot;10sp&quot; />"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="208"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        message="Avoid using sizes smaller than `11sp`: `8sp`"
+        errorLine1="                android:textSize=&quot;8sp&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="238"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        message="Avoid using sizes smaller than `11sp`: `10sp`"
+        errorLine1="                            android:textSize=&quot;10sp&quot; />"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="311"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        message="Avoid using sizes smaller than `11sp`: `10sp`"
+        errorLine1="                            android:textSize=&quot;10sp&quot; />"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="325"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        message="Avoid using sizes smaller than `11sp`: `10sp`"
+        errorLine1="                            android:textSize=&quot;10sp&quot; />"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="339"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        message="Avoid using sizes smaller than `11sp`: `10sp`"
+        errorLine1="                            android:textSize=&quot;10sp&quot; />"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="353"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        message="Avoid using sizes smaller than `11sp`: `10sp`"
+        errorLine1="                            android:textSize=&quot;10sp&quot; />"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="367"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `Int.toDrawable` instead?"
+        errorLine1="        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))"
+        errorLine2="                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/home/ui/home/BoostNewWordsDialogFragment.kt"
+            line="74"
+            column="47"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="                    Uri.parse(&quot;package:${requireContext().packageName}&quot;)"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/home/ui/practice/PracticeFragment.kt"
+            line="214"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="UseTomlInstead"
+        message="Use version catalog instead"
+        errorLine1="    testImplementation(&quot;junit:junit:4.13.2&quot;)"
+        errorLine2="                       ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle.kts"
+            line="62"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="UseTomlInstead"
+        message="Use version catalog instead"
+        errorLine1="    testImplementation(&quot;org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1&quot;)"
+        errorLine2="                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle.kts"
+            line="63"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageView"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
+            line="31"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageView"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
+            line="46"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageView"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
+            line="69"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                &lt;ImageView"
+        errorLine2="                 ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_button.xml"
+            line="50"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                &lt;ImageView"
+        errorLine2="                 ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_button.xml"
+            line="77"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageView"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_home.xml"
+            line="31"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageView"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_home.xml"
+            line="46"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageView"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_home.xml"
+            line="66"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                    &lt;ImageView"
+        errorLine2="                     ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_practice.xml"
+            line="176"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                    &lt;ImageView"
+        errorLine2="                     ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_practice.xml"
+            line="209"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                    &lt;ImageView"
+        errorLine2="                     ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_practice.xml"
+            line="241"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                    &lt;ImageView"
+        errorLine2="                     ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_practice.xml"
+            line="273"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageView"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="42"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageView"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="52"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageView"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="72"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                &lt;ImageView"
+        errorLine2="                 ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="286"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                &lt;ImageView"
+        errorLine2="                 ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="304"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                &lt;ImageView"
+        errorLine2="                 ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="328"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                &lt;ImageView"
+        errorLine2="                 ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="346"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                &lt;ImageView"
+        errorLine2="                 ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="370"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                &lt;ImageView"
+        errorLine2="                 ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="389"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                        &lt;ImageView"
+        errorLine2="                         ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="189"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                        &lt;ImageView"
+        errorLine2="                         ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="207"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="            android:clickable=&quot;true&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
+            line="95"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="            android:clickable=&quot;true&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
+            line="113"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="            android:clickable=&quot;true&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
+            line="124"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="            android:clickable=&quot;true&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_button.xml"
+            line="23"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="            android:clickable=&quot;true&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_home.xml"
+            line="92"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="            android:clickable=&quot;true&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_home.xml"
+            line="110"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="            android:clickable=&quot;true&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_home.xml"
+            line="121"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="                    android:clickable=&quot;true&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_practice.xml"
+            line="169"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="                    android:clickable=&quot;true&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_practice.xml"
+            line="201"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="                    android:clickable=&quot;true&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_practice.xml"
+            line="234"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="                    android:clickable=&quot;true&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_practice.xml"
+            line="266"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="            android:clickable=&quot;true&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="214"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="                android:clickable=&quot;true&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="247"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="                android:clickable=&quot;true&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="279"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="                android:clickable=&quot;true&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="322"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="                android:clickable=&quot;true&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="364"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="                android:clickable=&quot;true&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="407"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="        confirmButton.text = &quot;\u52A0\u91CF\u65B0\u5B66 (+$selectedAmount)&quot;"
+        errorLine2="                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/home/ui/home/BoostNewWordsDialogFragment.kt"
+            line="91"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="            binding.tvPendingItemMeta.text = &quot;${item.stateLabel} · ${item.operationLabel}&quot;"
+        errorLine2="                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/home/ui/sync/PendingSyncAdapter.kt"
+            line="34"
+            column="46"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="                        databind.tvDescription.text = &quot;你已与词相伴 $it 余日，语言在你身上，缓慢生长。&quot;"
+        errorLine2="                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/home/ui/stats/StatsFragment.kt"
+            line="104"
+            column="55"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;今日新学已完成&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;&amp;#x4ECA;&amp;#x65E5;&amp;#x65B0;&amp;#x5B66;&amp;#x5DF2;&amp;#x5B8C;&amp;#x6210;&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/dialog_home_boost_new_words.xml"
+            line="30"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;加量新学数量&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;&amp;#x52A0;&amp;#x91CF;&amp;#x65B0;&amp;#x5B66;&amp;#x6570;&amp;#x91CF;&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/dialog_home_boost_new_words.xml"
+            line="39"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;+5&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;+5&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/dialog_home_boost_new_words.xml"
+            line="56"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;+10&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;+10&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/dialog_home_boost_new_words.xml"
+            line="69"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;+20&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;+20&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/dialog_home_boost_new_words.xml"
+            line="82"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;加量新学 (+5)&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;&amp;#x52A0;&amp;#x91CF;&amp;#x65B0;&amp;#x5B66; (+5)&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/dialog_home_boost_new_words.xml"
+            line="95"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;取消&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;&amp;#x53D6;&amp;#x6D88;&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/dialog_home_boost_new_words.xml"
+            line="107"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;《雅思核心词汇》&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;《雅思核心词汇》&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
+            line="115"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;今日新词&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;今日新词&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_daily_plan.xml"
+            line="33"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;今日复习&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;今日复习&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_daily_plan.xml"
+            line="82"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;已掌握&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;已掌握&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_daily_plan.xml"
+            line="151"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;总词量&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;总词量&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_daily_plan.xml"
+            line="181"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;剩余&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;剩余&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_daily_plan.xml"
+            line="211"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;正确率&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;正确率&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_daily_plan.xml"
+            line="242"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;剩余天数&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;剩余天数&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_daily_plan.xml"
+            line="272"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;今日用时&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;今日用时&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_daily_plan.xml"
+            line="303"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;复习单词&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;&amp;#x590D;&amp;#x4E60;&amp;#x5355;&amp;#x8BCD;&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_button.xml"
+            line="59"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;修改计划&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;&amp;#x4FEE;&amp;#x6539;&amp;#x8BA1;&amp;#x5212;&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_study_button.xml"
+            line="86"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;更换&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;更换&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_word_book.xml"
+            line="48"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;当前词书&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;当前词书&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_word_book.xml"
+            line="60"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;总共已学&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;总共已学&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_word_book.xml"
+            line="80"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;总共词数&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;总共词数&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_word_book.xml"
+            line="105"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;剩余单词&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;剩余单词&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_word_book.xml"
+            line="129"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;剩余天数&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;剩余天数&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_word_book.xml"
+            line="163"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;已学天数&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;已学天数&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_word_book.xml"
+            line="188"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;《雅思核心词汇》&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;《雅思核心词汇》&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_home.xml"
+            line="112"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;自由练习&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;自由练习&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_practice.xml"
+            line="30"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;听力&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;听力&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_practice.xml"
+            line="189"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;跟读&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;跟读&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_practice.xml"
+            line="222"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;拼写&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;拼写&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_practice.xml"
+            line="254"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;随身听&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;随身听&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_practice.xml"
+            line="286"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;连续打卡&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;连续打卡&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="140"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;学习天数&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;学习天数&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="173"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;已背单词&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;已背单词&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="206"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;升级Pro会员&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;升级Pro会员&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="225"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;解锁所有高级词书和统计功能&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;解锁所有高级词书和统计功能&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="236"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;立即开通&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;立即开通&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="252"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;常用功能&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;常用功能&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="266"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;我的收藏&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;我的收藏&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="300"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;意见反馈&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;意见反馈&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="342"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;关于我们&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;关于我们&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="385"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;退出登录&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;退出登录&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="413"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;124&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;124&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="50"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;天&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;天&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="64"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;累计时长&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;累计时长&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="87"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;312&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;312&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="99"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;小时&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;小时&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="111"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;掌握单词&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;掌握单词&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="122"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;词&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;词&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="133"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;4,892&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;4,892&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="145"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="RtlSymmetry"
+        message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
+        errorLine1="                        android:paddingStart=&quot;8dp&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_word_book.xml"
+            line="79"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="RtlSymmetry"
+        message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
+        errorLine1="                        android:paddingStart=&quot;8dp&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_word_book.xml"
+            line="88"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="RtlSymmetry"
+        message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
+        errorLine1="                        android:paddingStart=&quot;8dp&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_word_book.xml"
+            line="104"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="RtlSymmetry"
+        message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
+        errorLine1="                        android:paddingStart=&quot;4dp&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_word_book.xml"
+            line="113"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="RtlSymmetry"
+        message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
+        errorLine1="                        android:paddingStart=&quot;8dp&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_word_book.xml"
+            line="162"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="RtlSymmetry"
+        message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
+        errorLine1="                        android:paddingStart=&quot;8dp&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_word_book.xml"
+            line="171"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="RtlSymmetry"
+        message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
+        errorLine1="                        android:paddingStart=&quot;8dp&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_word_book.xml"
+            line="187"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="RtlSymmetry"
+        message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
+        errorLine1="                        android:paddingStart=&quot;4dp&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/include_word_book.xml"
+            line="196"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="RtlEnabled"
+        message="The project references RTL attributes, but does not explicitly enable or disable RTL support with `android:supportsRtl` in the manifest">
+        <location
+            file="src/main/AndroidManifest.xml"/>
+    </issue>
+
+</issues>

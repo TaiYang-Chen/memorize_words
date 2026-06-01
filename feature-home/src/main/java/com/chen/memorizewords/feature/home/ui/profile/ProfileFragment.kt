@@ -2,13 +2,14 @@ package com.chen.memorizewords.feature.home.ui.profile
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import coil.load
 import coil.transform.CircleCropTransformation
+import com.chen.memorizewords.core.navigation.AppRoute
+import com.chen.memorizewords.core.navigation.RouteNavigator
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.core.ui.vm.UiEvent
 import com.chen.memorizewords.feature.home.databinding.ModuleHomeFragmentProfileBinding
@@ -36,6 +37,9 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ModuleHomeFragmentProfile
     @Inject
     lateinit var wordBookEntry: WordBookEntry
 
+    @Inject
+    lateinit var routeNavigator: RouteNavigator
+
     override fun initView(savedInstanceState: Bundle?) {
         databind.viewModel = viewModel
     }
@@ -57,25 +61,19 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ModuleHomeFragmentProfile
     }
 
     override fun onNavigationRoute(event: UiEvent.Navigation.Route) {
-        val target = event.target as? ProfileViewModel.Route.Open ?: return
-        val intent = when (target.screen) {
-            ProfileViewModel.Route.Screen.WORD_BOOK ->
-                wordBookEntry.createWordBookIntent(requireContext())
-            ProfileViewModel.Route.Screen.FEEDBACK ->
-                feedbackEntry.createFeedbackIntent(requireContext())
-            ProfileViewModel.Route.Screen.AUTH ->
-                authEntry.createAuthIntent(requireContext())
+        when (val target = event.target) {
+            is AppRoute -> routeNavigator.navigate(target)
+            is ProfileViewModel.Route.OpenAuth -> {
+                startActivity(
+                    authEntry.createAuthIntent(requireContext()).apply {
+                        if (target.clearTask) {
+                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        }
+                    }
+                )
+            }
+            else -> super.onNavigationRoute(event)
         }
-
-        startActivity(intent.apply {
-            target.deepLink?.let { uri ->
-                action = Intent.ACTION_VIEW
-                data = uri.toUri()
-            }
-            if (target.clearTask) {
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            }
-        })
     }
 
     override fun onConfirmDialog(event: UiEvent.Dialog.Confirm) {

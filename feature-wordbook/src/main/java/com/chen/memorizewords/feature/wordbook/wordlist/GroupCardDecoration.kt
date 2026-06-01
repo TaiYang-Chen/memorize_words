@@ -10,7 +10,7 @@ import android.graphics.RectF
 import android.graphics.Typeface
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.chen.memorizewords.domain.model.words.WordListRow
+import com.chen.memorizewords.domain.word.model.WordListRow
 
 class GroupCardDecoration(
     context: Context,

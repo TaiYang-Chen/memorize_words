@@ -1,6 +1,7 @@
 package com.chen.memorizewords.feature.learning.ui.practice.listening.strategy
 
-import com.chen.memorizewords.domain.model.words.word.Word
+import com.chen.memorizewords.domain.word.model.word.Word
+import com.chen.memorizewords.domain.practice.policy.SpellingAnswerPolicy
 import com.chen.memorizewords.feature.learning.ui.practice.ListeningMeaningOptionFeedback
 import com.chen.memorizewords.feature.learning.ui.practice.ListeningMeaningOptionUi
 import com.chen.memorizewords.feature.learning.ui.practice.ListeningQuestionType
@@ -47,6 +48,7 @@ internal data class SpellingQuestionBuildResult(
 
 internal class SpellingListeningQuestionStrategy : ListeningQuestionStrategy {
     override val questionType: ListeningQuestionType = ListeningQuestionType.SPELLING
+    private val spellingAnswerPolicy = SpellingAnswerPolicy()
 
     fun buildQuestion(
         word: Word,
@@ -127,7 +129,7 @@ internal class SpellingListeningQuestionStrategy : ListeningQuestionStrategy {
     }
 
     fun isCorrect(input: String, answer: String): Boolean {
-        return normalizeAnswer(input) == normalizeAnswer(answer)
+        return spellingAnswerPolicy.isCorrectIgnoringWhitespace(input, answer)
     }
 
     fun wrongSlots(
@@ -152,10 +154,6 @@ internal class SpellingListeningQuestionStrategy : ListeningQuestionStrategy {
         return slots.mapIndexedNotNull { index, slot ->
             index.takeIf { slot.feedback == ListeningSpellingSlotFeedback.WRONG }
         }
-    }
-
-    private fun normalizeAnswer(answer: String): String {
-        return answer.trim().lowercase().replace(" ", "")
     }
 
     private fun answerCharacters(answer: String): List<Char> {

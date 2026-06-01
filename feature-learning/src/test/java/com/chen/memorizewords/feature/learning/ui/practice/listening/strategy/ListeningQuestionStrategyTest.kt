@@ -1,6 +1,6 @@
 package com.chen.memorizewords.feature.learning.ui.practice.listening.strategy
 
-import com.chen.memorizewords.domain.model.words.word.Word
+import com.chen.memorizewords.domain.word.model.word.Word
 import com.chen.memorizewords.feature.learning.ui.practice.ListeningMeaningOptionFeedback
 import com.chen.memorizewords.feature.learning.ui.practice.ListeningMeaningOptionUi
 import com.chen.memorizewords.feature.learning.ui.practice.ListeningSpellingSlotFeedback

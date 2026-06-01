@@ -1,10 +1,10 @@
-﻿package com.chen.memorizewords.feature.floatingreview.ui.floating
+package com.chen.memorizewords.feature.floatingreview.ui.floating
 
-import com.chen.memorizewords.domain.model.floating.FloatingDockState
-import com.chen.memorizewords.domain.service.floating.FloatingReviewFacade
-import com.chen.memorizewords.domain.service.floating.FloatingWordCardContent
-import com.chen.memorizewords.domain.model.floating.FloatingWordSettings
-import com.chen.memorizewords.domain.model.words.word.Word
+import com.chen.memorizewords.domain.floating.model.FloatingDockState
+import com.chen.memorizewords.domain.floating.service.FloatingReviewFacade
+import com.chen.memorizewords.domain.floating.service.FloatingWordCardContent
+import com.chen.memorizewords.domain.floating.model.FloatingWordSettings
+import com.chen.memorizewords.domain.word.model.word.Word
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 

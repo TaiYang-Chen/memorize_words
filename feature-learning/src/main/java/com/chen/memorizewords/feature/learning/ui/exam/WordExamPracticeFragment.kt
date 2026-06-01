@@ -47,9 +47,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.fragment.findNavController
-import com.chen.memorizewords.domain.model.practice.ExamCategory
-import com.chen.memorizewords.domain.model.practice.ExamItemLastResult
-import com.chen.memorizewords.domain.model.practice.ExamQuestionType
+import com.chen.memorizewords.domain.practice.model.ExamCategory
+import com.chen.memorizewords.domain.practice.model.ExamItemLastResult
+import com.chen.memorizewords.domain.practice.model.ExamQuestionType
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -839,7 +839,7 @@ private fun AnswerBlock(itemUi: WordExamPracticeItemUi) {
     }
 }
 
-private fun buildAnswerText(item: com.chen.memorizewords.domain.model.practice.WordExamItem): String {
+private fun buildAnswerText(item: com.chen.memorizewords.domain.practice.model.WordExamItem): String {
     return when (item.questionType) {
         ExamQuestionType.SINGLE_CHOICE -> item.answerIndexes.joinToString("\u3001") { index ->
             optionPrefix(index)

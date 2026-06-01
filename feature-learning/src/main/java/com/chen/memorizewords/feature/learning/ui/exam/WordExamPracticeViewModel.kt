@@ -4,17 +4,23 @@ import android.os.SystemClock
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
-import com.chen.memorizewords.domain.model.practice.ExamCategory
-import com.chen.memorizewords.domain.model.practice.ExamPracticeAnswerSubmission
-import com.chen.memorizewords.domain.model.practice.ExamPracticeSessionSubmission
-import com.chen.memorizewords.domain.model.practice.ExamPracticeWord
-import com.chen.memorizewords.domain.model.practice.ExamQuestionType
-import com.chen.memorizewords.domain.model.practice.PracticeEntryType
-import com.chen.memorizewords.domain.model.practice.PracticeMode
-import com.chen.memorizewords.domain.model.practice.PracticeSessionRecord
-import com.chen.memorizewords.domain.model.practice.WordExamItem
-import com.chen.memorizewords.domain.repository.practice.ExamPracticeRepository
-import com.chen.memorizewords.domain.service.practice.PracticeFacade
+import com.chen.memorizewords.domain.practice.model.ExamCategory
+import com.chen.memorizewords.domain.practice.model.ExamPracticeAnswerSubmission
+import com.chen.memorizewords.domain.practice.model.ExamPracticeSessionSubmission
+import com.chen.memorizewords.domain.practice.model.ExamPracticeWord
+import com.chen.memorizewords.domain.practice.model.ExamQuestionType
+import com.chen.memorizewords.domain.practice.model.WordExamItem
+import com.chen.memorizewords.domain.practice.ExamPracticeSessionPolicy
+import com.chen.memorizewords.domain.practice.ExamPracticeSessionSummary
+import com.chen.memorizewords.domain.practice.PracticeEntryType
+import com.chen.memorizewords.domain.practice.PracticeKind
+import com.chen.memorizewords.domain.practice.PracticeMode
+import com.chen.memorizewords.domain.practice.PracticeReport
+import com.chen.memorizewords.domain.practice.PracticeReportRepository
+import com.chen.memorizewords.domain.practice.PracticeSessionRecord
+import com.chen.memorizewords.domain.practice.PracticeSessionReportRecord
+import com.chen.memorizewords.domain.practice.repository.ExamPracticeRepository
+import com.chen.memorizewords.domain.practice.service.PracticeFacade
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -65,12 +71,15 @@ data class WordExamPracticeUiState(
 class WordExamPracticeViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val examPracticeRepository: ExamPracticeRepository,
-    private val practiceFacade: PracticeFacade
+    private val practiceFacade: PracticeFacade,
+    private val practiceReportRepository: PracticeReportRepository
 ) : BaseViewModel() {
 
     private val wordId: Long = savedStateHandle.get<Long>(ARG_WORD_ID) ?: -1L
     private val fallbackWordText: String = savedStateHandle.get<String>(ARG_WORD_TEXT).orEmpty()
     private val startedAtElapsed = SystemClock.elapsedRealtime()
+    private val sessionId = "exam:${wordId}:${System.currentTimeMillis()}"
+    private val sessionPolicy = ExamPracticeSessionPolicy()
 
     private val _uiState = MutableStateFlow(
         WordExamPracticeUiState(
@@ -238,7 +247,8 @@ class WordExamPracticeViewModel @Inject constructor(
         if (finished) return
         finished = true
         val state = uiState.value
-        val summary = buildSessionSummary(state.items)
+        val report = buildPracticeReport(state.items)
+        val summary = buildSessionSummary(state.items, report)
         if (summary.questionCount <= 0 || summary.completedCount <= 0) {
             return
         }
@@ -261,6 +271,14 @@ class WordExamPracticeViewModel @Inject constructor(
                     completedCount = summary.completedCount,
                     correctCount = summary.correctCount,
                     submitCount = summary.submitCount
+                )
+            )
+            practiceReportRepository.save(
+                PracticeSessionReportRecord(
+                    sessionId = sessionId,
+                    kind = PracticeKind.EXAM,
+                    report = report,
+                    completedAtMillis = System.currentTimeMillis()
                 )
             )
             examPracticeRepository.submitSession(
@@ -308,7 +326,9 @@ class WordExamPracticeViewModel @Inject constructor(
                 totalCount = nextItems.size,
                 favoriteCount = nextItems.count { it.item.state?.favorite == true },
                 wrongCount = nextItems.count { it.item.state?.wrongBook == true },
-                objectiveCount = nextItems.count { it.item.questionType in OBJECTIVE_TYPES }
+                objectiveCount = nextItems.count { item ->
+                    item.item.questionType.isObjectiveType()
+                }
             )
             nextState.copy(visibleItems = applyFilters(nextState))
         }
@@ -416,84 +436,34 @@ class WordExamPracticeViewModel @Inject constructor(
         }
     }
 
-    private fun buildSessionSummary(items: List<WordExamPracticeItemUi>): SessionSummary {
-        val objectiveItems = items.filter { it.item.questionType in OBJECTIVE_TYPES }
-        if (objectiveItems.isEmpty()) {
-            return SessionSummary()
-        }
-        var completedCount = 0
-        var correctCount = 0
-        var submitCount = 0
-        objectiveItems.forEach { item ->
-            val result = grade(item)
-            if (result.completed) {
-                completedCount += 1
-                submitCount += item.submitCount.coerceAtLeast(1)
-                if (result.correct) {
-                    correctCount += 1
-                }
-            }
-        }
-        return SessionSummary(
-            questionCount = objectiveItems.size,
-            completedCount = completedCount,
-            correctCount = correctCount,
-            submitCount = submitCount
+    private fun buildSessionSummary(
+        items: List<WordExamPracticeItemUi>,
+        report: PracticeReport = buildPracticeReport(items)
+    ): ExamPracticeSessionSummary {
+        return sessionPolicy.buildSummary(
+            items = items.map { it.item },
+            submissionsByItemId = buildSubmissionsByItemId(items),
+            report = report
         )
     }
 
-    private fun grade(item: WordExamPracticeItemUi): GradeResult {
-        return when (item.item.questionType) {
-            ExamQuestionType.SINGLE_CHOICE -> {
-                val selected = item.selectedOptionIndex ?: return GradeResult()
-                GradeResult(
-                    completed = true,
-                    correct = item.item.answerIndexes == listOf(selected)
-                )
-            }
-
-            ExamQuestionType.CLOZE -> {
-                if (item.selectedClozeAnswers.isEmpty()) return GradeResult()
-                val expected = item.item.answers.map { it.trim().lowercase() }
-                val actual = item.selectedClozeAnswers.map { it.trim().lowercase() }
-                GradeResult(
-                    completed = true,
-                    correct = expected == actual
-                )
-            }
-
-            ExamQuestionType.MATCHING -> {
-                if (item.matchingPairs.isEmpty()) return GradeResult()
-                val actual = item.matchingPairs.entries.sortedBy { it.key }.map { it.value }
-                GradeResult(
-                    completed = actual.size == item.item.answerIndexes.size,
-                    correct = actual == item.item.answerIndexes
-                )
-            }
-
-            ExamQuestionType.PASSAGE,
-            ExamQuestionType.TRANSLATION -> GradeResult()
-        }
+    private fun buildPracticeReport(items: List<WordExamPracticeItemUi>): PracticeReport {
+        return sessionPolicy.buildReport(
+            items = items.map { it.item },
+            submissionsByItemId = buildSubmissionsByItemId(items)
+        )
     }
 
-    private data class GradeResult(
-        val completed: Boolean = false,
-        val correct: Boolean = false
-    )
+    private fun buildSubmissionsByItemId(
+        items: List<WordExamPracticeItemUi>
+    ): Map<Long, ExamPracticeAnswerSubmission> {
+        return buildSubmissionItems(items).associateBy { it.itemId }
+    }
 
-    private data class SessionSummary(
-        val questionCount: Int = 0,
-        val completedCount: Int = 0,
-        val correctCount: Int = 0,
-        val submitCount: Int = 0
-    )
-
-    private companion object {
-        val OBJECTIVE_TYPES = setOf(
-            ExamQuestionType.SINGLE_CHOICE,
-            ExamQuestionType.CLOZE,
-            ExamQuestionType.MATCHING
-        )
+    private fun ExamQuestionType.isObjectiveType(): Boolean {
+        return this == ExamQuestionType.SINGLE_CHOICE ||
+            this == ExamQuestionType.CLOZE ||
+            this == ExamQuestionType.MATCHING
     }
 }
 

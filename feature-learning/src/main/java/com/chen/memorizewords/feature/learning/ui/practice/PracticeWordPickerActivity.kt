@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.chen.memorizewords.core.navigation.OnboardingGuardDelegate
-import com.chen.memorizewords.domain.model.words.word.Word
+import com.chen.memorizewords.domain.word.model.word.Word
 import com.chen.memorizewords.feature.learning.R
 import com.chen.memorizewords.feature.learning.databinding.ActivityPracticeWordPickerBinding
 import com.chen.memorizewords.feature.learning.ui.practice.PracticeWordPickerViewModel

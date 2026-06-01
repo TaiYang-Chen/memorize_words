@@ -1,10 +1,10 @@
 package com.chen.memorizewords.feature.home.ui.practice
 
 import com.chen.memorizewords.core.common.resource.ResourceProvider
-import com.chen.memorizewords.domain.model.practice.PracticeDailyDurationStats
-import com.chen.memorizewords.domain.model.practice.PracticeEntryType
-import com.chen.memorizewords.domain.model.practice.PracticeMode
-import com.chen.memorizewords.domain.model.practice.PracticeSessionRecord
+import com.chen.memorizewords.domain.practice.PracticeDailyDurationStats
+import com.chen.memorizewords.domain.practice.PracticeEntryType
+import com.chen.memorizewords.domain.practice.PracticeMode
+import com.chen.memorizewords.domain.practice.PracticeSessionRecord
 import com.chen.memorizewords.feature.home.R
 import java.text.SimpleDateFormat
 import java.util.Calendar

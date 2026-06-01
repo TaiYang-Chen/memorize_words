@@ -2,13 +2,13 @@ package com.chen.memorizewords.feature.learning.ui.practice
 
 import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.common.resource.ResourceProvider
-import com.chen.memorizewords.domain.model.words.word.Word
-import com.chen.memorizewords.domain.model.words.word.WordDefinitions
-import com.chen.memorizewords.domain.usecase.practice.SynthesizeSpeechUseCase
-import com.chen.memorizewords.domain.usecase.word.GetWordDefinitionsUseCase
+import com.chen.memorizewords.domain.word.model.word.Word
+import com.chen.memorizewords.domain.word.model.word.WordDefinitions
+import com.chen.memorizewords.domain.practice.usecase.SynthesizeSpeechUseCase
+import com.chen.memorizewords.domain.word.usecase.GetWordDefinitionsUseCase
 import com.chen.memorizewords.feature.learning.R
-import com.chen.memorizewords.speech.api.SpeechAudioSuccess
-import com.chen.memorizewords.speech.api.SpeechTask
+import com.chen.memorizewords.domain.practice.speech.SpeechAudioSuccess
+import com.chen.memorizewords.domain.practice.speech.SpeechTask
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred

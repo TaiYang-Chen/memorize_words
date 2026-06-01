@@ -7,7 +7,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
-import com.chen.memorizewords.domain.model.words.enums.WordFilter
+import com.chen.memorizewords.domain.word.model.enums.WordFilter
 import com.chen.memorizewords.feature.wordbook.R
 import com.chen.memorizewords.feature.wordbook.databinding.FragmentWordListBinding
 import dagger.hilt.android.AndroidEntryPoint

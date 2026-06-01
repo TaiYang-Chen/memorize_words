@@ -2,8 +2,8 @@ package com.chen.memorizewords.feature.user.ui.login.qq
 
 import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
-import com.chen.memorizewords.domain.usecase.user.LoginError
-import com.chen.memorizewords.domain.usecase.user.QQLoginUseCase
+import com.chen.memorizewords.domain.account.usecase.user.LoginError
+import com.chen.memorizewords.domain.account.usecase.user.QQLoginUseCase
 import com.chen.memorizewords.feature.user.R
 import com.chen.memorizewords.feature.user.ui.resolveAuthFailureMessage
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -2,6 +2,7 @@ package com.chen.memorizewords.core.ui.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.chen.memorizewords.core.navigation.AppRoute
 import java.util.concurrent.atomic.AtomicInteger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -77,6 +78,10 @@ open class BaseViewModel : ViewModel() {
 
     protected fun navigateRoute(target: Any) {
         emitEvent(UiEvent.Navigation.Route(target))
+    }
+
+    protected fun navigate(route: AppRoute) {
+        navigateRoute(route)
     }
 
     fun showToast(message: String) {

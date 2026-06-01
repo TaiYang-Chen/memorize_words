@@ -13,8 +13,8 @@ import com.chen.memorizewords.core.navigation.AppLaunchEntry
 import com.chen.memorizewords.core.navigation.HomeEntry
 import com.chen.memorizewords.core.navigation.OnboardingEntry
 import com.chen.memorizewords.core.ui.activity.BaseVmDbActivity
-import com.chen.memorizewords.domain.model.onboarding.OnboardingStep
-import com.chen.memorizewords.domain.usecase.user.GetUserFlowUseCase
+import com.chen.memorizewords.domain.wordbook.model.onboarding.OnboardingStep
+import com.chen.memorizewords.domain.account.usecase.user.GetUserFlowUseCase
 import com.chen.memorizewords.feature.onboarding.databinding.ActivityOnboardingBinding
 import dagger.Binds
 import dagger.Module

@@ -3,21 +3,29 @@ package com.chen.memorizewords.feature.learning.ui.practice
 import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
-import com.chen.memorizewords.domain.model.words.word.Word
-import com.chen.memorizewords.domain.model.words.word.WordDefinitions
+import com.chen.memorizewords.domain.practice.PracticeKind
+import com.chen.memorizewords.domain.practice.PracticeQueueType
+import com.chen.memorizewords.domain.practice.PracticeReportRepository
+import com.chen.memorizewords.domain.practice.PracticeReviewQueuePolicy
+import com.chen.memorizewords.domain.practice.PracticeSessionReportRecord
+import com.chen.memorizewords.domain.practice.PracticeSessionReportTracker
+import com.chen.memorizewords.domain.word.model.word.Word
+import com.chen.memorizewords.domain.word.model.word.WordDefinitions
 import com.chen.memorizewords.domain.practice.PracticeWordProvider
-import com.chen.memorizewords.domain.usecase.practice.EvaluateShadowingUseCase
-import com.chen.memorizewords.domain.usecase.practice.SynthesizeSpeechUseCase
-import com.chen.memorizewords.domain.usecase.word.GetWordDefinitionsUseCase
+import com.chen.memorizewords.domain.practice.ShadowingPracticeAttemptOutcome
+import com.chen.memorizewords.domain.practice.ShadowingPracticeSessionPolicy
+import com.chen.memorizewords.domain.practice.usecase.EvaluateShadowingUseCase
+import com.chen.memorizewords.domain.practice.usecase.SynthesizeSpeechUseCase
+import com.chen.memorizewords.domain.word.usecase.GetWordDefinitionsUseCase
 import com.chen.memorizewords.feature.learning.R
-import com.chen.memorizewords.speech.api.ShadowingAnalysisSource
-import com.chen.memorizewords.speech.api.ShadowingAudioIssueType
-import com.chen.memorizewords.speech.api.ShadowingEvaluationResult
-import com.chen.memorizewords.speech.api.SpeechAudioInput
-import com.chen.memorizewords.speech.api.ShadowingRecordingMetadata
-import com.chen.memorizewords.speech.api.SpeechAudioSuccess
-import com.chen.memorizewords.speech.api.SpeechFailureResult
-import com.chen.memorizewords.speech.api.SpeechTask
+import com.chen.memorizewords.domain.practice.speech.ShadowingAnalysisSource
+import com.chen.memorizewords.domain.practice.speech.ShadowingAudioIssueType
+import com.chen.memorizewords.domain.practice.speech.ShadowingEvaluationResult
+import com.chen.memorizewords.domain.practice.speech.SpeechAudioInput
+import com.chen.memorizewords.domain.practice.speech.ShadowingRecordingMetadata
+import com.chen.memorizewords.domain.practice.speech.SpeechAudioSuccess
+import com.chen.memorizewords.domain.practice.speech.SpeechFailureResult
+import com.chen.memorizewords.domain.practice.speech.SpeechTask
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.Locale
 import javax.inject.Inject
@@ -62,7 +70,8 @@ class ShadowingPracticeViewModel @Inject constructor(
     private val synthesizeSpeech: SynthesizeSpeechUseCase,
     private val evaluateShadowing: EvaluateShadowingUseCase,
     private val wordProvider: PracticeWordProvider,
-    private val getWordDefinitions: GetWordDefinitionsUseCase
+    private val getWordDefinitions: GetWordDefinitionsUseCase,
+    private val practiceReportRepository: PracticeReportRepository
 ) : BaseViewModel() {
 
     data class ShadowingUiState(
@@ -114,11 +123,6 @@ class ShadowingPracticeViewModel @Inject constructor(
         var autoReviewCount: Int = 0
     )
 
-    private enum class QueueType {
-        NEW,
-        REVIEW
-    }
-
     private val _uiState = MutableStateFlow(ShadowingUiState())
     val uiState: StateFlow<ShadowingUiState> = _uiState.asStateFlow()
 
@@ -127,12 +131,14 @@ class ShadowingPracticeViewModel @Inject constructor(
 
     private var loadKey: String? = null
     private var runtimes: List<WordRuntime> = emptyList()
-    private val newQueue = ArrayDeque<Int>()
-    private val reviewQueue = ArrayDeque<Int>()
+    private val reviewQueuePolicy = PracticeReviewQueuePolicy()
+    private val sessionPolicy = ShadowingPracticeSessionPolicy()
+    private val reportTracker = PracticeSessionReportTracker()
     private var currentRuntimeIndex: Int? = null
     private var renderRequestToken: Int = 0
     private var evaluateRequestToken: Int = 0
-    private var preferReviewNext: Boolean = false
+    private var sessionId: String = ""
+    private var reportSaved: Boolean = false
 
     fun loadWithSelection(selectedIds: LongArray?, randomCount: Int) {
         val newLoadKey = buildPracticeSelectionKey(selectedIds, randomCount)
@@ -296,7 +302,12 @@ class ShadowingPracticeViewModel @Inject constructor(
                 else -> oldAttempt
             }
             latestRuntime.attempts[attemptIndex] = updatedAttempt
-            val needsReview = shouldScheduleReview(
+            recordAttempt(
+                word = latestRuntime.word,
+                attemptIndex = attemptIndex,
+                attempt = updatedAttempt
+            )
+            val needsReview = sessionPolicy.shouldScheduleReview(
                 evaluation = updatedAttempt.evaluation,
                 errorMessage = updatedAttempt.errorMessage
             )
@@ -325,11 +336,11 @@ class ShadowingPracticeViewModel @Inject constructor(
             )
             runtimes = words.map { WordRuntime(word = it) }
             _sessionWordIds.value = words.map { it.id }
-            newQueue.clear()
-            reviewQueue.clear()
-            runtimes.indices.forEach(newQueue::addLast)
+            reviewQueuePolicy.reset(words.map { it.id })
+            reportTracker.clear()
+            reportSaved = false
+            sessionId = "shadowing:${System.currentTimeMillis()}:${loadKey.orEmpty()}"
             currentRuntimeIndex = null
-            preferReviewNext = false
             renderRequestToken = nextShadowingPracticeRequestToken(renderRequestToken)
             evaluateRequestToken = nextShadowingPracticeRequestToken(evaluateRequestToken)
             openNextWord()
@@ -342,38 +353,28 @@ class ShadowingPracticeViewModel @Inject constructor(
             renderCompletedState()
             return
         }
-        currentRuntimeIndex = next.first
-        val queueType = next.second
-        val runtime = runtimes.getOrNull(next.first) ?: run {
+        val runtimeIndex = runtimeIndexByWordId(next.wordId) ?: run {
             renderCompletedState()
             return
         }
-        runtime.isCurrentReviewRound = queueType == QueueType.REVIEW
-        renderCurrentWord(next.first)
+        currentRuntimeIndex = runtimeIndex
+        runtimes.forEach { it.isCurrentReviewRound = false }
+        val runtime = runtimes.getOrNull(runtimeIndex) ?: run {
+            renderCompletedState()
+            return
+        }
+        runtime.isCurrentReviewRound = next.queueType == PracticeQueueType.REVIEW
+        if (next.queueType == PracticeQueueType.REVIEW) {
+            runtime.reviewEnqueued = false
+        }
+        renderCurrentWord(runtimeIndex)
     }
 
-    private fun selectNextWord(): Pair<Int, QueueType>? {
-        if (reviewQueue.isNotEmpty() && (preferReviewNext || newQueue.isEmpty())) {
-            while (reviewQueue.isNotEmpty()) {
-                val index = reviewQueue.removeFirst()
-                val runtime = runtimes.getOrNull(index) ?: continue
-                runtime.reviewEnqueued = false
-                preferReviewNext = false
-                return index to QueueType.REVIEW
-            }
-        }
-        if (newQueue.isNotEmpty()) {
-            preferReviewNext = reviewQueue.isNotEmpty()
-            return newQueue.removeFirst() to QueueType.NEW
-        }
-        while (reviewQueue.isNotEmpty()) {
-            val index = reviewQueue.removeFirst()
-            val runtime = runtimes.getOrNull(index) ?: continue
-            runtime.reviewEnqueued = false
-            preferReviewNext = false
-            return index to QueueType.REVIEW
-        }
-        return null
+    private fun selectNextWord() = reviewQueuePolicy.selectNext()
+
+    private fun runtimeIndexByWordId(wordId: Long): Int? {
+        val index = runtimes.indexOfFirst { it.word.id == wordId }
+        return index.takeIf { it >= 0 }
     }
 
     private fun renderCurrentWord(runtimeIndex: Int) {
@@ -421,6 +422,7 @@ class ShadowingPracticeViewModel @Inject constructor(
     }
 
     private fun renderCompletedState() {
+        persistPracticeReportIfNeeded()
         val summary = buildSummary()
         _uiState.value = ShadowingUiState(
             loading = false,
@@ -505,16 +507,23 @@ class ShadowingPracticeViewModel @Inject constructor(
     }
 
     private fun buildSummary(): PracticeSessionSummary {
-        val completedCount = runtimes.count { it.attempts.isNotEmpty() }
-        val correctCount = runtimes.count { runtime ->
-            runtime.attempts.maxOfOrNull { it.evaluation?.totalScore ?: 0 } ?: 0 >= PASS_SCORE
-        }
-        val submitCount = runtimes.sumOf { it.attempts.size }
+        val summary = sessionPolicy.buildSummary(
+            totalQuestionCount = runtimes.size,
+            attemptsByWordId = runtimes.associate { runtime ->
+                runtime.word.id to runtime.attempts.mapIndexed { index, attempt ->
+                    attempt.toOutcome(
+                        wordId = runtime.word.id,
+                        wordText = runtime.word.word,
+                        attemptIndex = index
+                    )
+                }
+            }
+        )
         return PracticeSessionSummary(
-            questionCount = runtimes.size,
-            completedCount = completedCount,
-            correctCount = correctCount,
-            submitCount = submitCount
+            questionCount = summary.questionCount,
+            completedCount = summary.completedCount,
+            correctCount = summary.correctCount,
+            submitCount = summary.submitCount
         )
     }
 
@@ -525,7 +534,7 @@ class ShadowingPracticeViewModel @Inject constructor(
         if (runtime.autoReviewCount >= MAX_AUTO_REVIEW_ROUNDS) return
         runtime.reviewEnqueued = true
         runtime.autoReviewCount += 1
-        reviewQueue.addLast(runtimeIndex)
+        reviewQueuePolicy.enqueueReview(runtime.word.id)
     }
 
     private fun clearReview(runtime: WordRuntime) {
@@ -538,10 +547,43 @@ class ShadowingPracticeViewModel @Inject constructor(
         return currentRuntimeIndex?.let { runtimes.getOrNull(it) }
     }
 
+    private fun recordAttempt(
+        word: Word,
+        attemptIndex: Int,
+        attempt: AttemptRecord
+    ) {
+        val answerRecord = sessionPolicy.toAnswerRecord(
+            attempt.toOutcome(
+                wordId = word.id,
+                wordText = word.word,
+                attemptIndex = attemptIndex
+            )
+        ) ?: return
+        reportTracker.record(answerRecord)
+    }
+
+    private fun persistPracticeReportIfNeeded() {
+        if (reportSaved) return
+        val report = reportTracker.buildReport(totalQuestionCount = runtimes.size)
+        if (report.answeredCount <= 0) return
+        reportSaved = true
+        viewModelScope.launch {
+            practiceReportRepository.save(
+                PracticeSessionReportRecord(
+                    sessionId = sessionId.ifBlank {
+                        "shadowing:${System.currentTimeMillis()}:${loadKey.orEmpty()}"
+                    },
+                    kind = PracticeKind.SHADOWING,
+                    report = report,
+                    completedAtMillis = System.currentTimeMillis()
+                )
+            )
+        }
+    }
+
     private fun isFinalAction(runtime: WordRuntime): Boolean {
         return runtime.attempts.isNotEmpty() &&
-            newQueue.isEmpty() &&
-            reviewQueue.isEmpty()
+            reviewQueuePolicy.isEmpty()
     }
 
     private fun pendingReviewText(): String {
@@ -754,6 +796,20 @@ class ShadowingPracticeViewModel @Inject constructor(
         )
     }
 
+    private fun AttemptRecord.toOutcome(
+        wordId: Long,
+        wordText: String,
+        attemptIndex: Int
+    ): ShadowingPracticeAttemptOutcome {
+        return ShadowingPracticeAttemptOutcome(
+            wordId = wordId,
+            wordText = wordText,
+            attemptIndex = attemptIndex,
+            evaluation = evaluation,
+            errorMessage = errorMessage
+        )
+    }
+
     companion object {
         private const val PASS_SCORE = 80
         private const val MAX_AUTO_REVIEW_ROUNDS = 2
@@ -796,19 +852,6 @@ private fun buildAttemptGuidance(
             resourceProvider.getString(R.string.practice_shadowing_guidance_good)
         }
     }
-}
-
-
-private fun shouldScheduleReview(
-    evaluation: ShadowingEvaluationResult?,
-    errorMessage: String
-): Boolean {
-    if (evaluation == null) return errorMessage.isNotBlank()
-    return evaluation.totalScore < 80 ||
-        evaluation.audioIssues.any { issue ->
-            issue.type == ShadowingAudioIssueType.MOSTLY_SILENT ||
-                issue.type == ShadowingAudioIssueType.TOO_FAST
-        }
 }
 
 private fun buildAudioIssueText(

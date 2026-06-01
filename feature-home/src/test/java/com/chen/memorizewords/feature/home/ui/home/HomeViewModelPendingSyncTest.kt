@@ -1,6 +1,6 @@
 package com.chen.memorizewords.feature.home.ui.home
 
-import com.chen.memorizewords.domain.model.sync.SyncBannerState
+import com.chen.memorizewords.domain.sync.model.SyncBannerState
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test

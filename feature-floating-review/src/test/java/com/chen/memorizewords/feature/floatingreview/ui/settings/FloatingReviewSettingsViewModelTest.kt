@@ -1,7 +1,7 @@
 package com.chen.memorizewords.feature.floatingreview.ui.settings
 
-import com.chen.memorizewords.domain.model.floating.FloatingWordOrderType
-import com.chen.memorizewords.domain.model.floating.FloatingWordSettings
+import com.chen.memorizewords.domain.floating.model.FloatingWordOrderType
+import com.chen.memorizewords.domain.floating.model.FloatingWordSettings
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test

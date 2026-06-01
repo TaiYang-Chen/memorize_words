@@ -11,7 +11,7 @@
 
         <variable
             name="data"
-            type="com.chen.memorizewords.domain.model.words.word.WordExample" />
+            type="com.chen.memorizewords.domain.word.model.word.WordExample" />
     </data>
 
     <LinearLayout

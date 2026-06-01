@@ -2,7 +2,6 @@ package com.chen.memorizewords.core.common.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.chen.memorizewords.domain.model.common.PageSlice
 
 class PageSlicePagingSource<T : Any>(
     private val loadPage: suspend (pageIndex: Int, pageSize: Int) -> PageSlice<T>

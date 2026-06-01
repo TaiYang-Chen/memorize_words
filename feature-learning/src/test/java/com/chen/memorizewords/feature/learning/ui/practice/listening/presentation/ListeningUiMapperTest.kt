@@ -1,8 +1,8 @@
 package com.chen.memorizewords.feature.learning.ui.practice.listening.presentation
 
 import com.chen.memorizewords.core.common.resource.ResourceProvider
-import com.chen.memorizewords.domain.model.words.word.PronunciationType
-import com.chen.memorizewords.domain.model.words.word.Word
+import com.chen.memorizewords.domain.word.model.word.PronunciationType
+import com.chen.memorizewords.domain.word.model.word.Word
 import com.chen.memorizewords.feature.learning.R
 import com.chen.memorizewords.feature.learning.ui.practice.ListeningPracticeMode
 import com.chen.memorizewords.feature.learning.ui.practice.listening.LISTENING_SPEECH_LOCALE_UK

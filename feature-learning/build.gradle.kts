@@ -1,38 +1,36 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
+    id("memorize.android-hilt-library")
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt)
     alias(libs.plugins.navigation.safeargs)
     id("kotlin-kapt")
 }
 
+val enablePaparazzi = providers.gradleProperty("enablePaparazzi")
+    .map { it.toBoolean() }
+    .orElse(false)
+
+if (enablePaparazzi.get()) {
+    apply(plugin = "app.cash.paparazzi")
+}
+
 android {
     namespace = "com.chen.memorizewords.feature.learning"
-    compileSdk = 36
-
-    defaultConfig {
-        minSdk = 25
-    }
-
     resourcePrefix("feature_learning_")
     buildTypes {
         release {
             isMinifyEnabled = false
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
     buildFeatures{
         dataBinding = true
         compose = true
         viewBinding = true
+    }
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
+    if (enablePaparazzi.get()) {
+        sourceSets.getByName("test").java.srcDir("src/paparazzi/java")
     }
 }
 
@@ -48,8 +46,10 @@ kapt {
 dependencies {
     implementation(project(":core-ui"))
     implementation(project(":core-navigation"))
-    implementation(project(":domain"))
-    implementation(project(":speech-api"))
+    implementation(project(":domain-practice"))
+    implementation(project(":domain-study"))
+    implementation(project(":domain-word"))
+    implementation(project(":domain-wordbook"))
 
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.compose.runtime.livedata)
@@ -72,4 +72,10 @@ dependencies {
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
+}
+
+if (enablePaparazzi.get()) {
+    tasks.matching { it.name == "check" }.configureEach {
+        dependsOn("verifyPaparazziDebug")
+    }
 }

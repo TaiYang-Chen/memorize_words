@@ -1,6 +1,6 @@
 package com.chen.memorizewords.feature.learning.ui.practice
 
-import com.chen.memorizewords.domain.model.practice.PracticeMode
+import com.chen.memorizewords.domain.practice.PracticeMode
 import com.chen.memorizewords.feature.learning.shouldUseListeningCustomHeader
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse

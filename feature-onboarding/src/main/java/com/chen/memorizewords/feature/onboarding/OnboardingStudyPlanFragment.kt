@@ -11,9 +11,9 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
-import com.chen.memorizewords.domain.model.learning.LearningTestMode
-import com.chen.memorizewords.domain.model.wordbook.WordBook
-import com.chen.memorizewords.domain.repository.WordOrderType
+import com.chen.memorizewords.domain.wordbook.model.learning.LearningTestMode
+import com.chen.memorizewords.domain.wordbook.model.WordBook
+import com.chen.memorizewords.domain.wordbook.repository.WordOrderType
 import com.chen.memorizewords.feature.onboarding.databinding.FragmentOnboardingStudyPlanBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch

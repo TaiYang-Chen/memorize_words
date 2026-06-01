@@ -1,9 +1,9 @@
 package com.chen.memorizewords.feature.learning.ui.speech
 
 import android.media.MediaPlayer
-import com.chen.memorizewords.speech.api.SpeechAudioOutput
-import com.chen.memorizewords.speech.api.SpeechAudioSuccess
-import com.chen.memorizewords.speech.api.SpeechResult
+import com.chen.memorizewords.domain.practice.speech.SpeechAudioOutput
+import com.chen.memorizewords.domain.practice.speech.SpeechAudioSuccess
+import com.chen.memorizewords.domain.practice.speech.SpeechResult
 import java.io.File
 import kotlin.coroutines.resume
 import kotlinx.coroutines.suspendCancellableCoroutine

@@ -6,11 +6,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.chen.memorizewords.core.navigation.AppRoute
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.core.ui.vm.UiEvent
-import com.chen.memorizewords.domain.model.sync.SyncBannerState
+import com.chen.memorizewords.domain.sync.model.SyncBannerState
 import com.chen.memorizewords.feature.home.databinding.FeatureHomeModuleHomeFragmentHomeBinding
-import com.chen.memorizewords.core.navigation.LearningEntry
+import com.chen.memorizewords.core.navigation.RouteNavigator
 import com.chen.memorizewords.core.navigation.WordBookEntry
 import com.chen.memorizewords.feature.home.ui.sync.PendingSyncDetailActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,7 +26,7 @@ class HomeFragment : BaseFragment<HomeViewModel, FeatureHomeModuleHomeFragmentHo
     }
 
     @Inject
-    lateinit var learningEntry: LearningEntry
+    lateinit var routeNavigator: RouteNavigator
 
     @Inject
     lateinit var wordBookEntry: WordBookEntry
@@ -86,19 +87,12 @@ class HomeFragment : BaseFragment<HomeViewModel, FeatureHomeModuleHomeFragmentHo
 
     override fun onNavigationRoute(event: UiEvent.Navigation.Route) {
         when (val target = event.target) {
-            HomeViewModel.Route.ToWordBook -> {
-                startActivity(wordBookEntry.createWordBookIntent(requireContext()))
-            }
-
             HomeViewModel.Route.ToPendingSyncDetails -> {
                 startActivity(PendingSyncDetailActivity.createIntent(requireContext()))
             }
 
-            is HomeViewModel.Route.ToLearning -> {
-                startActivity(
-                    learningEntry.createLearningIntent(requireContext(), target.request)
-                )
-            }
+            is AppRoute -> routeNavigator.navigate(target)
+            else -> super.onNavigationRoute(event)
         }
     }
 }

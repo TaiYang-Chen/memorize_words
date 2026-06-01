@@ -21,7 +21,7 @@ import com.chen.memorizewords.feature.learning.PracticeActivity
 import com.chen.memorizewords.feature.learning.R
 import com.chen.memorizewords.feature.learning.databinding.FragmentPracticeSpellingBinding
 import com.chen.memorizewords.feature.learning.ui.speech.setSpeechDataSource
-import com.chen.memorizewords.speech.api.SpeechAudioOutput
+import com.chen.memorizewords.domain.practice.speech.SpeechAudioOutput
 import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch

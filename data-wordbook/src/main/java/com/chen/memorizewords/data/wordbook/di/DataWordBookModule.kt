@@ -1,0 +1,171 @@
+﻿package com.chen.memorizewords.data.wordbook.di
+
+import android.content.Context
+import com.chen.memorizewords.core.database.DestructiveRoomDatabaseFactory
+import com.chen.memorizewords.core.database.NewArchitectureDatabase
+import com.chen.memorizewords.data.wordbook.local.WordBookDatabase
+import com.chen.memorizewords.data.wordbook.local.mmkv.onboarding.OnboardingSnapshotDataSource
+import com.chen.memorizewords.data.wordbook.local.mmkv.onboarding.OnboardingSnapshotDataSourceImpl
+import com.chen.memorizewords.data.wordbook.remote.datasync.RemoteUserSyncDataSource
+import com.chen.memorizewords.data.wordbook.remote.datasync.RemoteUserSyncDataSourceImpl
+import com.chen.memorizewords.data.wordbook.remote.wordbook.RemoteWordBookDataSource
+import com.chen.memorizewords.data.wordbook.remote.wordbook.RemoteWordBookDataSourceImpl
+import com.chen.memorizewords.data.wordbook.remoteapi.api.datasync.UserDataSyncApiService
+import com.chen.memorizewords.data.wordbook.remoteapi.api.wordbook.WordBookApiService
+import com.chen.memorizewords.data.wordbook.repository.LearningProgressRepositoryImpl
+import com.chen.memorizewords.data.wordbook.repository.RemoteWordBookRepositoryImpl
+import com.chen.memorizewords.data.wordbook.repository.WordBookRepositoryImpl
+import com.chen.memorizewords.data.wordbook.repository.bootstrap.WordBookSnapshotLocalStateStore
+import com.chen.memorizewords.data.wordbook.repository.WordBookUpdateRepositoryImpl
+import com.chen.memorizewords.data.wordbook.repository.onboarding.OnboardingRepositoryImpl
+import com.chen.memorizewords.data.wordbook.repository.wordbook.update.WordBookUpdateCoordinatorImpl
+import com.chen.memorizewords.data.wordbook.sync.WordBookUserSyncOutboxHandler
+import com.chen.memorizewords.domain.wordbook.repository.CurrentWordBookLocalStatePort
+import com.chen.memorizewords.domain.sync.SyncOutboxHandler
+import com.chen.memorizewords.domain.wordbook.repository.LearningProgressRepository
+import com.chen.memorizewords.domain.wordbook.repository.WordBookSnapshotLocalStatePort
+import com.chen.memorizewords.domain.wordbook.repository.WordBookRepository
+import com.chen.memorizewords.domain.wordbook.repository.WordBookUpdateRepository
+import com.chen.memorizewords.domain.wordbook.repository.onboarding.OnboardingRepository
+import com.chen.memorizewords.domain.wordbook.repository.shop.RemoteWordBookRepository
+import com.chen.memorizewords.domain.wordbook.service.WordBookUpdateCoordinator
+import dagger.Binds
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import dagger.multibindings.IntoSet
+import javax.inject.Singleton
+import retrofit2.Retrofit
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class DataWordBookModule {
+    @Binds
+    abstract fun bindWordBookRepository(impl: WordBookRepositoryImpl): WordBookRepository
+
+    @Binds
+    abstract fun bindCurrentWordBookLocalStatePort(
+        impl: WordBookRepositoryImpl
+    ): CurrentWordBookLocalStatePort
+
+    @Binds
+    abstract fun bindRemoteWordBookRepository(
+        impl: RemoteWordBookRepositoryImpl
+    ): RemoteWordBookRepository
+
+    @Binds
+    abstract fun bindLearningProgressRepository(
+        impl: LearningProgressRepositoryImpl
+    ): LearningProgressRepository
+
+    @Binds
+    abstract fun bindWordBookSnapshotLocalStatePort(
+        impl: WordBookSnapshotLocalStateStore
+    ): WordBookSnapshotLocalStatePort
+
+    @Binds
+    abstract fun bindOnboardingRepository(impl: OnboardingRepositoryImpl): OnboardingRepository
+
+    @Binds
+    abstract fun bindWordBookUpdateRepository(
+        impl: WordBookUpdateRepositoryImpl
+    ): WordBookUpdateRepository
+
+    @Binds
+    abstract fun bindWordBookUpdateCoordinator(
+        impl: WordBookUpdateCoordinatorImpl
+    ): WordBookUpdateCoordinator
+
+    @Binds
+    abstract fun bindRemoteWordBookDataSource(
+        impl: RemoteWordBookDataSourceImpl
+    ): RemoteWordBookDataSource
+
+    @Binds
+    abstract fun bindRemoteUserSyncDataSource(
+        impl: RemoteUserSyncDataSourceImpl
+    ): RemoteUserSyncDataSource
+
+    @Binds
+    abstract fun bindOnboardingSnapshotDataSource(
+        impl: OnboardingSnapshotDataSourceImpl
+    ): OnboardingSnapshotDataSource
+
+    @Binds
+    @IntoSet
+    abstract fun bindWordBookUserSyncOutboxHandler(
+        impl: WordBookUserSyncOutboxHandler
+    ): SyncOutboxHandler
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+object DataWordBookDatabaseModule {
+    @Provides
+    @Singleton
+    fun provideWordBookDatabase(@ApplicationContext context: Context): WordBookDatabase {
+        return DestructiveRoomDatabaseFactory(
+            databaseName = NewArchitectureDatabase.contextName("wordbook")
+        ).build(context, WordBookDatabase::class.java)
+    }
+
+    @Provides
+    fun provideWordBookDao(database: WordBookDatabase) = database.wordBookDao()
+
+    @Provides
+    fun provideCurrentWordBookSelectionDao(database: WordBookDatabase) =
+        database.currentWordBookSelectionDao()
+
+    @Provides
+    fun provideWordBookSyncStateDao(database: WordBookDatabase) = database.wordBookSyncStateDao()
+
+    @Provides
+    fun provideBookWordItemDao(database: WordBookDatabase) = database.wordBookItemDao()
+
+    @Provides
+    fun provideWordBookProgressDao(database: WordBookDatabase) = database.wordBookProgressDao()
+
+    @Provides
+    fun provideWordLearningStateDao(database: WordBookDatabase) = database.wordLearningStateDao()
+
+    @Provides
+    fun provideWordDao(database: WordBookDatabase) = database.wordDao()
+
+    @Provides
+    fun provideWordDefinitionDao(database: WordBookDatabase) = database.wordDefinitionDao()
+
+    @Provides
+    fun provideWordExampleDao(database: WordBookDatabase) = database.wordExampleDao()
+
+    @Provides
+    fun provideWordFormDao(database: WordBookDatabase) = database.wordFormDao()
+
+    @Provides
+    fun provideWordUserMetaDao(database: WordBookDatabase) = database.wordUserMetaDao()
+
+    @Provides
+    fun provideWordRelationDao(database: WordBookDatabase) = database.wordRelationDao()
+
+    @Provides
+    fun provideWordRootDao(database: WordBookDatabase) = database.wordRootDao()
+
+    @Provides
+    fun provideRootTagDao(database: WordBookDatabase) = database.rootTagDao()
+
+    @Provides
+    fun provideRootWordDao(database: WordBookDatabase) = database.rootWordDao()
+
+    @Provides
+    @Singleton
+    fun provideWordBookApiService(retrofit: Retrofit): WordBookApiService {
+        return retrofit.create(WordBookApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserDataSyncApiService(retrofit: Retrofit): UserDataSyncApiService {
+        return retrofit.create(UserDataSyncApiService::class.java)
+    }
+}

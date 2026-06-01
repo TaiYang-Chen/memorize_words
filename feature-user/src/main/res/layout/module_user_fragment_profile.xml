@@ -11,7 +11,7 @@
 
         <variable
             name="user"
-            type="com.chen.memorizewords.domain.model.user.User" />
+            type="com.chen.memorizewords.domain.account.model.user.User" />
     </data>
 
     <LinearLayout

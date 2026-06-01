@@ -1,8 +1,8 @@
 package com.chen.memorizewords.feature.home.ui.stats
 
-import com.chen.memorizewords.domain.model.study.record.CalendarDayStats
-import com.chen.memorizewords.domain.model.study.record.DailyDurationStats
-import com.chen.memorizewords.domain.model.study.record.DailyWordStats
+import com.chen.memorizewords.domain.study.model.record.CalendarDayStats
+import com.chen.memorizewords.domain.study.model.record.DailyDurationStats
+import com.chen.memorizewords.domain.study.model.record.DailyWordStats
 import java.util.Calendar
 
 internal class StatsCalendarBuilder(

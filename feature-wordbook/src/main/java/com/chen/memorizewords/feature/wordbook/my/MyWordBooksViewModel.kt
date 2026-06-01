@@ -2,11 +2,11 @@ package com.chen.memorizewords.feature.wordbook.my
 
 import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
-import com.chen.memorizewords.domain.model.wordbook.WordBookInfo
-import com.chen.memorizewords.domain.model.wordbook.WordBookUpdateUiState
-import com.chen.memorizewords.domain.service.wordbook.WordBookUpdateCoordinator
-import com.chen.memorizewords.domain.usecase.wordbook.GetMyWordBooksWithProgressUseCase
-import com.chen.memorizewords.domain.usecase.wordbook.SetCurrentWordBookUseCase
+import com.chen.memorizewords.domain.wordbook.model.WordBookInfo
+import com.chen.memorizewords.domain.wordbook.model.WordBookUpdateUiState
+import com.chen.memorizewords.domain.wordbook.service.WordBookUpdateCoordinator
+import com.chen.memorizewords.domain.wordbook.usecase.GetMyWordBooksWithProgressUseCase
+import com.chen.memorizewords.domain.wordbook.usecase.SetCurrentWordBookUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow

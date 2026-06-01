@@ -1,9 +1,9 @@
 package com.chen.memorizewords.feature.learning.ui.learning
 
 import com.chen.memorizewords.core.ui.vm.UiEffect
-import com.chen.memorizewords.domain.model.words.word.WordDefinitions
-import com.chen.memorizewords.domain.model.words.word.WordExample
-import com.chen.memorizewords.domain.query.word.WordDetail
+import com.chen.memorizewords.domain.word.model.word.WordDefinitions
+import com.chen.memorizewords.domain.word.model.word.WordExample
+import com.chen.memorizewords.domain.word.query.WordDetail
 
 sealed interface LearningShareAction {
     data object Copy : LearningShareAction

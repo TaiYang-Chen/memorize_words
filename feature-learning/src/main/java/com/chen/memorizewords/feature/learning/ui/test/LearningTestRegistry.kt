@@ -1,7 +1,7 @@
 package com.chen.memorizewords.feature.learning.ui.test
 
 import androidx.fragment.app.Fragment
-import com.chen.memorizewords.domain.model.learning.LearningTestMode
+import com.chen.memorizewords.domain.wordbook.model.learning.LearningTestMode
 import com.chen.memorizewords.feature.learning.ui.fragment.WordLearningTestFragment
 
 object LearningTestRegistry {

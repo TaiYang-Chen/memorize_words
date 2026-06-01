@@ -3,13 +3,21 @@ package com.chen.memorizewords.feature.learning.ui.practice
 import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.core.common.resource.ResourceProvider
-import com.chen.memorizewords.domain.model.words.word.Word
+import com.chen.memorizewords.domain.word.model.word.Word
+import com.chen.memorizewords.domain.practice.PracticeAnswerRecord
+import com.chen.memorizewords.domain.practice.PracticeAnswerStatus
+import com.chen.memorizewords.domain.practice.PracticeKind
+import com.chen.memorizewords.domain.practice.PracticeReport
+import com.chen.memorizewords.domain.practice.PracticeReportRepository
+import com.chen.memorizewords.domain.practice.PracticeSessionReportTracker
+import com.chen.memorizewords.domain.practice.PracticeSessionReportRecord
+import com.chen.memorizewords.domain.practice.policy.SpellingAnswerPolicy
 import com.chen.memorizewords.domain.practice.PracticeWordProvider
-import com.chen.memorizewords.domain.usecase.practice.SynthesizeSpeechUseCase
-import com.chen.memorizewords.domain.usecase.word.GetWordDefinitionsUseCase
+import com.chen.memorizewords.domain.practice.usecase.SynthesizeSpeechUseCase
+import com.chen.memorizewords.domain.word.usecase.GetWordDefinitionsUseCase
 import com.chen.memorizewords.feature.learning.R
-import com.chen.memorizewords.speech.api.SpeechAudioSuccess
-import com.chen.memorizewords.speech.api.SpeechTask
+import com.chen.memorizewords.domain.practice.speech.SpeechAudioSuccess
+import com.chen.memorizewords.domain.practice.speech.SpeechTask
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import java.util.Locale
@@ -38,10 +46,12 @@ class SpellingPracticeViewModel @Inject constructor(
     private val getWordDefinitions: GetWordDefinitionsUseCase,
     private val synthesizeSpeech: SynthesizeSpeechUseCase,
     private val wordProvider: PracticeWordProvider,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val practiceReportRepository: PracticeReportRepository
 ) : BaseViewModel() {
 
-    private val sessionEngine = SpellingSessionEngine(resourceProvider)
+    private val spellingAnswerPolicy = SpellingAnswerPolicy()
+    private val uiHelper = SpellingUiHelper(resourceProvider, spellingAnswerPolicy)
     private val assetLoader by lazy(LazyThreadSafetyMode.NONE) {
         SpellingAssetLoader(
             scope = viewModelScope,
@@ -105,10 +115,10 @@ class SpellingPracticeViewModel @Inject constructor(
     private var hintCount: Int = 0
     private var currentResultState: SpellingResultState = SpellingResultState.UNANSWERED
     private var completedCount: Int = 0
-    private var correctCount: Int = 0
-    private var submitCount: Int = 0
     private var autoPlayRequestId: Int = 0
     private var letterPoolChars: List<Char> = emptyList()
+    private var engineSessionId: String = ""
+    private val reportTracker = PracticeSessionReportTracker()
 
     fun loadWithSelection(selectedIds: LongArray?, randomCount: Int) {
         val newLoadKey = buildPracticeSelectionKey(selectedIds, randomCount)
@@ -125,7 +135,7 @@ class SpellingPracticeViewModel @Inject constructor(
 
     fun onKeyboardInputChanged(input: String) {
         if (_uiState.value.isCompleted || !_uiState.value.canEditAnswer) return
-        val sanitized = sessionEngine.reconcileKeyboardInput(
+        val sanitized = uiHelper.reconcileKeyboardInput(
             answerWord = answerWord,
             hintLockedLength = hintLockedLength,
             input = input
@@ -150,7 +160,7 @@ class SpellingPracticeViewModel @Inject constructor(
 
     fun onHint() {
         if (!_uiState.value.canHint || answerWord.isBlank()) return
-        val hintResult = sessionEngine.applyHint(answerWord, currentAnswer, hintLockedLength) ?: return
+        val hintResult = uiHelper.applyHint(answerWord, currentAnswer, hintLockedLength) ?: return
         currentAnswer = hintResult.answer
         hintLockedLength = hintResult.hintLockedLength
         hintCount = 1
@@ -169,20 +179,20 @@ class SpellingPracticeViewModel @Inject constructor(
     fun onSubmit() {
         val state = _uiState.value
         if (!state.canSubmit || answerWord.isBlank()) return
-        submitCount += 1
         attemptCount += 1
         val input = currentAnswer.trim()
-        val isCorrect = input.equals(answerWord, ignoreCase = true)
+        val isCorrect = spellingAnswerPolicy.isCorrect(input, answerWord)
         if (isCorrect) {
+            recordAnswer(PracticeAnswerStatus.CORRECT)
             currentResultState = SpellingResultState.CORRECT
             completedCount += 1
-            correctCount += 1
             publishCurrentState(
                 feedback = resourceProvider.getString(R.string.practice_spelling_correct)
             )
             return
         }
 
+        recordAnswer(PracticeAnswerStatus.WRONG)
         if (attemptCount >= 2) {
             currentResultState = SpellingResultState.REVEALED_WRONG
             completedCount += 1
@@ -208,6 +218,7 @@ class SpellingPracticeViewModel @Inject constructor(
         val nextIndex = resolveNextPracticeIndex(index, words.size)
         if (nextIndex == null) {
             currentResultState = SpellingResultState.COMPLETED
+            persistPracticeReport()
             _uiState.value = SpellingUiState(
                 progressText = resourceProvider.getString(
                     R.string.practice_spelling_progress_text,
@@ -220,7 +231,7 @@ class SpellingPracticeViewModel @Inject constructor(
                 isCompleted = true,
                 canEditAnswer = false,
                 summary = currentSummary(),
-                summaryText = sessionEngine.buildSummaryText(currentSummary())
+                summaryText = uiHelper.buildSummaryText(currentSummary())
             )
             return
         }
@@ -239,9 +250,9 @@ class SpellingPracticeViewModel @Inject constructor(
             _sessionWordIds.value = words.map { it.id }
             index = 0
             completedCount = 0
-            correctCount = 0
-            submitCount = 0
             autoPlayRequestId = 0
+            engineSessionId = "spelling:${System.currentTimeMillis()}:${loadKey.orEmpty()}"
+            reportTracker.clear()
             resetQuestionState()
             renderCurrent()
         }
@@ -278,7 +289,7 @@ class SpellingPracticeViewModel @Inject constructor(
 
         val token = ++renderToken
         answerWord = word.word.trim().uppercase(Locale.ROOT)
-        letterPoolChars = sessionEngine.buildLetterPoolChars(answerWord)
+        letterPoolChars = uiHelper.buildLetterPoolChars(answerWord)
         val cachedSpeech = assetLoader.cachedSpeech(word.id)
         val autoPlayForCachedSpeech = if (cachedSpeech != null) nextAutoPlayRequestId() else autoPlayRequestId
         publishCurrentState(
@@ -346,8 +357,8 @@ class SpellingPracticeViewModel @Inject constructor(
             },
             wordLength = answerWord.length,
             currentAnswer = currentAnswer,
-            answerSlots = sessionEngine.buildAnswerSlots(answerWord, currentAnswer, hintLockedLength),
-            letters = sessionEngine.buildLetterItems(letterPoolChars, currentAnswer),
+            answerSlots = uiHelper.buildAnswerSlots(answerWord, currentAnswer, hintLockedLength),
+            letters = uiHelper.buildLetterItems(letterPoolChars, currentAnswer),
             feedback = feedback,
             progressText = resourceProvider.getString(
                 R.string.practice_spelling_progress_text,
@@ -378,7 +389,7 @@ class SpellingPracticeViewModel @Inject constructor(
             isCompleted = isCompleted,
             autoPlayRequestId = autoPlayRequestId,
             summary = currentSummary(),
-            summaryText = if (isCompleted) sessionEngine.buildSummaryText(currentSummary()) else ""
+            summaryText = if (isCompleted) uiHelper.buildSummaryText(currentSummary()) else ""
         )
     }
 
@@ -392,25 +403,55 @@ class SpellingPracticeViewModel @Inject constructor(
         publishCurrentState(feedback = "")
     }
 
-    private fun sanitizeAnswerInput(raw: String): String {
-        return sessionEngine.sanitizeAnswerInput(answerWord, raw)
-    }
-
     private fun nextAutoPlayRequestId(): Int {
         autoPlayRequestId += 1
         return autoPlayRequestId
     }
 
     private fun buildRetryFeedback(input: String): String {
-        return sessionEngine.buildRetryFeedback(answerWord, input)
+        return uiHelper.buildRetryFeedback(answerWord, input)
     }
 
     private fun currentSummary(): PracticeSessionSummary {
+        val report = currentPracticeReport()
         return PracticeSessionSummary(
             questionCount = words.size,
             completedCount = completedCount,
-            correctCount = correctCount,
-            submitCount = submitCount
+            correctCount = report.correctCount,
+            submitCount = report.answeredCount
+        )
+    }
+
+    private fun persistPracticeReport() {
+        val report = currentPracticeReport()
+        viewModelScope.launch {
+            practiceReportRepository.save(
+                PracticeSessionReportRecord(
+                    sessionId = engineSessionId.ifBlank {
+                        "spelling:${System.currentTimeMillis()}:${loadKey.orEmpty()}"
+                    },
+                    kind = PracticeKind.LISTENING_SPELLING,
+                    report = report,
+                    completedAtMillis = System.currentTimeMillis()
+                )
+            )
+        }
+    }
+
+    private fun currentPracticeReport(): PracticeReport {
+        return reportTracker.buildReport(totalQuestionCount = words.size)
+    }
+
+    private fun recordAnswer(status: PracticeAnswerStatus) {
+        val word = words.getOrNull(index) ?: return
+        reportTracker.record(
+            PracticeAnswerRecord(
+                questionId = "spelling:${word.id}:${reportTracker.nextOrdinal()}",
+                wordId = word.id,
+                status = status,
+                submittedAnswer = currentAnswer.takeIf { it.isNotBlank() },
+                expectedAnswer = answerWord
+            )
         )
     }
 

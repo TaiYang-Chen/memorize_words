@@ -3,9 +3,9 @@ package com.chen.memorizewords.feature.home.ui.practice
 import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
-import com.chen.memorizewords.domain.service.floating.FloatingReviewFacade
-import com.chen.memorizewords.domain.service.practice.PracticeFacade
-import com.chen.memorizewords.domain.model.practice.PracticeMode
+import com.chen.memorizewords.domain.floating.service.FloatingReviewFacade
+import com.chen.memorizewords.domain.practice.service.PracticeFacade
+import com.chen.memorizewords.domain.practice.PracticeMode
 import com.chen.memorizewords.domain.practice.PracticeAvailability
 import com.chen.memorizewords.feature.home.R
 import com.chen.memorizewords.core.navigation.FloatingWordActions

@@ -13,7 +13,7 @@ import android.widget.PopupWindow
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.chen.memorizewords.core.ui.ext.dpToPx
-import com.chen.memorizewords.domain.model.words.word.Word
+import com.chen.memorizewords.domain.word.model.word.Word
 import com.chen.memorizewords.feature.learning.R
 import kotlin.math.max
 import kotlin.math.min
@@ -132,7 +132,7 @@ class WordQuickPopupController(
         }
     }
 
-    private fun buildMeaningSummary(result: com.chen.memorizewords.domain.model.words.word.WordQuickLookupResult?): String {
+    private fun buildMeaningSummary(result: com.chen.memorizewords.domain.word.model.word.WordQuickLookupResult?): String {
         val defs = result?.definitions.orEmpty()
         if (defs.isEmpty()) return "暂无释义"
         return defs.take(3).joinToString(separator = "\n") {

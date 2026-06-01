@@ -4,18 +4,18 @@ import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.common.session.SessionTimer
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
-import com.chen.memorizewords.domain.query.word.WordReadFacade
-import com.chen.memorizewords.domain.service.study.StudyStatsFacade
-import com.chen.memorizewords.domain.usecase.wordbook.GetCurrentWordBookUseCase
-import com.chen.memorizewords.domain.model.learning.LearningTestMode
-import com.chen.memorizewords.domain.model.wordbook.WordBook
-import com.chen.memorizewords.domain.model.words.word.PronunciationType
-import com.chen.memorizewords.domain.model.words.word.Word
-import com.chen.memorizewords.domain.usecase.word.MarkWordAsLearnedUseCase
-import com.chen.memorizewords.domain.usecase.word.study.IsFavoriteUseCase
-import com.chen.memorizewords.domain.usecase.word.study.RecordWordAnswerResultUseCase
-import com.chen.memorizewords.domain.usecase.word.study.SetWordAsMasteredUseCase
-import com.chen.memorizewords.domain.usecase.word.study.ToggleFavoriteUseCase
+import com.chen.memorizewords.domain.word.query.WordReadFacade
+import com.chen.memorizewords.domain.study.service.StudyStatsFacade
+import com.chen.memorizewords.domain.wordbook.usecase.GetCurrentWordBookUseCase
+import com.chen.memorizewords.domain.wordbook.model.learning.LearningTestMode
+import com.chen.memorizewords.domain.wordbook.model.WordBook
+import com.chen.memorizewords.domain.word.model.word.PronunciationType
+import com.chen.memorizewords.domain.word.model.word.Word
+import com.chen.memorizewords.domain.study.usecase.word.MarkWordAsLearnedUseCase
+import com.chen.memorizewords.domain.study.usecase.word.study.IsFavoriteUseCase
+import com.chen.memorizewords.domain.study.usecase.word.study.RecordWordAnswerResultUseCase
+import com.chen.memorizewords.domain.study.usecase.word.study.SetWordAsMasteredUseCase
+import com.chen.memorizewords.domain.study.usecase.word.study.ToggleFavoriteUseCase
 import com.chen.memorizewords.feature.learning.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -300,7 +300,7 @@ class LearningViewModel @Inject constructor(
             LearningShareAction.Copy -> {
                 viewModelScope.launch {
                     val detail = withContext(Dispatchers.IO) {
-                        com.chen.memorizewords.domain.query.word.WordDetail(
+                        com.chen.memorizewords.domain.word.query.WordDetail(
                             word = currentWord,
                             definitions = wordReadFacade.getWordDefinitions(currentWord.id),
                             examples = wordReadFacade.getWordExamples(currentWord.id),

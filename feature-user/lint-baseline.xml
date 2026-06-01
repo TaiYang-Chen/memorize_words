@@ -1,0 +1,1606 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.12.3" type="baseline" client="gradle" dependencies="false" name="AGP (8.12.3)" variant="all" version="8.12.3">
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_activity_auth`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_activity_auth`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_activity_auth.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_dialog_avatar_action`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_dialog_avatar_action`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_dialog_avatar_action.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_dialog_change_gender`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_dialog_change_gender`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_dialog_change_gender.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_fragment_avatar_preview`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_fragment_avatar_preview`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_avatar_preview.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_fragment_bind_phone`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_fragment_bind_phone`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_bind_phone.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_fragment_change_password`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_fragment_change_password`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_change_password.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_fragment_delete_account_confirm`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_fragment_delete_account_confirm`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_delete_account_confirm.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_fragment_login`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_fragment_login`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_login.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_fragment_profile`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_fragment_profile`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_profile.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_fragment_qq_one_tap_login`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_fragment_qq_one_tap_login`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_qq_one_tap_login.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_fragment_register`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_fragment_register`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_register.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_fragment_sms_code_login`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_fragment_sms_code_login`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_sms_code_login.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_fragment_wechat_one_tap_login`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_fragment_wechat_one_tap_login`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_wechat_one_tap_login.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_ic_avatar_placeholder`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_ic_avatar_placeholder`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_user_ic_avatar_placeholder.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_ic_qq`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_ic_qq`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_user_ic_qq.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_ic_right`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_ic_right`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_user_ic_right.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_ic_wechat`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_ic_wechat`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_user_ic_wechat.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_login_bg_edit_text`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_login_bg_edit_text`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_user_login_bg_edit_text.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_login_bg_login_btn`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_login_bg_login_btn`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_user_login_bg_login_btn.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_login_bg_third_icon`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_login_bg_third_icon`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_user_login_bg_third_icon.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_login_ic_pass_invisible`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_login_ic_pass_invisible`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:height=&quot;32dp&quot; android:viewportHeight=&quot;1024&quot; android:viewportWidth=&quot;1024&quot; android:width=&quot;32dp&quot;>"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_user_login_ic_pass_invisible.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`nav_module_auth`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_nav_module_auth`&apos; ?"
+        errorLine1="&lt;navigation xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~~~~~">
+        <location
+            file="src/main/res/navigation/nav_module_auth.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`profile`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_profile`&apos; ?"
+        errorLine1="    &lt;string name=&quot;profile&quot;>个人信息&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="3"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_login_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_login_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_login_title&quot;>欢迎登录&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="5"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_login_go_register`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_login_go_register`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_login_go_register&quot;>没有账号？立即注册&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="6"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_login_account_hint`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_login_account_hint`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_login_account_hint&quot;>请输入手机号&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="7"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_login_password_hint`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_login_password_hint`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_login_password_hint&quot;>请输入密码&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="8"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_login_button`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_login_button`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_login_button&quot;>登录&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="9"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_login_by_sms`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_login_by_sms`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_login_by_sms&quot;>验证码登录&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="10"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_sms_login_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_sms_login_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_sms_login_title&quot;>手机验证码登录&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="12"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_sms_code_hint`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_sms_code_hint`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_sms_code_hint&quot;>请输入验证码&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="13"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_back_to_password_login`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_back_to_password_login`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_back_to_password_login&quot;>返回账号密码登录&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="14"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_wechat_one_tap_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_wechat_one_tap_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_wechat_one_tap_title&quot;>微信一键登录&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="16"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_wechat_one_tap_desc`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_wechat_one_tap_desc`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_wechat_one_tap_desc&quot;>授权微信后可快速登录，首次使用会自动创建账号。&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="17"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_wechat_authorize_button`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_wechat_authorize_button`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_wechat_authorize_button&quot;>使用微信授权登录&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="18"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_qq_one_tap_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_qq_one_tap_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_qq_one_tap_title&quot;>QQ一键登录&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="20"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_qq_one_tap_desc`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_qq_one_tap_desc`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_qq_one_tap_desc&quot;>授权QQ后可快速登录，首次使用会自动创建账号。&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="21"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_qq_authorize_button`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_qq_authorize_button`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_qq_authorize_button&quot;>使用QQ授权登录&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="22"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_common_back`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_common_back`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_common_back&quot;>返回&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="24"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_send_code`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_send_code`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_send_code&quot;>发送验证码&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="25"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_resend_code`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_resend_code`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_resend_code&quot;>重新发送&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="26"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_countdown_seconds`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_countdown_seconds`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_countdown_seconds&quot;>%1$d秒&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="27"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_login_success`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_login_success`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_login_success&quot;>登录成功&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="29"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_login_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_login_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_login_failed&quot;>登录失败&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="30"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_login_phone_required`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_login_phone_required`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_login_phone_required&quot;>请输入手机号&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="31"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_login_password_required`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_login_password_required`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_login_password_required&quot;>请输入密码&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="32"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_login_sms_sent`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_login_sms_sent`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_login_sms_sent&quot;>验证码已发送&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="33"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_login_sms_required`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_login_sms_required`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_login_sms_required&quot;>请输入验证码&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="34"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_send_code_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_send_code_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_send_code_failed&quot;>验证码发送失败&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="35"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_register_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_register_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_register_failed&quot;>注册失败&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="36"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_qq_auth_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_qq_auth_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_qq_auth_failed&quot;>QQ授权失败&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="37"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_wechat_auth_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_wechat_auth_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_wechat_auth_failed&quot;>微信授权失败&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="38"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_qq_login_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_qq_login_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_qq_login_failed&quot;>QQ登录失败&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="39"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_wechat_login_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_wechat_login_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_wechat_login_failed&quot;>微信登录失败&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="40"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_bind_phone_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_phone_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_bind_phone_title&quot;>绑定手机号&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="42"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_bind_phone_phone_hint`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_phone_phone_hint`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_bind_phone_phone_hint&quot;>手机号&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="43"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_bind_phone_sms_hint`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_phone_sms_hint`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_bind_phone_sms_hint&quot;>验证码&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="44"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_bind_phone_confirm`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_phone_confirm`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_bind_phone_confirm&quot;>确认绑定&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="45"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_bind_phone_phone_invalid`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_phone_phone_invalid`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_bind_phone_phone_invalid&quot;>请输入正确的手机号&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="46"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_bind_phone_code_invalid`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_phone_code_invalid`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_bind_phone_code_invalid&quot;>请输入正确的验证码&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="47"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_bind_phone_sms_coming_soon`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_phone_sms_coming_soon`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_bind_phone_sms_coming_soon&quot;>绑定手机验证码功能即将上线&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="48"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_bind_phone_feature_coming_soon`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_phone_feature_coming_soon`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_bind_phone_feature_coming_soon&quot;>绑定手机号功能即将上线&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="49"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_bind_phone_unavailable_notice`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_phone_unavailable_notice`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_bind_phone_unavailable_notice&quot;>绑定手机号暂未开放，当前版本仅保留入口展示，后续接入真实能力后再开放填写与验证码操作。&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="50"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_change_password_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_change_password_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_change_password_title&quot;>修改密码&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="52"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_change_password_old_hint`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_change_password_old_hint`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_change_password_old_hint&quot;>旧密码&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="53"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_change_password_new_hint`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_change_password_new_hint`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_change_password_new_hint&quot;>新密码&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="54"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_change_password_confirm_new_hint`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_change_password_confirm_new_hint`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_change_password_confirm_new_hint&quot;>确认新密码&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="55"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_change_password_submit`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_change_password_submit`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_change_password_submit&quot;>提交&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="56"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_change_pwd_old_required`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_change_pwd_old_required`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_change_pwd_old_required&quot;>请输入旧密码&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="57"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_change_pwd_new_required`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_change_pwd_new_required`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_change_pwd_new_required&quot;>请输入新密码&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="58"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_change_pwd_confirm_required`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_change_pwd_confirm_required`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_change_pwd_confirm_required&quot;>请确认新密码&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="59"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_change_pwd_min_length`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_change_pwd_min_length`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_change_pwd_min_length&quot;>新密码至少6位&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="60"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_change_pwd_diff_old`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_change_pwd_diff_old`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_change_pwd_diff_old&quot;>新密码不能与旧密码相同&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="61"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_change_pwd_not_match`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_change_pwd_not_match`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_change_pwd_not_match&quot;>两次输入的密码不一致&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="62"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_change_pwd_success_relogin`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_change_pwd_success_relogin`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_change_pwd_success_relogin&quot;>密码修改成功，请重新登录&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="63"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_change_pwd_coming_soon`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_change_pwd_coming_soon`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_change_pwd_coming_soon&quot;>修改密码功能即将上线&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="64"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_change_pwd_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_change_pwd_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_change_pwd_failed&quot;>修改密码失败&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="65"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_delete_account_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_delete_account_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_delete_account_title&quot;>注销账号&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="67"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_delete_account_desc`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_delete_account_desc`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_delete_account_desc&quot;>确认后，账号将进入14天冷静期。冷静期内再次登录可取消注销。&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="68"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_delete_account_confirm_countdown`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_delete_account_confirm_countdown`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_delete_account_confirm_countdown&quot;>确认注销（%1$d秒）&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="69"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_delete_account_confirm`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_delete_account_confirm`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_delete_account_confirm&quot;>确认注销&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="70"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_delete_account_deleting`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_delete_account_deleting`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_delete_account_deleting&quot;>注销中...&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="71"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_delete_account_submitted`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_delete_account_submitted`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_delete_account_submitted&quot;>已提交注销申请&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="72"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_delete_account_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_delete_account_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_delete_account_failed&quot;>注销失败&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="73"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_profile_nickname_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_profile_nickname_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_profile_nickname_title&quot;>昵称&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="75"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_profile_update_success`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_profile_update_success`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_profile_update_success&quot;>修改成功&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="76"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_profile_avatar_update_success`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_profile_avatar_update_success`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_profile_avatar_update_success&quot;>头像更新成功&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="77"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_profile_avatar_coming_soon`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_profile_avatar_coming_soon`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_profile_avatar_coming_soon&quot;>头像功能即将上线&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="78"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_profile_avatar_update_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_profile_avatar_update_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_profile_avatar_update_failed&quot;>头像更新失败&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="79"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_profile_bind_success`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_profile_bind_success`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_profile_bind_success&quot;>绑定成功&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="80"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_profile_bind_coming_soon`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_profile_bind_coming_soon`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_profile_bind_coming_soon&quot;>绑定功能即将上线&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="81"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_profile_bind_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_profile_bind_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_profile_bind_failed&quot;>绑定失败&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="82"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_profile_get_cropped_avatar_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_profile_get_cropped_avatar_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_profile_get_cropped_avatar_failed&quot;>获取裁剪头像失败&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="83"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_profile_crop_avatar_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_profile_crop_avatar_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_profile_crop_avatar_failed&quot;>头像裁剪失败&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="84"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_profile_create_camera_file_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_profile_create_camera_file_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_profile_create_camera_file_failed&quot;>创建拍照文件失败&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="85"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_profile_create_crop_file_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_profile_create_crop_file_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_profile_create_crop_file_failed&quot;>创建裁剪文件失败&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="86"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_profile_crop_avatar_toolbar`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_profile_crop_avatar_toolbar`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_profile_crop_avatar_toolbar&quot;>裁剪头像&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="87"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_profile_process_avatar_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_profile_process_avatar_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_profile_process_avatar_failed&quot;>处理头像图片失败&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="88"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_profile_bind_wechat_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_profile_bind_wechat_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_profile_bind_wechat_failed&quot;>微信绑定失败&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="89"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_profile_bind_qq_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_profile_bind_qq_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_profile_bind_qq_failed&quot;>QQ绑定失败&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="90"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_profile_no_avatar`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_profile_no_avatar`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_profile_no_avatar&quot;>暂无头像&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="91"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_social_qq_authorize_cancelled`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_social_qq_authorize_cancelled`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_social_qq_authorize_cancelled&quot;>QQ授权已取消&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="93"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_social_qq_config_missing`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_social_qq_config_missing`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_social_qq_config_missing&quot;>QQ配置缺失&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="94"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_social_qq_sdk_init_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_social_qq_sdk_init_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_social_qq_sdk_init_failed&quot;>QQ授权组件初始化失败&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="95"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_social_qq_response_empty`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_social_qq_response_empty`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_social_qq_response_empty&quot;>QQ授权返回为空&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="96"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_social_qq_authorize_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_social_qq_authorize_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_social_qq_authorize_failed&quot;>QQ授权失败&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="97"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_social_qq_launch_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_social_qq_launch_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_social_qq_launch_failed&quot;>无法启动QQ授权，错误码：%1$d&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="98"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_social_wechat_config_missing`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_social_wechat_config_missing`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_social_wechat_config_missing&quot;>微信配置缺失&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="99"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_social_wechat_not_installed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_social_wechat_not_installed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_social_wechat_not_installed&quot;>未安装微信&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="100"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_social_wechat_launch_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_social_wechat_launch_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_social_wechat_launch_failed&quot;>无法启动微信授权&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="101"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_social_wechat_authorize_cancelled`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_social_wechat_authorize_cancelled`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_social_wechat_authorize_cancelled&quot;>微信授权已取消&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="102"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_nav_login_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_nav_login_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_nav_login_title&quot;>登录&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="103"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_nav_register_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_nav_register_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_nav_register_title&quot;>注册&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="104"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_nav_wechat_login_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_nav_wechat_login_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_nav_wechat_login_title&quot;>微信授权登录&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="105"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_nav_qq_login_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_nav_qq_login_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_nav_qq_login_title&quot;>QQ授权登录&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="106"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_nav_sms_login_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_nav_sms_login_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_nav_sms_login_title&quot;>验证码登录&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="107"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_nav_profile_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_nav_profile_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_nav_profile_title&quot;>个人信息&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="108"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_nav_change_password_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_nav_change_password_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_nav_change_password_title&quot;>修改密码&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="109"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_nav_bind_phone_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_nav_bind_phone_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_nav_bind_phone_title&quot;>绑定手机号&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="110"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_nav_delete_account_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_nav_delete_account_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_nav_delete_account_title&quot;>注销账号&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="111"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_nav_avatar_preview_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_nav_avatar_preview_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_nav_avatar_preview_title&quot;>头像预览&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="112"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="FragmentTagUsage"
+        message="Replace the &lt;fragment> tag with FragmentContainerView."
+        errorLine1="        &lt;fragment"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_activity_auth.xml"
+            line="14"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="DataBindingWithoutKapt"
+        message="If you plan to use data binding in a Kotlin project, you should apply the kotlin-kapt plugin."
+        errorLine1="        dataBinding = true"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle.kts"
+            line="41"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseCompoundDrawables"
+        message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
+        errorLine1="                        &lt;LinearLayout"
+        errorLine2="                         ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_profile.xml"
+            line="412"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="UseCompoundDrawables"
+        message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
+        errorLine1="                        &lt;LinearLayout"
+        errorLine2="                         ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_profile.xml"
+            line="435"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="UselessParent"
+        message="This `FrameLayout` layout or its `FrameLayout` parent is unnecessary"
+        errorLine1="                    &lt;FrameLayout"
+        errorLine2="                     ~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_profile.xml"
+            line="85"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;module_user_delete_account_deleting&quot;>注销中...&lt;/string>"
+        errorLine2="                                                       ~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="71"
+            column="56"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `Bitmap.scale` instead?"
+        errorLine1="                workingBitmap = Bitmap.createScaledBitmap(workingBitmap, nextSize, nextSize, true)"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/user/ui/profile/avatar/AvatarImageProcessor.kt"
+            line="34"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `Bitmap.scale` instead?"
+        errorLine1="        return Bitmap.createScaledBitmap(bitmap, maxEdge, maxEdge, true)"
+        errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/user/ui/profile/avatar/AvatarImageProcessor.kt"
+            line="67"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="        &lt;ImageView"
+        errorLine2="         ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_avatar_preview.xml"
+            line="16"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="        &lt;ImageView"
+        errorLine2="         ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_avatar_preview.xml"
+            line="27"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageView"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_login.xml"
+            line="81"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageView"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_register.xml"
+            line="88"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;查看头像&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;查看头像&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_dialog_avatar_action.xml"
+            line="28"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;从相册选择&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;从相册选择&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_dialog_avatar_action.xml"
+            line="39"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;拍照&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;拍照&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_dialog_avatar_action.xml"
+            line="50"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;取消&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;取消&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_dialog_avatar_action.xml"
+            line="64"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;返回&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;返回&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_dialog_change_gender.xml"
+            line="33"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;确定&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;确定&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_dialog_change_gender.xml"
+            line="62"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;注册&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;注册&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_register.xml"
+            line="26"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;已有账号？ 去登陆&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;已有账号？ 去登陆&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_register.xml"
+            line="40"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;请输入手机号&quot;, should use `@string` resource"
+        errorLine1="            android:hint=&quot;请输入手机号&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_register.xml"
+            line="55"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;请输入密码&quot;, should use `@string` resource"
+        errorLine1="                android:hint=&quot;请输入密码&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_register.xml"
+            line="81"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;注册&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;注册&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_register.xml"
+            line="105"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RelativeOverlap"
+        message="`@id/tvTitle` can overlap `@id/ivMore` if @string/feature_user_profile_title grows due to localized text expansion"
+        errorLine1="            &lt;TextView"
+        errorLine2="             ~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_profile.xml"
+            line="40"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="RtlEnabled"
+        message="The project references RTL attributes, but does not explicitly enable or disable RTL support with `android:supportsRtl` in the manifest">
+        <location
+            file="src/main/AndroidManifest.xml"/>
+    </issue>
+
+</issues>

@@ -1,17 +1,10 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt)
+    id("memorize.android-hilt-library")
 }
 
 android {
     namespace = "com.chen.memorizewords.speech"
-    compileSdk = 36
-
     defaultConfig {
-        minSdk = 25
-
         val wordTtsProvider = (project.findProperty("WORD_TTS_PROVIDER") as String?) ?: "BAIDU"
         val sentenceTtsProvider = (project.findProperty("SENTENCE_TTS_PROVIDER") as String?) ?: "BAIDU"
         val evaluationProvider = (project.findProperty("EVALUATION_PROVIDER") as String?) ?: "BAIDU"
@@ -39,13 +32,6 @@ android {
             isMinifyEnabled = false
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
     buildFeatures {
         buildConfig = true
     }
@@ -53,7 +39,8 @@ android {
 
 dependencies {
     implementation(project(":speech-api"))
-    implementation(project(":network"))
+    implementation(project(":domain-practice"))
+    implementation(project(":core-network"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.hilt.android)

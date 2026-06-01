@@ -3,9 +3,15 @@ package com.chen.memorizewords.core.navigation
 import android.content.Context
 import android.content.Intent
 import androidx.core.content.ContextCompat
-import com.chen.memorizewords.domain.model.learning.LearningSessionRequest
-import com.chen.memorizewords.domain.model.practice.PracticeEntryType
-import com.chen.memorizewords.domain.model.practice.PracticeMode
+import com.chen.memorizewords.domain.practice.PracticeEntryType
+import com.chen.memorizewords.domain.practice.PracticeMode
+
+data class LearningSessionRequest(
+    val initialLearnedCount: Int = 0,
+    val wordIds: List<Long>,
+    val sessionType: Int,
+    val sessionWordCount: Int
+)
 
 interface HomeEntry {
     fun createHomeIntent(context: Context): Intent

@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import com.chen.memorizewords.domain.model.practice.AudioLoopPlaybackMode
-import com.chen.memorizewords.domain.model.practice.PracticeSettings
+import com.chen.memorizewords.domain.practice.AudioLoopPlaybackMode
+import com.chen.memorizewords.domain.practice.PracticeSettings
 import com.chen.memorizewords.feature.learning.R
 import com.chen.memorizewords.feature.learning.databinding.DialogPracticeAudioLoopSettingsBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment

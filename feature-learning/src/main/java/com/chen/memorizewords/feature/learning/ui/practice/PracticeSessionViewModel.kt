@@ -3,10 +3,10 @@ package com.chen.memorizewords.feature.learning.ui.practice
 import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.common.session.SessionTimer
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
-import com.chen.memorizewords.domain.service.practice.PracticeFacade
-import com.chen.memorizewords.domain.model.practice.PracticeEntryType
-import com.chen.memorizewords.domain.model.practice.PracticeMode
-import com.chen.memorizewords.domain.model.practice.PracticeSessionRecord
+import com.chen.memorizewords.domain.practice.service.PracticeFacade
+import com.chen.memorizewords.domain.practice.PracticeEntryType
+import com.chen.memorizewords.domain.practice.PracticeMode
+import com.chen.memorizewords.domain.practice.PracticeSessionRecord
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers

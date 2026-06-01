@@ -9,7 +9,7 @@ import android.graphics.Shader
 import android.graphics.Typeface
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.chen.memorizewords.domain.model.words.WordListRow
+import com.chen.memorizewords.domain.word.model.WordListRow
 import com.chen.memorizewords.feature.wordbook.R
 import kotlin.math.min
 

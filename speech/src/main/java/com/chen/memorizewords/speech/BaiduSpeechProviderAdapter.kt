@@ -1,9 +1,6 @@
 package com.chen.memorizewords.speech
 
-import com.chen.memorizewords.network.api.practice.PracticeSpeechRequest
-import com.chen.memorizewords.network.api.practice.ShadowingAudioIssueDto
-import com.chen.memorizewords.network.api.practice.ShadowingEvaluateResponseDto
-import com.chen.memorizewords.network.util.NetworkResult
+import com.chen.memorizewords.core.network.http.NetworkResult
 import com.chen.memorizewords.speech.api.ShadowingAnalysisSource
 import com.chen.memorizewords.speech.api.ShadowingAudioIssue
 import com.chen.memorizewords.speech.api.ShadowingAudioIssueSeverity
@@ -19,6 +16,9 @@ import com.chen.memorizewords.speech.api.SpeechProviderType
 import com.chen.memorizewords.speech.api.SpeechResult
 import com.chen.memorizewords.speech.api.SpeechTask
 import com.chen.memorizewords.speech.api.WordAudioResult
+import com.chen.memorizewords.speech.remoteapi.api.practice.PracticeSpeechRequest
+import com.chen.memorizewords.speech.remoteapi.api.practice.ShadowingAudioIssueDto
+import com.chen.memorizewords.speech.remoteapi.api.practice.ShadowingEvaluateResponseDto
 import javax.inject.Inject
 import javax.inject.Singleton
 

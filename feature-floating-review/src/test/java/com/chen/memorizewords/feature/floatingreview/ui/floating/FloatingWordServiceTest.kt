@@ -1,8 +1,8 @@
 package com.chen.memorizewords.feature.floatingreview.ui.floating
 
-import com.chen.memorizewords.domain.model.floating.FloatingDockEdge
-import com.chen.memorizewords.domain.model.floating.FloatingDockState
-import com.chen.memorizewords.domain.model.floating.FloatingWordSettings
+import com.chen.memorizewords.domain.floating.model.FloatingDockEdge
+import com.chen.memorizewords.domain.floating.model.FloatingDockState
+import com.chen.memorizewords.domain.floating.model.FloatingWordSettings
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

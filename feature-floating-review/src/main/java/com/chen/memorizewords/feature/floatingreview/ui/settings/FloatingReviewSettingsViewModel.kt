@@ -2,11 +2,11 @@ package com.chen.memorizewords.feature.floatingreview.ui.settings
 
 import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
-import com.chen.memorizewords.domain.service.floating.FloatingReviewFacade
-import com.chen.memorizewords.domain.model.floating.FloatingWordFieldConfig
-import com.chen.memorizewords.domain.model.floating.FloatingWordOrderType
-import com.chen.memorizewords.domain.model.floating.FloatingWordSettings
-import com.chen.memorizewords.domain.model.floating.FloatingWordSourceType
+import com.chen.memorizewords.domain.floating.service.FloatingReviewFacade
+import com.chen.memorizewords.domain.floating.model.FloatingWordFieldConfig
+import com.chen.memorizewords.domain.floating.model.FloatingWordOrderType
+import com.chen.memorizewords.domain.floating.model.FloatingWordSettings
+import com.chen.memorizewords.domain.floating.model.FloatingWordSourceType
 import com.chen.memorizewords.core.navigation.FloatingWordActions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

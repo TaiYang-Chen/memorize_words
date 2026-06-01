@@ -8,7 +8,7 @@ import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import com.chen.memorizewords.core.ui.bottomsheetdialogfragment.BaseBottomSheetDialogFragment
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
-import com.chen.memorizewords.domain.repository.WordOrderType
+import com.chen.memorizewords.domain.wordbook.repository.WordOrderType
 import com.chen.memorizewords.feature.wordbook.R
 import com.chen.memorizewords.feature.wordbook.databinding.FeatureWordbookDialogWordOrderPickerBinding
 import com.chen.memorizewords.feature.wordbook.databinding.FeatureWordbookItemWordOrderOptionBinding

@@ -1,7 +1,7 @@
 package com.chen.memorizewords.feature.wordbook.shop
 
-import com.chen.memorizewords.domain.model.wordbook.WordBook
-import com.chen.memorizewords.domain.model.wordbook.shop.DownloadState
+import com.chen.memorizewords.domain.wordbook.model.WordBook
+import com.chen.memorizewords.domain.wordbook.model.shop.DownloadState
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Test

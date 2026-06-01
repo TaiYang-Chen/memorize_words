@@ -1,0 +1,70 @@
+package com.chen.memorizewords.data.sync.reset
+
+import android.content.Context
+import androidx.work.WorkManager
+import com.chen.memorizewords.data.sync.local.mmkv.checkin.CheckInConfigDataSource
+import com.chen.memorizewords.data.sync.local.mmkv.download.UpdateDownloadStore
+import com.chen.memorizewords.data.sync.local.room.model.sync.SyncOutboxDao
+import com.chen.memorizewords.data.sync.repository.sync.SyncWorkConstants
+import com.chen.memorizewords.domain.account.UserScopedDataResetContributor
+import dagger.Binds
+import dagger.Module
+import dagger.multibindings.IntoSet
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class DataSyncUserScopedDataResetContributor @Inject constructor(
+    @ApplicationContext context: Context,
+    private val syncOutboxDao: SyncOutboxDao,
+    private val checkInConfigDataSource: CheckInConfigDataSource,
+    private val updateDownloadStore: UpdateDownloadStore
+) : UserScopedDataResetContributor {
+    private val appContext = context.applicationContext
+
+    override suspend fun clearUserScopedData() {
+        cancelUserScopedWork()
+        syncOutboxDao.deleteAll()
+        checkInConfigDataSource.clearUserScopedState()
+        updateDownloadStore.clear()
+    }
+
+    private fun cancelUserScopedWork() {
+        val workManager = runCatching { WorkManager.getInstance(appContext) }.getOrNull() ?: return
+        listOf(
+            SyncWorkConstants.TAG_SYNC_OUTBOX_DRAIN,
+            SyncWorkConstants.TAG_POST_LOGIN_BOOTSTRAP,
+            SyncWorkConstants.TAG_ADD_MY_WORD_BOOK,
+            SyncWorkConstants.TAG_WORD_STATE_SYNC,
+            SyncWorkConstants.TAG_WORD_BOOK_PROGRESS_SYNC,
+            SyncWorkConstants.TAG_STUDY_PLAN_SYNC,
+            SyncWorkConstants.TAG_FAVORITE_SYNC,
+            TAG_WORD_BOOK_DOWNLOAD,
+            LEGACY_WORK_WORD_BOOK_BOOTSTRAP,
+            TAG_CURRENT_WORD_BOOK_UPDATE
+        ).forEach(workManager::cancelAllWorkByTag)
+        listOf(
+            SyncWorkConstants.WORK_SYNC_OUTBOX_DRAIN,
+            SyncWorkConstants.WORK_POST_LOGIN_BOOTSTRAP,
+            SyncWorkConstants.UNIQUE_DATA_BOOTSTRAP,
+            LEGACY_WORK_WORD_BOOK_BOOTSTRAP
+        ).forEach(workManager::cancelUniqueWork)
+    }
+}
+
+private const val TAG_WORD_BOOK_DOWNLOAD = "wordbook_download"
+private const val TAG_CURRENT_WORD_BOOK_UPDATE = "current_wordbook_update"
+private const val LEGACY_WORK_WORD_BOOK_BOOTSTRAP = "bootstrap_wordbook_data"
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class DataSyncUserScopedDataResetModule {
+    @Binds
+    @IntoSet
+    abstract fun bindUserScopedDataResetContributor(
+        impl: DataSyncUserScopedDataResetContributor
+    ): UserScopedDataResetContributor
+}

@@ -7,8 +7,8 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.chen.memorizewords.domain.model.wordbook.WordBook
-import com.chen.memorizewords.domain.model.wordbook.shop.DownloadState
+import com.chen.memorizewords.domain.wordbook.model.WordBook
+import com.chen.memorizewords.domain.wordbook.model.shop.DownloadState
 import com.chen.memorizewords.feature.wordbook.R
 import com.chen.memorizewords.feature.wordbook.databinding.ModuleWordbookItemBookShopBinding
 

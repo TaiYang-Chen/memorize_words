@@ -1,8 +1,8 @@
 package com.chen.memorizewords.feature.learning.ui.practice.listening.audio
 
-import com.chen.memorizewords.domain.usecase.practice.SynthesizeSpeechUseCase
-import com.chen.memorizewords.speech.api.SpeechAudioSuccess
-import com.chen.memorizewords.speech.api.SpeechTask
+import com.chen.memorizewords.domain.practice.usecase.SynthesizeSpeechUseCase
+import com.chen.memorizewords.domain.practice.speech.SpeechAudioSuccess
+import com.chen.memorizewords.domain.practice.speech.SpeechTask
 
 internal data class ListeningWordSpeechKey(
     val wordId: Long,

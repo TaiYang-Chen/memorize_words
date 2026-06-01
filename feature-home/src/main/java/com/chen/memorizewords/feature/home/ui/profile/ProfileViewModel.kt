@@ -1,13 +1,14 @@
 package com.chen.memorizewords.feature.home.ui.profile
 
 import androidx.lifecycle.viewModelScope
+import com.chen.memorizewords.core.navigation.AppRoute
 import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
-import com.chen.memorizewords.domain.model.user.User
-import com.chen.memorizewords.domain.service.study.StudyStatsFacade
-import com.chen.memorizewords.domain.repository.user.LogoutDataLossRiskException
-import com.chen.memorizewords.domain.usecase.user.GetUserFlowUseCase
-import com.chen.memorizewords.domain.usecase.user.LogoutUseCase
+import com.chen.memorizewords.domain.account.model.user.User
+import com.chen.memorizewords.domain.study.service.StudyStatsFacade
+import com.chen.memorizewords.domain.account.repository.user.LogoutDataLossRiskException
+import com.chen.memorizewords.domain.account.usecase.user.GetUserFlowUseCase
+import com.chen.memorizewords.domain.account.usecase.user.LogoutUseCase
 import com.chen.memorizewords.feature.home.R
 import com.chen.memorizewords.core.navigation.AuthEntryDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,17 +32,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     sealed interface Route {
-        enum class Screen {
-            WORD_BOOK,
-            FEEDBACK,
-            AUTH
-        }
-
-        data class Open(
-            val screen: Screen,
-            val deepLink: String? = null,
-            val clearTask: Boolean = false
-        ) : Route
+        data class OpenAuth(val clearTask: Boolean = false) : Route
     }
 
     val user: StateFlow<User?> =
@@ -65,49 +56,26 @@ class ProfileViewModel @Inject constructor(
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), "--")
 
     fun toFavorites() {
-        navigateRoute(
-            Route.Open(
-                screen = Route.Screen.WORD_BOOK,
-                deepLink = "myapp://favorites"
-            )
-        )
+        navigate(AppRoute.WordBook(deepLink = "myapp://favorites"))
     }
 
     fun toFeedback() {
-        navigateRoute(
-            Route.Open(
-                screen = Route.Screen.FEEDBACK,
-                deepLink = "myapp://feedback"
-            )
-        )
+        navigate(AppRoute.Feedback(deepLink = "myapp://feedback"))
     }
 
     fun toAbout() {
-        navigateRoute(
-            Route.Open(
-                screen = Route.Screen.FEEDBACK,
-                deepLink = "myapp://about"
-            )
-        )
+        navigate(AppRoute.Feedback(deepLink = "myapp://about"))
     }
 
     fun toUserInfo() {
-        navigateRoute(
-            Route.Open(
-                screen = Route.Screen.AUTH,
-                deepLink = AuthEntryDestination.USER_PROFILE_DEEP_LINK
-            )
-        )
+        navigate(AppRoute.Auth(deepLink = AuthEntryDestination.USER_PROFILE_DEEP_LINK))
     }
 
     fun logout() {
         viewModelScope.launch {
             logoutUseCase().onSuccess {
                 navigateRoute(
-                    Route.Open(
-                        screen = Route.Screen.AUTH,
-                        clearTask = true
-                    )
+                    Route.OpenAuth(clearTask = true)
                 )
             }.onFailure { failure ->
                 if (failure is LogoutDataLossRiskException) {
@@ -131,10 +99,7 @@ class ProfileViewModel @Inject constructor(
                 showToast(failure.message?.ifBlank { fallback } ?: fallback)
             }
             navigateRoute(
-                Route.Open(
-                    screen = Route.Screen.AUTH,
-                    clearTask = true
-                )
+                Route.OpenAuth(clearTask = true)
             )
         }
     }

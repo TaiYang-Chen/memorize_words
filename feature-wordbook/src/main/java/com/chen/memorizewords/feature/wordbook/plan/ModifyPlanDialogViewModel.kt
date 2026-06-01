@@ -4,7 +4,7 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.core.ui.vm.UiEvent
-import com.chen.memorizewords.domain.usecase.wordbook.SaveStudyCountUseCase
+import com.chen.memorizewords.domain.wordbook.usecase.SaveStudyCountUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers

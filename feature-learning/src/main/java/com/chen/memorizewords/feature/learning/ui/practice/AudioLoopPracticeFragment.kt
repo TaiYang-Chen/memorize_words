@@ -20,10 +20,10 @@ import com.chen.memorizewords.feature.learning.R
 import com.chen.memorizewords.feature.learning.databinding.FragmentPracticeAudioLoopBinding
 import com.chen.memorizewords.feature.learning.ui.speech.audioOutputOrNull
 import com.chen.memorizewords.feature.learning.ui.speech.prepareSpeechOutputAsync
-import com.chen.memorizewords.domain.model.practice.AudioLoopPlaybackMode
-import com.chen.memorizewords.domain.usecase.practice.SynthesizeSpeechUseCase
-import com.chen.memorizewords.speech.api.SpeechAudioOutput
-import com.chen.memorizewords.speech.api.SpeechTask
+import com.chen.memorizewords.domain.practice.AudioLoopPlaybackMode
+import com.chen.memorizewords.domain.practice.usecase.SynthesizeSpeechUseCase
+import com.chen.memorizewords.domain.practice.speech.SpeechAudioOutput
+import com.chen.memorizewords.domain.practice.speech.SpeechTask
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 import javax.inject.Inject
@@ -262,7 +262,7 @@ class AudioLoopPracticeFragment :
 
     private fun buildStatusDetail(
         state: AudioLoopUiState,
-        displaySettings: com.chen.memorizewords.domain.model.practice.PracticeSettings
+        displaySettings: com.chen.memorizewords.domain.practice.PracticeSettings
     ): String {
         val modeText = if (displaySettings.playbackMode == AudioLoopPlaybackMode.WORD_WITH_EXAMPLE) {
             getString(R.string.feature_learning_audio_loop_mode_word_with_example)

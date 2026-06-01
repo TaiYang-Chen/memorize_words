@@ -3,8 +3,8 @@ package com.chen.memorizewords.feature.user.ui.profile.password
 import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
-import com.chen.memorizewords.domain.usecase.user.ChangePasswordUseCase
-import com.chen.memorizewords.domain.usecase.user.LogoutUseCase
+import com.chen.memorizewords.domain.account.usecase.user.ChangePasswordUseCase
+import com.chen.memorizewords.domain.account.usecase.user.LogoutUseCase
 import com.chen.memorizewords.feature.user.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject

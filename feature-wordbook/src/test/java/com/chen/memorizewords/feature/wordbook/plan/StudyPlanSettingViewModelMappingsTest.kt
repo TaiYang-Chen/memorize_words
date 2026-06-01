@@ -1,7 +1,7 @@
 package com.chen.memorizewords.feature.wordbook.plan
 
-import com.chen.memorizewords.domain.model.learning.LearningTestMode
-import com.chen.memorizewords.domain.repository.WordOrderType
+import com.chen.memorizewords.domain.wordbook.model.learning.LearningTestMode
+import com.chen.memorizewords.domain.wordbook.repository.WordOrderType
 import com.chen.memorizewords.feature.wordbook.R
 import org.junit.Assert.assertEquals
 import org.junit.Test

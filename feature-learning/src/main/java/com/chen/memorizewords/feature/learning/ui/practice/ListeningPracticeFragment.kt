@@ -11,14 +11,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.chen.memorizewords.core.ui.fragment.BaseVmDbFragment
 import com.chen.memorizewords.core.ui.vm.UiEvent
-import com.chen.memorizewords.domain.model.practice.PracticeMode
+import com.chen.memorizewords.domain.practice.PracticeMode
 import com.chen.memorizewords.feature.learning.PracticeActivity
 import com.chen.memorizewords.feature.learning.R
 import com.chen.memorizewords.feature.learning.databinding.FragmentPracticeListeningBinding
 import com.chen.memorizewords.feature.learning.shouldUseListeningCustomHeader
 import com.chen.memorizewords.feature.learning.ui.practice.listening.audio.ListeningAudioPlayer
 import com.chen.memorizewords.feature.learning.ui.practice.listening.renderer.ListeningPracticeRenderer
-import com.chen.memorizewords.speech.api.SpeechAudioOutput
+import com.chen.memorizewords.domain.practice.speech.SpeechAudioOutput
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch

@@ -1,6 +1,6 @@
 package com.chen.memorizewords.speech
 
-import com.chen.memorizewords.network.util.NetworkResult
+import com.chen.memorizewords.core.network.http.NetworkResult
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.sync.Mutex
@@ -17,7 +17,7 @@ interface AliyunTokenRemoteDataSource {
 
 @Singleton
 class BackendAliyunTokenRemoteDataSource @Inject constructor(
-    private val speechInfraRequest: com.chen.memorizewords.network.api.speech.SpeechInfraRequest
+    private val speechInfraRequest: com.chen.memorizewords.speech.remoteapi.api.speech.SpeechInfraRequest
 ) : AliyunTokenRemoteDataSource {
 
     override suspend fun fetchToken(): AliyunTokenSnapshot {

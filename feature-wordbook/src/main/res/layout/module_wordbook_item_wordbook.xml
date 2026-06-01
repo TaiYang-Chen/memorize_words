@@ -6,7 +6,7 @@
     <data>
         <variable
             name="info"
-            type="com.chen.memorizewords.domain.model.wordbook.WordBookInfo" />
+            type="com.chen.memorizewords.domain.wordbook.model.WordBookInfo" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

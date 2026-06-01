@@ -9,7 +9,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chen.memorizewords.core.ui.ext.dpToPx
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
-import com.chen.memorizewords.domain.usecase.practice.SynthesizeSpeechUseCase
+import com.chen.memorizewords.domain.practice.usecase.SynthesizeSpeechUseCase
 import com.chen.memorizewords.feature.learning.LinearSpacingItemDecoration
 import com.chen.memorizewords.feature.learning.R
 import com.chen.memorizewords.feature.learning.adapter.DefinitionsAdapter
@@ -20,8 +20,8 @@ import com.chen.memorizewords.feature.learning.adapter.SynonymsAdapter
 import com.chen.memorizewords.feature.learning.databinding.FragmentWordEntryDetailBinding
 import com.chen.memorizewords.feature.learning.ui.speech.audioOutputOrNull
 import com.chen.memorizewords.feature.learning.ui.speech.prepareSpeechOutputAsync
-import com.chen.memorizewords.speech.api.SpeechAudioOutput
-import com.chen.memorizewords.speech.api.SpeechTask
+import com.chen.memorizewords.domain.practice.speech.SpeechAudioOutput
+import com.chen.memorizewords.domain.practice.speech.SpeechTask
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.launch

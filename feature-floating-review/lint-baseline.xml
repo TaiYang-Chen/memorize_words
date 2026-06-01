@@ -1,0 +1,1012 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.12.3" type="baseline" client="gradle" dependencies="false" name="AGP (8.12.3)" variant="all" version="8.12.3">
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_ball_size`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_ball_size`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_floating_review_ball_size&quot;>44dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="3"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_card_width`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_card_width`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_floating_review_card_width&quot;>240dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="4"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_page_horizontal_padding`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_page_horizontal_padding`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_floating_review_page_horizontal_padding&quot;>16dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="5"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_section_spacing`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_section_spacing`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_floating_review_section_spacing&quot;>16dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="6"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_card_radius`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_card_radius`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_floating_review_card_radius&quot;>18dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="7"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_inner_card_padding`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_inner_card_padding`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_floating_review_inner_card_padding&quot;>16dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="8"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_row_radius`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_row_radius`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_floating_review_row_radius&quot;>16dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="9"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_field_item_radius`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_field_item_radius`&apos; ?"
+        errorLine1="    &lt;dimen name=&quot;module_floating_review_field_item_radius&quot;>20dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="10"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_activity_settings`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_activity_settings`&apos; ?"
+        errorLine1="&lt;androidx.fragment.app.FragmentContainerView xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_floating_review_activity_settings.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_bg_field_item`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_bg_field_item`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_floating_review_bg_field_item.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_bg_floating_ball`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_bg_floating_ball`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_floating_review_bg_floating_ball.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_bg_floating_button`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_bg_floating_button`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_floating_review_bg_floating_button.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_bg_popup_card`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_bg_popup_card`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_floating_review_bg_popup_card.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_bg_settings_card`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_bg_settings_card`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_floating_review_bg_settings_card.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_bg_settings_chip`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_bg_settings_chip`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_floating_review_bg_settings_chip.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_bg_settings_row_idle`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_bg_settings_row_idle`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_floating_review_bg_settings_row_idle.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_bg_settings_row_selected`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_bg_settings_row_selected`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_floating_review_bg_settings_row_selected.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_bg_stepper_button`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_bg_stepper_button`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_floating_review_bg_stepper_button.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_bg_stepper_capsule`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_bg_stepper_capsule`&apos; ?"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~">
+        <location
+            file="src/main/res/drawable/module_floating_review_bg_stepper_capsule.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_fragment_settings`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_fragment_settings`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_floating_review_fragment_settings.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_ic_arrow_back`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_ic_arrow_back`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_floating_review_ic_arrow_back.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_ic_assignment`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_ic_assignment`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_floating_review_ic_assignment.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_ic_volume_up`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_ic_volume_up`&apos; ?"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/drawable/module_floating_review_ic_volume_up.xml"
+            line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_item_field_config`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_item_field_config`&apos; ?"
+        errorLine1="&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_floating_review_item_field_config.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_nav`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_nav`&apos; ?"
+        errorLine1="&lt;navigation xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~~~~~">
+        <location
+            file="src/main/res/navigation/module_floating_review_nav.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_refresh`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_refresh`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_refresh&quot;>刷新&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/module_floating_review_strings_actions.xml"
+            line="3"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_switch_thumb_tint`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_switch_thumb_tint`&apos; ?"
+        errorLine1="&lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~~~~">
+        <location
+            file="src/main/res/color/module_floating_review_switch_thumb_tint.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_switch_track_tint`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_switch_track_tint`&apos; ?"
+        errorLine1="&lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~~~~">
+        <location
+            file="src/main/res/color/module_floating_review_switch_track_tint.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_view_floating_ball`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_view_floating_ball`&apos; ?"
+        errorLine1="&lt;FrameLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_floating_review_view_floating_ball.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_view_floating_card`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_view_floating_card`&apos; ?"
+        errorLine1="&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_floating_review_view_floating_card.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_settings_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_settings_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_settings_title&quot;>桌面悬浮球&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="3"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_settings_subtitle`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_settings_subtitle`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_settings_subtitle&quot;>集中管理悬浮复习的内容、排序和展示方式&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="4"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_back`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_back`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_back&quot;>返回&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="5"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_auto_start`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_auto_start`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_auto_start&quot;>启动应用时启动悬浮球&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="6"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_appearance_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_appearance_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_appearance_title&quot;>外观设置&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="7"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_ball_opacity_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_ball_opacity_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_ball_opacity_title&quot;>悬浮球透明度&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="8"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_card_opacity_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_card_opacity_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_card_opacity_title&quot;>卡片透明度&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="9"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_card_opacity_value`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_card_opacity_value`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_card_opacity_value&quot;>%1$d%%&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="10"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_source_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_source_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_source_title&quot;>词源&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="11"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_source_current`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_source_current`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_source_current&quot;>当前词书复习词&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="12"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_source_self`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_source_self`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_source_self&quot;>自选单词&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="13"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_pick_words`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_pick_words`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_pick_words&quot;>选择单词&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="14"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_selected_count`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_selected_count`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_selected_count&quot;>已选 %1$d 个&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="15"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_order_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_order_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_order_title&quot;>排序方式&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="16"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_order_random`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_order_random`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_order_random&quot;>随机&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="17"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_order_memory`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_order_memory`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_order_memory&quot;>记忆曲线推荐&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="18"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_order_alpha_asc`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_order_alpha_asc`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_order_alpha_asc&quot;>首字母升序&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="19"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_order_alpha_desc`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_order_alpha_desc`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_order_alpha_desc&quot;>首字母降序&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="20"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_order_length_asc`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_order_length_asc`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_order_length_asc&quot;>长度升序&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="21"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_order_length_desc`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_order_length_desc`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_order_length_desc&quot;>长度降序&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="22"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_fields_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_fields_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_fields_title&quot;>展示字段排序（长按拖拽）&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="23"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_field_word`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_field_word`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_field_word&quot;>单词拼写&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="24"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_field_phonetic`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_field_phonetic`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_field_phonetic&quot;>音标&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="25"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_field_meaning`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_field_meaning`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_field_meaning&quot;>中文释义&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="26"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_field_pos`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_field_pos`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_field_pos&quot;>词性&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="27"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_field_example`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_field_example`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_field_example&quot;>例句&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="28"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_field_note`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_field_note`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_field_note&quot;>笔记&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="29"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_field_image`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_field_image`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_field_image&quot;>图片&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="30"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_notification_channel`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_notification_channel`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_notification_channel&quot;>悬浮复习卡&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="31"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_notification_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_notification_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_notification_title&quot;>悬浮复习卡运行中&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="32"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_notification_ready`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_notification_ready`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_notification_ready&quot;>点击悬浮球开始复习&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="33"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_detail`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_detail`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_detail&quot;>查看详情&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="34"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_empty`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_empty`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_empty&quot;>暂无可复习单词&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="35"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_close`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_close`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_close&quot;>关闭悬浮&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="36"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_preview_permission_required`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_preview_permission_required`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_preview_permission_required&quot;>请先授予悬浮窗权限后再预览透明度效果&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="37"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_phonetic_both`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_phonetic_both`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_phonetic_both&quot;>美 [%1$s]  英 [%2$s]&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="38"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_phonetic_us_only`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_phonetic_us_only`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_phonetic_us_only&quot;>美 [%1$s]&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="39"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_floating_review_phonetic_uk_only`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_phonetic_uk_only`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_floating_review_phonetic_uk_only&quot;>英 [%1$s]&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="40"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="        ballView = inflater.inflate(R.layout.module_floating_review_view_floating_ball, null)"
+        errorLine2="                                                                                        ~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/floatingreview/ui/floating/FloatingWordService.kt"
+            line="245"
+            column="89"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="        cardView = inflater.inflate(R.layout.module_floating_review_view_floating_card, null).apply {"
+        errorLine2="                                                                                        ~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/floatingreview/ui/floating/FloatingWordService.kt"
+            line="246"
+            column="89"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.recyclerview:recyclerview than 1.3.2 is available: 1.4.0"
+        errorLine1="    implementation(&quot;androidx.recyclerview:recyclerview:1.3.2&quot;)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle.kts"
+            line="54"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Use of this function is discouraged because resource reflection makes it harder to perform build optimizations and compile-time verification of code. It is much more efficient to retrieve resources by identifier (e.g. `R.foo.bar`) than by name (e.g. `getIdentifier(&quot;bar&quot;, &quot;foo&quot;, null)`)."
+        errorLine1="        val resourceId = resources.getIdentifier(name, &quot;dimen&quot;, &quot;android&quot;)"
+        errorLine2="                                   ~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/floatingreview/ui/floating/FloatingWordService.kt"
+            line="810"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="DataBindingWithoutKapt"
+        message="If you plan to use data binding in a Kotlin project, you should apply the kotlin-kapt plugin."
+        errorLine1="        dataBinding = true"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle.kts"
+            line="30"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseCompoundDrawables"
+        message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
+        errorLine1="            &lt;LinearLayout"
+        errorLine2="             ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_floating_review_fragment_settings.xml"
+            line="30"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (4217 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector."
+        errorLine1="      android:pathData=&quot;M872.4,493.4c-45.8,55.8 -152.2,45.4 -191.2,2.6 -59.2,-65.1 -153,-56.3 -190.6,10.7 11.2,-36 37.9,-70.2 74.2,-94a208.6,208.6 0,0 1,164.9 -27.9l1.9,-7.6a217,217 0,0 0,-171.1 29c-35.3,23.2 -61.2,54.8 -74.2,89.2 50.9,-311.5 462.8,-297.7 534.5,-13.2 -48.9,-48.4 -107.4,-38.6 -148.4,11.3zM810,369.2l-30.9,12.1 -24.3,-22.4 2.1,32.9 -28.9,16.2 32.1,8.2 6.5,32.5 17.8,-27.9 32.9,3.8 -21.1,-25.5 13.9,-29.9zM479.7,517.8c1.5,-7.6 3.7,-15.1 6.5,-22.5 -1.3,8 -2.6,16.1 -3.4,24.5 -1.1,-0.6 -2.1,-1.4 -3.2,-2zM468,510.5c3.8,2.7 7.7,5 11.7,7.2l-0.7,3.1a124.8,124.8 0,0 1,-11 -10.3zM401.5,411.3a206.7,206.7 0,0 1,24.3 -164.8l-6.7,-4.2a214.7,214.7 0,0 0,-25.2 171.1c11.3,41.2 33.9,75.8 63.2,98.8C174,368.3 314.5,-19.3 608.7,0.8c-61.2,31.4 -70,89.9 -35.1,144.1 39.1,60.7 -3.6,158.3 -56.5,182 -80.3,36 -101.1,127.2 -49.2,183.7 -30.7,-21.7 -55,-57.4 -66.4,-99.1zM441,222.8l6.4,32.4 17.9,-27.8 32.8,3.8 -21.1,-25.5 13.9,-30 -30.8,12.1 -24.3,-22.4 2,32.9 -28.8,16.1 32,8.3zM475.8,524.5a149.8,149.8 0,0 1,-18.6 -12.3c6.8,3.5 14,6.8 21.2,10l-2.7,2.3zM465.5,533.1c3.6,-2.8 7,-5.6 10.2,-8.6 0.9,0.5 1.7,1.3 2.6,1.7a118.2,118.2 0,0 1,-12.9 6.9zM350,565.6a208.4,208.4 0,0 1,-149.9 -73.9l-6,5a216.3,216.3 0,0 0,155.5 76.8c42.2,1.9 81.7,-8.4 112.6,-28.5 -224.9,222.1 -550,-30.3 -440.1,-302.5 11,67.7 64.1,94.2 126.6,77.8 70,-18.2 150,52.4 156.3,109.9 9.6,87.4 90.6,135.3 160.6,103 -30.3,22.5 -72.1,34.6 -115.6,32.5zM207.9,418.7l-30.8,12 -24.3,-22.4 2,33 -28.9,16.1 32,8.2 6.5,32.4 17.9,-27.8 32.8,3.8 -21.1,-25.4 14,-30zM480.8,530.4c-5.8,5.3 -12,10.2 -18.7,14.7 5.8,-5.8 11.6,-11.5 17.3,-17.9 0.5,1 0.9,2.2 1.4,3.3zM487.2,542.5a115.6,115.6 0,0 0,-6.4 -12.2c1,-0.6 2.2,-1.2 3.2,-1.9 1.5,4.7 2.4,9.4 3.2,14.1zM481.2,662.3a207.8,207.8 0,0 1,-116.8 119.2l2.9,7.2a215.8,215.8 0,0 0,121.2 -123.7c15,-39.4 17.3,-80.1 7.6,-115.5 142.5,281.8 -198.8,511.9 -424.6,323.6 68,10.4 109.6,-31.7 113.3,-96 4.1,-71.9 96.3,-125.9 153.2,-114 86.4,17.9 157.2,-44.2 147.8,-120.7 12.3,35.7 10.9,79.2 -4.5,119.9zM352.1,761.9l-30.9,12 -24.3,-22.4 2,33 -28.9,16.1 32,8.3 6.5,32.4 17.7,-27.8 33,3.8 -21.1,-25.4 13.9,-30zM487.9,527.4c3.2,7.1 6.1,14.5 8.2,22.1a379.8,379.8 0,0 0,-11.7 -21.8c1.2,-0.2 2.4,-0.3 3.5,-0.4zM501.2,528.7a64,64 0,0 0,-13.3 2.2c-0.4,-2 -0.6,-4.4 -1.1,-6.4a61.6,61.6 0,0 1,14.4 4.3zM691.6,715.3l7.9,-0.4a214.8,214.8 0,0 0,-80.5 -153.2c-33.1,-26.4 -71.2,-41.2 -108.2,-42.9 313.1,-48.1 427.3,346.6 177.8,502.4 31,-61.2 3.8,-113.7 -56.5,-137 -67.5,-26.1 -90.4,-130.2 -61.6,-180.5 43.8,-76.2 6.5,-162.4 -69.2,-177.3 37.8,-0.6 78.8,14.1 112.8,41.3a207.3,207.3 0,0 1,77.6 147.5zM674.3,778.2l6.4,32.4 17.9,-27.8 32.9,3.8 -21.1,-25.4 13.9,-30 -30.8,12 -24.3,-22.4 2,33 -28.8,16.1 32,8.2zM487.4,520.1c7.7,-1.3 15.6,-1.7 23.5,-1.2 -8,1.7 -16.1,3.6 -24.3,6.2 0.2,-1.7 0.6,-3.4 0.8,-5.1zM483.5,521.9c1.9,-0.3 3.8,-0.3 5.8,-0.5 -0.4,1.1 -1.1,2 -1.5,3.1a46,46 0,0 1,-4.2 -2.6zM485.2,526.5l-3.5,-6.2c2.1,-0.1 4.3,-0.1 6.4,-0.2 -0.8,2.2 -2.2,4.2 -2.8,6.4zM484.6,526.3l0.8,0.8h-0.1l-0.8,-0.8zM485.4,526.6l-1.1,0.5 1.2,-0.6 -0.1,0.1zM486,524l-4.2,6.4 -2.2,-1c2.1,-1.9 4.3,-3.5 6.4,-5.4zM488.1,530.4h-1.4l-4,-6.4c2.4,2.1 3.6,4.2 5.4,6.4zM485.9,526.8l-1.5,-0.2h0.1l1.4,0.2zM488,520.4l0.6,0.2 -6.4,6.1c1.7,-2.2 4,-4.2 5.8,-6.4zM488,522.2c0.3,1.2 0.4,2.5 0.8,3.7 -2.2,1 -4.2,1.5 -6.4,2.7l5.6,-6.4zM489.9,524.8c-0.1,0.9 -0.4,1.8 -0.6,2.7l-1,-2.4 1.7,-0.3zM491,529.4c-1.2,0 -2.2,-0.2 -3.5,-0.3 0.3,-1.7 0.8,-3.3 1.2,-5 0.8,1.8 1.5,3.6 2.3,5.3zM488.9,528.9l-6.3,-3.7c2.2,0.4 4.3,1.6 6.4,2.4l-0.1,1.3zM488.7,529.2l-1.9,1.3c-1.6,-2.1 -2.8,-4.2 -4.5,-6.4l6.4,5.1zM487.9,530.8l-2.1,0.3 1.5,-1.3 0.6,1.1zM484.2,533a70.3,70.3 0,0 1,-0.8 -3.8c1.9,-0.3 3.8,-0.2 5.8,-0.4 -1.7,1.4 -3.3,2.8 -4.9,4.3zM482.1,530.7c-0.4,-0.6 -0.6,-1.5 -0.9,-2.1l1.8,1.1 -0.9,1zM478.9,528.4l3.2,-1.9c0.8,1.7 1.3,3.5 2.1,5.1 -1.8,-1.2 -3.5,-2.3 -5.4,-3.2zM478.9,529.9l6.4,-5.8c-2,2.4 -4.2,4.3 -6.3,6.4l-0.1,-0.6zM478.4,526.3l0.4,-4c2,2.1 3.9,4.4 6,6.4l-6.4,-2.4zM480.5,525.2l1.7,-1.4 -0.4,2 -1.2,-0.6zM481.1,520.9c1,0.8 1.9,1.8 3.1,2.6 -1.5,1.3 -3.2,2.6 -4.7,3.8 0.4,-2.2 1.2,-4.2 1.6,-6.4zM479.8,521.2l6.1,6.4c-2.4,-1.9 -4.1,-4.2 -6.4,-6.1 0.1,0 0.2,-0.1 0.3,-0.3zM484.6,521.7l2.6,1.5c-0.9,0.2 -1.9,0.2 -2.8,0.3 0,-0.6 0.1,-1.2 0.2,-1.8zM490.6,506.7c-1.3,4.4 -2.4,8.6 -3.2,13l-3.2,0.3c1.9,-4.7 4,-9 6.4,-13.2z&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/drawable/module_floating_review_ic_assignment.xml"
+            line="7"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toColorInt` instead?"
+        errorLine1="            android.graphics.Color.parseColor(if (selected) &quot;#111827&quot; else &quot;#4B5563&quot;)"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/floatingreview/ui/settings/FloatingReviewSettingsFragment.kt"
+            line="359"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toColorInt` instead?"
+        errorLine1="            android.graphics.Color.parseColor(if (selected) &quot;#0A5FD3&quot; else &quot;#4B5563&quot;)"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/floatingreview/ui/settings/FloatingReviewSettingsFragment.kt"
+            line="372"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseTomlInstead"
+        message="Use version catalog instead"
+        errorLine1="    implementation(&quot;androidx.recyclerview:recyclerview:1.3.2&quot;)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle.kts"
+            line="54"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="UseTomlInstead"
+        message="Use version catalog instead"
+        errorLine1="    testImplementation(&quot;junit:junit:4.13.2&quot;)"
+        errorLine2="                       ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle.kts"
+            line="57"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="`onTouch` lambda should call `View#performClick` when a click is detected"
+        errorLine1="        ballView?.setOnTouchListener { _, event ->"
+        errorLine2="                                     ^">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/floatingreview/ui/floating/FloatingWordService.kt"
+            line="367"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="    &lt;ImageView"
+        errorLine2="     ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_floating_review_view_floating_ball.xml"
+            line="10"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Number formatting does not take into account locale settings. Consider using `String.format` instead."
+        errorLine1="            tvSize.text = item.fontSizeSp.toString()"
+        errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/floatingreview/ui/settings/FloatingWordFieldConfigAdapter.kt"
+            line="58"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;✓&quot;, should use `@string` resource"
+        errorLine1="                            android:text=&quot;✓&quot;"
+        errorLine2="                            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_floating_review_fragment_settings.xml"
+            line="370"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;✓&quot;, should use `@string` resource"
+        errorLine1="                            android:text=&quot;✓&quot;"
+        errorLine2="                            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_floating_review_fragment_settings.xml"
+            line="404"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;✓&quot;, should use `@string` resource"
+        errorLine1="                            android:text=&quot;✓&quot;"
+        errorLine2="                            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_floating_review_fragment_settings.xml"
+            line="438"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;✓&quot;, should use `@string` resource"
+        errorLine1="                            android:text=&quot;✓&quot;"
+        errorLine2="                            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_floating_review_fragment_settings.xml"
+            line="472"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;✓&quot;, should use `@string` resource"
+        errorLine1="                            android:text=&quot;✓&quot;"
+        errorLine2="                            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_floating_review_fragment_settings.xml"
+            line="506"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;✓&quot;, should use `@string` resource"
+        errorLine1="                            android:text=&quot;✓&quot;"
+        errorLine2="                            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_floating_review_fragment_settings.xml"
+            line="540"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;⋮⋮&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;⋮⋮&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_floating_review_item_field_config.xml"
+            line="21"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;-&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;-&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_floating_review_item_field_config.xml"
+            line="52"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;+&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;+&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_floating_review_item_field_config.xml"
+            line="72"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlEnabled"
+        message="The project references RTL attributes, but does not explicitly enable or disable RTL support with `android:supportsRtl` in the manifest">
+        <location
+            file="src/main/AndroidManifest.xml"/>
+    </issue>
+
+</issues>

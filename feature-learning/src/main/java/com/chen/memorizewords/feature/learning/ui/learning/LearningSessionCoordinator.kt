@@ -1,8 +1,8 @@
 package com.chen.memorizewords.feature.learning.ui.learning
 
-import com.chen.memorizewords.domain.model.learning.LearningTestMode
-import com.chen.memorizewords.domain.model.learning.WordSessionStatus
-import com.chen.memorizewords.domain.model.words.word.Word
+import com.chen.memorizewords.domain.wordbook.model.learning.LearningTestMode
+import com.chen.memorizewords.domain.study.model.learning.WordSessionStatus
+import com.chen.memorizewords.domain.word.model.word.Word
 import java.util.ArrayDeque
 
 internal class LearningSessionCoordinator(

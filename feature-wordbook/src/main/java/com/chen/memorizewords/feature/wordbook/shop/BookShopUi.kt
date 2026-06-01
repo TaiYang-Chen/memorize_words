@@ -1,7 +1,7 @@
 package com.chen.memorizewords.feature.wordbook.shop
 
-import com.chen.memorizewords.domain.model.wordbook.WordBook
-import com.chen.memorizewords.domain.model.wordbook.shop.DownloadState
+import com.chen.memorizewords.domain.wordbook.model.WordBook
+import com.chen.memorizewords.domain.wordbook.model.shop.DownloadState
 
 data class BookShopUi(
     val book: WordBook,

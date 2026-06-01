@@ -3,8 +3,8 @@ package com.chen.memorizewords.feature.home.ui.home
 import android.text.Html
 import android.text.Spanned
 import com.chen.memorizewords.core.common.resource.ResourceProvider
-import com.chen.memorizewords.domain.model.study.StudyPlan
-import com.chen.memorizewords.domain.model.sync.SyncBannerState
+import com.chen.memorizewords.domain.wordbook.model.study.StudyPlan
+import com.chen.memorizewords.domain.sync.model.SyncBannerState
 import com.chen.memorizewords.feature.home.R
 
 internal class HomeTextFormatter(
