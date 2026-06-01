@@ -10,7 +10,6 @@ import com.chen.memorizewords.core.navigation.HomeEntry
 import com.chen.memorizewords.core.navigation.OnboardingEntry
 import com.chen.memorizewords.domain.account.orchestrator.startup.StartupLaunchDestination
 import com.chen.memorizewords.domain.account.orchestrator.startup.StartupOrchestrator
-import com.chen.memorizewords.startup.NetworkMonitor
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.delay
@@ -35,9 +34,6 @@ class SplashActivity : AppCompatActivity() {
     @Inject
     lateinit var onboardingEntry: OnboardingEntry
 
-    @Inject
-    lateinit var networkMonitor: NetworkMonitor
-
     private var hasRouted = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,11 +45,7 @@ class SplashActivity : AppCompatActivity() {
         val splashShownAt = SystemClock.elapsedRealtime()
 
         lifecycleScope.launch {
-            val targetIntent = when (
-                startupOrchestrator.resolveLaunchDestination(
-                    hasNetwork = networkMonitor.isCurrentlyOnline()
-                )
-            ) {
+            val targetIntent = when (startupOrchestrator.resolveLaunchDestinationFast()) {
                 StartupLaunchDestination.HOME -> homeEntry.createHomeIntent(this@SplashActivity)
                 StartupLaunchDestination.ONBOARDING ->
                     onboardingEntry.createOnboardingIntent(this@SplashActivity)
