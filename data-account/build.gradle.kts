@@ -25,5 +25,4 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.javax.inject)
     ksp(libs.hilt.compiler)
-    testImplementation("junit:junit:4.13.2")
 }

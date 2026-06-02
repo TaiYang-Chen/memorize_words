@@ -1,8 +1,10 @@
 plugins {
-    `kotlin-dsl`
+    `java-gradle-plugin`
+    id("org.jetbrains.kotlin.jvm") version "2.2.0"
 }
 
 dependencies {
+    compileOnly(gradleKotlinDsl())
     compileOnly("com.android.tools.build:gradle:8.12.3")
     compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:2.2.0")
 }

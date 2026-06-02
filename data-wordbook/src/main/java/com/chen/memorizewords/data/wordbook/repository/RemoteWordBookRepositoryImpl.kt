@@ -63,6 +63,14 @@ class RemoteWordBookRepositoryImpl @Inject constructor(
         )
     }
 
+    override suspend fun getShopBookById(bookId: Long): WordBook? {
+        if (bookId <= 0L) return null
+        return remote.getWordBooks()
+            .getOrThrow()
+            .firstOrNull { it.id == bookId }
+            ?.toShopDomain()
+    }
+
     override fun observeDownloadStates(): Flow<Map<Long, DownloadState>> {
         val localBooksFlow = wordBookDao.getAllWordBooksFlow()
         val localCountFlow = bookWordItemDao.observeBookWordCounts()

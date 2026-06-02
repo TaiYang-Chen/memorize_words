@@ -33,5 +33,4 @@ dependencies {
     implementation(libs.retrofit)
     ksp(libs.hilt.compiler)
     ksp(libs.androidx.room.compiler)
-    testImplementation("junit:junit:4.13.2")
 }

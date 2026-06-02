@@ -23,8 +23,8 @@ class LoginViewModel @Inject constructor(
         data object ToSmsCodeLogin : Route
     }
 
-    val phoneNumber = MutableStateFlow("")
-    val password = MutableStateFlow("")
+    val phoneNumber = MutableStateFlow("123456")
+    val password = MutableStateFlow("123456")
 
     fun login() {
         launchWithLoading("登录中...") {

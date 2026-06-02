@@ -38,5 +38,4 @@ dependencies {
     implementation(libs.material)
     ksp(libs.hilt.compiler)
 
-    testImplementation("junit:junit:4.13.2")
 }

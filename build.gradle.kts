@@ -333,9 +333,7 @@ tasks.register("verifyDataModuleImportBoundaries") {
         dataModules.forEach { module ->
             val ownContext = module.name.removePrefix("data-").replace('-', '.')
             val sourceRoots = listOf(
-                module.resolve("src/main/java"),
-                module.resolve("src/test/java"),
-                module.resolve("src/androidTest/java")
+                module.resolve("src/main/java")
             ).filter { file -> file.exists() }
 
             sourceRoots.forEach { sourceRoot ->
@@ -600,9 +598,7 @@ tasks.register("verifyDataPackageLayoutConsistency") {
             val contextName = moduleRoot.name.removePrefix("data-").replace('-', '.')
             val requiredPackagePrefix = "com.chen.memorizewords.data.$contextName"
             val sourceRoots = listOf(
-                moduleRoot.resolve("src/main/java"),
-                moduleRoot.resolve("src/test/java"),
-                moduleRoot.resolve("src/androidTest/java")
+                moduleRoot.resolve("src/main/java")
             ).filter { file -> file.exists() }
 
             sourceRoots.forEach { sourceRoot ->

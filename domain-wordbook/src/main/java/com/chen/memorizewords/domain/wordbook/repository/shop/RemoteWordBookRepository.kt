@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface RemoteWordBookRepository {
     suspend fun getShopBooks(query: ShopBooksQuery): PageSlice<WordBook>
+    suspend fun getShopBookById(bookId: Long): WordBook?
     fun observeDownloadStates(): Flow<Map<Long, DownloadState>>
     suspend fun downloadBook(
         book: WordBook,

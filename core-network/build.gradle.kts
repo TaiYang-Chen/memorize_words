@@ -10,5 +10,4 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.javax.inject)
-    testImplementation("junit:junit:4.13.2")
 }

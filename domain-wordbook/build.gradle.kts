@@ -7,5 +7,4 @@ dependencies {
     api(project(":domain-word"))
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.javax.inject)
-    testImplementation("junit:junit:4.13.2")
 }

@@ -3,6 +3,7 @@ package com.chen.memorizewords.data.sync.bootstrap
 import com.chen.memorizewords.core.common.calendar.CheckInConfigDataSource
 import com.chen.memorizewords.data.sync.remote.datasync.RemoteUserSyncDataSource
 import com.chen.memorizewords.data.sync.remote.learningsync.RemoteLearningSyncDataSource
+import com.chen.memorizewords.data.sync.remoteapi.dto.wordbook.WordBookDto
 import com.chen.memorizewords.domain.floating.FloatingSnapshotLocalStatePort
 import com.chen.memorizewords.domain.floating.FloatingSettingsLocalStatePort
 import com.chen.memorizewords.domain.floating.model.FloatingWordDisplayRecord
@@ -84,6 +85,10 @@ class PrimaryServerBootstrapContributor @Inject constructor(
                 runInForeground = false
             )
         }
+        val restoredSelectedBookId = restoreCurrentWordBookSelection(
+            selectedBookId = selectedBookId,
+            remoteBooks = remoteBooks
+        )
 
         remoteBooks.forEach { book ->
             val states = loadPagedSnapshot { page, count ->
@@ -149,7 +154,26 @@ class PrimaryServerBootstrapContributor @Inject constructor(
                 .map { it.toDomain() }
         )
 
-        currentWordBookLocalStatePort.overwriteFromRemote(selectedBookId)
+        currentWordBookLocalStatePort.overwriteFromRemote(restoredSelectedBookId)
+    }
+
+    private suspend fun restoreCurrentWordBookSelection(
+        selectedBookId: Long?,
+        remoteBooks: List<WordBookDto>
+    ): Long? {
+        val safeSelectedBookId = selectedBookId?.takeIf { it > 0L } ?: return null
+        if (remoteBooks.any { it.id == safeSelectedBookId }) {
+            return safeSelectedBookId
+        }
+
+        val selectedBook = remoteWordBookRepository.getShopBookById(safeSelectedBookId)
+            ?: return null
+        remoteWordBookRepository.downloadBook(
+            book = selectedBook,
+            forceRefresh = false,
+            runInForeground = false
+        )
+        return safeSelectedBookId
     }
 
     private suspend fun <T> loadPagedSnapshot(
