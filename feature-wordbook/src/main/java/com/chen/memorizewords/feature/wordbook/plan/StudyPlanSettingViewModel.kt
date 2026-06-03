@@ -91,6 +91,7 @@ class StudyPlanSettingViewModel @Inject constructor(
 
     val planCountCardState: StateFlow<StudyPlan> =
         getStudyPlanFlowUseCase()
+            .map { plan -> plan ?: StudyPlan() }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5_000),

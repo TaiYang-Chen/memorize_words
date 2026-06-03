@@ -56,12 +56,23 @@ class HomeViewModel @Inject constructor(
 
     val user: MutableStateFlow<User?> = MutableStateFlow(null)
 
+    val isPreparingLearning: MutableStateFlow<Boolean> = MutableStateFlow(false)
+
+    val learningButtonEnabled: StateFlow<Boolean> =
+        isPreparingLearning
+            .map { preparing -> !preparing }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), true)
+
+    private var pendingBoostBookId: Long? = null
+    private var pendingBoostPlan: StudyPlan? = null
+
     val wordBookInfo: StateFlow<WordBookInfo?> =
         getCurrentWordBookInfoFlowUseCase()
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     val studyPlan: StateFlow<StudyPlan> =
         getStudyPlanFlowUseCase()
+            .map { plan -> plan ?: StudyPlan() }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), StudyPlan())
 
     val studyTotalDayCount: StateFlow<Int> =
@@ -86,8 +97,12 @@ class HomeViewModel @Inject constructor(
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
 
     val learnButtonText: StateFlow<String> =
-        combine(todayNewCount, studyPlan) { newCount, plan ->
-            textFormatter.formatLearnButtonText(newCount, plan)
+        combine(todayNewCount, studyPlan, isPreparingLearning) { newCount, plan, preparing ->
+            if (preparing) {
+                resourceProvider.getString(R.string.home_learning_prepare_loading)
+            } else {
+                textFormatter.formatLearnButtonText(newCount, plan)
+            }
         }.stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5_000),
@@ -139,15 +154,45 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onStartLearningClick() {
-        if (!ensureWordBookSelected()) {
+        if (isPreparingLearning.value) {
             return
         }
-        val plan = studyPlan.value
+        val bookInfo = wordBookInfo.value
+        if (bookInfo == null) {
+            restoreLearningPrerequisitesAndStart()
+            return
+        }
+        startLearning(bookInfo.bookId, studyPlan.value)
+    }
+
+    private fun restoreLearningPrerequisitesAndStart() {
+        viewModelScope.launch {
+            isPreparingLearning.value = true
+            try {
+                syncFacade.restoreLearningPrerequisites()
+                    .onSuccess { snapshot ->
+                        startLearning(snapshot.selectedBookId, snapshot.studyPlan)
+                    }
+                    .onFailure {
+                        showToast(resourceProvider.getString(R.string.home_learning_prepare_failed))
+                    }
+            } finally {
+                isPreparingLearning.value = false
+            }
+        }
+    }
+
+    private fun startLearning(bookId: Long, plan: StudyPlan) {
         val completedNewPlan = plan.dailyNewCount > 0 && todayNewCount.value >= plan.dailyNewCount
         if (!completedNewPlan) {
-            toLearningNewActivity()
+            pendingBoostBookId = null
+            pendingBoostPlan = null
+            navigateToNewLearning(bookId, plan, plan.dailyNewCount)
             return
         }
+
+        pendingBoostBookId = bookId
+        pendingBoostPlan = plan
 
         emitEvent(
             UiEvent.Dialog.CustomConfirmDialog(
@@ -158,11 +203,24 @@ class HomeViewModel @Inject constructor(
 
     fun onBoostNewWordsSelected(selected: Int) {
         val selectedCount = selected.takeIf { it > 0 } ?: DEFAULT_BOOST_NEW_WORDS
-        navigateToNewLearning(selectedCount)
+        val bookId = pendingBoostBookId ?: wordBookInfo.value?.bookId
+        val plan = pendingBoostPlan ?: studyPlan.value
+        pendingBoostBookId = null
+        pendingBoostPlan = null
+        if (bookId == null) {
+            showToast(resourceProvider.getString(R.string.home_practice_no_book))
+            return
+        }
+        navigateToNewLearning(bookId, plan, selectedCount)
     }
 
     fun toLearningNewActivity() {
-        navigateToNewLearning(studyPlan.value.dailyNewCount)
+        val bookInfo = wordBookInfo.value
+        if (bookInfo == null) {
+            showToast(resourceProvider.getString(R.string.home_practice_no_book))
+            return
+        }
+        navigateToNewLearning(bookInfo.bookId, studyPlan.value, studyPlan.value.dailyNewCount)
     }
 
     fun toLearningReviewActivity() {
@@ -191,11 +249,15 @@ class HomeViewModel @Inject constructor(
             showToast(resourceProvider.getString(R.string.home_practice_no_book))
             return
         }
+        navigateToNewLearning(bookInfo.bookId, studyPlan.value, count)
+    }
+
+    private fun navigateToNewLearning(bookId: Long, plan: StudyPlan, count: Int) {
         viewModelScope.launch {
             val route = learningLauncher.createNewRoute(
-                bookId = bookInfo.bookId,
+                bookId = bookId,
                 count = count,
-                orderType = studyPlan.value.wordOrderType
+                orderType = plan.wordOrderType
             )
             if (route == null) {
                 showToast(resourceProvider.getString(R.string.home_learning_no_words))
@@ -205,13 +267,6 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun ensureWordBookSelected(): Boolean {
-        if (wordBookInfo.value != null) {
-            return true
-        }
-        showToast(resourceProvider.getString(R.string.home_practice_no_book))
-        return false
-    }
 }
 
 internal fun calculateLearnProgress(

@@ -98,7 +98,7 @@ class OnboardingViewModel @Inject constructor(
         viewModelScope.launch {
             getStudyPlanFlowUseCase()
                 .take(1)
-                .collect { _draftStudyPlan.value = it }
+                .collect { plan -> _draftStudyPlan.value = plan ?: StudyPlan() }
         }
     }
 

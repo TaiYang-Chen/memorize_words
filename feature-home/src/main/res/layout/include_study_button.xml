@@ -21,6 +21,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/module_home_select_radius_black"
             android:clickable="true"
+            android:enabled="@{viewModel.learningButtonEnabled}"
             android:gravity="center"
             android:onClick="@{() -> viewModel.onStartLearningClick()}"
             android:padding="16dp"

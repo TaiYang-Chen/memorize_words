@@ -7,5 +7,5 @@ import kotlinx.coroutines.flow.Flow
 class GetStudyPlanFlowUseCase @Inject constructor(
     private val repository: StudyPlanRepository
 ) {
-    operator fun invoke(): Flow<StudyPlan> = repository.getStudyPlanFlow()
+    operator fun invoke(): Flow<StudyPlan?> = repository.getStudyPlanFlow()
 }

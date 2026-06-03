@@ -14,6 +14,7 @@ import com.chen.memorizewords.domain.study.model.record.TodayCheckInEntryState
 import com.chen.memorizewords.domain.word.model.WordListRow
 import com.chen.memorizewords.domain.word.model.enums.PartOfSpeech
 import com.chen.memorizewords.domain.word.model.word.Word
+import com.chen.memorizewords.domain.wordbook.model.study.StudyPlan
 import com.chen.memorizewords.feature.learning.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -151,7 +152,7 @@ class LearningDoneViewModel @Inject constructor(
                 return@launch
             }
 
-            val plan = withContext(Dispatchers.IO) { getStudyPlanUseCase() }
+            val plan = withContext(Dispatchers.IO) { getStudyPlanUseCase() } ?: StudyPlan()
             val request = buildContinueLearningRequest(sessionTypeValue, sessionWordCount)
             val excludeIds = sessionWordIds.toSet()
             val nextSessionRequest = withContext(Dispatchers.IO) {

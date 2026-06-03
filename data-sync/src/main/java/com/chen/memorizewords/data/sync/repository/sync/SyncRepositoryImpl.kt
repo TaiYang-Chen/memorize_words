@@ -3,6 +3,7 @@ package com.chen.memorizewords.data.sync.repository.sync
 import com.chen.memorizewords.data.sync.bootstrap.DataBootstrapCoordinator
 import com.chen.memorizewords.data.sync.local.room.model.sync.SyncOutboxDao
 import com.chen.memorizewords.data.sync.local.room.model.sync.SyncOutboxEntity
+import com.chen.memorizewords.domain.sync.model.LearningPrerequisitesSnapshot
 import com.chen.memorizewords.domain.sync.model.PostLoginBootstrapState
 import com.chen.memorizewords.domain.sync.model.SyncBannerState
 import com.chen.memorizewords.domain.sync.model.SyncPendingRecord
@@ -25,7 +26,8 @@ class SyncRepositoryImpl @Inject constructor(
     private val syncOutboxDao: SyncOutboxDao,
     private val networkMonitor: NetworkMonitor,
     private val syncOutboxWorkScheduler: SyncOutboxWorkScheduler,
-    private val postLoginBootstrapStateStore: PostLoginBootstrapStateStore
+    private val postLoginBootstrapStateStore: PostLoginBootstrapStateStore,
+    private val learningPrerequisitesRestorer: LearningPrerequisitesRestorer
 ) : SyncRepository {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
@@ -71,6 +73,10 @@ class SyncRepositoryImpl @Inject constructor(
         }
         dataBootstrapCoordinator.schedulePostLoginBootstrapWork()
         triggerDrain()
+    }
+
+    override suspend fun restoreLearningPrerequisites(): Result<LearningPrerequisitesSnapshot> {
+        return learningPrerequisitesRestorer.restore()
     }
 
     override fun getCurrentPostLoginBootstrapState(): PostLoginBootstrapState {

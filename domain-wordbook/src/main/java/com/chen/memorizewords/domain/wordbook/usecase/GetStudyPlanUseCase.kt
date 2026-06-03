@@ -6,5 +6,5 @@ import javax.inject.Inject
 class GetStudyPlanUseCase @Inject constructor(
     private val repository: StudyPlanRepository
 ) {
-    suspend operator fun invoke(): StudyPlan = repository.getStudyPlan()
+    suspend operator fun invoke(): StudyPlan? = repository.getStudyPlan()
 }

@@ -12,6 +12,6 @@ interface StudyPlanDataSource {
 
     suspend fun saveStudyPlan(studyPlan: StudyPlan)
     suspend fun clearStudyPlan()
-    suspend fun getStudyPlan(): StudyPlan
-    fun getStudyPlanFlow(): Flow<StudyPlan>
+    suspend fun getStudyPlan(): StudyPlan?
+    fun getStudyPlanFlow(): Flow<StudyPlan?>
 }

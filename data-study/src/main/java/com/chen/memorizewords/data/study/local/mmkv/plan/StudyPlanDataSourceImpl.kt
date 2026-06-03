@@ -20,10 +20,10 @@ class StudyPlanDataSourceImpl @Inject constructor(
     private val wordOrderTypeKey = "wordOrderType"
 
     private val _plan = MutableStateFlow(readPlanFromStorage())
-    private val plan: Flow<StudyPlan> = _plan
+    private val plan: Flow<StudyPlan?> = _plan
 
     override suspend fun saveStudyCount(dailyNewCount: Int, dailyReviewCount: Int) {
-        val current = _plan.value
+        val current = _plan.value ?: readPlanFromStorage() ?: StudyPlan()
         val nextPlan = current.copy(
             dailyNewCount = dailyNewCount,
             dailyReviewCount = dailyReviewCount
@@ -47,17 +47,20 @@ class StudyPlanDataSourceImpl @Inject constructor(
             mmkv.removeValueForKey(dailyReviewCountKey)
             mmkv.removeValueForKey(testModeKey)
             mmkv.removeValueForKey(wordOrderTypeKey)
-            _plan.value = StudyPlan()
+            _plan.value = null
         }
     }
 
-    override suspend fun getStudyPlan(): StudyPlan {
+    override suspend fun getStudyPlan(): StudyPlan? {
         return withContext(Dispatchers.IO) { readPlanFromStorage() }
     }
 
-    override fun getStudyPlanFlow(): Flow<StudyPlan> = plan
+    override fun getStudyPlanFlow(): Flow<StudyPlan?> = plan
 
-    private fun readPlanFromStorage(): StudyPlan {
+    private fun readPlanFromStorage(): StudyPlan? {
+        if (!hasStoredPlan()) {
+            return null
+        }
         val modeName = mmkv.decodeString(testModeKey, LearningTestMode.MEANING_CHOICE.name)
         val mode = runCatching { LearningTestMode.valueOf(modeName.orEmpty()) }
             .getOrDefault(LearningTestMode.MEANING_CHOICE)
@@ -70,5 +73,12 @@ class StudyPlanDataSourceImpl @Inject constructor(
             testMode = mode,
             wordOrderType = orderType
         )
+    }
+
+    private fun hasStoredPlan(): Boolean {
+        return mmkv.containsKey(dailyNewCountKey) ||
+            mmkv.containsKey(dailyReviewCountKey) ||
+            mmkv.containsKey(testModeKey) ||
+            mmkv.containsKey(wordOrderTypeKey)
     }
 }

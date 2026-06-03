@@ -1,4 +1,5 @@
 package com.chen.memorizewords.domain.sync.repository
+import com.chen.memorizewords.domain.sync.model.LearningPrerequisitesSnapshot
 import com.chen.memorizewords.domain.sync.model.PostLoginBootstrapState
 import com.chen.memorizewords.domain.sync.model.SyncBannerState
 import com.chen.memorizewords.domain.sync.model.SyncPendingRecord
@@ -6,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface SyncRepository {
     fun startPostLoginBootstrap()
+    suspend fun restoreLearningPrerequisites(): Result<LearningPrerequisitesSnapshot>
     fun getCurrentPostLoginBootstrapState(): PostLoginBootstrapState
     fun scheduleBootstrapSync()
     fun observePostLoginBootstrapState(): Flow<PostLoginBootstrapState>

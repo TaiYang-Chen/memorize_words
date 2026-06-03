@@ -1,4 +1,5 @@
 package com.chen.memorizewords.domain.sync.service
+import com.chen.memorizewords.domain.sync.model.LearningPrerequisitesSnapshot
 import com.chen.memorizewords.domain.sync.model.PostLoginBootstrapState
 import com.chen.memorizewords.domain.sync.model.SyncBannerState
 import com.chen.memorizewords.domain.sync.model.SyncPendingRecord
@@ -18,6 +19,9 @@ class SyncFacade @Inject constructor(
     fun startPostLoginBootstrap() {
         syncRepository.startPostLoginBootstrap()
     }
+
+    suspend fun restoreLearningPrerequisites(): Result<LearningPrerequisitesSnapshot> =
+        syncRepository.restoreLearningPrerequisites()
 
     fun observePendingSyncRecords(): Flow<List<SyncPendingRecord>> =
         syncRepository.observePendingSyncRecords()

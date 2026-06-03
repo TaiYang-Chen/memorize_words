@@ -38,6 +38,7 @@ import com.chen.memorizewords.domain.study.model.record.MakeUpCheckInException
 import com.chen.memorizewords.domain.study.model.record.TodayCheckInEntryState
 import com.chen.memorizewords.domain.word.model.word.Word
 import com.chen.memorizewords.domain.study.repository.record.LearningRecordRepository
+import com.chen.memorizewords.domain.wordbook.model.study.StudyPlan
 import com.google.gson.Gson
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -81,7 +82,7 @@ class LearningRecordRepositoryImpl @Inject constructor(
                 )
             )
 
-            val plan = studyPlanDataSource.getStudyPlan()
+            val plan = studyPlanDataSource.getStudyPlan() ?: StudyPlan()
             val todayNewCount = wordStudyRecordsDao.getTodayNewWordCountValue(today)
             val todayReviewCount = wordStudyRecordsDao.getTodayReviewWordCountValue(today)
             val dailyNewTarget = if (plan.dailyNewCount > 0) plan.dailyNewCount else 15

@@ -39,11 +39,11 @@ class StudyPlanRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getStudyPlan(): StudyPlan {
+    override suspend fun getStudyPlan(): StudyPlan? {
         return studyPlanDataSource.getStudyPlan()
     }
 
-    override fun getStudyPlanFlow(): Flow<StudyPlan> {
+    override fun getStudyPlanFlow(): Flow<StudyPlan?> {
         return studyPlanDataSource.getStudyPlanFlow()
     }
 
@@ -51,6 +51,7 @@ class StudyPlanRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             studyPlanDataSource.saveStudyCount(dailyNewCount, dailyReviewCount)
             val plan = studyPlanDataSource.getStudyPlan()
+                ?: StudyPlan(dailyNewCount = dailyNewCount, dailyReviewCount = dailyReviewCount)
             SyncOutboxWriter.enqueueLatest(
                 bizType = OutboxTopic.STUDY_PLAN,
                 bizKey = "study_plan",
