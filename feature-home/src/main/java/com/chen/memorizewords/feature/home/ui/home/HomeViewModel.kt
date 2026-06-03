@@ -125,7 +125,6 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             user.value = getCurrentUserUseCase()
         }
-        syncFacade.triggerDrain()
     }
 
     fun toWordBookActivity() {

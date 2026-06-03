@@ -6,6 +6,7 @@ import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.domain.account.model.user.User
 import com.chen.memorizewords.domain.study.service.StudyStatsFacade
+import com.chen.memorizewords.domain.account.model.LogoutOutcome
 import com.chen.memorizewords.domain.account.repository.user.LogoutDataLossRiskException
 import com.chen.memorizewords.domain.account.usecase.user.GetUserFlowUseCase
 import com.chen.memorizewords.domain.account.usecase.user.LogoutUseCase
@@ -74,7 +75,11 @@ class ProfileViewModel @Inject constructor(
 
     fun logout() {
         viewModelScope.launch {
-            logoutUseCase().onSuccess {
+            logoutUseCase().onSuccess { outcome ->
+                if (outcome is LogoutOutcome.LocalClearedRemoteFailed) {
+                    val fallback = resourceProvider.getString(R.string.home_logout_failed)
+                    showToast(outcome.cause.message?.ifBlank { fallback } ?: fallback)
+                }
                 navigateRoute(
                     Route.OpenAuth(clearTask = true)
                 )
@@ -95,7 +100,12 @@ class ProfileViewModel @Inject constructor(
 
     private fun forceLogout() {
         viewModelScope.launch {
-            logoutUseCase(force = true).onFailure { failure ->
+            logoutUseCase(force = true).onSuccess { outcome ->
+                if (outcome is LogoutOutcome.LocalClearedRemoteFailed) {
+                    val fallback = resourceProvider.getString(R.string.home_logout_failed)
+                    showToast(outcome.cause.message?.ifBlank { fallback } ?: fallback)
+                }
+            }.onFailure { failure ->
                 val fallback = resourceProvider.getString(R.string.home_logout_failed)
                 showToast(failure.message?.ifBlank { fallback } ?: fallback)
             }

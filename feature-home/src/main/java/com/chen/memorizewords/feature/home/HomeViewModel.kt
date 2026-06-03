@@ -4,10 +4,8 @@ import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.navigation.AppRoute
 import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
-import com.chen.memorizewords.domain.sync.model.PostLoginBootstrapState
 import com.chen.memorizewords.domain.wordbook.model.WordBookUpdateCandidate
 import com.chen.memorizewords.domain.wordbook.model.WordBookUpdatePrompt
-import com.chen.memorizewords.domain.sync.service.SyncFacade
 import com.chen.memorizewords.domain.wordbook.service.WordBookUpdateCoordinator
 import com.chen.memorizewords.domain.account.usecase.user.IsLoggedInUseCase
 import com.chen.memorizewords.domain.wordbook.usecase.GetCurrentWordBookUseCase
@@ -15,16 +13,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val isLoggedInUseCase: IsLoggedInUseCase,
     private val getCurrentWordBookUseCase: GetCurrentWordBookUseCase,
-    private val syncFacade: SyncFacade,
     private val updateCoordinator: WordBookUpdateCoordinator,
     private val resourceProvider: ResourceProvider
 ) : BaseViewModel() {
@@ -42,27 +37,9 @@ class HomeViewModel @Inject constructor(
     private val _wordbookState = MutableStateFlow<Boolean?>(null)
     val wordbookState: StateFlow<Boolean?> = _wordbookState
 
-    private val postLoginBootstrapState: StateFlow<PostLoginBootstrapState> =
-        syncFacade.observePostLoginBootstrapState()
-            .stateIn(
-                viewModelScope,
-                SharingStarted.WhileSubscribed(5_000),
-                PostLoginBootstrapState.Idle
-            )
-
     private var pendingPrompt: WordBookUpdatePrompt? = null
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
-            postLoginBootstrapState.collect { bootstrapState ->
-                if (loginState.value != true) return@collect
-                val hasWordBook = getCurrentWordBookUseCase() != null
-                _wordbookState.value = resolveWordBookSelectionState(
-                    hasWordBook = hasWordBook,
-                    bootstrapState = bootstrapState
-                )
-            }
-        }
         viewModelScope.launch {
             updateCoordinator.observeForegroundPrompt().collect { prompt ->
                 pendingPrompt = prompt
@@ -83,17 +60,7 @@ class HomeViewModel @Inject constructor(
             val isLoggedIn = isLoggedInUseCase()
             _loginState.value = isLoggedIn
             if (isLoggedIn) {
-                val bootstrapPlan = resolveAutoLoginBootstrapPlan(
-                    currentState = syncFacade.getCurrentPostLoginBootstrapState()
-                )
-                if (bootstrapPlan.shouldStartBootstrap) {
-                    syncFacade.startPostLoginBootstrap()
-                }
-                val hasWordBook = getCurrentWordBookUseCase() != null
-                _wordbookState.value = resolveWordBookSelectionState(
-                    hasWordBook = hasWordBook,
-                    bootstrapState = bootstrapPlan.effectiveState
-                )
+                _wordbookState.value = getCurrentWordBookUseCase() != null
             } else {
                 _wordbookState.value = null
             }
@@ -134,44 +101,5 @@ class HomeViewModel @Inject constructor(
             update.summary.modifiedCount,
             update.summary.removedCount
         ) + if (sampleLine.isBlank()) "" else "\n$sampleLine"
-    }
-}
-
-internal fun resolveWordBookSelectionState(
-    hasWordBook: Boolean,
-    bootstrapState: PostLoginBootstrapState
-): Boolean? {
-    if (hasWordBook) {
-        return true
-    }
-    return when (bootstrapState) {
-        PostLoginBootstrapState.Running -> null
-        PostLoginBootstrapState.Idle,
-        PostLoginBootstrapState.Failed,
-        PostLoginBootstrapState.Succeeded -> false
-    }
-}
-
-internal data class AutoLoginBootstrapPlan(
-    val shouldStartBootstrap: Boolean,
-    val effectiveState: PostLoginBootstrapState
-)
-
-internal fun resolveAutoLoginBootstrapPlan(
-    currentState: PostLoginBootstrapState
-): AutoLoginBootstrapPlan {
-    return if (
-        currentState == PostLoginBootstrapState.Idle ||
-        currentState == PostLoginBootstrapState.Failed
-    ) {
-        AutoLoginBootstrapPlan(
-            shouldStartBootstrap = true,
-            effectiveState = PostLoginBootstrapState.Running
-        )
-    } else {
-        AutoLoginBootstrapPlan(
-            shouldStartBootstrap = false,
-            effectiveState = currentState
-        )
     }
 }

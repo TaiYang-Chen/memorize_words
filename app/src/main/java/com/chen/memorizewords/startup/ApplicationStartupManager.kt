@@ -28,8 +28,7 @@ class ApplicationStartupManager @Inject constructor(
         val TASK_ORDER = mapOf(
             SessionKickoutStartupTask.TASK_NAME to 0,
             PostLaunchStartupTask.TASK_NAME to 1,
-            ForegroundWordBookStartupTask.TASK_NAME to 2,
-            ForegroundSyncStartupTask.TASK_NAME to 3
+            ForegroundWordBookStartupTask.TASK_NAME to 2
         )
     }
 }

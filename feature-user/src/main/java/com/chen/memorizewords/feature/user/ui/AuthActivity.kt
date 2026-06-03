@@ -3,14 +3,12 @@ package com.chen.memorizewords.feature.user.ui
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
-import com.chen.memorizewords.core.navigation.AppLaunchEntry
 import com.chen.memorizewords.core.navigation.HomeEntry
 import com.chen.memorizewords.core.navigation.OnboardingEntry
 import com.chen.memorizewords.core.ui.activity.BaseVmDbActivity
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.domain.account.auth.AuthStateProvider
-import com.chen.memorizewords.domain.account.orchestrator.startup.StartupLaunchDestination
-import com.chen.memorizewords.domain.account.orchestrator.startup.StartupOrchestrator
+import com.chen.memorizewords.domain.account.repository.LocalAccountRepository
 import com.chen.memorizewords.feature.user.auth.social.QQAuthProvider
 import com.chen.memorizewords.feature.user.databinding.ModuleUserActivityAuthBinding
 import com.chen.memorizewords.core.navigation.AuthEntry
@@ -21,6 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.runBlocking
 
 @AndroidEntryPoint
 class AuthActivity : BaseVmDbActivity<BaseViewModel, ModuleUserActivityAuthBinding>() {
@@ -36,16 +35,13 @@ class AuthActivity : BaseVmDbActivity<BaseViewModel, ModuleUserActivityAuthBindi
     lateinit var qqAuthProvider: QQAuthProvider
 
     @Inject
-    lateinit var appLaunchEntry: AppLaunchEntry
-
-    @Inject
     lateinit var homeEntry: HomeEntry
 
     @Inject
     lateinit var onboardingEntry: OnboardingEntry
 
     @Inject
-    lateinit var startupOrchestrator: StartupOrchestrator
+    lateinit var localAccountRepository: LocalAccountRepository
 
     private var relaunching = false
 
@@ -67,11 +63,11 @@ class AuthActivity : BaseVmDbActivity<BaseViewModel, ModuleUserActivityAuthBindi
         }
 
         if (isTaskRoot && authStateProvider.isAuthenticated()) {
-            val launchIntent = when (startupOrchestrator.resolveLaunchDestinationFast()) {
-                StartupLaunchDestination.HOME -> homeEntry.createHomeIntent(this)
-                StartupLaunchDestination.ONBOARDING ->
-                    onboardingEntry.createOnboardingIntent(this)
-                StartupLaunchDestination.AUTH -> appLaunchEntry.createLaunchIntent(this)
+            val user = runBlocking { localAccountRepository.getCurrentUser() }
+            val launchIntent = if (user?.onboardingCompleted == false) {
+                onboardingEntry.createOnboardingIntent(this)
+            } else {
+                homeEntry.createHomeIntent(this)
             }.apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             }

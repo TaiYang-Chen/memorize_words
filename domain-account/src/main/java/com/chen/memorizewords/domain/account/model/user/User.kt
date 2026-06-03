@@ -8,5 +8,6 @@ data class User(
     val phone: String?,
     val qq: String?,
     val wechat: String?,
-    val emailVerified: Boolean
+    val emailVerified: Boolean,
+    val onboardingCompleted: Boolean
 )

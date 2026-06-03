@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
 @Singleton
 class SyncRepositoryImpl @Inject constructor(
@@ -65,18 +64,6 @@ class SyncRepositoryImpl @Inject constructor(
     private val postLoginBootstrapStateFlow = postLoginBootstrapStateStore.observeState()
         .distinctUntilChanged()
         .stateIn(scope, SharingStarted.Eagerly, postLoginBootstrapStateStore.getState())
-
-    init {
-        scope.launch {
-            combine(retryableCountFlow, networkMonitor.isOnline) { retryableCount, hasNetwork ->
-                retryableCount to hasNetwork
-            }.collect { (retryableCount, hasNetwork) ->
-                if (hasNetwork && retryableCount > 0) {
-                    syncOutboxWorkScheduler.scheduleDrain()
-                }
-            }
-        }
-    }
 
     override fun startPostLoginBootstrap() {
         if (postLoginBootstrapStateStore.getState() != PostLoginBootstrapState.Running) {

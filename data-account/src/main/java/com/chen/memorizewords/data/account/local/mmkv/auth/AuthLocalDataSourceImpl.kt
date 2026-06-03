@@ -20,10 +20,11 @@ class AuthLocalDataSourceImpl(private val mmkv: MMKV) : AuthLocalDataSource {
         private const val QQ = "qq"
         private const val WECHAT = "wechat"
         private const val EMAIL_VERIFIED = "email_verified"
+        private const val ONBOARDING_COMPLETED = "onboarding_completed"
 
         private val KEYS = arrayOf(
             USER_ID, EMAIL, NICKNAME,
-            AVATAR_URL, PHONE, QQ, WECHAT, EMAIL_VERIFIED
+            AVATAR_URL, PHONE, QQ, WECHAT, EMAIL_VERIFIED, ONBOARDING_COMPLETED
         )
     }
 
@@ -40,7 +41,8 @@ class AuthLocalDataSourceImpl(private val mmkv: MMKV) : AuthLocalDataSource {
             phone = mmkv.getString(PHONE, null),
             qq = mmkv.getString(QQ, null),
             wechat = mmkv.getString(WECHAT, null),
-            emailVerified = mmkv.getBoolean(EMAIL_VERIFIED, false)
+            emailVerified = mmkv.getBoolean(EMAIL_VERIFIED, false),
+            onboardingCompleted = mmkv.getBoolean(ONBOARDING_COMPLETED, false)
         )
     }
 
@@ -64,14 +66,19 @@ class AuthLocalDataSourceImpl(private val mmkv: MMKV) : AuthLocalDataSource {
             putString(QQ, user.qq)
             putString(WECHAT, user.wechat)
             putBoolean(EMAIL_VERIFIED, user.emailVerified)
+            putBoolean(ONBOARDING_COMPLETED, user.onboardingCompleted)
             commit()
         }
         userFlow.value = user
     }
 
-    override fun clear() {
+    override fun clearUser() {
         KEYS.forEach { mmkv.removeValueForKey(it) }
         mmkv.commit()
         userFlow.value = null
+    }
+
+    override fun clear() {
+        clearUser()
     }
 }

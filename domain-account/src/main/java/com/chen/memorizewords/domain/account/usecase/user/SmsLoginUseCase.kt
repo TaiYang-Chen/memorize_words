@@ -4,11 +4,18 @@ import com.chen.memorizewords.domain.account.repository.user.AuthRepository
 import javax.inject.Inject
 
 class SmsLoginUseCase @Inject constructor(
-    private val repo: AuthRepository
+    private val authRepository: AuthRepository,
+    private val loginCompletionHandler: LoginCompletionHandler
 ) {
     suspend operator fun invoke(phone: String, code: String): Result<User> {
-        if (phone.isBlank()) return Result.failure(LoginError.EmptyPhone())
-        if (code.isBlank()) return Result.failure(LoginError.EmptySmsCode())
-        return repo.loginBySms(phone.trim(), code.trim())
+        return runCatching {
+            if (phone.isBlank()) throw LoginError.EmptyPhone()
+            if (code.isBlank()) throw LoginError.EmptySmsCode()
+            val loginResult = authRepository.loginBySms(
+                phone = phone.trim(),
+                code = code.trim()
+            ).getOrThrow()
+            loginCompletionHandler.complete(loginResult)
+        }
     }
 }

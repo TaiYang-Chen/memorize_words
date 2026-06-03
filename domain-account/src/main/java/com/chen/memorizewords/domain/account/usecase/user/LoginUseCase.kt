@@ -10,10 +10,19 @@ sealed class LoginError : Throwable() {
     class EmptyOauthCode : LoginError()
 }
 
-class LoginUseCase @Inject constructor(private val repo: AuthRepository) {
+class LoginUseCase @Inject constructor(
+    private val authRepository: AuthRepository,
+    private val loginCompletionHandler: LoginCompletionHandler
+) {
     suspend operator fun invoke(phoneNumber: String, password: String): Result<User> {
-        if (phoneNumber.isBlank()) return Result.failure(LoginError.EmptyPhone())
-        if (password.isBlank()) return Result.failure(LoginError.EmptyPassword())
-        return repo.login(phoneNumber.trim(), password)
+        return runCatching {
+            if (phoneNumber.isBlank()) throw LoginError.EmptyPhone()
+            if (password.isBlank()) throw LoginError.EmptyPassword()
+            val loginResult = authRepository.loginByPassword(
+                phoneNumber = phoneNumber.trim(),
+                password = password
+            ).getOrThrow()
+            loginCompletionHandler.complete(loginResult)
+        }
     }
 }

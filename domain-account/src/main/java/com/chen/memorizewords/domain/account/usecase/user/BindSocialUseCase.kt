@@ -1,10 +1,12 @@
 package com.chen.memorizewords.domain.account.usecase.user
 import com.chen.memorizewords.domain.account.model.user.User
+import com.chen.memorizewords.domain.account.repository.LocalAccountRepository
 import com.chen.memorizewords.domain.account.repository.user.AuthRepository
 import javax.inject.Inject
 
 class BindSocialUseCase @Inject constructor(
-    private val repo: AuthRepository
+    private val authRepository: AuthRepository,
+    private val localAccountRepository: LocalAccountRepository
 ) {
     suspend operator fun invoke(
         platform: String,
@@ -18,6 +20,14 @@ class BindSocialUseCase @Inject constructor(
         if (oauthCode.isBlank()) {
             return Result.failure(IllegalArgumentException("Authorization code is required"))
         }
-        return repo.bindSocial(normalizedPlatform, oauthCode, state)
+        return runCatching {
+            val user = authRepository.bindSocial(normalizedPlatform, oauthCode.trim(), state).getOrThrow()
+            val localUser = localAccountRepository.getCurrentUser()
+            val resolvedUser = user.copy(
+                onboardingCompleted = localUser?.onboardingCompleted ?: user.onboardingCompleted
+            )
+            localAccountRepository.saveUser(resolvedUser)
+            resolvedUser
+        }
     }
 }

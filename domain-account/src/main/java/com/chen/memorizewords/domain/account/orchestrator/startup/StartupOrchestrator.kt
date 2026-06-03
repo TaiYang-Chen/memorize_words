@@ -3,13 +3,11 @@ import com.chen.memorizewords.domain.account.auth.AccessTokenState
 import com.chen.memorizewords.domain.account.auth.AuthStateProvider
 import com.chen.memorizewords.domain.account.auth.SessionKickoutNotifier
 import com.chen.memorizewords.domain.account.auth.TokenProvider
-import com.chen.memorizewords.domain.account.repository.user.AuthRepository
 import javax.inject.Inject
 
 class StartupOrchestrator @Inject constructor(
     private val authStateProvider: AuthStateProvider,
     private val tokenProvider: TokenProvider,
-    private val authRepository: AuthRepository,
     private val onboardingStateReader: StartupOnboardingStateReader,
     private val floatingAutoStartReader: StartupFloatingAutoStartReader,
     val sessionKickoutNotifier: SessionKickoutNotifier
@@ -48,16 +46,12 @@ class StartupOrchestrator @Inject constructor(
 
     suspend fun shouldAutoStartFloating(canDrawOverlays: Boolean): Boolean {
         if (!canDrawOverlays) return false
-        if (!authRepository.isLoggedIn()) return false
+        if (!authStateProvider.isAuthenticated()) return false
         return floatingAutoStartReader.isAutoStartEnabled()
     }
 
     private fun resolveAuthenticatedDestination(): StartupLaunchDestination {
-        return if (onboardingStateReader.isOnboardingCompleted()) {
-            StartupLaunchDestination.HOME
-        } else {
-            StartupLaunchDestination.ONBOARDING
-        }
+        return StartupLaunchDestination.HOME
     }
 }
 

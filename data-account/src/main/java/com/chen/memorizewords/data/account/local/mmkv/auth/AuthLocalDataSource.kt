@@ -12,5 +12,6 @@ interface AuthLocalDataSource : LocalAccountStore {
     override fun getUserId(): Long?
 
     fun saveUser(user: User)
+    fun clearUser()
     fun clear()
 }

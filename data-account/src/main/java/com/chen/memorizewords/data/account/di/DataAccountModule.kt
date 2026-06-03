@@ -5,6 +5,10 @@ import com.chen.memorizewords.data.account.local.mmkv.auth.AuthLocalDataSourceIm
 import com.chen.memorizewords.data.account.remote.user.AuthRemoteDataSource
 import com.chen.memorizewords.data.account.remote.user.RemoteAuthDataSourceImpl
 import com.chen.memorizewords.data.account.remoteapi.api.auth.AuthApiService
+import com.chen.memorizewords.data.account.repository.AccountSessionRepositoryImpl
+import com.chen.memorizewords.data.account.repository.LocalAccountRepositoryImpl
+import com.chen.memorizewords.data.account.repository.UserDataOwnerRepositoryImpl
+import com.chen.memorizewords.data.account.repository.UserScopedDataCleanerImpl
 import com.chen.memorizewords.data.account.repository.user.AuthRepositoryImpl
 import com.chen.memorizewords.data.account.repository.user.UserRepositoryImpl
 import com.chen.memorizewords.data.account.session.AuthSessionRefreshRemoteDataSource
@@ -19,14 +23,20 @@ import com.chen.memorizewords.data.account.session.SessionManager
 import com.chen.memorizewords.data.account.session.SessionRefreshDataSource
 import com.chen.memorizewords.data.account.session.TokenLocalDataSource
 import com.chen.memorizewords.data.account.session.UnauthorizedSessionHandler
+import com.chen.memorizewords.data.account.time.SystemClockProvider
 import com.chen.memorizewords.core.network.remote.RemoteResultAdapter
 import com.chen.memorizewords.core.network.remote.UnauthorizedNetworkHandler
 import com.chen.memorizewords.domain.account.auth.AuthStateProvider
 import com.chen.memorizewords.domain.account.auth.LocalAccountStore
 import com.chen.memorizewords.domain.account.auth.SessionKickoutNotifier
 import com.chen.memorizewords.domain.account.auth.TokenProvider
+import com.chen.memorizewords.domain.account.repository.AccountSessionRepository
+import com.chen.memorizewords.domain.account.repository.LocalAccountRepository
+import com.chen.memorizewords.domain.account.repository.UserDataOwnerRepository
+import com.chen.memorizewords.domain.account.repository.UserScopedDataCleaner
 import com.chen.memorizewords.domain.account.repository.user.AuthRepository
 import com.chen.memorizewords.domain.account.repository.user.UserRepository
+import com.chen.memorizewords.domain.account.time.ClockProvider
 import com.tencent.mmkv.MMKV
 import dagger.Binds
 import dagger.Module
@@ -45,6 +55,21 @@ abstract class DataAccountRepositoryModule {
 
     @Binds
     abstract fun bindUserRepository(impl: UserRepositoryImpl): UserRepository
+
+    @Binds
+    abstract fun bindLocalAccountRepository(impl: LocalAccountRepositoryImpl): LocalAccountRepository
+
+    @Binds
+    abstract fun bindAccountSessionRepository(impl: AccountSessionRepositoryImpl): AccountSessionRepository
+
+    @Binds
+    abstract fun bindUserDataOwnerRepository(impl: UserDataOwnerRepositoryImpl): UserDataOwnerRepository
+
+    @Binds
+    abstract fun bindUserScopedDataCleaner(impl: UserScopedDataCleanerImpl): UserScopedDataCleaner
+
+    @Binds
+    abstract fun bindClockProvider(impl: SystemClockProvider): ClockProvider
 }
 
 @Module

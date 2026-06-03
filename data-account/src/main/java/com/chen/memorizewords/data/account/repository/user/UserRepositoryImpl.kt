@@ -1,6 +1,7 @@
 package com.chen.memorizewords.data.account.repository.user
 
 import com.chen.memorizewords.data.account.local.mmkv.auth.AuthLocalDataSource
+import com.chen.memorizewords.data.account.mapper.toDomain
 import com.chen.memorizewords.data.account.remote.user.AuthRemoteDataSource
 import com.chen.memorizewords.domain.account.model.user.User
 import com.chen.memorizewords.domain.account.repository.user.UserRepository
@@ -21,19 +22,8 @@ class UserRepositoryImpl @Inject constructor(
         request: ProfilePatchRequest
     ): Result<User> = runCatching {
         withContext(Dispatchers.IO) {
-            val user = remote.update(request).getOrThrow()
-
-            val entity = User(
-                userId = user.userId,
-                email = user.email,
-                nickname = user.nickname,
-                gender = user.gender,
-                avatarUrl = user.avatarUrl,
-                phone = user.phone,
-                qq = user.qq,
-                wechat = user.wechat,
-                emailVerified = user.emailVerified
-            )
+            val onboardingCompleted = authLocal.getUser()?.onboardingCompleted ?: false
+            val entity = remote.update(request).getOrThrow().toDomain(onboardingCompleted)
             authLocal.saveUser(entity)
             entity
         }
