@@ -27,7 +27,8 @@ class SyncRepositoryImpl @Inject constructor(
     private val networkMonitor: NetworkMonitor,
     private val syncOutboxWorkScheduler: SyncOutboxWorkScheduler,
     private val postLoginBootstrapStateStore: PostLoginBootstrapStateStore,
-    private val learningPrerequisitesRestorer: LearningPrerequisitesRestorer
+    private val learningPrerequisitesRestorer: LearningPrerequisitesRestorer,
+    private val homeDataRefresher: HomeDataRefresher
 ) : SyncRepository {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
@@ -73,6 +74,10 @@ class SyncRepositoryImpl @Inject constructor(
         }
         dataBootstrapCoordinator.schedulePostLoginBootstrapWork()
         triggerDrain()
+    }
+
+    override suspend fun refreshHomeData(): Result<Unit> {
+        return homeDataRefresher.refresh()
     }
 
     override suspend fun restoreLearningPrerequisites(): Result<LearningPrerequisitesSnapshot> {

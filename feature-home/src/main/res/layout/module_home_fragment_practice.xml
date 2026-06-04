@@ -346,16 +346,6 @@
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="@string/home_practice_records"
-                android:textColor="#0F172A"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvPracticeRecords"
                 android:layout_width="match_parent"
