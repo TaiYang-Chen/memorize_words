@@ -2,7 +2,9 @@ package com.chen.memorizewords.feature.learning.ui.fragment
 
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.view.View
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -78,6 +80,7 @@ class WordLearningDetailFragment :
         initRvRoot()
         initRvSynonyms()
         initRvInflection()
+        hideOptionalSections()
         bindParentScrollDismiss()
     }
 
@@ -120,18 +123,46 @@ class WordLearningDetailFragment :
                 viewModel.definitions.collect { definitionsAdapter.submitList(it) }
             }
             launch {
-                viewModel.wordExamples.collect { examplesAdapter.submitList(it) }
-            }
-            launch {
-                viewModel.wordRoots.collect { rootsAdapter.submitList(it) }
-            }
-            launch {
-                viewModel.currentWord.collect { word ->
-                    word?.let { synonymsAdapter.submitList(it.synonyms, it.antonyms) }
+                viewModel.wordExamples.collect {
+                    examplesAdapter.submitList(it)
+                    setOptionalSectionVisible(
+                        databind.sectionExamplesHeader,
+                        databind.rvExamples,
+                        it.isNotEmpty()
+                    )
                 }
             }
             launch {
-                viewModel.wordForm.collect { formAdapter.submitList(it) }
+                viewModel.wordRoots.collect {
+                    rootsAdapter.submitList(it)
+                    setOptionalSectionVisible(
+                        databind.sectionRootsHeader,
+                        databind.rvRoot,
+                        it.isNotEmpty()
+                    )
+                }
+            }
+            launch {
+                viewModel.currentWord.collect { word ->
+                    val synonyms = word?.synonyms.orEmpty()
+                    val antonyms = word?.antonyms.orEmpty()
+                    synonymsAdapter.submitList(synonyms, antonyms)
+                    setOptionalSectionVisible(
+                        databind.sectionSynonymsHeader,
+                        databind.rvSynonyms,
+                        synonyms.isNotEmpty() || antonyms.isNotEmpty()
+                    )
+                }
+            }
+            launch {
+                viewModel.wordForm.collect {
+                    formAdapter.submitList(it)
+                    setOptionalSectionVisible(
+                        databind.sectionInflectionHeader,
+                        databind.rvInflection,
+                        it.isNotEmpty()
+                    )
+                }
             }
             launch {
                 parentViewModel.uiState.collect { ui ->
@@ -152,6 +183,18 @@ class WordLearningDetailFragment :
                 }
             }
         }
+    }
+
+    private fun hideOptionalSections() {
+        setOptionalSectionVisible(databind.sectionExamplesHeader, databind.rvExamples, false)
+        setOptionalSectionVisible(databind.sectionInflectionHeader, databind.rvInflection, false)
+        setOptionalSectionVisible(databind.sectionRootsHeader, databind.rvRoot, false)
+        setOptionalSectionVisible(databind.sectionSynonymsHeader, databind.rvSynonyms, false)
+    }
+
+    private fun setOptionalSectionVisible(header: View, list: View, visible: Boolean) {
+        header.isVisible = visible
+        list.isVisible = visible
     }
 
     override fun onStop() {

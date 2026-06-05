@@ -2,7 +2,9 @@ package com.chen.memorizewords.feature.learning.ui.fragment
 
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.view.View
 import androidx.activity.OnBackPressedCallback
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
@@ -85,6 +87,7 @@ class WordEntryDetailFragment :
         databind.rvInflection.layoutManager = LinearLayoutManager(requireContext())
         databind.rvInflection.isNestedScrollingEnabled = false
 
+        hideOptionalSections()
         viewModel.loadWord(args.wordId, args.wordText)
     }
 
@@ -92,9 +95,14 @@ class WordEntryDetailFragment :
         lifecycleScope.launch {
             launch {
                 viewModel.currentWord.collect { word ->
-                    word?.let {
-                        synonymsAdapter.submitList(it.synonyms, it.antonyms)
-                    }
+                    val synonyms = word?.synonyms.orEmpty()
+                    val antonyms = word?.antonyms.orEmpty()
+                    synonymsAdapter.submitList(synonyms, antonyms)
+                    setOptionalSectionVisible(
+                        databind.sectionSynonymsHeader,
+                        databind.rvSynonyms,
+                        synonyms.isNotEmpty() || antonyms.isNotEmpty()
+                    )
                 }
             }
             launch {
@@ -105,19 +113,46 @@ class WordEntryDetailFragment :
             launch {
                 viewModel.wordExamples.collect { examples ->
                     examplesAdapter.submitList(examples)
+                    setOptionalSectionVisible(
+                        databind.sectionExamplesHeader,
+                        databind.rvExamples,
+                        examples.isNotEmpty()
+                    )
                 }
             }
             launch {
                 viewModel.wordRoots.collect { roots ->
                     rootsAdapter.submitList(roots)
+                    setOptionalSectionVisible(
+                        databind.sectionRootsHeader,
+                        databind.rvRoot,
+                        roots.isNotEmpty()
+                    )
                 }
             }
             launch {
                 viewModel.wordForm.collect { forms ->
                     formAdapter.submitList(forms)
+                    setOptionalSectionVisible(
+                        databind.sectionInflectionHeader,
+                        databind.rvInflection,
+                        forms.isNotEmpty()
+                    )
                 }
             }
         }
+    }
+
+    private fun hideOptionalSections() {
+        setOptionalSectionVisible(databind.sectionExamplesHeader, databind.rvExamples, false)
+        setOptionalSectionVisible(databind.sectionInflectionHeader, databind.rvInflection, false)
+        setOptionalSectionVisible(databind.sectionRootsHeader, databind.rvRoot, false)
+        setOptionalSectionVisible(databind.sectionSynonymsHeader, databind.rvSynonyms, false)
+    }
+
+    private fun setOptionalSectionVisible(header: View, list: View, visible: Boolean) {
+        header.isVisible = visible
+        list.isVisible = visible
     }
 
     override fun onDestroyView() {

@@ -2,9 +2,11 @@ package com.chen.memorizewords.feature.learning.ui.learning
 
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.os.Bundle
 import android.media.MediaPlayer
+import android.os.Bundle
+import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import com.chen.memorizewords.core.ui.ext.dpToPx
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -88,6 +90,7 @@ class LearningMainFragment :
         databind.includeBaseWord.ivSpeaker.setOnClickListener {
             speakCurrentWord()
         }
+        databind.root.post { updateLearningScrollBottomPadding() }
     }
 
     override fun createObserver() {
@@ -100,6 +103,7 @@ class LearningMainFragment :
                         renderState(state.learningState)
                     }
                     autoSpeakIfNeeded(state)
+                    databind.root.post { updateLearningScrollBottomPadding() }
                 }
             }
         }
@@ -203,6 +207,29 @@ class LearningMainFragment :
             .commit()
     }
 
+    private fun updateLearningScrollBottomPadding() {
+        val context = context ?: return
+        val bottomPadding = if (databind.composeBtn.visibility == android.view.View.VISIBLE) {
+            val layoutParams = databind.composeBtn.layoutParams as? ViewGroup.MarginLayoutParams
+            val buttonHeight = databind.composeBtn.height
+            if (buttonHeight == 0) {
+                databind.composeBtn.post { updateLearningScrollBottomPadding() }
+            }
+            buttonHeight +
+                (layoutParams?.topMargin ?: 0) +
+                (layoutParams?.bottomMargin ?: 0) +
+                LEARNING_SCROLL_EXTRA_BOTTOM_PADDING_DP.dpToPx(context)
+        } else {
+            LEARNING_SCROLL_COLLAPSED_BOTTOM_PADDING_DP.dpToPx(context)
+        }
+        databind.nestedScrollView2.setPadding(
+            databind.nestedScrollView2.paddingLeft,
+            databind.nestedScrollView2.paddingTop,
+            databind.nestedScrollView2.paddingRight,
+            bottomPadding
+        )
+    }
+
     private fun autoSpeakIfNeeded(state: LearningViewModel.LearningUiState) {
         val currentWord = state.currentWord ?: return
         if (state.learningState != LearningViewModel.LearningState.TEST) return
@@ -288,5 +315,10 @@ class LearningMainFragment :
         val idsFromIntent = intent?.getLongArrayExtra(LearningActivity.EXTRA_WORD_IDS)?.toList()
         val idsFromArgs = args?.getLongArray(LearningActivity.EXTRA_WORD_IDS)?.toList()
         return idsFromIntent ?: idsFromArgs.orEmpty()
+    }
+
+    private companion object {
+        const val LEARNING_SCROLL_EXTRA_BOTTOM_PADDING_DP = 16
+        const val LEARNING_SCROLL_COLLAPSED_BOTTOM_PADDING_DP = 16
     }
 }
