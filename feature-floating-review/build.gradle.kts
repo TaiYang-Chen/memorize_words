@@ -22,8 +22,7 @@ android {
 dependencies {
     implementation(project(":core-ui"))
     implementation(project(":core-navigation"))
-    implementation(project(":domain-floating"))
-    implementation(project(":domain-word"))
+    implementation(project(":domain"))
 
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)

@@ -3,7 +3,7 @@ package com.chen.memorizewords.data.sync.remoteapi.dto.wordbook
 import com.squareup.moshi.JsonClass
 
 /**
- * 璇嶆牴鐨勬暟鎹紶杈撳�?(DTO)�?
+ * 词根的数据传输对象（DTO）。
  */
 @JsonClass(generateAdapter = false)
 data class WordRootDto(

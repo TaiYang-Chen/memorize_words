@@ -179,6 +179,6 @@ class PracticeUiMapper @Inject constructor(
     }
 
     private companion object {
-        private const val PRACTICE_RECORD_SEPARATOR = " 璺?"
+        private const val PRACTICE_RECORD_SEPARATOR = " · "
     }
 }

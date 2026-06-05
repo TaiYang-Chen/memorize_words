@@ -3,7 +3,7 @@
 import com.squareup.moshi.JsonClass
 
 /**
- * 鐠囧秵鐗撮崥顐＄疅缁€杞扮伐锟?DTO锟?
+ * 词根含义示例 DTO。
  */
 @JsonClass(generateAdapter = false)
 data class RootExampleDto(

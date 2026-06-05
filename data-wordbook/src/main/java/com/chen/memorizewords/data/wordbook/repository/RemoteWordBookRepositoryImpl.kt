@@ -268,7 +268,7 @@ internal fun resolveShopDownloadState(
             maxOf(countProgress, workState.progress)
         )
         isPaused && downloadedCount > 0 -> DownloadState.Paused(countProgress)
-        workState?.hasFailed == true -> DownloadState.Failed(workState.errorMessage ?: "娑撳娴囨径杈Е")
+        workState?.hasFailed == true -> DownloadState.Failed(workState.errorMessage ?: "下载失败")
         isDownloaded -> DownloadState.Downloaded
         downloadedCount > 0 -> DownloadState.Paused(countProgress)
         else -> DownloadState.NotDownloaded

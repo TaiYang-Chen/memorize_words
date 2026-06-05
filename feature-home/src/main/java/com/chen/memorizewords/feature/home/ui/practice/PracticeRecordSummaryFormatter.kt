@@ -10,7 +10,7 @@ internal data class PracticeCompletionMetrics(
     val settledAccuracyRate: Int?
 )
 
-internal const val PRACTICE_RECORD_SEPARATOR = " 路 "
+internal const val PRACTICE_RECORD_SEPARATOR = " · "
 
 internal fun PracticeSessionRecord.toCompletionMetrics(): PracticeCompletionMetrics {
     val completionRate = if (questionCount > 0) {

@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.Flow
 interface WordLearningStateDao {
 
     /**
-     * 鍒濆鍖栦竴涓柊鍗曡瘝鐨勫涔犵姸锟?
-     * 閫氬父鍦ㄧ涓€娆″璇ュ崟璇嶆椂璋冪敤
+     * 初始化一个新单词的学习状态。
+     * 通常在第一次学习该单词时调用。
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertInitialState(state: WordLearningStateEntity)
@@ -68,10 +68,10 @@ interface WordLearningStateDao {
     suspend fun deleteByBookIdAndWordIds(bookId: Long, wordIds: List<Long>)
 
     /**
-     * 鎵归噺璇诲彇鎸囧畾 ids 鐨勫涔犵姸鎬佸疄锟?
+     * 批量读取指定 ids 的学习状态实体。
      *
-     * @param ids 瑕佹煡璇㈢殑 wordId 鍒楄〃锛堣嫢涓虹┖锛孯oom 閫氬父浼氳繑鍥炵┖鍒楄〃锛屼絾璋冪敤鑰呭彲鍏堣妫€鏌ワ級
-     * @return 瀵瑰簲鐨勫疄浣撳垪锟?
+     * @param ids 要查询的 wordId 列表（若为空，Room 通常会返回空列表，但调用者可先行检查）。
+     * @return 对应的实体列表。
      */
     @Query("SELECT * FROM word_learning_state WHERE word_id IN (:ids) AND book_id == :wordBookId")
     suspend fun getLearningStatesByIds(
@@ -90,13 +90,13 @@ interface WordLearningStateDao {
 
 
     /**
-     * 瀛︿範鍚庢洿鏂扮姸鎬侊紙鏂板 / 澶嶄範閫氱敤锟?
+     * 学习后更新状态（新学 / 复习通用）。
      *
-     * 杩欓噷涓嶇洿鎺ュ啓 SM-2 閫昏緫
-     * 锟?Repository 璁＄畻锟?nextReviewTime銆乵asteryLevel 鍐嶄紶锟?
+     * 这里不直接写 SM-2 逻辑。
+     * Repository 计算 nextReviewTime、masteryLevel 后再传入。
      */
     /**
-     * 鏇存柊鍗曡瘝瀛︿範鐘舵€侊紙SM-2绠楁硶锟?
+     * 更新单词学习状态（SM-2 算法）。
      */
     @Query(
         """

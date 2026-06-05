@@ -3,7 +3,7 @@ package com.chen.memorizewords.data.sync.remoteapi.dto.wordbook
 import com.squareup.moshi.JsonClass
 
 /**
- * 璇嶆牴鍚箟�?DTO�?
+ * 词根含义 DTO。
  */
 @JsonClass(generateAdapter = false)
 data class RootMeaningDto(

@@ -24,9 +24,7 @@ android {
 dependencies {
     implementation(project(":core-ui"))
     implementation(project(":core-navigation"))
-    implementation(project(":domain-account"))
-    implementation(project(":domain-study"))
-    implementation(project(":domain-wordbook"))
+    implementation(project(":domain"))
 
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.coordinatorlayout)

@@ -33,7 +33,7 @@ android {
 dependencies {
     implementation(project(":core-ui"))
     implementation(project(":core-navigation"))
-    implementation(project(":domain-account"))
+    implementation(project(":domain"))
 
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.appcompat)

@@ -19,9 +19,9 @@ interface BookWordItemDao {
     suspend fun insertAll(wordBookWords: List<WordBookItemEntity>)
 
     /**
-     * 鑾峰彇鎸囧畾鍗曡瘝鏈腑鎵€鏈夊崟璇嶇殑鏁伴噺
-     * @param wordBookId 鍗曡瘝鏈琁D
-     * @return 鍗曡瘝鏁伴噺
+     * 获取指定单词书中所有单词的数量
+     * @param wordBookId 单词书 ID
+     * @return 单词数量
      */
     @Query(
         """
@@ -184,8 +184,8 @@ interface BookWordItemDao {
     )
     suspend fun getWordListRowsPageToLearn(bookId: Long, limit: Int, offset: Int): List<WordListRowProjection>
 
-    // 楂樻€ц兘锛氳繑鍥炲睘锟?bookId 涓斿皻鏈湁瀛︿範鐘舵€佺殑 wordId 鍒楄〃
-    // 瑙ｉ噴锛氶€氳繃瀛愭煡璇㈠湪 DB 灞傝繃婊ゆ帀宸插湪 word_learning_state 琛ㄥ瓨鍦ㄧ殑 word
+    // 高性能：返回属于 bookId 且尚未有学习状态的 wordId 列表
+    // 说明：通过子查询在 DB 层过滤掉已存在于 word_learning_state 表的 word
     @Query(
         """
         SELECT w.word_id

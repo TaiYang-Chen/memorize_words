@@ -52,7 +52,7 @@ interface WordDefinitionDao {
     suspend fun getOneWordDefinition(wordId: Long): WordDefinitionEntity?
 
 
-    // 闅忔満骞叉壈椤癸紙鎺掗櫎褰撳墠 wordId锟?
+    // 随机干扰项（排除当前 wordId）
     @Query(
         """
         SELECT * FROM word_definitions

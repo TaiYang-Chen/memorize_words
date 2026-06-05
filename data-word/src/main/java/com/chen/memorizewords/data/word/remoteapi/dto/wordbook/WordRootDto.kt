@@ -3,7 +3,7 @@
 import com.squareup.moshi.JsonClass
 
 /**
- * 鐠囧秵鐗撮惃鍕殶閹诡喕绱舵潏鎾愁嚠锟?(DTO)锟?
+ * 词根的数据传输对象（DTO）。
  */
 @JsonClass(generateAdapter = false)
 data class WordRootDto(

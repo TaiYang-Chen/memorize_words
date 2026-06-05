@@ -15,8 +15,8 @@ import okhttp3.MultipartBody
 /**
  * AuthRemoteDataSource
  *
- * 远端认证数据源的抽象接口，定义了与后端交互的最小契约�?
- * 所有方法都返回 kotlin.Result 用于统一的成�?失败语义封装�?
+ * 远端认证数据源的抽象接口，定义了与后端交互的最小契约。
+ * 所有方法都返回 kotlin.Result，用于统一封装成功/失败语义。
  */
 interface AuthRemoteDataSource {
 

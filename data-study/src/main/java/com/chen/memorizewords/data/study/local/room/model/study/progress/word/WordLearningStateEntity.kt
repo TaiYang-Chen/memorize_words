@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.Index
 
 /**
- * 杩欎釜鍗曡瘝鐜板湪澶勪簬浠€涔堝涔犵姸锟?
+ * 记录这个单词当前所处的学习状态。
  */
 @Entity(
     tableName = "word_learning_state",
@@ -19,43 +19,43 @@ import androidx.room.Index
     ],
 )
 data class WordLearningStateEntity(
-    /** 鍗曡瘝ID */
+    /** 单词 ID */
     @ColumnInfo(name = "word_id")
     val wordId: Long,
 
-    /** 涔︽湰ID */
+    /** 书本 ID */
     @ColumnInfo(name = "book_id")
     val bookId: Long,
 
-    /** 鎬诲涔犳鏁帮紙鏂板 + 澶嶄範锟?*/
+    /** 总学习次数（新学 + 复习） */
     @ColumnInfo(name = "total_learn_count")
     val totalLearnCount: Int,
 
-    /** 鏈€杩戜竴娆″涔犳椂锟?*/
+    /** 最近一次学习时间 */
     @ColumnInfo(name = "last_learn_time")
     val lastLearnTime: Long,
 
-    /** 涓嬫澶嶄範鏃堕棿锛堣蹇嗘洸绾匡級 */
+    /** 下次复习时间（记忆曲线） */
     @ColumnInfo(name = "next_review_time")
     val nextReviewTime: Long,
 
-    /** 鎺屾彙锟?0~5 */
+    /** 掌握度：0~5 */
     @ColumnInfo(name = "mastery_level")
     val masteryLevel: Int,
 
-    /** 鐢ㄦ埛瀛︿範鐘舵€侊細0=姝ｅ父瀛︿範涓紝1=鐢ㄦ埛鏍囪涓哄凡鎺屾彙锟?=鐢ㄦ埛鏆傚仠瀛︿範锛堝澶畝鍗曪級 */
+    /** 用户学习状态：0=正常学习中，1=用户标记为已掌握，2=用户暂停学习（如太简单） */
     @ColumnInfo(name = "user_status")
     val userStatus: Int = 0,
 
-    /** SM-2 涓撶敤锛氳窛绂讳笂娆″涔犲ぉ锟?*/
+    /** SM-2 专用：距离上次学习天数 */
     @ColumnInfo(name = "interval")
     val interval: Long = 0,
 
-    /** SM-2 涓撶敤锛氳繛缁涔犳锟?*/
+    /** SM-2 专用：连续复习次数 */
     @ColumnInfo(name = "repetition")
     val repetition: Int,
 
-    /** SM-2 涓撶敤锛氭槗璁板洜锟?*/
+    /** SM-2 专用：易记因子 */
     @ColumnInfo(name = "efactor")
     val efactor: Double
 ) {

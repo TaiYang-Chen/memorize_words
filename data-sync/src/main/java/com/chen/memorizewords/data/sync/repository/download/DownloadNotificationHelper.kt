@@ -92,12 +92,12 @@ object DownloadNotificationHelper {
             .setAutoCancel(true)
             .addAction(
                 android.R.drawable.ic_media_play,
-                "缁х画",
+                "继续",
                 actionPendingIntent(context, FileDownloadWorkConstants.ACTION_RESUME, request.taskId)
             )
             .addAction(
                 android.R.drawable.ic_menu_close_clear_cancel,
-                "鍙栨秷",
+                "取消",
                 actionPendingIntent(context, FileDownloadWorkConstants.ACTION_CANCEL, request.taskId)
             )
             .build()
@@ -130,19 +130,19 @@ object DownloadNotificationHelper {
         if (status == DownloadStatus.Downloading) {
             builder.addAction(
                 android.R.drawable.ic_media_pause,
-                "鏆傚仠",
+                "暂停",
                 actionPendingIntent(context, FileDownloadWorkConstants.ACTION_PAUSE, request.taskId)
             )
         } else if (status == DownloadStatus.Paused) {
             builder.addAction(
                 android.R.drawable.ic_media_play,
-                "缁х画",
+                "继续",
                 actionPendingIntent(context, FileDownloadWorkConstants.ACTION_RESUME, request.taskId)
             )
         }
         builder.addAction(
             android.R.drawable.ic_menu_close_clear_cancel,
-            "鍙栨秷",
+            "取消",
             actionPendingIntent(context, FileDownloadWorkConstants.ACTION_CANCEL, request.taskId)
         )
         return builder.build()
@@ -163,12 +163,12 @@ object DownloadNotificationHelper {
             .setProgress(100, progress, totalBytes <= 0L)
             .addAction(
                 android.R.drawable.ic_media_play,
-                "缁х画",
+                "继续",
                 actionPendingIntent(context, FileDownloadWorkConstants.ACTION_RESUME, request.taskId)
             )
             .addAction(
                 android.R.drawable.ic_menu_close_clear_cancel,
-                "鍙栨秷",
+                "取消",
                 actionPendingIntent(context, FileDownloadWorkConstants.ACTION_CANCEL, request.taskId)
             )
             .build()
@@ -183,7 +183,7 @@ object DownloadNotificationHelper {
     }
 
     private fun resolveTitle(request: DownloadRequest): String {
-        return request.displayTitle.takeIf { it.isNotBlank() } ?: "姝ｅ湪涓嬭浇"
+        return request.displayTitle.takeIf { it.isNotBlank() } ?: "正在下载"
     }
 
     private fun resolveContent(

@@ -21,13 +21,7 @@ android {
 dependencies {
     implementation(project(":core-ui"))
     implementation(project(":core-navigation"))
-    implementation(project(":domain-account"))
-    implementation(project(":domain-floating"))
-    implementation(project(":domain-practice"))
-    implementation(project(":domain-study"))
-    implementation(project(":domain-sync"))
-    implementation(project(":domain-word"))
-    implementation(project(":domain-wordbook"))
+    implementation(project(":domain"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

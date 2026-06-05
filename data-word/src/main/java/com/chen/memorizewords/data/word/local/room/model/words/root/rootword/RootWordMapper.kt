@@ -4,7 +4,7 @@ import com.chen.memorizewords.domain.word.model.root.RootWord
 import com.chen.memorizewords.data.word.remoteapi.dto.wordbook.WordRootDto
 
 /**
- * 灏嗘暟鎹眰瀹炰綋 [RootWordEntity] 杞崲涓洪鍩熷眰妯″瀷 [RootWord]锟?
+ * 将数据层实体 [RootWordEntity] 转换为领域层模型 [RootWord]。
  */
 fun RootWordEntity.toDomain(): RootWord {
     return RootWord(
@@ -17,7 +17,7 @@ fun RootWordEntity.toDomain(): RootWord {
 }
 
 /**
- * 灏嗛鍩熷眰妯″瀷 [RootWord] 杞崲涓烘暟鎹眰瀹炰綋 [RootWordEntity]锟?
+ * 将领域层模型 [RootWord] 转换为数据层实体 [RootWordEntity]。
  */
 fun RootWord.toEntity(): RootWordEntity {
     return RootWordEntity(

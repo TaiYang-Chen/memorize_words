@@ -39,7 +39,7 @@ android {
 
 dependencies {
     implementation(project(":speech-api"))
-    implementation(project(":domain-practice"))
+    implementation(project(":domain"))
     implementation(project(":core-network"))
 
     implementation(libs.androidx.core.ktx)

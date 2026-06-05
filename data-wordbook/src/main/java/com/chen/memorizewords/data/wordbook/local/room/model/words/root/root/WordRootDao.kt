@@ -10,16 +10,16 @@ import com.chen.memorizewords.data.wordbook.local.room.model.words.root.rootmean
 import com.chen.memorizewords.data.wordbook.local.room.model.words.root.rootvariant.RootVariantEntity
 
 /**
- * 璇嶆牴妯″潡鐨勬暟鎹闂锟?(DAO)锟?
- * 鎻愪緵瀵硅瘝鏍圭浉鍏虫暟鎹殑澧炲垹鏀规煡鏂规硶锟?
+ * 词根模块的数据访问对象（DAO）。
+ * 提供对词根相关数据的增删改查方法。
  */
 @Dao
 interface WordRootDao {
 
     /**
-     * 鎻掑叆鍗曚釜璇嶆牴瀹炰綋锟?
-     * 濡傛灉璇嶆牴宸插瓨鍦紝鍒欐浛鎹㈠畠锟?
-     * @param root 瑕佹彃鍏ョ殑 [WordRootEntity]锟?
+     * 插入单个词根实体。
+     * 如果词根已存在，则替换它。
+     * @param root 要插入的 [WordRootEntity]。
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(root: WordRootEntity)
@@ -28,59 +28,59 @@ interface WordRootDao {
     suspend fun insert(root: List<WordRootEntity>)
 
     /**
-     * 鎻掑叆璇嶆牴瀹炰綋鍒楄〃锟?
-     * 濡傛灉璇嶆牴宸插瓨鍦紝鍒欐浛鎹㈠畠浠拷?
-     * @param roots 瑕佹彃鍏ョ殑 [WordRootEntity] 鍒楄〃锟?
+     * 插入词根实体列表。
+     * 如果词根已存在，则替换它们。
+     * @param roots 要插入的 [WordRootEntity] 列表。
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRoots(roots: List<WordRootEntity>)
 
     /**
-     * 鎻掑叆鍗曚釜璇嶆牴鍚箟瀹炰綋锟?
-     * @param meaning 瑕佹彃鍏ョ殑 [RootMeaningEntity]锟?
+     * 插入单个词根含义实体。
+     * @param meaning 要插入的 [RootMeaningEntity]。
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRootMeaning(meaning: RootMeaningEntity)
 
     /**
-     * 鎻掑叆璇嶆牴鍚箟瀹炰綋鍒楄〃锟?
-     * @param meanings 瑕佹彃鍏ョ殑 [RootMeaningEntity] 鍒楄〃锟?
+     * 插入词根含义实体列表。
+     * @param meanings 要插入的 [RootMeaningEntity] 列表。
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRootMeanings(meanings: List<RootMeaningEntity>)
 
     /**
-     * 鎻掑叆鍗曚釜璇嶆牴鍙樹綋瀹炰綋锟?
-     * @param variant 瑕佹彃鍏ョ殑 [RootVariantEntity]锟?
+     * 插入单个词根变体实体。
+     * @param variant 要插入的 [RootVariantEntity]。
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRootVariant(variant: RootVariantEntity)
 
     /**
-     * 鎻掑叆璇嶆牴鍙樹綋瀹炰綋鍒楄〃锟?
-     * @param variants 瑕佹彃鍏ョ殑 [RootVariantEntity] 鍒楄〃锟?
+     * 插入词根变体实体列表。
+     * @param variants 要插入的 [RootVariantEntity] 列表。
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRootVariants(variants: List<RootVariantEntity>)
 
     /**
-     * 鎻掑叆鍗曚釜璇嶆牴绀轰緥瀹炰綋锟?
-     * @param example 瑕佹彃鍏ョ殑 [RootExampleEntity]锟?
+     * 插入单个词根示例实体。
+     * @param example 要插入的 [RootExampleEntity]。
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRootExample(example: RootExampleEntity)
 
     /**
-     * 鎻掑叆璇嶆牴绀轰緥瀹炰綋鍒楄〃锟?
-     * @param examples 瑕佹彃鍏ョ殑 [RootExampleEntity] 鍒楄〃锟?
+     * 插入词根示例实体列表。
+     * @param examples 要插入的 [RootExampleEntity] 列表。
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRootExamples(examples: List<RootExampleEntity>)
 
     /**
-     * 浠ヤ簨鍔℃柟寮忔牴锟?ID 鏌ヨ鍗曚釜璇嶆牴鍙婂叾璇︾粏淇℃伅锟?
-     * @param id 瑕佹煡璇㈢殑璇嶆牴锟?ID锟?
-     * @return 涓€锟?[WordRootWithDetails] 瀵硅薄锛屽鏋滄湭鎵惧埌鍒欎负 null锟?
+     * 以事务方式根据词根文本查询词根实体。
+     * @param rootWord 要查询的词根文本。
+     * @return 匹配的 [WordRootEntity] 列表。
      */
     @Transaction
     @Query("SELECT * FROM word_roots WHERE root_word = :rootWord")

@@ -227,8 +227,7 @@ tasks.register("verifyNewArchitectureProjectDependencies") {
     doLast {
         val violations = mutableListOf<String>()
 
-        fun scanBuildFile(moduleName: String, forbiddenProjectRefs: List<String>) {
-            val buildFile = rootDir.resolve("$moduleName/build.gradle.kts")
+        fun scanBuildFile(buildFile: File, forbiddenProjectRefs: List<String>) {
             if (!buildFile.exists()) return
 
             buildFile.readLines().forEachIndexed { index, line ->
@@ -239,12 +238,11 @@ tasks.register("verifyNewArchitectureProjectDependencies") {
             }
         }
 
-        rootDir.listFiles()
-            ?.filter { file -> file.isDirectory && file.name.startsWith("domain-") }
-            .orEmpty()
-            .forEach { module ->
+        subprojects
+            .filter { project -> project.name == "domain" || project.name.startsWith("domain-") }
+            .forEach { project ->
                 scanBuildFile(
-                    moduleName = module.name,
+                    buildFile = project.projectDir.resolve("build.gradle.kts"),
                     forbiddenProjectRefs = listOf(
                         "project(\":app\")",
                         "project(\":data",
@@ -257,41 +255,31 @@ tasks.register("verifyNewArchitectureProjectDependencies") {
                 )
             }
 
-        rootDir.listFiles()
-            ?.filter { file -> file.isDirectory && file.name.startsWith("data-") }
-            .orEmpty()
-            .forEach { module ->
-                val otherDataModuleRefs = rootDir.listFiles()
-                    ?.filter { file -> file.isDirectory && file.name.startsWith("data-") && file.name != module.name }
-                    ?.map { file -> "project(\":${file.name}\")" }
-                    .orEmpty()
+        subprojects
+            .filter { project -> project.name == "data" || project.name.startsWith("data-") }
+            .forEach { project ->
+                val otherDataModuleRefs = subprojects
+                    .filter { candidate ->
+                        (candidate.name == "data" || candidate.name.startsWith("data-")) &&
+                            candidate.path != project.path
+                    }
+                    .map { candidate -> "project(\"${candidate.path}\")" }
                 scanBuildFile(
-                    moduleName = module.name,
+                    buildFile = project.projectDir.resolve("build.gradle.kts"),
                     forbiddenProjectRefs = otherDataModuleRefs + listOf(
                         "project(\":app\")",
                         "project(\":feature-",
                         "project(\":feature_",
-                        "project(\":data\")",
-                        "project(\":domain\")",
                         "project(\":network\")"
                     )
                 )
             }
 
-        scanBuildFile(
-            moduleName = "domain-account",
-            forbiddenProjectRefs = listOf(
-                "project(\":domain-floating\")",
-                "project(\":domain-wordbook\")"
-            )
-        )
-
-        rootDir.listFiles()
-            ?.filter { file -> file.isDirectory && file.name.startsWith("core-") }
-            .orEmpty()
-            .forEach { module ->
+        subprojects
+            .filter { project -> project.name.startsWith("core-") }
+            .forEach { project ->
                 scanBuildFile(
-                    moduleName = module.name,
+                    buildFile = project.projectDir.resolve("build.gradle.kts"),
                     forbiddenProjectRefs = listOf(
                         "project(\":app\")",
                         "project(\":data",
@@ -639,7 +627,7 @@ tasks.register("verifyLegacyArchitectureModulesRemoved") {
     description = "Fail when removed legacy architecture modules are included or present on disk."
 
     doLast {
-        val legacyModules = listOf("domain", "data", "network")
+        val legacyModules = listOf("network")
         val settingsFile = rootDir.resolve("settings.gradle.kts")
         val settingsText = if (settingsFile.exists()) settingsFile.readText() else ""
         val violations = mutableListOf<String>()

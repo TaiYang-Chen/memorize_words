@@ -17,9 +17,9 @@ class GetCurrentWordBookInfoFlowUseCase @Inject constructor(
     private val progressRepo: LearningProgressRepository
 ) {
     /**
-     * 杩斿洖涓€涓?Flow锛屽綋浠ヤ笅浠绘剰鏁版嵁鍙樺寲鏃惰嚜鍔ㄥ埛鏂帮細
-     * - 鎴戠殑璇嶄功鍒楄〃鍙戠敓鍙樺寲
-     * - 浠绘剰璇嶄功鐨勫涔犺繘搴﹀彂鐢熷彉鍖?
+     * 返回一个 Flow，当以下任意数据变化时自动刷新：
+     * - 当前词书信息发生变化
+     * - 当前词书的学习进度发生变化
      */
     operator fun invoke(): Flow<WordBookInfo?> {
         val currentBookFlow: Flow<WordBookInfo?> =
