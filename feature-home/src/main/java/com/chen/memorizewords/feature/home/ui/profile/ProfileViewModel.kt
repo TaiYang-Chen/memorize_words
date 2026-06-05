@@ -30,6 +30,7 @@ class ProfileViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     companion object {
+        const val ACTION_LOGOUT_CONFIRM = "logout_confirm"
         const val ACTION_FORCE_LOGOUT = "force_logout"
     }
 
@@ -73,7 +74,17 @@ class ProfileViewModel @Inject constructor(
         navigate(AppRoute.Auth(deepLink = AuthEntryDestination.USER_PROFILE_DEEP_LINK))
     }
 
-    fun logout() {
+    fun requestLogoutConfirmation() {
+        showConfirmDialog(
+            action = ACTION_LOGOUT_CONFIRM,
+            title = resourceProvider.getString(R.string.home_logout_confirm_title),
+            message = resourceProvider.getString(R.string.home_logout_confirm_message),
+            confirmText = resourceProvider.getString(R.string.home_logout_confirm_action),
+            cancelText = resourceProvider.getString(R.string.home_logout_cancel_action)
+        )
+    }
+
+    private fun logout() {
         viewModelScope.launch {
             logoutUseCase().onSuccess { outcome ->
                 if (outcome is LogoutOutcome.LocalClearedRemoteFailed) {
@@ -117,5 +128,9 @@ class ProfileViewModel @Inject constructor(
 
     fun onForceLogoutConfirmed() {
         forceLogout()
+    }
+
+    fun onLogoutConfirmed() {
+        logout()
     }
 }

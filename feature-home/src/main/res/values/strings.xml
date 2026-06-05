@@ -52,6 +52,10 @@
     <string name="home_duration_hours">%1$d小时</string>
     <string name="home_exit_confirm">再按一次退出应用</string>
     <string name="home_logout_failed">退出登录失败</string>
+    <string name="home_logout_confirm_title">确认退出登录</string>
+    <string name="home_logout_confirm_message">退出后需要重新登录，是否继续？</string>
+    <string name="home_logout_confirm_action">退出登录</string>
+    <string name="home_logout_cancel_action">取消</string>
     <string name="home_logout_risk_title">同步风险提示</string>
     <string name="home_logout_risk_message">当前有学习数据尚未同步，继续退出可能导致记录丢失，是否继续？</string>
     <string name="home_practice_overview">练习概览</string>

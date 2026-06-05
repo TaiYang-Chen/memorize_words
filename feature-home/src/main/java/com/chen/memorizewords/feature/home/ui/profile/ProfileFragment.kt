@@ -87,6 +87,10 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ModuleHomeFragmentProfile
     }
 
     override fun onConfirmDialog(event: UiEvent.Dialog.Confirm) {
+        if (event.action == ProfileViewModel.ACTION_LOGOUT_CONFIRM) {
+            viewModel.onLogoutConfirmed()
+            return
+        }
         if (event.action == ProfileViewModel.ACTION_FORCE_LOGOUT) {
             viewModel.onForceLogoutConfirmed()
             return

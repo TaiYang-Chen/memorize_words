@@ -406,11 +406,11 @@
                 android:layout_marginTop="25dp"
                 android:clickable="true"
                 android:gravity="center"
-                android:onClick="@{()->viewModel.logout()}"
+                android:onClick="@{()->viewModel.requestLogoutConfirmation()}"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:stateListAnimator="@animator/btn_scale_animator"
-                android:text="退出登录"
+                android:text="@string/home_logout_confirm_action"
                 android:textColor="#dc2626"
                 android:textStyle="bold" />
         </LinearLayout>
