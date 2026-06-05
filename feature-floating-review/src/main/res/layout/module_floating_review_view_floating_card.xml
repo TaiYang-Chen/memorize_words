@@ -21,48 +21,45 @@
         android:gravity="end"
         android:orientation="horizontal">
 
-        <TextView
+        <ImageButton
             android:id="@+id/module_floating_review_btn_close"
-            android:layout_width="wrap_content"
-            android:layout_height="28dp"
-            android:background="@drawable/module_floating_review_bg_floating_button"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@android:color/transparent"
             android:clickable="true"
+            android:contentDescription="@string/module_floating_review_close"
             android:focusable="true"
             android:gravity="center"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:text="@string/module_floating_review_close"
-            android:textColor="#0F172A"
-            android:textSize="12sp" />
+            android:padding="9dp"
+            android:scaleType="center"
+            android:src="@drawable/module_floating_review_ic_close" />
 
-        <TextView
+        <ImageButton
             android:id="@+id/module_floating_review_btn_refresh"
-            android:layout_width="wrap_content"
-            android:layout_height="28dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_marginStart="8dp"
-            android:background="@drawable/module_floating_review_bg_floating_button"
+            android:background="@android:color/transparent"
             android:clickable="true"
+            android:contentDescription="@string/module_floating_review_refresh"
             android:focusable="true"
             android:gravity="center"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:text="@string/module_floating_review_refresh"
-            android:textColor="#0F172A"
-            android:textSize="12sp" />
+            android:padding="9dp"
+            android:scaleType="center"
+            android:src="@drawable/module_floating_review_ic_refresh" />
 
-        <TextView
+        <ImageButton
             android:id="@+id/module_floating_review_btn_detail"
-            android:layout_width="wrap_content"
-            android:layout_height="28dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_marginStart="8dp"
-            android:background="@drawable/module_floating_review_bg_floating_button"
+            android:background="@android:color/transparent"
             android:clickable="true"
+            android:contentDescription="@string/module_floating_review_detail"
             android:focusable="true"
             android:gravity="center"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:text="@string/module_floating_review_detail"
-            android:textColor="#0F172A"
-            android:textSize="12sp" />
+            android:padding="9dp"
+            android:scaleType="center"
+            android:src="@drawable/module_floating_review_ic_detail" />
     </LinearLayout>
 </LinearLayout>

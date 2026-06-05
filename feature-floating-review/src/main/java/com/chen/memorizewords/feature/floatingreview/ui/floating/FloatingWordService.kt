@@ -607,8 +607,14 @@ class FloatingWordService : Service() {
     }
 
     private fun applyCardActionState(state: FloatingCardActionState) {
-        cardView?.findViewById<View>(R.id.module_floating_review_btn_refresh)?.isEnabled = state.refreshEnabled
-        cardView?.findViewById<View>(R.id.module_floating_review_btn_detail)?.isEnabled = state.detailEnabled
+        cardView?.findViewById<View>(R.id.module_floating_review_btn_refresh)?.apply {
+            isEnabled = state.refreshEnabled
+            alpha = if (state.refreshEnabled) 1f else 0.38f
+        }
+        cardView?.findViewById<View>(R.id.module_floating_review_btn_detail)?.apply {
+            isEnabled = state.detailEnabled
+            alpha = if (state.detailEnabled) 1f else 0.38f
+        }
     }
 
     private fun buildTextView(
