@@ -37,4 +37,6 @@ dependencies {
     implementation(libs.androidx.gridlayout)
     ksp(libs.hilt.compiler)
 
+    testImplementation(kotlin("test"))
+
 }

@@ -11,13 +11,15 @@ internal class HomeLearningLauncher(
     suspend fun createNewRoute(
         bookId: Long,
         count: Int,
-        orderType: WordOrderType
+        orderType: WordOrderType,
+        initialLearnedCount: Int = 0
     ): AppRoute.Learning? {
         return createLearningRoute(
             learningSessionFacade.createNewSessionRequest(
                 bookId = bookId,
                 count = count,
-                orderType = orderType
+                orderType = orderType,
+                initialLearnedCount = initialLearnedCount
             )
         )
     }
@@ -25,13 +27,15 @@ internal class HomeLearningLauncher(
     suspend fun createReviewRoute(
         bookId: Long,
         count: Int,
-        orderType: WordOrderType
+        orderType: WordOrderType,
+        initialLearnedCount: Int = 0
     ): AppRoute.Learning? {
         return createLearningRoute(
             learningSessionFacade.createReviewSessionRequest(
                 bookId = bookId,
                 count = count,
-                orderType = orderType
+                orderType = orderType,
+                initialLearnedCount = initialLearnedCount
             )
         )
     }

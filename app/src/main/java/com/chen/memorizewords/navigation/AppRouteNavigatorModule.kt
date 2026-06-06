@@ -59,6 +59,7 @@ class DefaultRouteNavigator @Inject constructor(
             is AppRoute.Learning -> learningEntry.createLearningIntent(
                 context,
                 LearningSessionRequest(
+                    initialLearnedCount = route.initialLearnedCount,
                     wordIds = route.wordIds,
                     sessionType = route.sessionType,
                     sessionWordCount = route.sessionWordCount

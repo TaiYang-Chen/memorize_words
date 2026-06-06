@@ -1,10 +1,8 @@
 package com.chen.memorizewords.feature.home.ui.home
 
-import android.text.Html
 import android.text.Spanned
 import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.navigation.AppRoute
-import com.chen.memorizewords.core.navigation.LearningSessionRequest
 import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.core.ui.vm.UiEvent
@@ -186,11 +184,18 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun startLearning(bookId: Long, plan: StudyPlan) {
-        val completedNewPlan = plan.dailyNewCount > 0 && todayNewCount.value >= plan.dailyNewCount
+        val todayNew = todayNewCount.value
+        val completedNewPlan = shouldShowBoostNewWordsDialog(todayNew, plan)
         if (!completedNewPlan) {
+            val progress = resolveNewLearningProgress(todayNew, plan)
             pendingBoostBookId = null
             pendingBoostPlan = null
-            navigateToNewLearning(bookId, plan, plan.dailyNewCount)
+            navigateToNewLearning(
+                bookId = bookId,
+                plan = plan,
+                count = progress.remainingCount,
+                initialLearnedCount = progress.initialLearnedCount
+            )
             return
         }
 
@@ -255,12 +260,18 @@ class HomeViewModel @Inject constructor(
         navigateToNewLearning(bookInfo.bookId, studyPlan.value, count)
     }
 
-    private fun navigateToNewLearning(bookId: Long, plan: StudyPlan, count: Int) {
+    private fun navigateToNewLearning(
+        bookId: Long,
+        plan: StudyPlan,
+        count: Int,
+        initialLearnedCount: Int = 0
+    ) {
         viewModelScope.launch {
             val route = learningLauncher.createNewRoute(
                 bookId = bookId,
                 count = count,
-                orderType = plan.wordOrderType
+                orderType = plan.wordOrderType,
+                initialLearnedCount = initialLearnedCount
             )
             if (route == null) {
                 showToast(resourceProvider.getString(R.string.home_learning_no_words))
@@ -290,12 +301,34 @@ internal fun resolveReviewWordCount(plan: StudyPlan): Int {
     return plan.dailyReviewCount.coerceAtLeast(0)
 }
 
+internal data class NewLearningProgress(
+    val remainingCount: Int,
+    val initialLearnedCount: Int
+)
+
+internal fun shouldShowBoostNewWordsDialog(todayNewCount: Int, plan: StudyPlan): Boolean {
+    return plan.dailyNewCount > 0 && todayNewCount >= plan.dailyNewCount
+}
+
+internal fun resolveNewLearningProgress(
+    todayNewCount: Int,
+    plan: StudyPlan
+): NewLearningProgress {
+    val dailyNewCount = plan.dailyNewCount.coerceAtLeast(0)
+    val initialLearnedCount = todayNewCount.coerceAtLeast(0).coerceAtMost(dailyNewCount)
+    return NewLearningProgress(
+        remainingCount = (dailyNewCount - initialLearnedCount).coerceAtLeast(0),
+        initialLearnedCount = initialLearnedCount
+    )
+}
+
 internal fun createLearningRoute(
     request: DomainLearningSessionRequest?
 ): AppRoute.Learning? {
     val safeRequest = request ?: return null
     if (safeRequest.wordIds.isEmpty()) return null
     return AppRoute.Learning(
+        initialLearnedCount = safeRequest.initialLearnedCount,
         wordIds = safeRequest.wordIds,
         sessionType = safeRequest.sessionType,
         sessionWordCount = safeRequest.sessionWordCount
@@ -309,6 +342,7 @@ internal fun createLearningRoute(
 ): AppRoute.Learning? {
     if (learningWords.isEmpty()) return null
     return AppRoute.Learning(
+        initialLearnedCount = 0,
         wordIds = learningWords.map { it.id },
         sessionType = sessionType,
         sessionWordCount = sessionWordCount

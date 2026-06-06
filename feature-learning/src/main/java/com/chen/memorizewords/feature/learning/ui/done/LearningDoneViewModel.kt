@@ -3,7 +3,6 @@ package com.chen.memorizewords.feature.learning.ui.done
 import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.navigation.AppRoute
-import com.chen.memorizewords.core.navigation.LearningSessionRequest
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.domain.study.orchestrator.learning.LearningSessionFacade
 import com.chen.memorizewords.domain.word.query.WordReadFacade
@@ -24,7 +23,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import com.chen.memorizewords.domain.study.model.learning.LearningSessionRequest as DomainLearningSessionRequest
 
 @HiltViewModel
 class LearningDoneViewModel @Inject constructor(
@@ -180,6 +178,7 @@ class LearningDoneViewModel @Inject constructor(
 
             navigate(
                 AppRoute.Learning(
+                    initialLearnedCount = nextSessionRequest.initialLearnedCount,
                     wordIds = nextSessionRequest.wordIds,
                     sessionType = nextSessionRequest.sessionType,
                     sessionWordCount = nextSessionRequest.sessionWordCount

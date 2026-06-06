@@ -7,7 +7,12 @@ sealed interface AppRoute {
     data object Onboarding : AppRoute
     data class WordBook(val deepLink: String? = null) : AppRoute
     data class Feedback(val deepLink: String? = null) : AppRoute
-    data class Learning(val wordIds: List<Long>, val sessionType: Int, val sessionWordCount: Int) : AppRoute
+    data class Learning(
+        val initialLearnedCount: Int = 0,
+        val wordIds: List<Long>,
+        val sessionType: Int,
+        val sessionWordCount: Int
+    ) : AppRoute
     data class OpenWord(val wordId: Long, val fromFloating: Boolean) : AppRoute
     data class Practice(
         val modeName: String,
