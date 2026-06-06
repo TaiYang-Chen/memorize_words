@@ -53,6 +53,6 @@ class WordVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
             "${item.partOfSpeech.abbr} $meaning"
         }
 
-        tvAction.text = itemView.context.getString(R.string.learning_done_word_action)
+        tvAction.text = "\u203A"
     }
 }

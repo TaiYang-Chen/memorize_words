@@ -12,347 +12,431 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/module_learning_bg_done_root">
+        android:background="@drawable/module_learning_bg_summary_root">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/topBar"
+            android:layout_width="0dp"
+            android:layout_height="76dp"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/ivClose"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:onClick="@{() -> viewModel.finish()}"
+                android:padding="6dp"
+                android:src="@drawable/module_learning_close"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="#2F3A35" />
+
+            <TextView
+                android:id="@+id/tvHeaderTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:fontFamily="serif"
+                android:gravity="center"
+                android:text="@string/learning_done_header_title"
+                android:textColor="#006C5B"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/ivClose"
+                app:layout_constraintEnd_toStartOf="@id/ivShare"
+                app:layout_constraintStart_toEndOf="@id/ivClose"
+                app:layout_constraintTop_toTopOf="@id/ivClose"
+                tools:text="Session Summary" />
+
+            <ImageView
+                android:id="@+id/ivShare"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="5dp"
+                android:src="@drawable/module_learning_share_24dp_444f5f"
+                app:layout_constraintBottom_toBottomOf="@id/ivClose"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/ivClose"
+                app:tint="#2F3A35" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedScrollView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:fillViewport="true"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:clipToPadding="false"
+            android:fillViewport="false"
+            android:overScrollMode="never"
+            android:paddingBottom="18dp"
+            app:layout_constraintBottom_toTopOf="@id/actionPanel"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/topBar">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
 
                 <LinearLayout
                     android:id="@+id/cardHero"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/module_learning_bg_done_hero"
+                    android:background="@drawable/module_learning_bg_summary_hero"
+                    android:elevation="1dp"
+                    android:gravity="center_horizontal"
                     android:orientation="vertical"
-                    android:padding="20dp">
+                    android:paddingStart="22dp"
+                    android:paddingTop="26dp"
+                    android:paddingEnd="22dp"
+                    android:paddingBottom="30dp">
 
-                    <TextView
-                        android:id="@+id/tvDoneTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/learning_done_title"
-                        android:textColor="#0F172A"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
+                    <FrameLayout
+                        android:layout_width="84dp"
+                        android:layout_height="84dp"
+                        android:background="@drawable/module_learning_bg_summary_medal_outer">
 
-                    <TextView
-                        android:id="@+id/tvDoneSubtitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/learning_done_subtitle_new"
-                        android:textColor="#475569"
-                        android:textSize="13sp" />
+                        <FrameLayout
+                            android:layout_width="52dp"
+                            android:layout_height="52dp"
+                            android:layout_gravity="center"
+                            android:background="@drawable/module_learning_bg_summary_medal_inner">
+
+                            <ImageView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/module_learning_ic_summary_medal" />
+                        </FrameLayout>
+                    </FrameLayout>
 
                     <TextView
                         android:id="@+id/tvDoneTag"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:background="@drawable/module_learning_bg_done_chip"
-                        android:paddingStart="12dp"
-                        android:paddingTop="4dp"
-                        android:paddingEnd="12dp"
-                        android:paddingBottom="4dp"
+                        android:layout_marginTop="18dp"
+                        android:background="@drawable/module_learning_bg_summary_chip"
+                        android:paddingStart="14dp"
+                        android:paddingTop="6dp"
+                        android:paddingEnd="14dp"
+                        android:paddingBottom="6dp"
                         android:text="@string/learning_done_tag_new"
-                        android:textColor="#0F766E"
-                        android:textSize="11sp"
-                        android:textStyle="bold" />
+                        android:textColor="#723B07"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        tools:text="新词学习" />
+
+                    <TextView
+                        android:id="@+id/tvDoneTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:text="@string/learning_done_title"
+                        android:textColor="#07111F"
+                        android:textSize="30sp"
+                        android:textStyle="bold"
+                        tools:text="学习完成" />
+
+                    <TextView
+                        android:id="@+id/tvDoneSubtitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:gravity="center"
+                        android:lineSpacingExtra="6dp"
+                        android:text="@string/learning_done_subtitle_new"
+                        android:textColor="#2F3A35"
+                        android:textSize="16sp"
+                        tools:text="本组新词学习已完成，继续保持节奏，再学一组。" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/cardStats"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="102dp"
+                    android:layout_marginTop="24dp"
+                    android:background="@drawable/module_learning_bg_summary_panel"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingStart="18dp"
+                    android:paddingEnd="18dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvMetricCompletedValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="serif"
+                            android:includeFontPadding="false"
+                            android:text="0"
+                            android:textColor="#006C5B"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            tools:text="15" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="@string/learning_done_metric_completed"
+                            android:textColor="#26352F"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="64dp"
+                        android:background="@drawable/module_learning_bg_summary_divider" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvMetricAccuracyValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="serif"
+                            android:includeFontPadding="false"
+                            android:text="0%"
+                            android:textColor="#006C5B"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            tools:text="92%" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="@string/learning_done_metric_accuracy"
+                            android:textColor="#26352F"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="64dp"
+                        android:background="@drawable/module_learning_bg_summary_divider" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvMetricDurationValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="serif"
+                            android:includeFontPadding="false"
+                            android:text="0 m"
+                            android:textColor="#006C5B"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            tools:text="12 m" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="@string/learning_done_metric_duration"
+                            android:textColor="#26352F"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/cardExtraStats"
+                    android:layout_width="match_parent"
+                    android:layout_height="106dp"
                     android:layout_marginTop="16dp"
-                    android:background="@drawable/module_learning_bg_done_card"
+                    android:background="@drawable/module_learning_bg_summary_panel"
                     android:orientation="vertical"
-                    android:padding="12dp">
+                    android:paddingStart="18dp"
+                    android:paddingTop="18dp"
+                    android:paddingEnd="18dp"
+                    android:paddingBottom="18dp">
 
-                    <androidx.gridlayout.widget.GridLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:columnCount="3"
-                        app:rowCount="3">
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                        <LinearLayout
+                        <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:padding="12dp"
-                            app:layout_column="0"
-                            app:layout_columnWeight="1"
-                            app:layout_row="0"
-                            app:layout_rowWeight="1">
+                            android:layout_weight="1"
+                            android:text="@string/learning_done_metric_quality"
+                            android:textColor="#1C2925"
+                            android:textSize="16sp" />
 
-                            <TextView
-                                android:id="@+id/tvMetricCompletedValue"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0"
-                                android:textColor="#0F172A"
-                                android:textSize="18sp"
-                                android:textStyle="bold"
-                                tools:text="15" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:text="@string/learning_done_metric_completed"
-                                android:textColor="#64748B"
-                                android:textSize="11sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
+                        <TextView
+                            android:id="@+id/tvMetricQualityValue"
+                            android:layout_width="46dp"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:orientation="vertical"
-                            android:padding="12dp"
-                            app:layout_column="1"
-                            app:layout_columnWeight="1"
-                            app:layout_row="0"
-                            app:layout_rowWeight="1">
+                            android:text="A"
+                            android:textColor="#96520E"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            tools:text="A" />
 
-                            <TextView
-                                android:id="@+id/tvMetricDurationValue"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0分钟"
-                                android:textColor="#0F172A"
-                                android:textSize="18sp"
-                                android:textStyle="bold"
-                                tools:text="12分钟" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:text="@string/learning_done_metric_duration"
-                                android:textColor="#64748B"
-                                android:textSize="11sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
+                        <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:padding="12dp"
-                            app:layout_column="2"
-                            app:layout_columnWeight="1"
-                            app:layout_row="0"
-                            app:layout_rowWeight="1">
+                            android:layout_marginStart="16dp"
+                            android:layout_weight="1"
+                            android:text="@string/learning_done_metric_answered"
+                            android:textColor="#1C2925"
+                            android:textSize="16sp" />
 
-                            <TextView
-                                android:id="@+id/tvMetricAccuracyValue"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0%"
-                                android:textColor="#0F172A"
-                                android:textSize="18sp"
-                                android:textStyle="bold"
-                                tools:text="92%" />
+                        <TextView
+                            android:id="@+id/tvMetricAnsweredValue"
+                            android:layout_width="50dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="end"
+                            android:text="0"
+                            android:textColor="#07111F"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            tools:text="40" />
+                    </LinearLayout>
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:text="@string/learning_done_metric_accuracy"
-                                android:textColor="#64748B"
-                                android:textSize="11sp" />
-                        </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                        <LinearLayout
+                        <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:padding="12dp"
-                            app:layout_column="0"
-                            app:layout_columnWeight="1"
-                            app:layout_row="1"
-                            app:layout_rowWeight="1">
+                            android:layout_weight="1"
+                            android:text="@string/learning_done_metric_wrong"
+                            android:textColor="#1C2925"
+                            android:textSize="16sp" />
 
-                            <TextView
-                                android:id="@+id/tvMetricQualityValue"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="优"
-                                android:textColor="#0F172A"
-                                android:textSize="18sp"
-                                android:textStyle="bold"
-                                tools:text="优" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:text="@string/learning_done_metric_quality"
-                                android:textColor="#64748B"
-                                android:textSize="11sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
+                        <TextView
+                            android:id="@+id/tvMetricWrongValue"
+                            android:layout_width="46dp"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:orientation="vertical"
-                            android:padding="12dp"
-                            app:layout_column="1"
-                            app:layout_columnWeight="1"
-                            app:layout_row="1"
-                            app:layout_rowWeight="1">
+                            android:text="0"
+                            android:textColor="#B80D16"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            tools:text="3" />
 
-                            <TextView
-                                android:id="@+id/tvMetricAnsweredValue"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0"
-                                android:textColor="#0F172A"
-                                android:textSize="18sp"
-                                android:textStyle="bold"
-                                tools:text="40" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:text="@string/learning_done_metric_answered"
-                                android:textColor="#64748B"
-                                android:textSize="11sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
+                        <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:padding="12dp"
-                            app:layout_column="2"
-                            app:layout_columnWeight="1"
-                            app:layout_row="1"
-                            app:layout_rowWeight="1">
+                            android:layout_marginStart="16dp"
+                            android:layout_weight="1"
+                            android:text="@string/learning_done_metric_efficiency"
+                            android:textColor="#1C2925"
+                            android:textSize="16sp" />
 
-                            <TextView
-                                android:id="@+id/tvMetricWrongValue"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0"
-                                android:textColor="#0F172A"
-                                android:textSize="18sp"
-                                android:textStyle="bold"
-                                tools:text="3" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:text="@string/learning_done_metric_wrong"
-                                android:textColor="#64748B"
-                                android:textSize="11sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
+                        <TextView
+                            android:id="@+id/tvMetricEfficiencyValue"
+                            android:layout_width="70dp"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:padding="12dp"
-                            app:layout_column="0"
-                            app:layout_columnSpan="3"
-                            app:layout_columnWeight="1"
-                            app:layout_row="2"
-                            app:layout_rowWeight="1">
-
-                            <TextView
-                                android:id="@+id/tvMetricEfficiencyValue"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0.0 词/分钟"
-                                android:textColor="#0F172A"
-                                android:textSize="18sp"
-                                android:textStyle="bold"
-                                tools:text="3.5 词/分钟" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:text="@string/learning_done_metric_efficiency"
-                                android:textColor="#64748B"
-                                android:textSize="11sp" />
-                        </LinearLayout>
-
-                    </androidx.gridlayout.widget.GridLayout>
+                            android:gravity="end"
+                            android:text="0.0 词/分"
+                            android:textColor="#07111F"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            tools:text="3.5 词/分" />
+                    </LinearLayout>
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/tvWordListTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="28dp"
                     android:text="@string/learning_done_list_title"
-                    android:textColor="#0F172A"
-                    android:textSize="16sp"
+                    android:textColor="#07111F"
+                    android:textSize="21sp"
                     android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvWordList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="18dp"
                     android:nestedScrollingEnabled="false"
                     android:overScrollMode="never"
+                    tools:itemCount="3"
                     tools:listitem="@layout/rv_item_word_list" />
-
-                <LinearLayout
-                    android:id="@+id/actionRow"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/btnContinue"
-                        android:layout_width="0dp"
-                        android:layout_height="48dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/module_learning_selector_6b5b95_radius"
-                        android:gravity="center"
-                        android:text="@string/learning_done_continue"
-                        android:textColor="#FFFFFF"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/btnBackHome"
-                        android:layout_width="0dp"
-                        android:layout_height="48dp"
-                        android:layout_marginStart="12dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/module_learning_selector_done_secondary"
-                        android:gravity="center"
-                        android:text="@string/learning_done_back_home"
-                        android:textColor="#475569"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
+
+        <LinearLayout
+            android:id="@+id/actionPanel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/module_learning_bg_summary_root"
+            android:elevation="8dp"
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="18dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:id="@+id/btnContinue"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="@drawable/module_learning_selector_summary_primary"
+                android:gravity="center"
+                android:text="@string/learning_done_continue"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/btnBackHome"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/module_learning_selector_summary_secondary"
+                android:gravity="center"
+                android:text="@string/learning_done_back_home"
+                android:textColor="#9A5412"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

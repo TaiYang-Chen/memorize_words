@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="learning_done_title">学习完成</string>
+    <string name="learning_done_header_title">Session Summary</string>
     <string name="learning_done_subtitle_new">本组新词学习已完成，继续保持节奏，再学一组。</string>
     <string name="learning_done_subtitle_review">本组复习已完成，趁热打铁，再复习一组。</string>
     <string name="learning_done_tag_new">新词学习</string>
@@ -13,10 +14,10 @@
     <string name="learning_done_metric_answered">答题次数</string>
     <string name="learning_done_metric_wrong">错误次数</string>
     <string name="learning_done_metric_efficiency">学习效率</string>
-    <string name="learning_done_duration_minutes">%1$d分钟</string>
-    <string name="learning_done_duration_hours_minutes">%1$d小时%2$d分钟</string>
-    <string name="learning_done_accuracy_format">%.1f%%</string>
-    <string name="learning_done_efficiency_format">%.1f 词/分钟</string>
+    <string name="learning_done_duration_minutes">%1$d m</string>
+    <string name="learning_done_duration_hours_minutes">%1$d h %2$d m</string>
+    <string name="learning_done_accuracy_format">%.0f%%</string>
+    <string name="learning_done_efficiency_format">%.1f 词/分</string>
 
     <string name="learning_done_continue">继续学习</string>
     <string name="learning_done_back_home">返回首页</string>
