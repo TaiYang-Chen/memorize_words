@@ -11,7 +11,11 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chen.memorizewords.core.ui.ext.dpToPx
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
+import com.chen.memorizewords.domain.practice.speech.SpeechAudioOutput
+import com.chen.memorizewords.domain.practice.speech.SpeechTask
 import com.chen.memorizewords.domain.practice.usecase.SynthesizeSpeechUseCase
+import com.chen.memorizewords.domain.word.model.word.PronunciationType
+import com.chen.memorizewords.domain.word.model.word.Word
 import com.chen.memorizewords.feature.learning.LinearSpacingItemDecoration
 import com.chen.memorizewords.feature.learning.R
 import com.chen.memorizewords.feature.learning.adapter.DefinitionsAdapter
@@ -22,8 +26,6 @@ import com.chen.memorizewords.feature.learning.adapter.SynonymsAdapter
 import com.chen.memorizewords.feature.learning.databinding.FragmentWordEntryDetailBinding
 import com.chen.memorizewords.feature.learning.ui.speech.audioOutputOrNull
 import com.chen.memorizewords.feature.learning.ui.speech.prepareSpeechOutputAsync
-import com.chen.memorizewords.domain.practice.speech.SpeechAudioOutput
-import com.chen.memorizewords.domain.practice.speech.SpeechTask
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.launch
@@ -51,10 +53,19 @@ class WordEntryDetailFragment :
     private val synonymsAdapter = SynonymsAdapter()
     private val formAdapter = FormAdapter()
     private var mediaPlayer: MediaPlayer? = null
+    private var pronunciationType: PronunciationType = PronunciationType.US
 
     override fun initView(savedInstanceState: Bundle?) {
         databind.viewModel = viewModel
         databind.ivBack.setOnClickListener { handleBack() }
+        databind.ivSpeaker.setOnClickListener { speakCurrentWord() }
+        databind.languageRadioGroup.setOnCheckedChangeListener { _, checkedId ->
+            pronunciationType = when (checkedId) {
+                R.id.btnEnglish -> PronunciationType.UK
+                else -> PronunciationType.US
+            }
+            renderPhonetic(viewModel.currentWord.value)
+        }
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
@@ -97,6 +108,7 @@ class WordEntryDetailFragment :
                 viewModel.currentWord.collect { word ->
                     val synonyms = word?.synonyms.orEmpty()
                     val antonyms = word?.antonyms.orEmpty()
+                    renderPhonetic(word)
                     synonymsAdapter.submitList(synonyms, antonyms)
                     setOptionalSectionVisible(
                         databind.sectionSynonymsHeader,
@@ -155,6 +167,13 @@ class WordEntryDetailFragment :
         list.isVisible = visible
     }
 
+    private fun renderPhonetic(word: Word?) {
+        databind.tvPhonetic.text = when (pronunciationType) {
+            PronunciationType.US -> word?.phoneticUS.orEmpty()
+            PronunciationType.UK -> word?.phoneticUK.orEmpty()
+        }
+    }
+
     override fun onDestroyView() {
         releaseMediaPlayer()
         super.onDestroyView()
@@ -165,6 +184,32 @@ class WordEntryDetailFragment :
             requireActivity().finish()
         } else {
             viewModel.back()
+        }
+    }
+
+    private fun speakCurrentWord() {
+        val word = viewModel.currentWord.value?.word?.takeIf { it.isNotBlank() } ?: return
+        val locale = when (pronunciationType) {
+            PronunciationType.US -> "en-US"
+            PronunciationType.UK -> "en-GB"
+        }
+        speakWord(word, locale)
+    }
+
+    private fun speakWord(word: String, locale: String) {
+        if (word.isBlank()) return
+        viewLifecycleOwner.lifecycleScope.launch {
+            val audioOutput = synthesizeSpeech(
+                SpeechTask.SynthesizeWord(
+                    text = word,
+                    locale = locale
+                )
+            ).audioOutputOrNull()
+            if (audioOutput == null) {
+                viewModel.showToast(getString(R.string.practice_audio_unavailable))
+                return@launch
+            }
+            playSpeechOutput(audioOutput)
         }
     }
 

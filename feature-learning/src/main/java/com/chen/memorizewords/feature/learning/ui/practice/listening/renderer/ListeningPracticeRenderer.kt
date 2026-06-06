@@ -6,9 +6,6 @@ import android.animation.ObjectAnimator
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.style.StyleSpan
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -20,8 +17,16 @@ import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.gridlayout.widget.GridLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.chen.memorizewords.feature.learning.LinearSpacingItemDecoration
 import com.chen.memorizewords.feature.learning.R
+import com.chen.memorizewords.feature.learning.adapter.DefinitionsAdapter
+import com.chen.memorizewords.feature.learning.adapter.ExamplesAdapter
+import com.chen.memorizewords.feature.learning.adapter.FormAdapter
+import com.chen.memorizewords.feature.learning.adapter.RootsAdapter
+import com.chen.memorizewords.feature.learning.adapter.SynonymsAdapter
 import com.chen.memorizewords.feature.learning.databinding.FeatureLearningFragmentPracticeListeningBinding
+import com.chen.memorizewords.feature.learning.ui.fragment.WaterfallFlowLayoutManager
 import com.chen.memorizewords.feature.learning.ui.practice.ListeningFeedbackTone
 import com.chen.memorizewords.feature.learning.ui.practice.ListeningFooterMode
 import com.chen.memorizewords.feature.learning.ui.practice.ListeningMeaningOptionFeedback
@@ -32,8 +37,6 @@ import com.chen.memorizewords.feature.learning.ui.practice.ListeningReportWordUi
 import com.chen.memorizewords.feature.learning.ui.practice.ListeningSpellingLetterUi
 import com.chen.memorizewords.feature.learning.ui.practice.ListeningSpellingSlotFeedback
 import com.chen.memorizewords.feature.learning.ui.practice.ListeningSpellingSlotUi
-import com.chen.memorizewords.feature.learning.ui.practice.ListeningStudyDefinitionUi
-import com.chen.memorizewords.feature.learning.ui.practice.ListeningStudyExampleUi
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 
@@ -45,16 +48,54 @@ internal class ListeningPracticeRenderer(
         fun onSpellingLetterSelected(letterId: Long)
         fun onSpellingDeleteLast()
         fun onStudyExampleAudioRequested(index: Int)
+        fun onStudySentenceAudioRequested(sentence: String)
         fun onReportWordAudioRequested(row: ListeningReportWordUi)
         fun onAutoPlayRequested()
     }
 
+    private val studyDefinitionsAdapter = DefinitionsAdapter()
+    private val studyExamplesAdapter = ExamplesAdapter(
+        onclickWord = { _, _ -> },
+        onSpeakSentence = { sentence -> callbacks.onStudySentenceAudioRequested(sentence) }
+    )
+    private val studyRootsAdapter = RootsAdapter()
+    private val studySynonymsAdapter = SynonymsAdapter()
+    private val studyFormAdapter = FormAdapter()
     private var lastAutoPlayRequestId: Int = -1
     private var lastWrongMeaningShakeRequestId: Int = -1
     private var lastWrongSpellingShakeRequestId: Int = -1
     private val spellingSlotViews = mutableListOf<View>()
     private val spellingLetterButtons = mutableMapOf<Long, MaterialButton>()
     private var spellingDeleteButton: MaterialButton? = null
+
+    init {
+        initStudyLists()
+    }
+
+    private fun initStudyLists() {
+        binding.rvStudyDefinitions.adapter = studyDefinitionsAdapter
+        binding.rvStudyDefinitions.layoutManager = LinearLayoutManager(context)
+        binding.rvStudyDefinitions.isNestedScrollingEnabled = false
+        binding.rvStudyDefinitions.addItemDecoration(LinearSpacingItemDecoration(dp(8)))
+
+        binding.rvStudyExamples.adapter = studyExamplesAdapter
+        binding.rvStudyExamples.layoutManager = LinearLayoutManager(context)
+        binding.rvStudyExamples.isNestedScrollingEnabled = false
+        binding.rvStudyExamples.addItemDecoration(LinearSpacingItemDecoration(dp(16)))
+
+        binding.rvStudyRoot.adapter = studyRootsAdapter
+        binding.rvStudyRoot.layoutManager = LinearLayoutManager(context)
+        binding.rvStudyRoot.isNestedScrollingEnabled = false
+        binding.rvStudyRoot.addItemDecoration(LinearSpacingItemDecoration(dp(16)))
+
+        binding.rvStudySynonyms.adapter = studySynonymsAdapter
+        binding.rvStudySynonyms.layoutManager = WaterfallFlowLayoutManager()
+        binding.rvStudySynonyms.isNestedScrollingEnabled = false
+
+        binding.rvStudyInflection.adapter = studyFormAdapter
+        binding.rvStudyInflection.layoutManager = LinearLayoutManager(context)
+        binding.rvStudyInflection.isNestedScrollingEnabled = false
+    }
 
     fun render(state: ListeningPracticeViewModel.ListeningUiState) {
         renderHeader(state)
@@ -125,17 +166,44 @@ internal class ListeningPracticeRenderer(
         binding.btnSubmitSpelling.isEnabled = state.spellingSubmitEnabled
 
         binding.tvStudyWord.text = state.studyWord
-        binding.tvStudyPhoneticLabel.text = state.studyPhoneticLocaleLabel
-        binding.tvStudyPhoneticLabel.isVisible = state.studyPhoneticLocaleLabel.isNotBlank()
-        binding.tvStudyPhoneticLabel.isClickable = state.studyPhoneticToggleEnabled
-        binding.tvStudyPhoneticLabel.isEnabled = state.studyPhoneticToggleEnabled
-        binding.viewStudyPhoneticDivider.isVisible = state.studyPhoneticLocaleLabel.isNotBlank()
+        val checkedPronunciationId = when (state.studyPronunciationType) {
+            com.chen.memorizewords.domain.word.model.word.PronunciationType.US -> R.id.btn_study_us
+            com.chen.memorizewords.domain.word.model.word.PronunciationType.UK -> R.id.btn_study_uk
+        }
+        if (binding.studyLanguageRadioGroup.checkedRadioButtonId != checkedPronunciationId) {
+            binding.studyLanguageRadioGroup.check(checkedPronunciationId)
+        }
+        binding.btnStudyUs.isEnabled = true
+        binding.btnStudyUk.isEnabled = true
         binding.tvStudyPhonetic.text = state.studyPhoneticChipText
         binding.layoutStudyPhoneticBar.isVisible = state.studyPhoneticChipText.isNotBlank()
-        binding.tvStudyDefinition.text = buildStudyDefinitionText(state.studyDefinitions)
-        binding.tvStudyDefinition.isVisible = binding.tvStudyDefinition.text.isNotBlank()
-        binding.cardStudyExamples.isVisible = state.studyExamples.isNotEmpty()
-        renderStudyExamples(state.studyWord, state.studyExamples)
+        studyDefinitionsAdapter.submitList(state.studyDefinitions)
+        binding.layoutStudyMemoryTip.isVisible = state.studyMemoryTip.isNotBlank()
+        binding.tvStudyMemoryTip.text = state.studyMemoryTip
+        studyExamplesAdapter.submitList(state.studyExamples)
+        setOptionalSectionVisible(
+            binding.sectionStudyExamplesHeader,
+            binding.rvStudyExamples,
+            state.studyExamples.isNotEmpty()
+        )
+        studyFormAdapter.submitList(state.studyForms)
+        setOptionalSectionVisible(
+            binding.sectionStudyInflectionHeader,
+            binding.rvStudyInflection,
+            state.studyForms.isNotEmpty()
+        )
+        studyRootsAdapter.submitList(state.studyRoots)
+        setOptionalSectionVisible(
+            binding.sectionStudyRootsHeader,
+            binding.rvStudyRoot,
+            state.studyRoots.isNotEmpty()
+        )
+        studySynonymsAdapter.submitList(state.studySynonyms, state.studyAntonyms)
+        setOptionalSectionVisible(
+            binding.sectionStudySynonymsHeader,
+            binding.rvStudySynonyms,
+            state.studySynonyms.isNotEmpty() || state.studyAntonyms.isNotEmpty()
+        )
 
         renderReportState(state)
 
@@ -464,115 +532,9 @@ internal class ListeningPracticeRenderer(
         button.alpha = if (isUsed) 0.35f else 1f
     }
 
-    private fun buildStudyDefinitionText(definitions: List<ListeningStudyDefinitionUi>): String {
-        val primaryDefinition = definitions.firstOrNull() ?: return ""
-        return "${primaryDefinition.partOfSpeech} ${primaryDefinition.meaning}".trim()
-    }
-
-    private fun renderStudyExamples(
-        studyWord: String,
-        examples: List<ListeningStudyExampleUi>
-    ) {
-        val container = binding.layoutStudyExamples
-        container.removeAllViews()
-        examples.forEachIndexed { index, example ->
-            container.addView(buildStudyExampleView(studyWord, example, index))
-        }
-    }
-
-    private fun buildStudyExampleView(
-        studyWord: String,
-        example: ListeningStudyExampleUi,
-        index: Int
-    ): View {
-        return LinearLayout(context).apply {
-            orientation = LinearLayout.HORIZONTAL
-            if (index > 0) {
-                layoutParams = LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                ).apply {
-                    topMargin = dp(18)
-                }
-            }
-
-            addView(
-                LinearLayout(context).apply {
-                    orientation = LinearLayout.VERTICAL
-                    layoutParams = LinearLayout.LayoutParams(
-                        0,
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        1f
-                    )
-
-                    addView(
-                        TextView(context).apply {
-                            text = buildHighlightedExampleText(example.englishText, studyWord)
-                            textSize = 16f
-                            setLineSpacing(dp(3).toFloat(), 1f)
-                            setTextColor(Color.parseColor("#0F172A"))
-                        }
-                    )
-
-                    if (example.chineseText.isNotBlank()) {
-                        addView(
-                            TextView(context).apply {
-                                text = example.chineseText
-                                textSize = 13f
-                                setLineSpacing(dp(2).toFloat(), 1f)
-                                setTextColor(Color.parseColor("#475569"))
-                                layoutParams = LinearLayout.LayoutParams(
-                                    ViewGroup.LayoutParams.MATCH_PARENT,
-                                    ViewGroup.LayoutParams.WRAP_CONTENT
-                                ).apply {
-                                    topMargin = dp(8)
-                                }
-                            }
-                        )
-                    }
-                }
-            )
-
-            addView(
-                ImageView(context).apply {
-                    layoutParams = LinearLayout.LayoutParams(dp(22), dp(22)).apply {
-                        marginStart = dp(10)
-                    }
-                    background = AppCompatResources.getDrawable(
-                        context,
-                        android.R.drawable.list_selector_background
-                    )
-                    setImageDrawable(
-                        AppCompatResources.getDrawable(
-                            context,
-                            R.drawable.module_learning_ic_volume_up_gray
-                        )
-                    )
-                    setPadding(dp(2), dp(2), dp(2), dp(2))
-                    setOnClickListener { callbacks.onStudyExampleAudioRequested(index) }
-                }
-            )
-        }
-    }
-
-    private fun buildHighlightedExampleText(text: String, studyWord: String): CharSequence {
-        if (text.isBlank() || studyWord.isBlank()) return text
-        val spannable = SpannableString(text)
-        val source = text.lowercase()
-        val target = studyWord.lowercase()
-        var searchStart = 0
-        while (searchStart < source.length) {
-            val foundIndex = source.indexOf(target, startIndex = searchStart)
-            if (foundIndex < 0) break
-            spannable.setSpan(
-                StyleSpan(Typeface.BOLD),
-                foundIndex,
-                foundIndex + target.length,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-            searchStart = foundIndex + target.length
-        }
-        return spannable
+    private fun setOptionalSectionVisible(header: View, list: View, visible: Boolean) {
+        header.isVisible = visible
+        list.isVisible = visible
     }
 
     private fun renderReportState(state: ListeningPracticeViewModel.ListeningUiState) {

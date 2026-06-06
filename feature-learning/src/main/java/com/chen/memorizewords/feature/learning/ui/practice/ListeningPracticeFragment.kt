@@ -19,6 +19,7 @@ import com.chen.memorizewords.feature.learning.shouldUseListeningCustomHeader
 import com.chen.memorizewords.feature.learning.ui.practice.listening.audio.ListeningAudioPlayer
 import com.chen.memorizewords.feature.learning.ui.practice.listening.renderer.ListeningPracticeRenderer
 import com.chen.memorizewords.domain.practice.speech.SpeechAudioOutput
+import com.chen.memorizewords.domain.word.model.word.PronunciationType
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -97,6 +98,10 @@ class ListeningPracticeFragment :
                     playStudyExampleAudio(index)
                 }
 
+                override fun onStudySentenceAudioRequested(sentence: String) {
+                    playStudySentenceAudio(sentence)
+                }
+
                 override fun onReportWordAudioRequested(row: ListeningReportWordUi) {
                     playReportWordAudio(row)
                 }
@@ -112,7 +117,13 @@ class ListeningPracticeFragment :
         databind.btnBack.setOnClickListener { handleExitRequest() }
         databind.btnSettings.setOnClickListener { showModeDialog() }
         databind.btnPlayAudio.setOnClickListener { playCurrentAudio() }
-        databind.tvStudyPhoneticLabel.setOnClickListener { viewModel.onStudyPhoneticToggle() }
+        databind.studyLanguageRadioGroup.setOnCheckedChangeListener { _, checkedId ->
+            val pronunciationType = when (checkedId) {
+                R.id.btn_study_uk -> PronunciationType.UK
+                else -> PronunciationType.US
+            }
+            viewModel.onStudyPronunciationSelected(pronunciationType)
+        }
         databind.btnPlayStudyAudio.setOnClickListener { playCurrentAudio() }
         databind.btnOption1.setOnClickListener { viewModel.onMeaningOptionSelected(0) }
         databind.btnOption2.setOnClickListener { viewModel.onMeaningOptionSelected(1) }
@@ -184,6 +195,17 @@ class ListeningPracticeFragment :
     private fun playStudyExampleAudio(index: Int, showMissingToast: Boolean = true) {
         viewLifecycleOwner.lifecycleScope.launch {
             val resolved = viewModel.ensureStudyExampleSpeech(index)?.audioOutput
+            if (resolved == null) {
+                showMissingAudioToast(showMissingToast)
+                return@launch
+            }
+            playResolvedAudio(resolved)
+        }
+    }
+
+    private fun playStudySentenceAudio(sentence: String, showMissingToast: Boolean = true) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            val resolved = viewModel.ensureStudySentenceSpeech(sentence)?.audioOutput
             if (resolved == null) {
                 showMissingAudioToast(showMissingToast)
                 return@launch

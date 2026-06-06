@@ -365,61 +365,95 @@
                         android:id="@+id/tv_study_word"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-black"
-                        android:letterSpacing="-0.03"
-                        android:textColor="#0F172A"
-                        android:textSize="44sp"
+                        android:gravity="center"
+                        android:textColor="#000000"
+                        android:textSize="32sp"
                         android:textStyle="bold"
                         tools:text="absorption" />
 
-                    <LinearLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/layout_study_phonetic_bar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="18dp"
-                        android:background="@drawable/module_learning_bg_radius_f1f5f9"
-                        android:gravity="center_vertical"
-                        android:minHeight="48dp"
-                        android:orientation="horizontal"
-                        android:paddingStart="16dp"
-                        android:paddingTop="10dp"
-                        android:paddingEnd="14dp"
-                        android:paddingBottom="10dp">
+                        android:layout_marginTop="16dp">
+
+                        <RadioGroup
+                            android:id="@+id/study_language_radio_group"
+                            android:layout_width="50dp"
+                            android:layout_height="25dp"
+                            android:layout_marginEnd="8dp"
+                            android:background="@drawable/module_learning_toggle_background"
+                            android:orientation="horizontal"
+                            android:padding="2dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/tv_study_phonetic"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <RadioButton
+                                android:id="@+id/btn_study_us"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:background="@drawable/module_learning_toggle_item_selector"
+                                android:button="@null"
+                                android:checked="true"
+                                android:gravity="center"
+                                android:padding="2dp"
+                                android:text="美"
+                                android:textColor="@drawable/module_learning_toggle_text_selector"
+                                android:textSize="10sp" />
+
+                            <RadioButton
+                                android:id="@+id/btn_study_uk"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:background="@drawable/module_learning_toggle_item_selector"
+                                android:button="@null"
+                                android:gravity="center"
+                                android:padding="2dp"
+                                android:text="英"
+                                android:textColor="@drawable/module_learning_toggle_text_selector"
+                                android:textSize="10sp" />
+                        </RadioGroup>
 
                         <TextView
                             android:id="@+id/tv_study_phonetic_label"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="#64748B"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:visibility="gone" />
 
                         <View
                             android:id="@+id/view_study_phonetic_divider"
-                            android:layout_width="1dp"
-                            android:layout_height="18dp"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginEnd="10dp"
-                            android:background="#D7DEE7" />
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:visibility="gone" />
 
                         <TextView
                             android:id="@+id/tv_study_phonetic"
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textColor="#475569"
-                            android:textSize="14sp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="#666666"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
                             tools:text="/əbˈzɔːrpʃən/" />
 
                         <ImageView
                             android:id="@+id/btn_play_study_audio"
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginStart="8dp"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="@null"
                             android:padding="2dp"
-                            android:src="@drawable/module_learning_ic_volume_up_gray" />
-                    </LinearLayout>
+                            android:src="@drawable/module_learning_ic_volume_up"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/tv_study_phonetic"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <TextView
                         android:id="@+id/tv_study_definition"
@@ -429,6 +463,7 @@
                         android:lineSpacingExtra="1dp"
                         android:textColor="#334155"
                         android:textSize="16sp"
+                        android:visibility="gone"
                         tools:text="n. 吸收；全神贯注；专注" />
 
                     <LinearLayout
@@ -441,7 +476,8 @@
                         android:paddingStart="16dp"
                         android:paddingTop="18dp"
                         android:paddingEnd="16dp"
-                        android:paddingBottom="18dp">
+                        android:paddingBottom="18dp"
+                        android:visibility="gone">
 
                         <LinearLayout
                             android:id="@+id/layout_study_examples"
@@ -449,6 +485,154 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical" />
                     </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_study_definitions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_study_memory_tip"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/module_learning_bg_radius_eefdf7"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/module_learning_lightbulb_10b981"
+                            android:text="记忆技巧"
+                            android:textColor="#167e5e"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tv_study_memory_tip"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:textColor="#6b7885"
+                            tools:text="root memory tip" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/section_study_examples_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="4dp"
+                            android:layout_height="18dp"
+                            android:layout_marginEnd="4dp"
+                            android:background="#10b981" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="例句"
+                            android:textColor="#aab8c8"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_study_examples"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp" />
+
+                    <LinearLayout
+                        android:id="@+id/section_study_inflection_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="4dp"
+                            android:layout_height="18dp"
+                            android:layout_marginEnd="4dp"
+                            android:background="#fb9034" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="词形变化"
+                            android:textColor="#aab8c8"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_study_inflection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp" />
+
+                    <LinearLayout
+                        android:id="@+id/section_study_roots_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="4dp"
+                            android:layout_height="18dp"
+                            android:layout_marginEnd="4dp"
+                            android:background="#60a5fa" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="词根词缀"
+                            android:textColor="#aab8c8"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_study_root"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp" />
+
+                    <LinearLayout
+                        android:id="@+id/section_study_synonyms_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="4dp"
+                            android:layout_height="18dp"
+                            android:layout_marginEnd="4dp"
+                            android:background="#be7dfc" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="同反义词"
+                            android:textColor="#aab8c8"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_study_synonyms"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp" />
                 </LinearLayout>
 
                 <LinearLayout

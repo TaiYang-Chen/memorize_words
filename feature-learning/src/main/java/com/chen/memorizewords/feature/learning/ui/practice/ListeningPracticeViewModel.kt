@@ -9,6 +9,8 @@ import com.chen.memorizewords.domain.word.model.word.PronunciationType
 import com.chen.memorizewords.domain.word.model.word.Word
 import com.chen.memorizewords.domain.word.model.word.WordDefinitions
 import com.chen.memorizewords.domain.word.model.word.WordExample
+import com.chen.memorizewords.domain.word.model.word.WordForm
+import com.chen.memorizewords.domain.word.model.word.WordRoot
 import com.chen.memorizewords.domain.practice.PracticeKind
 import com.chen.memorizewords.domain.practice.PracticeAnswerRecord
 import com.chen.memorizewords.domain.practice.PracticeAnswerStatus
@@ -43,6 +45,7 @@ import com.chen.memorizewords.domain.practice.speech.SpeechAudioSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlin.random.Random
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -113,16 +116,6 @@ data class ListeningSpellingLetterUi(
     val id: Long,
     val character: String,
     val isUsed: Boolean = false
-)
-
-data class ListeningStudyDefinitionUi(
-    val partOfSpeech: String,
-    val meaning: String
-)
-
-data class ListeningStudyExampleUi(
-    val englishText: String,
-    val chineseText: String
 )
 
 data class ListeningReportWordUi(
@@ -222,8 +215,13 @@ class ListeningPracticeViewModel @Inject constructor(
         val studyPhoneticChipText: String = "",
         val studySpeechLocale: String = "en-US",
         val studyPhoneticToggleEnabled: Boolean = false,
-        val studyDefinitions: List<ListeningStudyDefinitionUi> = emptyList(),
-        val studyExamples: List<ListeningStudyExampleUi> = emptyList(),
+        val studyMemoryTip: String = "",
+        val studyDefinitions: List<WordDefinitions> = emptyList(),
+        val studyExamples: List<WordExample> = emptyList(),
+        val studyRoots: List<WordRoot> = emptyList(),
+        val studyForms: List<WordForm> = emptyList(),
+        val studySynonyms: List<String> = emptyList(),
+        val studyAntonyms: List<String> = emptyList(),
         val primaryButtonText: String = "",
         val primaryButtonEnabled: Boolean = false,
         val report: ListeningReportUi = ListeningReportUi(),
@@ -236,6 +234,8 @@ class ListeningPracticeViewModel @Inject constructor(
         val word: Word,
         val definitions: List<WordDefinitions>,
         val examples: List<WordExample>,
+        val roots: List<WordRoot>,
+        val forms: List<WordForm>,
         val meaningOptions: List<ListeningMeaningOptionUi>,
         val learningState: WordLearningState?,
         var reviewRequired: Boolean = false,
@@ -497,15 +497,22 @@ class ListeningPracticeViewModel @Inject constructor(
 
     fun onStudyPhoneticToggle() {
         if (currentScreen != ListeningScreenState.STUDY) return
-        val card = activeCard ?: return
-        val runtime = runtimes[card.wordId] ?: return
         val current = _uiState.value
-        if (!current.studyPhoneticToggleEnabled) return
         val toggledType = when (current.studyPronunciationType) {
             PronunciationType.US -> PronunciationType.UK
             PronunciationType.UK -> PronunciationType.US
         }
-        val nextPhoneticUi = uiMapper.studyPronunciation(runtime.word, toggledType)
+        onStudyPronunciationSelected(toggledType)
+    }
+
+    fun onStudyPronunciationSelected(pronunciationType: PronunciationType) {
+        if (currentScreen != ListeningScreenState.STUDY) return
+        val card = activeCard ?: return
+        val runtime = runtimes[card.wordId] ?: return
+        val current = _uiState.value
+        if (pronunciationType == current.studyPronunciationType) return
+        if (!current.studyPhoneticToggleEnabled) return
+        val nextPhoneticUi = uiMapper.studyPronunciation(runtime.word, pronunciationType)
         if (nextPhoneticUi.pronunciationType == current.studyPronunciationType) return
         val speechKey = ListeningWordSpeechKey(runtime.word.id, nextPhoneticUi.speechLocale)
         currentSpeechCacheKey = speechKey
@@ -554,7 +561,19 @@ class ListeningPracticeViewModel @Inject constructor(
         val example = _uiState.value.studyExamples.getOrNull(index) ?: return null
         val cacheKey = ListeningSentenceSpeechKey(
             wordId = wordId,
-            text = example.englishText,
+            text = example.englishSentence,
+            locale = LISTENING_SPEECH_LOCALE_US
+        )
+        return speechController.resolveSentenceSpeech(cacheKey)
+    }
+
+    suspend fun ensureStudySentenceSpeech(sentence: String): SpeechAudioSuccess? {
+        if (currentScreen != ListeningScreenState.STUDY) return null
+        val wordId = activeCard?.wordId ?: return null
+        val text = sentence.takeIf { it.isNotBlank() } ?: return null
+        val cacheKey = ListeningSentenceSpeechKey(
+            wordId = wordId,
+            text = text,
             locale = LISTENING_SPEECH_LOCALE_US
         )
         return speechController.resolveSentenceSpeech(cacheKey)
@@ -570,14 +589,15 @@ class ListeningPracticeViewModel @Inject constructor(
         statesByWordId: Map<Long, WordLearningState>
     ): List<WordRuntime> = supervisorScope {
         words.map { word ->
-            async {
-                val definitions = wordReadFacade.getWordDefinitions(word.id)
-                val examples = wordReadFacade.getWordExamples(word.id)
+            async(Dispatchers.IO) {
+                val detail = wordReadFacade.getWordDetail(word)
                 val meaningOptions = buildMeaningOptions(word.id)
                 WordRuntime(
-                    word = word,
-                    definitions = definitions,
-                    examples = examples,
+                    word = detail.word,
+                    definitions = detail.definitions,
+                    examples = detail.examples,
+                    roots = detail.roots,
+                    forms = detail.forms,
                     meaningOptions = meaningOptions,
                     learningState = statesByWordId[word.id]
                 )
@@ -750,7 +770,13 @@ class ListeningPracticeViewModel @Inject constructor(
             studyPhoneticChipText = "",
             studySpeechLocale = resolvePracticeSpeechLocale(),
             studyPhoneticToggleEnabled = false,
+            studyMemoryTip = "",
+            studyDefinitions = emptyList(),
             studyExamples = emptyList(),
+            studyRoots = emptyList(),
+            studyForms = emptyList(),
+            studySynonyms = emptyList(),
+            studyAntonyms = emptyList(),
             primaryButtonText = "",
             primaryButtonEnabled = false,
             speech = speechController.cachedWordSpeech(practiceSpeechKey),
@@ -1018,20 +1044,13 @@ class ListeningPracticeViewModel @Inject constructor(
             studyPhoneticChipText = studyPhoneticUi.phoneticText,
             studySpeechLocale = studyPhoneticUi.speechLocale,
             studyPhoneticToggleEnabled = studyPhoneticUi.toggleEnabled,
-            studyDefinitions = runtime.definitions.take(3).map {
-                ListeningStudyDefinitionUi(
-                    partOfSpeech = it.partOfSpeech.abbr,
-                    meaning = it.meaningChinese
-                )
-            },
-            studyExamples = runtime.examples
-                .take(2)
-                .map { example ->
-                    ListeningStudyExampleUi(
-                        englishText = example.englishSentence,
-                        chineseText = example.chineseTranslation.orEmpty()
-                    )
-                },
+            studyMemoryTip = runtime.word.memoryTip.orEmpty(),
+            studyDefinitions = runtime.definitions,
+            studyExamples = runtime.examples,
+            studyRoots = runtime.roots,
+            studyForms = runtime.forms,
+            studySynonyms = runtime.word.synonyms,
+            studyAntonyms = runtime.word.antonyms,
             primaryButtonText = resourceProvider.getString(
                 R.string.practice_listening_continue_practice
             ),
@@ -1111,7 +1130,13 @@ class ListeningPracticeViewModel @Inject constructor(
             studyPhoneticChipText = "",
             studySpeechLocale = resolvePracticeSpeechLocale(),
             studyPhoneticToggleEnabled = false,
+            studyMemoryTip = "",
+            studyDefinitions = emptyList(),
             studyExamples = emptyList(),
+            studyRoots = emptyList(),
+            studyForms = emptyList(),
+            studySynonyms = emptyList(),
+            studyAntonyms = emptyList(),
             primaryButtonText = resourceProvider.getString(
                 R.string.practice_listening_report_complete
             ),
