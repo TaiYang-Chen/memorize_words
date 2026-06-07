@@ -38,11 +38,43 @@ class LoginCompletionHandlerTest {
         assertEquals(loginResult.user, localAccountRepository.savedUser)
         assertEquals(loginResult.session, accountSessionRepository.savedSession)
         assertEquals(1, syncRepository.syncAfterLoginCalls)
+        assertEquals(1, localAccountRepository.saveUserCalls)
+        assertEquals(1, accountSessionRepository.saveSessionCalls)
     }
 
     @Test
-    fun `complete throws sync error when post login sync fails`() = runBlocking {
-        val syncRepository = FakeSyncRepository(syncResult = Result.failure(RuntimeException("offline")))
+    fun `complete retries post login sync and succeeds`() = runBlocking {
+        val localAccountRepository = FakeLocalAccountRepository()
+        val accountSessionRepository = FakeAccountSessionRepository()
+        val syncRepository = FakeSyncRepository(
+            syncResults = listOf(
+                Result.failure(RuntimeException("offline")),
+                Result.failure(RuntimeException("server busy")),
+                Result.success(Unit)
+            )
+        )
+        val handler = LoginCompletionHandler(
+            localAccountRepository = localAccountRepository,
+            accountSessionRepository = accountSessionRepository,
+            syncFacade = SyncFacade(syncRepository)
+        )
+        val loginResult = createLoginResult()
+
+        val user = handler.complete(loginResult)
+
+        assertEquals(loginResult.user, user)
+        assertEquals(loginResult.user, localAccountRepository.savedUser)
+        assertEquals(loginResult.session, accountSessionRepository.savedSession)
+        assertEquals(3, syncRepository.syncAfterLoginCalls)
+        assertEquals(1, localAccountRepository.saveUserCalls)
+        assertEquals(1, accountSessionRepository.saveSessionCalls)
+    }
+
+    @Test
+    fun `complete throws sync error after three post login sync retries fail`() = runBlocking {
+        val syncRepository = FakeSyncRepository(
+            syncResults = listOf(Result.failure(RuntimeException("offline")))
+        )
         val handler = LoginCompletionHandler(
             localAccountRepository = FakeLocalAccountRepository(),
             accountSessionRepository = FakeAccountSessionRepository(),
@@ -52,7 +84,7 @@ class LoginCompletionHandlerTest {
         assertFailsWith<LoginDataSyncError> {
             handler.complete(createLoginResult())
         }
-        assertEquals(1, syncRepository.syncAfterLoginCalls)
+        assertEquals(4, syncRepository.syncAfterLoginCalls)
     }
 }
 
@@ -81,6 +113,7 @@ private fun createLoginResult(): AuthLoginResult {
 
 private class FakeLocalAccountRepository : LocalAccountRepository {
     var savedUser: User? = null
+    var saveUserCalls: Int = 0
 
     override fun isLoggedIn(): Boolean = savedUser != null
 
@@ -91,6 +124,7 @@ private class FakeLocalAccountRepository : LocalAccountRepository {
     override fun getUserFlow(): Flow<User?> = flowOf(savedUser)
 
     override suspend fun saveUser(user: User) {
+        saveUserCalls++
         savedUser = user
     }
 
@@ -101,8 +135,10 @@ private class FakeLocalAccountRepository : LocalAccountRepository {
 
 private class FakeAccountSessionRepository : AccountSessionRepository {
     var savedSession: AccountSession? = null
+    var saveSessionCalls: Int = 0
 
     override suspend fun saveSession(session: AccountSession) {
+        saveSessionCalls++
         savedSession = session
     }
 
@@ -112,7 +148,7 @@ private class FakeAccountSessionRepository : AccountSessionRepository {
 }
 
 private class FakeSyncRepository(
-    private val syncResult: Result<Unit> = Result.success(Unit)
+    private val syncResults: List<Result<Unit>> = listOf(Result.success(Unit))
 ) : SyncRepository {
     var syncAfterLoginCalls: Int = 0
 
@@ -120,7 +156,7 @@ private class FakeSyncRepository(
 
     override suspend fun syncAfterLogin(): Result<Unit> {
         syncAfterLoginCalls++
-        return syncResult
+        return syncResults.getOrElse(syncAfterLoginCalls - 1) { syncResults.last() }
     }
 
     override suspend fun restoreLearningPrerequisites(): Result<LearningPrerequisitesSnapshot> {
