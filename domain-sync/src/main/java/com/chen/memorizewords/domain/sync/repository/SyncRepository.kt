@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface SyncRepository {
     fun startPostLoginBootstrap()
-    suspend fun refreshHomeData(): Result<Unit>
+    suspend fun syncAfterLogin(): Result<Unit>
     suspend fun restoreLearningPrerequisites(): Result<LearningPrerequisitesSnapshot>
     fun getCurrentPostLoginBootstrapState(): PostLoginBootstrapState
     fun scheduleBootstrapSync()

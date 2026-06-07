@@ -180,9 +180,6 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             user.value = getCurrentUserUseCase()
         }
-        viewModelScope.launch {
-            syncFacade.refreshHomeData()
-        }
     }
 
     fun toWordBookActivity() {

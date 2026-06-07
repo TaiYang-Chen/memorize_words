@@ -2,6 +2,7 @@ package com.chen.memorizewords.feature.user.ui.register
 
 import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
+import com.chen.memorizewords.domain.account.usecase.user.LoginDataSyncError
 import com.chen.memorizewords.domain.account.usecase.user.LoginError
 import com.chen.memorizewords.domain.account.usecase.user.RegisterUseCase
 import com.chen.memorizewords.feature.user.R
@@ -26,6 +27,9 @@ class RegisterViewModel @Inject constructor(
                 finish()
             }.onFailure { failure ->
                 when (failure) {
+                    is LoginDataSyncError ->
+                        showToast(resourceProvider.getString(R.string.module_user_login_sync_failed))
+
                     is LoginError.EmptyPhone ->
                         showToast(resourceProvider.getString(R.string.module_user_login_phone_required))
 

@@ -27,8 +27,7 @@ class SyncRepositoryImpl @Inject constructor(
     private val networkMonitor: NetworkMonitor,
     private val syncOutboxWorkScheduler: SyncOutboxWorkScheduler,
     private val postLoginBootstrapStateStore: PostLoginBootstrapStateStore,
-    private val learningPrerequisitesRestorer: LearningPrerequisitesRestorer,
-    private val homeDataRefresher: HomeDataRefresher
+    private val learningPrerequisitesRestorer: LearningPrerequisitesRestorer
 ) : SyncRepository {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
@@ -76,8 +75,14 @@ class SyncRepositoryImpl @Inject constructor(
         triggerDrain()
     }
 
-    override suspend fun refreshHomeData(): Result<Unit> {
-        return homeDataRefresher.refresh()
+    override suspend fun syncAfterLogin(): Result<Unit> {
+        postLoginBootstrapStateStore.setState(PostLoginBootstrapState.Running)
+        return runCatching {
+            dataBootstrapCoordinator.syncAfterLoginInOrder()
+            postLoginBootstrapStateStore.setState(PostLoginBootstrapState.Succeeded)
+        }.onFailure {
+            postLoginBootstrapStateStore.setState(PostLoginBootstrapState.Failed)
+        }
     }
 
     override suspend fun restoreLearningPrerequisites(): Result<LearningPrerequisitesSnapshot> {

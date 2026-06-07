@@ -20,8 +20,8 @@ class SyncFacade @Inject constructor(
         syncRepository.startPostLoginBootstrap()
     }
 
-    suspend fun refreshHomeData(): Result<Unit> =
-        syncRepository.refreshHomeData()
+    suspend fun syncAfterLogin(): Result<Unit> =
+        syncRepository.syncAfterLogin()
 
     suspend fun restoreLearningPrerequisites(): Result<LearningPrerequisitesSnapshot> =
         syncRepository.restoreLearningPrerequisites()

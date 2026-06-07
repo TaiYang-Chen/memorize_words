@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
+import com.chen.memorizewords.domain.account.usecase.user.LoginDataSyncError
 import com.chen.memorizewords.domain.account.usecase.user.LoginError
 import com.chen.memorizewords.domain.account.usecase.user.SendLoginSmsCodeUseCase
 import com.chen.memorizewords.domain.account.usecase.user.SmsLoginUseCase
@@ -60,6 +61,9 @@ class SmsCodeLoginViewModel @Inject constructor(
                 finish()
             }.onFailure { failure ->
                 when (failure) {
+                    is LoginDataSyncError ->
+                        showToast(resourceProvider.getString(R.string.module_user_login_sync_failed))
+
                     is LoginError.EmptyPhone ->
                         showToast(resourceProvider.getString(R.string.module_user_login_phone_required))
                     is LoginError.EmptySmsCode ->

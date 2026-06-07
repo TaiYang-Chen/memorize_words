@@ -2,6 +2,7 @@ package com.chen.memorizewords.feature.user.ui.login.wechat
 
 import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
+import com.chen.memorizewords.domain.account.usecase.user.LoginDataSyncError
 import com.chen.memorizewords.domain.account.usecase.user.LoginError
 import com.chen.memorizewords.domain.account.usecase.user.WeChatLoginUseCase
 import com.chen.memorizewords.feature.user.R
@@ -22,6 +23,9 @@ class WeChatOneTapLoginViewModel @Inject constructor(
                 finish()
             }.onFailure { failure ->
                 when (failure) {
+                    is LoginDataSyncError ->
+                        showToast(resourceProvider.getString(R.string.module_user_login_sync_failed))
+
                     is LoginError.EmptyOauthCode ->
                         showToast(resourceProvider.getString(R.string.module_user_wechat_auth_failed))
                     else -> showToast(
