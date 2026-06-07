@@ -4,8 +4,13 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.content.res.ColorStateList
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.Typeface
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ReplacementSpan
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -283,44 +288,69 @@ internal class ListeningPracticeRenderer(
             return
         }
         button.isVisible = true
-        button.text = "${option.partOfSpeech} ${option.content}"
         button.isEnabled = isEnabled
         button.iconGravity = MaterialButton.ICON_GRAVITY_TEXT_END
         button.iconPadding = dp(12)
+        button.iconSize = dp(24)
         when (feedback) {
-            ListeningMeaningOptionFeedback.CORRECT -> applyMeaningOptionStyle(
-                button = button,
-                backgroundColor = "#4CAF50",
-                strokeColor = "#388E3C",
-                textColor = "#FFFFFF",
-                iconRes = R.drawable.module_learning_check,
-                iconTint = "#FFFFFF",
-                strokeWidthDp = 2
-            )
+            ListeningMeaningOptionFeedback.CORRECT ->
+                applyMeaningOptionStyle(
+                    button = button,
+                    text = buildMeaningOptionText(option),
+                    backgroundColor = "#4CAF50",
+                    strokeColor = "#388E3C",
+                    textColor = "#FFFFFF",
+                    iconRes = R.drawable.module_learning_check,
+                    iconTint = "#FFFFFF",
+                    strokeWidthDp = 2
+                )
 
-            ListeningMeaningOptionFeedback.WRONG -> applyMeaningOptionStyle(
-                button = button,
-                backgroundColor = "#E57373",
-                strokeColor = "#D32F2F",
-                textColor = "#FFFFFF",
-                iconRes = R.drawable.module_learning_clear,
-                iconTint = "#FFFFFF",
-                strokeWidthDp = 2
-            )
+            ListeningMeaningOptionFeedback.WRONG ->
+                applyMeaningOptionStyle(
+                    button = button,
+                    text = buildMeaningOptionText(option),
+                    backgroundColor = "#E57373",
+                    strokeColor = "#D32F2F",
+                    textColor = "#FFFFFF",
+                    iconRes = R.drawable.module_learning_clear,
+                    iconTint = "#FFFFFF",
+                    strokeWidthDp = 2
+                )
 
-            ListeningMeaningOptionFeedback.DEFAULT -> applyMeaningOptionStyle(
-                button = button,
-                backgroundColor = "#FFFFFF",
-                strokeColor = "#E8EDF4",
-                textColor = "#111827",
-                iconRes = null,
-                strokeWidthDp = 1
+            ListeningMeaningOptionFeedback.DEFAULT ->
+                applyMeaningOptionStyle(
+                    button = button,
+                    text = buildMeaningOptionText(option),
+                    backgroundColor = "#F5F5F5",
+                    strokeColor = "#00000000",
+                    textColor = "#000000",
+                    iconRes = null,
+                    strokeWidthDp = 0
+                )
+        }
+    }
+
+    private fun buildMeaningOptionText(option: ListeningMeaningOptionUi): CharSequence {
+        val partOfSpeech = option.partOfSpeech.trim()
+        val content = option.content.trim()
+        if (partOfSpeech.isBlank()) {
+            return content
+        }
+
+        val text = "$partOfSpeech$content"
+        return SpannableString(text).apply {
+            setSpan(
+                MeaningPartOfSpeechSpan(),
+                0,
+                partOfSpeech.length,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
             )
         }
     }
 
     private fun applyMeaningOptionStyle(
         button: MaterialButton,
+        text: CharSequence,
         backgroundColor: String,
         strokeColor: String,
         textColor: String,
@@ -331,6 +361,7 @@ internal class ListeningPracticeRenderer(
         button.backgroundTintList = ColorStateList.valueOf(Color.parseColor(backgroundColor))
         button.strokeColor = ColorStateList.valueOf(Color.parseColor(strokeColor))
         button.strokeWidth = dp(strokeWidthDp)
+        button.text = text
         button.setTextColor(Color.parseColor(textColor))
         button.icon = iconRes?.let { AppCompatResources.getDrawable(button.context, it) }
         button.iconTint = iconTint?.let { ColorStateList.valueOf(Color.parseColor(it)) }
@@ -804,6 +835,38 @@ internal class ListeningPracticeRenderer(
     }
 
     private val context get() = binding.root.context
+
+    private inner class MeaningPartOfSpeechSpan : ReplacementSpan() {
+        private val columnWidth = dp(52)
+
+        override fun getSize(
+            paint: Paint,
+            text: CharSequence,
+            start: Int,
+            end: Int,
+            fm: Paint.FontMetricsInt?
+        ): Int {
+            return columnWidth
+        }
+
+        override fun draw(
+            canvas: Canvas,
+            text: CharSequence,
+            start: Int,
+            end: Int,
+            x: Float,
+            top: Int,
+            y: Int,
+            bottom: Int,
+            paint: Paint
+        ) {
+            val oldTypeface = paint.typeface
+            paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+            paint.isAntiAlias = true
+            canvas.drawText(text, start, end, x, y.toFloat(), paint)
+            paint.typeface = oldTypeface
+        }
+    }
 
     private companion object {
         const val SPELLING_GRID_COLUMN_COUNT = 5
