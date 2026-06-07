@@ -31,7 +31,7 @@
                 android:paddingEnd="8dp">
 
                 <TextView
-                    android:text="@{viewModel.wordBookInfo.title}"
+                    android:text="@{viewModel.wordBookTitleText}"
                     tools:text="Word book 1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
 
                     <TextView
                         tools:text="14"
-                        android:text="@{String.valueOf(viewModel.wordBookInfo.learningWords)}"
+                        android:text="@{viewModel.wordBookLearningWordsText}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingStart="8dp"
@@ -107,7 +107,7 @@
 
                     <TextView
                         tools:text="1000"
-                        android:text="@{String.valueOf(viewModel.wordBookInfo.totalWords)}"
+                        android:text="@{viewModel.wordBookTotalWordsText}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingStart="4dp"
@@ -131,7 +131,7 @@
 
                     <TextView
                         tools:text="986"
-                        android:text="@{String.valueOf(viewModel.wordBookInfo.remainWords)}"
+                        android:text="@{viewModel.wordBookRemainWordsText}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#000"
@@ -165,7 +165,7 @@
 
                     <TextView
                         tools:text="66"
-                        android:text="@{String.valueOf(viewModel.wordBookInfo.remainWords / (viewModel.studyPlan.dailyNewCount == 0 ? 1 : viewModel.studyPlan.dailyNewCount ))}"
+                        android:text="@{viewModel.wordBookRemainDaysText}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingStart="8dp"
@@ -190,7 +190,7 @@
 
                     <TextView
                         tools:text="2"
-                        android:text="@{String.valueOf(viewModel.wordBookInfo.studyDayCount)}"
+                        android:text="@{viewModel.wordBookStudyDayCountText}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingStart="4dp"

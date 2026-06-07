@@ -6,6 +6,8 @@ import com.chen.memorizewords.data.sync.remoteapi.api.datasync.DailyStudyDuratio
 import com.chen.memorizewords.data.sync.remoteapi.api.datasync.StudyRecordDto
 import com.chen.memorizewords.data.sync.remoteapi.api.datasync.WordBookProgressDto
 import com.chen.memorizewords.data.sync.remoteapi.dto.wordbook.WordBookDto
+import com.chen.memorizewords.data.sync.remoteapi.dto.wordstate.WordStateDto
+import com.chen.memorizewords.domain.study.model.progress.word.WordLearningState
 import com.chen.memorizewords.domain.study.model.record.DailyStudyRecords
 import com.chen.memorizewords.domain.study.repository.StudyDailyDurationSnapshot
 import com.chen.memorizewords.domain.study.repository.StudySnapshotLocalStatePort
@@ -13,6 +15,7 @@ import com.chen.memorizewords.domain.wordbook.model.WordBook
 import com.chen.memorizewords.domain.wordbook.model.study.progress.wordbook.WordBookProgress
 import com.chen.memorizewords.domain.wordbook.repository.CurrentWordBookLocalStatePort
 import com.chen.memorizewords.domain.wordbook.repository.StudyPlanLocalStatePort
+import com.chen.memorizewords.domain.wordbook.repository.WordBookLearningStateSnapshot
 import com.chen.memorizewords.domain.wordbook.repository.WordBookSnapshotLocalStatePort
 import com.chen.memorizewords.domain.wordbook.repository.shop.RemoteWordBookRepository
 import javax.inject.Inject
@@ -41,6 +44,22 @@ class HomeDataRefresher @Inject constructor(
             runInForeground = false
         )
         currentWordBookLocalStatePort.overwriteFromRemote(selectedBookId)
+
+        val selectedWordStates = loadPagedSnapshot { page, count ->
+            remoteUserSyncDataSource.getWordStates(
+                bookId = selectedBookId,
+                page = page,
+                count = count
+            )
+        }
+        studySnapshotLocalStatePort.overwriteLearningStatesForBookFromRemote(
+            bookId = selectedBookId,
+            states = selectedWordStates.map { it.toDomain(selectedBookId) }
+        )
+        wordBookSnapshotLocalStatePort.overwriteLearningStatesForBookFromRemote(
+            bookId = selectedBookId,
+            states = selectedWordStates.map { it.toSnapshot(selectedBookId) }
+        )
 
         wordBookSnapshotLocalStatePort.overwriteProgressFromRemote(
             remoteUserSyncDataSource.getWordBookProgressList().getOrThrow().map { it.toDomain() }
@@ -122,6 +141,36 @@ private fun WordBookProgressDto.toDomain(): WordBookProgress {
         wrongCount = wrongCount,
         studyDayCount = studyDayCount,
         lastStudyDate = lastStudyDate
+    )
+}
+
+private fun WordStateDto.toDomain(fallbackBookId: Long): WordLearningState {
+    return WordLearningState(
+        wordId = wordId,
+        bookId = if (bookId > 0L) bookId else fallbackBookId,
+        totalLearnCount = totalLearnCount,
+        lastLearnTime = lastLearnTime,
+        nextReviewTime = nextReviewTime,
+        masteryLevel = masteryLevel,
+        userStatus = userStatus,
+        repetition = repetition,
+        interval = interval,
+        efactor = efactor
+    )
+}
+
+private fun WordStateDto.toSnapshot(fallbackBookId: Long): WordBookLearningStateSnapshot {
+    return WordBookLearningStateSnapshot(
+        wordId = wordId,
+        bookId = if (bookId > 0L) bookId else fallbackBookId,
+        totalLearnCount = totalLearnCount,
+        lastLearnTime = lastLearnTime,
+        nextReviewTime = nextReviewTime,
+        masteryLevel = masteryLevel,
+        userStatus = userStatus,
+        repetition = repetition,
+        interval = interval,
+        efactor = efactor
     )
 }
 

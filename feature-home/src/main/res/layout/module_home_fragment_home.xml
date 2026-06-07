@@ -120,7 +120,7 @@
             android:layout_marginTop="4dp"
             android:clickable="true"
             android:stateListAnimator="@animator/btn_scale_animator"
-            android:text="@{`本书已坚持学习`+viewModel.wordBookInfo.studyDayCount+`天`}"
+            android:text="@{`本书已坚持学习`+viewModel.wordBookStudyDayCountText+`天`}"
             android:textSize="12sp"
             tools:text="本书已坚持学习12天" />
 

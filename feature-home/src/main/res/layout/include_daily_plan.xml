@@ -134,7 +134,7 @@
                 app:layout_rowWeight="1">
 
                 <TextView
-                    android:text="@{String.valueOf(viewModel.wordBookInfo.masteredWords)}"
+                    android:text="@{viewModel.wordBookMasteredWordsText}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -164,7 +164,7 @@
                 app:layout_rowWeight="1">
 
                 <TextView
-                    android:text="@{String.valueOf(viewModel.wordBookInfo.totalWords)}"
+                    android:text="@{viewModel.wordBookTotalWordsText}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -194,7 +194,7 @@
                 app:layout_rowWeight="1">
 
                 <TextView
-                    android:text="@{String.valueOf(viewModel.wordBookInfo.remainWords)}"
+                    android:text="@{viewModel.wordBookRemainWordsText}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -225,7 +225,7 @@
                 app:layout_rowWeight="1">
 
                 <TextView
-                    android:text="@{String.format(`%.1f%%`, viewModel.wordBookInfo.accuracyRate)}"
+                    android:text="@{viewModel.wordBookAccuracyRateText}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -256,7 +256,7 @@
                 app:layout_rowWeight="1">
 
                 <TextView
-                    android:text="@{String.valueOf(viewModel.wordBookInfo.remainDays(viewModel.studyPlan.dailyNewCount))}"                    android:layout_width="wrap_content"
+                    android:text="@{viewModel.wordBookRemainDaysText}"                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textColor="#333333"

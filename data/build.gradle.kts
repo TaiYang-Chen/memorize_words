@@ -63,6 +63,8 @@ dependencies {
     implementation(libs.javax.inject)
     implementation(libs.hilt.android)
 
+    testImplementation(kotlin("test"))
+
     ksp(libs.androidx.room.compiler)
     ksp(libs.hilt.compiler)
 }

@@ -74,23 +74,24 @@ interface WordBookProgressDao {
     @Query(
         """
         SELECT
-            p.book_id AS wordBookId,
+            b.id AS wordBookId,
             COALESCE((
                 SELECT COUNT(*)
                 FROM word_learning_state
-                WHERE book_id = p.book_id AND user_status = 0
+                WHERE book_id = b.id AND user_status = 0
             ), 0) AS learningCount,
             COALESCE((
                 SELECT COUNT(*)
                 FROM word_learning_state
-                WHERE book_id = p.book_id AND user_status = 1
+                WHERE book_id = b.id AND user_status = 1
             ), 0) AS masteredCount,
-            p.correct_count AS correctCount,
-            p.wrong_count AS wrongCount,
-            p.study_day_count AS studyDayCount,
+            COALESCE(p.correct_count, 0) AS correctCount,
+            COALESCE(p.wrong_count, 0) AS wrongCount,
+            COALESCE(p.study_day_count, 0) AS studyDayCount,
             p.last_study_date AS lastStudyDate
-        FROM word_book_progress p
-        WHERE p.book_id = :bookId
+        FROM word_book b
+        LEFT JOIN word_book_progress p ON p.book_id = b.id
+        WHERE b.id = :bookId
         """
     )
     fun getWordBookProgress(bookId: Long): Flow<WordBookProgressSummary?>
@@ -98,23 +99,24 @@ interface WordBookProgressDao {
     @Query(
         """
         SELECT
-            p.book_id AS wordBookId,
+            b.id AS wordBookId,
             COALESCE((
                 SELECT COUNT(*)
                 FROM word_learning_state
-                WHERE book_id = p.book_id AND user_status = 0
+                WHERE book_id = b.id AND user_status = 0
             ), 0) AS learningCount,
             COALESCE((
                 SELECT COUNT(*)
                 FROM word_learning_state
-                WHERE book_id = p.book_id AND user_status = 1
+                WHERE book_id = b.id AND user_status = 1
             ), 0) AS masteredCount,
-            p.correct_count AS correctCount,
-            p.wrong_count AS wrongCount,
-            p.study_day_count AS studyDayCount,
+            COALESCE(p.correct_count, 0) AS correctCount,
+            COALESCE(p.wrong_count, 0) AS wrongCount,
+            COALESCE(p.study_day_count, 0) AS studyDayCount,
             p.last_study_date AS lastStudyDate
-        FROM word_book_progress p
-        WHERE p.book_id IN (:bookIds)
+        FROM word_book b
+        LEFT JOIN word_book_progress p ON p.book_id = b.id
+        WHERE b.id IN (:bookIds)
         """
     )
     fun getWordBooksProgress(bookIds: List<Long>): Flow<List<WordBookProgressSummary>>

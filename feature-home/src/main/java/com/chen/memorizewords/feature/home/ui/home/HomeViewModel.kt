@@ -29,6 +29,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+internal const val WORD_BOOK_INFO_PLACEHOLDER = "--"
+
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
@@ -72,6 +74,46 @@ class HomeViewModel @Inject constructor(
         getStudyPlanFlowUseCase()
             .map { plan -> plan ?: StudyPlan() }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), StudyPlan())
+
+    val wordBookTitleText: StateFlow<String> =
+        wordBookInfo
+            .map { info -> formatWordBookTitleText(info?.title) }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), WORD_BOOK_INFO_PLACEHOLDER)
+
+    val wordBookLearningWordsText: StateFlow<String> =
+        wordBookInfo
+            .map { info -> formatWordBookNumberText(info?.learningWords) }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), WORD_BOOK_INFO_PLACEHOLDER)
+
+    val wordBookMasteredWordsText: StateFlow<String> =
+        wordBookInfo
+            .map { info -> formatWordBookNumberText(info?.masteredWords) }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), WORD_BOOK_INFO_PLACEHOLDER)
+
+    val wordBookTotalWordsText: StateFlow<String> =
+        wordBookInfo
+            .map { info -> formatWordBookNumberText(info?.totalWords) }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), WORD_BOOK_INFO_PLACEHOLDER)
+
+    val wordBookRemainWordsText: StateFlow<String> =
+        wordBookInfo
+            .map { info -> formatWordBookNumberText(info?.remainWords) }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), WORD_BOOK_INFO_PLACEHOLDER)
+
+    val wordBookStudyDayCountText: StateFlow<String> =
+        wordBookInfo
+            .map { info -> formatWordBookNumberText(info?.studyDayCount) }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), WORD_BOOK_INFO_PLACEHOLDER)
+
+    val wordBookAccuracyRateText: StateFlow<String> =
+        wordBookInfo
+            .map { info -> formatWordBookAccuracyRateText(info?.accuracyRate) }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), WORD_BOOK_INFO_PLACEHOLDER)
+
+    val wordBookRemainDaysText: StateFlow<String> =
+        combine(wordBookInfo, studyPlan) { info, plan ->
+            formatWordBookRemainDaysText(info, plan)
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), WORD_BOOK_INFO_PLACEHOLDER)
 
     val studyTotalDayCount: StateFlow<Int> =
         studyStatsFacade.getStudyTotalDayCount()
@@ -352,6 +394,26 @@ internal fun createLearningRoute(
 internal object LearningSessionTypeContract {
     const val NEW: Int = 0
     const val REVIEW: Int = 1
+}
+
+internal fun formatWordBookTitleText(title: String?): String {
+    return title?.takeIf { it.isNotBlank() } ?: WORD_BOOK_INFO_PLACEHOLDER
+}
+
+internal fun formatWordBookNumberText(value: Int?): String {
+    return value?.toString() ?: WORD_BOOK_INFO_PLACEHOLDER
+}
+
+internal fun formatWordBookAccuracyRateText(value: Float?): String {
+    return value?.let { String.format("%.1f%%", it) } ?: WORD_BOOK_INFO_PLACEHOLDER
+}
+
+internal fun formatWordBookRemainDaysText(
+    info: WordBookInfo?,
+    plan: StudyPlan
+): String {
+    val safeDailyNewCount = plan.dailyNewCount.takeIf { it > 0 } ?: 1
+    return info?.remainDays(safeDailyNewCount)?.toString() ?: WORD_BOOK_INFO_PLACEHOLDER
 }
 
 internal fun canOpenPendingSyncDetails(state: SyncBannerState): Boolean {
