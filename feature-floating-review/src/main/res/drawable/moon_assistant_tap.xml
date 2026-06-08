@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="true">
+    <item android:drawable="@drawable/moon_assistant_tap_000" android:duration="41" />
+    <item android:drawable="@drawable/moon_assistant_tap_001" android:duration="42" />
+    <item android:drawable="@drawable/moon_assistant_tap_002" android:duration="42" />
+    <item android:drawable="@drawable/moon_assistant_tap_003" android:duration="42" />
+    <item android:drawable="@drawable/moon_assistant_tap_004" android:duration="42" />
+    <item android:drawable="@drawable/moon_assistant_tap_005" android:duration="42" />
+    <item android:drawable="@drawable/moon_assistant_tap_006" android:duration="42" />
+    <item android:drawable="@drawable/moon_assistant_tap_007" android:duration="42" />
+    <item android:drawable="@drawable/moon_assistant_tap_008" android:duration="42" />
+    <item android:drawable="@drawable/moon_assistant_tap_009" android:duration="42" />
+    <item android:drawable="@drawable/moon_assistant_tap_010" android:duration="42" />
+    <item android:drawable="@drawable/moon_assistant_tap_011" android:duration="42" />
+    <item android:drawable="@drawable/moon_assistant_tap_012" android:duration="41" />
+    <item android:drawable="@drawable/moon_assistant_tap_013" android:duration="42" />
+    <item android:drawable="@drawable/moon_assistant_tap_014" android:duration="42" />
+    <item android:drawable="@drawable/moon_assistant_tap_015" android:duration="42" />
+    <item android:drawable="@drawable/moon_assistant_tap_016" android:duration="42" />
+    <item android:drawable="@drawable/moon_assistant_tap_017" android:duration="42" />
+    <item android:drawable="@drawable/moon_assistant_tap_018" android:duration="42" />
+    <item android:drawable="@drawable/moon_assistant_tap_019" android:duration="42" />
+    <item android:drawable="@drawable/moon_assistant_tap_020" android:duration="42" />
+    <item android:drawable="@drawable/moon_assistant_tap_021" android:duration="42" />
+    <item android:drawable="@drawable/moon_assistant_tap_022" android:duration="42" />
+    <item android:drawable="@drawable/moon_assistant_tap_023" android:duration="42" />
+</animation-list>

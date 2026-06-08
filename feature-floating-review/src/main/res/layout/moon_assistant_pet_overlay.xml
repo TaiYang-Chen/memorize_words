@@ -5,10 +5,10 @@
     android:layout_height="wrap_content"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:paddingStart="14dp"
-    android:paddingTop="8dp"
-    android:paddingEnd="14dp"
-    android:paddingBottom="8dp">
+    android:paddingStart="0dp"
+    android:paddingTop="0dp"
+    android:paddingEnd="0dp"
+    android:paddingBottom="0dp">
 
     <ImageView
         android:id="@+id/petImage"
@@ -17,6 +17,6 @@
         android:adjustViewBounds="false"
         android:contentDescription="@null"
         android:scaleType="fitCenter"
-        android:src="@drawable/moon_assistant_idle_pose" />
+        android:src="@drawable/moon_assistant_idle" />
 
 </FrameLayout>

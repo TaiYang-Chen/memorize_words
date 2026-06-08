@@ -26,7 +26,10 @@ internal const val DEFAULT_CARD_OPACITY_PERCENT = 100
 
 internal fun normalizeBallOpacityPercent(value: Int): Int = value.coerceIn(0, 100)
 internal fun normalizeCardOpacityPercent(value: Int): Int = value.coerceIn(0, 100)
-internal fun sanitizeDockState(): FloatingDockState? = null
+internal fun sanitizeDockState(
+    dockState: FloatingDockState?,
+    dockConfig: FloatingDockConfig
+): FloatingDockState? = dockState?.normalized(dockConfig)
 
 internal fun normalizeFieldConfigs(
     configs: List<FloatingWordFieldConfig>
@@ -46,7 +49,7 @@ internal fun normalizeFloatingWordSettings(settings: FloatingWordSettings): Floa
         ballOpacityPercent = normalizeBallOpacityPercent(settings.ballOpacityPercent),
         cardOpacityPercent = normalizeCardOpacityPercent(settings.cardOpacityPercent),
         dockConfig = normalizedDockConfig,
-        dockState = sanitizeDockState()
+        dockState = sanitizeDockState(settings.dockState, normalizedDockConfig)
     )
 }
 
@@ -154,6 +157,9 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
         val dockConfig = runCatching {
             gson.fromJson(dockConfigJson, FloatingDockConfig::class.java)
         }.getOrNull() ?: FloatingDockConfig()
+        val dockState = runCatching {
+            gson.fromJson(dockStateJson, FloatingDockState::class.java)
+        }.getOrNull()
 
         val settings = normalizeFloatingWordSettings(
             FloatingWordSettings(
@@ -175,7 +181,7 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
                     DEFAULT_CARD_OPACITY_PERCENT
                 ),
                 dockConfig = dockConfig,
-                dockState = sanitizeDockState()
+                dockState = dockState
             )
         )
         if (dockStateJson != null) {
