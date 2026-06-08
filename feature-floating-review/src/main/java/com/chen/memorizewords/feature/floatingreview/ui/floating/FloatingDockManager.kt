@@ -38,14 +38,15 @@ class FloatingDockManager {
 
     fun createBounds(
         safeArea: FloatingAvailableArea,
-        ballSizePx: Int,
+        ballWidthPx: Int,
+        ballHeightPx: Int,
         config: FloatingDockConfig
     ): FloatingMovementBounds {
         val normalizedConfig = config.normalized()
-        val visibleWidth = resolveVisibleWidthPx(ballSizePx, normalizedConfig)
-        val hiddenWidth = (ballSizePx - visibleWidth).coerceAtLeast(0)
-        val freeRight = (safeArea.right - ballSizePx).coerceAtLeast(safeArea.left)
-        val freeBottom = (safeArea.bottom - ballSizePx).coerceAtLeast(safeArea.top)
+        val visibleWidth = resolveVisibleWidthPx(ballWidthPx, normalizedConfig)
+        val hiddenWidth = (ballWidthPx - visibleWidth).coerceAtLeast(0)
+        val freeRight = (safeArea.right - ballWidthPx).coerceAtLeast(safeArea.left)
+        val freeBottom = (safeArea.bottom - ballHeightPx).coerceAtLeast(safeArea.top)
         return FloatingMovementBounds(
             freeLeft = safeArea.left,
             freeTop = safeArea.top,
