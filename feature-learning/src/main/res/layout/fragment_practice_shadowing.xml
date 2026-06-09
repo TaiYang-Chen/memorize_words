@@ -22,11 +22,11 @@
 
             <ImageButton
                 android:id="@+id/btn_back"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="@dimen/title_icon_touch_size"
+                android:layout_height="@dimen/title_icon_touch_size"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/practice_shadowing_title_compare"
-                android:padding="6dp"
+                android:padding="7dp"
                 android:src="@drawable/ic_arrow_back"
                 app:tint="@color/feature_learning_shadowing_text_primary" />
 

@@ -23,12 +23,12 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/title_margin">
+                android:layout_height="@dimen/title_height">
 
                 <ImageView
                     android:id="@+id/btn_back"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="@dimen/title_icon_size"
+                    android:layout_height="@dimen/title_icon_size"
                     android:layout_gravity="center_vertical|start"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@null"
@@ -40,7 +40,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:textColor="#111111"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/title_text_size"
                     android:textStyle="bold" />
 
                 <ImageView

@@ -33,10 +33,10 @@
 
             <ImageView
                 android:id="@+id/iv_back"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="@dimen/title_icon_size"
+                android:layout_height="@dimen/title_icon_size"
                 android:layout_gravity="start|center"
-                android:layout_marginTop="@dimen/title_height"
+                android:layout_marginTop="@dimen/title_margin"
                 android:onClick="@{()->viewModel.requestExitLearningConfirm()}"
                 android:src="@drawable/ic_arrow_back"
                 app:layout_constraintStart_toStartOf="parent"

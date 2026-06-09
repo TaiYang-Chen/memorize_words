@@ -20,12 +20,12 @@
 
             <ImageView
                 android:id="@+id/btnPendingSyncBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/title_icon_touch_size"
+                android:layout_height="@dimen/title_icon_touch_size"
                 android:layout_gravity="center_vertical"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/feature_home_pending_sync_title"
-                android:padding="8dp"
+                android:padding="7dp"
                 android:src="@drawable/ic_arrow_back" />
 
             <TextView
@@ -35,7 +35,7 @@
                 android:gravity="center"
                 android:text="@string/feature_home_pending_sync_title"
                 android:textColor="#0F172A"
-                android:textSize="18sp"
+                android:textSize="@dimen/title_text_size"
                 android:textStyle="bold" />
         </FrameLayout>
 

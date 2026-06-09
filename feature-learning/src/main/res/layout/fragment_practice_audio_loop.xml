@@ -22,11 +22,11 @@
 
             <ImageButton
                 android:id="@+id/btn_back"
-                android:layout_width="34dp"
-                android:layout_height="34dp"
+                android:layout_width="@dimen/title_icon_touch_size"
+                android:layout_height="@dimen/title_icon_touch_size"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/feature_learning_audio_loop_title"
-                android:padding="6dp"
+                android:padding="7dp"
                 android:src="@drawable/ic_arrow_back"
                 app:tint="@color/feature_learning_audio_loop_text_primary" />
 
