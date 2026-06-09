@@ -43,17 +43,26 @@
 
 
             <!-- 使用 RadioGroup 实现 -->
+            <LinearLayout
+                android:id="@+id/phoneticContent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
             <RadioGroup
                 android:id="@+id/languageRadioGroup"
                 android:layout_width="50dp"
                 android:layout_height="25dp"
                 android:layout_marginEnd="8dp"
+                android:layout_gravity="center_vertical"
                 android:background="@drawable/module_learning_toggle_background"
                 android:orientation="horizontal"
-                android:padding="2dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/tv_phonetic"
-                app:layout_constraintTop_toTopOf="parent">
+                android:padding="2dp">
 
                 <RadioButton
                     android:id="@+id/btnChinese"
@@ -89,12 +98,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
+                android:layout_gravity="center_vertical"
                 android:text="@{viewModel.uiState.pronunciationText}"
                 android:textColor="#666666"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 tools:text="sdfsdfsdgg" />
 
             <!-- 扬声器图标 -->
@@ -103,10 +109,10 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginStart="8dp"
-                android:src="@drawable/module_learning_ic_volume_up"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tv_phonetic"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/module_learning_ic_volume_up" />
+
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>

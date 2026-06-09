@@ -4,15 +4,15 @@
     android:id="@+id/rootCard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="14dp"
+    android:layout_marginBottom="10dp"
     android:background="@drawable/module_learning_selector_summary_word_item"
     android:gravity="center_vertical"
-    android:minHeight="86dp"
+    android:minHeight="72dp"
     android:orientation="horizontal"
     android:paddingStart="18dp"
-    android:paddingTop="14dp"
-    android:paddingEnd="18dp"
-    android:paddingBottom="14dp">
+    android:paddingTop="10dp"
+    android:paddingEnd="14dp"
+    android:paddingBottom="10dp">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -36,7 +36,7 @@
                 android:includeFontPadding="false"
                 android:maxLines="1"
                 android:textColor="#07111F"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 tools:text="serene" />
 
@@ -49,20 +49,21 @@
                 android:includeFontPadding="false"
                 android:maxLines="1"
                 android:textColor="#4B5563"
-                android:textSize="14sp"
-                tools:text="/səˈriːn/" />
+                android:textSize="13sp"
+                tools:text="/se'ri:n/" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/tvDefinition"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="9dp"
             android:ellipsize="end"
+            android:includeFontPadding="false"
             android:maxLines="1"
             android:textColor="#111827"
-            android:textSize="16sp"
-            tools:text="adj. 平静的，安详的" />
+            android:textSize="14sp"
+            tools:text="adj. calm, peaceful" />
     </LinearLayout>
 
     <TextView
@@ -73,6 +74,6 @@
         android:gravity="center"
         android:text="&#8250;"
         android:textColor="#9AA0A6"
-        android:textSize="34sp"
-        tools:text="›" />
+        android:textSize="28sp"
+        tools:text=">" />
 </LinearLayout>

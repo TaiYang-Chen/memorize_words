@@ -19,7 +19,9 @@
             app:argType="integer" />
         <action
             android:id="@+id/action_learningMainFragment_to_learningDoneFragment"
-            app:destination="@id/learningDoneFragment" />
+            app:destination="@id/learningDoneFragment"
+            app:popUpTo="@id/learningMainFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_learningMainFragment_to_wordEntryDetailFragment"
             app:destination="@id/wordEntryDetailFragment" />

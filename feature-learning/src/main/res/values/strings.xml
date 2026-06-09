@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="learning_done_title">学习完成</string>
-    <string name="learning_done_header_title">Session Summary</string>
+    <string name="learning_done_header_title">学习完成</string>
     <string name="learning_done_subtitle_new">本组新词学习已完成，继续保持节奏，再学一组。</string>
     <string name="learning_done_subtitle_review">本组复习已完成，趁热打铁，再复习一组。</string>
     <string name="learning_done_tag_new">新词学习</string>
@@ -98,6 +98,9 @@
     <string name="learning_nav_done_title">学习完成</string>
     <string name="learning_nav_check_in_title">打卡结果</string>
     <string name="learning_nav_word_detail_title">单词详情</string>
+    <string name="learning_exit_confirm_title">退出学习</string>
+    <string name="learning_exit_confirm_message">是否退出当前学习？</string>
+    <string name="learning_exit_confirm_action">退出</string>
     <string name="learning_share_sheet_title">分享单词</string>
     <string name="learning_share_action_copy">复制</string>
     <string name="learning_share_copied">已复制到剪贴板</string>

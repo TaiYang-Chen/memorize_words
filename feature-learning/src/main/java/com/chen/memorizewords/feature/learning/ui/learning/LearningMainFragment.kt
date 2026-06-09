@@ -5,6 +5,7 @@ import android.content.ClipboardManager
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
 import com.chen.memorizewords.core.ui.ext.dpToPx
 import androidx.lifecycle.Lifecycle
@@ -81,6 +82,15 @@ class LearningMainFragment :
             initialWordIds = initialWordIds
         )
 
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    viewModel.requestExitLearningConfirm()
+                }
+            }
+        )
+
         databind.includeBaseWord.languageRadioGroup.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.btnChinese -> viewModel.onSetPronunciationType(PronunciationType.US)
@@ -138,6 +148,14 @@ class LearningMainFragment :
 
             else -> Unit
         }
+    }
+
+    override fun onConfirmDialog(event: UiEvent.Dialog.Confirm) {
+        if (event.action == LearningViewModel.ACTION_EXIT_LEARNING) {
+            requireActivity().finish()
+            return
+        }
+        super.onConfirmDialog(event)
     }
 
     override fun onUiEffect(effect: UiEffect) {

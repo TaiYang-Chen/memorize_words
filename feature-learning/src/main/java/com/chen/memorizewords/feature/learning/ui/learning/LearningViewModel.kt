@@ -76,6 +76,8 @@ class LearningViewModel @Inject constructor(
             val wordIds = words.joinToString(separator = ",") { it.id.toString() }
             return "${sessionTypeValue}_${sessionWordCount}_${initialLearnedCount}_$wordIds"
         }
+
+        const val ACTION_EXIT_LEARNING = "action_exit_learning"
     }
 
     data class LearningUiState(
@@ -191,6 +193,16 @@ class LearningViewModel @Inject constructor(
         viewModelScope.launch {
             studyStatsFacade.addStudyDuration(durationMs)
         }
+    }
+
+    fun requestExitLearningConfirm() {
+        showConfirmDialog(
+            action = ACTION_EXIT_LEARNING,
+            title = resourceProvider.getString(R.string.learning_exit_confirm_title),
+            message = resourceProvider.getString(R.string.learning_exit_confirm_message),
+            confirmText = resourceProvider.getString(R.string.learning_exit_confirm_action),
+            cancelText = resourceProvider.getString(android.R.string.cancel)
+        )
     }
 
     fun handleUserAnswer(isCorrect: Boolean) {
