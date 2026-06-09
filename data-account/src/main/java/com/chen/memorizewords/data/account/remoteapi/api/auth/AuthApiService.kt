@@ -23,6 +23,9 @@ interface AuthApiService {
     @POST("auth/sms/send-code")
     fun sendSmsCode(@Body request: SendSmsCodeRequest): Call<ApiResponse<SendSmsCodeResponseDto>>
 
+    @POST("auth/email/send-code")
+    fun sendEmailCode(@Body request: SendEmailCodeRequest): Call<ApiResponse<SendSmsCodeResponseDto>>
+
     @POST("auth/refresh")
     fun refresh(@Body request: RefreshRequest): Call<ApiResponse<LoginResponseDto>>
 

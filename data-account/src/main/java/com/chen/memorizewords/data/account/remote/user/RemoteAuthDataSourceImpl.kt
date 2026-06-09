@@ -5,6 +5,7 @@ import com.chen.memorizewords.data.account.remoteapi.api.auth.LoginRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.AuthRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.RegisterRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.SendSmsCodeRequest
+import com.chen.memorizewords.data.account.remoteapi.api.auth.SendEmailCodeRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.ChangePasswordRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.BindSocialRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.AvatarUploadDto
@@ -38,6 +39,10 @@ class RemoteAuthDataSourceImpl @Inject constructor(
 
     override suspend fun sendLoginSmsCode(request: SendSmsCodeRequest): Result<SendSmsCodeResponseDto> {
         return remoteResultAdapter.toResult { authRequest.sendLoginSmsCode(request) }
+    }
+
+    override suspend fun sendEmailCode(request: SendEmailCodeRequest): Result<SendSmsCodeResponseDto> {
+        return remoteResultAdapter.toResult { authRequest.sendEmailCode(request) }
     }
 
     override suspend fun register(request: RegisterRequest): Result<LoginResponseDto> {

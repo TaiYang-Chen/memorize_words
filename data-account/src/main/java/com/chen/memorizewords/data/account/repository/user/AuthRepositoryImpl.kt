@@ -6,6 +6,7 @@ import com.chen.memorizewords.data.account.remoteapi.api.auth.BindSocialRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.ChangePasswordRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.LoginRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.RegisterRequest
+import com.chen.memorizewords.data.account.remoteapi.api.auth.SendEmailCodeRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.SendSmsCodeRequest
 import com.chen.memorizewords.domain.account.model.AuthLoginResult
 import com.chen.memorizewords.domain.account.model.user.SmsCodeMeta
@@ -28,7 +29,6 @@ class AuthRepositoryImpl @Inject constructor(
             val request = LoginRequest(
                 loginMethod = "password",
                 emailOrPhone = phoneNumber,
-                phone = phoneNumber,
                 password = password
             )
             remote.login(request).getOrThrow().toDomain(clockProvider.nowEpochMillis())
@@ -41,6 +41,12 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun sendEmailCode(email: String, scene: String): Result<SmsCodeMeta> = runCatching {
+        withContext(Dispatchers.IO) {
+            remote.sendEmailCode(SendEmailCodeRequest(email = email, scene = scene)).getOrThrow().toDomain()
+        }
+    }
+
     override suspend fun loginBySms(phone: String, code: String): Result<AuthLoginResult> = runCatching {
         withContext(Dispatchers.IO) {
             val request = LoginRequest(
@@ -49,6 +55,17 @@ class AuthRepositoryImpl @Inject constructor(
                 smsCode = code
             )
             remote.loginBySms(request).getOrThrow().toDomain(clockProvider.nowEpochMillis())
+        }
+    }
+
+    override suspend fun loginByEmailCode(email: String, code: String): Result<AuthLoginResult> = runCatching {
+        withContext(Dispatchers.IO) {
+            val request = LoginRequest(
+                loginMethod = "email_code",
+                email = email,
+                emailCode = code
+            )
+            remote.login(request).getOrThrow().toDomain(clockProvider.nowEpochMillis())
         }
     }
 
@@ -77,12 +94,14 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun register(
-        phoneNumber: String,
+        email: String,
+        emailCode: String,
         password: String
     ): Result<AuthLoginResult> = runCatching {
         withContext(Dispatchers.IO) {
             val request = RegisterRequest(
-                phone = phoneNumber,
+                email = email,
+                emailCode = emailCode,
                 password = password
             )
             remote.register(request).getOrThrow().toDomain(clockProvider.nowEpochMillis())
@@ -128,4 +147,3 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 }
-

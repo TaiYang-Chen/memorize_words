@@ -21,6 +21,7 @@ class LoginFragment : BaseFragment<LoginViewModel, ModuleUserFragmentLoginBindin
 
     override fun initView(savedInstanceState: Bundle?) {
         databind.viewModel = viewModel
+        databind.lifecycleOwner = viewLifecycleOwner
         setupPasswordToggle()
         setupNavigationClicks()
     }

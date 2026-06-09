@@ -19,6 +19,7 @@ class RegisterFragment : BaseFragment<RegisterViewModel, ModuleUserFragmentRegis
 
     override fun initView(savedInstanceState: Bundle?) {
         databind.viewModel = viewModel
+        databind.lifecycleOwner = viewLifecycleOwner
         setupPasswordToggle()
     }
 

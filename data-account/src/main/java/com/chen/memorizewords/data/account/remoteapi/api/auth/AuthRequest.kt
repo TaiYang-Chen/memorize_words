@@ -37,6 +37,13 @@ class AuthRequest @Inject constructor(
             .await<ApiResponse<SendSmsCodeResponseDto>, SendSmsCodeResponseDto>()
     }
 
+    suspend fun sendEmailCode(
+        request: SendEmailCodeRequest
+    ): NetworkResult<SendSmsCodeResponseDto> = requestExecutor.executePublic {
+        authApiService.sendEmailCode(request)
+            .await<ApiResponse<SendSmsCodeResponseDto>, SendSmsCodeResponseDto>()
+    }
+
     suspend fun getProfile(): NetworkResult<ProfileDto> = requestExecutor.executeAuthenticated {
         authApiService.getProfile()
             .await<ApiResponse<ProfileDto>, ProfileDto>()

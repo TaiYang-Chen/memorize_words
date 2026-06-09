@@ -3,6 +3,7 @@ package com.chen.memorizewords.data.account.remote.user
 import com.chen.memorizewords.data.account.remoteapi.api.auth.LoginRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.RegisterRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.SendSmsCodeRequest
+import com.chen.memorizewords.data.account.remoteapi.api.auth.SendEmailCodeRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.ChangePasswordRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.BindSocialRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.AvatarUploadDto
@@ -29,6 +30,8 @@ interface AuthRemoteDataSource {
     suspend fun loginByQq(loginRequest: LoginRequest): Result<LoginResponseDto>
 
     suspend fun sendLoginSmsCode(request: SendSmsCodeRequest): Result<SendSmsCodeResponseDto>
+
+    suspend fun sendEmailCode(request: SendEmailCodeRequest): Result<SendSmsCodeResponseDto>
 
     suspend fun register(request: RegisterRequest): Result<LoginResponseDto>
 

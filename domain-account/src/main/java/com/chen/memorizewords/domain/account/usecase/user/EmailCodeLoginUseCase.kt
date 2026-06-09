@@ -4,19 +4,17 @@ import com.chen.memorizewords.domain.account.model.user.User
 import com.chen.memorizewords.domain.account.repository.user.AuthRepository
 import javax.inject.Inject
 
-class RegisterUseCase @Inject constructor(
+class EmailCodeLoginUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     private val loginCompletionHandler: LoginCompletionHandler
 ) {
-    suspend operator fun invoke(email: String, emailCode: String, password: String): Result<User> {
+    suspend operator fun invoke(email: String, code: String): Result<User> {
         return runCatching {
             if (email.isBlank()) throw LoginError.EmptyEmail()
-            if (emailCode.isBlank()) throw LoginError.EmptySmsCode()
-            if (password.isBlank()) throw LoginError.EmptyPassword()
-            val loginResult = authRepository.register(
+            if (code.isBlank()) throw LoginError.EmptySmsCode()
+            val loginResult = authRepository.loginByEmailCode(
                 email = email.trim(),
-                emailCode = emailCode.trim(),
-                password = password
+                code = code.trim()
             ).getOrThrow()
             loginCompletionHandler.complete(loginResult)
         }

@@ -6,9 +6,11 @@ import com.squareup.moshi.JsonClass
 data class LoginRequest(
     val loginMethod: String = "password",
     val emailOrPhone: String? = null,
+    val email: String? = null,
     val phone: String? = null,
     val password: String? = null,
     val smsCode: String? = null,
+    val emailCode: String? = null,
     val oauthCode: String? = null,
     val platform: String? = null,
     val state: String? = null
@@ -16,14 +18,21 @@ data class LoginRequest(
 
 @JsonClass(generateAdapter = false)
 data class RegisterRequest(
-    val phone: String,
+    val email: String,
+    val emailCode: String,
     val password: String,
-    val registerMethod: String = "password"
+    val registerMethod: String = "email"
 )
 
 @JsonClass(generateAdapter = false)
 data class SendSmsCodeRequest(
     val phone: String,
+    val scene: String = "login"
+)
+
+@JsonClass(generateAdapter = false)
+data class SendEmailCodeRequest(
+    val email: String,
     val scene: String = "login"
 )
 

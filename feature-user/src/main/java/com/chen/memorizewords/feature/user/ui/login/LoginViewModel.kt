@@ -24,12 +24,12 @@ class LoginViewModel @Inject constructor(
         data object ToSmsCodeLogin : Route
     }
 
-    val phoneNumber = MutableStateFlow("123456")
-    val password = MutableStateFlow("123456")
+    val email = MutableStateFlow("")
+    val password = MutableStateFlow("")
 
     fun login() {
         launchWithLoading("登录中...") {
-            loginUseCase(phoneNumber.value, password.value).onSuccess {
+            loginUseCase(email.value, password.value).onSuccess {
                 showToast(resourceProvider.getString(R.string.module_user_login_success))
                 finish()
             }.onFailure { failure ->
@@ -37,8 +37,8 @@ class LoginViewModel @Inject constructor(
                     is LoginDataSyncError ->
                         showToast(resourceProvider.getString(R.string.module_user_login_sync_failed))
 
-                    is LoginError.EmptyPhone ->
-                        showToast(resourceProvider.getString(R.string.module_user_login_phone_required))
+                    is LoginError.EmptyEmail ->
+                        showToast(resourceProvider.getString(R.string.module_user_login_email_required))
 
                     is LoginError.EmptyPassword ->
                         showToast(resourceProvider.getString(R.string.module_user_login_password_required))
