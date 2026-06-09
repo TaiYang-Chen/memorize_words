@@ -4,11 +4,5 @@
         android:width="@dimen/app_splash_logo_card_size"
         android:height="@dimen/app_splash_logo_card_size"
         android:gravity="center"
-        android:drawable="@drawable/app_splash_logo_card" />
-
-    <item
-        android:width="@dimen/app_splash_logo_icon_size"
-        android:height="@dimen/app_splash_logo_icon_size"
-        android:gravity="center"
-        android:drawable="@drawable/module_floating_review_ic_assignment" />
+        android:drawable="@drawable/app_brand_logo" />
 </layer-list>

@@ -87,7 +87,7 @@
                         android:layout_height="@dimen/module_feedback_about_hero_logo_size"
                         android:layout_gravity="center"
                         android:contentDescription="@string/module_feedback_app_icon_desc"
-                        android:src="@drawable/module_feedback_ic_about_logo" />
+                        android:src="@drawable/app_brand_logo" />
                 </com.google.android.material.card.MaterialCardView>
 
                 <TextView
