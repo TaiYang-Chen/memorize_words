@@ -46,6 +46,9 @@ debugDb = "1.0.7"
 splashscreen = "1.0.1"
 profileinstaller = "1.4.1"
 paparazzi = "2.0.0-alpha04"
+camerax = "1.6.1"
+mlkitBarcodeScanning = "17.3.0"
+zxingCore = "3.5.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -98,6 +101,12 @@ glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "gl
 debug-db = { group = "com.github.amitshekhariitbhu.Android-Debug-Database", name = "debug-db", version.ref = "debugDb" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
 androidx-profileinstaller = { group = "androidx.profileinstaller", name = "profileinstaller", version.ref = "profileinstaller" }
+androidx-camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "camerax" }
+androidx-camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camerax" }
+androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camerax" }
+androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax" }
+mlkit-barcode-scanning = { group = "com.google.mlkit", name = "barcode-scanning", version.ref = "mlkitBarcodeScanning" }
+zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxingCore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

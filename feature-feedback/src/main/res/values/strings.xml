@@ -15,6 +15,12 @@
     <string name="module_feedback_update_unavailable">暂未开放</string>
     <string name="module_feedback_latest_version">最新版</string>
     <string name="module_feedback_about_feature_pending">%1$s暂未开放</string>
+    <string name="feature_feedback_about_release_url" translatable="false">https://www.xiaobaibeidanci.com/download</string>
+    <string name="feature_feedback_about_official_website_url" translatable="false">https://www.xiaobaibeidanci.com</string>
+    <string name="feature_feedback_about_terms_url" translatable="false">https://www.xiaobaibeidanci.com/terms</string>
+    <string name="feature_feedback_about_privacy_url" translatable="false">https://www.xiaobaibeidanci.com/privacy</string>
+    <string name="feature_feedback_about_link_unavailable">链接暂不可用</string>
+    <string name="feature_feedback_about_no_handler">未找到可打开的应用</string>
     <string name="module_feedback_app_icon_desc">应用图标</string>
     <string name="module_feedback_back">返回</string>
     <string name="module_feedback_avatar_text">小白</string>

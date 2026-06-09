@@ -44,6 +44,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:contentDescription="@string/feature_home_profile_personal_qr"
+                android:onClick="@{()->viewModel.toPersonalQr()}"
                 android:src="@drawable/module_home_qr_code_scanner_172337"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -210,11 +212,13 @@
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/feature_home_member_card"
             android:layout_width="match_parent"
-            android:clickable="true"
-            android:stateListAnimator="@animator/btn_scale_animator"
             android:layout_height="wrap_content"
-            android:background="@drawable/module_home_bg_border_161f31">
+            android:background="@drawable/module_home_bg_border_161f31"
+            android:clickable="true"
+            android:onClick="@{()->viewModel.toMembership()}"
+            android:stateListAnimator="@animator/btn_scale_animator">
 
             <TextView
                 android:id="@+id/vip"
@@ -242,13 +246,15 @@
 
 
             <TextView
+                android:id="@+id/feature_home_btn_open_member"
                 android:layout_width="80dp"
                 android:layout_height="30dp"
-                android:clickable="true"
                 android:layout_marginEnd="16dp"
-                android:stateListAnimator="@animator/btn_scale_animator"
                 android:background="@drawable/module_home_bg_radius_13ec80"
+                android:clickable="true"
                 android:gravity="center"
+                android:onClick="@{()->viewModel.toMembership()}"
+                android:stateListAnimator="@animator/btn_scale_animator"
                 android:text="立即开通"
                 android:textColor="#0f0c2a"
                 android:textSize="11sp"

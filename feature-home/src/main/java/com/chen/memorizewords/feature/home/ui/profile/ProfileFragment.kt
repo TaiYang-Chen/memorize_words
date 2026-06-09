@@ -73,6 +73,12 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ModuleHomeFragmentProfile
                 )
             }
             is AppRoute -> routeNavigator.navigate(target)
+            ProfileViewModel.Route.OpenMembership -> {
+                startActivity(ProMembershipActivity.createIntent(requireContext()))
+            }
+            ProfileViewModel.Route.OpenPersonalQr -> {
+                startActivity(PersonalQrActivity.createIntent(requireContext()))
+            }
             is ProfileViewModel.Route.OpenAuth -> {
                 startActivity(
                     authEntry.createAuthIntent(requireContext()).apply {

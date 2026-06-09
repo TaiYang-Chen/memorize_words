@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#111827"
+        tools:context=".ui.profile.QrScanActivity">
+
+    <androidx.camera.view.PreviewView
+        android:id="@+id/feature_home_preview_qr_scan"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:id="@+id/feature_home_panel_qr_permission"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="28dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/feature_home_tv_qr_scan_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:lineSpacingExtra="4dp"
+            android:text="@string/feature_home_profile_qr_camera_denied"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/feature_home_btn_retry_qr_permission"
+            android:layout_width="160dp"
+            android:layout_height="44dp"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/feature_home_bg_profile_primary_button"
+            android:gravity="center"
+            android:text="@string/feature_home_profile_qr_camera_retry"
+            android:textColor="#0F172A"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/page_margin">
+
+        <ImageView
+            android:id="@+id/feature_home_btn_qr_scan_back"
+            android:layout_width="@dimen/title_icon_size"
+            android:layout_height="@dimen/title_icon_size"
+            android:layout_marginTop="@dimen/title_margin"
+            android:contentDescription="@string/feature_home_common_back"
+            android:padding="2dp"
+            android:src="@drawable/ic_arrow_back"
+            app:tint="#FFFFFF"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/feature_home_view_qr_scan_frame"
+            android:layout_width="260dp"
+            android:layout_height="260dp"
+            android:background="@drawable/feature_home_bg_scan_frame"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:gravity="center"
+            android:text="@string/feature_home_profile_qr_camera_hint"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@id/feature_home_view_qr_scan_frame"
+            app:layout_constraintStart_toStartOf="@id/feature_home_view_qr_scan_frame"
+            app:layout_constraintTop_toBottomOf="@id/feature_home_view_qr_scan_frame" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+</layout>

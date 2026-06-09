@@ -36,6 +36,8 @@ class ProfileViewModel @Inject constructor(
 
     sealed interface Route {
         data class OpenAuth(val clearTask: Boolean = false) : Route
+        data object OpenMembership : Route
+        data object OpenPersonalQr : Route
     }
 
     val user: StateFlow<User?> =
@@ -72,6 +74,14 @@ class ProfileViewModel @Inject constructor(
 
     fun toUserInfo() {
         navigate(AppRoute.Auth(deepLink = AuthEntryDestination.USER_PROFILE_DEEP_LINK))
+    }
+
+    fun toMembership() {
+        navigateRoute(Route.OpenMembership)
+    }
+
+    fun toPersonalQr() {
+        navigateRoute(Route.OpenPersonalQr)
     }
 
     fun requestLogoutConfirmation() {

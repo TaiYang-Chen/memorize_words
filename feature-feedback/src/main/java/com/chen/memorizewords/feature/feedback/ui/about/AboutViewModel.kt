@@ -1,6 +1,5 @@
 package com.chen.memorizewords.feature.feedback.ui.about
 
-import androidx.annotation.StringRes
 import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.feature.feedback.R
@@ -15,6 +14,12 @@ class AboutViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider
 ) : BaseViewModel() {
 
+    sealed interface Route {
+        data class OpenUrl(val url: String) : Route
+        data class OpenReleasePage(val url: String) : Route
+        data class OpenAppMarket(val packageName: String) : Route
+    }
+
     private val _missionText =
         MutableStateFlow(resourceProvider.getString(R.string.module_feedback_mission_text))
     val missionText: StateFlow<String> = _missionText.asStateFlow()
@@ -24,30 +29,37 @@ class AboutViewModel @Inject constructor(
     val updateStatusText: StateFlow<String> = _updateStatusText.asStateFlow()
 
     fun onCheckUpdateClicked() {
-        showToast(_updateStatusText.value)
+        navigateRoute(
+            Route.OpenReleasePage(
+                resourceProvider.getString(R.string.feature_feedback_about_release_url)
+            )
+        )
     }
 
-    fun onRateUsClicked() {
-        showPendingMessage(R.string.module_feedback_rate_us)
+    fun onRateUsClicked(packageName: String) {
+        navigateRoute(Route.OpenAppMarket(packageName))
     }
 
     fun onOfficialWebsiteClicked() {
-        showPendingMessage(R.string.module_feedback_official_website)
+        navigateRoute(
+            Route.OpenUrl(
+                resourceProvider.getString(R.string.feature_feedback_about_official_website_url)
+            )
+        )
     }
 
     fun onTermsClicked() {
-        showPendingMessage(R.string.module_feedback_terms)
+        navigateRoute(
+            Route.OpenUrl(
+                resourceProvider.getString(R.string.feature_feedback_about_terms_url)
+            )
+        )
     }
 
     fun onPrivacyClicked() {
-        showPendingMessage(R.string.module_feedback_privacy)
-    }
-
-    private fun showPendingMessage(@StringRes featureNameRes: Int) {
-        showToast(
-            resourceProvider.getString(
-                R.string.module_feedback_about_feature_pending,
-                resourceProvider.getString(featureNameRes)
+        navigateRoute(
+            Route.OpenUrl(
+                resourceProvider.getString(R.string.feature_feedback_about_privacy_url)
             )
         )
     }
