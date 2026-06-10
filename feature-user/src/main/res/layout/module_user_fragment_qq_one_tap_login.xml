@@ -47,9 +47,11 @@
             android:layout_marginTop="56dp"
             android:layout_marginEnd="32dp"
             android:background="@drawable/module_user_login_bg_login_btn"
+            android:backgroundTint="@null"
             android:text="@string/module_user_qq_authorize_button"
             android:textColor="@android:color/white"
             android:textSize="16sp"
+            app:backgroundTint="@null"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvSubTitle" />

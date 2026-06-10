@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="module_user_auth_primary">#2979FF</color>
     <color name="feature_user_profile_teal">#0B7B7A</color>
     <color name="feature_user_profile_label">#5C656D</color>
     <color name="feature_user_profile_value">#1E2329</color>

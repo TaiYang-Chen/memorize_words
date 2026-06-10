@@ -22,7 +22,7 @@ class StartupOrchestratorTest {
     }
 
     @Test
-    fun `fast launch returns home for authenticated user even when onboarding is incomplete`() {
+    fun `fast launch returns onboarding for authenticated user when onboarding is incomplete`() {
         val orchestrator = createOrchestrator(
             isAuthenticated = true,
             onboardingCompleted = false
@@ -30,7 +30,7 @@ class StartupOrchestratorTest {
 
         val destination = orchestrator.resolveLaunchDestinationFast()
 
-        assertEquals(StartupLaunchDestination.HOME, destination)
+        assertEquals(StartupLaunchDestination.ONBOARDING, destination)
     }
 
     @Test
@@ -46,7 +46,7 @@ class StartupOrchestratorTest {
     }
 
     @Test
-    fun `network launch returns home for authenticated user with available token`() = runBlocking {
+    fun `network launch returns onboarding for authenticated user with available token when onboarding is incomplete`() = runBlocking {
         val orchestrator = createOrchestrator(
             isAuthenticated = true,
             onboardingCompleted = false,
@@ -55,11 +55,11 @@ class StartupOrchestratorTest {
 
         val destination = orchestrator.resolveLaunchDestination(hasNetwork = true)
 
-        assertEquals(StartupLaunchDestination.HOME, destination)
+        assertEquals(StartupLaunchDestination.ONBOARDING, destination)
     }
 
     @Test
-    fun `network launch returns home for authenticated user with temporarily unavailable token`() = runBlocking {
+    fun `network launch returns onboarding for authenticated user with temporarily unavailable token when onboarding is incomplete`() = runBlocking {
         val orchestrator = createOrchestrator(
             isAuthenticated = true,
             onboardingCompleted = false,
@@ -68,7 +68,7 @@ class StartupOrchestratorTest {
 
         val destination = orchestrator.resolveLaunchDestination(hasNetwork = true)
 
-        assertEquals(StartupLaunchDestination.HOME, destination)
+        assertEquals(StartupLaunchDestination.ONBOARDING, destination)
     }
 
     private fun createOrchestrator(

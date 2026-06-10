@@ -93,10 +93,12 @@
             android:layout_height="48dp"
             android:layout_marginTop="32dp"
             android:background="@drawable/module_user_login_bg_login_btn"
+            android:backgroundTint="@null"
             android:onClick="@{() -> viewModel.login()}"
             android:text="@string/module_user_login_button"
             android:textColor="@android:color/white"
             android:textSize="16sp"
+            app:backgroundTint="@null"
             app:layout_constraintEnd_toEndOf="@id/flPassword"
             app:layout_constraintStart_toStartOf="@id/flPassword"
             app:layout_constraintTop_toBottomOf="@id/flPassword" />

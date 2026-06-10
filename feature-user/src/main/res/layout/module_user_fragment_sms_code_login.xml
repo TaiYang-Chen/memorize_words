@@ -110,10 +110,12 @@
             android:layout_height="48dp"
             android:layout_marginTop="32dp"
             android:background="@drawable/module_user_login_bg_login_btn"
+            android:backgroundTint="@null"
             android:onClick="@{() -> viewModel.loginBySms()}"
             android:text="@string/module_user_login_button"
             android:textColor="@android:color/white"
             android:textSize="16sp"
+            app:backgroundTint="@null"
             app:layout_constraintEnd_toEndOf="@id/clCode"
             app:layout_constraintStart_toStartOf="@id/clCode"
             app:layout_constraintTop_toBottomOf="@id/clCode" />

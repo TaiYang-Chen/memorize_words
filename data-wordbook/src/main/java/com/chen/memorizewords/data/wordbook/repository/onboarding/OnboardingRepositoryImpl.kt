@@ -6,6 +6,7 @@ import com.chen.memorizewords.domain.sync.OutboxTopic
 import com.chen.memorizewords.domain.sync.SyncOperation
 import com.chen.memorizewords.domain.sync.SyncOutboxWriter
 import com.chen.memorizewords.domain.account.auth.LocalAccountStore
+import com.chen.memorizewords.domain.account.repository.LocalAccountRepository
 import com.chen.memorizewords.domain.wordbook.model.onboarding.OnboardingPhase
 import com.chen.memorizewords.domain.wordbook.model.onboarding.OnboardingSnapshot
 import com.chen.memorizewords.domain.wordbook.repository.onboarding.OnboardingRepository
@@ -24,8 +25,10 @@ import kotlinx.coroutines.withContext
 @Singleton
 class OnboardingRepositoryImpl @Inject constructor(
     private val localAccountStore: LocalAccountStore,
+    private val localAccountRepository: LocalAccountRepository,
     private val onboardingSnapshotDataSource: OnboardingSnapshotDataSource,
-    private val SyncOutboxWriter: SyncOutboxWriter,    private val gson: Gson
+    private val syncOutboxWriter: SyncOutboxWriter,
+    private val gson: Gson
 ) : OnboardingRepository {
 
     override fun getCurrentSnapshot(): OnboardingSnapshot {
@@ -92,12 +95,20 @@ class OnboardingRepositoryImpl @Inject constructor(
                 completedAt = current.completedAt ?: now
             )
             onboardingSnapshotDataSource.saveSnapshot(userId, next)
+            markCurrentUserOnboardingCompleted(userId)
             enqueueSnapshotSync(userId, next)
             next
         }
     }
+
+    private suspend fun markCurrentUserOnboardingCompleted(userId: Long) {
+        val currentUser = localAccountRepository.getCurrentUser() ?: return
+        if (currentUser.userId != userId || currentUser.onboardingCompleted) return
+        localAccountRepository.saveUser(currentUser.copy(onboardingCompleted = true))
+    }
+
     private suspend fun enqueueSnapshotSync(userId: Long, snapshot: OnboardingSnapshot) {
-        SyncOutboxWriter.enqueueLatest(
+        syncOutboxWriter.enqueueLatest(
             bizType = OutboxTopic.ONBOARDING_STATE,
             bizKey = "onboarding_state:$userId",
             operation = SyncOperation.UPSERT,

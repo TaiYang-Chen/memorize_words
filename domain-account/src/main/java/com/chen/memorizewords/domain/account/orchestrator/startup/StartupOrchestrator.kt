@@ -51,7 +51,11 @@ class StartupOrchestrator @Inject constructor(
     }
 
     private fun resolveAuthenticatedDestination(): StartupLaunchDestination {
-        return StartupLaunchDestination.HOME
+        return if (onboardingStateReader.isOnboardingCompleted()) {
+            StartupLaunchDestination.HOME
+        } else {
+            StartupLaunchDestination.ONBOARDING
+        }
     }
 }
 

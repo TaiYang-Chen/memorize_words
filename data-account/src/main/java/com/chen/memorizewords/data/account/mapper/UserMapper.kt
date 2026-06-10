@@ -17,7 +17,7 @@ fun UserDto.toDomain(onboardingSnapshot: OnboardingSnapshot? = null): User {
         qq = qq,
         wechat = wechat,
         emailVerified = emailVerified,
-        onboardingCompleted = onboardingSnapshot.isCompleted()
+        onboardingCompleted = onboardingCompleted ?: onboardingSnapshot.isCompleted()
     )
 }
 
@@ -32,7 +32,7 @@ fun ProfileDto.toDomain(onboardingCompleted: Boolean = false): User {
         qq = qq,
         wechat = wechat,
         emailVerified = emailVerified,
-        onboardingCompleted = onboardingCompleted
+        onboardingCompleted = this.onboardingCompleted ?: onboardingCompleted
     )
 }
 
