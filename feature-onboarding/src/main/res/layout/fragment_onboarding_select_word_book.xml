@@ -181,7 +181,7 @@
                     app:tabContentStart="0dp"
                     app:tabGravity="start"
                     app:tabIndicatorAnimationMode="linear"
-                    app:tabIndicatorColor="@color/feature_onboarding_select_tab_indicator"
+                    app:tabIndicator="@drawable/feature_onboarding_tab_indicator_rounded"
                     app:tabIndicatorFullWidth="false"
                     app:tabIndicatorHeight="3dp"
                     app:tabMinWidth="0dp"

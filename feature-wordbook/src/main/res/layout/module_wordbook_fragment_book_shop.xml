@@ -117,7 +117,7 @@
             app:tabContentStart="0dp"
             app:tabGravity="start"
             app:tabIndicatorAnimationMode="linear"
-            app:tabIndicatorColor="@color/feature_wordbook_shop_tab_indicator"
+            app:tabIndicator="@drawable/feature_wordbook_shop_tab_indicator_rounded"
             app:tabIndicatorFullWidth="false"
             app:tabIndicatorHeight="3dp"
             app:tabMinWidth="0dp"
