@@ -1,10 +1,16 @@
 package com.chen.memorizewords
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.content.Intent
 import android.os.Bundle
 import android.os.SystemClock
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.splashscreen.SplashScreenViewProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.chen.memorizewords.core.navigation.AuthEntry
 import com.chen.memorizewords.core.navigation.HomeEntry
 import com.chen.memorizewords.core.navigation.OnboardingEntry
@@ -19,7 +25,8 @@ import kotlinx.coroutines.launch
 class SplashActivity : AppCompatActivity() {
 
     companion object {
-        private const val MIN_SPLASH_DISPLAY_DURATION_MS = 500L
+        private const val MIN_SPLASH_DISPLAY_DURATION_MS = 1000L
+        private const val SPLASH_EXIT_ANIMATION_DURATION_MS = 320L
     }
 
     @Inject
@@ -37,10 +44,12 @@ class SplashActivity : AppCompatActivity() {
     private var hasRouted = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         window.setBackgroundDrawableResource(R.color.app_splash_background)
         setContentView(R.layout.activity_splash)
+        findViewById<View>(R.id.logo_card).alpha = 0f
+        splashScreen.setOnExitAnimationListener(::animateSplashIconToLogo)
 
         val splashShownAt = SystemClock.elapsedRealtime()
 
@@ -60,7 +69,59 @@ class SplashActivity : AppCompatActivity() {
         }
     }
 
-    private fun routeToTarget(targetIntent: android.content.Intent) {
+    private fun animateSplashIconToLogo(provider: SplashScreenViewProvider) {
+        val iconView = provider.iconView
+        val targetView = findViewById<View>(R.id.logo_card)
+
+        if (iconView.width == 0 || iconView.height == 0 ||
+            targetView.width == 0 || targetView.height == 0
+        ) {
+            targetView.alpha = 1f
+            provider.remove()
+            return
+        }
+
+        val iconLocation = IntArray(2)
+        val targetLocation = IntArray(2)
+        iconView.getLocationInWindow(iconLocation)
+        targetView.getLocationInWindow(targetLocation)
+
+        val iconCenterX = iconLocation[0] + iconView.width / 2f
+        val iconCenterY = iconLocation[1] + iconView.height / 2f
+        val targetCenterX = targetLocation[0] + targetView.width / 2f
+        val targetCenterY = targetLocation[1] + targetView.height / 2f
+
+        iconView.pivotX = iconView.width / 2f
+        iconView.pivotY = iconView.height / 2f
+        var hasRemovedProvider = false
+
+        fun finishSplashExit() {
+            if (hasRemovedProvider) return
+            hasRemovedProvider = true
+            targetView.alpha = 1f
+            provider.remove()
+        }
+
+        iconView.animate()
+            .translationX(targetCenterX - iconCenterX)
+            .translationY(targetCenterY - iconCenterY)
+            .scaleX(targetView.width.toFloat() / iconView.width)
+            .scaleY(targetView.height.toFloat() / iconView.height)
+            .setDuration(SPLASH_EXIT_ANIMATION_DURATION_MS)
+            .setInterpolator(FastOutSlowInInterpolator())
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    finishSplashExit()
+                }
+
+                override fun onAnimationCancel(animation: Animator) {
+                    finishSplashExit()
+                }
+            })
+            .start()
+    }
+
+    private fun routeToTarget(targetIntent: Intent) {
         if (hasRouted) return
         hasRouted = true
         startActivity(targetIntent)
