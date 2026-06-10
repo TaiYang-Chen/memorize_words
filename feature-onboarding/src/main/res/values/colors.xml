@@ -36,6 +36,7 @@
     <color name="feature_onboarding_goal_icon_tint">#007AFF</color>
     <color name="feature_onboarding_action_blue">#007AFF</color>
     <color name="feature_onboarding_action_blue_pressed">#1F007AFF</color>
+    <color name="feature_onboarding_action_disabled_background">#D9DDE5</color>
     <color name="feature_onboarding_test_mode_selected_background">#F2F7FF</color>
     <color name="feature_onboarding_test_mode_stroke">#E6EBF2</color>
     <color name="feature_onboarding_test_mode_text_default">#5D6878</color>
@@ -46,6 +47,7 @@
     <color name="feature_onboarding_book_card_title">#111827</color>
     <color name="feature_onboarding_book_card_description">#667085</color>
     <color name="feature_onboarding_book_card_meta">#98A2B3</color>
+    <color name="feature_onboarding_book_card_unselected_stroke">#E8EDF3</color>
     <color name="feature_onboarding_book_card_selected_stroke">#C9DAFF</color>
     <color name="feature_onboarding_book_card_ripple">#12007AFF</color>
     <color name="feature_onboarding_book_cover_frame_background">#F5F7FA</color>

@@ -60,6 +60,7 @@
     <dimen name="feature_onboarding_book_card_padding_horizontal">16dp</dimen>
     <dimen name="feature_onboarding_book_card_padding_vertical">14dp</dimen>
     <dimen name="feature_onboarding_book_card_content_spacing">14dp</dimen>
+    <dimen name="feature_onboarding_book_card_unselected_stroke_width">1dp</dimen>
     <dimen name="feature_onboarding_book_card_selected_stroke_width">2dp</dimen>
     <dimen name="feature_onboarding_book_card_unselected_elevation">0dp</dimen>
     <dimen name="feature_onboarding_book_card_selected_elevation">0dp</dimen>

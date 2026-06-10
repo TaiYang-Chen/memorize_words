@@ -62,6 +62,11 @@ class OnboardingSelectWordBookAdapter(
                 R.dimen.feature_onboarding_book_card_selected_stroke_width
             )
         }
+        private val unselectedStrokeWidthPx by lazy(LazyThreadSafetyMode.NONE) {
+            binding.root.resources.getDimensionPixelSize(
+                R.dimen.feature_onboarding_book_card_unselected_stroke_width
+            )
+        }
         private val unselectedElevationPx by lazy(LazyThreadSafetyMode.NONE) {
             binding.root.resources.getDimension(
                 R.dimen.feature_onboarding_book_card_unselected_elevation
@@ -75,8 +80,8 @@ class OnboardingSelectWordBookAdapter(
         private val selectedStrokeColor by lazy(LazyThreadSafetyMode.NONE) {
             binding.root.context.getColor(R.color.feature_onboarding_book_card_selected_stroke)
         }
-        private val defaultStrokeColor by lazy(LazyThreadSafetyMode.NONE) {
-            binding.root.context.getColor(android.R.color.transparent)
+        private val unselectedStrokeColor by lazy(LazyThreadSafetyMode.NONE) {
+            binding.root.context.getColor(R.color.feature_onboarding_book_card_unselected_stroke)
         }
 
         fun bind(item: WordBook?, isSelected: Boolean) {
@@ -96,8 +101,8 @@ class OnboardingSelectWordBookAdapter(
             binding.ivSelected.isVisible = isSelected
             styleTitle(binding.tvTitle, isSelected)
             binding.cardCanvas.apply {
-                strokeColor = if (isSelected) selectedStrokeColor else defaultStrokeColor
-                strokeWidth = if (isSelected) selectedStrokeWidthPx else 0
+                strokeColor = if (isSelected) selectedStrokeColor else unselectedStrokeColor
+                strokeWidth = if (isSelected) selectedStrokeWidthPx else unselectedStrokeWidthPx
                 cardElevation = if (isSelected) selectedElevationPx else unselectedElevationPx
             }
             ViewCompat.setStateDescription(

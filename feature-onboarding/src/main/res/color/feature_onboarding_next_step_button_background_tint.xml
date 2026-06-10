@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:color="@color/feature_onboarding_action_disabled_background"
+        android:state_enabled="false" />
+    <item android:color="@color/feature_onboarding_action_blue" />
+</selector>
