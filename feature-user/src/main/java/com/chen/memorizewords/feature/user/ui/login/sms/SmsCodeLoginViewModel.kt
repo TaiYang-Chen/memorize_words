@@ -32,11 +32,13 @@ class SmsCodeLoginViewModel @Inject constructor(
 
     fun sendCode() {
         if (isSendCodeEnabled.value == false) return
+        showSendCodeSending()
         viewModelScope.launch {
             sendEmailCodeUseCase(email.value.orEmpty(), scene = "login").onSuccess { meta ->
                 showToast(resourceProvider.getString(R.string.module_user_login_sms_sent))
                 startCountDown(meta.resendIntervalSeconds)
             }.onFailure { failure ->
+                restoreSendCodeButton()
                 when (failure) {
                     is LoginError.EmptyEmail ->
                         showToast(resourceProvider.getString(R.string.module_user_login_email_required))
@@ -49,6 +51,16 @@ class SmsCodeLoginViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun showSendCodeSending() {
+        isSendCodeEnabled.value = false
+        sendCodeText.value = SEND_CODE_LOADING_TEXT
+    }
+
+    private fun restoreSendCodeButton() {
+        sendCodeText.value = resourceProvider.getString(R.string.module_user_send_code)
+        isSendCodeEnabled.value = true
     }
 
     fun loginBySms() {
@@ -100,5 +112,9 @@ class SmsCodeLoginViewModel @Inject constructor(
     override fun onCleared() {
         countdownJob?.cancel()
         super.onCleared()
+    }
+
+    private companion object {
+        const val SEND_CODE_LOADING_TEXT = "\u53D1\u9001\u4E2D..."
     }
 }
