@@ -121,12 +121,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/feature_onboarding_book_learner_spacing"
+                    android:gravity="center_vertical"
                     android:includeFontPadding="false"
                     android:textColor="@color/feature_onboarding_book_card_meta"
                     android:textSize="@dimen/feature_onboarding_book_learner_text_size"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@id/tvCount"
-                    app:layout_constraintStart_toEndOf="@id/tvCount" />
+                    app:layout_constraintStart_toEndOf="@id/tvCount"
+                    app:layout_constraintTop_toTopOf="@id/tvCount" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
     </FrameLayout>
