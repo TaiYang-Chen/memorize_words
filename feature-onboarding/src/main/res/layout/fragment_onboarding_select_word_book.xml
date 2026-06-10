@@ -74,7 +74,8 @@
                 android:minHeight="52dp"
                 android:backgroundTint="@color/feature_onboarding_next_step_button_background_tint"
                 android:text="@string/feature_onboarding_next_step"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                app:cornerRadius="@dimen/feature_onboarding_action_button_corner_radius" />
         </FrameLayout>
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout

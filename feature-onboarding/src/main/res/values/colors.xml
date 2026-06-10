@@ -24,10 +24,13 @@
     <color name="feature_onboarding_goal_card_background">#F7F9FC</color>
     <color name="feature_onboarding_goal_card_surface">#FFFFFF</color>
     <color name="feature_onboarding_goal_card_stroke">#E8EDF3</color>
+    <color name="feature_onboarding_daily_goal_panel_background">#F6F9FF</color>
+    <color name="feature_onboarding_daily_goal_control_background">#FFFFFF</color>
+    <color name="feature_onboarding_daily_goal_control_stroke">#EAF0F8</color>
     <color name="feature_onboarding_goal_control_track">#F5F7FA</color>
     <color name="feature_onboarding_goal_control_button_stroke">#E1E7EF</color>
-    <color name="feature_onboarding_goal_button_subtle">#EEF2F6</color>
-    <color name="feature_onboarding_goal_button_subtle_pressed">#DDE6EF</color>
+    <color name="feature_onboarding_goal_button_subtle">#F2F5FA</color>
+    <color name="feature_onboarding_goal_button_subtle_pressed">#E2EAF4</color>
     <color name="feature_onboarding_goal_button_subtle_icon">#111827</color>
     <color name="feature_onboarding_goal_button_accent">#007AFF</color>
     <color name="feature_onboarding_goal_button_accent_pressed">#0062CC</color>
