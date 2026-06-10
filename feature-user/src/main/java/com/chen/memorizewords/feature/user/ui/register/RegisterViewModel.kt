@@ -33,11 +33,13 @@ class RegisterViewModel @Inject constructor(
 
     fun sendCode() {
         if (!isSendCodeEnabled.value) return
+        showSendCodeSending()
         viewModelScope.launch {
             sendEmailCodeUseCase(email.value, scene = "register").onSuccess { meta ->
                 showToast(resourceProvider.getString(R.string.module_user_login_sms_sent))
                 startCountDown(meta.resendIntervalSeconds)
             }.onFailure { failure ->
+                restoreSendCodeButton()
                 when (failure) {
                     is LoginError.EmptyEmail ->
                         showToast(resourceProvider.getString(R.string.module_user_login_email_required))
@@ -50,6 +52,16 @@ class RegisterViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun showSendCodeSending() {
+        isSendCodeEnabled.value = false
+        sendCodeText.value = SEND_CODE_LOADING_TEXT
+    }
+
+    private fun restoreSendCodeButton() {
+        sendCodeText.value = resourceProvider.getString(R.string.module_user_send_code)
+        isSendCodeEnabled.value = true
     }
 
     fun register() {
@@ -103,5 +115,9 @@ class RegisterViewModel @Inject constructor(
     override fun onCleared() {
         countdownJob?.cancel()
         super.onCleared()
+    }
+
+    private companion object {
+        const val SEND_CODE_LOADING_TEXT = "\u53D1\u9001\u4E2D..."
     }
 }
