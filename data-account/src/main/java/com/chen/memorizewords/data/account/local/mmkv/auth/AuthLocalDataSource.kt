@@ -14,4 +14,6 @@ interface AuthLocalDataSource : LocalAccountStore {
     fun saveUser(user: User)
     fun clearUser()
     fun clear()
+
+    fun onboardingCompleted()
 }

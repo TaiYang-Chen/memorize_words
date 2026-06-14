@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.chen.memorizewords.core.navigation.AppLaunchEntry
 import com.chen.memorizewords.core.navigation.AppRoute
-import com.chen.memorizewords.core.navigation.OnboardingGuardDelegate
 import com.chen.memorizewords.core.navigation.RouteNavigator
 import com.chen.memorizewords.core.ui.activity.BaseVmDbActivity
 import com.chen.memorizewords.core.ui.vm.UiEvent
@@ -36,9 +35,6 @@ class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBindi
     lateinit var appLaunchEntry: AppLaunchEntry
 
     @Inject
-    lateinit var onboardingGuardDelegate: OnboardingGuardDelegate
-
-    @Inject
     lateinit var routeNavigator: RouteNavigator
 
     private val homeTag = "home_fragment"
@@ -60,7 +56,6 @@ class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBindi
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        if (onboardingGuardDelegate.guard(this)) return
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 handleExitBackPress()
@@ -68,11 +63,6 @@ class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBindi
         })
         setupBottomNav(savedInstanceState == null)
         viewModel.checkAutoLogin()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        onboardingGuardDelegate.guard(this)
     }
 
     private fun setupBottomNav(selectDefault: Boolean) {

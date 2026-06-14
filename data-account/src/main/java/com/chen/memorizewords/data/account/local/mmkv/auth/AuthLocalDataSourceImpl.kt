@@ -81,4 +81,10 @@ class AuthLocalDataSourceImpl(private val mmkv: MMKV) : AuthLocalDataSource {
     override fun clear() {
         clearUser()
     }
+
+    override fun onboardingCompleted() {
+        userFlow.value?.let {
+            saveUser(it.copy(onboardingCompleted=true))
+        }
+    }
 }

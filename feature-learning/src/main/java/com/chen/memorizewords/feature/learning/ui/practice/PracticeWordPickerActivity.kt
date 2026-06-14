@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.chen.memorizewords.core.navigation.OnboardingGuardDelegate
 import com.chen.memorizewords.domain.word.model.word.Word
 import com.chen.memorizewords.feature.learning.R
 import com.chen.memorizewords.feature.learning.databinding.ActivityPracticeWordPickerBinding
@@ -44,12 +43,9 @@ class PracticeWordPickerActivity : AppCompatActivity() {
     private val viewModel: PracticeWordPickerViewModel by viewModels()
     private val adapter = WordPickerAdapter { wordId -> viewModel.toggleSelection(wordId) }
 
-    @Inject
-    lateinit var onboardingGuardDelegate: OnboardingGuardDelegate
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (onboardingGuardDelegate.guard(this)) return
         binding = ActivityPracticeWordPickerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -110,10 +106,6 @@ class PracticeWordPickerActivity : AppCompatActivity() {
         viewModel.loadWords(intent.getLongArrayExtra(EXTRA_INITIAL_SELECTED_WORD_IDS))
     }
 
-    override fun onResume() {
-        super.onResume()
-        onboardingGuardDelegate.guard(this)
-    }
 }
 
 private class WordPickerAdapter(

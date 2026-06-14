@@ -602,8 +602,11 @@
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
+
         <Button
             android:id="@+id/btnComplete"
+            android:enabled="false"
+            android:minHeight="52dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/feature_onboarding_action_blue"

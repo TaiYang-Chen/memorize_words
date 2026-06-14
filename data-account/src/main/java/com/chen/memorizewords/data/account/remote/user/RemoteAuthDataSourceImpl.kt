@@ -66,6 +66,10 @@ class RemoteAuthDataSourceImpl @Inject constructor(
         return remoteResultAdapter.toResult { authRequest.changePassword(request) }
     }
 
+    override suspend fun onboardingCompleted(): Result<Unit> {
+        return remoteResultAdapter.toResult { authRequest.onboardingCompleted() }
+    }
+
     override suspend fun bindSocial(request: BindSocialRequest): Result<ProfileDto> {
         return remoteResultAdapter.toResult { authRequest.bindSocial(request) }
     }

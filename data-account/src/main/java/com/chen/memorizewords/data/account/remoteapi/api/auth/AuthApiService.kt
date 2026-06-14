@@ -55,4 +55,7 @@ interface AuthApiService {
     fun update(
         @Body fields: Map<String, String>
     ): Call<ApiResponse<ProfileDto>>
+
+    @GET("auth/onboardingCompleted")
+    fun onboardingCompleted(): Call<ApiResponse<Unit>>
 }

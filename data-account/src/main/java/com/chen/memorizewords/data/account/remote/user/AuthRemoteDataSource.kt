@@ -44,6 +44,8 @@ interface AuthRemoteDataSource {
 
     suspend fun changePassword(request: ChangePasswordRequest): Result<Unit>
 
+    suspend fun onboardingCompleted(): Result<Unit>
+
     suspend fun bindSocial(request: BindSocialRequest): Result<ProfileDto>
 
     suspend fun bindEmail(request: BindEmailRequest): Result<ProfileDto>

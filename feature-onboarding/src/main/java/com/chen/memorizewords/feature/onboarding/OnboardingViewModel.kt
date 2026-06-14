@@ -2,6 +2,7 @@ package com.chen.memorizewords.feature.onboarding
 
 import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
+import com.chen.memorizewords.domain.account.usecase.user.OnboardingCompletedUseCase
 import com.chen.memorizewords.domain.wordbook.model.learning.LearningTestMode
 import com.chen.memorizewords.domain.wordbook.model.onboarding.OnboardingError
 import com.chen.memorizewords.domain.wordbook.model.onboarding.OnboardingPhase
@@ -16,6 +17,7 @@ import com.chen.memorizewords.domain.wordbook.usecase.onboarding.GetCurrentOnboa
 import com.chen.memorizewords.domain.wordbook.usecase.onboarding.ObserveCurrentOnboardingSnapshotUseCase
 import com.chen.memorizewords.domain.wordbook.usecase.GetStudyPlanFlowUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -29,13 +31,10 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
-    getCurrentOnboardingSnapshotUseCase: GetCurrentOnboardingSnapshotUseCase,
-    observeCurrentOnboardingSnapshotUseCase: ObserveCurrentOnboardingSnapshotUseCase,
+    private val onboardingCompletedUseCase: OnboardingCompletedUseCase,
     getStudyPlanFlowUseCase: GetStudyPlanFlowUseCase,
     private val onboardingCoordinator: OnboardingCoordinator
 ) : BaseViewModel() {
-
-    private val initialSnapshot = getCurrentOnboardingSnapshotUseCase()
 
     private val _draftStudyPlan = MutableStateFlow(StudyPlan())
     private val _pendingSelectedWordBook = MutableStateFlow<WordBook?>(null)
@@ -43,30 +42,12 @@ class OnboardingViewModel @Inject constructor(
     private val _isSubmittingFinalDraft = MutableStateFlow(false)
     private val _planSubmitErrorMessage = MutableStateFlow<String?>(null)
 
-    val snapshot: StateFlow<OnboardingSnapshot> =
-        observeCurrentOnboardingSnapshotUseCase()
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = initialSnapshot
-            )
+    private val _step = MutableStateFlow(OnboardingStep.SELECT_WORD_BOOK)
+    val step: StateFlow<OnboardingStep> = _step
 
-    val step: StateFlow<OnboardingStep> =
-        combine(snapshot, _selectedWordBook) { snapshot, selectedWordBook ->
-            when {
-                snapshot.phase == OnboardingPhase.COMPLETED -> OnboardingStep.COMPLETED
-                selectedWordBook != null -> OnboardingStep.SET_STUDY_PLAN
-                else -> OnboardingStep.SELECT_WORD_BOOK
-            }
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = if (initialSnapshot.phase == OnboardingPhase.COMPLETED) {
-                OnboardingStep.COMPLETED
-            } else {
-                OnboardingStep.SELECT_WORD_BOOK
-            }
-        )
+    fun updateStep(newStep: OnboardingStep) {
+        _step.value = newStep
+    }
 
     val pendingSelectedWordBook: StateFlow<WordBook?> =
         _pendingSelectedWordBook.asStateFlow()
@@ -111,6 +92,7 @@ class OnboardingViewModel @Inject constructor(
         val pendingSelection = _pendingSelectedWordBook.value ?: return
         _planSubmitErrorMessage.value = null
         _selectedWordBook.value = pendingSelection
+        updateStep(OnboardingStep.SET_STUDY_PLAN)
     }
 
     fun updateDailyNewCount(value: Int) {
@@ -187,7 +169,11 @@ class OnboardingViewModel @Inject constructor(
             onboardingCoordinator.completeOnboarding(
                 selectedBook = currentState.wordBook,
                 studyPlan = currentState.studyPlan
-            ).onFailure { throwable ->
+            ).onSuccess {
+                onboardingCompletedUseCase.invoke().onSuccess {
+                    updateStep(OnboardingStep.COMPLETED)
+                }
+            }.onFailure { throwable ->
                 val message = throwable.toOnboardingMessage()
                 _planSubmitErrorMessage.value = message
                 showToast(message)

@@ -95,6 +95,8 @@ class AuthActivity : BaseVmDbActivity<BaseViewModel, ModuleUserActivityAuthBindi
             return
         }
 
+        startActivity( onboardingEntry.createOnboardingIntent(this))
+
         if (isTaskRoot && authStateProvider.isAuthenticated()) {
             val user = runBlocking { localAccountRepository.getCurrentUser() }
             val launchIntent = if (user?.onboardingCompleted == false) {

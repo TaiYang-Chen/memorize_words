@@ -23,6 +23,8 @@ interface AuthRepository {
 
     suspend fun changePassword(oldPassword: String, newPassword: String): Result<Unit>
 
+    suspend fun onboardingCompleted(): Result<Unit>
+
     suspend fun bindSocial(platform: String, oauthCode: String, state: String?): Result<User>
 
     suspend fun logoutRemote(): Result<Unit>

@@ -5,7 +5,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.os.bundleOf
-import com.chen.memorizewords.core.navigation.OnboardingGuardDelegate
 import com.chen.memorizewords.domain.practice.PracticeEntryType
 import com.chen.memorizewords.domain.practice.PracticeMode
 import com.chen.memorizewords.feature.learning.databinding.ActivityPracticeBinding
@@ -37,12 +36,9 @@ class PracticeActivity : AppCompatActivity() {
     private val sessionViewModel: PracticeSessionViewModel by viewModels()
     private var practiceMode: PracticeMode = PracticeMode.LISTENING
 
-    @Inject
-    lateinit var onboardingGuardDelegate: OnboardingGuardDelegate
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (onboardingGuardDelegate.guard(this)) return
         binding = ActivityPracticeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -101,7 +97,6 @@ class PracticeActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (onboardingGuardDelegate.guard(this)) return
         if (!isAudioLoopMode()) {
             sessionViewModel.onPageVisible()
         }
