@@ -57,6 +57,9 @@
             android:id="@+id/action_module_login_profilefragment_to_bindPhoneFragment"
             app:destination="@id/bindPhoneFragment" />
         <action
+            android:id="@+id/action_module_login_profilefragment_to_bindEmailFragment"
+            app:destination="@id/bindEmailFragment" />
+        <action
             android:id="@+id/action_module_login_profilefragment_to_deleteAccountConfirmFragment"
             app:destination="@id/deleteAccountConfirmFragment" />
         <action
@@ -80,6 +83,11 @@
         android:id="@+id/bindPhoneFragment"
         android:name="com.chen.memorizewords.feature.user.ui.profile.phone.BindPhoneFragment"
         android:label="@string/module_user_nav_bind_phone_title" />
+
+    <fragment
+        android:id="@+id/bindEmailFragment"
+        android:name="com.chen.memorizewords.feature.user.ui.profile.email.BindEmailFragment"
+        android:label="@string/module_user_nav_bind_email_title" />
 
     <fragment
         android:id="@+id/deleteAccountConfirmFragment"

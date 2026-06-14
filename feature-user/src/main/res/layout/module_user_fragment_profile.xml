@@ -17,7 +17,9 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:padding="@dimen/page_margin"
+        android:paddingTop="@dimen/page_margin"
+        android:paddingStart="@dimen/page_margin"
+        android:paddingEnd="@dimen/page_margin"
         android:background="@android:color/white"
         android:layout_height="match_parent">
 
@@ -61,7 +63,7 @@
 
 
 
-        <androidx.core.widget.NestedScrollView
+        <com.chen.memorizewords.feature.user.ui.profile.ElasticNestedScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -335,6 +337,40 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/feature_user_profile_row_height"
                             android:gravity="center_vertical"
+                            android:onClick="@{()->viewModel.changeEmail()}"
+                            android:paddingStart="@dimen/feature_user_profile_row_horizontal_padding"
+                            android:paddingEnd="@dimen/feature_user_profile_row_horizontal_padding">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/feature_user_profile_label_email"
+                                android:textColor="@color/feature_user_profile_label"
+                                android:textSize="@dimen/feature_user_profile_label_size" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="@{viewModel.displayEmail(user)}"
+                                android:textColor="@color/feature_user_profile_value"
+                                android:textSize="@dimen/feature_user_profile_value_size"
+                                tools:text="zh****@example.com" />
+
+                            <ImageView
+                                android:layout_width="@dimen/feature_user_profile_chevron_size"
+                                android:layout_height="@dimen/feature_user_profile_chevron_size"
+                                android:layout_marginStart="@dimen/feature_user_profile_trailing_icon_spacing"
+                                android:contentDescription="@null"
+                                android:src="@drawable/feature_user_ic_profile_chevron_right" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/feature_user_profile_row_height"
+                            android:gravity="center_vertical"
                             android:onClick="@{()->viewModel.changeWechat()}"
                             android:paddingStart="@dimen/feature_user_profile_row_horizontal_padding"
                             android:paddingEnd="@dimen/feature_user_profile_row_horizontal_padding">
@@ -457,7 +493,7 @@
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
+        </com.chen.memorizewords.feature.user.ui.profile.ElasticNestedScrollView>
 
     </LinearLayout>
 </layout>

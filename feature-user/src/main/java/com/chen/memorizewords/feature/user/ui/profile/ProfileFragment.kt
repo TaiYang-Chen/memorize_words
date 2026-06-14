@@ -126,6 +126,12 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ModuleUserFragmentProfile
                     R.id.action_module_login_profilefragment_to_bindPhoneFragment
                 )
             }
+
+            ProfileViewModel.Route.ToBindEmail -> {
+                findNavController().navigate(
+                    R.id.action_module_login_profilefragment_to_bindEmailFragment
+                )
+            }
         }
     }
 

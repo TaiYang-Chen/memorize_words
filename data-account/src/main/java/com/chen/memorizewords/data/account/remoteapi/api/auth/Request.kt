@@ -53,6 +53,12 @@ data class BindSocialRequest(
 )
 
 @JsonClass(generateAdapter = false)
+data class BindEmailRequest(
+    val email: String,
+    val emailCode: String
+)
+
+@JsonClass(generateAdapter = false)
 data class AvatarUploadDto(
     val url: String
 )

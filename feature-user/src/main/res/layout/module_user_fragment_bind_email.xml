@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.chen.memorizewords.feature.user.ui.profile.phone.BindPhoneViewModel" />
+            type="com.chen.memorizewords.feature.user.ui.profile.email.BindEmailViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,7 +30,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/module_user_bind_phone_title"
+            android:text="@{viewModel.titleText}"
             android:textColor="#111111"
             android:textSize="@dimen/title_text_size"
             android:textStyle="bold"
@@ -39,36 +39,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/ivBack" />
 
-        <TextView
-            android:id="@+id/tvUnavailableNotice"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/module_user_login_bg_edit_text"
-            android:padding="14dp"
-            android:text="@string/module_user_bind_phone_unavailable_notice"
-            android:textColor="#6B7280"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ivBack" />
-
         <EditText
-            android:id="@+id/etPhone"
+            android:id="@+id/etEmail"
             android:layout_width="0dp"
             android:layout_height="48dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="32dp"
             android:background="@drawable/module_user_login_bg_edit_text"
-            android:enabled="@{viewModel.isFormEnabled}"
-            android:hint="@string/module_user_bind_phone_phone_hint"
-            android:inputType="phone"
+            android:hint="@string/module_user_bind_email_hint"
+            android:inputType="textEmailAddress"
             android:paddingStart="14dp"
             android:paddingEnd="14dp"
-            android:text="@={viewModel.phoneNumber}"
+            android:text="@={viewModel.email}"
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvUnavailableNotice" />
+            app:layout_constraintTop_toBottomOf="@id/ivBack" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/clCode"
@@ -76,21 +61,20 @@
             android:layout_height="48dp"
             android:layout_marginTop="12dp"
             android:background="@drawable/module_user_login_bg_edit_text"
-            app:layout_constraintEnd_toEndOf="@id/etPhone"
-            app:layout_constraintStart_toStartOf="@id/etPhone"
-            app:layout_constraintTop_toBottomOf="@id/etPhone">
+            app:layout_constraintEnd_toEndOf="@id/etEmail"
+            app:layout_constraintStart_toStartOf="@id/etEmail"
+            app:layout_constraintTop_toBottomOf="@id/etEmail">
 
             <EditText
-                android:id="@+id/etSmsCode"
+                android:id="@+id/etEmailCode"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"
-                android:enabled="@{viewModel.isFormEnabled}"
-                android:hint="@string/module_user_bind_phone_sms_hint"
+                android:hint="@string/module_user_bind_email_code_hint"
                 android:inputType="number"
                 android:paddingStart="14dp"
                 android:paddingEnd="14dp"
-                android:text="@={viewModel.smsCode}"
+                android:text="@={viewModel.emailCode}"
                 android:textSize="15sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/btnSendCode"
@@ -126,9 +110,8 @@
             android:layout_marginTop="24dp"
             android:background="@drawable/module_user_login_bg_login_btn"
             android:backgroundTint="@null"
-            android:enabled="@{viewModel.isConfirmEnabled}"
             android:onClick="@{() -> viewModel.confirmBind()}"
-            android:text="@string/module_user_bind_phone_confirm"
+            android:text="@{viewModel.confirmText}"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             app:backgroundTint="@null"

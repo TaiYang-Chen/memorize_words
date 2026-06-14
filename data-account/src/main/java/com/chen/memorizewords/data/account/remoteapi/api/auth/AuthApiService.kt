@@ -44,6 +44,9 @@ interface AuthApiService {
     @POST("auth/bind-social")
     fun bindSocial(@Body request: BindSocialRequest): Call<ApiResponse<ProfileDto>>
 
+    @POST("auth/bind-email")
+    fun bindEmail(@Body request: BindEmailRequest): Call<ApiResponse<ProfileDto>>
+
     @Multipart
     @POST("upload/avatar")
     fun uploadAvatar(@Part file: okhttp3.MultipartBody.Part): Call<ApiResponse<AvatarUploadDto>>

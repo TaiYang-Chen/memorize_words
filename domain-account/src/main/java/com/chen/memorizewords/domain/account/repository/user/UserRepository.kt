@@ -8,6 +8,8 @@ interface UserRepository {
 
     suspend fun updatePhone(phone: String): Result<User>
 
+    suspend fun bindEmail(email: String, emailCode: String): Result<User>
+
     suspend fun updateWechat(wechat: String): Result<User>
 
     suspend fun updateQQ(qq: String): Result<User>

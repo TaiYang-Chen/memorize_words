@@ -3,6 +3,7 @@ package com.chen.memorizewords.data.account.repository.user
 import com.chen.memorizewords.data.account.local.mmkv.auth.AuthLocalDataSource
 import com.chen.memorizewords.data.account.mapper.toDomain
 import com.chen.memorizewords.data.account.remote.user.AuthRemoteDataSource
+import com.chen.memorizewords.data.account.remoteapi.api.auth.BindEmailRequest
 import com.chen.memorizewords.domain.account.model.user.User
 import com.chen.memorizewords.domain.account.repository.user.UserRepository
 import com.chen.memorizewords.data.account.remoteapi.api.auth.ProfilePatchRequest
@@ -41,6 +42,20 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun updatePhone(
         phone: String
     ): Result<User> = update(ProfilePatchRequest(ProfilePatchRequest.Field.PHONE, phone))
+
+    override suspend fun bindEmail(email: String, emailCode: String): Result<User> = runCatching {
+        withContext(Dispatchers.IO) {
+            val onboardingCompleted = authLocal.getUser()?.onboardingCompleted ?: false
+            val entity = remote.bindEmail(
+                BindEmailRequest(
+                    email = email,
+                    emailCode = emailCode
+                )
+            ).getOrThrow().toDomain(onboardingCompleted)
+            authLocal.saveUser(entity)
+            entity
+        }
+    }
 
     override suspend fun updateWechat(
         wechat: String

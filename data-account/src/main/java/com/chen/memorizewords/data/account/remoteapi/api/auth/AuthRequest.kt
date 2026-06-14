@@ -79,6 +79,13 @@ class AuthRequest @Inject constructor(
             .await<ApiResponse<ProfileDto>, ProfileDto>()
     }
 
+    suspend fun bindEmail(
+        request: BindEmailRequest
+    ): NetworkResult<ProfileDto> = requestExecutor.executeAuthenticated {
+        authApiService.bindEmail(request)
+            .await<ApiResponse<ProfileDto>, ProfileDto>()
+    }
+
     suspend fun uploadAvatar(file: MultipartBody.Part): NetworkResult<AvatarUploadDto> =
         requestExecutor.executeAuthenticated {
             authApiService.uploadAvatar(file)

@@ -28,13 +28,14 @@
 | `POST` | `auth/login` | 登录，支持密码、短信、邮箱验证码、OAuth 等方式；`email_code` 只允许已注册邮箱登录 | 否 | `LoginRequest` | `ApiResponse<LoginResponseDto>` |
 | `POST` | `auth/register` | 邮箱注册 | 否 | `RegisterRequest` | `ApiResponse<LoginResponseDto>` |
 | `POST` | `auth/sms/send-code` | 发送短信验证码 | 否 | `SendSmsCodeRequest` | `ApiResponse<SendSmsCodeResponseDto>` |
-| `POST` | `auth/email/send-code` | 发送邮箱验证码；`scene=login` 仅已注册邮箱成功，`scene=register` 仅未注册邮箱成功 | 否 | `SendEmailCodeRequest` | `ApiResponse<SendSmsCodeResponseDto>` |
+| `POST` | `auth/email/send-code` | 发送邮箱验证码；`scene=login` 仅已注册邮箱成功，`scene=register` 仅未注册邮箱成功，`scene=bind_email` 用于邮箱绑定/换绑 | 否 | `SendEmailCodeRequest` | `ApiResponse<SendSmsCodeResponseDto>` |
 | `POST` | `auth/refresh` | 刷新登录态 | 否 | `RefreshRequest` | `ApiResponse<LoginResponseDto>` |
 | `GET` | `me` | 获取当前用户资料 | 是 | 无 | `ApiResponse<ProfileDto>` |
 | `POST` | `auth/logout` | 退出登录 | 是 | 无 | `ApiResponse<Unit>` |
 | `POST` | `me/account/delete` | 删除账号 | 是 | 无 | `ApiResponse<Unit>` |
 | `POST` | `auth/change-password` | 修改密码 | 是 | `ChangePasswordRequest` | `ApiResponse<Unit>` |
 | `POST` | `auth/bind-social` | 绑定微信/QQ 等第三方账号 | 是 | `BindSocialRequest` | `ApiResponse<ProfileDto>` |
+| `POST` | `auth/bind-email` | 绑定或换绑邮箱 | 是 | `BindEmailRequest` | `ApiResponse<ProfileDto>` |
 | `POST` | `upload/avatar` | 上传头像 | 是 | multipart `file` | `ApiResponse<AvatarUploadDto>` |
 | `PATCH` | `me/profile` | 更新资料字段 | 是 | `Map<String, String>` | `ApiResponse<ProfileDto>` |
 
@@ -49,6 +50,7 @@
 | `RefreshRequest` | `refreshToken` |
 | `ChangePasswordRequest` | `oldPassword`, `newPassword` |
 | `BindSocialRequest` | `platform`, `oauthCode`, `state?` |
+| `BindEmailRequest` | `email`, `emailCode` |
 | `LoginResponseDto` | `token`, `refreshToken`, `tokenType`, `user`, `expiresIn`, `refreshTokenExpiresIn`, `onboarding?` |
 | `UserDto` | `id`, `email?`, `nickname?`, `gender?`, `avatarUrl?`, `phone?`, `qq?`, `wechat?`, `emailVerified` |
 | `ProfileDto` | `userId`, `email?`, `nickname?`, `gender?`, `avatarUrl?`, `phone?`, `qq?`, `wechat?`, `emailVerified` |
