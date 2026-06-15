@@ -3,33 +3,45 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:minHeight="44dp"
+    android:minHeight="54dp"
     android:orientation="horizontal"
-    android:paddingStart="12dp"
-    android:paddingTop="8dp"
-    android:paddingEnd="12dp"
-    android:paddingBottom="8dp">
+    android:paddingStart="14dp"
+    android:paddingTop="9dp"
+    android:paddingEnd="14dp"
+    android:paddingBottom="9dp">
+
+    <TextView
+        android:id="@+id/tvBadge"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textColor="#0B5FE8"
+        android:textSize="14sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tvWord"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
         android:layout_weight="1"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="#0F172A"
-        android:textSize="15sp"
-        android:textStyle="bold" />
+        android:textColor="#071426"
+        android:textSize="17sp" />
 
     <TextView
         android:id="@+id/tvDefinition"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:layout_weight="1"
         android:ellipsize="end"
         android:gravity="end"
         android:maxLines="1"
-        android:textColor="#64748B"
-        android:textSize="13sp" />
+        android:textColor="#333B4D"
+        android:textSize="15sp"
+        android:textStyle="bold" />
 
 </LinearLayout>
