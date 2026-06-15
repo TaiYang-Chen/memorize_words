@@ -72,6 +72,11 @@
     <string name="home_practice_mode_spelling">拼写</string>
     <string name="home_practice_mode_audio_loop">随身听</string>
     <string name="home_practice_mode_exam">真题</string>
+    <string name="feature_home_practice_mode_section_title">选择练习模式</string>
+    <string name="feature_home_practice_mode_listening_desc">听单词，提升理解能力</string>
+    <string name="feature_home_practice_mode_shadowing_desc">开口练习，提升口语表达</string>
+    <string name="feature_home_practice_mode_spelling_desc">强化记忆，提升拼写能力</string>
+    <string name="feature_home_practice_mode_audio_loop_desc">随时播放，轻松背单词</string>
     <string name="home_practice_entry_self">自选%1$d个</string>
     <string name="home_practice_entry_random">随机%1$d个</string>
     <string name="home_practice_record_title">%1$s · %2$s</string>
