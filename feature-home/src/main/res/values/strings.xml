@@ -120,6 +120,7 @@
     <string name="feature_home_pending_sync_raw_payload">原始 JSON</string>
     <string name="feature_home_pending_sync_parse_failed">字段解析失败，仅展示原始内容</string>
     <string name="feature_home_profile_scan">扫一扫</string>
+    <string name="feature_home_profile_user_info">个人信息</string>
     <string name="feature_home_profile_member_center">会员中心</string>
     <string name="feature_home_profile_personal_qr">个人二维码</string>
     <string name="feature_home_profile_member_status_normal">普通用户</string>

@@ -2,6 +2,7 @@ package com.chen.memorizewords.feature.home.ui.profile
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -70,6 +71,16 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ModuleHomeFragmentProfile
             is AppRoute.WordBook -> {
                 startActivity(
                     wordBookEntry.createWordBookIntent(requireContext(), target.deepLink)
+                )
+            }
+            is AppRoute.Auth -> {
+                startActivity(
+                    authEntry.createAuthIntent(requireContext()).apply {
+                        target.deepLink?.let { deepLink ->
+                            action = Intent.ACTION_VIEW
+                            data = deepLink.toUri()
+                        }
+                    }
                 )
             }
             is AppRoute -> routeNavigator.navigate(target)
