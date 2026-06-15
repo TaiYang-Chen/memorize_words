@@ -101,7 +101,7 @@ class StatsFragment : BaseFragment<StatsViewModel, ModuleHomeFragmentStatsBindin
                 launch {
                     viewModel.totalStudyDaysText.collect {
                         databind.tvAchievementDays.text = it
-                        databind.tvDescription.text = "你已与词相伴 $it 余日，语言在你身上，缓慢生长。"
+                        databind.tvDescription.text = getString(R.string.feature_home_stats_keep_going)
                     }
                 }
                 launch {
@@ -110,7 +110,9 @@ class StatsFragment : BaseFragment<StatsViewModel, ModuleHomeFragmentStatsBindin
                     }
                 }
                 launch {
-                    viewModel.totalStudyWordsText.collect { databind.tvAchievementWords.text = it }
+                    viewModel.totalStudyWordsText.collect {
+                        databind.tvAchievementWords.text = it
+                    }
                 }
                 launch {
                     viewModel.weekWordBars.collect {
@@ -212,8 +214,9 @@ class StatsFragment : BaseFragment<StatsViewModel, ModuleHomeFragmentStatsBindin
         container.removeAllViews()
         val inflater = LayoutInflater.from(container.context)
         val maxValue = bars.maxOfOrNull { it.value } ?: 0L
-        val maxBarHeight = dp(110)
-        val minBarHeight = dp(6)
+        val isDurationChart = container.id == R.id.llWeekDurationBars
+        val maxBarHeight = if (isDurationChart) dp(68) else dp(104)
+        val minBarHeight = if (isDurationChart) dp(8) else dp(12)
 
         bars.forEach { bar ->
             val itemView = inflater.inflate(R.layout.item_week_bar, container, false)
@@ -222,8 +225,15 @@ class StatsFragment : BaseFragment<StatsViewModel, ModuleHomeFragmentStatsBindin
             val barView = itemView.findViewById<View>(R.id.view_bar)
 
             tvValue.text = bar.valueLabel
+            tvValue.visibility = View.GONE
             tvDay.text = bar.dayLabel
-            barView.setBackgroundResource(barResId)
+            barView.setBackgroundResource(
+                if (bar.value <= 0L) {
+                    R.drawable.feature_home_stats_bar_empty
+                } else {
+                    barResId
+                }
+            )
 
             val calculatedHeight = if (maxValue <= 0L) {
                 minBarHeight

@@ -33,6 +33,15 @@
     <string name="home_filter_new">新词</string>
     <string name="home_filter_review">复习</string>
     <string name="home_weekly_duration_bars">周时长柱状图</string>
+    <string name="feature_home_stats_total_days">总学习天数</string>
+    <string name="feature_home_stats_keep_going">坚持就是胜利，你是最棒的！</string>
+    <string name="feature_home_stats_total_duration">累计时长</string>
+    <string name="feature_home_stats_mastered_words">掌握词汇</string>
+    <string name="feature_home_stats_hours_unit">小时</string>
+    <string name="feature_home_stats_words_unit">词</string>
+    <string name="feature_home_stats_back_today">回到今天</string>
+    <string name="feature_home_stats_weekly_words_title">周词量统计</string>
+    <string name="feature_home_stats_weekly_duration_title">周时长统计</string>
 
     <string name="home_learn_button_start">开始学习</string>
     <string name="home_learn_button_continue">继续学习</string>
