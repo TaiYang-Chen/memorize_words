@@ -6,9 +6,11 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -21,7 +23,11 @@ import com.chen.memorizewords.feature.home.databinding.FeatureHomeActivityPerson
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.ByteArrayOutputStream
+import java.io.File
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class PersonalQrActivity :
@@ -77,12 +83,17 @@ class PersonalQrActivity :
             R.string.feature_home_profile_qr_user_id,
             userIdText
         )
-        databind.featureHomeIvQrAvatar.load(state.avatarUrl) {
+        databind.featureHomeIvQrAvatar.load(state.avatarLoadSource()) {
             crossfade(true)
             placeholder(R.drawable.feature_home_ic_avatar_placeholder)
             error(R.drawable.feature_home_ic_avatar_placeholder)
             fallback(R.drawable.feature_home_ic_avatar_placeholder)
             transformations(CircleCropTransformation())
+            listener(
+                onSuccess = { _, result ->
+                    cacheRemoteAvatarIfNeeded(state, result.drawable)
+                }
+            )
         }
         runCatching { createQrBitmap(state.payload, QR_SIZE_PX) }
             .onSuccess { databind.featureHomeIvQrCode.setImageBitmap(it) }
@@ -137,6 +148,39 @@ class PersonalQrActivity :
         }
         return Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888).apply {
             setPixels(pixels, 0, size, 0, 0, size, size)
+        }
+    }
+
+    private fun PersonalQrUiState.avatarLoadSource(): Any? {
+        val localPath = localAvatarPath?.trim().orEmpty()
+        if (localPath.isNotBlank()) {
+            val file = File(localPath)
+            if (file.isFile && file.canRead()) {
+                return file
+            }
+        }
+        return avatarUrl?.trim()?.takeIf { it.isNotBlank() }
+    }
+
+    private fun cacheRemoteAvatarIfNeeded(state: PersonalQrUiState, drawable: Drawable) {
+        val avatarUrl = state.avatarUrl?.trim()?.takeIf { it.isNotBlank() } ?: return
+        val localPath = state.localAvatarPath?.trim().orEmpty()
+        if (localPath.isNotBlank()) {
+            val file = File(localPath)
+            if (file.isFile && file.canRead()) return
+        }
+        lifecycleScope.launch {
+            val bytes = withContext(Dispatchers.Default) {
+                drawable.toBitmap().toJpegBytes()
+            }
+            viewModel.cacheLoadedAvatar(bytes, avatarUrl)
+        }
+    }
+
+    private fun Bitmap.toJpegBytes(): ByteArray {
+        return ByteArrayOutputStream().use { output ->
+            compress(Bitmap.CompressFormat.JPEG, 95, output)
+            output.toByteArray()
         }
     }
 

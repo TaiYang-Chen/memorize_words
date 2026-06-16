@@ -16,5 +16,7 @@ interface UserRepository {
 
     suspend fun uploadAvatar(imageBytes: ByteArray): Result<String>
 
-    suspend fun updateAvatar(avatarUrl: String): Result<User>
+    suspend fun updateAvatar(avatarUrl: String, imageBytes: ByteArray): Result<User>
+
+    suspend fun cacheLoadedAvatar(imageBytes: ByteArray, avatarUrl: String?): Result<User>
 }

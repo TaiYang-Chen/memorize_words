@@ -9,5 +9,6 @@ data class User(
     val qq: String?,
     val wechat: String?,
     val emailVerified: Boolean,
-    val onboardingCompleted: Boolean
+    val onboardingCompleted: Boolean,
+    val localAvatarPath: String? = null
 )

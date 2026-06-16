@@ -2,6 +2,8 @@ package com.chen.memorizewords.data.account.di
 
 import com.chen.memorizewords.data.account.local.mmkv.auth.AuthLocalDataSource
 import com.chen.memorizewords.data.account.local.mmkv.auth.AuthLocalDataSourceImpl
+import com.chen.memorizewords.data.account.local.avatar.AvatarLocalDataSource
+import com.chen.memorizewords.data.account.local.avatar.AvatarLocalDataSourceImpl
 import com.chen.memorizewords.data.account.remote.user.AuthRemoteDataSource
 import com.chen.memorizewords.data.account.remote.user.RemoteAuthDataSourceImpl
 import com.chen.memorizewords.data.account.remoteapi.api.auth.AuthApiService
@@ -94,6 +96,12 @@ object DataAccountModule {
     @Singleton
     fun provideAuthLocalDataSource(mmkv: MMKV): AuthLocalDataSource {
         return AuthLocalDataSourceImpl(mmkv)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAvatarLocalDataSource(impl: AvatarLocalDataSourceImpl): AvatarLocalDataSource {
+        return impl
     }
 
     @Provides

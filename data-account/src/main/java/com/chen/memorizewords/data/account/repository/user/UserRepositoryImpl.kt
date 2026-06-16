@@ -1,5 +1,6 @@
 package com.chen.memorizewords.data.account.repository.user
 
+import com.chen.memorizewords.data.account.local.avatar.AvatarLocalDataSource
 import com.chen.memorizewords.data.account.local.mmkv.auth.AuthLocalDataSource
 import com.chen.memorizewords.data.account.mapper.toDomain
 import com.chen.memorizewords.data.account.remote.user.AuthRemoteDataSource
@@ -16,15 +17,19 @@ import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
     private val remote: AuthRemoteDataSource,
-    private val authLocal: AuthLocalDataSource
+    private val authLocal: AuthLocalDataSource,
+    private val avatarLocal: AvatarLocalDataSource
 ) : UserRepository {
 
     private suspend fun update(
         request: ProfilePatchRequest
     ): Result<User> = runCatching {
         withContext(Dispatchers.IO) {
-            val onboardingCompleted = authLocal.getUser()?.onboardingCompleted ?: false
-            val entity = remote.update(request).getOrThrow().toDomain(onboardingCompleted)
+            val localUser = authLocal.getUser()
+            val entity = remote.update(request)
+                .getOrThrow()
+                .toDomain(localUser?.onboardingCompleted ?: false)
+                .withLocalAvatarFrom(localUser)
             authLocal.saveUser(entity)
             entity
         }
@@ -45,13 +50,15 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun bindEmail(email: String, emailCode: String): Result<User> = runCatching {
         withContext(Dispatchers.IO) {
-            val onboardingCompleted = authLocal.getUser()?.onboardingCompleted ?: false
+            val localUser = authLocal.getUser()
             val entity = remote.bindEmail(
                 BindEmailRequest(
                     email = email,
                     emailCode = emailCode
                 )
-            ).getOrThrow().toDomain(onboardingCompleted)
+            ).getOrThrow()
+                .toDomain(localUser?.onboardingCompleted ?: false)
+                .withLocalAvatarFrom(localUser)
             authLocal.saveUser(entity)
             entity
         }
@@ -78,6 +85,43 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateAvatar(avatarUrl: String): Result<User> =
-        update(ProfilePatchRequest(ProfilePatchRequest.Field.AVATAR_URL, avatarUrl))
+    override suspend fun updateAvatar(avatarUrl: String, imageBytes: ByteArray): Result<User> =
+        runCatching {
+            withContext(Dispatchers.IO) {
+                val localUser = authLocal.getUser()
+                val entity = remote.update(
+                    ProfilePatchRequest(ProfilePatchRequest.Field.AVATAR_URL, avatarUrl)
+                ).getOrThrow()
+                    .toDomain(localUser?.onboardingCompleted ?: false)
+                    .let { user ->
+                        user.copy(
+                            localAvatarPath = avatarLocal.saveAvatar(
+                                userId = user.userId,
+                                imageBytes = imageBytes
+                            )
+                        )
+                    }
+                authLocal.saveUser(entity)
+                entity
+            }
+        }
+
+    override suspend fun cacheLoadedAvatar(imageBytes: ByteArray, avatarUrl: String?): Result<User> =
+        runCatching {
+            withContext(Dispatchers.IO) {
+                val localUser = authLocal.getUser()
+                    ?: throw IllegalStateException("No local user to cache avatar")
+                val path = avatarLocal.saveAvatar(localUser.userId, imageBytes)
+                val entity = localUser.copy(
+                    avatarUrl = avatarUrl?.takeIf { it.isNotBlank() } ?: localUser.avatarUrl,
+                    localAvatarPath = path
+                )
+                authLocal.saveUser(entity)
+                entity
+            }
+        }
+
+    private fun User.withLocalAvatarFrom(localUser: User?): User {
+        return copy(localAvatarPath = localUser?.localAvatarPath)
+    }
 }

@@ -5,7 +5,9 @@ import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.core.ui.vm.UiEvent
 import com.chen.memorizewords.domain.account.model.user.User
+import com.chen.memorizewords.domain.account.model.user.avatarLoadSource
 import com.chen.memorizewords.domain.account.usecase.user.BindSocialUseCase
+import com.chen.memorizewords.domain.account.usecase.user.CacheLoadedAvatarUseCase
 import com.chen.memorizewords.domain.account.usecase.user.ChangeAvatarUseCase
 import com.chen.memorizewords.domain.account.usecase.user.ChangeGenderUseCase
 import com.chen.memorizewords.domain.account.usecase.user.ChangeNicknameUseCase
@@ -25,6 +27,7 @@ class ProfileViewModel @Inject constructor(
     private val changeGenderUseCase: ChangeGenderUseCase,
     private val changeAvatarUseCase: ChangeAvatarUseCase,
     private val bindSocialUseCase: BindSocialUseCase,
+    private val cacheLoadedAvatarUseCase: CacheLoadedAvatarUseCase,
     private val resourceProvider: ResourceProvider
 ) : BaseViewModel() {
 
@@ -90,7 +93,13 @@ class ProfileViewModel @Inject constructor(
     fun onMoreClick() = Unit
 
     fun openAvatarPreview() {
-        navigateRoute(Route.ToAvatarPreview(user.value?.avatarUrl.orEmpty()))
+        navigateRoute(Route.ToAvatarPreview(user.value.avatarLoadSource()?.toString().orEmpty()))
+    }
+
+    fun cacheLoadedAvatar(imageBytes: ByteArray, avatarUrl: String?) {
+        viewModelScope.launch {
+            cacheLoadedAvatarUseCase(imageBytes, avatarUrl)
+        }
     }
 
     fun changeAvatar(imageBytes: ByteArray) {

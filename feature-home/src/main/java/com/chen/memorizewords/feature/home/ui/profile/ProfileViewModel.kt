@@ -8,6 +8,7 @@ import com.chen.memorizewords.domain.account.model.user.User
 import com.chen.memorizewords.domain.study.service.StudyStatsFacade
 import com.chen.memorizewords.domain.account.model.LogoutOutcome
 import com.chen.memorizewords.domain.account.repository.user.LogoutDataLossRiskException
+import com.chen.memorizewords.domain.account.usecase.user.CacheLoadedAvatarUseCase
 import com.chen.memorizewords.domain.account.usecase.user.GetUserFlowUseCase
 import com.chen.memorizewords.domain.account.usecase.user.LogoutUseCase
 import com.chen.memorizewords.feature.home.R
@@ -26,6 +27,7 @@ class ProfileViewModel @Inject constructor(
     getUserFlowUseCase: GetUserFlowUseCase,
     private val logoutUseCase: LogoutUseCase,
     private val studyStatsFacade: StudyStatsFacade,
+    private val cacheLoadedAvatarUseCase: CacheLoadedAvatarUseCase,
     private val resourceProvider: ResourceProvider
 ) : BaseViewModel() {
 
@@ -82,6 +84,12 @@ class ProfileViewModel @Inject constructor(
 
     fun toPersonalQr() {
         navigateRoute(Route.OpenPersonalQr)
+    }
+
+    fun cacheLoadedAvatar(imageBytes: ByteArray, avatarUrl: String?) {
+        viewModelScope.launch {
+            cacheLoadedAvatarUseCase(imageBytes, avatarUrl)
+        }
     }
 
     fun requestLogoutConfirmation() {

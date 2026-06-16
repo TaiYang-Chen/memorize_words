@@ -1,7 +1,9 @@
 package com.chen.memorizewords.feature.home.ui.profile
 
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
+import androidx.core.graphics.drawable.toBitmap
 import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -13,14 +15,20 @@ import com.chen.memorizewords.core.navigation.AppRoute
 import com.chen.memorizewords.core.navigation.RouteNavigator
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.core.ui.vm.UiEvent
+import com.chen.memorizewords.domain.account.model.user.User
+import com.chen.memorizewords.domain.account.model.user.avatarLoadSource
+import com.chen.memorizewords.domain.account.model.user.hasReadableLocalAvatar
 import com.chen.memorizewords.feature.home.databinding.ModuleHomeFragmentProfileBinding
 import com.chen.memorizewords.feature.home.R
 import com.chen.memorizewords.core.navigation.AuthEntry
 import com.chen.memorizewords.core.navigation.FeedbackEntry
 import com.chen.memorizewords.core.navigation.WordBookEntry
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.ByteArrayOutputStream
 import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class ProfileFragment : BaseFragment<ProfileViewModel, ModuleHomeFragmentProfileBinding>() {
@@ -49,15 +57,38 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ModuleHomeFragmentProfile
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.user.collect { user ->
-                    databind.ivAvatar.load(user?.avatarUrl) {
+                    databind.ivAvatar.load(user.avatarLoadSource()) {
                         crossfade(true)
                         transformations(CircleCropTransformation())
                         placeholder(R.drawable.feature_home_ic_avatar_placeholder)
                         error(R.drawable.feature_home_ic_avatar_placeholder)
                         fallback(R.drawable.feature_home_ic_avatar_placeholder)
+                        listener(
+                            onSuccess = { _, result ->
+                                cacheRemoteAvatarIfNeeded(user, result.drawable)
+                            }
+                        )
                     }
                 }
             }
+        }
+    }
+
+    private fun cacheRemoteAvatarIfNeeded(user: User?, drawable: android.graphics.drawable.Drawable) {
+        val avatarUrl = user?.avatarUrl?.trim()?.takeIf { it.isNotBlank() } ?: return
+        if (user.hasReadableLocalAvatar()) return
+        lifecycleScope.launch {
+            val bytes = withContext(Dispatchers.Default) {
+                drawable.toBitmap().toJpegBytes()
+            }
+            viewModel.cacheLoadedAvatar(bytes, avatarUrl)
+        }
+    }
+
+    private fun Bitmap.toJpegBytes(): ByteArray {
+        return ByteArrayOutputStream().use { output ->
+            compress(Bitmap.CompressFormat.JPEG, 95, output)
+            output.toByteArray()
         }
     }
 

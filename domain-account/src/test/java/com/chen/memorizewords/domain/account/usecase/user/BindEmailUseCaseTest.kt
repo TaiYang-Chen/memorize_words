@@ -65,7 +65,9 @@ class BindEmailUseCaseTest {
 
         override suspend fun uploadAvatar(imageBytes: ByteArray): Result<String> = unused()
 
-        override suspend fun updateAvatar(avatarUrl: String): Result<User> = unused()
+        override suspend fun updateAvatar(avatarUrl: String, imageBytes: ByteArray): Result<User> = unused()
+
+        override suspend fun cacheLoadedAvatar(imageBytes: ByteArray, avatarUrl: String?): Result<User> = unused()
 
         private fun user(email: String): User = User(
             userId = 1L,

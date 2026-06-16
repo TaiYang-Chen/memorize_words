@@ -2,16 +2,19 @@ package com.chen.memorizewords.feature.home.ui.profile
 
 import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
+import com.chen.memorizewords.domain.account.usecase.user.CacheLoadedAvatarUseCase
 import com.chen.memorizewords.domain.account.usecase.user.GetUserFlowUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class PersonalQrViewModel @Inject constructor(
-    getUserFlowUseCase: GetUserFlowUseCase
+    getUserFlowUseCase: GetUserFlowUseCase,
+    private val cacheLoadedAvatarUseCase: CacheLoadedAvatarUseCase
 ) : BaseViewModel() {
 
     val uiState = getUserFlowUseCase()
@@ -22,6 +25,7 @@ class PersonalQrViewModel @Inject constructor(
                 userId = userId,
                 nickname = nickname,
                 avatarUrl = user?.avatarUrl,
+                localAvatarPath = user?.localAvatarPath,
                 payload = PersonalQrPayload.create(userId, nickname)
             )
         }
@@ -30,4 +34,10 @@ class PersonalQrViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = PersonalQrUiState()
         )
+
+    fun cacheLoadedAvatar(imageBytes: ByteArray, avatarUrl: String?) {
+        viewModelScope.launch {
+            cacheLoadedAvatarUseCase(imageBytes, avatarUrl)
+        }
+    }
 }

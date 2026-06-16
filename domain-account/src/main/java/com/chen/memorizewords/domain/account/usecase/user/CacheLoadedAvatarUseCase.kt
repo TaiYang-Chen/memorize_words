@@ -1,18 +1,16 @@
 package com.chen.memorizewords.domain.account.usecase.user
+
 import com.chen.memorizewords.domain.account.model.user.User
 import com.chen.memorizewords.domain.account.repository.user.UserRepository
 import javax.inject.Inject
 
-class ChangeAvatarUseCase @Inject constructor(
+class CacheLoadedAvatarUseCase @Inject constructor(
     private val repo: UserRepository
 ) {
-    suspend operator fun invoke(imageBytes: ByteArray): Result<User> {
+    suspend operator fun invoke(imageBytes: ByteArray, avatarUrl: String?): Result<User> {
         if (imageBytes.isEmpty()) {
             return Result.failure(IllegalArgumentException("Avatar image is empty"))
         }
-        return repo.uploadAvatar(imageBytes).fold(
-            onSuccess = { url -> repo.updateAvatar(url, imageBytes) },
-            onFailure = { throwable -> Result.failure(throwable) }
-        )
+        return repo.cacheLoadedAvatar(imageBytes, avatarUrl)
     }
 }
