@@ -83,12 +83,8 @@ class OnboardingStudyPlanFragment :
         databind.cardMeaningMode.setOnClickListener {
             viewModel.updateTestMode(LearningTestMode.MEANING_CHOICE)
         }
-        databind.cardSpellingMode.setOnClickListener {
-            viewModel.updateTestMode(LearningTestMode.SPELLING)
-        }
-        databind.cardListeningMode.setOnClickListener {
-            viewModel.updateTestMode(LearningTestMode.LISTENING)
-        }
+        databind.cardSpellingMode.isVisible = false
+        databind.cardListeningMode.isVisible = false
         databind.radioOrderRandom.setOnCheckedChangeListener { _, checked ->
             if (checked) viewModel.updateWordOrderType(WordOrderType.RANDOM)
         }
@@ -224,17 +220,12 @@ class OnboardingStudyPlanFragment :
                         databind.etDailyNewValue.isEnabled = isInteractive
                         databind.etDailyReviewValue.isEnabled = isInteractive
                         databind.cardMeaningMode.isEnabled = isInteractive
-                        databind.cardSpellingMode.isEnabled = isInteractive
-                        databind.cardListeningMode.isEnabled = isInteractive
-                        databind.cardMeaningMode.isSelected =
-                            state.studyPlan.testMode == LearningTestMode.MEANING_CHOICE
-                        databind.cardSpellingMode.isSelected =
-                            state.studyPlan.testMode == LearningTestMode.SPELLING
-                        databind.cardListeningMode.isSelected =
-                            state.studyPlan.testMode == LearningTestMode.LISTENING
+                        databind.cardSpellingMode.isEnabled = false
+                        databind.cardListeningMode.isEnabled = false
+                        databind.cardMeaningMode.isSelected = true
+                        databind.cardSpellingMode.isSelected = false
+                        databind.cardListeningMode.isSelected = false
                         bindModeCardEnabledState(databind.cardMeaningMode, isInteractive)
-                        bindModeCardEnabledState(databind.cardSpellingMode, isInteractive)
-                        bindModeCardEnabledState(databind.cardListeningMode, isInteractive)
                         databind.radioOrderRandom.isChecked =
                             state.studyPlan.wordOrderType == WordOrderType.RANDOM
                         databind.radioOrderAlphabeticAsc.isChecked =

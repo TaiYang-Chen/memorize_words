@@ -79,7 +79,7 @@ class OnboardingViewModel @Inject constructor(
         viewModelScope.launch {
             getStudyPlanFlowUseCase()
                 .take(1)
-                .collect { plan -> _draftStudyPlan.value = plan ?: StudyPlan() }
+                .collect { plan -> _draftStudyPlan.value = (plan ?: StudyPlan()).meaningChoiceOnly() }
         }
     }
 
@@ -142,7 +142,9 @@ class OnboardingViewModel @Inject constructor(
 
     fun updateTestMode(mode: LearningTestMode) {
         _planSubmitErrorMessage.value = null
-        _draftStudyPlan.update { current -> current.copy(testMode = mode) }
+        _draftStudyPlan.update { current ->
+            current.copy(testMode = LearningTestMode.MEANING_CHOICE)
+        }
     }
 
     fun updateWordOrderType(type: WordOrderType) {
@@ -168,7 +170,7 @@ class OnboardingViewModel @Inject constructor(
             _planSubmitErrorMessage.value = null
             onboardingCoordinator.completeOnboarding(
                 selectedBook = currentState.wordBook,
-                studyPlan = currentState.studyPlan
+                studyPlan = currentState.studyPlan.meaningChoiceOnly()
             ).onSuccess {
                 onboardingCompletedUseCase.invoke().onSuccess {
                     updateStep(OnboardingStep.COMPLETED)
@@ -212,3 +214,11 @@ private const val MIN_DAILY_REVIEW_COUNT = 1
 private const val MAX_DAILY_REVIEW_COUNT = 160
 private const val RECOMMENDED_DAILY_NEW_COUNT = 15
 private const val RECOMMENDED_DAILY_REVIEW_COUNT = 30
+
+private fun StudyPlan.meaningChoiceOnly(): StudyPlan {
+    return if (testMode == LearningTestMode.MEANING_CHOICE) {
+        this
+    } else {
+        copy(testMode = LearningTestMode.MEANING_CHOICE)
+    }
+}

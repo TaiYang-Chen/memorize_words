@@ -4,7 +4,6 @@ import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.domain.word.query.WordReadFacade
 import com.chen.memorizewords.domain.wordbook.model.learning.LearningTestMode
-import com.chen.memorizewords.domain.word.model.word.Word
 import com.chen.memorizewords.domain.word.model.word.WordDefinitions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -32,9 +31,7 @@ class WordLearningTestViewModel @Inject constructor(
     }
 
     private data class LoadedData(
-        val definitions: List<WordDefinitions>,
-        val currentWord: Word?,
-        val optionWordMap: Map<Long, Word?>
+        val definitions: List<WordDefinitions>
     )
 
     private val _uiState = MutableStateFlow(TestUiState())
@@ -42,38 +39,25 @@ class WordLearningTestViewModel @Inject constructor(
     private var activeLoadRequestToken: Int = 0
 
     fun loadData(wordId: Long, mode: LearningTestMode) {
+        val effectiveMode = LearningTestMode.MEANING_CHOICE
         val requestToken = nextLoadRequestToken(activeLoadRequestToken)
         activeLoadRequestToken = requestToken
-        _uiState.value = loadingUiState(mode)
+        _uiState.value = loadingUiState(effectiveMode)
         viewModelScope.launch {
             val loaded = withContext(Dispatchers.IO) {
                 val definitions = wordReadFacade.generateMultipleChoiceOptions(wordId)
                 if (definitions.isEmpty()) {
-                    return@withContext LoadedData(
-                        definitions = emptyList(),
-                        currentWord = null,
-                        optionWordMap = emptyMap()
-                    )
+                    return@withContext LoadedData(definitions = emptyList())
                 }
 
-                val currentWord = wordReadFacade.getWordById(wordId)
-                val optionWordMap = definitions
-                    .map { it.wordId }
-                    .distinct()
-                    .associateWith { optionWordId -> wordReadFacade.getWordById(optionWordId) }
-
-                LoadedData(
-                    definitions = definitions,
-                    currentWord = currentWord,
-                    optionWordMap = optionWordMap
-                )
+                LoadedData(definitions = definitions)
             }
 
             if (!shouldApplyLoadResult(activeLoadRequestToken, requestToken)) return@launch
             val definitions = loaded.definitions
             if (definitions.isEmpty()) {
                 _uiState.value = TestUiState(
-                    mode = mode,
+                    mode = effectiveMode,
                     isLoading = false,
                     prompt = "\u9898\u76EE\u52A0\u8F7D\u5931\u8D25",
                     promptHint = "",
@@ -83,46 +67,20 @@ class WordLearningTestViewModel @Inject constructor(
                 return@launch
             }
 
-            val correctDefinition =
-                definitions.firstOrNull { it.wordId == wordId } ?: definitions.first()
-            val options = when (mode) {
-                LearningTestMode.MEANING_CHOICE -> {
-                    definitions.map {
-                        OptionData(
-                            partOfSpeech = it.partOfSpeech.abbr,
-                            content = it.meaningChinese,
-                            isCorrect = it.wordId == wordId
-                        )
-                    }
-                }
-
-                LearningTestMode.SPELLING,
-                LearningTestMode.LISTENING -> {
-                    definitions.map {
-                        val optionWord = loaded.optionWordMap[it.wordId]
-                        OptionData(
-                            partOfSpeech = "\u8BCD",
-                            content = optionWord?.word.orEmpty(),
-                            isCorrect = it.wordId == wordId
-                        )
-                    }
-                }
+            val options = definitions.map {
+                OptionData(
+                    partOfSpeech = it.partOfSpeech.abbr,
+                    content = it.meaningChinese,
+                    isCorrect = it.wordId == wordId
+                )
             }
 
-            val prompt = when (mode) {
-                LearningTestMode.MEANING_CHOICE -> "\u4ECE\u4E0B\u5217\u56DB\u4E2A\u9009\u9879\u4E2D\uFF0C\u9009\u62E9\u6B63\u786E\u91CA\u4E49"
-                LearningTestMode.SPELLING -> "\u6839\u636E\u91CA\u4E49\uFF0C\u9009\u62E9\u6B63\u786E\u5355\u8BCD"
-                LearningTestMode.LISTENING -> "\u542C\u53D1\u97F3\uFF0C\u9009\u62E9\u6B63\u786E\u5355\u8BCD"
-            }
-            val promptHint = when (mode) {
-                LearningTestMode.MEANING_CHOICE -> ""
-                LearningTestMode.SPELLING -> "${correctDefinition.partOfSpeech.abbr} ${correctDefinition.meaningChinese}"
-                LearningTestMode.LISTENING -> ""
-            }
+            val prompt = "\u4ECE\u4E0B\u5217\u56DB\u4E2A\u9009\u9879\u4E2D\uFF0C\u9009\u62E9\u6B63\u786E\u91CA\u4E49"
+            val promptHint = ""
 
             if (!shouldApplyLoadResult(activeLoadRequestToken, requestToken)) return@launch
             _uiState.value = TestUiState(
-                mode = mode,
+                mode = effectiveMode,
                 isLoading = false,
                 prompt = prompt,
                 promptHint = promptHint,

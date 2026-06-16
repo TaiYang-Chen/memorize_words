@@ -69,8 +69,7 @@ class RemoteUserSyncDataSourceImpl @Inject constructor(
                     StudyPlan(
                         dailyNewCount = it.dailyNewWords,
                         dailyReviewCount = it.dailyReviewWords,
-                        testMode = runCatching { LearningTestMode.valueOf(it.testMode) }
-                            .getOrDefault(LearningTestMode.MEANING_CHOICE),
+                        testMode = LearningTestMode.MEANING_CHOICE,
                         wordOrderType = runCatching { WordOrderType.valueOf(it.wordOrderType) }
                             .getOrDefault(WordOrderType.RANDOM)
                     )
@@ -84,7 +83,7 @@ class RemoteUserSyncDataSourceImpl @Inject constructor(
                 StudyPlanDto(
                     dailyNewWords = studyPlan.dailyNewCount,
                     dailyReviewWords = studyPlan.dailyReviewCount,
-                    testMode = studyPlan.testMode.name,
+                    testMode = LearningTestMode.MEANING_CHOICE.name,
                     wordOrderType = studyPlan.wordOrderType.name
                 )
             )

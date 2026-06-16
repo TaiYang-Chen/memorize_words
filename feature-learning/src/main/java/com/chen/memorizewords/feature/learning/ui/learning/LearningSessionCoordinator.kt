@@ -92,7 +92,7 @@ internal class LearningSessionCoordinator(
             !isCorrect && progress.status == WordSessionStatus.UNSEEN -> {
                 progress.status = WordSessionStatus.WRONG_TRACK
                 progress.consecutiveCorrect = 0
-                progress.testMode = LearningTestMode.LISTENING
+                progress.testMode = LearningTestMode.MEANING_CHOICE
                 enqueueWrongWord(wordId)
             }
 
@@ -108,7 +108,7 @@ internal class LearningSessionCoordinator(
 
             !isCorrect && progress.status == WordSessionStatus.WRONG_TRACK -> {
                 progress.consecutiveCorrect = 0
-                progress.testMode = upgradeMode(progress.testMode)
+                progress.testMode = LearningTestMode.MEANING_CHOICE
                 enqueueWrongWord(wordId)
             }
         }
@@ -214,14 +214,6 @@ internal class LearningSessionCoordinator(
             isFinished = completedWordIds.size >= originalWords.size,
             questionToken = questionToken
         )
-    }
-
-    private fun upgradeMode(currentMode: LearningTestMode): LearningTestMode {
-        return when (currentMode) {
-            LearningTestMode.MEANING_CHOICE -> LearningTestMode.LISTENING
-            LearningTestMode.LISTENING -> LearningTestMode.SPELLING
-            LearningTestMode.SPELLING -> LearningTestMode.SPELLING
-        }
     }
 
     companion object {

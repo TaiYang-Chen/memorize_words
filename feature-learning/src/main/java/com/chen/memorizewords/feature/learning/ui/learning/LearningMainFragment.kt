@@ -16,7 +16,6 @@ import androidx.navigation.fragment.findNavController
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.core.ui.vm.UiEffect
 import com.chen.memorizewords.core.ui.vm.UiEvent
-import com.chen.memorizewords.domain.wordbook.model.learning.LearningTestMode
 import com.chen.memorizewords.domain.word.model.word.PronunciationType
 import com.chen.memorizewords.domain.practice.usecase.SynthesizeSpeechUseCase
 import com.chen.memorizewords.feature.learning.LearningActivity
@@ -46,7 +45,6 @@ class LearningMainFragment :
     lateinit var synthesizeSpeech: SynthesizeSpeechUseCase
 
     private var lastRenderKey: RenderKey? = null
-    private var autoSpeakKey: String? = null
     private var mediaPlayer: MediaPlayer? = null
 
     private val testFragmentTag = "learning_test"
@@ -112,7 +110,6 @@ class LearningMainFragment :
                         lastRenderKey = key
                         renderState(state.learningState)
                     }
-                    autoSpeakIfNeeded(state)
                     databind.root.post { updateLearningScrollBottomPadding() }
                 }
             }
@@ -178,7 +175,6 @@ class LearningMainFragment :
 
     override fun onDestroyView() {
         releaseMediaPlayer()
-        autoSpeakKey = null
         lastRenderKey = null
         super.onDestroyView()
     }
@@ -244,18 +240,6 @@ class LearningMainFragment :
             databind.nestedScrollView2.paddingRight,
             bottomPadding
         )
-    }
-
-    private fun autoSpeakIfNeeded(state: LearningViewModel.LearningUiState) {
-        val currentWord = state.currentWord ?: return
-        if (state.learningState != LearningViewModel.LearningState.TEST) return
-        if (state.currentTestMode != LearningTestMode.LISTENING) return
-        if (state.isAnswered) return
-
-        val key = "${state.questionToken}_${currentWord.id}_${state.pronunciationType.name}"
-        if (key == autoSpeakKey) return
-        autoSpeakKey = key
-        speakCurrentWord()
     }
 
     private fun speakCurrentWord() {

@@ -58,8 +58,10 @@ class StudyPlanSettingFragment :
             viewModel.onSelectWordOrderType(wordOrderType)
         }
         databind.layoutStudyModeAction.setOnClickListener {
-            showStudyModePicker()
+            viewModel.onSelectTestMode(LearningTestMode.MEANING_CHOICE)
         }
+        databind.layoutStudyModeAction.isClickable = false
+        databind.layoutStudyModeAction.isFocusable = false
         databind.layoutWordOrderAction.setOnClickListener {
             showWordOrderPicker()
         }

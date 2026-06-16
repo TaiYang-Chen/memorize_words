@@ -10,14 +10,6 @@ object LearningTestRegistry {
         object : LearningTestContract {
             override val mode: LearningTestMode = LearningTestMode.MEANING_CHOICE
             override fun createFragment(): Fragment = WordLearningTestFragment()
-        },
-        object : LearningTestContract {
-            override val mode: LearningTestMode = LearningTestMode.SPELLING
-            override fun createFragment(): Fragment = WordLearningTestFragment()
-        },
-        object : LearningTestContract {
-            override val mode: LearningTestMode = LearningTestMode.LISTENING
-            override fun createFragment(): Fragment = WordLearningTestFragment()
         }
     ).associateBy { it.mode }
 
