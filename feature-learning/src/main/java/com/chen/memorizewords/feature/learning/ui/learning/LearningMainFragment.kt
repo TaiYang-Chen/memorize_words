@@ -227,19 +227,17 @@ class LearningMainFragment :
 
     private fun updateLearningScrollBottomPadding() {
         val context = context ?: return
-        val bottomPadding = if (databind.composeBtn.visibility == android.view.View.VISIBLE) {
-            val layoutParams = databind.composeBtn.layoutParams as? ViewGroup.MarginLayoutParams
-            val buttonHeight = databind.composeBtn.height
-            if (buttonHeight == 0) {
-                databind.composeBtn.post { updateLearningScrollBottomPadding() }
-            }
-            buttonHeight +
-                (layoutParams?.topMargin ?: 0) +
-                (layoutParams?.bottomMargin ?: 0) +
-                LEARNING_SCROLL_EXTRA_BOTTOM_PADDING_DP.dpToPx(context)
-        } else {
-            LEARNING_SCROLL_COLLAPSED_BOTTOM_PADDING_DP.dpToPx(context)
+        val layoutParams = databind.composeBtn.layoutParams as? ViewGroup.MarginLayoutParams
+        val measuredButtonHeight = databind.composeBtn.height
+        if (measuredButtonHeight == 0) {
+            databind.composeBtn.post { updateLearningScrollBottomPadding() }
         }
+        val buttonHeight = measuredButtonHeight.takeIf { it > 0 }
+            ?: LEARNING_BOTTOM_BUTTON_HEIGHT_DP.dpToPx(context)
+        val bottomPadding = buttonHeight +
+            (layoutParams?.topMargin ?: 0) +
+            (layoutParams?.bottomMargin ?: 0) +
+            LEARNING_SCROLL_EXTRA_BOTTOM_PADDING_DP.dpToPx(context)
         databind.nestedScrollView2.setPadding(
             databind.nestedScrollView2.paddingLeft,
             databind.nestedScrollView2.paddingTop,
@@ -336,7 +334,7 @@ class LearningMainFragment :
     }
 
     private companion object {
+        const val LEARNING_BOTTOM_BUTTON_HEIGHT_DP = 54
         const val LEARNING_SCROLL_EXTRA_BOTTOM_PADDING_DP = 16
-        const val LEARNING_SCROLL_COLLAPSED_BOTTOM_PADDING_DP = 16
     }
 }
