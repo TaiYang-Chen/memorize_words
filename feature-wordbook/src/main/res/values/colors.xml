@@ -63,4 +63,14 @@
     <color name="feature_wordbook_my_books_filter_selected_background">#E8EBEF</color>
     <color name="feature_wordbook_my_books_filter_text_selected">#1A2232</color>
     <color name="feature_wordbook_my_books_filter_text_unselected">#1A2232</color>
+    <color name="feature_wordbook_favorites_page_background">#F4F7FA</color>
+    <color name="feature_wordbook_favorites_card_background">#FFFFFF</color>
+    <color name="feature_wordbook_favorites_text_primary">#080C12</color>
+    <color name="feature_wordbook_favorites_text_secondary">#25313A</color>
+    <color name="feature_wordbook_favorites_accent">#004E66</color>
+    <color name="feature_wordbook_favorites_badge_background">#EEF3F7</color>
+    <color name="feature_wordbook_favorites_badge_stroke">#C5CED6</color>
+    <color name="feature_wordbook_favorites_badge_text">#56616B</color>
+    <color name="feature_wordbook_favorites_date_background">#DDE8EE</color>
+    <color name="feature_wordbook_favorites_date_text">#5F6972</color>
 </resources>

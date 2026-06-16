@@ -83,4 +83,21 @@
     <dimen name="feature_wordbook_my_books_list_item_spacing">16dp</dimen>
     <dimen name="feature_wordbook_my_books_list_top_spacing">18dp</dimen>
     <dimen name="feature_wordbook_my_books_list_bottom_spacing">16dp</dimen>
+
+    <dimen name="feature_wordbook_favorites_card_min_height">112dp</dimen>
+    <dimen name="feature_wordbook_favorites_card_corner_radius">14dp</dimen>
+    <dimen name="feature_wordbook_favorites_card_padding_horizontal">20dp</dimen>
+    <dimen name="feature_wordbook_favorites_card_padding_vertical">18dp</dimen>
+    <dimen name="feature_wordbook_favorites_card_spacing">16dp</dimen>
+    <dimen name="feature_wordbook_favorites_word_text_size">24sp</dimen>
+    <dimen name="feature_wordbook_favorites_meaning_text_size">17sp</dimen>
+    <dimen name="feature_wordbook_favorites_part_text_size">14sp</dimen>
+    <dimen name="feature_wordbook_favorites_word_max_width">184dp</dimen>
+    <dimen name="feature_wordbook_favorites_part_height">30dp</dimen>
+    <dimen name="feature_wordbook_favorites_part_padding_horizontal">12dp</dimen>
+    <dimen name="feature_wordbook_favorites_star_size">32dp</dimen>
+    <dimen name="feature_wordbook_favorites_date_header_height">56dp</dimen>
+    <dimen name="feature_wordbook_favorites_date_badge_height">32dp</dimen>
+    <dimen name="feature_wordbook_favorites_date_badge_padding_horizontal">14dp</dimen>
+    <dimen name="feature_wordbook_favorites_date_text_size">15sp</dimen>
 </resources>
