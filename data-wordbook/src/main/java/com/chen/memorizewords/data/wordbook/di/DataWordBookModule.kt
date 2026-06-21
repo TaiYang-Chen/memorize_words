@@ -21,11 +21,13 @@ import com.chen.memorizewords.data.wordbook.repository.WordRepositoryImpl
 import com.chen.memorizewords.data.wordbook.repository.bootstrap.WordBookSnapshotLocalStateStore
 import com.chen.memorizewords.data.wordbook.repository.WordBookUpdateRepositoryImpl
 import com.chen.memorizewords.data.wordbook.repository.onboarding.OnboardingRepositoryImpl
+import com.chen.memorizewords.data.wordbook.repository.wordbook.WordBookContentReadinessAdapter
 import com.chen.memorizewords.data.wordbook.repository.wordbook.update.WordBookUpdateCoordinatorImpl
 import com.chen.memorizewords.data.wordbook.sync.WordBookUserSyncOutboxHandler
 import com.chen.memorizewords.domain.wordbook.repository.CurrentWordBookLocalStatePort
 import com.chen.memorizewords.domain.sync.SyncOutboxHandler
 import com.chen.memorizewords.domain.wordbook.repository.LearningProgressRepository
+import com.chen.memorizewords.domain.wordbook.repository.WordBookContentReadinessPort
 import com.chen.memorizewords.domain.wordbook.repository.WordBookSnapshotLocalStatePort
 import com.chen.memorizewords.domain.wordbook.repository.WordBookRepository
 import com.chen.memorizewords.domain.wordbook.repository.WordBookUpdateRepository
@@ -76,6 +78,11 @@ abstract class DataWordBookModule {
     abstract fun bindWordBookSnapshotLocalStatePort(
         impl: WordBookSnapshotLocalStateStore
     ): WordBookSnapshotLocalStatePort
+
+    @Binds
+    abstract fun bindWordBookContentReadinessPort(
+        impl: WordBookContentReadinessAdapter
+    ): WordBookContentReadinessPort
 
     @Binds
     abstract fun bindOnboardingRepository(impl: OnboardingRepositoryImpl): OnboardingRepository

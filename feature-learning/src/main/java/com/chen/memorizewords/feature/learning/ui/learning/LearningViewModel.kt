@@ -6,6 +6,7 @@ import com.chen.memorizewords.core.common.session.SessionTimer
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.domain.word.query.WordReadFacade
 import com.chen.memorizewords.domain.study.service.StudyStatsFacade
+import com.chen.memorizewords.domain.study.model.record.TodayCheckInEntryState
 import com.chen.memorizewords.domain.wordbook.usecase.GetCurrentWordBookUseCase
 import com.chen.memorizewords.domain.wordbook.model.learning.LearningTestMode
 import com.chen.memorizewords.domain.wordbook.model.WordBook
@@ -17,6 +18,7 @@ import com.chen.memorizewords.domain.study.usecase.word.study.RecordWordAnswerRe
 import com.chen.memorizewords.domain.study.usecase.word.study.SetWordAsMasteredUseCase
 import com.chen.memorizewords.domain.study.usecase.word.study.ToggleFavoriteUseCase
 import com.chen.memorizewords.feature.learning.R
+import com.chen.memorizewords.feature.learning.ui.done.LearningSessionType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -99,6 +101,8 @@ class LearningViewModel @Inject constructor(
     }
 
     sealed interface Route {
+        data object ToCheckIn : Route
+
         data class ToWordExamPractice(
             val wordId: Long,
             val wordText: String
@@ -423,20 +427,32 @@ class LearningViewModel @Inject constructor(
     private fun finishSession() {
         if (sessionFinished) return
         sessionFinished = true
-        onLearningPageHidden()
-        trackingEnabled = false
         val snapshot = sessionCoordinator?.snapshot()
         val studyDurationMs = sessionTimer.finish()
-        val payload = Route.ToLearningDone(
-            wordIds = words.map { it.id }.toLongArray(),
-            sessionType = sessionType,
-            sessionWordCount = sessionWordCount,
-            answeredCount = snapshot?.answeredCount ?: 0,
-            correctCount = snapshot?.correctCount ?: 0,
-            wrongCount = snapshot?.wrongCount ?: 0,
-            studyDurationMs = studyDurationMs
-        )
-        navigateRoute(payload)
+        trackingEnabled = false
+
+        viewModelScope.launch {
+            val route = resolveLearningFinishRoute(
+                sessionTypeValue = sessionType,
+                sessionWordCount = sessionWordCount,
+                answeredCount = snapshot?.answeredCount ?: 0,
+                correctCount = snapshot?.correctCount ?: 0,
+                wrongCount = snapshot?.wrongCount ?: 0,
+                studyDurationMs = studyDurationMs,
+                wordIds = words.map { it.id },
+                addStudyDuration = { durationMs ->
+                    withContext(Dispatchers.IO) {
+                        studyStatsFacade.addStudyDuration(durationMs)
+                    }
+                },
+                getTodayCheckInEntryState = {
+                    withContext(Dispatchers.IO) {
+                        studyStatsFacade.getTodayCheckInEntryState()
+                    }
+                }
+            )
+            navigateRoute(route)
+        }
     }
 
     private fun emptySnapshot(): LearningSessionCoordinator.SessionSnapshot {
@@ -458,5 +474,44 @@ class LearningViewModel @Inject constructor(
 
     private fun updateUiState(block: (LearningUiState) -> LearningUiState) {
         _uiState.update(block)
+    }
+}
+
+internal fun shouldNavigateToCheckIn(
+    sessionType: LearningSessionType,
+    state: TodayCheckInEntryState
+): Boolean {
+    return when (sessionType) {
+        LearningSessionType.NEW,
+        LearningSessionType.REVIEW -> state.shouldNavigate
+    }
+}
+
+internal suspend fun resolveLearningFinishRoute(
+    sessionTypeValue: Int,
+    sessionWordCount: Int,
+    answeredCount: Int,
+    correctCount: Int,
+    wrongCount: Int,
+    studyDurationMs: Long,
+    wordIds: List<Long>,
+    addStudyDuration: suspend (Long) -> Unit,
+    getTodayCheckInEntryState: suspend () -> TodayCheckInEntryState
+): LearningViewModel.Route {
+    addStudyDuration(studyDurationMs)
+    val sessionType = LearningSessionType.fromValue(sessionTypeValue)
+    val state = getTodayCheckInEntryState()
+    return if (shouldNavigateToCheckIn(sessionType, state)) {
+        LearningViewModel.Route.ToCheckIn
+    } else {
+        LearningViewModel.Route.ToLearningDone(
+            wordIds = wordIds.toLongArray(),
+            sessionType = sessionTypeValue,
+            sessionWordCount = sessionWordCount,
+            answeredCount = answeredCount,
+            correctCount = correctCount,
+            wrongCount = wrongCount,
+            studyDurationMs = studyDurationMs
+        )
     }
 }

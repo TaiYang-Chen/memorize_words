@@ -17,11 +17,7 @@ class ApiResponseJsonAdapter<T>(
             when (reader.nextName()) {
                 "code" -> code = reader.nextInt()
                 "message" -> message = reader.nextString()
-                "data" -> data = runCatching { dataAdapter.fromJson(reader) }
-                    .getOrElse {
-                        reader.skipValue()
-                        null
-                    }
+                "data" -> data = dataAdapter.fromJson(reader)
                 else -> reader.skipValue()
             }
         }

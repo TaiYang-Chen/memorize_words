@@ -6,7 +6,7 @@
 
 | 项 | 说明 | 源码 |
 |---|---|---|
-| Base URL | `http://10.130.56.105:8080/api/` | `data-sync/.../remoteapi/GlobalConfig.kt` |
+| Base URL | `http://10.212.143.105:8080/api/` | `data-sync/.../remoteapi/GlobalConfig.kt` |
 | 统一响应 | `ApiResponse<T> { data: T?, code: Int, message: String }` | `core-network/.../http/ApiResponse.kt` |
 | 分页响应 | `PageData<T> { items: List<T>, page: Int, size: Int, total: Long }` | `core-network/.../http/ApiResponse.kt` |
 | 鉴权 | 除 `auth/login`、`auth/register`、`auth/refresh`、`auth/sms/send-code`、`auth/email/send-code` 外，默认添加 `Authorization: Bearer <token>` | `core-network/.../CoreNetworkRoutePolicy.kt` |

@@ -12,21 +12,14 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
-import androidx.room.withTransaction
-import androidx.work.BackoffPolicy
-import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.Data
-import androidx.work.ExistingWorkPolicy
 import androidx.work.ForegroundInfo
-import androidx.work.NetworkType
 import androidx.work.WorkerParameters
-import com.chen.memorizewords.data.wordbook.local.WordBookDatabase
-import com.chen.memorizewords.data.wordbook.local.room.wordbook.WordBookSyncStateStore
 import com.chen.memorizewords.data.wordbook.remote.datasync.RemoteUserSyncDataSource
-import com.chen.memorizewords.data.wordbook.remote.wordbook.RemoteWordBookDataSource
 import com.chen.memorizewords.data.wordbook.repository.WordLearningStateMirror
-import com.chen.memorizewords.data.wordbook.repository.wordbook.persistWordBookPage
+import com.chen.memorizewords.data.wordbook.repository.wordbook.WordBookContentDownloader
+import com.chen.memorizewords.data.wordbook.repository.wordbook.toProgress
 import com.chen.memorizewords.data.wordbook.remoteapi.dto.wordstate.WordStateDto
 import com.chen.memorizewords.domain.study.model.progress.word.WordLearningState
 import dagger.hilt.EntryPoint
@@ -35,8 +28,6 @@ import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CancellationException
 import java.io.IOException
-import java.util.concurrent.TimeUnit
-import kotlin.math.min
 
 class WordBookDownloadWorker(
     appContext: Context,
@@ -66,73 +57,51 @@ class WordBookDownloadWorker(
             applicationContext,
             WordBookDownloadWorkerEntryPoint::class.java
         )
-        val remoteWordBookDataSource = entryPoint.remoteWordBookDataSource()
+        val contentDownloader = entryPoint.wordBookContentDownloader()
         val remoteUserSyncDataSource = entryPoint.remoteUserSyncDataSource()
-        val db = entryPoint.appDatabase()
-        val syncStateStore = entryPoint.wordBookSyncStateStore()
         val wordLearningStateMirror = entryPoint.wordLearningStateMirror()
-        val bookWordItemDao = db.wordBookItemDao()
 
         val notificationId = buildNotificationId(bookId)
         ensureNotificationChannel()
 
         return try {
-            if (forceRefresh) {
-                db.withTransaction {
-                    bookWordItemDao.deleteByBookId(bookId)
-                    db.wordLearningStateDao().deleteLearningWordByBookId(bookId)
-                }
-            }
-
-            var downloadedCount = bookWordItemDao.getWordCountByWordBookId(bookId)
-            var total = expectedTotal
-            var pageSize = resolvePageSize(total)
-
             if (runInForeground) {
-                updateForeground(notificationId, bookTitle, downloadedCount, total)
+                updateForeground(notificationId, bookTitle, 0, expectedTotal)
             }
-
-            if (total !in 1..downloadedCount) {
-                var page = downloadedCount / pageSize
-                while (true) {
-                    if (isStopped) throw CancellationException()
-
-                    val pageData = remoteWordBookDataSource
-                        .getBookWords(bookId, page, pageSize)
-                        .getOrThrow()
-
-                    if (total <= 0) {
-                        total = if (pageData.total > 0) pageData.total.toInt() else expectedTotal
-                        pageSize = resolvePageSize(total)
-                    }
-
-                    val items = pageData.items
-                    if (items.isEmpty()) break
-
-                    db.persistWordBookPage(bookId, items)
-
-                    downloadedCount = bookWordItemDao.getWordCountByWordBookId(bookId)
-                    val progress = toProgress(downloadedCount, total)
-                    setProgress(
-                        Data.Builder()
-                            .putLong(WordBookDownloadWorkConstants.KEY_BOOK_ID, bookId)
-                            .putInt(WordBookDownloadWorkConstants.KEY_DOWNLOADED_WORDS, downloadedCount)
-                            .putInt(WordBookDownloadWorkConstants.KEY_TOTAL_WORDS, total)
-                            .putInt(WordBookDownloadWorkConstants.KEY_PROGRESS, progress)
-                            .build()
+            val downloadResult = contentDownloader.downloadContent(
+                bookId = bookId,
+                expectedTotal = expectedTotal,
+                targetVersion = targetVersion,
+                forceRefresh = forceRefresh
+            ) { progress ->
+                if (isStopped) throw CancellationException()
+                setProgress(
+                    Data.Builder()
+                        .putLong(WordBookDownloadWorkConstants.KEY_BOOK_ID, progress.bookId)
+                        .putInt(
+                            WordBookDownloadWorkConstants.KEY_DOWNLOADED_WORDS,
+                            progress.downloadedWords
+                        )
+                        .putInt(WordBookDownloadWorkConstants.KEY_TOTAL_WORDS, progress.totalWords)
+                        .putInt(WordBookDownloadWorkConstants.KEY_PROGRESS, progress.progressPercent)
+                        .build()
+                )
+                if (runInForeground) {
+                    updateForeground(
+                        notificationId = notificationId,
+                        title = bookTitle,
+                        downloadedCount = progress.downloadedWords,
+                        total = progress.totalWords
                     )
-                    if (runInForeground) {
-                        updateForeground(notificationId, bookTitle, downloadedCount, total)
-                    }
-
-                    if (total > 0 && downloadedCount >= total) break
-                    page++
                 }
+            }
+            if (isStopped) {
+                throw CancellationException()
             }
 
             syncWordStates(
                 bookId = bookId,
-                pageSize = pageSize,
+                pageSize = DEFAULT_PAGE_SIZE,
                 remoteUserSyncDataSource = remoteUserSyncDataSource,
                 wordLearningStateMirror = wordLearningStateMirror
             )
@@ -141,17 +110,16 @@ class WordBookDownloadWorker(
                 remoteUserSyncDataSource.addMyWordBook(bookId).getOrThrow()
             }
 
-            val finalProgress = toProgress(downloadedCount, total)
             notifyCompleted(notificationId, bookTitle)
-            if (targetVersion > 0L) {
-                syncStateStore.setLocalVersion(bookId, targetVersion)
-            }
             Result.success(
                 Data.Builder()
                     .putLong(WordBookDownloadWorkConstants.KEY_BOOK_ID, bookId)
-                    .putInt(WordBookDownloadWorkConstants.KEY_DOWNLOADED_WORDS, downloadedCount)
-                    .putInt(WordBookDownloadWorkConstants.KEY_TOTAL_WORDS, total)
-                    .putInt(WordBookDownloadWorkConstants.KEY_PROGRESS, finalProgress)
+                    .putInt(
+                        WordBookDownloadWorkConstants.KEY_DOWNLOADED_WORDS,
+                        downloadResult.downloadedWords
+                    )
+                    .putInt(WordBookDownloadWorkConstants.KEY_TOTAL_WORDS, downloadResult.totalWords)
+                    .putInt(WordBookDownloadWorkConstants.KEY_PROGRESS, downloadResult.progressPercent)
                     .build()
             )
         } catch (cancelled: CancellationException) {
@@ -316,18 +284,6 @@ class WordBookDownloadWorker(
         )
     }
 
-    private fun toProgress(downloadedCount: Int, total: Int): Int {
-        if (total <= 0) return 0
-        return ((downloadedCount * 100) / total).coerceIn(0, 100)
-    }
-
-    private fun resolvePageSize(totalHint: Int): Int {
-        if (totalHint > 0) {
-            return min(DEFAULT_PAGE_SIZE, totalHint)
-        }
-        return DEFAULT_PAGE_SIZE
-    }
-
     private fun buildNotificationId(bookId: Long): Int {
         return (bookId % 1_000_000L).toInt() + 3_000
     }
@@ -337,10 +293,8 @@ class WordBookDownloadWorker(
 @EntryPoint
 @InstallIn(SingletonComponent::class)
 interface WordBookDownloadWorkerEntryPoint {
-    fun remoteWordBookDataSource(): RemoteWordBookDataSource
+    fun wordBookContentDownloader(): WordBookContentDownloader
     fun remoteUserSyncDataSource(): RemoteUserSyncDataSource
-    fun appDatabase(): WordBookDatabase
-    fun wordBookSyncStateStore(): WordBookSyncStateStore
     fun wordLearningStateMirror(): WordLearningStateMirror
 }
 
