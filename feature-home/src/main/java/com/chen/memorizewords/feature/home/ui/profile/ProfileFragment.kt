@@ -51,6 +51,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ModuleHomeFragmentProfile
 
     override fun initView(savedInstanceState: Bundle?) {
         databind.viewModel = viewModel
+        databind.lifecycleOwner = viewLifecycleOwner
     }
 
     override fun createObserver() {

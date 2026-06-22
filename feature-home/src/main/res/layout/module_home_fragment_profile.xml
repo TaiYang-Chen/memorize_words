@@ -8,25 +8,36 @@
         <variable
             name="viewModel"
             type="com.chen.memorizewords.feature.home.ui.profile.ProfileViewModel" />
-
     </data>
-
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/module_home_bg_home"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="@dimen/page_margin">
+        android:paddingTop="@dimen/page_margin"
+        android:paddingStart="@dimen/page_margin"
+        android:paddingEnd="@dimen/page_margin"
+        android:background="@drawable/feature_home_bg_profile_page"
+        android:orientation="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/title_margin">
 
+            <ImageView
+                android:id="@+id/feature_home_profile_qr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/feature_home_profile_personal_qr"
+                android:onClick="@{()->viewModel.toPersonalQr()}"
+                android:src="@drawable/module_home_qr_code_scanner_172337"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="#172337" />
+
             <TextView
-                android:id="@+id/textView5"
+                android:id="@+id/feature_home_profile_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -40,386 +51,791 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/imageView4"
+                android:id="@+id/feature_home_profile_settings_top"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:contentDescription="@string/feature_home_profile_personal_qr"
-                android:onClick="@{()->viewModel.toPersonalQr()}"
-                android:src="@drawable/module_home_qr_code_scanner_172337"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/imageView3"
-                android:onClick="@{()->viewModel.toUserInfo()}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/feature_home_profile_user_info"
+                android:contentDescription="@string/feature_home_profile_settings"
+                android:onClick="@{()->viewModel.toSettings()}"
                 android:src="@drawable/feature_home_settings_172337"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="16dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/ivAvatar"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:background="@drawable/bg_avatar_ring"
-                android:clipToOutline="true"
-                android:padding="4dp"
-                android:scaleType="centerCrop"
-                tools:src="@drawable/feature_home_ic_avatar_placeholder" />
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:fillViewport="false"
+            android:overScrollMode="never">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_weight="1"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tv_user_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{viewModel.user.nickname}"
-                    android:textColor="#0f172a"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    tools:text="用户名_User123" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/feature_home_profile_hero_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="124dp"
+                    android:layout_marginTop="18dp"
+                    android:background="@drawable/feature_home_bg_profile_hero_card"
+                    android:clipChildren="false"
+                    android:padding="8dp"
+                    android:clipToPadding="false">
 
-                <TextView
-                    android:id="@+id/tv_user_id"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:text="@{`编号：`+String.valueOf(viewModel.user.userId)}"
-                    android:textColor="#666666"
-                    android:textSize="12sp"
-                    tools:text="编号：--" />
+                    <ImageView
+                        android:id="@+id/feature_home_iv_profile_flame"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/feature_home_ic_profile_flame"
+                        app:layout_constraintBottom_toBottomOf="@id/feature_home_tv_profile_streak"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/feature_home_tv_profile_streak" />
+
+                    <TextView
+                        android:id="@+id/feature_home_tv_profile_streak"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text="@string/feature_home_profile_static_streak_prefix"
+                        android:textColor="#142238"
+                        android:textSize="8sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toEndOf="@id/feature_home_iv_profile_flame"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/feature_home_tv_profile_streak_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:text="@{viewModel.continuousCheckInText}"
+                        android:textColor="#10B981"
+                        android:textSize="8sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBaseline_toBaselineOf="@id/feature_home_tv_profile_streak"
+                        app:layout_constraintStart_toEndOf="@id/feature_home_tv_profile_streak" />
+
+                    <TextView
+                        android:id="@+id/feature_home_tv_profile_streak_unit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text="天"
+                        android:textColor="#142238"
+                        android:textSize="8sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBaseline_toBaselineOf="@id/feature_home_tv_profile_streak"
+                        app:layout_constraintStart_toEndOf="@id/feature_home_tv_profile_streak_count" />
+
+                    <ImageView
+                        android:id="@+id/feature_home_iv_profile_mascot"
+                        android:layout_width="80dp"
+                        android:layout_height="70dp"
+                        android:contentDescription="@string/feature_home_profile_mascot"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/feature_home_profile_mascot"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/ivAvatar"
+                        android:layout_width="68dp"
+                        android:layout_height="68dp"
+                        android:background="@drawable/feature_home_bg_profile_avatar_frame"
+                        android:clipToOutline="true"
+                        android:padding="7dp"
+                        android:scaleType="centerCrop"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/feature_home_tv_profile_streak"
+                        tools:src="@drawable/feature_home_ic_avatar_placeholder" />
+
+                    <TextView
+                        android:id="@+id/tv_user_name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textSize="18sp"
+                        android:text="@{viewModel.profileNicknameText}"
+                        android:textColor="#10213F"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toTopOf="@id/tv_user_id"
+                        app:layout_constraintStart_toEndOf="@id/ivAvatar"
+                        app:layout_constraintTop_toTopOf="@id/ivAvatar"
+                        app:layout_constraintVertical_chainStyle="packed"
+                        tools:text="小生xBFHD" />
+
+                    <TextView
+                        android:id="@+id/tv_user_id"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="@{viewModel.profileAccountIdDisplayText}"
+                        android:textColor="#2D3D56"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="@id/tv_user_name"
+                        app:layout_constraintTop_toBottomOf="@id/tv_user_name" />
+
+                    <ImageView
+                        android:id="@+id/feature_home_iv_profile_copy"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/feature_home_ic_profile_copy"
+                        app:layout_constraintBottom_toBottomOf="@id/tv_user_id"
+                        app:layout_constraintStart_toEndOf="@+id/tv_user_id"
+                        app:layout_constraintTop_toTopOf="@id/tv_user_id" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="96dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/feature_home_bg_profile_surface_card"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:paddingStart="2dp"
+                        android:paddingEnd="6dp">
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:background="@drawable/feature_home_bg_profile_icon_green"
+                            android:contentDescription="@null"
+                            android:padding="6dp"
+                            android:src="@drawable/feature_home_ic_profile_calendar_check" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="9dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="bottom"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{viewModel.continuousCheckInText}"
+                                    android:textColor="#0B1D3A"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:text="天"
+                                    android:textColor="#253851"
+                                    android:textSize="10sp" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/feature_home_profile_card_days"
+                                android:textColor="#5C6C82"
+                                android:textSize="10sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:layout_height="wrap_content"
+                                android:text="@{viewModel.longestCheckInText}"
+                                android:textColor="#10B981"
+                                android:textSize="10sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="64dp"
+                        android:background="@drawable/feature_home_bg_profile_divider" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="4dp">
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:background="@drawable/feature_home_bg_profile_icon_blue"
+                            android:contentDescription="@null"
+                            android:padding="6dp"
+                            android:src="@drawable/feature_home_ic_profile_book_open" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="9dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="bottom"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{viewModel.studyTotalWordCountText}"
+                                    android:textColor="#0B1D3A"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:text="词"
+                                    android:textColor="#253851"
+                                    android:textSize="10sp" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/feature_home_profile_card_words"
+                                android:textColor="#5C6C82"
+                                android:textSize="10sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="@{viewModel.wordsVsYesterdayText}"
+                                android:textColor="#10B981"
+                                android:textSize="10sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="64dp"
+                        android:background="@drawable/feature_home_bg_profile_divider" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:paddingStart="10dp">
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:background="@drawable/feature_home_bg_profile_icon_purple"
+                            android:contentDescription="@null"
+                            android:padding="6dp"
+                            android:src="@drawable/feature_home_ic_profile_clock" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="9dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="bottom"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{viewModel.totalStudyDurationHoursText}"
+                                    android:textColor="#0B1D3A"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:text="小时"
+                                    android:textColor="#253851"
+                                    android:textSize="10sp" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/feature_home_profile_card_hours"
+                                android:textColor="#5C6C82"
+                                android:textSize="10sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="@{viewModel.durationVsYesterdayText}"
+                                android:textColor="#10B981"
+                                android:textSize="10sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/feature_home_member_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="92dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/feature_home_bg_profile_pro_card"
+                    android:clickable="true"
+                    android:onClick="@{()->viewModel.toMembership()}"
+                    android:paddingStart="15dp"
+                    android:paddingTop="12dp"
+                    android:paddingEnd="15dp"
+                    android:paddingBottom="10dp"
+                    android:stateListAnimator="@animator/btn_scale_animator">
+
+                    <TextView
+                        android:id="@+id/feature_home_profile_pro_crown"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="♛"
+                        android:textColor="#FFD98A"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/feature_home_profile_pro_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/feature_home_profile_upgrade_pro"
+                        android:textColor="#FFE7B2"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@id/feature_home_profile_pro_crown"
+                        app:layout_constraintStart_toEndOf="@id/feature_home_profile_pro_crown"
+                        app:layout_constraintTop_toTopOf="@id/feature_home_profile_pro_crown" />
+
+                    <TextView
+                        android:id="@+id/feature_home_profile_pro_subtitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="@string/feature_home_profile_unlock_pro"
+                        android:textColor="#D8E2EA"
+                        android:textSize="11sp"
+                        app:layout_constraintEnd_toStartOf="@id/feature_home_btn_open_member"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/feature_home_profile_pro_title" />
+
+                    <TextView
+                        android:id="@+id/feature_home_btn_open_member"
+                        android:layout_width="wrap_content"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/feature_home_bg_profile_pro_button"
+                        android:gravity="center"
+                        android:onClick="@{()->viewModel.toMembership()}"
+                        android:stateListAnimator="@animator/btn_scale_animator"
+                        android:text="@string/feature_home_profile_open_now"
+                        android:textColor="#4A2600"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/feature_home_profile_pro_books"
+                            android:textColor="#FFEFC4"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/feature_home_profile_pro_bubble"
+                            android:textColor="#FFEFC4"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/feature_home_profile_pro_stats"
+                            android:textColor="#FFEFC4"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/feature_home_profile_pro_ai"
+                            android:textColor="#FFEFC4"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/feature_home_profile_pro_more"
+                            android:textColor="#FFEFC4"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/feature_home_bg_profile_surface_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                            android:gravity="center"
+                            android:padding="12dp"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:clickable="true"
+                            android:onClick="@{()->viewModel.toMyWordBooks()}"
+                            android:layout_height="wrap_content">
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:background="@drawable/feature_home_bg_profile_icon_green"
+                                android:contentDescription="@null"
+                                android:padding="6dp"
+                                android:src="@drawable/feature_home_ic_profile_menu_book" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:layout_weight="1"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="@string/feature_home_profile_my_books"
+                                android:textColor="#101C32"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <ImageView
+                                android:layout_width="10dp"
+                                android:layout_height="10dp"
+                                android:contentDescription="@null"
+                                android:src="@drawable/module_home_ic_right" />
+
+                        </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/feature_home_bg_profile_divider" />
+
+                    <LinearLayout
+                        android:gravity="center"
+                        android:padding="12dp"
+                        android:layout_width="match_parent"
+                        android:clickable="true"
+                        android:onClick="@{()->viewModel.toFavorites()}"
+                        android:orientation="horizontal"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:background="@drawable/feature_home_bg_profile_icon_pink"
+                            android:contentDescription="@null"
+                            android:padding="6dp"
+                            android:src="@drawable/feature_home_ic_profile_menu_heart" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="@string/feature_home_profile_favorites"
+                            android:textColor="#101C32"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/module_home_ic_right" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/feature_home_bg_profile_divider" />
+
+                    <LinearLayout
+                        android:padding="12dp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:clickable="true"
+                        android:onClick="@{()->viewModel.toLearningReport()}"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:background="@drawable/feature_home_bg_profile_icon_purple"
+                            android:contentDescription="@null"
+                            android:padding="6dp"
+                            android:src="@drawable/feature_home_ic_profile_menu_chart" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="@string/feature_home_profile_learning_report"
+                            android:textColor="#101C32"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/module_home_ic_right" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/feature_home_bg_profile_divider" />
+
+                    <LinearLayout
+                        android:gravity="center"
+                        android:layout_width="match_parent"
+                        android:clickable="true"
+                        android:padding="12dp"
+                        android:onClick="@{()->viewModel.toMembership()}"
+                        android:orientation="horizontal"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:background="@drawable/feature_home_bg_profile_icon_orange"
+                            android:contentDescription="@null"
+                            android:padding="6dp"
+                            android:src="@drawable/feature_home_ic_profile_menu_crown" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="@string/feature_home_profile_member_center"
+                            android:textColor="#101C32"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/module_home_ic_right" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/feature_home_bg_profile_divider" />
+
+
+
+                    <LinearLayout
+                        android:gravity="center"
+                        android:padding="12dp"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:clickable="true"
+                        android:onClick="@{()->viewModel.toFeedback()}"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:background="@drawable/feature_home_bg_profile_icon_orange"
+                            android:contentDescription="@null"
+                            android:padding="6dp"
+                            android:src="@drawable/feature_home_ic_profile_menu_feedback" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="@string/feature_home_profile_feedback"
+                            android:textColor="#101C32"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/module_home_ic_right" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/feature_home_bg_profile_divider" />
+
+                    <LinearLayout
+                        android:gravity="center"
+                        android:layout_width="match_parent"
+                        android:clickable="true"
+                        android:padding="12dp"
+                        android:onClick="@{()->viewModel.toSettings()}"
+                        android:orientation="horizontal"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:background="@drawable/feature_home_bg_profile_icon_blue"
+                            android:contentDescription="@null"
+                            android:padding="6dp"
+                            android:src="@drawable/feature_home_ic_profile_menu_settings" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="@string/feature_home_profile_settings"
+                            android:textColor="#101C32"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/module_home_ic_right" />
+
+                    </LinearLayout>
+
+
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@drawable/feature_home_bg_profile_divider" />
+                    <LinearLayout
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:padding="12dp"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:clickable="true"
+                        android:onClick="@{()->viewModel.toAbout()}"
+                        android:layout_height="wrap_content">
+
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:background="@drawable/feature_home_bg_profile_icon_purple"
+                            android:contentDescription="@null"
+                            android:padding="6dp"
+                            android:src="@drawable/feature_home_ic_profile_menu_info" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="@string/feature_home_profile_about"
+                            android:textColor="#101C32"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/module_home_ic_right" />
+
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingTop="24dp"
-            android:paddingBottom="24dp">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="@{viewModel.continuousCheckInText}"
-                    android:textColor="#0d1529"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    tools:text="10" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="连续打卡"
-                    android:textColor="#65758c"
-                    android:textSize="10sp" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:background="#ccc" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="@{String.valueOf(viewModel.studyTotalDayCount)}"
-                    android:textColor="#0d1529"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    tools:text="10" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="学习天数"
-                    android:textColor="#65758c"
-                    android:textSize="10sp" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:background="#ccc" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="@{String.valueOf(viewModel.studyTotalWordCount)}"
-                    android:textColor="#0d1529"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    tools:text="10" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="已背单词"
-                    android:textColor="#65758c"
-                    android:textSize="10sp" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/feature_home_member_card"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/module_home_bg_border_161f31"
-            android:clickable="true"
-            android:onClick="@{()->viewModel.toMembership()}"
-            android:stateListAnimator="@animator/btn_scale_animator">
-
-            <TextView
-                android:id="@+id/vip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:text="升级Pro会员"
-                android:textColor="#12c570"
-                android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:layout_marginBottom="16dp"
-                android:text="解锁所有高级词书和统计功能"
-                android:textColor="#8c9baf"
-                android:textSize="8sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/vip"
-                app:layout_constraintTop_toBottomOf="@+id/vip" />
-
-
-            <TextView
-                android:id="@+id/feature_home_btn_open_member"
-                android:layout_width="80dp"
-                android:layout_height="30dp"
-                android:layout_marginEnd="16dp"
-                android:background="@drawable/module_home_bg_radius_13ec80"
-                android:clickable="true"
-                android:gravity="center"
-                android:onClick="@{()->viewModel.toMembership()}"
-                android:stateListAnimator="@animator/btn_scale_animator"
-                android:text="立即开通"
-                android:textColor="#0f0c2a"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25sp"
-            android:text="常用功能"
-            android:textColor="#0d1529"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:gravity="center"
-                android:onClick="@{()->viewModel.toFavorites()}"
-                android:orientation="horizontal"
-                android:paddingBottom="6dp"
-                android:stateListAnimator="@animator/btn_scale_animator">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/module_home_bg_oval_f0fdf4"
-                    android:padding="6dp"
-                    android:src="@drawable/module_home_favorite_16a34a" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_weight="1"
-                    android:paddingTop="16dp"
-                    android:paddingBottom="16dp"
-                    android:text="我的收藏"
-                    android:textColor="#1b1d2b"
-                    android:textSize="14sp" />
-
-                <ImageView
-                    android:layout_width="11dp"
-                    android:layout_height="11dp"
-                    android:layout_marginEnd="12dp"
-                    android:src="@drawable/module_home_ic_right" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#f8fafc" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="6dp"
-                android:clickable="true"
-                android:gravity="center"
-                android:onClick="@{()->viewModel.toFeedback()}"
-                android:orientation="horizontal"
-                android:stateListAnimator="@animator/btn_scale_animator">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/module_home_bg_oval_fff7ed"
-                    android:padding="6dp"
-                    android:src="@drawable/module_home_feedback_ea580c" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_weight="1"
-                    android:paddingTop="16dp"
-                    android:paddingBottom="16dp"
-                    android:text="意见反馈"
-                    android:textColor="#000"
-                    android:textSize="14sp" />
-
-                <ImageView
-                    android:layout_width="11dp"
-                    android:layout_height="11dp"
-                    android:layout_marginEnd="12dp"
-                    android:src="@drawable/module_home_ic_right" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#f8fafc" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="6dp"
-                android:clickable="true"
-                android:gravity="center"
-                android:onClick="@{()->viewModel.toAbout()}"
-                android:orientation="horizontal"
-                android:stateListAnimator="@animator/btn_scale_animator">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/module_home_bg_oval_faf5ff"
-                    android:padding="6dp"
-                    android:src="@drawable/module_home_info_9333ea" />
-
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_weight="1"
-                    android:paddingTop="16dp"
-                    android:paddingBottom="16dp"
-                    android:text="关于我们"
-                    android:textColor="#000"
-                    android:textSize="14sp" />
-
-                <ImageView
-                    android:layout_width="11dp"
-                    android:layout_height="11dp"
-                    android:layout_marginEnd="12dp"
-                    android:src="@drawable/module_home_ic_right" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#f8fafc" />
-
-            <TextView
-                android:id="@+id/tvLogout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
-                android:clickable="true"
-                android:gravity="center"
-                android:onClick="@{()->viewModel.requestLogoutConfirmation()}"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
-                android:stateListAnimator="@animator/btn_scale_animator"
-                android:text="@string/home_logout_confirm_action"
-                android:textColor="#dc2626"
-                android:textStyle="bold" />
-        </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
     </LinearLayout>
 </layout>

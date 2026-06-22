@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/feature_home_bg_profile_icon_green"
+        android:contentDescription="@null"
+        android:padding="6dp"
+        android:src="@drawable/feature_home_ic_profile_report_clock" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="15 小时"
+        android:textColor="#0B1D3A"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/feature_home_profile_vs_last_week_time"
+        android:textColor="#10B981"
+        android:textSize="9sp" />
+</LinearLayout>
