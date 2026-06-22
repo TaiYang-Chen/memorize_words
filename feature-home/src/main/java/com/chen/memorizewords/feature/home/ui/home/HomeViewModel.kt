@@ -119,6 +119,11 @@ class HomeViewModel @Inject constructor(
         studyStatsFacade.getStudyTotalDayCount()
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
 
+    val studyTotalDayText: StateFlow<String> =
+        studyTotalDayCount
+            .map { count -> formatDayCountText(count) }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), formatDayCountText(0))
+
     val todayNewCount: StateFlow<Int> =
         studyStatsFacade.getTodayNewWordCount()
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
@@ -135,6 +140,44 @@ class HomeViewModel @Inject constructor(
                 plan = plan
             )
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
+
+    val todayPlanTotalCount: StateFlow<Int> =
+        studyPlan
+            .map { plan -> calculateTodayPlanTotalCount(plan) }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
+
+    val todayCompletedWordsText: StateFlow<String> =
+        combine(todayNewCount, todayReviewCount, studyPlan) { newCount, reviewCount, plan ->
+            formatTodayCompletedWordsText(newCount, reviewCount, plan)
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), "0/0")
+
+    val todayNewProgressText: StateFlow<String> =
+        combine(todayNewCount, studyPlan) { newCount, plan ->
+            formatCountProgressText(newCount, plan.dailyNewCount)
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), "0/0")
+
+    val todayReviewProgressText: StateFlow<String> =
+        combine(todayReviewCount, studyPlan) { reviewCount, plan ->
+            formatCountProgressText(reviewCount, plan.dailyReviewCount)
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), "0/0")
+
+    val remainingReviewWordsText: StateFlow<String> =
+        combine(todayReviewCount, studyPlan) { reviewCount, plan ->
+            calculateRemainingCount(reviewCount, plan.dailyReviewCount).toString()
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), "0")
+
+    val estimatedStudyMinutesText: StateFlow<String> =
+        studyPlan
+            .map { plan -> formatEstimatedStudyMinutesText(plan) }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), formatMinuteText(0))
+
+    val learnButtonSubtitleText: StateFlow<String> =
+        studyPlan
+            .map { plan ->
+                "新学 ${plan.dailyNewCount.coerceAtLeast(0)} 个单词 · 预计 ${
+                    calculateEstimatedStudyMinutes(plan)
+                } 分钟"
+            }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), "新学 0 个单词 · 预计 0 分钟")
 
     val learnButtonText: StateFlow<String> =
         combine(todayNewCount, studyPlan, isPreparingLearning) { newCount, plan, preparing ->
@@ -334,6 +377,44 @@ internal fun calculateLearnProgress(
         return 0
     }
     return (((boundedNewCount + boundedReviewCount).toFloat() / totalPlan.toFloat()) * 100).toInt()
+}
+
+internal fun calculateTodayPlanTotalCount(plan: StudyPlan): Int {
+    return plan.dailyNewCount.coerceAtLeast(0) + plan.dailyReviewCount.coerceAtLeast(0)
+}
+
+internal fun calculateRemainingCount(doneCount: Int, planCount: Int): Int {
+    return (planCount.coerceAtLeast(0) - doneCount.coerceAtLeast(0)).coerceAtLeast(0)
+}
+
+internal fun calculateEstimatedStudyMinutes(plan: StudyPlan): Int {
+    return plan.dailyNewCount.coerceAtLeast(0)
+}
+
+internal fun formatTodayCompletedWordsText(
+    todayNewCount: Int,
+    todayReviewCount: Int,
+    plan: StudyPlan
+): String {
+    val completed = minOf(todayNewCount.coerceAtLeast(0), plan.dailyNewCount.coerceAtLeast(0)) +
+        minOf(todayReviewCount.coerceAtLeast(0), plan.dailyReviewCount.coerceAtLeast(0))
+    return "$completed/${calculateTodayPlanTotalCount(plan)}"
+}
+
+internal fun formatCountProgressText(doneCount: Int, planCount: Int): String {
+    return "${doneCount.coerceAtLeast(0)}/${planCount.coerceAtLeast(0)}"
+}
+
+internal fun formatMinuteText(minutes: Int): String {
+    return "${minutes.coerceAtLeast(0)}分钟"
+}
+
+internal fun formatEstimatedStudyMinutesText(plan: StudyPlan): String {
+    return formatMinuteText(calculateEstimatedStudyMinutes(plan))
+}
+
+internal fun formatDayCountText(days: Int): String {
+    return "${days.coerceAtLeast(0)} 天"
 }
 
 internal fun resolveReviewWordCount(plan: StudyPlan): Int {

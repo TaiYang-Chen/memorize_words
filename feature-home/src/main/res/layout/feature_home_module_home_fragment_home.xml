@@ -11,140 +11,749 @@
     </data>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/module_home_bg_home"
-        android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="@dimen/page_margin"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        android:background="#EEF6FF"
+        android:paddingTop="@dimen/page_margin"
+        android:paddingStart="@dimen/page_margin"
+        android:paddingEnd="@dimen/page_margin"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <FrameLayout
             android:layout_marginTop="@dimen/title_margin"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/module_home_account_circle_1e293b" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/title"
                 android:textColor="#000"
                 android:textSize="@dimen/title_text_size"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
+        </FrameLayout>
 
-            <ImageView
-                android:layout_width="wrap_content"
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:overScrollMode="never">
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/module_home_menu_1e293b" />
-        </LinearLayout>
+                android:clipToPadding="false"
+                android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/syncBannerContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/module_home_bg_radius_d5fbea"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingStart="12dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="12dp"
-            android:paddingBottom="8dp"
-            android:foreground="?attr/selectableItemBackground"
-            android:visibility="gone">
+                <LinearLayout
+                    android:id="@+id/syncBannerContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginEnd="26dp"
+                    android:background="@drawable/module_home_bg_radius_d5fbea"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="12dp"
+                    android:paddingTop="8dp"
+                    android:paddingEnd="12dp"
+                    android:paddingBottom="8dp"
+                    android:visibility="gone">
 
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@drawable/module_home_info_9333ea" />
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:src="@drawable/module_home_info_9333ea" />
 
-            <TextView
-                android:id="@+id/tvSyncBanner"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:ellipsize="marquee"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:singleLine="true"
-                android:textColor="#0f172a"
-                android:textSize="12sp"
-                tools:text="当前无网络，还有 3 条数据没有更新到远程" />
-        </LinearLayout>
+                    <TextView
+                        android:id="@+id/tvSyncBanner"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:ellipsize="marquee"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:singleLine="true"
+                        android:textColor="#0F172A"
+                        android:textSize="12sp"
+                        tools:text="当前离线，还有 3 条数据待上传" />
+                </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="35dp"
-            android:background="@drawable/module_home_bg_radius_d5fbea"
-            android:clickable="true"
-            android:gravity="center"
-            android:letterSpacing="0.3"
-            android:paddingStart="10dp"
-            android:paddingTop="4dp"
-            android:paddingEnd="10dp"
-            android:paddingBottom="4dp"
-            android:stateListAnimator="@animator/btn_scale_animator"
-            android:text="@{`已坚持学习` + viewModel.studyTotalDayCount+ `天`}"
-            android:textColor="#0ba659"
-            android:textSize="10dp"
-            android:textStyle="bold"
-            tools:text="已坚持学习45天" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/feature_home_home_hero_card"
+                    android:paddingStart="18dp"
+                    android:paddingTop="18dp"
+                    android:paddingEnd="14dp"
+                    android:paddingBottom="16dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:clickable="true"
-            android:stateListAnimator="@animator/btn_scale_animator"
-            android:text="《雅思核心词汇》"
-            android:textColor="#000000"
-            android:textSize="26sp"
-            android:textStyle="bold" />
+                    <ImageView
+                        android:id="@+id/feature_home_home_streak_icon"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:src="@drawable/feature_home_ic_profile_flame"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:clickable="true"
-            android:stateListAnimator="@animator/btn_scale_animator"
-            android:text="@{`本书已坚持学习`+viewModel.wordBookStudyDayCountText+`天`}"
-            android:textSize="12sp"
-            tools:text="本书已坚持学习12天" />
+                    <TextView
+                        android:id="@+id/feature_home_home_streak"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="7dp"
+                        android:text="@{`已连续学习 ` + viewModel.studyTotalDayText}"
+                        android:textColor="#111827"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@id/feature_home_home_streak_icon"
+                        app:layout_constraintStart_toEndOf="@id/feature_home_home_streak_icon"
+                        app:layout_constraintTop_toTopOf="@id/feature_home_home_streak_icon"
+                        tools:text="已连续学习 2 天" />
 
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+                    <ImageView
+                        android:id="@+id/feature_home_home_book_hero"
+                        android:layout_width="112dp"
+                        android:layout_height="112dp"
+                        android:contentDescription="词书插画"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/feature_home_home_wordbook_hero"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-        <include
-            layout="@layout/include_daily_plan"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="21dp"
-            app:viewModel="@{viewModel}" />
+                    <TextView
+                        android:id="@+id/feature_home_home_book_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="@{viewModel.wordBookTitleText}"
+                        android:textColor="#111827"
+                        android:textSize="23sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toStartOf="@id/feature_home_home_book_hero"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/feature_home_home_streak_icon"
+                        tools:text="雅思核心词汇" />
 
-        <include
-            layout="@layout/include_study_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            app:viewModel="@{viewModel}" />
+                    <ProgressBar
+                        android:id="@+id/feature_home_home_progress"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="8dp"
+                        android:layout_marginTop="16dp"
+                        android:max="100"
+                        android:progress="@{viewModel.learnProcess}"
+                        android:progressDrawable="@drawable/feature_home_home_progress"
+                        app:layout_constraintEnd_toStartOf="@id/feature_home_home_progress_percent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/feature_home_home_book_title"
+                        tools:progress="33" />
 
+                    <TextView
+                        android:id="@+id/feature_home_home_progress_percent"
+                        android:layout_width="46dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        android:text="@{String.valueOf(viewModel.learnProcess) + `%`}"
+                        android:textColor="#9AA4B2"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@id/feature_home_home_progress"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/feature_home_home_progress"
+                        tools:text="33%" />
+
+                    <TextView
+                        android:id="@+id/feature_home_home_done"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="@{`今日完成 ` + viewModel.todayCompletedWordsText + ` 个单词`}"
+                        android:textColor="#6B7280"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/feature_home_home_progress"
+                        tools:text="今日完成 15/45 个单词" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{`还需复习 ` + viewModel.remainingReviewWordsText + ` 个单词`}"
+                        android:textColor="#9AA4B2"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@id/feature_home_home_done"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/feature_home_home_done"
+                        tools:text="还需复习 30 个单词" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/feature_home_home_content_panel"
+                    android:orientation="vertical"
+                    android:paddingStart="16dp"
+                    android:paddingTop="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="16dp"
+
+                    android:layout_marginBottom="8dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        android:background="@drawable/feature_home_home_primary_button"
+                        android:clickable="true"
+                        android:enabled="@{viewModel.learningButtonEnabled}"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:gravity="center"
+                        android:onClick="@{() -> viewModel.onStartLearningClick()}"
+                        android:orientation="vertical"
+                        android:stateListAnimator="@animator/btn_scale_animator">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <FrameLayout
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:background="@drawable/feature_home_home_play_circle">
+
+                                <ImageView
+                                    android:layout_width="14dp"
+                                    android:layout_height="14dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/feature_home_home_ic_play" />
+                            </FrameLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:text="@{viewModel.learnButtonText}"
+                                android:textColor="#FFFFFF"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                tools:text="开始今日学习" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="@{viewModel.learnButtonSubtitleText}"
+                            android:textColor="#DCE6FF"
+                            android:textSize="12sp"
+                            tools:text="新学 15 个单词 · 预计 15 分钟" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="4dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/feature_home_home_task_card_green"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
+                            android:onClick="@{() -> viewModel.toLearningReviewActivity()}"
+                            android:orientation="horizontal"
+                            android:gravity="center"
+                            android:padding="8dp"
+                            android:stateListAnimator="@animator/btn_scale_animator">
+
+                            <FrameLayout
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:background="@drawable/feature_home_home_icon_circle_green">
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/feature_home_home_ic_book" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="9dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="复习单词"
+                                    android:textColor="#111827"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="7dp"
+                                    android:text="@{viewModel.todayReviewProgressText + ` 待复习`}"
+                                    android:textColor="#6B7280"
+                                    android:textSize="9sp"
+                                    tools:text="0/30 待复习" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="5dp"
+                                    android:text="巩固记忆，强化掌握"
+                                    android:textColor="#9CA3AF"
+                                    android:textSize="8sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="4dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/feature_home_home_task_card_orange"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
+                            android:onClick="@{() -> viewModel.toWordBookActivity()}"
+                            android:orientation="horizontal"
+                            android:padding="8dp"
+                            android:gravity="center"
+                            android:stateListAnimator="@animator/btn_scale_animator">
+
+                            <FrameLayout
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:background="@drawable/feature_home_home_icon_circle_orange">
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/module_home_edit_calendar_6b46c1"
+                                    app:tint="#F97316" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginStart="9dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="修改计划"
+                                    android:textColor="#111827"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="7dp"
+                                    android:text="@{`当前计划：` + viewModel.wordBookRemainDaysText + ` 天`}"
+                                    android:textColor="#6B7280"
+                                    android:textSize="9sp"
+                                    tools:text="当前计划：45 天" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="5dp"
+                                    android:text="调整每日学习目标"
+                                    android:textColor="#9CA3AF"
+                                    android:textSize="8sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="22dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="4dp"
+                            android:layout_height="14dp"
+                            android:background="@drawable/feature_home_home_section_marker" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="今日任务"
+                            android:textColor="#111827"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="96dp"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/feature_home_home_today_card"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="新词学习"
+                                android:textColor="#4B5563"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="@{viewModel.todayNewProgressText}"
+                                android:textColor="#28D895"
+                                android:textSize="22sp"
+                                android:textStyle="bold"
+                                tools:text="15/15" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="已完成"
+                                    android:textColor="#6B7280"
+                                    android:textSize="11sp" />
+
+                                <ImageView
+                                    android:layout_width="11dp"
+                                    android:layout_height="11dp"
+                                    android:layout_marginStart="3dp"
+                                    android:src="@drawable/feature_home_home_ic_check" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="56dp"
+                            android:background="@drawable/feature_home_home_divider" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="复习单词"
+                                android:textColor="#4B5563"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="@{viewModel.todayReviewProgressText}"
+                                android:textColor="#F97316"
+                                android:textSize="22sp"
+                                android:textStyle="bold"
+                                tools:text="0/30" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="待完成"
+                                android:textColor="#6B7280"
+                                android:textSize="11sp" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="56dp"
+                            android:background="@drawable/feature_home_home_divider" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="预计用时"
+                                android:textColor="#4B5563"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="@{viewModel.estimatedStudyMinutesText}"
+                                android:textColor="#4A86FF"
+                                android:textSize="22sp"
+                                android:textStyle="bold"
+                                tools:text="15分钟" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="合理安排时间"
+                                android:textColor="#6B7280"
+                                android:textSize="11sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="22dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="4dp"
+                            android:layout_height="14dp"
+                            android:background="@drawable/feature_home_home_section_marker" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="学习概览"
+                            android:textColor="#111827"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <androidx.gridlayout.widget.GridLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        app:columnCount="3"
+                        app:rowCount="2">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="84dp"
+                            android:layout_marginEnd="6dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/feature_home_home_metric_card"
+                            android:orientation="vertical"
+                            android:paddingStart="12dp"
+                            android:paddingTop="12dp"
+                            android:paddingEnd="10dp"
+                            app:layout_columnWeight="1">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{viewModel.wordBookMasteredWordsText}"
+                                android:textColor="#28D895"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                tools:text="11" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="7dp"
+                                android:text="已掌握单词"
+                                android:textColor="#6B7280"
+                                android:textSize="11sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="84dp"
+                            android:layout_marginStart="3dp"
+                            android:layout_marginEnd="3dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/feature_home_home_metric_card"
+                            android:orientation="vertical"
+                            android:paddingStart="12dp"
+                            android:paddingTop="12dp"
+                            android:paddingEnd="10dp"
+                            app:layout_columnWeight="1">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{viewModel.wordBookTotalWordsText}"
+                                android:textColor="#111827"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                tools:text="681" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="7dp"
+                                android:text="总词量"
+                                android:textColor="#6B7280"
+                                android:textSize="11sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="84dp"
+                            android:layout_marginStart="6dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/feature_home_home_metric_card"
+                            android:orientation="vertical"
+                            android:paddingStart="12dp"
+                            android:paddingTop="12dp"
+                            android:paddingEnd="10dp"
+                            app:layout_columnWeight="1">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{viewModel.wordBookAccuracyRateText}"
+                                android:textColor="#111827"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                tools:text="20.0%" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="7dp"
+                                android:text="正确率"
+                                android:textColor="#6B7280"
+                                android:textSize="11sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="84dp"
+                            android:layout_marginEnd="6dp"
+                            android:background="@drawable/feature_home_home_metric_card"
+                            android:orientation="vertical"
+                            android:paddingStart="12dp"
+                            android:paddingTop="12dp"
+                            android:paddingEnd="10dp"
+                            app:layout_columnWeight="1">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{viewModel.studyTotalDayText}"
+                                android:textColor="#111827"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                tools:text="2 天" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="7dp"
+                                android:text="连续学习"
+                                android:textColor="#6B7280"
+                                android:textSize="11sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="84dp"
+                            android:layout_marginStart="3dp"
+                            android:layout_marginEnd="3dp"
+                            android:background="@drawable/feature_home_home_metric_card"
+                            android:orientation="vertical"
+                            android:paddingStart="12dp"
+                            android:paddingTop="12dp"
+                            android:paddingEnd="10dp"
+                            app:layout_columnWeight="1">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{viewModel.wordBookRemainDaysText + ` 天`}"
+                                android:textColor="#111827"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                tools:text="45 天" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="7dp"
+                                android:text="预计完成"
+                                android:textColor="#6B7280"
+                                android:textSize="11sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="84dp"
+                            android:layout_marginStart="6dp"
+                            android:background="@drawable/feature_home_home_metric_card"
+                            android:orientation="vertical"
+                            android:paddingStart="12dp"
+                            android:paddingTop="12dp"
+                            android:paddingEnd="10dp"
+                            app:layout_columnWeight="1">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{viewModel.todayStudyDurationText}"
+                                android:textColor="#111827"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                tools:text="15分钟" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="7dp"
+                                android:text="今日用时"
+                                android:textColor="#6B7280"
+                                android:textSize="11sp" />
+                        </LinearLayout>
+                    </androidx.gridlayout.widget.GridLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
     </LinearLayout>
 </layout>

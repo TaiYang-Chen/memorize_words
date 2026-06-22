@@ -84,4 +84,32 @@ class HomeLearningProgressTest {
         assertEquals("8", formatWordBookRemainDaysText(info, StudyPlan(dailyNewCount = 10)))
         assertEquals("75.0%", formatWordBookAccuracyRateText(info.accuracyRate))
     }
+
+    @Test
+    fun `home dashboard formats completed words against total plan`() {
+        val plan = StudyPlan(dailyNewCount = 15, dailyReviewCount = 30)
+
+        assertEquals("15/45", formatTodayCompletedWordsText(15, 0, plan))
+        assertEquals("45/45", formatTodayCompletedWordsText(18, 31, plan))
+    }
+
+    @Test
+    fun `home dashboard formats review progress and remaining review words`() {
+        val plan = StudyPlan(dailyNewCount = 15, dailyReviewCount = 30)
+
+        assertEquals("0/30", formatCountProgressText(0, plan.dailyReviewCount))
+        assertEquals(30, calculateRemainingCount(0, plan.dailyReviewCount))
+        assertEquals(12, calculateRemainingCount(18, plan.dailyReviewCount))
+    }
+
+    @Test
+    fun `home dashboard handles zero plan counts`() {
+        val plan = StudyPlan(dailyNewCount = 0, dailyReviewCount = 0)
+
+        assertEquals(0, calculateTodayPlanTotalCount(plan))
+        assertEquals(0, calculateLearnProgress(0, 0, plan))
+        assertEquals("0/0", formatTodayCompletedWordsText(0, 0, plan))
+        assertEquals("0/0", formatCountProgressText(0, 0))
+        assertEquals("0分钟", formatEstimatedStudyMinutesText(plan))
+    }
 }
