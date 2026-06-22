@@ -35,6 +35,42 @@ data class WeekBarUi(
     val value: Long
 )
 
+data class StatsOverviewCardUi(
+    val value: String,
+    val unit: String,
+    val title: String,
+    val changeText: String,
+    val iconResId: Int,
+    val iconBackgroundResId: Int
+)
+
+data class StatsTrendPointUi(
+    val dayLabel: String,
+    val durationHours: Float,
+    val newWordCount: Int
+)
+
+data class StatsTimeDistributionUi(
+    val label: String,
+    val percent: Int,
+    val color: Int
+)
+
+data class StatsAchievementUi(
+    val title: String,
+    val subtitle: String,
+    val iconResId: Int,
+    val achieved: Boolean
+)
+
+data class StatsReportRowUi(
+    val label: String,
+    val value: String,
+    val unit: String,
+    val iconResId: Int,
+    val iconBackgroundResId: Int
+)
+
 data class DayStudyWordItemUi(
     val word: String,
     val definition: String,
