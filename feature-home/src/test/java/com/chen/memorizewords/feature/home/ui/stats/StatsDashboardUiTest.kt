@@ -2,6 +2,8 @@ package com.chen.memorizewords.feature.home.ui.stats
 
 import com.chen.memorizewords.domain.study.model.record.DailyDurationStats
 import com.chen.memorizewords.domain.study.model.record.DailyWordStats
+import com.chen.memorizewords.domain.study.model.record.CalendarDayStats
+import com.chen.memorizewords.core.common.resource.ResourceProvider
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -65,11 +67,61 @@ class StatsDashboardUiTest {
     }
 
     @Test
-    fun buildTimeDistributionUsesBalancedEmptyState() {
+    fun buildTimeDistributionReturnsEmptyUntilRealTimeBucketsExist() {
         val distribution = buildTimeDistribution(emptyList())
 
-        assertEquals(listOf(25, 25, 25, 25), distribution.map { it.percent })
-        assertEquals(listOf("早晨", "上午", "下午", "晚上"), distribution.map { it.label })
+        assertTrue(distribution.isEmpty())
+    }
+
+    @Test
+    fun buildCalendarPagerPagesMapsRealCalendarStatsToStatuses() {
+        val dateCalculator = StatsDateCalculator()
+        val builder = StatsCalendarBuilder(
+            dateCalculator = dateCalculator,
+            formatter = StatsFormatter(FakeResourceProvider)
+        )
+
+        val pages = builder.buildCalendarPagerPages(
+            anchorMonth = dateCalculator.currentMonthStart("2026-06-22"),
+            stats = listOf(
+                CalendarDayStats(
+                    date = "2026-06-03",
+                    hasStudy = true,
+                    hasCheckIn = false,
+                    isNewPlanCompleted = false,
+                    isReviewPlanCompleted = false
+                ),
+                CalendarDayStats(
+                    date = "2026-06-04",
+                    hasStudy = true,
+                    hasCheckIn = false,
+                    isNewPlanCompleted = true,
+                    isReviewPlanCompleted = false
+                ),
+                CalendarDayStats(
+                    date = "2026-06-05",
+                    hasStudy = true,
+                    hasCheckIn = false,
+                    isNewPlanCompleted = true,
+                    isReviewPlanCompleted = true
+                ),
+                CalendarDayStats(
+                    date = "2026-06-06",
+                    hasStudy = false,
+                    hasCheckIn = true,
+                    isNewPlanCompleted = false,
+                    isReviewPlanCompleted = false
+                )
+            ),
+            currentBusinessDate = "2026-06-22"
+        )
+
+        val currentMonthCells = pages[1].cells.associateBy { it.date }
+        assertEquals(CalendarStudyStatus.STUDIED, currentMonthCells["2026-06-03"]?.status)
+        assertEquals(CalendarStudyStatus.NEW_DONE, currentMonthCells["2026-06-04"]?.status)
+        assertEquals(CalendarStudyStatus.ALL_DONE, currentMonthCells["2026-06-05"]?.status)
+        assertEquals(CalendarStudyStatus.CHECKED_IN, currentMonthCells["2026-06-06"]?.status)
+        assertTrue(currentMonthCells["2026-06-22"]?.isToday == true)
     }
 
     @Test
@@ -91,5 +143,14 @@ class StatsDashboardUiTest {
         assertEquals("10", rows[1].value)
         assertEquals("二", rows[2].value)
         assertTrue(rows[3].value == "2")
+    }
+
+    private object FakeResourceProvider : ResourceProvider {
+        override fun getString(resId: Int, vararg formatArgs: Any): String {
+            return when (formatArgs.size) {
+                0 -> resId.toString()
+                else -> formatArgs.joinToString()
+            }
+        }
     }
 }

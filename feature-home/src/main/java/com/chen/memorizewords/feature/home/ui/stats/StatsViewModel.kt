@@ -404,15 +404,8 @@ internal fun buildTrendPoints(
     }
 }
 
-internal fun buildTimeDistribution(stats: List<DailyDurationStats>): List<StatsTimeDistributionUi> {
-    val hasStudy = stats.any { it.durationMs > 0L }
-    val values = if (hasStudy) listOf(25, 20, 35, 20) else listOf(25, 25, 25, 25)
-    return listOf(
-        StatsTimeDistributionUi("早晨", values[0], 0xFFFFC533.toInt()),
-        StatsTimeDistributionUi("上午", values[1], 0xFF70D96B.toInt()),
-        StatsTimeDistributionUi("下午", values[2], 0xFF3BA5F5.toInt()),
-        StatsTimeDistributionUi("晚上", values[3], 0xFF8B5CF6.toInt())
-    )
+internal fun buildTimeDistribution(_stats: List<DailyDurationStats>): List<StatsTimeDistributionUi> {
+    return emptyList()
 }
 
 internal fun buildAchievements(

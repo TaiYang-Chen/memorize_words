@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -29,6 +30,25 @@ class StatsFragment : BaseFragment<StatsViewModel, ModuleHomeFragmentStatsBindin
     override fun initView(savedInstanceState: Bundle?) {
         databind.viewModel = viewModel
         databind.lifecycleOwner = viewLifecycleOwner
+        databind.statsPreviousMonthButton.setOnClickListener {
+            viewModel.shiftToPreviousMonth()
+        }
+        databind.statsNextMonthButton.setOnClickListener {
+            if (!viewModel.shiftToNextMonth()) {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.home_calendar_future_disabled),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+        databind.statsBackToday.setOnClickListener {
+            viewModel.backToToday()
+        }
+        databind.statsMonthHeatmapView.setOnDayClickListener { day ->
+            viewModel.selectDate(day.date)
+            showDayDetail(day.date)
+        }
     }
 
     override fun createObserver() {
@@ -60,6 +80,21 @@ class StatsFragment : BaseFragment<StatsViewModel, ModuleHomeFragmentStatsBindin
                     }
                 }
                 launch {
+                    viewModel.canGoNextMonth.collect { canGoNext ->
+                        databind.statsNextMonthButton.isEnabled = canGoNext
+                        databind.statsNextMonthButton.alpha = if (canGoNext) 1f else 0.35f
+                    }
+                }
+                launch {
+                    viewModel.showBackToday.collect { showBackToday ->
+                        databind.statsBackToday.visibility = if (showBackToday) {
+                            View.VISIBLE
+                        } else {
+                            View.GONE
+                        }
+                    }
+                }
+                launch {
                     viewModel.calendarPagerPages.collect { pages ->
                         databind.statsMonthHeatmapView.submitCells(pages.getOrNull(CURRENT_MONTH_PAGE_INDEX)?.cells.orEmpty())
                     }
@@ -68,17 +103,19 @@ class StatsFragment : BaseFragment<StatsViewModel, ModuleHomeFragmentStatsBindin
         }
     }
 
-    private fun renderDistributionLegend(items: List<StatsTimeDistributionUi>) {
-        val safeItems = items.ifEmpty {
-            listOf(
-                StatsTimeDistributionUi("早晨", 25, 0xFFFFC533.toInt()),
-                StatsTimeDistributionUi("上午", 25, 0xFF70D96B.toInt()),
-                StatsTimeDistributionUi("下午", 25, 0xFF3BA5F5.toInt()),
-                StatsTimeDistributionUi("晚上", 25, 0xFF8B5CF6.toInt())
-            )
+    private fun showDayDetail(date: String) {
+        val fragmentManager = parentFragmentManager
+        if (fragmentManager.findFragmentByTag(StatsDayDetailBottomSheetDialog.TAG) != null) {
+            return
         }
+        StatsDayDetailBottomSheetDialog
+            .newInstance(date)
+            .show(fragmentManager, StatsDayDetailBottomSheetDialog.TAG)
+    }
+
+    private fun renderDistributionLegend(items: List<StatsTimeDistributionUi>) {
         databind.llDistributionLegend.removeAllViews()
-        safeItems.forEach { item ->
+        items.forEach { item ->
             databind.llDistributionLegend.addView(createDistributionLegendRow(item))
         }
     }
