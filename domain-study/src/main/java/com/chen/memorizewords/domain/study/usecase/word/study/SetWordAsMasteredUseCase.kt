@@ -14,6 +14,7 @@ class SetWordAsMasteredUseCase @Inject constructor(
     suspend operator fun invoke(
         bookId: Long,
         word: Word,
+        isNewWord: Boolean = true
     ) {
         wordRepository.setWordAsMastered(bookId, word)
         val definitions = wordRepository.getWordDefinitions(word.id)
@@ -23,7 +24,7 @@ class SetWordAsMasteredUseCase @Inject constructor(
         learningRecordRepository.addLearningRecord(
             word,
             definition,
-            true
+            isNewWord
         )
         val today = getCurrentBusinessDateUseCase()
         wordBookRepository.updateBookStudyDay(bookId, today)

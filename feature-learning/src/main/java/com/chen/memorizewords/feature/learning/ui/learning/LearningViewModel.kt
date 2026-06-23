@@ -5,6 +5,7 @@ import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.common.session.SessionTimer
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.domain.word.query.WordReadFacade
+import com.chen.memorizewords.domain.study.orchestrator.learning.LearningSessionTypes
 import com.chen.memorizewords.domain.study.service.StudyStatsFacade
 import com.chen.memorizewords.domain.study.model.record.TodayCheckInEntryState
 import com.chen.memorizewords.domain.wordbook.usecase.GetCurrentWordBookUseCase
@@ -481,7 +482,11 @@ class LearningViewModel @Inject constructor(
         val book = wordBook ?: return
         completionPersistenceGate.launch(viewModelScope) {
             if (markAsMastered) {
-                setWordAsMastered(book.id, word)
+                setWordAsMastered(
+                    book.id,
+                    word,
+                    isNewWord = resolveLearningRecordIsNewWord(sessionType)
+                )
             } else {
                 markWordAsLearned(book.id, word, LEARN_QUALITY_CORRECT)
             }
@@ -526,6 +531,14 @@ internal fun shouldNavigateToCheckIn(
     return when (sessionType) {
         LearningSessionType.NEW,
         LearningSessionType.REVIEW -> state.shouldNavigate
+    }
+}
+
+internal fun resolveLearningRecordIsNewWord(sessionTypeValue: Int): Boolean {
+    return when (sessionTypeValue) {
+        LearningSessionTypes.REVIEW -> false
+        LearningSessionTypes.NEW -> true
+        else -> true
     }
 }
 
