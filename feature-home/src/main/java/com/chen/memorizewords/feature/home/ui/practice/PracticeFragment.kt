@@ -5,13 +5,11 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.chen.memorizewords.core.ui.dialog.prefabricated.ShowConfirmBottomDialog
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.core.ui.vm.UiEvent
@@ -42,9 +40,6 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
     private var pendingSelectedIds: LongArray? = null
     private var latestFloatingEnabled: Boolean = false
     private var ignoreSwitchUpdate: Boolean = false
-    private val recordAdapter = PracticeRecordAdapter { record ->
-        showRecordDetail(record.id)
-    }
 
     private val pickWordsLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -70,11 +65,6 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
     override fun initView(savedInstanceState: Bundle?) {
         databind.viewModel = viewModel
         databind.lifecycleOwner = viewLifecycleOwner
-        databind.rvPracticeRecords.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = recordAdapter
-            itemAnimator = null
-        }
         databind.switchFloatingCard.setOnCheckedChangeListener { _, isChecked ->
             if (ignoreSwitchUpdate) return@setOnCheckedChangeListener
             if (isChecked) {
@@ -94,24 +84,6 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
     override fun createObserver() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    viewModel.todayDurationHmsText.collect { databind.tvPracticeTodayDuration.text = it }
-                }
-                launch {
-                    viewModel.totalDurationMinutesText.collect {
-                        databind.tvPracticeTotalMinutesValue.text = it
-                    }
-                }
-                launch {
-                    viewModel.continuousDaysText.collect { databind.tvPracticeStreakValue.text = it }
-                }
-                launch {
-                    viewModel.recentRecords.collect { records ->
-                        recordAdapter.submitList(records)
-                        databind.tvPracticeRecordsEmpty.visibility =
-                            if (records.isEmpty()) View.VISIBLE else View.GONE
-                    }
-                }
                 launch {
                     viewModel.floatingEnabled.collect { enabled ->
                         latestFloatingEnabled = enabled
@@ -181,14 +153,6 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
                 selectedIds = selectedIds
             )
         )
-    }
-
-    private fun showRecordDetail(recordId: Long) {
-        val tag = PracticeRecordDetailBottomSheetDialog.TAG
-        val existing = childFragmentManager.findFragmentByTag(tag)
-        if (existing != null) return
-        PracticeRecordDetailBottomSheetDialog.newInstance(recordId)
-            .show(childFragmentManager, tag)
     }
 
     private fun openFloatingSettings() {

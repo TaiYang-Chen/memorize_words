@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_home_practice_static_title">自由练习</string>
+    <string name="feature_home_practice_static_subtitle">自主选择练习模式，针对性提升词汇能力</string>
+    <string name="feature_home_practice_static_one">1</string>
+    <string name="feature_home_practice_static_15">15</string>
+    <string name="feature_home_practice_static_29">29</string>
+    <string name="feature_home_practice_static_second">秒</string>
+    <string name="feature_home_practice_static_goal_30">目标 30 分钟</string>
+    <string name="feature_home_practice_static_continuous_learning">连续学习</string>
+    <string name="feature_home_practice_static_keep_going">继续加油！</string>
+    <string name="feature_home_practice_static_growth">学习成长</string>
+    <string name="feature_home_practice_static_level_title">学习等级</string>
+    <string name="feature_home_practice_static_level">Lv.2</string>
+    <string name="feature_home_practice_static_rookie" translatable="false">Rookie</string>
+    <string name="feature_home_practice_static_xp" translatable="false">45 / 100 XP</string>
+    <string name="feature_home_practice_static_week">本周练习</string>
+    <string name="feature_home_practice_static_vs_last_week">较上周</string>
+    <string name="feature_home_practice_static_plus_20" translatable="false">+20%</string>
+    <string name="feature_home_practice_static_win">坚持就是胜利！</string>
+    <string name="feature_home_practice_static_more_tools">更多工具</string>
+    <string name="feature_home_practice_mode_listening_desc_static">提升理解能力</string>
+    <string name="feature_home_practice_mode_shadowing_desc_static">提升口语表达</string>
+    <string name="feature_home_practice_mode_spelling_desc_static">强化拼写记忆</string>
+    <string name="feature_home_practice_mode_audio_loop_desc_static">随时随地磨耳朵</string>
+</resources>

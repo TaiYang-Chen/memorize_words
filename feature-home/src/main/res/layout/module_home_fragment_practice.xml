@@ -10,177 +10,312 @@
             type="com.chen.memorizewords.feature.home.ui.practice.PracticeViewModel" />
     </data>
 
-    <androidx.core.widget.NestedScrollView
+    <LinearLayout
+        android:orientation="vertical"
+        android:background="@drawable/feature_home_bg_practice_page"
+        android:paddingStart="@dimen/page_margin"
+        android:paddingEnd="@dimen/page_margin"
+        android:paddingTop="@dimen/page_margin"
+        android:paddingBottom="@dimen/page_margin"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/module_home_bg_home"
-        android:fillViewport="true">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/tvPracticeTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/page_margin">
+            android:textColor="#000"
+            android:gravity="center"
+            android:textSize="@dimen/title_text_size"
+            android:textStyle="bold"
+            android:layout_marginTop="@dimen/title_margin"
+            android:text="@string/feature_home_practice_static_title" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/title_margin"
-                android:gravity="center"
-                android:text="自由练习"
-                android:textColor="#000"
-                android:textSize="@dimen/title_text_size"
-                android:textStyle="bold" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:fillViewport="true"
+            android:overScrollMode="never">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/home_practice_today_duration"
-                    android:textColor="@color/practice_record_icon_shadowing"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tvPracticeTodayDuration"
+                    android:id="@+id/tvPracticeSubtitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:gravity="center"
-                    android:textColor="#0F172A"
-                    android:textSize="48sp"
-                    android:textStyle="bold"
-                    tools:text="01:00:00" />
+                    android:text="@string/feature_home_practice_static_subtitle"
+                    android:textColor="#45648D"
+                    android:textSize="13sp"
+                    android:textStyle="bold"/>
 
-                <LinearLayout
-                    android:padding="12dp"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="28dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+                    android:padding="16dp"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/feature_home_bg_practice_summary_card">
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:id="@+id/layoutTodayDuration"
+                        android:layout_width="116dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/home_practice_total_duration"
-                            android:textColor="#94A3B8"
-                            android:textSize="12sp" />
+                            android:text="@string/home_practice_today_duration"
+                            android:textColor="#071436"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:gravity="center"
+                            android:layout_marginTop="14dp"
+                            android:gravity="bottom"
                             android:orientation="horizontal">
 
                             <TextView
-                                android:id="@+id/tvPracticeTotalMinutesValue"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="#0F172A"
-                                android:textSize="20sp"
-                                android:textStyle="bold"
-                                tools:text="15" />
+                                android:text="@string/feature_home_practice_static_29"
+                                android:textColor="#071436"
+                                android:textSize="35sp"
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:text="@string/home_minutes_unit"
-                                android:textColor="#64748B"
-                                android:textSize="12sp" />
+                                android:layout_marginStart="8dp"
+                                android:text="@string/feature_home_practice_static_second"
+                                android:textColor="#071436"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
                         </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/feature_home_practice_static_goal_30"
+                            android:textColor="#071436"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                        <ProgressBar
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="7dp"
+                            android:layout_marginTop="9dp"
+                            android:max="1800"
+                            android:progress="29"
+                            android:progressDrawable="@drawable/feature_home_progress_practice_today" />
                     </LinearLayout>
 
                     <View
+                        android:id="@+id/viewPracticeSummaryDivider"
                         android:layout_width="1dp"
-                        android:layout_height="32dp"
-                        android:layout_marginHorizontal="16dp"
-                        android:background="#E2E8F0" />
+                        android:layout_height="72dp"
+                        android:layout_marginStart="8dp"
+                        android:background="#E3EAF5"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/layoutTodayDuration"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:id="@+id/layoutSummaryStreak"
+                        android:layout_width="70dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/home_practice_streak_days"
-                            android:textColor="#94A3B8"
-                            android:textSize="12sp" />
+                        android:layout_marginStart="12dp"
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/viewPracticeSummaryDivider"
+                        app:layout_constraintTop_toTopOf="parent">
 
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:gravity="center"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="13dp"
+                                android:layout_height="13dp"
+                                android:src="@drawable/feature_home_ic_practice_flame"
+                                app:tint="#19C970" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:text="@string/feature_home_practice_static_continuous_learning"
+                                android:textColor="#071436"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:gravity="bottom"
                             android:orientation="horizontal">
 
                             <TextView
-                                android:id="@+id/tvPracticeStreakValue"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="#0F172A"
-                                android:textSize="20sp"
-                                android:textStyle="bold"
-                                tools:text="15" />
+                                android:text="@string/feature_home_practice_static_one"
+                                android:textColor="#16C76B"
+                                android:textSize="27sp"
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
+                                android:layout_marginStart="9dp"
                                 android:text="@string/home_days_unit"
-                                android:textColor="#64748B"
-                                android:textSize="12sp" />
+                                android:textColor="#071436"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
                         </LinearLayout>
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
-                android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/feature_home_practice_static_keep_going"
+                            android:textColor="#071436"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="86dp"
+                        android:layout_height="80dp"
+                        android:layout_marginEnd="2dp"
+                        android:src="@drawable/feature_home_illus_practice_clock"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    style="@style/FeatureHomePracticeSectionTitle"
+                    android:layout_marginTop="28dp"
+                    android:text="@string/feature_home_practice_mode_section_title" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="14dp"
+                    android:orientation="vertical">
 
-                    <View
-                        android:layout_width="2dp"
-                        android:layout_height="10dp"
-                        android:background="#34D399" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="6dp"
-                        android:text="@string/feature_home_practice_mode_section_title"
-                        android:textColor="#0F172A"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
+                        android:orientation="horizontal">
+
+                        <include
+                            android:id="@+id/cardListening"
+                            layout="@layout/module_home_item_practice_mode_static"
+                            android:layout_width="0dp"
+                            android:layout_height="78dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/feature_home_bg_practice_mode_listening_large"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackgroundBorderless"
+                            android:onClick="@{() -> viewModel.openListening()}"
+                            app:featureHomeModeArrowBg="@{@drawable/feature_home_bg_practice_arrow_blue}"
+                            app:featureHomeModeArrowIcon="@{@drawable/feature_home_ic_practice_arrow_blue}"
+                            app:featureHomeModeIcon="@{@drawable/feature_home_ic_practice_headset_blue}"
+                            app:featureHomeModeIconBg="@{@drawable/feature_home_bg_practice_icon_blue}"
+                            app:featureHomeModeSubtitle="@{@string/feature_home_practice_mode_listening_desc_static}"
+                            app:featureHomeModeTitle="@{@string/home_practice_mode_listening}" />
+
+                        <include
+                            android:id="@+id/cardShadowing"
+                            layout="@layout/module_home_item_practice_mode_static"
+                            android:layout_width="0dp"
+                            android:layout_height="78dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/feature_home_bg_practice_mode_shadowing_large"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackgroundBorderless"
+                            android:onClick="@{() -> viewModel.openShadowing()}"
+                            app:featureHomeModeArrowBg="@{@drawable/feature_home_bg_practice_arrow_orange}"
+                            app:featureHomeModeArrowIcon="@{@drawable/feature_home_ic_practice_arrow_orange}"
+                            app:featureHomeModeIcon="@{@drawable/feature_home_ic_practice_mic_orange}"
+                            app:featureHomeModeIconBg="@{@drawable/feature_home_bg_practice_icon_orange}"
+                            app:featureHomeModeSubtitle="@{@string/feature_home_practice_mode_shadowing_desc_static}"
+                            app:featureHomeModeTitle="@{@string/home_practice_mode_shadowing}" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="horizontal">
+
+                        <include
+                            android:id="@+id/cardSpelling"
+                            layout="@layout/module_home_item_practice_mode_static"
+                            android:layout_width="0dp"
+                            android:layout_height="78dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/feature_home_bg_practice_mode_spelling_large"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackgroundBorderless"
+                            android:onClick="@{() -> viewModel.openSpelling()}"
+                            app:featureHomeModeArrowBg="@{@drawable/feature_home_bg_practice_arrow_green}"
+                            app:featureHomeModeArrowIcon="@{@drawable/feature_home_ic_practice_arrow_green}"
+                            app:featureHomeModeIcon="@{@drawable/feature_home_ic_practice_edit_green}"
+                            app:featureHomeModeIconBg="@{@drawable/feature_home_bg_practice_icon_green}"
+                            app:featureHomeModeSubtitle="@{@string/feature_home_practice_mode_spelling_desc_static}"
+                            app:featureHomeModeTitle="@{@string/home_practice_mode_spelling}" />
+
+                        <include
+                            android:id="@+id/cardAudioLoop"
+                            layout="@layout/module_home_item_practice_mode_static"
+                            android:layout_width="0dp"
+                            android:layout_height="78dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/feature_home_bg_practice_mode_audio_loop_large"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackgroundBorderless"
+                            android:onClick="@{() -> viewModel.openAudioLoop()}"
+                            app:featureHomeModeArrowBg="@{@drawable/feature_home_bg_practice_arrow_purple}"
+                            app:featureHomeModeArrowIcon="@{@drawable/feature_home_ic_practice_arrow_purple}"
+                            app:featureHomeModeIcon="@{@drawable/feature_home_ic_practice_play_purple}"
+                            app:featureHomeModeIconBg="@{@drawable/feature_home_bg_practice_icon_purple}"
+                            app:featureHomeModeSubtitle="@{@string/feature_home_practice_mode_audio_loop_desc_static}"
+                            app:featureHomeModeTitle="@{@string/home_practice_mode_audio_loop}" />
+                    </LinearLayout>
                 </LinearLayout>
+
+                <TextView
+                    style="@style/FeatureHomePracticeSectionTitle"
+                    android:layout_marginTop="28dp"
+                    android:text="@string/feature_home_practice_static_growth" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -188,324 +323,258 @@
                     android:layout_marginTop="14dp"
                     android:orientation="horizontal">
 
-                    <FrameLayout
-                        android:layout_width="0dp"
-                        android:layout_height="124dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/feature_home_bg_practice_mode_listening_card"
-                        android:clickable="true"
-                        android:foreground="?attr/selectableItemBackgroundBorderless"
-                        android:onClick="@{() -> viewModel.openListening()}"
-                        android:stateListAnimator="@animator/btn_scale_animator">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center_horizontal"
-                            android:orientation="vertical"
-                            android:paddingStart="6dp"
-                            android:paddingTop="11dp"
-                            android:paddingEnd="6dp"
-                            android:paddingBottom="18dp">
-
-                            <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:background="@drawable/module_home_practice_circle_listening"
-                                android:padding="8dp"
-                                android:src="@drawable/feature_home_ic_practice_headset"
-                                app:tint="@color/practice_record_icon_listening" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/home_practice_mode_listening"
-                                android:textColor="#0F172A"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:gravity="center"
-                                android:lineSpacingExtra="1dp"
-                                android:maxLines="2"
-                                android:text="@string/feature_home_practice_mode_listening_desc"
-                                android:textColor="#64748B"
-                                android:textSize="9sp" />
-                        </LinearLayout>
-                    </FrameLayout>
-
-                    <FrameLayout
-                        android:layout_width="0dp"
-                        android:layout_height="124dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/feature_home_bg_practice_mode_shadowing_card"
-                        android:clickable="true"
-                        android:foreground="?attr/selectableItemBackgroundBorderless"
-                        android:onClick="@{() -> viewModel.openShadowing()}"
-                        android:stateListAnimator="@animator/btn_scale_animator">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center_horizontal"
-                            android:orientation="vertical"
-                            android:paddingStart="6dp"
-                            android:paddingTop="11dp"
-                            android:paddingEnd="6dp"
-                            android:paddingBottom="18dp">
-
-                            <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:background="@drawable/module_home_practice_circle_shadowing"
-                                android:padding="8dp"
-                                android:src="@drawable/feature_home_ic_practice_mic"
-                                app:tint="@color/practice_record_icon_shadowing" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/home_practice_mode_shadowing"
-                                android:textColor="#0F172A"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:gravity="center"
-                                android:lineSpacingExtra="1dp"
-                                android:maxLines="2"
-                                android:text="@string/feature_home_practice_mode_shadowing_desc"
-                                android:textColor="#64748B"
-                                android:textSize="9sp" />
-                        </LinearLayout>
-                    </FrameLayout>
-
-                    <FrameLayout
-                        android:layout_width="0dp"
-                        android:layout_height="124dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/feature_home_bg_practice_mode_spelling_card"
-                        android:clickable="true"
-                        android:foreground="?attr/selectableItemBackgroundBorderless"
-                        android:onClick="@{() -> viewModel.openSpelling()}"
-                        android:stateListAnimator="@animator/btn_scale_animator">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center_horizontal"
-                            android:orientation="vertical"
-                            android:paddingStart="6dp"
-                            android:paddingTop="11dp"
-                            android:paddingEnd="6dp"
-                            android:paddingBottom="18dp">
-
-                            <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:background="@drawable/module_home_practice_circle_spelling"
-                                android:padding="8dp"
-                                android:src="@drawable/feature_home_ic_practice_edit"
-                                app:tint="@color/practice_record_icon_spelling" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/home_practice_mode_spelling"
-                                android:textColor="#0F172A"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:gravity="center"
-                                android:lineSpacingExtra="1dp"
-                                android:maxLines="2"
-                                android:text="@string/feature_home_practice_mode_spelling_desc"
-                                android:textColor="#64748B"
-                                android:textSize="9sp" />
-                        </LinearLayout>
-                    </FrameLayout>
-
-                    <FrameLayout
-                        android:layout_width="0dp"
-                        android:layout_height="124dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/feature_home_bg_practice_mode_audio_loop_card"
-                        android:clickable="true"
-                        android:foreground="?attr/selectableItemBackgroundBorderless"
-                        android:onClick="@{() -> viewModel.openAudioLoop()}"
-                        android:stateListAnimator="@animator/btn_scale_animator">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center_horizontal"
-                            android:orientation="vertical"
-                            android:paddingStart="6dp"
-                            android:paddingTop="11dp"
-                            android:paddingEnd="6dp"
-                            android:paddingBottom="18dp">
-
-                            <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:background="@drawable/feature_home_practice_circle_player"
-                                android:padding="8dp"
-                                android:src="@drawable/feature_home_ic_practice_play"
-                                app:tint="@color/practice_record_icon_audio_loop" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/home_practice_mode_audio_loop"
-                                android:textColor="#0F172A"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:gravity="center"
-                                android:lineSpacingExtra="1dp"
-                                android:maxLines="2"
-                                android:text="@string/feature_home_practice_mode_audio_loop_desc"
-                                android:textColor="#64748B"
-                                android:textSize="9sp" />
-                        </LinearLayout>
-                    </FrameLayout>
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layoutFloatingCard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
-                android:background="@drawable/feature_home_bg_layout_floating_card"
-                android:gravity="center_vertical"
-                android:minHeight="76dp"
-                android:orientation="horizontal"
-                android:paddingStart="20dp"
-                android:paddingTop="14dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="14dp">
-
-                <FrameLayout
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/feature_home_bg_floating_ball">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/feature_home_ic_floating_ball" />
-                </FrameLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
                     <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/feature_home_bg_practice_growth_blue"
+                        android:orientation="vertical"
+                        android:paddingStart="12dp"
+                        android:paddingTop="14dp"
+                        android:paddingEnd="12dp">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:src="@drawable/feature_home_ic_practice_medal"
+                                app:tint="#258CF0" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:text="@string/feature_home_practice_static_level_title"
+                                android:textColor="#45648D"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:text="@string/feature_home_floating_section_title"
-                            android:textColor="#0F172A"
-                            android:textSize="14sp"
+                            android:layout_marginTop="14dp"
+                            android:text="@string/feature_home_practice_static_level"
+                            android:textColor="#071436"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
+
+                        <ProgressBar
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="6dp"
+                            android:layout_marginTop="9dp"
+                            android:max="100"
+                            android:progress="45"
+                            android:progressDrawable="@drawable/feature_home_progress_practice_xp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/feature_home_practice_static_xp"
+                            android:textColor="#208AF2"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/feature_home_bg_practice_growth_green"
+                        android:orientation="vertical"
+                        android:paddingStart="12dp"
+                        android:paddingTop="16dp"
+                        android:paddingBottom="16dp"
+                        android:paddingEnd="12dp">
 
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:background="@drawable/feature_home_bg_floating_vip_badge">
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:src="@drawable/feature_home_ic_practice_chart"
+                                app:tint="#19C970" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="VIP"
-                                android:textColor="#EA580C"
-                                android:textSize="10sp"
+                                android:layout_marginStart="12dp"
+                                android:text="@string/feature_home_practice_static_week"
+                                android:textColor="#45648D"
+                                android:textSize="11sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
-                    </LinearLayout>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:text="@string/feature_home_floating_subtitle"
-                        android:textColor="#64748B"
-                        android:textSize="12sp" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="14dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/feature_home_practice_static_15"
+                                android:textColor="#071436"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:text="@string/home_minutes_unit"
+                                android:textColor="#45648D"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/feature_home_practice_static_vs_last_week"
+                                android:textColor="#45648D"
+                                android:textSize="10sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:text="@string/feature_home_practice_static_plus_20"
+                                android:textColor="#16C76B"
+                                android:textSize="10sp"
+                                android:textStyle="bold" />
+
+                            <ImageView
+                                android:layout_width="12dp"
+                                android:layout_height="12dp"
+                                android:layout_marginStart="8dp"
+                                android:src="@drawable/feature_home_ic_practice_trend_up"
+                                app:tint="#16C76B" />
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
 
-                <ImageView
-                    android:id="@+id/btnFloatingSettings"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginEnd="4dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:clickable="true"
-                    android:contentDescription="@string/feature_home_floating_settings"
-                    android:focusable="true"
-                    android:padding="4dp"
-                    android:src="@drawable/feature_home_settings_172337" />
+                <TextView
+                    style="@style/FeatureHomePracticeSectionTitle"
+                    android:layout_marginTop="28dp"
+                    android:text="@string/feature_home_practice_static_more_tools" />
 
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchFloatingCard"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:thumbTint="@drawable/feature_home_floating_switch_thumb_tint"
-                    app:trackTint="@drawable/feature_home_floating_switch_track_tint" />
+                <LinearLayout
+                    android:id="@+id/layoutFloatingCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/feature_home_bg_practice_tool_card"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="10dp">
+
+                    <FrameLayout
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/feature_home_bg_floating_ball">
+
+                        <ImageView
+                            android:layout_width="23dp"
+                            android:layout_height="23dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/feature_home_ic_floating_ball" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="14dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="@string/feature_home_floating_section_title"
+                                android:textColor="#071436"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:background="@drawable/feature_home_bg_floating_vip_badge"
+                                android:paddingStart="7dp"
+                                android:paddingEnd="7dp"
+                                android:text="VIP"
+                                android:textColor="#EA580C"
+                                android:textSize="9sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="@string/feature_home_floating_subtitle"
+                            android:textColor="#45648D"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <CheckBox
+                        android:id="@+id/switchFloatingCard"
+                        android:layout_width="44dp"
+                        android:layout_height="18dp"
+                        android:background="@drawable/feature_home_floating_switch_background"
+                        android:button="@null"
+                        android:checked="true"
+                        android:gravity="center"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:padding="0dp"
+                        android:text="" />
+
+                    <ImageView
+                        android:id="@+id/btnFloatingSettings"
+                        android:layout_width="34dp"
+                        android:layout_height="34dp"
+                        android:clickable="true"
+                        android:contentDescription="@string/feature_home_floating_settings"
+                        android:focusable="true"
+                        android:padding="9dp"
+                        android:src="@drawable/module_home_ic_right_black"
+                        app:tint="#8190A8" />
+                </LinearLayout>
             </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvPracticeRecords"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:nestedScrollingEnabled="false" />
-
-            <TextView
-                android:id="@+id/tvPracticeRecordsEmpty"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingTop="6dp"
-                android:text="@string/home_practice_records_empty"
-                android:textColor="#94A3B8"
-                android:textSize="11sp"
-                android:visibility="gone" />
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
 </layout>
