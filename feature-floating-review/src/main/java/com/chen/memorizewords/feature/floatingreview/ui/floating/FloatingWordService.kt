@@ -4,6 +4,9 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.PixelFormat
@@ -18,14 +21,16 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import coil.load
 import com.chen.memorizewords.core.navigation.FloatingWordActions
-import com.chen.memorizewords.core.navigation.LearningEntry
 import com.chen.memorizewords.domain.floating.model.FloatingDockState
+import com.chen.memorizewords.domain.floating.model.FloatingWordFieldConfig
 import com.chen.memorizewords.domain.floating.model.FloatingWordFieldType
 import com.chen.memorizewords.domain.floating.model.FloatingWordOrderType
 import com.chen.memorizewords.domain.floating.model.FloatingWordSettings
@@ -46,7 +51,8 @@ import kotlin.math.roundToInt
 
 internal data class FloatingCardActionState(
     val refreshEnabled: Boolean,
-    val detailEnabled: Boolean
+    val favoriteEnabled: Boolean,
+    val copyEnabled: Boolean
 )
 
 internal data class FloatingWordAdvanceResult(
@@ -58,7 +64,8 @@ internal data class FloatingWordAdvanceResult(
 internal fun resolveCardActionState(hasWord: Boolean): FloatingCardActionState {
     return FloatingCardActionState(
         refreshEnabled = hasWord,
-        detailEnabled = hasWord
+        favoriteEnabled = hasWord,
+        copyEnabled = hasWord
     )
 }
 
@@ -155,9 +162,6 @@ class FloatingWordService : Service() {
     @Inject
     lateinit var floatingWordController: FloatingWordController
 
-    @Inject
-    lateinit var learningEntry: LearningEntry
-
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val dockManager = FloatingDockManager()
     private lateinit var windowManager: WindowManager
@@ -171,6 +175,7 @@ class FloatingWordService : Service() {
     private var words: List<Word> = emptyList()
     private var currentIndex = 0
     private var currentWord: Word? = null
+    private var currentDefinitions: List<WordDefinitions> = emptyList()
     private var currentSettings: FloatingWordSettings = FloatingWordSettings()
 
     private var isDragging = false
@@ -462,13 +467,14 @@ class FloatingWordService : Service() {
     }
 
     private fun bindCardActions() {
+        cardView?.findViewById<View>(R.id.module_floating_review_btn_favorite)?.setOnClickListener {
+            toggleCurrentFavorite()
+        }
         cardView?.findViewById<View>(R.id.module_floating_review_btn_refresh)?.setOnClickListener {
             showNextWord()
         }
-        cardView?.findViewById<View>(R.id.module_floating_review_btn_detail)?.setOnClickListener {
-            val word = currentWord ?: return@setOnClickListener
-            hideCard()
-            openWordDetail(word)
+        cardView?.findViewById<View>(R.id.module_floating_review_btn_copy)?.setOnClickListener {
+            copyCurrentWord()
         }
         cardView?.findViewById<View>(R.id.module_floating_review_btn_close)?.setOnClickListener {
             closeThenStopFloating()
@@ -565,16 +571,16 @@ class FloatingWordService : Service() {
 
     private fun renderEmptyCard() {
         invalidateCardMeasurement()
+        currentDefinitions = emptyList()
+        cardView?.findViewById<TextView>(R.id.module_floating_review_tv_word)?.apply {
+            text = getString(R.string.module_floating_review_empty)
+            visibility = View.VISIBLE
+        }
+        cardView?.findViewById<View>(R.id.module_floating_review_phonetic_row)?.visibility = View.GONE
         val container = cardView?.findViewById<LinearLayout>(
             R.id.module_floating_review_floating_fields_container
         ) ?: return
         container.removeAllViews()
-        val textView = TextView(this).apply {
-            text = getString(R.string.module_floating_review_empty)
-            setTextColor(0xFF64748B.toInt())
-            textSize = 13f
-        }
-        container.addView(textView)
         applyCardActionState(resolveCardActionState(hasWord = false))
     }
 
@@ -585,6 +591,7 @@ class FloatingWordService : Service() {
         settings: FloatingWordSettings
     ) {
         invalidateCardMeasurement()
+        currentDefinitions = definitions
         val container = cardView?.findViewById<LinearLayout>(
             R.id.module_floating_review_floating_fields_container
         ) ?: return
@@ -594,76 +601,136 @@ class FloatingWordService : Service() {
             renderEmptyCard()
             return
         }
+        val enabledTypes = configs.map { it.type }.toSet()
+        renderHeader(word, enabledTypes)
+        renderPhonetics(word, enabledTypes)
+        renderDefinitions(container, definitions, enabledTypes, configs)
+        renderExtraFields(container, word, definitions, examples, configs)
         applyCardActionState(resolveCardActionState(hasWord = true))
-        configs.forEachIndexed { index, config ->
-            val view = when (config.type) {
-                FloatingWordFieldType.WORD -> buildTextView(
-                    word.word,
-                    config.fontSizeSp.toFloat(),
-                    0xFF0F172A.toInt(),
-                    true
-                )
-
-                FloatingWordFieldType.PHONETIC -> buildTextView(
-                    buildPhoneticText(word),
-                    config.fontSizeSp.toFloat(),
-                    0xFF64748B.toInt(),
-                    false
-                )
-
-                FloatingWordFieldType.MEANING -> buildTextView(
-                    buildMeaningText(definitions),
-                    config.fontSizeSp.toFloat(),
-                    0xFF1F2937.toInt(),
-                    false
-                )
-
-                FloatingWordFieldType.PART_OF_SPEECH -> buildTextView(
-                    buildPartOfSpeechText(definitions),
-                    config.fontSizeSp.toFloat(),
-                    0xFF475569.toInt(),
-                    false
-                )
-
-                FloatingWordFieldType.EXAMPLE -> buildTextView(
-                    buildExampleText(examples),
-                    config.fontSizeSp.toFloat(),
-                    0xFF334155.toInt(),
-                    false
-                )
-
-                FloatingWordFieldType.NOTE -> buildTextView(
-                    word.notes.orEmpty(),
-                    config.fontSizeSp.toFloat(),
-                    0xFF334155.toInt(),
-                    false
-                )
-
-                FloatingWordFieldType.IMAGE -> buildImageView(word.mnemonicImageUrl, config.fontSizeSp)
-            }
-
-            view?.let {
-                val layoutParams = (it.layoutParams as? LinearLayout.LayoutParams)
-                    ?: LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                    )
-                if (index > 0) layoutParams.topMargin = dp(6)
-                it.layoutParams = layoutParams
-                container.addView(it)
-            }
-        }
+        refreshFavoriteState(word)
     }
 
     private fun applyCardActionState(state: FloatingCardActionState) {
+        cardView?.findViewById<View>(R.id.module_floating_review_btn_favorite)?.apply {
+            isEnabled = state.favoriteEnabled
+            alpha = if (state.favoriteEnabled) 1f else 0.38f
+        }
         cardView?.findViewById<View>(R.id.module_floating_review_btn_refresh)?.apply {
             isEnabled = state.refreshEnabled
             alpha = if (state.refreshEnabled) 1f else 0.38f
         }
-        cardView?.findViewById<View>(R.id.module_floating_review_btn_detail)?.apply {
-            isEnabled = state.detailEnabled
-            alpha = if (state.detailEnabled) 1f else 0.38f
+        cardView?.findViewById<View>(R.id.module_floating_review_btn_copy)?.apply {
+            isEnabled = state.copyEnabled
+            alpha = if (state.copyEnabled) 1f else 0.38f
         }
+    }
+
+    private fun renderHeader(word: Word, enabledTypes: Set<FloatingWordFieldType>) {
+        cardView?.findViewById<TextView>(R.id.module_floating_review_tv_word)?.apply {
+            text = word.word
+            visibility = if (FloatingWordFieldType.WORD in enabledTypes) View.VISIBLE else View.GONE
+        }
+    }
+
+    private fun renderPhonetics(word: Word, enabledTypes: Set<FloatingWordFieldType>) {
+        val row = cardView?.findViewById<View>(R.id.module_floating_review_phonetic_row) ?: return
+        val divider = cardView?.findViewById<View>(R.id.module_floating_review_phonetic_divider)
+        val uk = word.phoneticUK?.takeIf { it.isNotBlank() }
+        val us = word.phoneticUS?.takeIf { it.isNotBlank() }
+        val showRow = FloatingWordFieldType.PHONETIC in enabledTypes && (uk != null || us != null)
+        row.visibility = if (showRow) View.VISIBLE else View.GONE
+        divider?.visibility = if (showRow) View.VISIBLE else View.GONE
+        if (!showRow) return
+
+        bindPhoneticGroup(
+            groupId = R.id.module_floating_review_phonetic_uk_group,
+            textId = R.id.module_floating_review_tv_phonetic_uk,
+            value = uk
+        )
+        bindPhoneticGroup(
+            groupId = R.id.module_floating_review_phonetic_us_group,
+            textId = R.id.module_floating_review_tv_phonetic_us,
+            value = us
+        )
+    }
+
+    private fun bindPhoneticGroup(groupId: Int, textId: Int, value: String?) {
+        val group = cardView?.findViewById<View>(groupId) ?: return
+        group.visibility = if (value == null) View.GONE else View.VISIBLE
+        cardView?.findViewById<TextView>(textId)?.text = value.orEmpty()
+    }
+
+    private fun renderDefinitions(
+        container: LinearLayout,
+        definitions: List<WordDefinitions>,
+        enabledTypes: Set<FloatingWordFieldType>,
+        configs: List<FloatingWordFieldConfig>
+    ) {
+        val showMeaning = FloatingWordFieldType.MEANING in enabledTypes
+        val showPartOfSpeech = FloatingWordFieldType.PART_OF_SPEECH in enabledTypes
+        if (!showMeaning && !showPartOfSpeech) return
+
+        val text = buildDefinitionLines(
+            definitions = definitions,
+            showPartOfSpeech = showPartOfSpeech || showMeaning,
+            showMeaning = showMeaning
+        )
+        if (text.isBlank()) return
+        val definitionTextSize = resolveFontSize(configs, FloatingWordFieldType.MEANING, 16)
+            .coerceAtLeast(16)
+        container.addView(
+            buildTextView(
+                text = text,
+                textSizeSp = definitionTextSize.toFloat(),
+                color = 0xFF111827.toInt(),
+                bold = false
+            ).apply {
+                includeFontPadding = false
+                setLineSpacing(dp(10).toFloat(), 1f)
+            }
+        )
+    }
+
+    private fun renderExtraFields(
+        container: LinearLayout,
+        word: Word,
+        definitions: List<WordDefinitions>,
+        examples: List<WordExample>,
+        configs: List<FloatingWordFieldConfig>
+    ) {
+        configs
+            .filter { it.type in setOf(FloatingWordFieldType.EXAMPLE, FloatingWordFieldType.NOTE, FloatingWordFieldType.IMAGE) }
+            .forEach { config ->
+                val view = when (config.type) {
+                    FloatingWordFieldType.EXAMPLE -> buildTextView(
+                        buildExampleText(examples),
+                        config.fontSizeSp.toFloat(),
+                        0xFF334155.toInt(),
+                        false
+                    )
+
+                    FloatingWordFieldType.NOTE -> buildTextView(
+                        word.notes.orEmpty(),
+                        config.fontSizeSp.toFloat(),
+                        0xFF334155.toInt(),
+                        false
+                    )
+
+                    FloatingWordFieldType.IMAGE -> buildImageView(word.mnemonicImageUrl, config.fontSizeSp)
+                    else -> null
+                }
+
+                view?.takeIf { hasRenderableContent(it) }?.let {
+                    val layoutParams = (it.layoutParams as? LinearLayout.LayoutParams)
+                        ?: LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                        )
+                    layoutParams.topMargin = if (container.childCount > 0) dp(8) else 0
+                    it.layoutParams = layoutParams
+                    container.addView(it)
+                }
+            }
     }
 
     private fun buildTextView(
@@ -678,6 +745,7 @@ class FloatingWordService : Service() {
             this.text = content
             setTextColor(if (isPlaceholder) 0xFF94A3B8.toInt() else color)
             this.textSize = textSizeSp
+            includeFontPadding = false
             if (bold) setTypeface(typeface, android.graphics.Typeface.BOLD)
         }
     }
@@ -695,6 +763,124 @@ class FloatingWordService : Service() {
             scaleType = ImageView.ScaleType.CENTER_CROP
             load(url)
         }
+    }
+
+    private fun hasRenderableContent(view: View): Boolean {
+        return (view as? TextView)?.text?.toString() != EMPTY_PLACEHOLDER
+    }
+
+    private fun resolveFontSize(
+        configs: List<FloatingWordFieldConfig>,
+        type: FloatingWordFieldType,
+        fallback: Int
+    ): Int {
+        return configs.firstOrNull { it.type == type }?.fontSizeSp ?: fallback
+    }
+
+    private fun buildDefinitionLines(
+        definitions: List<WordDefinitions>,
+        showPartOfSpeech: Boolean,
+        showMeaning: Boolean
+    ): String {
+        if (definitions.isEmpty()) return ""
+        return definitions.take(2).joinToString("\n") { definition ->
+            when {
+                showPartOfSpeech && showMeaning ->
+                    "${formatPartOfSpeech(definition.partOfSpeech.abbr)} ${definition.meaningChinese}"
+                showPartOfSpeech -> formatPartOfSpeech(definition.partOfSpeech.abbr)
+                showMeaning -> definition.meaningChinese
+                else -> ""
+            }
+        }
+    }
+
+    private fun formatPartOfSpeech(value: String): String {
+        val trimmed = value.trim()
+        if (trimmed.isBlank()) return trimmed
+        return if (trimmed.endsWith(".")) trimmed else "$trimmed."
+    }
+
+    private fun refreshFavoriteState(word: Word) {
+        val button = cardView?.findViewById<ImageButton>(R.id.module_floating_review_btn_favorite)
+        button?.setImageResource(R.drawable.module_floating_review_ic_star)
+        button?.contentDescription = getString(R.string.module_floating_review_favorite)
+        serviceScope.launch {
+            runCatching { floatingWordController.isFavorite(word.id) }
+                .onSuccess { favorite ->
+                    if (currentWord?.id == word.id) applyFavoriteState(favorite)
+                }
+        }
+    }
+
+    private fun toggleCurrentFavorite() {
+        val word = currentWord ?: return
+        serviceScope.launch {
+            runCatching {
+                floatingWordController.toggleFavorite(word)
+                floatingWordController.isFavorite(word.id)
+            }.onSuccess { favorite ->
+                if (currentWord?.id == word.id) applyFavoriteState(favorite)
+                Toast.makeText(
+                    this@FloatingWordService,
+                    getString(
+                        if (favorite) {
+                            R.string.module_floating_review_favorited
+                        } else {
+                            R.string.module_floating_review_unfavorited
+                        }
+                    ),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    private fun applyFavoriteState(favorite: Boolean) {
+        cardView?.findViewById<ImageButton>(R.id.module_floating_review_btn_favorite)?.apply {
+            setImageResource(
+                if (favorite) {
+                    R.drawable.module_floating_review_ic_star_filled
+                } else {
+                    R.drawable.module_floating_review_ic_star
+                }
+            )
+            contentDescription = getString(
+                if (favorite) {
+                    R.string.module_floating_review_unfavorite
+                } else {
+                    R.string.module_floating_review_favorite
+                }
+            )
+        }
+    }
+
+    private fun copyCurrentWord() {
+        val word = currentWord ?: return
+        val text = buildCopyText(word, currentDefinitions)
+        val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+        clipboardManager?.setPrimaryClip(
+            ClipData.newPlainText(word.word, text)
+        )
+        Toast.makeText(
+            this,
+            getString(R.string.module_floating_review_copied),
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun buildCopyText(
+        word: Word,
+        definitions: List<WordDefinitions>
+    ): String {
+        return buildList {
+            add(word.word)
+            buildPhoneticText(word).takeIf { it.isNotBlank() }?.let(::add)
+            buildDefinitionLines(
+                definitions = definitions,
+                showPartOfSpeech = true,
+                showMeaning = true
+            ).takeIf { it.isNotBlank() }?.let(::add)
+        }.joinToString("\n")
     }
 
     private fun buildPhoneticText(word: Word): String {
@@ -825,14 +1011,6 @@ class FloatingWordService : Service() {
         return position.x != currentSettings.floatingBallX ||
             position.y != currentSettings.floatingBallY ||
             currentSettings.dockState != null
-    }
-
-    private fun openWordDetail(word: Word) {
-        startActivity(
-            learningEntry.createOpenWordIntent(this, word.id, true).apply {
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
-        )
     }
 
     private fun getMovementBounds(settings: FloatingWordSettings): FloatingMovementBounds {
