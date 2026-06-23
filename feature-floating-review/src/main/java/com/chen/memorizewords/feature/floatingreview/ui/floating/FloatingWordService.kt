@@ -9,9 +9,7 @@ import android.content.res.Configuration
 import android.graphics.PixelFormat
 import android.graphics.Rect
 import android.os.Build
-import android.os.Handler
 import android.os.IBinder
-import android.os.Looper
 import android.provider.Settings
 import android.view.Gravity
 import android.view.GestureDetector
@@ -27,7 +25,6 @@ import androidx.core.app.NotificationCompat
 import coil.load
 import com.chen.memorizewords.core.navigation.FloatingWordActions
 import com.chen.memorizewords.core.navigation.LearningEntry
-import com.chen.memorizewords.domain.floating.model.FloatingDockEdge
 import com.chen.memorizewords.domain.floating.model.FloatingDockState
 import com.chen.memorizewords.domain.floating.model.FloatingWordFieldType
 import com.chen.memorizewords.domain.floating.model.FloatingWordOrderType
@@ -149,10 +146,6 @@ class FloatingWordService : Service() {
         private const val CHANNEL_ID = "floating_word_review_channel"
         private const val NOTIFICATION_ID = 5321
         private const val EMPTY_PLACEHOLDER = "-"
-        private const val PET_SLEEP_TIMEOUT_MS = 60_000L
-        private const val PET_TAP_DURATION_MS = 1_000L
-        private const val PET_OPEN_CARD_DURATION_MS = 1_000L
-        private const val PET_CLOSE_CARD_DURATION_MS = 750L
     }
 
     @Inject
@@ -169,11 +162,6 @@ class FloatingWordService : Service() {
     private var cardView: View? = null
     private var ballParams: WindowManager.LayoutParams? = null
     private var cardParams: WindowManager.LayoutParams? = null
-    private val petActionHandler = Handler(Looper.getMainLooper())
-    private var petMotion: MoonAssistantSequenceFrameController? = null
-    private var petSequenceRunnable: Runnable? = null
-    private var petSleepRunnable: Runnable? = null
-    private var isPetSleeping = false
     private var settingsJob: Job? = null
 
     private var words: List<Word> = emptyList()
@@ -184,6 +172,8 @@ class FloatingWordService : Service() {
     private var isDragging = false
     private var touchDownX = 0f
     private var touchDownY = 0f
+    private var dragStartBallX = 0
+    private var dragStartBallY = 0
     private var ballGestureDetector: GestureDetector? = null
     private var lastMovementBounds: FloatingMovementBounds? = null
     private var cachedCardWidth = 0
@@ -247,8 +237,6 @@ class FloatingWordService : Service() {
     }
 
     private fun refreshWords(showNext: Boolean) {
-        wakePetForInteraction()
-        playPetAction(MoonAssistantFrameAction.LOADING)
         serviceScope.launch {
             runCatching {
                 currentSettings = floatingWordController.getSettings()
@@ -258,12 +246,8 @@ class FloatingWordService : Service() {
                 }
                 currentIndex = 0
                 if (showNext) {
-                    showNextWord(playOpenMotion = true)
-                } else {
-                    playPetAction(MoonAssistantFrameAction.IDLE)
+                    showNextWord()
                 }
-            }.onFailure {
-                playPetAction(MoonAssistantFrameAction.SAD)
             }
         }
     }
@@ -271,7 +255,7 @@ class FloatingWordService : Service() {
     private fun ensureViews() {
         if (ballView != null && cardView != null) return
         val inflater = LayoutInflater.from(this)
-        ballView = inflater.inflate(R.layout.moon_assistant_pet_overlay, null)
+        ballView = inflater.inflate(R.layout.module_floating_review_view_floating_ball, null)
         cardView = inflater.inflate(R.layout.module_floating_review_view_floating_card, null).apply {
             visibility = View.GONE
         }
@@ -282,7 +266,6 @@ class FloatingWordService : Service() {
         windowManager.addView(ballView, ballParams)
         windowManager.addView(cardView, cardParams)
 
-        initializePetMotion()
         applyFloatingAppearance()
         restoreBallPosition()
         configureBallGestures()
@@ -322,7 +305,6 @@ class FloatingWordService : Service() {
     }
 
     private fun removeViews() {
-        stopPetMotion()
         ballView?.let { runCatching { windowManager.removeView(it) } }
         cardView?.let { runCatching { windowManager.removeView(it) } }
         ballView = null
@@ -367,70 +349,6 @@ class FloatingWordService : Service() {
         }
     }
 
-    private fun initializePetMotion() {
-        val petRootView = ballView ?: return
-        val petImage = petImageView() ?: return
-        petMotion = MoonAssistantSequenceFrameController(petRootView, petImage)
-        playPetAction(MoonAssistantFrameAction.IDLE)
-    }
-
-    private fun stopPetMotion() {
-        cancelPetSequence()
-        cancelPetSleep()
-        petMotion?.stop()
-        petMotion = null
-        isPetSleeping = false
-    }
-
-    private fun petImageView(): ImageView? = ballView?.findViewById(R.id.petImage)
-
-    private fun playPetAction(action: MoonAssistantFrameAction, resetSleepTimer: Boolean = true) {
-        if (action == MoonAssistantFrameAction.SLEEP) {
-            isPetSleeping = true
-            petMotion?.play(action)
-            return
-        }
-        isPetSleeping = false
-        petMotion?.play(action)
-        if (resetSleepTimer) schedulePetSleep()
-    }
-
-    private fun wakePetForInteraction() {
-        cancelPetSequence()
-        if (isPetSleeping) {
-            isPetSleeping = false
-            petMotion?.play(MoonAssistantFrameAction.WAKE)
-        }
-        schedulePetSleep()
-    }
-
-    private fun schedulePetSequence(delayMs: Long, block: () -> Unit) {
-        cancelPetSequence()
-        val runnable = Runnable(block)
-        petSequenceRunnable = runnable
-        petActionHandler.postDelayed(runnable, delayMs)
-    }
-
-    private fun cancelPetSequence() {
-        petSequenceRunnable?.let(petActionHandler::removeCallbacks)
-        petSequenceRunnable = null
-    }
-
-    private fun schedulePetSleep() {
-        cancelPetSleep()
-        val runnable = Runnable {
-            cancelPetSequence()
-            playPetAction(MoonAssistantFrameAction.SLEEP, resetSleepTimer = false)
-        }
-        petSleepRunnable = runnable
-        petActionHandler.postDelayed(runnable, PET_SLEEP_TIMEOUT_MS)
-    }
-
-    private fun cancelPetSleep() {
-        petSleepRunnable?.let(petActionHandler::removeCallbacks)
-        petSleepRunnable = null
-    }
-
     private fun configureBallGestures() {
         ballGestureDetector = GestureDetector(
             this,
@@ -456,7 +374,8 @@ class FloatingWordService : Service() {
                     isDragging = false
                     touchDownX = event.rawX
                     touchDownY = event.rawY
-                    wakePetForInteraction()
+                    dragStartBallX = params.x
+                    dragStartBallY = params.y
                     true
                 }
 
@@ -467,19 +386,18 @@ class FloatingWordService : Service() {
                     if (!isDragging && (abs(dx) > threshold || abs(dy) > threshold)) {
                         isDragging = true
                         dragJustStarted = true
-                        updatePetDragWindowPosition(params, event)
-                        playPetAction(resolveDragStartAction())
+                        updateDraggedBallPosition(params, dx, dy)
                         clearLocalDockState()
                     }
                     if (isDragging && !dragJustStarted) {
-                        updatePetDragWindowPosition(params, event)
+                        updateDraggedBallPosition(params, dx, dy)
                     }
                     true
                 }
 
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                     if (isDragging) {
-                        playPetAction(settleDraggedBall())
+                        settleDraggedBall()
                     }
                     true
                 }
@@ -489,27 +407,16 @@ class FloatingWordService : Service() {
         }
     }
 
-    private fun updatePetDragWindowPosition(
+    private fun updateDraggedBallPosition(
         params: WindowManager.LayoutParams,
-        event: MotionEvent
+        dx: Float,
+        dy: Float
     ): Boolean {
-        val motion = petMotion ?: return false
-        motion.updateDragWindowPosition(
-            windowManager = windowManager,
-            params = params,
-            rawTouchX = event.rawX,
-            rawTouchY = event.rawY
-        )
+        params.x = dragStartBallX + dx.roundToInt()
+        params.y = dragStartBallY + dy.roundToInt()
+        ballView?.let { windowManager.updateViewLayout(it, params) }
         if (isCardVisible()) updateCardPosition()
         return true
-    }
-
-    private fun resolveDragStartAction(): MoonAssistantFrameAction {
-        return when (currentSettings.dockState?.dockedEdge) {
-            FloatingDockEdge.LEFT -> MoonAssistantFrameAction.UNDOCK_LEFT
-            FloatingDockEdge.RIGHT -> MoonAssistantFrameAction.UNDOCK_RIGHT
-            else -> MoonAssistantFrameAction.DRAG
-        }
     }
 
     private fun clearLocalDockState() {
@@ -518,8 +425,8 @@ class FloatingWordService : Service() {
         }
     }
 
-    private fun settleDraggedBall(): MoonAssistantFrameAction {
-        val params = ballParams ?: return MoonAssistantFrameAction.DROP
+    private fun settleDraggedBall() {
+        val params = ballParams ?: return
         val result = dockManager.resolveRestingState(
             bounds = getMovementBounds(currentSettings),
             config = currentSettings.dockConfig,
@@ -530,25 +437,14 @@ class FloatingWordService : Service() {
         isDragging = false
         applyBallPosition(result.position)
         persistBallPosition(result.position, result.dockState)
-        return when (result.dockState?.dockedEdge) {
-            FloatingDockEdge.LEFT -> MoonAssistantFrameAction.DOCK_LEFT
-            FloatingDockEdge.RIGHT -> MoonAssistantFrameAction.DOCK_RIGHT
-            else -> MoonAssistantFrameAction.DROP
-        }
     }
 
     private fun handleBallSingleTap() {
-        wakePetForInteraction()
         when (resolveSingleTapAction(isCardVisible())) {
-            FloatingBallSingleTapAction.ShowCard -> {
-                playPetAction(MoonAssistantFrameAction.TAP)
-                schedulePetSequence(PET_TAP_DURATION_MS) {
-                    showNextWord(playOpenMotion = true)
-                }
-            }
+            FloatingBallSingleTapAction.ShowCard -> showNextWord()
 
             FloatingBallSingleTapAction.HideCard -> {
-                hideCardWithMotion()
+                hideCard()
             }
         }
     }
@@ -563,12 +459,11 @@ class FloatingWordService : Service() {
 
     private fun bindCardActions() {
         cardView?.findViewById<View>(R.id.module_floating_review_btn_refresh)?.setOnClickListener {
-            wakePetForInteraction()
-            showNextWord(playOpenMotion = true)
+            showNextWord()
         }
         cardView?.findViewById<View>(R.id.module_floating_review_btn_detail)?.setOnClickListener {
             val word = currentWord ?: return@setOnClickListener
-            hideCardWithMotion()
+            hideCard()
             openWordDetail(word)
         }
         cardView?.findViewById<View>(R.id.module_floating_review_btn_close)?.setOnClickListener {
@@ -576,24 +471,16 @@ class FloatingWordService : Service() {
         }
     }
 
-    private fun hideCardWithMotion() {
-        cancelPetSequence()
-        playPetAction(MoonAssistantFrameAction.CLOSE_CARD)
+    private fun hideCard() {
         cardView?.visibility = View.GONE
     }
 
     private fun closeThenStopFloating() {
-        cancelPetSequence()
-        playPetAction(MoonAssistantFrameAction.CLOSE_CARD)
-        cardView?.visibility = View.GONE
-        schedulePetSequence(PET_CLOSE_CARD_DURATION_MS) {
-            stopFloating()
-        }
+        hideCard()
+        stopFloating()
     }
 
     private fun previewCard() {
-        wakePetForInteraction()
-        playPetAction(MoonAssistantFrameAction.LOADING)
         serviceScope.launch {
             runCatching {
                 currentSettings = floatingWordController.getSettings()
@@ -603,7 +490,7 @@ class FloatingWordService : Service() {
                     val content = floatingWordController.loadCardContent(word, currentSettings)
                     renderCard(word, content.definitions, content.examples, currentSettings)
                     updateNotification(word.word)
-                    showCardWithMotion(playOpenMotion = true)
+                    showCard()
                 } else {
                     if (words.isEmpty()) {
                         words = floatingWordController.loadWords(currentSettings)
@@ -623,25 +510,22 @@ class FloatingWordService : Service() {
                     currentWord = previewWord
                     if (previewWord == null) {
                         renderEmptyCard()
-                        showCardWithoutMotion()
-                        playPetAction(MoonAssistantFrameAction.SAD)
+                        showCard()
                     } else {
                         val content = floatingWordController.loadCardContent(previewWord, currentSettings)
                         renderCard(previewWord, content.definitions, content.examples, currentSettings)
                         updateNotification(previewWord.word)
-                        showCardWithMotion(playOpenMotion = true)
+                        showCard()
                     }
                 }
             }.onFailure {
                 renderEmptyCard()
-                showCardWithoutMotion()
-                playPetAction(MoonAssistantFrameAction.SAD)
+                showCard()
             }
         }
     }
 
-    private fun showNextWord(playOpenMotion: Boolean = true) {
-        playPetAction(MoonAssistantFrameAction.LOADING)
+    private fun showNextWord() {
         serviceScope.launch {
             runCatching {
                 val nextWord = advanceFloatingWordSequence(words, currentIndex, currentSettings.orderType)
@@ -652,8 +536,7 @@ class FloatingWordService : Service() {
                 if (word == null) {
                     currentWord = null
                     renderEmptyCard()
-                    showCardWithoutMotion()
-                    playPetAction(MoonAssistantFrameAction.SAD)
+                    showCard()
                     return@launch
                 }
 
@@ -661,47 +544,19 @@ class FloatingWordService : Service() {
                 val content = floatingWordController.loadCardContent(word, currentSettings)
                 renderCard(word, content.definitions, content.examples, currentSettings)
                 updateNotification(word.word)
-                showCardWithMotion(playOpenMotion = playOpenMotion)
+                showCard()
                 floatingWordController.recordDisplay(word.id)
             }.onFailure {
                 currentWord = null
                 renderEmptyCard()
-                showCardWithoutMotion()
-                playPetAction(MoonAssistantFrameAction.SAD)
+                showCard()
             }
         }
     }
 
-    private fun showCardWithoutMotion() {
+    private fun showCard() {
         updateCardPosition()
         cardView?.visibility = View.VISIBLE
-    }
-
-    private fun showCardWithMotion(playOpenMotion: Boolean) {
-        showCardWithoutMotion()
-        val motion = petMotion ?: return
-        val cardOnLeft = isCardOnLeft()
-        cancelPetSequence()
-        if (playOpenMotion) {
-            motion.playOpenCard(cardOnLeft)
-            schedulePetSequence(PET_OPEN_CARD_DURATION_MS) {
-                petMotion?.playPoint(cardOnLeft)
-                schedulePetSleep()
-            }
-        } else {
-            motion.playPoint(cardOnLeft)
-            schedulePetSleep()
-        }
-    }
-
-    private fun isCardOnLeft(): Boolean {
-        val card = cardView ?: return true
-        val cardParams = cardParams ?: return true
-        val ballParams = ballParams ?: return true
-        val cardWidth = card.measuredWidth.takeIf { it > 0 } ?: card.width
-        val cardCenterX = cardParams.x + cardWidth / 2
-        val petCenterX = ballParams.x + getPetWindowSize().first / 2
-        return cardCenterX < petCenterX
     }
 
     private fun renderEmptyCard() {

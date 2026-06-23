@@ -7,4 +7,4 @@
     android:clickable="true"
     android:focusable="true"
     android:scaleType="fitCenter"
-    android:src="@drawable/moon_assistant_idle_pose" />
+    android:src="@drawable/feature_floating_review_floating_pet" />
