@@ -21,10 +21,14 @@ import com.chen.memorizewords.feature.learning.R
 import com.chen.memorizewords.feature.learning.ui.done.LearningSessionType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -135,6 +139,7 @@ class LearningViewModel @Inject constructor(
     private val sessionTimer = SessionTimer()
     private var trackingEnabled: Boolean = true
     private var sessionFinished: Boolean = false
+    private val completionPersistenceGate = LearningCompletionPersistenceGate()
 
     init {
         viewModelScope.launch {
@@ -217,11 +222,7 @@ class LearningViewModel @Inject constructor(
             learningState = LearningState.TEST
         )
         result.newlyCompletedWord?.let { completedWord ->
-            wordBook?.let { book ->
-                viewModelScope.launch {
-                    markWordAsLearned(book.id, completedWord, LEARN_QUALITY_CORRECT)
-                }
-            }
+            persistCompletedWord(completedWord, markAsMastered = false)
         }
         wordBook?.let { book ->
             viewModelScope.launch {
@@ -271,11 +272,7 @@ class LearningViewModel @Inject constructor(
         val currentWord = uiState.value.currentWord ?: return
         val result = coordinator.markCurrentWordMastered()
         if (result.newlyCompletedWord != null) {
-            wordBook?.let { book ->
-                viewModelScope.launch {
-                    setWordAsMastered(book.id, currentWord)
-                }
-            }
+            persistCompletedWord(currentWord, markAsMastered = true)
         }
 
         val nextSnapshot = coordinator.moveToNext()
@@ -432,6 +429,7 @@ class LearningViewModel @Inject constructor(
         trackingEnabled = false
 
         viewModelScope.launch {
+            completionPersistenceGate.awaitPending()
             val route = resolveLearningFinishRoute(
                 sessionTypeValue = sessionType,
                 sessionWordCount = sessionWordCount,
@@ -474,6 +472,50 @@ class LearningViewModel @Inject constructor(
 
     private fun updateUiState(block: (LearningUiState) -> LearningUiState) {
         _uiState.update(block)
+    }
+
+    private fun persistCompletedWord(
+        word: Word,
+        markAsMastered: Boolean
+    ) {
+        val book = wordBook ?: return
+        completionPersistenceGate.launch(viewModelScope) {
+            if (markAsMastered) {
+                setWordAsMastered(book.id, word)
+            } else {
+                markWordAsLearned(book.id, word, LEARN_QUALITY_CORRECT)
+            }
+        }
+    }
+}
+
+internal class LearningCompletionPersistenceGate {
+    private val lock = Any()
+    private val pendingJobs = mutableSetOf<Job>()
+
+    fun launch(
+        scope: CoroutineScope,
+        block: suspend () -> Unit
+    ): Job {
+        val job = scope.launch(start = CoroutineStart.LAZY) {
+            block()
+        }
+        synchronized(lock) {
+            pendingJobs += job
+        }
+        job.invokeOnCompletion {
+            synchronized(lock) {
+                pendingJobs -= job
+            }
+        }
+        job.start()
+        return job
+    }
+
+    suspend fun awaitPending() {
+        synchronized(lock) {
+            pendingJobs.toList()
+        }.joinAll()
     }
 }
 

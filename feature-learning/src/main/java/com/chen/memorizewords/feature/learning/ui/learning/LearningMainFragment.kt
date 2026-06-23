@@ -46,6 +46,9 @@ class LearningMainFragment :
 
     private var lastRenderKey: RenderKey? = null
     private var mediaPlayer: MediaPlayer? = null
+    private val updateBottomPaddingRunnable = Runnable {
+        updateLearningScrollBottomPadding()
+    }
 
     private val testFragmentTag = "learning_test"
     private val detailFragmentTag = "learning_detail"
@@ -98,7 +101,7 @@ class LearningMainFragment :
         databind.includeBaseWord.ivSpeaker.setOnClickListener {
             speakCurrentWord()
         }
-        databind.root.post { updateLearningScrollBottomPadding() }
+        scheduleLearningScrollBottomPaddingUpdate()
     }
 
     override fun createObserver() {
@@ -110,7 +113,7 @@ class LearningMainFragment :
                         lastRenderKey = key
                         renderState(state.learningState)
                     }
-                    databind.root.post { updateLearningScrollBottomPadding() }
+                    scheduleLearningScrollBottomPaddingUpdate()
                 }
             }
         }
@@ -180,6 +183,8 @@ class LearningMainFragment :
     }
 
     override fun onDestroyView() {
+        view?.removeCallbacks(updateBottomPaddingRunnable)
+        databind.composeBtn.removeCallbacks(updateBottomPaddingRunnable)
         releaseMediaPlayer()
         lastRenderKey = null
         super.onDestroyView()
@@ -227,23 +232,31 @@ class LearningMainFragment :
             .commit()
     }
 
+    private fun scheduleLearningScrollBottomPaddingUpdate() {
+        val root = view ?: return
+        root.removeCallbacks(updateBottomPaddingRunnable)
+        root.post(updateBottomPaddingRunnable)
+    }
+
     private fun updateLearningScrollBottomPadding() {
-        val context = context ?: return
-        val layoutParams = databind.composeBtn.layoutParams as? ViewGroup.MarginLayoutParams
-        val measuredButtonHeight = databind.composeBtn.height
+        val root = view ?: return
+        val context = root.context
+        val binding = databind
+        val layoutParams = binding.composeBtn.layoutParams as? ViewGroup.MarginLayoutParams
+        val measuredButtonHeight = binding.composeBtn.height
         if (measuredButtonHeight == 0) {
-            databind.composeBtn.post { updateLearningScrollBottomPadding() }
+            scheduleLearningScrollBottomPaddingUpdate()
+            return
         }
-        val buttonHeight = measuredButtonHeight.takeIf { it > 0 }
-            ?: LEARNING_BOTTOM_BUTTON_HEIGHT_DP.dpToPx(context)
+        val buttonHeight = measuredButtonHeight
         val bottomPadding = buttonHeight +
             (layoutParams?.topMargin ?: 0) +
             (layoutParams?.bottomMargin ?: 0) +
             LEARNING_SCROLL_EXTRA_BOTTOM_PADDING_DP.dpToPx(context)
-        databind.nestedScrollView2.setPadding(
-            databind.nestedScrollView2.paddingLeft,
-            databind.nestedScrollView2.paddingTop,
-            databind.nestedScrollView2.paddingRight,
+        binding.nestedScrollView2.setPadding(
+            binding.nestedScrollView2.paddingLeft,
+            binding.nestedScrollView2.paddingTop,
+            binding.nestedScrollView2.paddingRight,
             bottomPadding
         )
     }

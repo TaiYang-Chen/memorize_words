@@ -21,6 +21,16 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<HomeViewModel, FeatureHomeModuleHomeFragmentHomeBinding>() {
 
+    enum class HomeTab {
+        STATS,
+        PRACTICE,
+        PROFILE
+    }
+
+    interface HomeTabHost {
+        fun openHomeTab(tab: HomeTab)
+    }
+
     override val viewModel: HomeViewModel by lazy {
         ViewModelProvider(this)[HomeViewModel::class.java]
     }
@@ -89,6 +99,18 @@ class HomeFragment : BaseFragment<HomeViewModel, FeatureHomeModuleHomeFragmentHo
         when (val target = event.target) {
             HomeViewModel.Route.ToPendingSyncDetails -> {
                 startActivity(PendingSyncDetailActivity.createIntent(requireContext()))
+            }
+
+            HomeViewModel.Route.ToStatsTab -> {
+                (activity as? HomeTabHost)?.openHomeTab(HomeTab.STATS)
+            }
+
+            HomeViewModel.Route.ToPracticeTab -> {
+                (activity as? HomeTabHost)?.openHomeTab(HomeTab.PRACTICE)
+            }
+
+            HomeViewModel.Route.ToProfileTab -> {
+                (activity as? HomeTabHost)?.openHomeTab(HomeTab.PROFILE)
             }
 
             is AppRoute.WordBook -> {

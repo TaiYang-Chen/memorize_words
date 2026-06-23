@@ -21,7 +21,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBinding>() {
+class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBinding>(),
+    HomeFragment.HomeTabHost {
 
     companion object {
         private const val EXIT_CONFIRM_WINDOW_MS = 2000L
@@ -95,6 +96,23 @@ class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBindi
 
     private fun showStats() {
         showFragment(statsTag) { StatsFragment() }
+    }
+
+    override fun openHomeTab(tab: HomeFragment.HomeTab) {
+        val itemId = when (tab) {
+            HomeFragment.HomeTab.STATS -> R.id.menu_stats
+            HomeFragment.HomeTab.PRACTICE -> R.id.menu_practice
+            HomeFragment.HomeTab.PROFILE -> R.id.menu_profile
+        }
+        if (databind.bottomNav.selectedItemId != itemId) {
+            databind.bottomNav.selectedItemId = itemId
+            return
+        }
+        when (tab) {
+            HomeFragment.HomeTab.STATS -> showStats()
+            HomeFragment.HomeTab.PRACTICE -> showPractice()
+            HomeFragment.HomeTab.PROFILE -> showProfile()
+        }
     }
 
     private fun showFragment(

@@ -5,38 +5,42 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.chen.memorizewords.feature.home.ui.home.HomeViewModel" />
     </data>
 
     <LinearLayout
-        android:orientation="vertical"
-        android:background="#EEF6FF"
-        android:paddingTop="@dimen/page_margin"
-        android:paddingStart="@dimen/page_margin"
-        android:paddingEnd="@dimen/page_margin"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/feature_home_home_page_bg"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/page_margin"
+        android:paddingTop="@dimen/page_margin"
+        android:paddingEnd="@dimen/page_margin">
+
         <FrameLayout
-            android:layout_marginTop="@dimen/title_margin"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/title_margin">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@string/title"
-                android:textColor="#000"
+                android:text="@{viewModel.homeTitleText}"
+                android:textColor="#111827"
                 android:textSize="@dimen/title_text_size"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                tools:text="小白背单词" />
         </FrameLayout>
-
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:fillViewport="true"
             android:overScrollMode="never">
 
@@ -44,15 +48,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingBottom="8dp">
 
                 <LinearLayout
                     android:id="@+id/syncBannerContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="26dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="14dp"
-                    android:layout_marginEnd="26dp"
+                    android:layout_marginEnd="10dp"
                     android:background="@drawable/module_home_bg_radius_d5fbea"
                     android:clickable="true"
                     android:focusable="true"
@@ -91,6 +96,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/feature_home_home_hero_card"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:onClick="@{() -> viewModel.toWordBookActivity()}"
                     android:paddingStart="18dp"
                     android:paddingTop="18dp"
                     android:paddingEnd="14dp"
@@ -109,7 +118,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="7dp"
-                        android:text="@{`已连续学习 ` + viewModel.studyTotalDayText}"
+                        android:text="@{viewModel.streakText}"
                         android:textColor="#111827"
                         android:textSize="13sp"
                         android:textStyle="bold"
@@ -120,12 +129,11 @@
 
                     <ImageView
                         android:id="@+id/feature_home_home_book_hero"
-                        android:layout_width="112dp"
-                        android:layout_height="112dp"
-                        android:contentDescription="词书插画"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:contentDescription="@{viewModel.wordBookHeroContentDescription}"
                         android:scaleType="fitCenter"
                         android:src="@drawable/feature_home_home_wordbook_hero"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -151,6 +159,7 @@
                         android:layout_width="0dp"
                         android:layout_height="8dp"
                         android:layout_marginTop="16dp"
+                        android:layout_marginEnd="8dp"
                         android:max="100"
                         android:progress="@{viewModel.learnProcess}"
                         android:progressDrawable="@drawable/feature_home_home_progress"
@@ -161,10 +170,10 @@
 
                     <TextView
                         android:id="@+id/feature_home_home_progress_percent"
-                        android:layout_width="46dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="end"
-                        android:text="@{String.valueOf(viewModel.learnProcess) + `%`}"
+                        android:text="@{viewModel.progressPercentText}"
                         android:textColor="#9AA4B2"
                         android:textSize="12sp"
                         app:layout_constraintBottom_toBottomOf="@id/feature_home_home_progress"
@@ -177,7 +186,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="@{`今日完成 ` + viewModel.todayCompletedWordsText + ` 个单词`}"
+                        android:text="@{viewModel.todayCompletedWordsText}"
                         android:textColor="#6B7280"
                         android:textSize="12sp"
                         app:layout_constraintStart_toStartOf="parent"
@@ -187,7 +196,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{`还需复习 ` + viewModel.remainingReviewWordsText + ` 个单词`}"
+                        android:text="@{viewModel.remainingReviewWordsText}"
                         android:textColor="#9AA4B2"
                         android:textSize="12sp"
                         app:layout_constraintBottom_toBottomOf="@id/feature_home_home_done"
@@ -200,14 +209,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
+                    android:layout_marginBottom="8dp"
                     android:background="@drawable/feature_home_home_content_panel"
                     android:orientation="vertical"
                     android:paddingStart="16dp"
                     android:paddingTop="16dp"
                     android:paddingEnd="16dp"
-                    android:paddingBottom="16dp"
-
-                    android:layout_marginBottom="8dp">
+                    android:paddingBottom="16dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -276,9 +284,9 @@
                             android:clickable="true"
                             android:focusable="true"
                             android:foreground="?attr/selectableItemBackground"
+                            android:gravity="center"
                             android:onClick="@{() -> viewModel.toLearningReviewActivity()}"
                             android:orientation="horizontal"
-                            android:gravity="center"
                             android:padding="8dp"
                             android:stateListAnimator="@animator/btn_scale_animator">
 
@@ -304,27 +312,29 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="复习单词"
+                                    android:text="@{viewModel.reviewCardTitleText}"
                                     android:textColor="#111827"
                                     android:textSize="14sp"
-                                    android:textStyle="bold" />
+                                    android:textStyle="bold"
+                                    tools:text="复习单词" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="7dp"
-                                    android:text="@{viewModel.todayReviewProgressText + ` 待复习`}"
+                                    android:text="@{viewModel.reviewCardSubtitleText}"
                                     android:textColor="#6B7280"
                                     android:textSize="9sp"
-                                    tools:text="0/30 待复习" />
+                                    tools:text="0/30 待完成" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="5dp"
-                                    android:text="巩固记忆，强化掌握"
+                                    android:text="@{viewModel.reviewCardDescriptionText}"
                                     android:textColor="#9CA3AF"
-                                    android:textSize="8sp" />
+                                    android:textSize="8sp"
+                                    tools:text="巩固记忆，强化掌握" />
                             </LinearLayout>
                         </LinearLayout>
 
@@ -337,10 +347,10 @@
                             android:clickable="true"
                             android:focusable="true"
                             android:foreground="?attr/selectableItemBackground"
+                            android:gravity="center"
                             android:onClick="@{() -> viewModel.toWordBookActivity()}"
                             android:orientation="horizontal"
                             android:padding="8dp"
-                            android:gravity="center"
                             android:stateListAnimator="@animator/btn_scale_animator">
 
                             <FrameLayout
@@ -366,27 +376,29 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="修改计划"
+                                    android:text="@{viewModel.planCardTitleText}"
                                     android:textColor="#111827"
                                     android:textSize="14sp"
-                                    android:textStyle="bold" />
+                                    android:textStyle="bold"
+                                    tools:text="修改计划" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="7dp"
-                                    android:text="@{`当前计划：` + viewModel.wordBookRemainDaysText + ` 天`}"
+                                    android:text="@{viewModel.planCardSubtitleText}"
                                     android:textColor="#6B7280"
                                     android:textSize="9sp"
-                                    tools:text="当前计划：45 天" />
+                                    tools:text="新学 15 / 复习 30" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="5dp"
-                                    android:text="调整每日学习目标"
+                                    android:text="@{viewModel.planCardDescriptionText}"
                                     android:textColor="#9CA3AF"
-                                    android:textSize="8sp" />
+                                    android:textSize="8sp"
+                                    tools:text="调整每日学习目标" />
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
@@ -395,7 +407,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="22dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
                         android:gravity="center_vertical"
+                        android:onClick="@{() -> viewModel.onStatsClicked()}"
                         android:orientation="horizontal">
 
                         <View
@@ -407,10 +423,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:text="今日任务"
+                            android:text="@{viewModel.todaySectionTitleText}"
                             android:textColor="#111827"
                             android:textSize="15sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            tools:text="今日任务" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -418,7 +435,11 @@
                         android:layout_height="96dp"
                         android:layout_marginTop="12dp"
                         android:background="@drawable/feature_home_home_today_card"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
                         android:gravity="center"
+                        android:onClick="@{() -> viewModel.onStatsClicked()}"
                         android:orientation="horizontal">
 
                         <LinearLayout
@@ -431,9 +452,10 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="新词学习"
+                                android:text="@{viewModel.newTaskTitleText}"
                                 android:textColor="#4B5563"
-                                android:textSize="12sp" />
+                                android:textSize="12sp"
+                                tools:text="新词学习" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -455,15 +477,17 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="已完成"
+                                    android:text="@{viewModel.todayNewStatusText}"
                                     android:textColor="#6B7280"
-                                    android:textSize="11sp" />
+                                    android:textSize="11sp"
+                                    tools:text="已完成" />
 
                                 <ImageView
                                     android:layout_width="11dp"
                                     android:layout_height="11dp"
                                     android:layout_marginStart="3dp"
-                                    android:src="@drawable/feature_home_home_ic_check" />
+                                    android:src="@drawable/feature_home_home_ic_check"
+                                    android:visibility="@{viewModel.todayNewDoneIconVisible ? View.VISIBLE : View.GONE}" />
                             </LinearLayout>
                         </LinearLayout>
 
@@ -482,9 +506,10 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="复习单词"
+                                android:text="@{viewModel.reviewTaskTitleText}"
                                 android:textColor="#4B5563"
-                                android:textSize="12sp" />
+                                android:textSize="12sp"
+                                tools:text="复习单词" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -496,13 +521,28 @@
                                 android:textStyle="bold"
                                 tools:text="0/30" />
 
-                            <TextView
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
-                                android:text="待完成"
-                                android:textColor="#6B7280"
-                                android:textSize="11sp" />
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{viewModel.todayReviewStatusText}"
+                                    android:textColor="#6B7280"
+                                    android:textSize="11sp"
+                                    tools:text="待完成" />
+
+                                <ImageView
+                                    android:layout_width="11dp"
+                                    android:layout_height="11dp"
+                                    android:layout_marginStart="3dp"
+                                    android:src="@drawable/feature_home_home_ic_check"
+                                    android:visibility="@{viewModel.todayReviewDoneIconVisible ? View.VISIBLE : View.GONE}" />
+                            </LinearLayout>
                         </LinearLayout>
 
                         <View
@@ -520,9 +560,10 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="预计用时"
+                                android:text="@{viewModel.estimatedTaskTitleText}"
                                 android:textColor="#4B5563"
-                                android:textSize="12sp" />
+                                android:textSize="12sp"
+                                tools:text="预计用时" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -538,9 +579,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
-                                android:text="合理安排时间"
+                                android:text="@{viewModel.estimatedTaskHintText}"
                                 android:textColor="#6B7280"
-                                android:textSize="11sp" />
+                                android:textSize="11sp"
+                                tools:text="合理安排时间" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -548,7 +590,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="22dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
                         android:gravity="center_vertical"
+                        android:onClick="@{() -> viewModel.onStatsClicked()}"
                         android:orientation="horizontal">
 
                         <View
@@ -560,10 +606,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:text="学习概览"
+                            android:text="@{viewModel.overviewSectionTitleText}"
                             android:textColor="#111827"
                             android:textSize="15sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            tools:text="学习概览" />
                     </LinearLayout>
 
                     <androidx.gridlayout.widget.GridLayout
@@ -579,6 +626,10 @@
                             android:layout_marginEnd="6dp"
                             android:layout_marginBottom="8dp"
                             android:background="@drawable/feature_home_home_metric_card"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
+                            android:onClick="@{() -> viewModel.onStatsClicked()}"
                             android:orientation="vertical"
                             android:paddingStart="12dp"
                             android:paddingTop="12dp"
@@ -588,7 +639,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{viewModel.wordBookMasteredWordsText}"
+                                android:text="@{viewModel.masteredWordsText}"
                                 android:textColor="#28D895"
                                 android:textSize="20sp"
                                 android:textStyle="bold"
@@ -598,9 +649,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="7dp"
-                                android:text="已掌握单词"
+                                android:text="@{viewModel.masteredWordsTitleText}"
                                 android:textColor="#6B7280"
-                                android:textSize="11sp" />
+                                android:textSize="11sp"
+                                tools:text="已掌握单词" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -610,6 +662,10 @@
                             android:layout_marginEnd="3dp"
                             android:layout_marginBottom="8dp"
                             android:background="@drawable/feature_home_home_metric_card"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
+                            android:onClick="@{() -> viewModel.toWordBookActivity()}"
                             android:orientation="vertical"
                             android:paddingStart="12dp"
                             android:paddingTop="12dp"
@@ -619,7 +675,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{viewModel.wordBookTotalWordsText}"
+                                android:text="@{viewModel.totalWordsText}"
                                 android:textColor="#111827"
                                 android:textSize="20sp"
                                 android:textStyle="bold"
@@ -629,9 +685,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="7dp"
-                                android:text="总词量"
+                                android:text="@{viewModel.totalWordsTitleText}"
                                 android:textColor="#6B7280"
-                                android:textSize="11sp" />
+                                android:textSize="11sp"
+                                tools:text="总词量" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -640,6 +697,10 @@
                             android:layout_marginStart="6dp"
                             android:layout_marginBottom="8dp"
                             android:background="@drawable/feature_home_home_metric_card"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
+                            android:onClick="@{() -> viewModel.onStatsClicked()}"
                             android:orientation="vertical"
                             android:paddingStart="12dp"
                             android:paddingTop="12dp"
@@ -649,7 +710,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{viewModel.wordBookAccuracyRateText}"
+                                android:text="@{viewModel.accuracyRateText}"
                                 android:textColor="#111827"
                                 android:textSize="20sp"
                                 android:textStyle="bold"
@@ -659,9 +720,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="7dp"
-                                android:text="正确率"
+                                android:text="@{viewModel.accuracyRateTitleText}"
                                 android:textColor="#6B7280"
-                                android:textSize="11sp" />
+                                android:textSize="11sp"
+                                tools:text="正确率" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -669,6 +731,10 @@
                             android:layout_height="84dp"
                             android:layout_marginEnd="6dp"
                             android:background="@drawable/feature_home_home_metric_card"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
+                            android:onClick="@{() -> viewModel.onStatsClicked()}"
                             android:orientation="vertical"
                             android:paddingStart="12dp"
                             android:paddingTop="12dp"
@@ -678,7 +744,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{viewModel.studyTotalDayText}"
+                                android:text="@{viewModel.continuousDaysText}"
                                 android:textColor="#111827"
                                 android:textSize="20sp"
                                 android:textStyle="bold"
@@ -688,9 +754,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="7dp"
-                                android:text="连续学习"
+                                android:text="@{viewModel.continuousDaysTitleText}"
                                 android:textColor="#6B7280"
-                                android:textSize="11sp" />
+                                android:textSize="11sp"
+                                tools:text="连续学习" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -699,6 +766,10 @@
                             android:layout_marginStart="3dp"
                             android:layout_marginEnd="3dp"
                             android:background="@drawable/feature_home_home_metric_card"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
+                            android:onClick="@{() -> viewModel.toWordBookActivity()}"
                             android:orientation="vertical"
                             android:paddingStart="12dp"
                             android:paddingTop="12dp"
@@ -708,7 +779,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{viewModel.wordBookRemainDaysText + ` 天`}"
+                                android:text="@{viewModel.expectedCompletionText}"
                                 android:textColor="#111827"
                                 android:textSize="20sp"
                                 android:textStyle="bold"
@@ -718,9 +789,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="7dp"
-                                android:text="预计完成"
+                                android:text="@{viewModel.expectedCompletionTitleText}"
                                 android:textColor="#6B7280"
-                                android:textSize="11sp" />
+                                android:textSize="11sp"
+                                tools:text="预计完成" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -728,6 +800,10 @@
                             android:layout_height="84dp"
                             android:layout_marginStart="6dp"
                             android:background="@drawable/feature_home_home_metric_card"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
+                            android:onClick="@{() -> viewModel.onStatsClicked()}"
                             android:orientation="vertical"
                             android:paddingStart="12dp"
                             android:paddingTop="12dp"
@@ -747,9 +823,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="7dp"
-                                android:text="今日用时"
+                                android:text="@{viewModel.todayDurationTitleText}"
                                 android:textColor="#6B7280"
-                                android:textSize="11sp" />
+                                android:textSize="11sp"
+                                tools:text="今日用时" />
                         </LinearLayout>
                     </androidx.gridlayout.widget.GridLayout>
                 </LinearLayout>

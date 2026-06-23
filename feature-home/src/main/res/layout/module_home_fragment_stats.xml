@@ -15,8 +15,9 @@
         android:layout_height="match_parent"
         android:background="@drawable/feature_home_stats_page_bg_v2"
         android:orientation="vertical"
-        android:paddingStart="14dp"
-        android:paddingEnd="14dp">
+        android:paddingTop="@dimen/page_margin"
+        android:paddingStart="@dimen/page_margin"
+        android:paddingEnd="@dimen/page_margin">
 
         <TextView
             android:layout_marginTop="@dimen/title_margin"
