@@ -87,16 +87,15 @@ class FloatingDockManager {
         x: Int,
         y: Int
     ): FloatingDockResult {
+        return resolveFreeRestingState(bounds, x, y)
+    }
+
+    fun resolveFreeRestingState(
+        bounds: FloatingMovementBounds,
+        x: Int,
+        y: Int
+    ): FloatingDockResult {
         val clamped = clampToFree(bounds, x, y)
-        val edge = nearestDockEdge(bounds, config, clamped)
-        if (edge != null && distanceToEdge(bounds, clamped, edge) <= snapTriggerDistancePx) {
-            val dockState = FloatingDockState(
-                dockedEdge = edge,
-                crossAxisPercent = crossAxisPercent(bounds, clamped.y)
-            )
-            return resolveDocked(bounds, config, dockState)
-                ?: FloatingDockResult(position = clamped, dockState = null)
-        }
         return FloatingDockResult(position = clamped, dockState = null)
     }
 

@@ -433,10 +433,8 @@ class FloatingWordService : Service() {
 
     private fun settleDraggedBall() {
         val params = ballParams ?: return
-        val result = dockManager.resolveRestingState(
+        val result = dockManager.resolveFreeRestingState(
             bounds = getMovementBounds(currentSettings),
-            config = currentSettings.dockConfig,
-            snapTriggerDistancePx = dp(currentSettings.dockConfig.snapTriggerDistanceDp),
             x = params.x,
             y = params.y
         )
