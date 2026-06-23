@@ -5,6 +5,10 @@ internal sealed interface FloatingBallSingleTapAction {
     data object HideCard : FloatingBallSingleTapAction
 }
 
+internal sealed interface FloatingCardCloseAction {
+    data object HideCard : FloatingCardCloseAction
+}
+
 internal fun resolveSingleTapAction(
     isCardVisible: Boolean
 ): FloatingBallSingleTapAction {
@@ -13,4 +17,8 @@ internal fun resolveSingleTapAction(
     } else {
         FloatingBallSingleTapAction.ShowCard
     }
+}
+
+internal fun resolveCardCloseAction(): FloatingCardCloseAction {
+    return FloatingCardCloseAction.HideCard
 }

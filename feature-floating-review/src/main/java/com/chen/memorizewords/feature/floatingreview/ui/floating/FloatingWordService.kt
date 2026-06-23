@@ -479,17 +479,14 @@ class FloatingWordService : Service() {
             copyCurrentWord()
         }
         cardView?.findViewById<View>(R.id.module_floating_review_btn_close)?.setOnClickListener {
-            closeThenStopFloating()
+            when (resolveCardCloseAction()) {
+                FloatingCardCloseAction.HideCard -> hideCard()
+            }
         }
     }
 
     private fun hideCard() {
         cardView?.visibility = View.GONE
-    }
-
-    private fun closeThenStopFloating() {
-        hideCard()
-        stopFloating()
     }
 
     private fun previewCard() {
