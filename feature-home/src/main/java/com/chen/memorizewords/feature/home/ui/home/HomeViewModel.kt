@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -352,10 +353,23 @@ class HomeViewModel @Inject constructor(
             return
         }
         viewModelScope.launch {
+            val plan = studyPlan.value
+            val progress = resolveReviewLearningProgress(
+                todayReviewCount = todayReviewCount.value,
+                plan = plan
+            )
+            val reviewedWordIds = studyStatsFacade
+                .getDailyStudyWordRecords(studyStatsFacade.getCurrentBusinessDate())
+                .first()
+                .filterNot { it.isNewWord }
+                .map { it.wordId }
+                .toSet()
             val route = learningLauncher.createReviewRoute(
                 bookId = bookInfo.bookId,
-                count = resolveReviewWordCount(studyPlan.value),
-                orderType = studyPlan.value.wordOrderType
+                count = progress.remainingCount,
+                orderType = plan.wordOrderType,
+                excludeIds = reviewedWordIds,
+                initialLearnedCount = progress.initialLearnedCount
             )
             if (route == null) {
                 showToast(resourceProvider.getString(R.string.home_learning_no_words))
@@ -596,6 +610,11 @@ internal fun resolveReviewWordCount(plan: StudyPlan): Int {
     return plan.dailyReviewCount.coerceAtLeast(0)
 }
 
+internal data class ReviewLearningProgress(
+    val remainingCount: Int,
+    val initialLearnedCount: Int
+)
+
 internal data class NewLearningProgress(
     val remainingCount: Int,
     val initialLearnedCount: Int
@@ -613,6 +632,18 @@ internal fun resolveNewLearningProgress(
     val initialLearnedCount = todayNewCount.coerceAtLeast(0).coerceAtMost(dailyNewCount)
     return NewLearningProgress(
         remainingCount = (dailyNewCount - initialLearnedCount).coerceAtLeast(0),
+        initialLearnedCount = initialLearnedCount
+    )
+}
+
+internal fun resolveReviewLearningProgress(
+    todayReviewCount: Int,
+    plan: StudyPlan
+): ReviewLearningProgress {
+    val dailyReviewCount = plan.dailyReviewCount.coerceAtLeast(0)
+    val initialLearnedCount = todayReviewCount.coerceAtLeast(0).coerceAtMost(dailyReviewCount)
+    return ReviewLearningProgress(
+        remainingCount = (dailyReviewCount - initialLearnedCount).coerceAtLeast(0),
         initialLearnedCount = initialLearnedCount
     )
 }

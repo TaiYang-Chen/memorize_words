@@ -34,6 +34,39 @@ class HomeLearningProgressTest {
     }
 
     @Test
+    fun `review plan starts from zero when no words reviewed today`() {
+        val progress = resolveReviewLearningProgress(
+            todayReviewCount = 0,
+            plan = StudyPlan(dailyReviewCount = 30)
+        )
+
+        assertEquals(30, progress.remainingCount)
+        assertEquals(0, progress.initialLearnedCount)
+    }
+
+    @Test
+    fun `review plan continues from todays reviewed count`() {
+        val progress = resolveReviewLearningProgress(
+            todayReviewCount = 1,
+            plan = StudyPlan(dailyReviewCount = 30)
+        )
+
+        assertEquals(29, progress.remainingCount)
+        assertEquals(1, progress.initialLearnedCount)
+    }
+
+    @Test
+    fun `review plan caps initial count when today review exceeds plan`() {
+        val progress = resolveReviewLearningProgress(
+            todayReviewCount = 35,
+            plan = StudyPlan(dailyReviewCount = 30)
+        )
+
+        assertEquals(0, progress.remainingCount)
+        assertEquals(30, progress.initialLearnedCount)
+    }
+
+    @Test
     fun `completed new plan uses boost flow instead of normal continue`() {
         val plan = StudyPlan(dailyNewCount = 5)
 
