@@ -79,6 +79,15 @@ class FloatingReviewSettingsViewModel @Inject constructor(
         }
     }
 
+    fun onBallSizeChanged(ballSizePercent: Int) {
+        updateSettings(
+            refreshFloatingContent = false,
+            previewCard = true
+        ) {
+            it.copy(ballSizePercent = ballSizePercent)
+        }
+    }
+
     fun onFieldConfigsChanged(configs: List<FloatingWordFieldConfig>) {
         updateSettings { it.copy(fieldConfigs = configs) }
     }

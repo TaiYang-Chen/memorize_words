@@ -70,6 +70,10 @@ internal fun resolveBallAlpha(ballOpacityPercent: Int): Float {
     return ballOpacityPercent.coerceIn(0, 100) / 100f
 }
 
+internal fun resolveBallSizeScale(ballSizePercent: Int): Float {
+    return ballSizePercent.coerceIn(60, 140) / 100f
+}
+
 internal fun advanceFloatingWordSequence(
     words: List<Word>,
     currentIndex: Int,
@@ -188,6 +192,7 @@ class FloatingWordService : Service() {
                 currentSettings = settings
                 applyFloatingAppearance()
                 if (ballView != null && !isDragging) {
+                    applyBallSize()
                     reconcileBallPosition(persistIfNeeded = false)
                 }
             }
@@ -276,6 +281,7 @@ class FloatingWordService : Service() {
     private fun restoreBallPosition() {
         serviceScope.launch {
             currentSettings = floatingWordController.getSettings()
+            applyFloatingAppearance()
             reconcileBallPosition(persistIfNeeded = true)
         }
     }
@@ -781,8 +787,19 @@ class FloatingWordService : Service() {
     }
 
     private fun applyFloatingAppearance() {
+        applyBallSize()
         applyBallOpacity()
         applyCardOpacity()
+    }
+
+    private fun applyBallSize() {
+        val params = ballParams ?: return
+        val (petWidth, petHeight) = getPetWindowSize()
+        if (params.width == petWidth && params.height == petHeight) return
+        params.width = petWidth
+        params.height = petHeight
+        ballView?.let { runCatching { windowManager.updateViewLayout(it, params) } }
+        if (isCardVisible()) updateCardPosition()
     }
 
     private fun persistBallPosition(
@@ -837,10 +854,10 @@ class FloatingWordService : Service() {
     }
 
     private fun getPetWindowSize(): Pair<Int, Int> {
-        return Pair(
-            resources.getDimensionPixelSize(R.dimen.feature_floating_review_pet_width),
-            resources.getDimensionPixelSize(R.dimen.feature_floating_review_pet_height)
-        )
+        val scale = resolveBallSizeScale(currentSettings.ballSizePercent)
+        val width = resources.getDimensionPixelSize(R.dimen.feature_floating_review_pet_width)
+        val height = resources.getDimensionPixelSize(R.dimen.feature_floating_review_pet_height)
+        return Pair((width * scale).roundToInt(), (height * scale).roundToInt())
     }
 
     private fun getSafeDisplayRect(): Rect {

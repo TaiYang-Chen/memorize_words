@@ -155,6 +155,7 @@ data class FloatingSettingsSyncPayload(
     val floatingBallY: Int,
     val autoStartOnBoot: Boolean,
     val autoStartOnAppLaunch: Boolean,
+    val ballSizePercent: Int? = null,
     val ballOpacityPercent: Int,
     val cardOpacityPercent: Int,
     val dockConfigJson: String? = null,

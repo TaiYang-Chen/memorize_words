@@ -106,6 +106,7 @@ class DataSyncLearningOutboxHandler @Inject constructor(
                         floatingBallY = payload.floatingBallY,
                         autoStartOnBoot = payload.autoStartOnBoot,
                         autoStartOnAppLaunch = payload.autoStartOnAppLaunch,
+                        ballSizePercent = payload.ballSizePercent ?: 100,
                         ballOpacityPercent = payload.ballOpacityPercent,
                         cardOpacityPercent = payload.cardOpacityPercent,
                         dockConfig = payload.dockConfigJson?.let {

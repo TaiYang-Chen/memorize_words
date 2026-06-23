@@ -5,6 +5,7 @@
     <string name="module_floating_review_back">返回</string>
     <string name="module_floating_review_auto_start">启动应用时启动悬浮球</string>
     <string name="module_floating_review_appearance_title">外观设置</string>
+    <string name="module_floating_review_ball_size_title">悬浮球大小</string>
     <string name="module_floating_review_ball_opacity_title">悬浮球透明度</string>
     <string name="module_floating_review_card_opacity_title">卡片透明度</string>
     <string name="module_floating_review_card_opacity_value">%1$d%%</string>
