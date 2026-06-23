@@ -88,6 +88,15 @@ class FloatingReviewSettingsViewModel @Inject constructor(
         }
     }
 
+    fun onCardGapChanged(cardGapDp: Int) {
+        updateSettings(
+            refreshFloatingContent = false,
+            previewCard = true
+        ) {
+            it.copy(cardGapDp = cardGapDp)
+        }
+    }
+
     fun onFieldConfigsChanged(configs: List<FloatingWordFieldConfig>) {
         updateSettings { it.copy(fieldConfigs = configs) }
     }

@@ -3,14 +3,13 @@
     android:layout_width="@dimen/module_floating_review_card_width"
     android:layout_height="wrap_content"
     android:clipChildren="false"
-    android:clipToPadding="false"
-    android:paddingBottom="14dp">
+    android:clipToPadding="false">
 
     <LinearLayout
         android:id="@+id/module_floating_review_card_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="14dp"
+        android:layout_marginBottom="@dimen/module_floating_review_tail_panel_offset"
         android:background="@drawable/module_floating_review_bg_popup_card"
         android:clipToOutline="true"
         android:orientation="vertical">
@@ -217,13 +216,10 @@
         </LinearLayout>
     </LinearLayout>
 
-    <ImageView
+    <com.chen.memorizewords.feature.floatingreview.ui.floating.FloatingSpeechTailView
         android:id="@+id/module_floating_review_card_tail"
-        android:layout_width="26dp"
-        android:layout_height="16dp"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="50dp"
-        android:contentDescription="@null"
-        android:elevation="8dp"
-        android:src="@drawable/module_floating_review_bg_popup_tail" />
+        android:layout_width="@dimen/module_floating_review_tail_width"
+        android:layout_height="@dimen/module_floating_review_tail_height"
+        android:layout_gravity="bottom|start"
+        android:contentDescription="@null" />
 </FrameLayout>

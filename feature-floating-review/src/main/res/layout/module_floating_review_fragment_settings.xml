@@ -231,6 +231,41 @@
                         android:progressBackgroundTint="#D6DEE8"
                         android:progressTint="#0A5FD3"
                         android:thumbTint="#FFFFFF" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/module_floating_review_card_gap_title"
+                            android:textColor="#4B5563"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/tvCardGapValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#4B5563"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <SeekBar
+                        android:id="@+id/seekCardGap"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:max="32"
+                        android:progress="32"
+                        android:progressBackgroundTint="#D6DEE8"
+                        android:progressTint="#0A5FD3"
+                        android:thumbTint="#FFFFFF" />
                 </LinearLayout>
 
                 <LinearLayout

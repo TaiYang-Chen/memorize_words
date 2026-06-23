@@ -6,6 +6,7 @@ data class FloatingWordSettings(
     val ballSizePercent: Int = 100,
     val ballOpacityPercent: Int = 100,
     val cardOpacityPercent: Int = 100,
+    val cardGapDp: Int = 40,
     val sourceType: FloatingWordSourceType = FloatingWordSourceType.CURRENT_BOOK,
     val orderType: FloatingWordOrderType = FloatingWordOrderType.RANDOM,
     val fieldConfigs: List<FloatingWordFieldConfig> = defaultFieldConfigs(),

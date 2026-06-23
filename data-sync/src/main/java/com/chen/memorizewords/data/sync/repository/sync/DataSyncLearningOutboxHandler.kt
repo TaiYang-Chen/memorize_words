@@ -109,6 +109,7 @@ class DataSyncLearningOutboxHandler @Inject constructor(
                         ballSizePercent = payload.ballSizePercent ?: 100,
                         ballOpacityPercent = payload.ballOpacityPercent,
                         cardOpacityPercent = payload.cardOpacityPercent,
+                        cardGapDp = payload.cardGapDp,
                         dockConfig = payload.dockConfigJson?.let {
                             gson.fromJson(it, FloatingDockConfig::class.java)
                         } ?: FloatingDockConfig(),

@@ -4,6 +4,12 @@
     <dimen name="feature_floating_review_pet_width">156dp</dimen>
     <dimen name="feature_floating_review_pet_height">187dp</dimen>
     <dimen name="module_floating_review_card_width">242dp</dimen>
+    <dimen name="module_floating_review_card_gap">40dp</dimen>
+    <dimen name="module_floating_review_card_edge_margin">12dp</dimen>
+    <dimen name="module_floating_review_tail_width">34dp</dimen>
+    <dimen name="module_floating_review_tail_height">20dp</dimen>
+    <dimen name="module_floating_review_tail_panel_offset">18dp</dimen>
+    <dimen name="module_floating_review_tail_safe_inset">24dp</dimen>
     <dimen name="module_floating_review_page_horizontal_padding">16dp</dimen>
     <dimen name="module_floating_review_section_spacing">16dp</dimen>
     <dimen name="module_floating_review_card_radius">18dp</dimen>
