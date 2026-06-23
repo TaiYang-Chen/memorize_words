@@ -89,6 +89,7 @@
                             android:orientation="horizontal">
 
                             <TextView
+                                android:id="@+id/tvPracticeTodayValue"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/feature_home_practice_static_29"
@@ -97,6 +98,7 @@
                                 android:textStyle="bold" />
 
                             <TextView
+                                android:id="@+id/tvPracticeTodayUnit"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
@@ -107,6 +109,7 @@
                         </LinearLayout>
 
                         <TextView
+                            android:id="@+id/tvPracticeGoal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
@@ -116,6 +119,7 @@
                             android:textStyle="bold" />
 
                         <ProgressBar
+                            android:id="@+id/progressPracticeToday"
                             style="?android:attr/progressBarStyleHorizontal"
                             android:layout_width="match_parent"
                             android:layout_height="7dp"
@@ -175,6 +179,7 @@
                             android:orientation="horizontal">
 
                             <TextView
+                                android:id="@+id/tvPracticeStreakValue"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/feature_home_practice_static_one"
@@ -206,6 +211,7 @@
                         android:layout_width="86dp"
                         android:layout_height="80dp"
                         android:layout_marginEnd="2dp"
+                        android:layout_marginBottom="-8dp"
                         android:src="@drawable/feature_home_illus_practice_clock"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent" />
@@ -357,6 +363,7 @@
                         </LinearLayout>
 
                         <TextView
+                            android:id="@+id/tvPracticeLevelValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="14dp"
@@ -366,6 +373,7 @@
                             android:textStyle="bold" />
 
                         <ProgressBar
+                            android:id="@+id/progressPracticeXp"
                             style="?android:attr/progressBarStyleHorizontal"
                             android:layout_width="match_parent"
                             android:layout_height="6dp"
@@ -375,6 +383,7 @@
                             android:progressDrawable="@drawable/feature_home_progress_practice_xp" />
 
                         <TextView
+                            android:id="@+id/tvPracticeXp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
@@ -425,6 +434,7 @@
                             android:orientation="horizontal">
 
                             <TextView
+                                android:id="@+id/tvPracticeWeekValue"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/feature_home_practice_static_15"
@@ -433,6 +443,7 @@
                                 android:textStyle="bold" />
 
                             <TextView
+                                android:id="@+id/tvPracticeWeekUnit"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
@@ -457,6 +468,7 @@
                                 android:textSize="10sp" />
 
                             <TextView
+                                android:id="@+id/tvPracticeWeekTrend"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="6dp"

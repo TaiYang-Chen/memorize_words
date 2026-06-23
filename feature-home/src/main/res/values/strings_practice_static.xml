@@ -6,6 +6,7 @@
     <string name="feature_home_practice_static_15">15</string>
     <string name="feature_home_practice_static_29">29</string>
     <string name="feature_home_practice_static_second">秒</string>
+    <string name="feature_home_practice_static_hours">小时</string>
     <string name="feature_home_practice_static_goal_30">目标 30 分钟</string>
     <string name="feature_home_practice_static_continuous_learning">连续学习</string>
     <string name="feature_home_practice_static_keep_going">继续加油！</string>

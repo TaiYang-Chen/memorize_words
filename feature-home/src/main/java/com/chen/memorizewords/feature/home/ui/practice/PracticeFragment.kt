@@ -85,6 +85,9 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
+                    viewModel.dashboardUi.collect(::renderDashboard)
+                }
+                launch {
                     viewModel.floatingEnabled.collect { enabled ->
                         latestFloatingEnabled = enabled
                         updateFloatingSwitch(enabled)
@@ -92,6 +95,21 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
                 }
             }
         }
+    }
+
+    private fun renderDashboard(ui: PracticeDashboardUi) {
+        databind.tvPracticeTodayValue.text = ui.todayDurationValue
+        databind.tvPracticeTodayUnit.text = ui.todayDurationUnit
+        databind.progressPracticeToday.max = PRACTICE_DAILY_GOAL_SECONDS.toInt()
+        databind.progressPracticeToday.progress = ui.todayProgress
+        databind.tvPracticeStreakValue.text = ui.continuousDaysText
+        databind.tvPracticeWeekValue.text = ui.weekDurationValue
+        databind.tvPracticeWeekUnit.text = ui.weekDurationUnit
+        databind.tvPracticeWeekTrend.text = ui.weekTrendText
+        databind.tvPracticeLevelValue.text = ui.levelText
+        databind.tvPracticeXp.text = ui.xpText
+        databind.progressPracticeXp.max = PRACTICE_XP_PER_LEVEL
+        databind.progressPracticeXp.progress = ui.xpProgress
     }
 
     override fun onResume() {

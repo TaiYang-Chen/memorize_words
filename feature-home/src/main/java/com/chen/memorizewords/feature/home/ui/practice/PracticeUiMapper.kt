@@ -17,6 +17,29 @@ class PracticeUiMapper @Inject constructor(
     private val resourceProvider: ResourceProvider
 ) {
 
+    fun buildDashboardUi(
+        todayDurationMs: Long,
+        continuousDays: Int,
+        recentStats: List<PracticeDailyDurationStats>,
+        totalDurationMs: Long
+    ): PracticeDashboardUi {
+        val todayParts = formatDurationParts(todayDurationMs)
+        val weekMinutes = (recentStats.sumOf { it.durationMs } / 60_000L).coerceAtLeast(0L)
+        val level = buildPracticeLevel(totalDurationMs)
+        return PracticeDashboardUi(
+            todayDurationValue = todayParts.value,
+            todayDurationUnit = todayParts.unit,
+            todayProgress = calculateTodayGoalProgress(todayDurationMs),
+            continuousDaysText = continuousDays.coerceAtLeast(0).toString(),
+            weekDurationValue = weekMinutes.toString(),
+            weekDurationUnit = resourceProvider.getString(R.string.home_minutes_unit),
+            weekTrendText = formatIncreasePercent(recentStats),
+            levelText = level.levelText,
+            xpText = level.xpText,
+            xpProgress = level.xpProgress
+        )
+    }
+
     fun formatIncreasePercent(stats: List<PracticeDailyDurationStats>): String {
         val today = stats.lastOrNull()?.durationMs ?: 0L
         val yesterday = stats.getOrNull(stats.size - 2)?.durationMs ?: 0L
@@ -54,6 +77,52 @@ class PracticeUiMapper @Inject constructor(
     fun formatDurationMinutes(durationMs: Long): String {
         val totalMinutes = (durationMs / 60_000L).coerceAtLeast(0L)
         return totalMinutes.toString()
+    }
+
+    fun formatDurationParts(durationMs: Long): PracticeDurationParts {
+        val totalSeconds = (durationMs / 1000L).coerceAtLeast(0L)
+        if (totalSeconds < PRACTICE_SECONDS_PER_MINUTE) {
+            return PracticeDurationParts(
+                value = totalSeconds.toString(),
+                unit = resourceProvider.getString(R.string.feature_home_practice_static_second)
+            )
+        }
+
+        val totalMinutes = totalSeconds / PRACTICE_SECONDS_PER_MINUTE
+        if (totalMinutes < PRACTICE_MINUTES_PER_HOUR) {
+            return PracticeDurationParts(
+                value = totalMinutes.toString(),
+                unit = resourceProvider.getString(R.string.home_minutes_unit)
+            )
+        }
+
+        val hours = totalMinutes / PRACTICE_MINUTES_PER_HOUR
+        val minutes = totalMinutes % PRACTICE_MINUTES_PER_HOUR
+        val value = if (minutes == 0L) {
+            hours.toString()
+        } else {
+            String.format(Locale.US, "%.1f", totalMinutes / PRACTICE_MINUTES_PER_HOUR.toDouble())
+        }
+        return PracticeDurationParts(
+            value = value,
+            unit = resourceProvider.getString(R.string.feature_home_practice_static_hours)
+        )
+    }
+
+    fun calculateTodayGoalProgress(durationMs: Long): Int {
+        val seconds = (durationMs / 1000L).coerceAtLeast(0L)
+        return seconds.coerceAtMost(PRACTICE_DAILY_GOAL_SECONDS).toInt()
+    }
+
+    fun buildPracticeLevel(totalDurationMs: Long): PracticeLevelUi {
+        val totalXp = (totalDurationMs / 60_000L).coerceAtLeast(0L).toInt()
+        val level = totalXp / PRACTICE_XP_PER_LEVEL + 1
+        val xpInLevel = totalXp % PRACTICE_XP_PER_LEVEL
+        return PracticeLevelUi(
+            levelText = "Lv.$level",
+            xpText = "$xpInLevel / $PRACTICE_XP_PER_LEVEL XP",
+            xpProgress = xpInLevel
+        )
     }
 
     fun buildSessionUi(records: List<PracticeSessionRecord>): List<PracticeSessionRecordUi> {
