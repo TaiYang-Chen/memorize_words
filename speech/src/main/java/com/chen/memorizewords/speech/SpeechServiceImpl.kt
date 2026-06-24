@@ -2,6 +2,7 @@ package com.chen.memorizewords.speech
 
 import android.util.Log
 import com.chen.memorizewords.speech.api.SentenceAudioResult
+import com.chen.memorizewords.speech.api.SpeechAudioFormat
 import com.chen.memorizewords.speech.api.SpeechAudioOutput
 import com.chen.memorizewords.speech.api.SpeechAudioSuccess
 import com.chen.memorizewords.speech.api.SpeechCapability
@@ -26,7 +27,6 @@ import kotlinx.coroutines.sync.withLock
 
 @Singleton
 class SpeechServiceImpl @Inject constructor(
-    private val aliyunAdapter: AliyunSpeechProviderAdapter,
     private val baiduAdapter: BaiduSpeechProviderAdapter,
     private val providerSelector: SpeechProviderSelector,
     private val speechCacheStore: SpeechCacheStore,
@@ -83,8 +83,9 @@ class SpeechServiceImpl @Inject constructor(
         startedAt: Long
     ): SpeechResult {
         val cacheKey = speechCacheStore.stableHash(task.cacheDescriptor(provider.name))
-        speechCacheStore.getCachedFile(cacheKey)?.let { cachedFile ->
-            val result = toCachedSuccess(task, provider, traceId, cachedFile, cacheKey)
+        val expectedFormat = task.audioFormatOrDefault()
+        speechCacheStore.getCachedFile(cacheKey, expectedFormat)?.let { cachedFile ->
+            val result = toCachedSuccess(task, provider, traceId, cachedFile, cacheKey, expectedFormat)
             logResult(task, result, startedAt, cacheHit = true)
             return result
         }
@@ -124,8 +125,13 @@ class SpeechServiceImpl @Inject constructor(
 
     private fun normalizeAudioResult(task: SpeechTask, result: SpeechResult, cacheKey: String): SpeechResult {
         val audioSuccess = result as? SpeechAudioSuccess ?: return result
+        val targetCacheKey = audioSuccess.cacheKey.ifBlank { cacheKey }
         val cacheFile = when (val output = audioSuccess.audioOutput) {
-            is SpeechAudioOutput.FileOutput -> speechCacheStore.copyIntoCache(cacheKey, File(output.filePath))
+            is SpeechAudioOutput.FileOutput -> speechCacheStore.copyIntoCache(
+                cacheKey = targetCacheKey,
+                source = File(output.filePath),
+                format = output.format
+            )
             is SpeechAudioOutput.UrlOutput -> null
             is SpeechAudioOutput.StreamOutput -> null
         }
@@ -140,7 +146,7 @@ class SpeechServiceImpl @Inject constructor(
                 provider = audioSuccess.provider,
                 traceId = audioSuccess.traceId,
                 audioOutput = normalizedOutput,
-                cacheKey = cacheKey,
+                cacheKey = targetCacheKey,
                 isFromCache = cacheFile != null
             )
 
@@ -148,7 +154,7 @@ class SpeechServiceImpl @Inject constructor(
                 provider = audioSuccess.provider,
                 traceId = audioSuccess.traceId,
                 audioOutput = normalizedOutput,
-                cacheKey = cacheKey,
+                cacheKey = targetCacheKey,
                 isFromCache = cacheFile != null
             )
 
@@ -161,9 +167,10 @@ class SpeechServiceImpl @Inject constructor(
         provider: SpeechProviderType,
         traceId: String,
         cachedFile: File,
-        cacheKey: String
+        cacheKey: String,
+        format: SpeechAudioFormat
     ): SpeechResult {
-        val output = SpeechAudioOutput.FileOutput(cachedFile.absolutePath)
+        val output = SpeechAudioOutput.FileOutput(cachedFile.absolutePath, format)
         return when (task) {
             is SpeechTask.SynthesizeWord -> WordAudioResult(
                 provider = provider,
@@ -185,9 +192,16 @@ class SpeechServiceImpl @Inject constructor(
         }
     }
 
+    private fun SpeechTask.audioFormatOrDefault(): SpeechAudioFormat {
+        return when (this) {
+            is SpeechTask.SynthesizeWord -> audioFormat
+            is SpeechTask.SynthesizeSentence -> audioFormat
+            else -> SpeechAudioFormat.defaultOutput()
+        }
+    }
+
     private fun resolveAdapter(provider: SpeechProviderType): SpeechProviderAdapter {
         return when (provider) {
-            SpeechProviderType.ALIYUN -> aliyunAdapter
             SpeechProviderType.BAIDU -> baiduAdapter
         }
     }
@@ -204,10 +218,12 @@ class SpeechServiceImpl @Inject constructor(
             ?.javaClass
             ?.simpleName
             ?: "NONE"
+        val failureResult = result as? com.chen.memorizewords.speech.api.SpeechFailureResult
         Log.i(
             "SpeechService",
             "traceId=${result.traceId}, provider=${result.provider}, taskType=${task.javaClass.simpleName}, " +
-                "requiredCapability=${task.requiredCapability}, cacheHit=$cacheHit, durationMs=$durationMs, failureType=$failureType"
+                "requiredCapability=${task.requiredCapability}, cacheHit=$cacheHit, durationMs=$durationMs, " +
+                "failureType=$failureType, causeCode=${failureResult?.causeCode}, message=${failureResult?.message}"
         )
     }
 }

@@ -121,13 +121,6 @@ private fun SpeechResult.toDomain(): DomainSpeechResult {
             causeCode = causeCode,
             message = message
         )
-
-        else -> DomainDefaultSpeechFailureResult(
-            provider = provider.toDomain(),
-            traceId = traceId,
-            failure = DomainSpeechFailure.Unknown("Unsupported speech result: ${this::class.simpleName}"),
-            message = "Unsupported speech result"
-        )
     }
 }
 
@@ -193,7 +186,6 @@ private fun ShadowingAudioIssue.toDomain(): DomainShadowingAudioIssue {
 private fun SpeechProviderType.toDomain(): DomainSpeechProviderType {
     return when (this) {
         SpeechProviderType.BAIDU -> DomainSpeechProviderType.BAIDU
-        SpeechProviderType.ALIYUN -> DomainSpeechProviderType.ALIYUN
     }
 }
 

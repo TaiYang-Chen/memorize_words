@@ -19,10 +19,6 @@ import okhttp3.OkHttpClient
 @Retention(AnnotationRetention.BINARY)
 annotation class BaiduHttpClient
 
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class AliyunHttpClient
-
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class SpeechBindingModule {
@@ -45,10 +41,6 @@ abstract class SpeechBindingModule {
         impl: DefaultSpeechProviderSelector
     ): SpeechProviderSelector
 
-    @Binds
-    abstract fun bindAliyunTokenRemoteDataSource(
-        impl: BackendAliyunTokenRemoteDataSource
-    ): AliyunTokenRemoteDataSource
 }
 
 @Module
@@ -69,29 +61,11 @@ object SpeechConfigModule {
 
     @Provides
     @Singleton
-    @AliyunHttpClient
-    fun provideAliyunOkHttpClient(): OkHttpClient {
-        return OkHttpClient.Builder()
-            .retryOnConnectionFailure(true)
-            .connectTimeout(15, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
-            .build()
-    }
-
-    @Provides
-    @Singleton
     fun provideSpeechRuntimeConfig(): SpeechRuntimeConfig {
         return SpeechRuntimeConfig(
-            wordTtsProvider = parseProvider(BuildConfig.WORD_TTS_PROVIDER, SpeechProviderType.ALIYUN),
+            wordTtsProvider = parseProvider(BuildConfig.WORD_TTS_PROVIDER, SpeechProviderType.BAIDU),
             sentenceTtsProvider = parseProvider(BuildConfig.SENTENCE_TTS_PROVIDER, SpeechProviderType.BAIDU),
-            evaluationProvider = parseProvider(BuildConfig.EVALUATION_PROVIDER, SpeechProviderType.BAIDU),
-            baiduAppId = BuildConfig.BAIDU_APP_ID,
-            baiduApiKey = BuildConfig.BAIDU_API_KEY,
-            baiduSecretKey = BuildConfig.BAIDU_SECRET_KEY,
-            aliyunAppKey = BuildConfig.ALIYUN_APP_KEY,
-            aliyunWordVoice = BuildConfig.ALIYUN_WORD_VOICE,
-            aliyunSentenceVoice = BuildConfig.ALIYUN_SENTENCE_VOICE
+            evaluationProvider = parseProvider(BuildConfig.EVALUATION_PROVIDER, SpeechProviderType.BAIDU)
         )
     }
 

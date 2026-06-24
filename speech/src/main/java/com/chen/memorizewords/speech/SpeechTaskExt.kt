@@ -2,32 +2,27 @@ package com.chen.memorizewords.speech
 
 import com.chen.memorizewords.speech.api.SpeechTask
 import java.util.Locale
+import org.json.JSONObject
 
 internal fun SpeechTask.cacheDescriptor(providerName: String): String {
     return when (this) {
-        is SpeechTask.SynthesizeSentence -> listOf(
-            providerName,
-            requiredCapability.name,
-            voice,
-            locale,
-            text,
-            audioFormat.mimeType,
-            audioFormat.sampleRateHz.toString(),
-            audioFormat.channelCount.toString(),
-            audioFormat.encoding
-        ).joinToString(separator = "|")
+        is SpeechTask.SynthesizeSentence -> synthesisCacheDescriptor(
+            providerName = providerName,
+            capabilityName = requiredCapability.name,
+            voice = voice,
+            locale = locale,
+            text = text,
+            audioFormat = audioFormat
+        )
 
-        is SpeechTask.SynthesizeWord -> listOf(
-            providerName,
-            requiredCapability.name,
-            voice,
-            locale,
-            text,
-            audioFormat.mimeType,
-            audioFormat.sampleRateHz.toString(),
-            audioFormat.channelCount.toString(),
-            audioFormat.encoding
-        ).joinToString(separator = "|")
+        is SpeechTask.SynthesizeWord -> synthesisCacheDescriptor(
+            providerName = providerName,
+            capabilityName = requiredCapability.name,
+            voice = voice,
+            locale = locale,
+            text = text,
+            audioFormat = audioFormat
+        )
 
         is SpeechTask.EvaluateShadowing -> listOf(
             providerName,
@@ -35,6 +30,51 @@ internal fun SpeechTask.cacheDescriptor(providerName: String): String {
             locale,
             referenceText
         ).joinToString(separator = "|")
+    }
+}
+
+private fun synthesisCacheDescriptor(
+    providerName: String,
+    capabilityName: String,
+    voice: String,
+    locale: String,
+    text: String,
+    audioFormat: com.chen.memorizewords.speech.api.SpeechAudioFormat
+): String {
+    if (providerName.equals("BAIDU", ignoreCase = true)) {
+        return JSONObject()
+            .put("provider", "BAIDU")
+            .put("text", text.replace("\r\n", "\n").replace('\r', '\n').trim())
+            .put("lan", baiduLanguageTag(locale))
+            .put("per", baiduCacheVoice(voice))
+            .put("spd", 5)
+            .put("pit", 5)
+            .put("vol", 9)
+            .put("aue", baiduAue(audioFormat))
+            .put("audioCtrl", JSONObject.NULL)
+            .put("textCtrl", JSONObject.NULL)
+            .put("cacheSchemaVersion", 1)
+            .toString()
+    }
+    return listOf(
+        providerName,
+        capabilityName,
+        voice,
+        locale,
+        text,
+        audioFormat.mimeType,
+        audioFormat.sampleRateHz.toString(),
+        audioFormat.channelCount.toString(),
+        audioFormat.encoding
+    ).joinToString(separator = "|")
+}
+
+private fun baiduCacheVoice(voice: String): String {
+    val normalized = voice.trim()
+    return if (normalized.isBlank() || normalized.equals("default", ignoreCase = true)) {
+        "0"
+    } else {
+        normalized
     }
 }
 

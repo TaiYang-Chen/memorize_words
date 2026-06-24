@@ -25,18 +25,6 @@ internal class BaiduApiException(
     val code: String? = null
 ) : BaiduClientException(message)
 
-internal data class BaiduAccessToken(
-    val token: String,
-    val expiresAtMillis: Long
-) {
-    fun isValid(nowMillis: Long): Boolean = token.isNotBlank() && nowMillis < expiresAtMillis
-}
-
-internal data class BaiduRecognizedSpeech(
-    val recognizedText: String,
-    val rawJson: String
-)
-
 internal fun Throwable.toBaiduClientException(): BaiduClientException {
     return when (this) {
         is BaiduClientException -> this
@@ -46,7 +34,7 @@ internal fun Throwable.toBaiduClientException(): BaiduClientException {
 }
 
 internal fun baiduLanguageTag(locale: String): String {
-    return if (locale.lowercase(Locale.US).startsWith("zh")) "zh" else "en"
+    return "zh"
 }
 
 internal fun baiduVoicePerson(voice: String, locale: String): String {

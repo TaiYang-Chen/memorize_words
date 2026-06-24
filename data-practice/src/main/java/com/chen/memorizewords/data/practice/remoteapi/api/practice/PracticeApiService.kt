@@ -12,14 +12,23 @@ data class TtsRequestDto(
     val text: String,
     val language: String,
     val voice: String,
-    val provider: String
+    val provider: String,
+    val speed: Int? = null,
+    val pitch: Int? = null,
+    val volume: Int? = null,
+    val audioFormat: String? = null,
+    val audioCtrl: String? = null,
+    val textCtrl: String? = null
 )
 
 @JsonClass(generateAdapter = false)
 data class TtsResponseDto(
+    val provider: String? = null,
     val audioUrl: String?,
-    val audioBase64: String?,
-    val cacheKey: String?
+    val cacheKey: String?,
+    val audioFormat: String? = null,
+    val mimeType: String? = null,
+    val fromCache: Boolean? = null
 )
 
 @JsonClass(generateAdapter = false)

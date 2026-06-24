@@ -1,4 +1,4 @@
-package com.chen.memorizewords.data.sync.remote.learningsync
+﻿package com.chen.memorizewords.data.sync.remote.learningsync
 
 import com.chen.memorizewords.core.network.remote.RemoteResultAdapter
 import com.chen.memorizewords.domain.floating.model.FloatingDockConfig
@@ -30,7 +30,7 @@ import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.PracticeSetti
 import com.chen.memorizewords.core.network.http.PageData
 import javax.inject.Inject
 
-private const val LEGACY_BACKEND_DEFAULT_PROVIDER = "BACKEND_DEFAULT"
+private const val PRACTICE_SETTINGS_PROVIDER = "BAIDU"
 
 class RemoteLearningSyncDataSourceImpl @Inject constructor(
     private val request: LearningSyncRequest,
@@ -53,7 +53,7 @@ class RemoteLearningSyncDataSourceImpl @Inject constructor(
                     showMeaning = settings.showMeaning,
                     playbackMode = settings.playbackMode.name,
                     playTimes = settings.playTimes.coerceAtLeast(1),
-                    provider = LEGACY_BACKEND_DEFAULT_PROVIDER
+                    provider = PRACTICE_SETTINGS_PROVIDER
                 )
             )
         }

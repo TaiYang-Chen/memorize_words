@@ -31,7 +31,7 @@ class PracticeSettingsRepositoryImpl @Inject constructor(
         private const val KEY_AUDIO_LOOP_PLAYBACK_MODE = "practice_audio_loop_playback_mode"
         private const val KEY_AUDIO_LOOP_PLAY_TIMES = "practice_audio_loop_play_times"
         private const val KEY_SPEECH_PROVIDER = "practice_speech_provider"
-        private const val LEGACY_SYNC_PROVIDER = "BACKEND_DEFAULT"
+        private const val SYNC_PROVIDER = "BAIDU"
     }
 
     private val state = MutableStateFlow(readFromLocal())
@@ -58,7 +58,7 @@ class PracticeSettingsRepositoryImpl @Inject constructor(
                     showMeaning = normalized.showMeaning,
                     playbackMode = normalized.playbackMode.name,
                     playTimes = normalized.playTimes,
-                    provider = LEGACY_SYNC_PROVIDER
+                    provider = SYNC_PROVIDER
                 )
             )
         )

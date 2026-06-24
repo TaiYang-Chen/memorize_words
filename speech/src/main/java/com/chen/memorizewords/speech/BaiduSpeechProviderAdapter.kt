@@ -1,5 +1,6 @@
 package com.chen.memorizewords.speech
 
+import android.util.Log
 import com.chen.memorizewords.core.network.http.NetworkResult
 import com.chen.memorizewords.speech.api.ShadowingAnalysisSource
 import com.chen.memorizewords.speech.api.ShadowingAudioIssue
@@ -17,18 +18,24 @@ import com.chen.memorizewords.speech.api.SpeechResult
 import com.chen.memorizewords.speech.api.SpeechTask
 import com.chen.memorizewords.speech.api.WordAudioResult
 import com.chen.memorizewords.speech.remoteapi.api.practice.PracticeSpeechRequest
+import com.chen.memorizewords.speech.remoteapi.api.practice.TtsRequestDto
 import com.chen.memorizewords.speech.remoteapi.api.practice.ShadowingAudioIssueDto
 import com.chen.memorizewords.speech.remoteapi.api.practice.ShadowingEvaluateResponseDto
+import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
 @Singleton
 class BaiduSpeechProviderAdapter @Inject constructor(
     private val speechCacheStore: SpeechCacheStore,
-    private val ttsClient: BaiduTtsClient,
-    private val shadowingClient: BaiduShadowingClient,
-    private val shadowingScorer: BaiduShadowingScorer,
-    private val practiceSpeechRequest: PracticeSpeechRequest
+    private val practiceSpeechRequest: PracticeSpeechRequest,
+    @BaiduHttpClient private val httpClient: OkHttpClient,
+    private val networkConfig: com.chen.memorizewords.core.network.CoreNetworkConfig
 ) : SpeechProviderAdapter {
 
     override val provider: SpeechProviderType = SpeechProviderType.BAIDU
@@ -71,20 +78,18 @@ class BaiduSpeechProviderAdapter @Inject constructor(
         task: SpeechTask
     ): SpeechResult {
         return runCatching {
-            val audioFile = ttsClient.synthesize(
-                task = SpeechSynthesisTask(
-                    text = text,
-                    locale = locale,
-                    voice = voice,
-                    audioFormat = audioFormat
-                ),
+            val backendAudio = synthesizeViaBackend(
+                text = text,
+                locale = locale,
+                voice = voice,
+                audioFormat = audioFormat,
                 traceId = traceId
             )
             val output = SpeechAudioOutput.FileOutput(
-                filePath = audioFile.absolutePath,
+                filePath = backendAudio.file.absolutePath,
                 format = audioFormat
             )
-            val cacheKey = speechCacheStore.stableHash(task.cacheDescriptor(provider.name))
+            val cacheKey = backendAudio.cacheKey ?: speechCacheStore.stableHash(task.cacheDescriptor(provider.name))
             when (task) {
                 is SpeechTask.SynthesizeWord -> WordAudioResult(
                     provider = provider,
@@ -109,11 +114,81 @@ class BaiduSpeechProviderAdapter @Inject constructor(
         }
     }
 
+    private suspend fun synthesizeViaBackend(
+        text: String,
+        locale: String,
+        voice: String,
+        audioFormat: com.chen.memorizewords.speech.api.SpeechAudioFormat,
+        traceId: String
+    ): BackendAudioFile {
+        val remoteResult = practiceSpeechRequest.synthesize(
+            TtsRequestDto(
+                text = text,
+                language = baiduLanguageTag(locale),
+                voice = voice,
+                provider = provider.name,
+                speed = 5,
+                pitch = 5,
+                volume = 9,
+                audioFormat = baiduAue(audioFormat)
+            )
+        )
+        when (remoteResult) {
+            is NetworkResult.Success -> {
+                val response = remoteResult.data
+                val audioUrl = response.audioUrl?.takeIf { it.isNotBlank() }
+                    ?: throw BaiduApiException("Backend TTS response does not contain audioUrl.")
+                return BackendAudioFile(
+                    file = downloadBackendAudio(audioUrl, traceId, audioFormat),
+                    cacheKey = response.cacheKey
+                )
+            }
+
+            is NetworkResult.Failure -> throw remoteResult.toBackendTtsException()
+        }
+    }
+
+    private suspend fun downloadBackendAudio(
+        audioUrl: String,
+        traceId: String,
+        audioFormat: com.chen.memorizewords.speech.api.SpeechAudioFormat
+    ): File = withContext(Dispatchers.IO) {
+        val resolvedUrl = resolveBackendAudioUrl(audioUrl)
+        val request = Request.Builder().url(resolvedUrl).get().build()
+        httpClient.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) {
+                throw BaiduNetworkException("Backend TTS audio download failed: HTTP ${response.code}")
+            }
+            val bytes = response.body?.bytes() ?: ByteArray(0)
+            if (bytes.isEmpty()) {
+                throw BaiduApiException("Backend TTS audio is empty.")
+            }
+            speechCacheStore.createTempFile("backend_baidu_tts_$traceId", audioFormat).also { file ->
+                file.writeBytes(bytes)
+            }
+        }
+    }
+
+    private data class BackendAudioFile(
+        val file: File,
+        val cacheKey: String?
+    )
+
+    private fun resolveBackendAudioUrl(audioUrl: String): String {
+        if (audioUrl.startsWith("http://") || audioUrl.startsWith("https://")) {
+            return audioUrl
+        }
+        val base = networkConfig.baseUrl.toHttpUrlOrNull()
+            ?: throw BaiduApiException("Backend base URL is invalid.")
+        return base.resolve(audioUrl)?.toString()
+            ?: throw BaiduApiException("Backend TTS audioUrl is invalid.")
+    }
+
     private suspend fun evaluate(task: SpeechTask.EvaluateShadowing, traceId: String): SpeechResult {
         val normalizedInput = when (val input = task.audioInput) {
             is SpeechAudioInput.FileInput -> input
             is SpeechAudioInput.ByteArrayInput -> {
-                val tempFile = speechCacheStore.createTempFile("shadowing_$traceId")
+                val tempFile = speechCacheStore.createTempFile("shadowing_$traceId", input.format)
                 tempFile.writeBytes(input.bytes)
                 SpeechAudioInput.FileInput(
                     filePath = tempFile.absolutePath,
@@ -141,37 +216,16 @@ class BaiduSpeechProviderAdapter @Inject constructor(
                 traceId = traceId
             )
         }
-        return runCatching {
-            val recognized = shadowingClient.recognize(
-                audioInput = normalizedInput,
-                locale = task.locale
-            )
-            val scores = shadowingScorer.score(
-                referenceText = task.referenceText,
-                recognizedText = recognized.recognizedText,
-                recordingMetadata = task.recordingMetadata
-            )
-            ShadowingEvaluationResult(
-                provider = provider,
-                traceId = traceId,
-                totalScore = scores.totalScore,
-                pronunciationScore = scores.pronunciationScore,
-                fluencyScore = scores.fluencyScore,
-                recognizedText = recognized.recognizedText,
-                intonationScore = scores.intonationScore,
-                stressScore = scores.stressScore,
-                speedScore = scores.speedScore,
-                audioIssues = scores.audioIssues,
-                analysisSource = scores.analysisSource,
-                detailSourceNote = scores.detailSourceNote,
-                guidanceText = null
-            )
-        }.getOrElse { error ->
-            mapError(traceId, error)
-        }
+        return failureResult(
+            provider = provider,
+            traceId = traceId,
+            failure = SpeechFailure.ProviderFailure("Backend shadowing evaluate request failed."),
+            message = "Backend shadowing evaluate request failed."
+        )
     }
 
     private fun mapError(traceId: String, throwable: Throwable): SpeechResult {
+        Log.w(TAG, "Baidu speech request failed. traceId=$traceId", throwable)
         return when (val error = throwable.toBaiduClientException()) {
             is BaiduAuthException -> failureResult(
                 provider = provider,
@@ -203,6 +257,29 @@ class BaiduSpeechProviderAdapter @Inject constructor(
                 message = error.message
             )
         }
+    }
+}
+
+private const val TAG = "BaiduSpeechProvider"
+
+private fun NetworkResult.Failure.toBackendTtsException(): BaiduClientException {
+    return when (this) {
+        is NetworkResult.Failure.Unauthorized -> BaiduAuthException(
+            message = message ?: "Backend TTS request unauthorized.",
+            code = code.toString()
+        )
+
+        is NetworkResult.Failure.HttpError -> BaiduApiException(
+            message = message ?: "Backend TTS request failed: HTTP $code",
+            code = code.toString()
+        )
+
+        is NetworkResult.Failure.NetworkError -> BaiduNetworkException(
+            message = throwable.message ?: "Backend TTS network request failed.",
+            cause = throwable
+        )
+
+        is NetworkResult.Failure.GenericError -> BaiduApiException(message)
     }
 }
 

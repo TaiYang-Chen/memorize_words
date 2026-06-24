@@ -1,8 +1,7 @@
 package com.chen.memorizewords.speech.api
 
 enum class SpeechProviderType {
-    BAIDU,
-    ALIYUN
+    BAIDU
 }
 
 enum class SpeechCapability {

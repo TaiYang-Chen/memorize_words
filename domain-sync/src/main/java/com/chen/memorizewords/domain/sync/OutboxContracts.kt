@@ -208,7 +208,7 @@ data class PracticeSettingsSyncPayload(
     val showMeaning: Boolean,
     val playbackMode: String = "WORD_ONLY",
     val playTimes: Int = 1,
-    val provider: String = "BACKEND_DEFAULT"
+    val provider: String = "BAIDU"
 )
 
 data class FloatingSettingsSyncPayload(

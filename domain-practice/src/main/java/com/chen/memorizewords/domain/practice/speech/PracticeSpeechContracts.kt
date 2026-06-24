@@ -1,8 +1,7 @@
 package com.chen.memorizewords.domain.practice.speech
 
 enum class SpeechProviderType {
-    BAIDU,
-    ALIYUN
+    BAIDU
 }
 
 enum class SpeechCapability {
