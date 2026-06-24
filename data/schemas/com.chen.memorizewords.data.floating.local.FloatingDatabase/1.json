@@ -1,0 +1,107 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "9939844353014270d653fe697cdbd68c",
+    "entities": [
+      {
+        "tableName": "floating_word_display_record",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`date` TEXT NOT NULL, `display_count` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, PRIMARY KEY(`date`))",
+        "fields": [
+          {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "displayCount",
+            "columnName": "display_count",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updated_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "date"
+          ]
+        }
+      },
+      {
+        "tableName": "floating_word_display_word",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`record_date` TEXT NOT NULL, `sequence` INTEGER NOT NULL, `word_id` INTEGER NOT NULL, PRIMARY KEY(`record_date`, `sequence`), FOREIGN KEY(`record_date`) REFERENCES `floating_word_display_record`(`date`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "recordDate",
+            "columnName": "record_date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sequence",
+            "columnName": "sequence",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wordId",
+            "columnName": "word_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "record_date",
+            "sequence"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_floating_word_display_word_record_date",
+            "unique": false,
+            "columnNames": [
+              "record_date"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_floating_word_display_word_record_date` ON `${TABLE_NAME}` (`record_date`)"
+          },
+          {
+            "name": "index_floating_word_display_word_word_id",
+            "unique": false,
+            "columnNames": [
+              "word_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_floating_word_display_word_word_id` ON `${TABLE_NAME}` (`word_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "floating_word_display_record",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "record_date"
+            ],
+            "referencedColumns": [
+              "date"
+            ]
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9939844353014270d653fe697cdbd68c')"
+    ]
+  }
+}

@@ -198,7 +198,7 @@ fun FloatingSettingsDto.toDomain(): FloatingWordSettings {
         cardOpacityPercent = cardOpacityPercent,
         cardGapDp = cardGapDp,
         dockConfig = dockConfig?.toDomain() ?: FloatingDockConfig(),
-        dockState = null
+        dockState = dockState?.toDomainOrNull()
     )
 }
 

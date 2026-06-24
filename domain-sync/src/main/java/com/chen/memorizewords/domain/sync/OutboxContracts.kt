@@ -20,6 +20,8 @@ object OutboxTopic {
     const val CHECKIN_RECORD = "CHECKIN_RECORD"
 }
 
+const val OUTBOX_PAYLOAD_SCHEMA_VERSION = 1
+
 data class OutboxCommand(
     val topic: String,
     val key: String,
@@ -93,6 +95,7 @@ interface ServerBootstrapContributor {
 }
 
 data class StudyRecordSyncPayload(
+    val schemaVersion: Int = OUTBOX_PAYLOAD_SCHEMA_VERSION,
     val date: String,
     val wordId: Long,
     val word: String,
@@ -101,6 +104,7 @@ data class StudyRecordSyncPayload(
 )
 
 data class DailyStudyDurationSyncPayload(
+    val schemaVersion: Int = OUTBOX_PAYLOAD_SCHEMA_VERSION,
     val date: String,
     val totalDurationMs: Long,
     val updatedAt: Long,
@@ -109,12 +113,14 @@ data class DailyStudyDurationSyncPayload(
 )
 
 data class PracticeDurationSyncPayload(
+    val schemaVersion: Int = OUTBOX_PAYLOAD_SCHEMA_VERSION,
     val date: String,
     val totalDurationMs: Long,
     val updatedAt: Long
 )
 
 data class PracticeSessionSyncPayload(
+    val schemaVersion: Int = OUTBOX_PAYLOAD_SCHEMA_VERSION,
     val id: Long,
     val date: String,
     val mode: String,
@@ -130,6 +136,7 @@ data class PracticeSessionSyncPayload(
 )
 
 data class FavoriteSyncPayload(
+    val schemaVersion: Int = OUTBOX_PAYLOAD_SCHEMA_VERSION,
     val wordId: Long,
     val word: String? = null,
     val definitions: String? = null,
@@ -139,6 +146,7 @@ data class FavoriteSyncPayload(
 )
 
 data class WordBookProgressSyncPayload(
+    val schemaVersion: Int = OUTBOX_PAYLOAD_SCHEMA_VERSION,
     val bookId: Long,
     val bookName: String,
     val learnedCount: Int,
@@ -151,10 +159,12 @@ data class WordBookProgressSyncPayload(
 )
 
 data class WordBookSelectionSyncPayload(
+    val schemaVersion: Int = OUTBOX_PAYLOAD_SCHEMA_VERSION,
     val bookId: Long
 )
 
 data class WordStateUpsertSyncPayload(
+    val schemaVersion: Int = OUTBOX_PAYLOAD_SCHEMA_VERSION,
     val bookId: Long,
     val wordId: Long,
     val totalLearnCount: Int,
@@ -168,10 +178,12 @@ data class WordStateUpsertSyncPayload(
 )
 
 data class WordStateDeleteByBookSyncPayload(
+    val schemaVersion: Int = OUTBOX_PAYLOAD_SCHEMA_VERSION,
     val bookId: Long
 )
 
 data class StudyPlanSyncPayload(
+    val schemaVersion: Int = OUTBOX_PAYLOAD_SCHEMA_VERSION,
     val dailyNewWords: Int,
     val dailyReviewWords: Int,
     val testMode: String,
@@ -179,6 +191,7 @@ data class StudyPlanSyncPayload(
 )
 
 data class OnboardingStateSyncPayload(
+    val schemaVersion: Int = OUTBOX_PAYLOAD_SCHEMA_VERSION,
     val phase: String,
     val selectedWordBookId: Long?,
     val revision: Long,
@@ -187,6 +200,7 @@ data class OnboardingStateSyncPayload(
 )
 
 data class PracticeSettingsSyncPayload(
+    val schemaVersion: Int = OUTBOX_PAYLOAD_SCHEMA_VERSION,
     val selectedBookId: Long,
     val intervalSeconds: Int,
     val loopEnabled: Boolean,
@@ -198,6 +212,7 @@ data class PracticeSettingsSyncPayload(
 )
 
 data class FloatingSettingsSyncPayload(
+    val schemaVersion: Int = OUTBOX_PAYLOAD_SCHEMA_VERSION,
     val enabled: Boolean,
     val sourceType: String,
     val orderType: String,
@@ -216,6 +231,7 @@ data class FloatingSettingsSyncPayload(
 )
 
 data class FloatingDisplayRecordSyncPayload(
+    val schemaVersion: Int = OUTBOX_PAYLOAD_SCHEMA_VERSION,
     val date: String,
     val displayCount: Int,
     val wordIds: List<Long>,
@@ -223,6 +239,7 @@ data class FloatingDisplayRecordSyncPayload(
 )
 
 data class CheckInRecordSyncPayload(
+    val schemaVersion: Int = OUTBOX_PAYLOAD_SCHEMA_VERSION,
     val date: String,
     val type: String,
     val signedAt: Long,

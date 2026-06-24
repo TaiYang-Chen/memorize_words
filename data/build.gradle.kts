@@ -6,6 +6,23 @@ android {
     namespace = "com.chen.memorizewords.data"
     resourcePrefix("data_")
 
+    buildFeatures {
+        buildConfig = true
+    }
+
+    defaultConfig {
+        val apiBaseUrl = providers.gradleProperty("memorize.apiBaseUrl")
+            .orElse("https://example.invalid/api/")
+            .get()
+        val enableNetworkBodyLogging = providers.gradleProperty("memorize.enableNetworkBodyLogging")
+            .orElse("false")
+            .get()
+            .toBooleanStrictOrNull() ?: false
+
+        buildConfigField("String", "API_BASE_URL", apiBaseUrl.toBuildConfigString())
+        buildConfigField("boolean", "ENABLE_NETWORK_BODY_LOGGING", enableNetworkBodyLogging.toString())
+    }
+
     sourceSets {
         getByName("main") {
             java.srcDirs(
@@ -43,6 +60,10 @@ android {
     }
 }
 
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+}
+
 dependencies {
     implementation(project(":domain"))
     implementation(project(":core-common"))
@@ -67,4 +88,8 @@ dependencies {
 
     ksp(libs.androidx.room.compiler)
     ksp(libs.hilt.compiler)
+}
+
+fun String.toBuildConfigString(): String {
+    return "\"" + replace("\\", "\\\\").replace("\"", "\\\"") + "\""
 }

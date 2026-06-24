@@ -1,7 +1,9 @@
 package com.chen.memorizewords.data.sync.remoteapi
 
+import com.chen.memorizewords.data.BuildConfig
+
 object GlobalConfig {
-    var isDebug: Boolean = true
-    var baseUrl: String = "http://10.212.143.105:8080/api/"
-    //var baseUrl: String = "http://192.168.0.101:8080/api/"
+    var isDebug: Boolean = BuildConfig.DEBUG
+    var baseUrl: String = BuildConfig.API_BASE_URL
+    var enableBodyLogging: Boolean = BuildConfig.DEBUG && BuildConfig.ENABLE_NETWORK_BODY_LOGGING
 }

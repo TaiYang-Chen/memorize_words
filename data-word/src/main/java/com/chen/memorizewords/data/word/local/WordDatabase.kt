@@ -50,7 +50,7 @@ import com.chen.memorizewords.data.word.local.room.model.words.word.WordEntity
         RootWordEntity::class
     ],
     version = 1,
-    exportSchema = false
+    exportSchema = true
 )
 @TypeConverters(WordRoomConverters::class)
 abstract class WordDatabase : RoomDatabase() {

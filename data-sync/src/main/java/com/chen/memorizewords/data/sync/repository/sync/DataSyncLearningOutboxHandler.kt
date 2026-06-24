@@ -57,8 +57,10 @@ class DataSyncLearningOutboxHandler @Inject constructor(
                     PracticeSessionRecord(
                         id = payload.id,
                         date = payload.date,
-                        mode = PracticeMode.valueOf(payload.mode),
-                        entryType = PracticeEntryType.valueOf(payload.entryType),
+                        mode = runCatching { PracticeMode.valueOf(payload.mode) }
+                            .getOrDefault(PracticeMode.LISTENING),
+                        entryType = runCatching { PracticeEntryType.valueOf(payload.entryType) }
+                            .getOrDefault(PracticeEntryType.SELF),
                         entryCount = payload.entryCount,
                         durationMs = payload.durationMs,
                         createdAt = payload.createdAt,
@@ -99,9 +101,15 @@ class DataSyncLearningOutboxHandler @Inject constructor(
                             .getOrDefault(FloatingWordSourceType.CURRENT_BOOK),
                         orderType = runCatching { FloatingWordOrderType.valueOf(payload.orderType) }
                             .getOrDefault(FloatingWordOrderType.RANDOM),
-                        fieldConfigs = gson.fromJson(payload.fieldConfigsJson, fieldConfigType) ?: emptyList(),
-                        selectedWordIds = gson.fromJson(payload.selectedWordIdsJson, selectedIdsType)
-                            ?: emptyList(),
+                        fieldConfigs = runCatching {
+                            gson.fromJson<List<FloatingWordFieldConfig>>(
+                                payload.fieldConfigsJson,
+                                fieldConfigType
+                            )
+                        }.getOrNull().orEmpty(),
+                        selectedWordIds = runCatching {
+                            gson.fromJson<List<Long>>(payload.selectedWordIdsJson, selectedIdsType)
+                        }.getOrNull().orEmpty(),
                         floatingBallX = payload.floatingBallX,
                         floatingBallY = payload.floatingBallY,
                         autoStartOnBoot = payload.autoStartOnBoot,

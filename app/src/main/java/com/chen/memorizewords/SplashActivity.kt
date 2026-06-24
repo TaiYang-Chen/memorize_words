@@ -70,14 +70,26 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun animateSplashIconToLogo(provider: SplashScreenViewProvider) {
-        val iconView = provider.iconView
         val targetView = findViewById<View>(R.id.logo_card)
+        var hasRemovedProvider = false
+
+        fun finishSplashExit() {
+            if (hasRemovedProvider) return
+            hasRemovedProvider = true
+            targetView.alpha = 1f
+            provider.remove()
+        }
+
+        val iconView = runCatching { provider.iconView }.getOrNull()
+        if (iconView == null) {
+            finishSplashExit()
+            return
+        }
 
         if (iconView.width == 0 || iconView.height == 0 ||
             targetView.width == 0 || targetView.height == 0
         ) {
-            targetView.alpha = 1f
-            provider.remove()
+            finishSplashExit()
             return
         }
 
@@ -93,14 +105,6 @@ class SplashActivity : AppCompatActivity() {
 
         iconView.pivotX = iconView.width / 2f
         iconView.pivotY = iconView.height / 2f
-        var hasRemovedProvider = false
-
-        fun finishSplashExit() {
-            if (hasRemovedProvider) return
-            hasRemovedProvider = true
-            targetView.alpha = 1f
-            provider.remove()
-        }
 
         iconView.animate()
             .translationX(targetCenterX - iconCenterX)

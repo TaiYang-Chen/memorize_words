@@ -138,7 +138,8 @@ class WordBookUserSyncOutboxHandler @Inject constructor(
                     StudyPlan(
                         dailyNewCount = payload.dailyNewWords,
                         dailyReviewCount = payload.dailyReviewWords,
-                        testMode = LearningTestMode.MEANING_CHOICE,
+                        testMode = runCatching { LearningTestMode.valueOf(payload.testMode) }
+                            .getOrDefault(LearningTestMode.MEANING_CHOICE),
                         wordOrderType = runCatching { WordOrderType.valueOf(payload.wordOrderType) }
                             .getOrDefault(WordOrderType.RANDOM)
                     )

@@ -3,11 +3,13 @@ package com.chen.memorizewords.core.database
 import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 class DestructiveRoomDatabaseFactory(
     private val databaseName: String = NewArchitectureDatabase.NAME,
-    private val onCreateOrOpen: (SupportSQLiteDatabase) -> Unit = {}
+    private val onCreateOrOpen: (SupportSQLiteDatabase) -> Unit = {},
+    private val migrations: Array<Migration> = emptyArray()
 ) {
     fun <T : RoomDatabase> build(
         context: Context,
@@ -19,7 +21,6 @@ class DestructiveRoomDatabaseFactory(
             databaseClass,
             databaseName
         )
-            .fallbackToDestructiveMigration(dropAllTables = true)
             .addCallback(
                 object : RoomDatabase.Callback() {
                     override fun onCreate(db: SupportSQLiteDatabase) {
@@ -33,6 +34,7 @@ class DestructiveRoomDatabaseFactory(
                     }
                 }
             )
+            .addMigrations(*migrations)
             .configure()
             .build()
     }

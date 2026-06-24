@@ -44,7 +44,10 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import android.content.Context
+import javax.inject.Qualifier
 import javax.inject.Provider
 import javax.inject.Singleton
 import retrofit2.Retrofit
@@ -118,7 +121,15 @@ object DataAccountModule {
 
     @Provides
     @Singleton
-    fun provideSessionLocalDataSource(mmkv: MMKV): SessionLocalDataSource {
+    @AccountSessionStorage
+    fun provideAccountSessionMMKV(@ApplicationContext context: Context): MMKV {
+        MMKV.initialize(context.applicationContext)
+        return MMKV.mmkvWithID("account_session", MMKV.SINGLE_PROCESS_MODE)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSessionLocalDataSource(@AccountSessionStorage mmkv: MMKV): SessionLocalDataSource {
         return TokenLocalDataSource(mmkv)
     }
 
@@ -186,3 +197,7 @@ object DataAccountModule {
         return UnauthorizedSessionHandler(localAuthStateCleaner)
     }
 }
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class AccountSessionStorage

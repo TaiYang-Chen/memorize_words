@@ -26,7 +26,7 @@ import com.chen.memorizewords.data.study.local.room.model.study.progress.wordboo
         WordBookProgressEntity::class
     ],
     version = 1,
-    exportSchema = false
+    exportSchema = true
 )
 @TypeConverters(StudyRoomConverters::class)
 abstract class StudyDatabase : RoomDatabase() {

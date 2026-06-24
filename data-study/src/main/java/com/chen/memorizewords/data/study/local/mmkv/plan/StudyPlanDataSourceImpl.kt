@@ -33,12 +33,11 @@ class StudyPlanDataSourceImpl @Inject constructor(
 
     override suspend fun saveStudyPlan(studyPlan: StudyPlan) {
         withContext(Dispatchers.IO) {
-            val normalizedPlan = studyPlan.meaningChoiceOnly()
-            mmkv.encode(dailyNewCountKey, normalizedPlan.dailyNewCount)
-            mmkv.encode(dailyReviewCountKey, normalizedPlan.dailyReviewCount)
-            mmkv.encode(testModeKey, normalizedPlan.testMode.name)
-            mmkv.encode(wordOrderTypeKey, normalizedPlan.wordOrderType.name)
-            _plan.value = normalizedPlan
+            mmkv.encode(dailyNewCountKey, studyPlan.dailyNewCount)
+            mmkv.encode(dailyReviewCountKey, studyPlan.dailyReviewCount)
+            mmkv.encode(testModeKey, studyPlan.testMode.name)
+            mmkv.encode(wordOrderTypeKey, studyPlan.wordOrderType.name)
+            _plan.value = studyPlan
         }
     }
 
@@ -65,10 +64,13 @@ class StudyPlanDataSourceImpl @Inject constructor(
         val orderTypeName = mmkv.decodeString(wordOrderTypeKey, WordOrderType.RANDOM.name)
         val orderType = runCatching { WordOrderType.valueOf(orderTypeName.orEmpty()) }
             .getOrDefault(WordOrderType.RANDOM)
+        val testModeName = mmkv.decodeString(testModeKey, LearningTestMode.MEANING_CHOICE.name)
+        val testMode = runCatching { LearningTestMode.valueOf(testModeName.orEmpty()) }
+            .getOrDefault(LearningTestMode.MEANING_CHOICE)
         return StudyPlan(
             dailyNewCount = mmkv.decodeInt(dailyNewCountKey, StudyPlan().dailyNewCount),
             dailyReviewCount = mmkv.decodeInt(dailyReviewCountKey, StudyPlan().dailyReviewCount),
-            testMode = LearningTestMode.MEANING_CHOICE,
+            testMode = testMode,
             wordOrderType = orderType
         )
     }
@@ -78,13 +80,5 @@ class StudyPlanDataSourceImpl @Inject constructor(
             mmkv.containsKey(dailyReviewCountKey) ||
             mmkv.containsKey(testModeKey) ||
             mmkv.containsKey(wordOrderTypeKey)
-    }
-}
-
-private fun StudyPlan.meaningChoiceOnly(): StudyPlan {
-    return if (testMode == LearningTestMode.MEANING_CHOICE) {
-        this
-    } else {
-        copy(testMode = LearningTestMode.MEANING_CHOICE)
     }
 }

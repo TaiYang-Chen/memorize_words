@@ -36,7 +36,12 @@ object CoreNetworkFactory {
             .apply {
                 if (config.enableBodyLogging) {
                     addInterceptor(
-                        HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+                        HttpLoggingInterceptor().apply {
+                            redactHeader("Authorization")
+                            redactHeader("Cookie")
+                            redactHeader("Set-Cookie")
+                            level = HttpLoggingInterceptor.Level.BODY
+                        }
                     )
                 }
                 applicationInterceptors.forEach(::addInterceptor)
