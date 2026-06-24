@@ -39,7 +39,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/feature_onboarding_retry" />
+                    android:backgroundTint="@color/feature_onboarding_action_blue"
+                    android:text="@string/feature_onboarding_retry"
+                    android:textColor="@android:color/white" />
 
                 <Button
                     android:id="@+id/btnDismissSelectionError"
@@ -47,7 +49,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     android:layout_weight="1"
-                    android:text="@string/feature_onboarding_dismiss" />
+                    android:backgroundTint="@color/feature_onboarding_goal_control_track"
+                    android:text="@string/feature_onboarding_dismiss"
+                    android:textColor="@color/feature_onboarding_action_blue" />
             </LinearLayout>
         </LinearLayout>
 
@@ -68,7 +72,10 @@
                 android:layout_height="wrap_content"
                 android:enabled="false"
                 android:minHeight="52dp"
-                android:text="@string/feature_onboarding_next_step" />
+                android:backgroundTint="@color/feature_onboarding_next_step_button_background_tint"
+                android:text="@string/feature_onboarding_next_step"
+                android:textColor="@android:color/white"
+                app:cornerRadius="@dimen/feature_onboarding_action_button_corner_radius" />
         </FrameLayout>
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -175,7 +182,7 @@
                     app:tabContentStart="0dp"
                     app:tabGravity="start"
                     app:tabIndicatorAnimationMode="linear"
-                    app:tabIndicatorColor="@color/feature_onboarding_select_tab_indicator"
+                    app:tabIndicator="@drawable/feature_onboarding_tab_indicator_rounded"
                     app:tabIndicatorFullWidth="false"
                     app:tabIndicatorHeight="3dp"
                     app:tabMinWidth="0dp"
@@ -226,7 +233,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
+                        android:backgroundTint="@color/feature_onboarding_action_blue"
                         android:text="@string/feature_onboarding_retry"
+                        android:textColor="@android:color/white"
                         android:visibility="gone" />
                 </LinearLayout>
 

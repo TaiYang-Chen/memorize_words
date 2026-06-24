@@ -6,10 +6,10 @@
 
 | 项 | 说明 | 源码 |
 |---|---|---|
-| Base URL | `http://10.130.56.105:8080/api/` | `data-sync/.../remoteapi/GlobalConfig.kt` |
+| Base URL | `http://10.212.143.105:8080/api/` | `data-sync/.../remoteapi/GlobalConfig.kt` |
 | 统一响应 | `ApiResponse<T> { data: T?, code: Int, message: String }` | `core-network/.../http/ApiResponse.kt` |
 | 分页响应 | `PageData<T> { items: List<T>, page: Int, size: Int, total: Long }` | `core-network/.../http/ApiResponse.kt` |
-| 鉴权 | 除 `auth/login`、`auth/register`、`auth/refresh`、`auth/sms/send-code` 外，默认添加 `Authorization: Bearer <token>` | `core-network/.../CoreNetworkRoutePolicy.kt` |
+| 鉴权 | 除 `auth/login`、`auth/register`、`auth/refresh`、`auth/sms/send-code`、`auth/email/send-code` 外，默认添加 `Authorization: Bearer <token>` | `core-network/.../CoreNetworkRoutePolicy.kt` |
 | 请求格式 | 普通接口为 JSON；头像和反馈图片为 `multipart/form-data` | 各 `*ApiService.kt` |
 
 源码归档说明：
@@ -25,15 +25,17 @@
 
 | 方法 | Path | 用途 | 鉴权 | 请求 | 响应 |
 |---|---|---|---|---|---|
-| `POST` | `auth/login` | 登录，支持密码、短信、OAuth 等方式 | 否 | `LoginRequest` | `ApiResponse<LoginResponseDto>` |
-| `POST` | `auth/register` | 手机号注册 | 否 | `RegisterRequest` | `ApiResponse<LoginResponseDto>` |
+| `POST` | `auth/login` | 登录，支持密码、短信、邮箱验证码、OAuth 等方式；`email_code` 只允许已注册邮箱登录 | 否 | `LoginRequest` | `ApiResponse<LoginResponseDto>` |
+| `POST` | `auth/register` | 邮箱注册 | 否 | `RegisterRequest` | `ApiResponse<LoginResponseDto>` |
 | `POST` | `auth/sms/send-code` | 发送短信验证码 | 否 | `SendSmsCodeRequest` | `ApiResponse<SendSmsCodeResponseDto>` |
+| `POST` | `auth/email/send-code` | 发送邮箱验证码；`scene=login` 仅已注册邮箱成功，`scene=register` 仅未注册邮箱成功，`scene=bind_email` 用于邮箱绑定/换绑 | 否 | `SendEmailCodeRequest` | `ApiResponse<SendSmsCodeResponseDto>` |
 | `POST` | `auth/refresh` | 刷新登录态 | 否 | `RefreshRequest` | `ApiResponse<LoginResponseDto>` |
 | `GET` | `me` | 获取当前用户资料 | 是 | 无 | `ApiResponse<ProfileDto>` |
 | `POST` | `auth/logout` | 退出登录 | 是 | 无 | `ApiResponse<Unit>` |
 | `POST` | `me/account/delete` | 删除账号 | 是 | 无 | `ApiResponse<Unit>` |
 | `POST` | `auth/change-password` | 修改密码 | 是 | `ChangePasswordRequest` | `ApiResponse<Unit>` |
 | `POST` | `auth/bind-social` | 绑定微信/QQ 等第三方账号 | 是 | `BindSocialRequest` | `ApiResponse<ProfileDto>` |
+| `POST` | `auth/bind-email` | 绑定或换绑邮箱 | 是 | `BindEmailRequest` | `ApiResponse<ProfileDto>` |
 | `POST` | `upload/avatar` | 上传头像 | 是 | multipart `file` | `ApiResponse<AvatarUploadDto>` |
 | `PATCH` | `me/profile` | 更新资料字段 | 是 | `Map<String, String>` | `ApiResponse<ProfileDto>` |
 
@@ -41,12 +43,14 @@
 
 | DTO | 字段 |
 |---|---|
-| `LoginRequest` | `loginMethod`, `emailOrPhone?`, `phone?`, `password?`, `smsCode?`, `oauthCode?`, `platform?`, `state?` |
-| `RegisterRequest` | `phone`, `password`, `registerMethod` |
+| `LoginRequest` | `loginMethod`, `emailOrPhone?`, `email?`, `phone?`, `password?`, `smsCode?`, `emailCode?`, `oauthCode?`, `platform?`, `state?` |
+| `RegisterRequest` | `email`, `emailCode`, `password`, `registerMethod` |
 | `SendSmsCodeRequest` | `phone`, `scene` |
+| `SendEmailCodeRequest` | `email`, `scene` |
 | `RefreshRequest` | `refreshToken` |
 | `ChangePasswordRequest` | `oldPassword`, `newPassword` |
 | `BindSocialRequest` | `platform`, `oauthCode`, `state?` |
+| `BindEmailRequest` | `email`, `emailCode` |
 | `LoginResponseDto` | `token`, `refreshToken`, `tokenType`, `user`, `expiresIn`, `refreshTokenExpiresIn`, `onboarding?` |
 | `UserDto` | `id`, `email?`, `nickname?`, `gender?`, `avatarUrl?`, `phone?`, `qq?`, `wechat?`, `emailVerified` |
 | `ProfileDto` | `userId`, `email?`, `nickname?`, `gender?`, `avatarUrl?`, `phone?`, `qq?`, `wechat?`, `emailVerified` |

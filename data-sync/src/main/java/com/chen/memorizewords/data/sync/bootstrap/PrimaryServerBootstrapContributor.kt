@@ -1,5 +1,6 @@
 package com.chen.memorizewords.data.sync.bootstrap
 
+import android.util.Log
 import com.chen.memorizewords.core.common.calendar.CheckInConfigDataSource
 import com.chen.memorizewords.data.sync.remote.datasync.RemoteUserSyncDataSource
 import com.chen.memorizewords.data.sync.remote.learningsync.RemoteLearningSyncDataSource
@@ -23,6 +24,7 @@ import com.chen.memorizewords.domain.wordbook.model.study.progress.wordbook.Word
 import com.chen.memorizewords.domain.wordbook.model.WordBook
 import com.chen.memorizewords.domain.wordbook.repository.CurrentWordBookLocalStatePort
 import com.chen.memorizewords.domain.wordbook.repository.StudyPlanLocalStatePort
+import com.chen.memorizewords.domain.wordbook.repository.WordBookContentReadinessPort
 import com.chen.memorizewords.domain.wordbook.repository.WordBookLearningStateSnapshot
 import com.chen.memorizewords.domain.wordbook.repository.WordBookSnapshotLocalStatePort
 import com.chen.memorizewords.domain.wordbook.repository.onboarding.OnboardingRepository
@@ -44,117 +46,209 @@ class PrimaryServerBootstrapContributor @Inject constructor(
     private val wordBookSnapshotLocalStatePort: WordBookSnapshotLocalStatePort,
     private val currentWordBookLocalStatePort: CurrentWordBookLocalStatePort,
     private val remoteWordBookRepository: RemoteWordBookRepository,
-    private val checkInConfigDataSource: CheckInConfigDataSource
+    private val wordBookContentReadinessPort: WordBookContentReadinessPort,
+    private val checkInConfigDataSource: CheckInConfigDataSource,
+    private val errorLogger: PostLoginBootstrapErrorLogger
 ) : ServerBootstrapContributor {
 
     override val bootstrapKey: String = "primary_server_snapshot"
 
     override suspend fun bootstrapFromServer(): Result<Unit> = runCatching {
-        val onboardingSnapshot = remoteUserSyncDataSource.getOnboardingState().getOrThrow()
-        onboardingRepository.replaceCurrentSnapshot(onboardingSnapshot)
+        val onboardingSnapshot = bootstrapStep("getOnboardingState") {
+            remoteUserSyncDataSource.getOnboardingState().getOrThrow()
+        }
+        bootstrapStep("replaceOnboardingSnapshot") {
+            onboardingRepository.replaceCurrentSnapshot(onboardingSnapshot)
+        }
 
-        studyPlanLocalStatePort.overwriteFromRemote(
+        val studyPlan = bootstrapStep("getStudyPlan") {
             remoteUserSyncDataSource.getStudyPlan().getOrThrow()
-        )
-
-        remoteLearningSyncDataSource.getPracticeSettings().getOrThrow()?.let {
-            practiceSettingsLocalStatePort.overwriteFromRemote(it)
-        } ?: practiceSettingsLocalStatePort.clearLocalState()
-
-        remoteLearningSyncDataSource.getFloatingSettings().getOrThrow()?.let {
-            floatingSettingsLocalStatePort.overwriteFromRemote(it)
-        } ?: floatingSettingsLocalStatePort.clearLocalState()
-
-        remoteUserSyncDataSource.getCheckInConfig().getOrThrow()?.let { config ->
-            checkInConfigDataSource.saveDayBoundaryOffsetMinutes(config.dayBoundaryOffsetMinutes)
-            checkInConfigDataSource.saveTimezoneId(config.timezoneId)
         }
-        remoteUserSyncDataSource.getCheckInStatus().getOrThrow()?.let { status ->
-            checkInConfigDataSource.saveCachedMakeupCardBalance(status.makeupCardBalance)
-            checkInConfigDataSource.saveLastCheckInSyncAt(System.currentTimeMillis())
+        bootstrapStep("overwriteStudyPlan") {
+            studyPlanLocalStatePort.overwriteFromRemote(studyPlan)
         }
 
-        val remoteBooks = remoteUserSyncDataSource.getMyWordBooks().getOrThrow()
+        val practiceSettings = bootstrapStep("getPracticeSettings") {
+            remoteLearningSyncDataSource.getPracticeSettings().getOrThrow()
+        }
+        bootstrapStep("overwritePracticeSettings") {
+            practiceSettings?.let {
+                practiceSettingsLocalStatePort.overwriteFromRemote(it)
+            } ?: practiceSettingsLocalStatePort.clearLocalState()
+        }
+
+        val floatingSettings = bootstrapStep("getFloatingSettings") {
+            remoteLearningSyncDataSource.getFloatingSettings().getOrThrow()
+        }
+        bootstrapStep("overwriteFloatingSettings") {
+            floatingSettings?.let {
+                floatingSettingsLocalStatePort.overwriteFromRemote(it)
+            } ?: floatingSettingsLocalStatePort.clearLocalState()
+        }
+
+        val checkInConfig = bootstrapStep("getCheckInConfig") {
+            remoteUserSyncDataSource.getCheckInConfig().getOrThrow()
+        }
+        bootstrapStep("overwriteCheckInConfig") {
+            checkInConfig?.let { config ->
+                checkInConfigDataSource.saveDayBoundaryOffsetMinutes(config.dayBoundaryOffsetMinutes)
+                checkInConfigDataSource.saveTimezoneId(config.timezoneId)
+            }
+        }
+
+        val checkInStatus = bootstrapStep("getCheckInStatus") {
+            remoteUserSyncDataSource.getCheckInStatus().getOrThrow()
+        }
+        bootstrapStep("overwriteCheckInStatus") {
+            checkInStatus?.let { status ->
+                checkInConfigDataSource.saveCachedMakeupCardBalance(status.makeupCardBalance)
+                checkInConfigDataSource.saveLastCheckInSyncAt(System.currentTimeMillis())
+            }
+        }
+
+        val remoteBooks = bootstrapStep("getMyWordBooks") {
+            remoteUserSyncDataSource.getMyWordBooks().getOrThrow()
+        }
         val selectedBookId = remoteBooks.firstOrNull { it.isSelected }?.id
             ?: onboardingSnapshot?.selectedWordBookId
 
         remoteBooks.forEach { dto ->
-            remoteWordBookRepository.downloadBook(
-                book = dto.toDomain(),
-                forceRefresh = false,
-                runInForeground = false
-            )
-        }
-        val restoredSelectedBookId = restoreCurrentWordBookSelection(
-            selectedBookId = selectedBookId,
-            remoteBooks = remoteBooks
-        )
-
-        remoteBooks.forEach { book ->
-            val states = loadPagedSnapshot { page, count ->
-                remoteUserSyncDataSource.getWordStates(
-                    bookId = book.id,
-                    page = page,
-                    count = count
+            bootstrapStep("ensureBookContentReady(bookId=${dto.id})") {
+                wordBookContentReadinessPort.ensureContentReady(
+                    book = dto.toDomain(),
+                    forceRefresh = false
                 )
             }
-            studySnapshotLocalStatePort.overwriteLearningStatesForBookFromRemote(
-                book.id,
-                states.map { it.toDomain(book.id) }
-            )
-            wordBookSnapshotLocalStatePort.overwriteLearningStatesForBookFromRemote(
-                book.id,
-                states.map { it.toSnapshot(book.id) }
+        }
+        val restoredSelectedBookId = bootstrapStep("restoreCurrentWordBookSelection") {
+            restoreCurrentWordBookSelection(
+                selectedBookId = selectedBookId,
+                remoteBooks = remoteBooks
             )
         }
 
-        wordBookSnapshotLocalStatePort.overwriteProgressFromRemote(
-            remoteUserSyncDataSource.getWordBookProgressList().getOrThrow().map { it.toDomain() }
-        )
+        remoteBooks.forEach { book ->
+            val states = bootstrapStep("getWordStates(bookId=${book.id})") {
+                loadPagedSnapshot { page, count ->
+                    remoteUserSyncDataSource.getWordStates(
+                        bookId = book.id,
+                        page = page,
+                        count = count
+                    )
+                }
+            }
+            bootstrapStep("overwriteWordStates(bookId=${book.id})") {
+                studySnapshotLocalStatePort.overwriteLearningStatesForBookFromRemote(
+                    book.id,
+                    states.map { it.toDomain(book.id) }
+                )
+                wordBookSnapshotLocalStatePort.overwriteLearningStatesForBookFromRemote(
+                    book.id,
+                    states.map { it.toSnapshot(book.id) }
+                )
+            }
+        }
 
-        studySnapshotLocalStatePort.overwriteFavoritesFromRemote(
+        val wordBookProgressList = bootstrapStep("getWordBookProgressList") {
+            remoteUserSyncDataSource.getWordBookProgressList().getOrThrow()
+        }
+        bootstrapStep("overwriteWordBookProgress") {
+            wordBookSnapshotLocalStatePort.overwriteProgressFromRemote(
+                wordBookProgressList.map { it.toDomain() }
+            )
+        }
+
+        val favorites = bootstrapStep("getFavorites") {
             loadPagedSnapshot { page, count ->
                 remoteUserSyncDataSource.getFavorites(page = page, count = count)
-            }.map { it.toDomain() }
-        )
-        studySnapshotLocalStatePort.overwriteStudyRecordsFromRemote(
+            }
+        }
+        bootstrapStep("overwriteFavorites") {
+            studySnapshotLocalStatePort.overwriteFavoritesFromRemote(favorites.map { it.toDomain() })
+        }
+        val studyRecords = bootstrapStep("getStudyRecords") {
             loadPagedSnapshot { page, count ->
                 remoteUserSyncDataSource.getStudyRecords(page = page, count = count)
-            }.map { it.toDomain() }
-        )
-        studySnapshotLocalStatePort.overwriteDailyDurationsFromRemote(
+            }
+        }
+        bootstrapStep("overwriteStudyRecords") {
+            studySnapshotLocalStatePort.overwriteStudyRecordsFromRemote(
+                studyRecords.map { it.toDomain() }
+            )
+        }
+        val dailyStudyDurations = bootstrapStep("getDailyStudyDurations") {
             loadPagedSnapshot { page, count ->
                 remoteUserSyncDataSource.getDailyStudyDurations(page = page, count = count)
             }
-                .map { it.toSnapshot() }
-        )
-        studySnapshotLocalStatePort.overwriteCheckInRecordsFromRemote(
+        }
+        bootstrapStep("overwriteDailyStudyDurations") {
+            studySnapshotLocalStatePort.overwriteDailyDurationsFromRemote(
+                dailyStudyDurations.map { it.toSnapshot() }
+            )
+        }
+        val checkInRecords = bootstrapStep("getCheckInRecords") {
             loadPagedSnapshot { page, count ->
                 remoteUserSyncDataSource.getCheckInRecords(page = page, count = count)
-            }.map { it.toDomain() }
-        )
+            }
+        }
+        bootstrapStep("overwriteCheckInRecords") {
+            studySnapshotLocalStatePort.overwriteCheckInRecordsFromRemote(
+                checkInRecords.map { it.toDomain() }
+            )
+        }
 
-        practiceSnapshotLocalStatePort.overwriteDurationsFromRemote(
+        val practiceDurations = bootstrapStep("getPracticeDurations") {
             loadPagedSnapshot { page, count ->
                 remoteLearningSyncDataSource.getPracticeDurations(page = page, count = count)
             }
-                .map { it.toSnapshot() }
-        )
-        practiceSnapshotLocalStatePort.overwriteSessionsFromRemote(
+        }
+        bootstrapStep("overwritePracticeDurations") {
+            practiceSnapshotLocalStatePort.overwriteDurationsFromRemote(
+                practiceDurations.map { it.toSnapshot() }
+            )
+        }
+        val practiceSessions = bootstrapStep("getPracticeSessions") {
             loadPagedSnapshot { page, count ->
                 remoteLearningSyncDataSource.getPracticeSessions(page = page, count = count)
             }
-                .map { it.toDomain() }
-        )
+        }
+        bootstrapStep("overwritePracticeSessions") {
+            practiceSnapshotLocalStatePort.overwriteSessionsFromRemote(
+                practiceSessions.map { it.toDomain() }
+            )
+        }
 
-        floatingSnapshotLocalStatePort.overwriteDisplayRecordsFromRemote(
+        val floatingDisplayRecords = bootstrapStep("getFloatingDisplayRecords") {
             loadPagedSnapshot { page, count ->
                 remoteLearningSyncDataSource.getFloatingDisplayRecords(page = page, count = count)
             }
-                .map { it.toDomain() }
-        )
+        }
+        bootstrapStep("overwriteFloatingDisplayRecords") {
+            floatingSnapshotLocalStatePort.overwriteDisplayRecordsFromRemote(
+                floatingDisplayRecords.map { it.toDomain() }
+            )
+        }
 
-        currentWordBookLocalStatePort.overwriteFromRemote(restoredSelectedBookId)
+        bootstrapStep("overwriteCurrentWordBook") {
+            currentWordBookLocalStatePort.overwriteFromRemote(restoredSelectedBookId)
+        }
+    }
+
+    private suspend fun <T> bootstrapStep(
+        name: String,
+        block: suspend () -> T
+    ): T {
+        return try {
+            block()
+        } catch (throwable: Throwable) {
+            Log.e(TAG, "Post-login bootstrap step failed: $name", throwable)
+            errorLogger.logFailure(
+                source = "PrimaryServerBootstrapContributor",
+                stepName = name,
+                throwable = throwable
+            )
+            throw ServerBootstrapStepException(stepName = name, cause = throwable)
+        }
     }
 
     private suspend fun restoreCurrentWordBookSelection(
@@ -168,11 +262,12 @@ class PrimaryServerBootstrapContributor @Inject constructor(
 
         val selectedBook = remoteWordBookRepository.getShopBookById(safeSelectedBookId)
             ?: return null
-        remoteWordBookRepository.downloadBook(
-            book = selectedBook,
-            forceRefresh = false,
-            runInForeground = false
-        )
+        bootstrapStep("ensureBookContentReady(bookId=$safeSelectedBookId)") {
+            wordBookContentReadinessPort.ensureContentReady(
+                book = selectedBook,
+                forceRefresh = false
+            )
+        }
         return safeSelectedBookId
     }
 
@@ -196,6 +291,16 @@ class PrimaryServerBootstrapContributor @Inject constructor(
         return items
     }
 }
+
+class ServerBootstrapStepException(
+    val stepName: String,
+    cause: Throwable
+) : Exception(
+    "Post-login bootstrap step failed: $stepName: ${cause.message ?: cause::class.java.simpleName}",
+    cause
+)
+
+private const val TAG = "ServerBootstrap"
 
 private fun com.chen.memorizewords.data.sync.remoteapi.dto.wordbook.WordBookDto.toDomain(): WordBook {
     return WordBook(

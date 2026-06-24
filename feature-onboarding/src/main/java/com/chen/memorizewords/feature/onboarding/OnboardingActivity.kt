@@ -2,7 +2,9 @@ package com.chen.memorizewords.feature.onboarding
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -71,6 +73,7 @@ class OnboardingActivity : BaseVmDbActivity<OnboardingViewModel, ActivityOnboard
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+        configureSystemBars()
         if (savedInstanceState != null) return
         val navHost = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment_activity_onboarding) as? NavHostFragment
@@ -93,6 +96,11 @@ class OnboardingActivity : BaseVmDbActivity<OnboardingViewModel, ActivityOnboard
     }
 
     override fun navControllerId() = R.id.nav_host_fragment_activity_onboarding
+
+    private fun configureSystemBars() {
+        window.statusBarColor = Color.WHITE
+        WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = true
+    }
 
     private fun navigateToDestination(destinationId: Int) {
         if (hasRoutedAway) return

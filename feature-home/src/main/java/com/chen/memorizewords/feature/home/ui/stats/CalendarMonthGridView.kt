@@ -14,7 +14,7 @@ class CalendarMonthGridView @JvmOverloads constructor(
 ) : LinearLayout(context, attrs) {
 
     private val cellHolders = mutableListOf<DayCellHolder>()
-    private val spacingPx = dp(4)
+    private val spacingPx = dp(3)
 
     init {
         orientation = VERTICAL
@@ -85,15 +85,15 @@ class CalendarMonthGridView @JvmOverloads constructor(
         onDayClick: (CalendarDayCellUi) -> Unit
     ) {
         holder.dayText.text = item.dayText
-        holder.dayText.alpha = if (item.isCurrentMonth) 1f else 0.35f
+        holder.dayText.alpha = if (item.isCurrentMonth) 1f else 0.3f
         holder.dayText.setTextColor(
             when (item.status) {
-                CalendarStudyStatus.NONE -> 0xFF334155.toInt()
+                CalendarStudyStatus.NONE -> 0xFF0F172A.toInt()
                 CalendarStudyStatus.CHECKED_IN -> 0xFF0F172A.toInt()
                 CalendarStudyStatus.STUDIED -> 0xFF0F172A.toInt()
                 CalendarStudyStatus.NEW_DONE -> 0xFF0F172A.toInt()
                 CalendarStudyStatus.REVIEW_DONE -> 0xFF0F172A.toInt()
-                CalendarStudyStatus.ALL_DONE -> 0xFF0F172A.toInt()
+                CalendarStudyStatus.ALL_DONE -> 0xFFFFFFFF.toInt()
             }
         )
         holder.dayText.setBackgroundResource(
@@ -141,7 +141,7 @@ class CalendarMonthGridView @JvmOverloads constructor(
     )
 
     companion object {
-        private const val ROW_COUNT = 6
+        private const val ROW_COUNT = 5
         private const val COLUMN_COUNT = 7
         private const val CELL_COUNT = ROW_COUNT * COLUMN_COUNT
     }

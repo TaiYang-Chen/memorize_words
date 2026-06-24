@@ -19,7 +19,7 @@ internal data class StatsDateRange(
 internal class StatsDateCalculator {
 
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    private val monthTitleFormat = SimpleDateFormat("yyyy.MM", Locale.getDefault())
+    private val monthTitleFormat = SimpleDateFormat("yyyy年 M月", Locale.getDefault())
     private val monthKeyFormat = SimpleDateFormat("yyyy-MM", Locale.getDefault())
 
     fun formatMonthTitle(date: Date): String {
@@ -79,7 +79,7 @@ internal class StatsDateCalculator {
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
         }
-        val offset = (firstDay.get(Calendar.DAY_OF_WEEK) + 5) % 7
+        val offset = firstDay.get(Calendar.DAY_OF_WEEK) - Calendar.SUNDAY
         return firstDay.apply { add(Calendar.DAY_OF_MONTH, -offset) }
     }
 

@@ -12,7 +12,7 @@ class StartupOrchestrator @Inject constructor(
     private val floatingAutoStartReader: StartupFloatingAutoStartReader,
     val sessionKickoutNotifier: SessionKickoutNotifier
 ) {
-    fun resolveLaunchDestinationFast(): StartupLaunchDestination {
+    suspend fun resolveLaunchDestinationLocal(): StartupLaunchDestination {
         return if (authStateProvider.isAuthenticated()) {
             resolveAuthenticatedDestination()
         } else {
@@ -41,7 +41,7 @@ class StartupOrchestrator @Inject constructor(
 
     suspend fun warmUpSessionStateIfNeeded(hasNetwork: Boolean) {
         if (!hasNetwork || !authStateProvider.isAuthenticated()) return
-        tokenProvider.resolveAccessTokenState()
+        tokenProvider.resolveAccessTokenState(notifyKickoutOnInvalidSession = false)
     }
 
     suspend fun shouldAutoStartFloating(canDrawOverlays: Boolean): Boolean {
@@ -50,13 +50,17 @@ class StartupOrchestrator @Inject constructor(
         return floatingAutoStartReader.isAutoStartEnabled()
     }
 
-    private fun resolveAuthenticatedDestination(): StartupLaunchDestination {
-        return StartupLaunchDestination.HOME
+    private suspend fun resolveAuthenticatedDestination(): StartupLaunchDestination {
+        return if (onboardingStateReader.isOnboardingCompleted()) {
+            StartupLaunchDestination.HOME
+        } else {
+            StartupLaunchDestination.ONBOARDING
+        }
     }
 }
 
 interface StartupOnboardingStateReader {
-    fun isOnboardingCompleted(): Boolean
+    suspend fun isOnboardingCompleted(): Boolean
 }
 
 interface StartupFloatingAutoStartReader {

@@ -296,7 +296,7 @@
                                     android:padding="@dimen/feature_onboarding_goal_button_padding"
                                     android:scaleType="centerInside"
                                     android:src="@drawable/feature_onboarding_ic_add"
-                                    app:tint="@color/feature_onboarding_goal_button_accent_icon" />
+                                    app:tint="@color/feature_onboarding_goal_button_subtle_icon" />
                             </LinearLayout>
                         </LinearLayout>
 
@@ -392,7 +392,7 @@
                                     android:padding="@dimen/feature_onboarding_goal_button_padding"
                                     android:scaleType="centerInside"
                                     android:src="@drawable/feature_onboarding_ic_add"
-                                    app:tint="@color/feature_onboarding_goal_button_accent_icon" />
+                                    app:tint="@color/feature_onboarding_goal_button_subtle_icon" />
                             </LinearLayout>
                         </LinearLayout>
 
@@ -602,13 +602,17 @@
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
+
         <Button
             android:id="@+id/btnComplete"
+            android:enabled="false"
+            android:minHeight="52dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/feature_onboarding_action_blue"
             android:text="@string/feature_onboarding_complete"
             android:textColor="@android:color/white"
+            app:cornerRadius="@dimen/feature_onboarding_action_button_corner_radius"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:layout_editor_absoluteX="24dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>

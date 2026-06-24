@@ -6,7 +6,6 @@ import android.os.Bundle
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
-import com.chen.memorizewords.core.navigation.OnboardingGuardDelegate
 import com.chen.memorizewords.core.ui.activity.BaseVmDbActivity
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.feature.feedback.databinding.ModuleFeedbackActivityFeedbackBinding
@@ -22,9 +21,6 @@ import javax.inject.Singleton
 @AndroidEntryPoint
 class FeedbackActivity : BaseVmDbActivity<BaseViewModel, ModuleFeedbackActivityFeedbackBinding>() {
 
-    @Inject
-    lateinit var onboardingGuardDelegate: OnboardingGuardDelegate
-
     override val viewModel: BaseViewModel by lazy {
         ViewModelProvider(this)[BaseViewModel::class.java]
     }
@@ -33,7 +29,6 @@ class FeedbackActivity : BaseVmDbActivity<BaseViewModel, ModuleFeedbackActivityF
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        if (onboardingGuardDelegate.guard(this)) return
         val navHostFrag = supportFragmentManager.findFragmentById(
             R.id.nav_host_fragment_activity_wordbook
         ) as NavHostFragment
@@ -43,16 +38,10 @@ class FeedbackActivity : BaseVmDbActivity<BaseViewModel, ModuleFeedbackActivityF
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        if (onboardingGuardDelegate.guard(this)) return
         val navHostFrag = supportFragmentManager.findFragmentById(
             R.id.nav_host_fragment_activity_wordbook
         ) as NavHostFragment
         navHostFrag.navController.handleDeepLink(intent)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        onboardingGuardDelegate.guard(this)
     }
 }
 

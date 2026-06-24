@@ -61,16 +61,16 @@ class StudyPlanDataSourceImpl @Inject constructor(
         if (!hasStoredPlan()) {
             return null
         }
-        val modeName = mmkv.decodeString(testModeKey, LearningTestMode.MEANING_CHOICE.name)
-        val mode = runCatching { LearningTestMode.valueOf(modeName.orEmpty()) }
-            .getOrDefault(LearningTestMode.MEANING_CHOICE)
         val orderTypeName = mmkv.decodeString(wordOrderTypeKey, WordOrderType.RANDOM.name)
         val orderType = runCatching { WordOrderType.valueOf(orderTypeName.orEmpty()) }
             .getOrDefault(WordOrderType.RANDOM)
+        val testModeName = mmkv.decodeString(testModeKey, LearningTestMode.MEANING_CHOICE.name)
+        val testMode = runCatching { LearningTestMode.valueOf(testModeName.orEmpty()) }
+            .getOrDefault(LearningTestMode.MEANING_CHOICE)
         return StudyPlan(
             dailyNewCount = mmkv.decodeInt(dailyNewCountKey, StudyPlan().dailyNewCount),
             dailyReviewCount = mmkv.decodeInt(dailyReviewCountKey, StudyPlan().dailyReviewCount),
-            testMode = mode,
+            testMode = testMode,
             wordOrderType = orderType
         )
     }

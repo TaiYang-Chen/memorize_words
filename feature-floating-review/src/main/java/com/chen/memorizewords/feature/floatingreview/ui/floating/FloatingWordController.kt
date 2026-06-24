@@ -4,12 +4,16 @@ import com.chen.memorizewords.domain.floating.model.FloatingDockState
 import com.chen.memorizewords.domain.floating.service.FloatingReviewFacade
 import com.chen.memorizewords.domain.floating.service.FloatingWordCardContent
 import com.chen.memorizewords.domain.floating.model.FloatingWordSettings
+import com.chen.memorizewords.domain.study.usecase.word.study.IsFavoriteUseCase
+import com.chen.memorizewords.domain.study.usecase.word.study.ToggleFavoriteUseCase
 import com.chen.memorizewords.domain.word.model.word.Word
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 
 class FloatingWordController @Inject constructor(
-    private val floatingReviewFacade: FloatingReviewFacade
+    private val floatingReviewFacade: FloatingReviewFacade,
+    private val isFavoriteUseCase: IsFavoriteUseCase,
+    private val toggleFavoriteUseCase: ToggleFavoriteUseCase
 ) {
 
     fun observeSettings(): Flow<FloatingWordSettings> = floatingReviewFacade.observeSettings()
@@ -31,4 +35,10 @@ class FloatingWordController @Inject constructor(
         word: Word,
         settings: FloatingWordSettings
     ): FloatingWordCardContent = floatingReviewFacade.loadCardContent(word, settings)
+
+    suspend fun isFavorite(wordId: Long): Boolean = isFavoriteUseCase(wordId)
+
+    suspend fun toggleFavorite(word: Word) {
+        toggleFavoriteUseCase(word)
+    }
 }

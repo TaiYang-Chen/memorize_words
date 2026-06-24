@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="feature_home_practice_blue">#188AF5</color>
+    <color name="feature_home_practice_orange">#FF7A00</color>
+    <color name="feature_home_practice_green">#19C970</color>
+    <color name="feature_home_practice_purple">#8B5CF6</color>
+</resources>

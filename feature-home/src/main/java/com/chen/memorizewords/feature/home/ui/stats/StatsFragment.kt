@@ -1,21 +1,23 @@
 package com.chen.memorizewords.feature.home.ui.stats
 
+import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.view.HapticFeedbackConstants
-import android.view.LayoutInflater
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.viewpager2.widget.ViewPager2
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.feature.home.R
 import com.chen.memorizewords.feature.home.databinding.ModuleHomeFragmentStatsBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlin.math.abs
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -25,222 +27,296 @@ class StatsFragment : BaseFragment<StatsViewModel, ModuleHomeFragmentStatsBindin
         ViewModelProvider(this)[StatsViewModel::class.java]
     }
 
-    private val monthPagerAdapter by lazy {
-        CalendarMonthPagerAdapter { day ->
-            onCalendarDayClicked(day)
-        }
-    }
-    private var canGoNextMonth: Boolean = false
-    private var pagerReady: Boolean = false
-    private var selectedPagePosition: Int = 1
-    private val pagerCallback = object : ViewPager2.OnPageChangeCallback() {
-        override fun onPageSelected(position: Int) {
-            selectedPagePosition = position
-        }
-
-        override fun onPageScrollStateChanged(state: Int) {
-            if (!pagerReady) return
-            if (state != ViewPager2.SCROLL_STATE_IDLE) return
-            when (selectedPagePosition) {
-                0 -> {
-                    performLightHaptic()
-                    viewModel.shiftToPreviousMonth()
-                    resetPagerToCenter()
-                }
-
-                2 -> {
-                    val moved = viewModel.shiftToNextMonth()
-                    if (moved) {
-                        performLightHaptic()
-                    } else {
-                        showMonthBoundaryFeedback()
-                    }
-                    resetPagerToCenter()
-                }
-            }
-        }
-    }
-
     override fun initView(savedInstanceState: Bundle?) {
         databind.viewModel = viewModel
         databind.lifecycleOwner = viewLifecycleOwner
-        setupCalendarPager()
-        setupMonthActions()
+        databind.statsPreviousMonthButton.setOnClickListener {
+            viewModel.shiftToPreviousMonth()
+        }
+        databind.statsNextMonthButton.setOnClickListener {
+            if (!viewModel.shiftToNextMonth()) {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.home_calendar_future_disabled),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+        databind.statsBackToday.setOnClickListener {
+            viewModel.backToToday()
+        }
+        databind.statsMonthHeatmapView.setOnDayClickListener { day ->
+            viewModel.selectDate(day.date)
+            showDayDetail(day.date)
+        }
     }
 
     override fun createObserver() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModel.monthTitle.collect { databind.tvMonthValue.text = it }
+                    viewModel.trendPoints.collect { points ->
+                        databind.trendChartView.submitPoints(points)
+                    }
                 }
                 launch {
-                    viewModel.calendarPagerPages.collect {
-                        monthPagerAdapter.submitPages(it)
-                        if (!pagerReady && it.size > 1) {
-                            pagerReady = true
-                            selectedPagePosition = 1
-                            databind.vpCalendar.setCurrentItem(1, false)
-                        } else if (pagerReady && it.size > 1 && databind.vpCalendar.currentItem != 1) {
-                            databind.vpCalendar.setCurrentItem(1, false)
+                    viewModel.timeDistribution.collect { distribution ->
+                        databind.donutChartView.submitItems(distribution)
+                        renderDistributionLegend(distribution)
+                    }
+                }
+                launch {
+                    viewModel.achievements.collect(::renderAchievements)
+                }
+                launch {
+                    viewModel.reportRows.collect(::renderReportRows)
+                }
+                launch {
+                    viewModel.overviewCards.collect(::renderOverviewCards)
+                }
+                launch {
+                    viewModel.monthTitle.collect { title ->
+                        databind.statsMonthTitle.text = title
+                    }
+                }
+                launch {
+                    viewModel.canGoNextMonth.collect { canGoNext ->
+                        databind.statsNextMonthButton.isEnabled = canGoNext
+                        databind.statsNextMonthButton.alpha = if (canGoNext) 1f else 0.35f
+                    }
+                }
+                launch {
+                    viewModel.showBackToday.collect { showBackToday ->
+                        databind.statsBackToday.visibility = if (showBackToday) {
+                            View.VISIBLE
+                        } else {
+                            View.GONE
                         }
                     }
                 }
                 launch {
-                    viewModel.canGoNextMonth.collect {
-                        canGoNextMonth = it
-                        databind.btnNextMonth.isEnabled = it
-                        databind.btnNextMonth.alpha = if (it) 1f else 0.45f
-                    }
-                }
-                launch {
-                    viewModel.showBackToday.collect {
-                        databind.btnBackToday.visibility = if (it) View.VISIBLE else View.GONE
-                    }
-                }
-                launch {
-                    viewModel.totalStudyDaysText.collect {
-                        databind.tvAchievementDays.text = it
-                        databind.tvDescription.text = "你已与词相伴 $it 余日，语言在你身上，缓慢生长。"
-                    }
-                }
-                launch {
-                    viewModel.totalStudyDurationText.collect {
-                        databind.tvAchievementDuration.text = it
-                    }
-                }
-                launch {
-                    viewModel.totalStudyWordsText.collect { databind.tvAchievementWords.text = it }
-                }
-                launch {
-                    viewModel.weekWordBars.collect {
-                        renderBars(
-                            databind.llWeekWordBars,
-                            it,
-                            R.drawable.feature_home_stats_bar_word
-                        )
-                    }
-                }
-                launch {
-                    viewModel.weekDurationBars.collect {
-                        renderBars(
-                            databind.llWeekDurationBars,
-                            it,
-                            R.drawable.feature_home_stats_bar_duration
-                        )
-                    }
-                }
-                launch {
-                    viewModel.wordFilter.collect { filter ->
-                        databind.btnFilterAll.isSelected = filter == WeeklyWordFilter.ALL
-                        databind.btnFilterNew.isSelected = filter == WeeklyWordFilter.NEW
-                        databind.btnFilterReview.isSelected = filter == WeeklyWordFilter.REVIEW
+                    viewModel.calendarPagerPages.collect { pages ->
+                        databind.statsMonthHeatmapView.submitCells(pages.getOrNull(CURRENT_MONTH_PAGE_INDEX)?.cells.orEmpty())
                     }
                 }
             }
         }
     }
 
-    override fun onDestroyView() {
-        databind.vpCalendar.unregisterOnPageChangeCallback(pagerCallback)
-        super.onDestroyView()
+    private fun showDayDetail(date: String) {
+        val fragmentManager = parentFragmentManager
+        if (fragmentManager.findFragmentByTag(StatsDayDetailBottomSheetDialog.TAG) != null) {
+            return
+        }
+        StatsDayDetailBottomSheetDialog
+            .newInstance(date)
+            .show(fragmentManager, StatsDayDetailBottomSheetDialog.TAG)
     }
 
-    private fun setupCalendarPager() {
-        databind.vpCalendar.apply {
-            adapter = monthPagerAdapter
-            offscreenPageLimit = 1
-            registerOnPageChangeCallback(pagerCallback)
-            setPageTransformer { page, position ->
-                page.alpha = 0.85f + (1f - abs(position)) * 0.15f
+    private fun renderDistributionLegend(items: List<StatsTimeDistributionUi>) {
+        databind.llDistributionLegend.removeAllViews()
+        items.forEach { item ->
+            databind.llDistributionLegend.addView(createDistributionLegendRow(item))
+        }
+    }
+
+    private fun createDistributionLegendRow(item: StatsTimeDistributionUi): View {
+        return LinearLayout(requireContext()).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                0,
+                1f
+            )
+            gravity = Gravity.CENTER_VERTICAL
+            orientation = LinearLayout.HORIZONTAL
+
+            addView(View(context).apply {
+                layoutParams = LinearLayout.LayoutParams(dp(6), dp(6)).apply {
+                    marginEnd = dp(7)
+                }
+                background = ovalDrawable(item.color)
+            })
+            addView(TextView(context).apply {
+                layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
+                text = item.label
+                setTextColor(0xFF39465F.toInt())
+                textSize = 10f
+                typeface = Typeface.DEFAULT_BOLD
+                includeFontPadding = false
+                maxLines = 1
+            })
+            addView(TextView(context).apply {
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                text = "${item.percent.coerceAtLeast(0)}%"
+                setTextColor(0xFF071436.toInt())
+                textSize = 11f
+                typeface = Typeface.DEFAULT_BOLD
+                includeFontPadding = false
+            })
+        }
+    }
+
+    private fun renderAchievements(achievements: List<StatsAchievementUi>) {
+        databind.llAchievements.removeAllViews()
+        achievements.take(4).forEach { achievement ->
+            databind.llAchievements.addView(createAchievementView(achievement))
+        }
+    }
+
+    private fun createAchievementView(achievement: StatsAchievementUi): View {
+        return LinearLayout(requireContext()).apply {
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f)
+            gravity = Gravity.CENTER_VERTICAL
+            orientation = LinearLayout.HORIZONTAL
+
+            addView(ImageView(context).apply {
+                layoutParams = LinearLayout.LayoutParams(dp(34), dp(34)).apply {
+                    marginEnd = dp(8)
+                }
+                setImageResource(if (achievement.achieved) achievement.iconResId else R.drawable.feature_home_ic_achievement_locked)
+                alpha = if (achievement.achieved) 1f else 0.9f
+                contentDescription = null
+            })
+            addView(LinearLayout(context).apply {
+                layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
+                orientation = LinearLayout.VERTICAL
+
+                addView(TextView(context).apply {
+                    layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                    text = achievement.title
+                    setTextColor(0xFF071436.toInt())
+                    textSize = 10f
+                    typeface = Typeface.DEFAULT_BOLD
+                    maxLines = 1
+                })
+                addView(TextView(context).apply {
+                    layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                        topMargin = dp(2)
+                    }
+                    text = achievement.subtitle
+                    setTextColor(0xFF8190A4.toInt())
+                    textSize = 8f
+                    maxLines = 1
+                })
+            })
+        }
+    }
+
+    private fun renderReportRows(rows: List<StatsReportRowUi>) {
+        databind.llReportRows.removeAllViews()
+        rows.take(4).forEach { row ->
+            databind.llReportRows.addView(createReportRow(row))
+        }
+    }
+
+    private fun renderOverviewCards(cards: List<StatsOverviewCardUi>) {
+        bindOverviewCard(
+            card = cards.getOrNull(0),
+            valueView = databind.statsOverviewWordsValue,
+            unitView = databind.statsOverviewWordsUnit,
+            titleView = databind.statsOverviewWordsTitle,
+            changeView = databind.statsOverviewWordsChange
+        )
+        bindOverviewCard(
+            card = cards.getOrNull(1),
+            valueView = databind.statsOverviewStreakValue,
+            unitView = databind.statsOverviewStreakUnit,
+            titleView = databind.statsOverviewStreakTitle,
+            changeView = databind.statsOverviewStreakChange
+        )
+        bindOverviewCard(
+            card = cards.getOrNull(2),
+            valueView = databind.statsOverviewDurationValue,
+            unitView = databind.statsOverviewDurationUnit,
+            titleView = databind.statsOverviewDurationTitle,
+            changeView = databind.statsOverviewDurationChange
+        )
+        bindOverviewCard(
+            card = cards.getOrNull(3),
+            valueView = databind.statsOverviewAccuracyValue,
+            unitView = databind.statsOverviewAccuracyUnit,
+            titleView = databind.statsOverviewAccuracyTitle,
+            changeView = databind.statsOverviewAccuracyChange
+        )
+    }
+
+    private fun bindOverviewCard(
+        card: StatsOverviewCardUi?,
+        valueView: TextView,
+        unitView: TextView,
+        titleView: TextView,
+        changeView: TextView
+    ) {
+        val safeCard = card ?: return
+        valueView.text = safeCard.value
+        unitView.text = safeCard.unit
+        titleView.text = safeCard.title
+        changeView.text = safeCard.changeText
+    }
+
+    private fun createReportRow(row: StatsReportRowUi): View {
+        return LinearLayout(requireContext()).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                0,
+                1f
+            )
+            gravity = Gravity.CENTER_VERTICAL
+            orientation = LinearLayout.HORIZONTAL
+
+            addView(ImageView(context).apply {
+                layoutParams = LinearLayout.LayoutParams(dp(24), dp(24)).apply {
+                    marginEnd = dp(9)
+                }
+                background = requireContext().getDrawable(row.iconBackgroundResId)
+                setImageResource(row.iconResId)
+                setPadding(dp(5), dp(5), dp(5), dp(5))
+                contentDescription = null
+            })
+            addView(TextView(context).apply {
+                layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
+                text = row.label
+                setTextColor(0xFF60708A.toInt())
+                textSize = 10f
+                typeface = Typeface.DEFAULT_BOLD
+                maxLines = 1
+            })
+            addView(TextView(context).apply {
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                text = row.value
+                setTextColor(0xFF071436.toInt())
+                textSize = 16f
+                typeface = Typeface.DEFAULT_BOLD
+                includeFontPadding = false
+                maxLines = 1
+            })
+            if (row.unit.isNotBlank()) {
+                addView(TextView(context).apply {
+                    layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                        marginStart = dp(3)
+                    }
+                    text = row.unit
+                    setTextColor(0xFF4F5E75.toInt())
+                    textSize = 9f
+                    typeface = Typeface.DEFAULT_BOLD
+                    maxLines = 1
+                })
             }
         }
     }
 
-    private fun setupMonthActions() {
-        databind.btnPrevMonth.setOnClickListener {
-            if (!pagerReady) return@setOnClickListener
-            performLightHaptic()
-            databind.vpCalendar.setCurrentItem(0, true)
-        }
-        databind.btnNextMonth.setOnClickListener {
-            if (!pagerReady) return@setOnClickListener
-            if (canGoNextMonth) {
-                performLightHaptic()
-                databind.vpCalendar.setCurrentItem(2, true)
-            } else {
-                showMonthBoundaryFeedback()
-            }
-        }
-    }
-
-    private fun resetPagerToCenter() {
-        selectedPagePosition = 1
-        if (databind.vpCalendar.currentItem != 1) {
-            databind.vpCalendar.setCurrentItem(1, false)
-        }
-    }
-
-    private fun onCalendarDayClicked(day: CalendarDayCellUi) {
-        if (!day.isCurrentMonth) return
-        performLightHaptic()
-        viewModel.selectDate(day.date)
-        showDayDetailSheet(day.date)
-    }
-
-    private fun showDayDetailSheet(date: String) {
-        val existing = childFragmentManager.findFragmentByTag(StatsDayDetailBottomSheetDialog.TAG)
-        if (existing != null) return
-        StatsDayDetailBottomSheetDialog.newInstance(date)
-            .show(childFragmentManager, StatsDayDetailBottomSheetDialog.TAG)
-    }
-
-    private fun showMonthBoundaryFeedback() {
-        performRejectHaptic()
-        viewModel.showToast(getString(R.string.home_calendar_future_disabled))
-    }
-
-    private fun performLightHaptic() {
-        databind.root.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-    }
-
-    private fun performRejectHaptic() {
-        databind.root.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-    }
-
-    private fun renderBars(container: LinearLayout, bars: List<WeekBarUi>, barResId: Int) {
-        container.removeAllViews()
-        val inflater = LayoutInflater.from(container.context)
-        val maxValue = bars.maxOfOrNull { it.value } ?: 0L
-        val maxBarHeight = dp(110)
-        val minBarHeight = dp(6)
-
-        bars.forEach { bar ->
-            val itemView = inflater.inflate(R.layout.item_week_bar, container, false)
-            val tvValue = itemView.findViewById<TextView>(R.id.tv_bar_value)
-            val tvDay = itemView.findViewById<TextView>(R.id.tv_bar_day)
-            val barView = itemView.findViewById<View>(R.id.view_bar)
-
-            tvValue.text = bar.valueLabel
-            tvDay.text = bar.dayLabel
-            barView.setBackgroundResource(barResId)
-
-            val calculatedHeight = if (maxValue <= 0L) {
-                minBarHeight
-            } else {
-                ((bar.value.toDouble() / maxValue.toDouble()) * maxBarHeight).toInt()
-                    .coerceAtLeast(minBarHeight)
-            }
-            barView.layoutParams = barView.layoutParams.apply {
-                height = calculatedHeight
-            }
-
-            container.addView(itemView)
+    private fun ovalDrawable(color: Int): GradientDrawable {
+        return GradientDrawable().apply {
+            shape = GradientDrawable.OVAL
+            setColor(color)
         }
     }
 
     private fun dp(value: Int): Int {
-        val density = resources.displayMetrics.density
-        return (value * density).toInt()
+        return (value * resources.displayMetrics.density).toInt()
+    }
+
+    private companion object {
+        private const val CURRENT_MONTH_PAGE_INDEX = 1
     }
 }

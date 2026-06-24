@@ -24,7 +24,7 @@ import com.chen.memorizewords.data.practice.local.room.model.practice.session.Pr
         PracticeSessionWordEntity::class
     ],
     version = 2,
-    exportSchema = false
+    exportSchema = true
 )
 @TypeConverters(PracticeRoomConverters::class)
 abstract class PracticeDatabase : RoomDatabase() {

@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.chen.memorizewords.core.navigation.AppLaunchEntry
 import com.chen.memorizewords.core.navigation.AppRoute
-import com.chen.memorizewords.core.navigation.OnboardingGuardDelegate
 import com.chen.memorizewords.core.navigation.RouteNavigator
 import com.chen.memorizewords.core.ui.activity.BaseVmDbActivity
 import com.chen.memorizewords.core.ui.vm.UiEvent
@@ -22,7 +21,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBinding>() {
+class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBinding>(),
+    HomeFragment.HomeTabHost {
 
     companion object {
         private const val EXIT_CONFIRM_WINDOW_MS = 2000L
@@ -34,9 +34,6 @@ class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBindi
 
     @Inject
     lateinit var appLaunchEntry: AppLaunchEntry
-
-    @Inject
-    lateinit var onboardingGuardDelegate: OnboardingGuardDelegate
 
     @Inject
     lateinit var routeNavigator: RouteNavigator
@@ -60,7 +57,6 @@ class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBindi
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        if (onboardingGuardDelegate.guard(this)) return
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 handleExitBackPress()
@@ -68,11 +64,6 @@ class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBindi
         })
         setupBottomNav(savedInstanceState == null)
         viewModel.checkAutoLogin()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        onboardingGuardDelegate.guard(this)
     }
 
     private fun setupBottomNav(selectDefault: Boolean) {
@@ -105,6 +96,23 @@ class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBindi
 
     private fun showStats() {
         showFragment(statsTag) { StatsFragment() }
+    }
+
+    override fun openHomeTab(tab: HomeFragment.HomeTab) {
+        val itemId = when (tab) {
+            HomeFragment.HomeTab.STATS -> R.id.menu_stats
+            HomeFragment.HomeTab.PRACTICE -> R.id.menu_practice
+            HomeFragment.HomeTab.PROFILE -> R.id.menu_profile
+        }
+        if (databind.bottomNav.selectedItemId != itemId) {
+            databind.bottomNav.selectedItemId = itemId
+            return
+        }
+        when (tab) {
+            HomeFragment.HomeTab.STATS -> showStats()
+            HomeFragment.HomeTab.PRACTICE -> showPractice()
+            HomeFragment.HomeTab.PROFILE -> showProfile()
+        }
     }
 
     private fun showFragment(

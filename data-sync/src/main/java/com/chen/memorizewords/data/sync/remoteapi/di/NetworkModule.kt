@@ -1,6 +1,7 @@
 package com.chen.memorizewords.data.sync.remoteapi.di
 
 import android.content.Context
+import com.chen.memorizewords.data.BuildConfig
 import com.chen.memorizewords.core.network.AccessTokenSource
 import com.chen.memorizewords.core.network.CoreNetworkConfig
 import com.chen.memorizewords.core.network.CoreNetworkFactory
@@ -32,9 +33,12 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideCoreNetworkConfig(): CoreNetworkConfig {
+        require(BuildConfig.DEBUG || GlobalConfig.baseUrl.startsWith("https://")) {
+            "Release network baseUrl must use HTTPS."
+        }
         return CoreNetworkConfig(
             baseUrl = GlobalConfig.baseUrl,
-            enableBodyLogging = false
+            enableBodyLogging = true
         )
     }
 

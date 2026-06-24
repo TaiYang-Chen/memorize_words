@@ -24,7 +24,8 @@ class BindSocialUseCase @Inject constructor(
             val user = authRepository.bindSocial(normalizedPlatform, oauthCode.trim(), state).getOrThrow()
             val localUser = localAccountRepository.getCurrentUser()
             val resolvedUser = user.copy(
-                onboardingCompleted = localUser?.onboardingCompleted ?: user.onboardingCompleted
+                onboardingCompleted = localUser?.onboardingCompleted ?: user.onboardingCompleted,
+                localAvatarPath = localUser?.localAvatarPath
             )
             localAccountRepository.saveUser(resolvedUser)
             resolvedUser

@@ -16,7 +16,6 @@ import androidx.navigation.fragment.findNavController
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.core.ui.vm.UiEffect
 import com.chen.memorizewords.core.ui.vm.UiEvent
-import com.chen.memorizewords.domain.wordbook.model.learning.LearningTestMode
 import com.chen.memorizewords.domain.word.model.word.PronunciationType
 import com.chen.memorizewords.domain.practice.usecase.SynthesizeSpeechUseCase
 import com.chen.memorizewords.feature.learning.LearningActivity
@@ -46,8 +45,10 @@ class LearningMainFragment :
     lateinit var synthesizeSpeech: SynthesizeSpeechUseCase
 
     private var lastRenderKey: RenderKey? = null
-    private var autoSpeakKey: String? = null
     private var mediaPlayer: MediaPlayer? = null
+    private val updateBottomPaddingRunnable = Runnable {
+        updateLearningScrollBottomPadding()
+    }
 
     private val testFragmentTag = "learning_test"
     private val detailFragmentTag = "learning_detail"
@@ -100,7 +101,7 @@ class LearningMainFragment :
         databind.includeBaseWord.ivSpeaker.setOnClickListener {
             speakCurrentWord()
         }
-        databind.root.post { updateLearningScrollBottomPadding() }
+        scheduleLearningScrollBottomPaddingUpdate()
     }
 
     override fun createObserver() {
@@ -112,8 +113,7 @@ class LearningMainFragment :
                         lastRenderKey = key
                         renderState(state.learningState)
                     }
-                    autoSpeakIfNeeded(state)
-                    databind.root.post { updateLearningScrollBottomPadding() }
+                    scheduleLearningScrollBottomPaddingUpdate()
                 }
             }
         }
@@ -121,6 +121,12 @@ class LearningMainFragment :
 
     override fun onNavigationRoute(event: UiEvent.Navigation.Route) {
         when (val target = event.target) {
+            LearningViewModel.Route.ToCheckIn -> {
+                findNavController().navigate(
+                    R.id.action_learningMainFragment_to_learningCheckInFragment
+                )
+            }
+
             is LearningViewModel.Route.ToLearningDone -> {
                 findNavController().navigate(
                     R.id.action_learningMainFragment_to_learningDoneFragment,
@@ -177,8 +183,9 @@ class LearningMainFragment :
     }
 
     override fun onDestroyView() {
+        view?.removeCallbacks(updateBottomPaddingRunnable)
+        databind.composeBtn.removeCallbacks(updateBottomPaddingRunnable)
         releaseMediaPlayer()
-        autoSpeakKey = null
         lastRenderKey = null
         super.onDestroyView()
     }
@@ -225,39 +232,33 @@ class LearningMainFragment :
             .commit()
     }
 
-    private fun updateLearningScrollBottomPadding() {
-        val context = context ?: return
-        val bottomPadding = if (databind.composeBtn.visibility == android.view.View.VISIBLE) {
-            val layoutParams = databind.composeBtn.layoutParams as? ViewGroup.MarginLayoutParams
-            val buttonHeight = databind.composeBtn.height
-            if (buttonHeight == 0) {
-                databind.composeBtn.post { updateLearningScrollBottomPadding() }
-            }
-            buttonHeight +
-                (layoutParams?.topMargin ?: 0) +
-                (layoutParams?.bottomMargin ?: 0) +
-                LEARNING_SCROLL_EXTRA_BOTTOM_PADDING_DP.dpToPx(context)
-        } else {
-            LEARNING_SCROLL_COLLAPSED_BOTTOM_PADDING_DP.dpToPx(context)
-        }
-        databind.nestedScrollView2.setPadding(
-            databind.nestedScrollView2.paddingLeft,
-            databind.nestedScrollView2.paddingTop,
-            databind.nestedScrollView2.paddingRight,
-            bottomPadding
-        )
+    private fun scheduleLearningScrollBottomPaddingUpdate() {
+        val root = view ?: return
+        root.removeCallbacks(updateBottomPaddingRunnable)
+        root.post(updateBottomPaddingRunnable)
     }
 
-    private fun autoSpeakIfNeeded(state: LearningViewModel.LearningUiState) {
-        val currentWord = state.currentWord ?: return
-        if (state.learningState != LearningViewModel.LearningState.TEST) return
-        if (state.currentTestMode != LearningTestMode.LISTENING) return
-        if (state.isAnswered) return
-
-        val key = "${state.questionToken}_${currentWord.id}_${state.pronunciationType.name}"
-        if (key == autoSpeakKey) return
-        autoSpeakKey = key
-        speakCurrentWord()
+    private fun updateLearningScrollBottomPadding() {
+        val root = view ?: return
+        val context = root.context
+        val binding = databind
+        val layoutParams = binding.composeBtn.layoutParams as? ViewGroup.MarginLayoutParams
+        val measuredButtonHeight = binding.composeBtn.height
+        if (measuredButtonHeight == 0) {
+            scheduleLearningScrollBottomPaddingUpdate()
+            return
+        }
+        val buttonHeight = measuredButtonHeight
+        val bottomPadding = buttonHeight +
+            (layoutParams?.topMargin ?: 0) +
+            (layoutParams?.bottomMargin ?: 0) +
+            LEARNING_SCROLL_EXTRA_BOTTOM_PADDING_DP.dpToPx(context)
+        binding.nestedScrollView2.setPadding(
+            binding.nestedScrollView2.paddingLeft,
+            binding.nestedScrollView2.paddingTop,
+            binding.nestedScrollView2.paddingRight,
+            bottomPadding
+        )
     }
 
     private fun speakCurrentWord() {
@@ -336,7 +337,7 @@ class LearningMainFragment :
     }
 
     private companion object {
+        const val LEARNING_BOTTOM_BUTTON_HEIGHT_DP = 54
         const val LEARNING_SCROLL_EXTRA_BOTTOM_PADDING_DP = 16
-        const val LEARNING_SCROLL_COLLAPSED_BOTTOM_PADDING_DP = 16
     }
 }

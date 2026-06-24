@@ -11,7 +11,10 @@ import okhttp3.logging.HttpLoggingInterceptor
 class LoggingInterceptor @Inject constructor() : Interceptor {
 
     private val delegate = HttpLoggingInterceptor().apply {
-        level = if (GlobalConfig.isDebug) {
+        redactHeader("Authorization")
+        redactHeader("Cookie")
+        redactHeader("Set-Cookie")
+        level = if (GlobalConfig.enableBodyLogging) {
             HttpLoggingInterceptor.Level.BODY
         } else {
             HttpLoggingInterceptor.Level.NONE

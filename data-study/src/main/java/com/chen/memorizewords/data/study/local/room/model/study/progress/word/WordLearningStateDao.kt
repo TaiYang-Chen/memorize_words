@@ -83,6 +83,7 @@ interface WordLearningStateDao {
         """
         SELECT word_id FROM word_learning_state
         WHERE book_id = :bookId
+          AND user_status = 0
         ORDER BY next_review_time ASC, last_learn_time ASC, word_id ASC
         """
     )

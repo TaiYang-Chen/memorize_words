@@ -1543,8 +1543,8 @@
 
     <issue
         id="HardcodedText"
-        message="Hardcoded string &quot;已有账号？ 去登陆&quot;, should use `@string` resource"
-        errorLine1="            android:text=&quot;已有账号？ 去登陆&quot;"
+        message="Hardcoded string &quot;已有账号？ 去登录&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;已有账号？ 去登录&quot;"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/module_user_fragment_register.xml"

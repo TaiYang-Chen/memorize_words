@@ -97,9 +97,6 @@ class LearningDoneFragment :
 
     override fun onNavigationRoute(event: UiEvent.Navigation.Route) {
         when (val target = event.target) {
-            LearningDoneViewModel.Route.ToCheckIn -> {
-                findNavController().navigate(R.id.action_learningDoneFragment_to_learningCheckInFragment)
-            }
             is AppRoute -> {
                 routeNavigator.navigate(target)
                 requireActivity().finish()

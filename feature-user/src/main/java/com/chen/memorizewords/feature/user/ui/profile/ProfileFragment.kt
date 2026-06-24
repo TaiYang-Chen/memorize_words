@@ -6,12 +6,14 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
+import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
@@ -21,6 +23,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import coil.load
+import com.chen.memorizewords.domain.account.model.user.User
+import com.chen.memorizewords.domain.account.model.user.avatarLoadSource
+import com.chen.memorizewords.domain.account.model.user.hasReadableLocalAvatar
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.core.ui.vm.UiEvent
 import com.chen.memorizewords.feature.user.R
@@ -32,6 +37,7 @@ import com.chen.memorizewords.feature.user.ui.profile.avatar.AvatarImageProcesso
 import com.yalantis.ucrop.UCrop
 import dagger.hilt.android.AndroidEntryPoint
 import jakarta.inject.Inject
+import java.io.ByteArrayOutputStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -126,6 +132,12 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ModuleUserFragmentProfile
                     R.id.action_module_login_profilefragment_to_bindPhoneFragment
                 )
             }
+
+            ProfileViewModel.Route.ToBindEmail -> {
+                findNavController().navigate(
+                    R.id.action_module_login_profilefragment_to_bindEmailFragment
+                )
+            }
         }
     }
 
@@ -156,15 +168,15 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ModuleUserFragmentProfile
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.user.collect { user ->
                     databind.user = user
-                    renderAvatar(user?.avatarUrl)
+                    renderAvatar(user)
                 }
             }
         }
     }
 
-    private fun renderAvatar(avatarUrl: String?) {
-        val source = avatarUrl?.trim().orEmpty()
-        if (source.isBlank()) {
+    private fun renderAvatar(user: User?) {
+        val source = user.avatarLoadSource()
+        if (source == null) {
             showDefaultAvatar()
             return
         }
@@ -172,6 +184,9 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ModuleUserFragmentProfile
         databind.ivAvatar.load(source) {
             crossfade(true)
             listener(
+                onSuccess = { _, result ->
+                    cacheRemoteAvatarIfNeeded(user, result.drawable)
+                },
                 onError = { _, _ ->
                     showDefaultAvatar()
                 }
@@ -182,6 +197,24 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ModuleUserFragmentProfile
     private fun showDefaultAvatar() {
         databind.ivAvatar.scaleType = ImageView.ScaleType.FIT_CENTER
         databind.ivAvatar.setImageResource(R.drawable.feature_user_ic_profile_avatar_default)
+    }
+
+    private fun cacheRemoteAvatarIfNeeded(user: User?, drawable: Drawable) {
+        val avatarUrl = user?.avatarUrl?.trim()?.takeIf { it.isNotBlank() } ?: return
+        if (user.hasReadableLocalAvatar()) return
+        lifecycleScope.launch {
+            val bytes = withContext(Dispatchers.Default) {
+                drawable.toBitmap().toJpegBytes()
+            }
+            viewModel.cacheLoadedAvatar(bytes, avatarUrl)
+        }
+    }
+
+    private fun Bitmap.toJpegBytes(): ByteArray {
+        return ByteArrayOutputStream().use { output ->
+            compress(Bitmap.CompressFormat.JPEG, 95, output)
+            output.toByteArray()
+        }
     }
 
     private fun bindStaticActions() {

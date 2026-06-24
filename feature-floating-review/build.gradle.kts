@@ -37,4 +37,6 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     ksp(libs.hilt.compiler)
 
+    testImplementation(kotlin("test"))
+
 }

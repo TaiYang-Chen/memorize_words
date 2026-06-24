@@ -46,28 +46,6 @@
                 android:textStyle="bold" />
         </FrameLayout>
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabLayout"
-            android:layout_width="0dp"
-            android:layout_height="36dp"
-            android:layout_marginTop="8dp"
-            android:background="@android:color/transparent"
-            android:minHeight="36dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/frameLayout"
-            app:tabContentStart="0dp"
-            app:tabGravity="start"
-            app:tabIndicatorAnimationMode="linear"
-            app:tabIndicatorColor="@color/module_feedback_tab_indicator"
-            app:tabIndicatorFullWidth="false"
-            app:tabIndicatorHeight="3dp"
-            app:tabMinWidth="0dp"
-            app:tabMode="scrollable"
-            app:tabPaddingBottom="0dp"
-            app:tabPaddingTop="0dp"
-            app:tabRippleColor="@android:color/transparent" />
-
         <TextView
             android:id="@+id/tvDesc"
             android:layout_width="0dp"
@@ -78,7 +56,7 @@
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tabLayout" />
+            app:layout_constraintTop_toBottomOf="@id/frameLayout" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardFeedback"

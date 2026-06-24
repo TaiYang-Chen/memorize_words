@@ -11,7 +11,7 @@ class ChangeAvatarUseCase @Inject constructor(
             return Result.failure(IllegalArgumentException("Avatar image is empty"))
         }
         return repo.uploadAvatar(imageBytes).fold(
-            onSuccess = { url -> repo.updateAvatar(url) },
+            onSuccess = { url -> repo.updateAvatar(url, imageBytes) },
             onFailure = { throwable -> Result.failure(throwable) }
         )
     }

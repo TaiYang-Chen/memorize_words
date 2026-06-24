@@ -16,6 +16,7 @@ class AuthLocalDataSourceImpl(private val mmkv: MMKV) : AuthLocalDataSource {
         private const val NICKNAME = "nickname"
         private const val GENDER = "gender"
         private const val AVATAR_URL = "avatar_url"
+        private const val LOCAL_AVATAR_PATH = "local_avatar_path"
         private const val PHONE = "phone"
         private const val QQ = "qq"
         private const val WECHAT = "wechat"
@@ -24,7 +25,7 @@ class AuthLocalDataSourceImpl(private val mmkv: MMKV) : AuthLocalDataSource {
 
         private val KEYS = arrayOf(
             USER_ID, EMAIL, NICKNAME,
-            AVATAR_URL, PHONE, QQ, WECHAT, EMAIL_VERIFIED, ONBOARDING_COMPLETED
+            AVATAR_URL, LOCAL_AVATAR_PATH, PHONE, QQ, WECHAT, EMAIL_VERIFIED, ONBOARDING_COMPLETED
         )
     }
 
@@ -42,7 +43,8 @@ class AuthLocalDataSourceImpl(private val mmkv: MMKV) : AuthLocalDataSource {
             qq = mmkv.getString(QQ, null),
             wechat = mmkv.getString(WECHAT, null),
             emailVerified = mmkv.getBoolean(EMAIL_VERIFIED, false),
-            onboardingCompleted = mmkv.getBoolean(ONBOARDING_COMPLETED, false)
+            onboardingCompleted = mmkv.getBoolean(ONBOARDING_COMPLETED, false),
+            localAvatarPath = mmkv.getString(LOCAL_AVATAR_PATH, null)
         )
     }
 
@@ -62,6 +64,7 @@ class AuthLocalDataSourceImpl(private val mmkv: MMKV) : AuthLocalDataSource {
             putString(NICKNAME, user.nickname)
             putString(GENDER, user.gender)
             putString(AVATAR_URL, user.avatarUrl)
+            putString(LOCAL_AVATAR_PATH, user.localAvatarPath)
             putString(PHONE, user.phone)
             putString(QQ, user.qq)
             putString(WECHAT, user.wechat)
@@ -80,5 +83,11 @@ class AuthLocalDataSourceImpl(private val mmkv: MMKV) : AuthLocalDataSource {
 
     override fun clear() {
         clearUser()
+    }
+
+    override fun onboardingCompleted() {
+        userFlow.value?.let {
+            saveUser(it.copy(onboardingCompleted=true))
+        }
     }
 }

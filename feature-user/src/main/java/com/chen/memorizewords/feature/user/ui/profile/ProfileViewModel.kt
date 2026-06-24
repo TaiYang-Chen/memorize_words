@@ -5,7 +5,9 @@ import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.core.ui.vm.UiEvent
 import com.chen.memorizewords.domain.account.model.user.User
+import com.chen.memorizewords.domain.account.model.user.avatarLoadSource
 import com.chen.memorizewords.domain.account.usecase.user.BindSocialUseCase
+import com.chen.memorizewords.domain.account.usecase.user.CacheLoadedAvatarUseCase
 import com.chen.memorizewords.domain.account.usecase.user.ChangeAvatarUseCase
 import com.chen.memorizewords.domain.account.usecase.user.ChangeGenderUseCase
 import com.chen.memorizewords.domain.account.usecase.user.ChangeNicknameUseCase
@@ -25,6 +27,7 @@ class ProfileViewModel @Inject constructor(
     private val changeGenderUseCase: ChangeGenderUseCase,
     private val changeAvatarUseCase: ChangeAvatarUseCase,
     private val bindSocialUseCase: BindSocialUseCase,
+    private val cacheLoadedAvatarUseCase: CacheLoadedAvatarUseCase,
     private val resourceProvider: ResourceProvider
 ) : BaseViewModel() {
 
@@ -41,6 +44,7 @@ class ProfileViewModel @Inject constructor(
         data object ToChangePassword : Route
         data object ToDeleteAccountConfirm : Route
         data object ToBindPhone : Route
+        data object ToBindEmail : Route
     }
 
     val user: StateFlow<User?> =
@@ -66,6 +70,10 @@ class ProfileViewModel @Inject constructor(
         toBindPhone()
     }
 
+    fun changeEmail() {
+        toBindEmail()
+    }
+
     fun changeWechat() {
         startBindWechat()
     }
@@ -85,7 +93,13 @@ class ProfileViewModel @Inject constructor(
     fun onMoreClick() = Unit
 
     fun openAvatarPreview() {
-        navigateRoute(Route.ToAvatarPreview(user.value?.avatarUrl.orEmpty()))
+        navigateRoute(Route.ToAvatarPreview(user.value.avatarLoadSource()?.toString().orEmpty()))
+    }
+
+    fun cacheLoadedAvatar(imageBytes: ByteArray, avatarUrl: String?) {
+        viewModelScope.launch {
+            cacheLoadedAvatarUseCase(imageBytes, avatarUrl)
+        }
     }
 
     fun changeAvatar(imageBytes: ByteArray) {
@@ -115,6 +129,10 @@ class ProfileViewModel @Inject constructor(
 
     fun toBindPhone() {
         navigateRoute(Route.ToBindPhone)
+    }
+
+    fun toBindEmail() {
+        navigateRoute(Route.ToBindEmail)
     }
 
     fun startBindWechat() {
@@ -177,6 +195,23 @@ class ProfileViewModel @Inject constructor(
             append("****")
             append(phone.takeLast(4))
         }
+    }
+
+    fun displayEmail(user: User?): String {
+        val email = user?.email?.trim().orEmpty()
+        if (email.isBlank()) {
+            return resourceProvider.getString(R.string.feature_user_profile_value_unbound)
+        }
+        val atIndex = email.indexOf('@')
+        if (atIndex <= 0 || atIndex == email.lastIndex) return email
+        val name = email.substring(0, atIndex)
+        val domain = email.substring(atIndex)
+        val maskedName = when {
+            name.length <= 1 -> "*"
+            name.length == 2 -> "${name.first()}*"
+            else -> "${name.take(2)}****"
+        }
+        return maskedName + domain
     }
 
     fun displayWechat(user: User?): String = user?.wechat?.trim().orEmpty()

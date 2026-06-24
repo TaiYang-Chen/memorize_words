@@ -1,6 +1,7 @@
 package com.chen.memorizewords.data.sync.repository.sync
 
 import com.chen.memorizewords.data.sync.bootstrap.DataBootstrapCoordinator
+import com.chen.memorizewords.data.sync.bootstrap.PostLoginBootstrapErrorLogger
 import com.chen.memorizewords.data.sync.local.room.model.sync.SyncOutboxDao
 import com.chen.memorizewords.data.sync.local.room.model.sync.SyncOutboxEntity
 import com.chen.memorizewords.domain.sync.model.LearningPrerequisitesSnapshot
@@ -27,7 +28,8 @@ class SyncRepositoryImpl @Inject constructor(
     private val networkMonitor: NetworkMonitor,
     private val syncOutboxWorkScheduler: SyncOutboxWorkScheduler,
     private val postLoginBootstrapStateStore: PostLoginBootstrapStateStore,
-    private val learningPrerequisitesRestorer: LearningPrerequisitesRestorer
+    private val learningPrerequisitesRestorer: LearningPrerequisitesRestorer,
+    private val errorLogger: PostLoginBootstrapErrorLogger
 ) : SyncRepository {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
@@ -80,7 +82,11 @@ class SyncRepositoryImpl @Inject constructor(
         return runCatching {
             dataBootstrapCoordinator.syncAfterLoginInOrder()
             postLoginBootstrapStateStore.setState(PostLoginBootstrapState.Succeeded)
-        }.onFailure {
+        }.onFailure { throwable ->
+            errorLogger.logFailure(
+                source = "SyncRepositoryImpl.syncAfterLogin",
+                throwable = throwable
+            )
             postLoginBootstrapStateStore.setState(PostLoginBootstrapState.Failed)
         }
     }

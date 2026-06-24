@@ -134,8 +134,10 @@ class RemoteLearningSyncDataSourceImpl @Inject constructor(
                     floatingBallY = settings.floatingBallY,
                     autoStartOnBoot = settings.autoStartOnBoot,
                     autoStartOnAppLaunch = settings.autoStartOnAppLaunch,
+                    ballSizePercent = settings.ballSizePercent,
                     ballOpacityPercent = settings.ballOpacityPercent,
                     cardOpacityPercent = settings.cardOpacityPercent,
+                    cardGapDp = settings.cardGapDp,
                     dockConfig = settings.dockConfig.toDto(),
                     dockState = settings.dockState?.toDto()
                 )
@@ -191,10 +193,12 @@ fun FloatingSettingsDto.toDomain(): FloatingWordSettings {
         floatingBallY = floatingBallY,
         autoStartOnBoot = autoStartOnBoot,
         autoStartOnAppLaunch = autoStartOnAppLaunch,
+        ballSizePercent = ballSizePercent,
         ballOpacityPercent = ballOpacityPercent,
         cardOpacityPercent = cardOpacityPercent,
+        cardGapDp = cardGapDp,
         dockConfig = dockConfig?.toDomain() ?: FloatingDockConfig(),
-        dockState = null
+        dockState = dockState?.toDomainOrNull()
     )
 }
 

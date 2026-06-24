@@ -24,13 +24,20 @@ class PostLoginBootstrapWorker(
             PostLoginBootstrapWorkerEntryPoint::class.java
         )
         val stateStore = entryPoint.postLoginBootstrapStateStore()
+        val errorLogger = entryPoint.postLoginBootstrapErrorLogger()
         stateStore.setState(PostLoginBootstrapState.Running)
         return runCatching {
             entryPoint.dataBootstrapCoordinator().syncAfterLoginInOrder()
             stateStore.setState(PostLoginBootstrapState.Succeeded)
             Result.success()
         }.getOrElse { throwable ->
-            when (resolvePostLoginBootstrapFailure(throwable)) {
+            val failure = resolvePostLoginBootstrapFailure(throwable)
+            errorLogger.logFailure(
+                source = "PostLoginBootstrapWorker.doWork",
+                throwable = throwable,
+                classification = failure.name
+            )
+            when (failure) {
                 PostLoginBootstrapFailure.Retry -> Result.retry()
                 PostLoginBootstrapFailure.Failed -> {
                     stateStore.setState(PostLoginBootstrapState.Failed)
@@ -46,6 +53,7 @@ class PostLoginBootstrapWorker(
 interface PostLoginBootstrapWorkerEntryPoint {
     fun dataBootstrapCoordinator(): DataBootstrapCoordinator
     fun postLoginBootstrapStateStore(): PostLoginBootstrapStateStore
+    fun postLoginBootstrapErrorLogger(): PostLoginBootstrapErrorLogger
 }
 
 internal enum class PostLoginBootstrapFailure {
@@ -54,12 +62,13 @@ internal enum class PostLoginBootstrapFailure {
 }
 
 internal fun resolvePostLoginBootstrapFailure(throwable: Throwable): PostLoginBootstrapFailure {
+    val failure = throwable.rootDiagnosticCause()
     return when {
-        throwable is IOException -> PostLoginBootstrapFailure.Retry
-        throwable is HttpStatusException && (throwable.code >= 500 || throwable.code == 429) ->
+        failure is IOException -> PostLoginBootstrapFailure.Retry
+        failure is HttpStatusException && (failure.code >= 500 || failure.code == 429) ->
             PostLoginBootstrapFailure.Retry
-        throwable is UnauthorizedNetworkException -> PostLoginBootstrapFailure.Failed
-        throwable is HttpStatusException -> PostLoginBootstrapFailure.Failed
+        failure is UnauthorizedNetworkException -> PostLoginBootstrapFailure.Failed
+        failure is HttpStatusException -> PostLoginBootstrapFailure.Failed
         else -> PostLoginBootstrapFailure.Failed
     }
 }

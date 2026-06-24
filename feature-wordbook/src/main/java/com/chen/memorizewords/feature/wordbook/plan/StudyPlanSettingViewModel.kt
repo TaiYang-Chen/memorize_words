@@ -32,7 +32,7 @@ class StudyPlanSettingViewModel @Inject constructor(
         const val ACTION_RESET_BOOK_WORDS = "reset_book_words"
 
         fun availableStudyModes(): List<StudyModeUiModel> =
-            LearningTestMode.entries.map(::studyModeUiModelFor)
+            listOf(studyModeUiModelFor(LearningTestMode.MEANING_CHOICE))
 
         fun studyModeUiModelFor(mode: LearningTestMode): StudyModeUiModel {
             return when (mode) {
@@ -91,7 +91,7 @@ class StudyPlanSettingViewModel @Inject constructor(
 
     val planCountCardState: StateFlow<StudyPlan> =
         getStudyPlanFlowUseCase()
-            .map { plan -> plan ?: StudyPlan() }
+            .map { plan -> (plan ?: StudyPlan()).meaningChoiceOnly() }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5_000),
@@ -134,8 +134,13 @@ class StudyPlanSettingViewModel @Inject constructor(
     }
 
     fun onSelectTestMode(mode: LearningTestMode) {
+        if (mode != LearningTestMode.MEANING_CHOICE) return
         updatePlan { current ->
-            if (current.testMode == mode) current else current.copy(testMode = mode)
+            if (current.testMode == LearningTestMode.MEANING_CHOICE) {
+                current
+            } else {
+                current.copy(testMode = LearningTestMode.MEANING_CHOICE)
+            }
         }
     }
 
@@ -148,7 +153,7 @@ class StudyPlanSettingViewModel @Inject constructor(
     private fun updatePlan(transform: (StudyPlan) -> StudyPlan) {
         viewModelScope.launch {
             val current = planCountCardState.value
-            val next = transform(current)
+            val next = transform(current).meaningChoiceOnly()
             if (next == current) return@launch
             saveStudyPlanUseCase(next)
             showToast("学习计划已更新")
@@ -167,5 +172,13 @@ class StudyPlanSettingViewModel @Inject constructor(
         viewModelScope.launch {
             resetBookWordsUseCase(wordBookCardState.value.bookId)
         }
+    }
+}
+
+private fun StudyPlan.meaningChoiceOnly(): StudyPlan {
+    return if (testMode == LearningTestMode.MEANING_CHOICE) {
+        this
+    } else {
+        copy(testMode = LearningTestMode.MEANING_CHOICE)
     }
 }

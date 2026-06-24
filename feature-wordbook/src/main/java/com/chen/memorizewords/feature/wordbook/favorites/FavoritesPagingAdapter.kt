@@ -2,6 +2,7 @@ package com.chen.memorizewords.feature.wordbook.favorites
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -40,8 +41,11 @@ class FavoritesPagingAdapter :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: FavoritesWord) {
+            val partOfSpeech = item.partOfSpeech.trim()
             binding.tvWord.text = item.word
-            binding.tvMeaning.text = "${item.partOfSpeech} ${item.meaning}"
+            binding.tvPartOfSpeech.isVisible = partOfSpeech.isNotEmpty()
+            binding.tvPartOfSpeech.text = partOfSpeech
+            binding.tvMeaning.text = item.meaning
         }
     }
 }

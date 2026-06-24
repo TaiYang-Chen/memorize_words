@@ -36,6 +36,13 @@ import kotlinx.coroutines.launch
 class FloatingReviewSettingsFragment :
     BaseVmDbFragment<FloatingReviewSettingsViewModel, ModuleFloatingReviewFragmentSettingsBinding>() {
 
+    private companion object {
+        const val MIN_BALL_SIZE_PERCENT = 60
+        const val MAX_BALL_SIZE_PERCENT = 140
+        const val MIN_CARD_GAP_DP = 8
+        const val MAX_CARD_GAP_DP = 40
+    }
+
     private data class SourceRowBinding(
         val containerId: Int,
         val radioId: Int,
@@ -113,8 +120,10 @@ class FloatingReviewSettingsFragment :
 
     private fun bindView(view: View) {
         val switchAutoStart = view.findViewById<SwitchMaterial>(R.id.switchFloatingAutoStart)
+        val seekBallSize = view.findViewById<SeekBar>(R.id.seekBallSize)
         val seekBallOpacity = view.findViewById<SeekBar>(R.id.seekBallOpacity)
         val seekCardOpacity = view.findViewById<SeekBar>(R.id.seekCardOpacity)
+        val seekCardGap = view.findViewById<SeekBar>(R.id.seekCardGap)
 
         view.findViewById<View>(R.id.layoutSourceCurrent).setOnClickListener {
             viewModel.onSourceTypeChanged(FloatingWordSourceType.CURRENT_BOOK)
@@ -134,6 +143,18 @@ class FloatingReviewSettingsFragment :
             viewModel.onAutoStartChanged(isChecked)
         }
 
+        seekBallSize.max = MAX_BALL_SIZE_PERCENT - MIN_BALL_SIZE_PERCENT
+        seekBallSize.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (ignoreViewUpdates || !fromUser) return
+                viewModel.onBallSizeChanged(progress + MIN_BALL_SIZE_PERCENT)
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) = Unit
+        })
+
         seekBallOpacity.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (ignoreViewUpdates || !fromUser) return
@@ -149,6 +170,18 @@ class FloatingReviewSettingsFragment :
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (ignoreViewUpdates || !fromUser) return
                 viewModel.onCardOpacityChanged(progress)
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) = Unit
+        })
+
+        seekCardGap.max = MAX_CARD_GAP_DP - MIN_CARD_GAP_DP
+        seekCardGap.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (ignoreViewUpdates || !fromUser) return
+                viewModel.onCardGapChanged(progress + MIN_CARD_GAP_DP)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
@@ -182,6 +215,15 @@ class FloatingReviewSettingsFragment :
         )
         root.findViewById<SwitchMaterial>(R.id.switchFloatingAutoStart).isChecked =
             updated.autoStartOnAppLaunch
+        root.findViewById<SeekBar>(R.id.seekBallSize).progress =
+            updated.ballSizePercent.coerceIn(
+                MIN_BALL_SIZE_PERCENT,
+                MAX_BALL_SIZE_PERCENT
+            ) - MIN_BALL_SIZE_PERCENT
+        root.findViewById<TextView>(R.id.tvBallSizeValue).text = getString(
+            R.string.module_floating_review_card_opacity_value,
+            updated.ballSizePercent
+        )
         root.findViewById<SeekBar>(R.id.seekBallOpacity).progress = updated.ballOpacityPercent
         root.findViewById<TextView>(R.id.tvBallOpacityValue).text = getString(
             R.string.module_floating_review_card_opacity_value,
@@ -191,6 +233,15 @@ class FloatingReviewSettingsFragment :
         root.findViewById<TextView>(R.id.tvCardOpacityValue).text = getString(
             R.string.module_floating_review_card_opacity_value,
             updated.cardOpacityPercent
+        )
+        root.findViewById<SeekBar>(R.id.seekCardGap).progress =
+            updated.cardGapDp.coerceIn(
+                MIN_CARD_GAP_DP,
+                MAX_CARD_GAP_DP
+            ) - MIN_CARD_GAP_DP
+        root.findViewById<TextView>(R.id.tvCardGapValue).text = getString(
+            R.string.module_floating_review_card_gap_value,
+            updated.cardGapDp
         )
         renderSourceSelection(root, updated.sourceType)
         renderOrderSelection(root, updated.orderType)

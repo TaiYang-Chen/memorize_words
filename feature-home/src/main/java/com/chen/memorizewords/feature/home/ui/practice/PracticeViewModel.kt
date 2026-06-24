@@ -13,6 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -38,13 +39,25 @@ class PracticeViewModel @Inject constructor(
         practiceFacade.getRecentSessionRecords(7)
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
+    private val todayDurationMs =
+        practiceFacade.getTodayPracticeDurationMs()
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0L)
+
+    private val totalDurationMs =
+        practiceFacade.getPracticeTotalDurationMs()
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0L)
+
+    private val continuousDays =
+        practiceFacade.getContinuousPracticeDays()
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
+
     val floatingEnabled: StateFlow<Boolean> =
         floatingReviewFacade.observeSettings()
             .map { it.enabled }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
 
     val todayDurationText: StateFlow<String> =
-        practiceFacade.getTodayPracticeDurationMs()
+        todayDurationMs
             .map(practiceUiMapper::formatDuration)
             .stateIn(
                 viewModelScope,
@@ -53,7 +66,7 @@ class PracticeViewModel @Inject constructor(
             )
 
     val todayDurationHmsText: StateFlow<String> =
-        practiceFacade.getTodayPracticeDurationMs()
+        todayDurationMs
             .map(practiceUiMapper::formatDurationHms)
             .stateIn(
                 viewModelScope,
@@ -62,7 +75,7 @@ class PracticeViewModel @Inject constructor(
             )
 
     val totalDurationText: StateFlow<String> =
-        practiceFacade.getPracticeTotalDurationMs()
+        totalDurationMs
             .map(practiceUiMapper::formatDuration)
             .stateIn(
                 viewModelScope,
@@ -71,7 +84,7 @@ class PracticeViewModel @Inject constructor(
             )
 
     val totalDurationMinutesText: StateFlow<String> =
-        practiceFacade.getPracticeTotalDurationMs()
+        totalDurationMs
             .map(practiceUiMapper::formatDurationMinutes)
             .stateIn(
                 viewModelScope,
@@ -80,7 +93,7 @@ class PracticeViewModel @Inject constructor(
             )
 
     val continuousDaysText: StateFlow<String> =
-        practiceFacade.getContinuousPracticeDays()
+        continuousDays
             .map { it.toString() }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), "0")
 
@@ -93,6 +106,30 @@ class PracticeViewModel @Inject constructor(
         recentSessions
             .map(practiceUiMapper::buildSessionUi)
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    val dashboardUi: StateFlow<PracticeDashboardUi> =
+        combine(
+            todayDurationMs,
+            continuousDays,
+            recentStats,
+            totalDurationMs
+        ) { todayDuration, streakDays, stats, totalDuration ->
+            practiceUiMapper.buildDashboardUi(
+                todayDurationMs = todayDuration,
+                continuousDays = streakDays,
+                recentStats = stats,
+                totalDurationMs = totalDuration
+            )
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5_000),
+            practiceUiMapper.buildDashboardUi(
+                todayDurationMs = 0L,
+                continuousDays = 0,
+                recentStats = emptyList(),
+                totalDurationMs = 0L
+            )
+        )
 
     fun openListening() {
         tryOpenPractice(PracticeMode.LISTENING)

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="feature_home_stats_day_word_badge_new_text">#0B5FE8</color>
+    <color name="feature_home_stats_day_word_badge_review_text">#8A5A12</color>
+</resources>

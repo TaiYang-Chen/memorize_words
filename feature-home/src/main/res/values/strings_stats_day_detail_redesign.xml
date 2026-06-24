@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_day_detail_close">关闭</string>
+    <string name="home_day_detail_date_ymd">%1$d年%2$d月%3$d日</string>
+    <string name="home_day_detail_plan_all_done_short">全部计划已完成</string>
+    <string name="home_day_detail_plan_new_done_short">新学计划已完成</string>
+    <string name="home_day_detail_plan_review_done_short">复习计划已完成</string>
+    <string name="home_day_detail_plan_not_completed_short">当天计划未完成</string>
+    <string name="home_day_detail_auto_checkin_success">自动打卡成功</string>
+    <string name="home_day_detail_keep_learning">继续保持学习节奏</string>
+    <string name="home_day_detail_empty_short">当天暂无学习记录</string>
+    <string name="home_day_detail_makeup_card_button_with_count">补签卡(余%1$d张)</string>
+    <string name="home_day_detail_metric_new_words">新学词数</string>
+    <string name="home_day_detail_metric_review_words">复习词数</string>
+    <string name="home_day_detail_metric_duration">学习时长</string>
+    <string name="home_day_detail_new_words_with_count">新学词条 (%1$d)</string>
+    <string name="home_day_detail_review_words_with_count">复习词条 (%1$d)</string>
+    <string name="home_day_detail_view_all_new_words">查看全部 %1$d 个新词</string>
+    <string name="home_day_detail_view_all_review_words">查看全部 %1$d 个复习词</string>
+</resources>

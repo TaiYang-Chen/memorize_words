@@ -12,7 +12,7 @@ import com.chen.memorizewords.data.floating.local.room.model.floating.FloatingWo
         FloatingWordDisplayWordEntity::class
     ],
     version = 1,
-    exportSchema = false
+    exportSchema = true
 )
 abstract class FloatingDatabase : RoomDatabase() {
     abstract fun floatingWordDisplayRecordDao(): FloatingWordDisplayRecordDao

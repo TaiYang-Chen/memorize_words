@@ -10,8 +10,10 @@
     <string name="feature_user_profile_label_account_id">账号 ID</string>
     <string name="feature_user_profile_label_gender">性别</string>
     <string name="feature_user_profile_label_phone">手机号</string>
+    <string name="feature_user_profile_label_email">邮箱号</string>
     <string name="feature_user_profile_label_wechat">微信号</string>
     <string name="feature_user_profile_label_qq">QQ号</string>
+    <string name="feature_user_profile_value_unbound">未绑定</string>
     <string name="feature_user_profile_member_gold">黄金会员</string>
     <string name="feature_user_profile_change_password">修改密码</string>
     <string name="feature_user_profile_delete_account">注销账户</string>

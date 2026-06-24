@@ -51,6 +51,18 @@
     <string name="module_user_bind_phone_feature_coming_soon">绑定手机号功能即将上线</string>
     <string name="module_user_bind_phone_unavailable_notice">绑定手机号暂未开放，当前版本仅保留入口展示，后续接入真实能力后再开放填写与验证码操作。</string>
 
+    <string name="module_user_bind_email_title">绑定邮箱</string>
+    <string name="module_user_change_email_title">换绑邮箱</string>
+    <string name="module_user_bind_email_hint">邮箱</string>
+    <string name="module_user_bind_email_code_hint">验证码</string>
+    <string name="module_user_bind_email_confirm">确认绑定</string>
+    <string name="module_user_change_email_confirm">确认换绑</string>
+    <string name="module_user_bind_email_invalid">请输入正确的邮箱</string>
+    <string name="module_user_bind_email_code_invalid">请输入正确的验证码</string>
+    <string name="module_user_bind_email_success">邮箱绑定成功</string>
+    <string name="module_user_bind_email_failed">邮箱绑定失败</string>
+    <string name="module_user_bind_email_loading">绑定中...</string>
+
     <string name="module_user_change_password_title">修改密码</string>
     <string name="module_user_change_password_old_hint">旧密码</string>
     <string name="module_user_change_password_new_hint">新密码</string>
@@ -110,6 +122,7 @@
     <string name="module_user_nav_profile_title">个人信息</string>
     <string name="module_user_nav_change_password_title">修改密码</string>
     <string name="module_user_nav_bind_phone_title">绑定手机号</string>
+    <string name="module_user_nav_bind_email_title">绑定邮箱</string>
     <string name="module_user_nav_delete_account_title">注销账号</string>
     <string name="module_user_nav_avatar_preview_title">头像预览</string>
 </resources>

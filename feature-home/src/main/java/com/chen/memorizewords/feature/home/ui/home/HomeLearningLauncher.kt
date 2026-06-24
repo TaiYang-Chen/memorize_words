@@ -28,6 +28,7 @@ internal class HomeLearningLauncher(
         bookId: Long,
         count: Int,
         orderType: WordOrderType,
+        excludeIds: Set<Long> = emptySet(),
         initialLearnedCount: Int = 0
     ): AppRoute.Learning? {
         return createLearningRoute(
@@ -35,6 +36,7 @@ internal class HomeLearningLauncher(
                 bookId = bookId,
                 count = count,
                 orderType = orderType,
+                excludeIds = excludeIds,
                 initialLearnedCount = initialLearnedCount
             )
         )

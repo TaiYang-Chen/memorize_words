@@ -23,9 +23,19 @@ import kotlinx.coroutines.flow.asStateFlow
 
 internal const val DEFAULT_BALL_OPACITY_PERCENT = 100
 internal const val DEFAULT_CARD_OPACITY_PERCENT = 100
+internal const val DEFAULT_BALL_SIZE_PERCENT = 100
+internal const val DEFAULT_CARD_GAP_DP = 40
+internal const val MIN_BALL_SIZE_PERCENT = 60
+internal const val MAX_BALL_SIZE_PERCENT = 140
+internal const val MIN_CARD_GAP_DP = 8
+internal const val MAX_CARD_GAP_DP = 40
 
+internal fun normalizeBallSizePercent(value: Int): Int =
+    value.coerceIn(MIN_BALL_SIZE_PERCENT, MAX_BALL_SIZE_PERCENT)
 internal fun normalizeBallOpacityPercent(value: Int): Int = value.coerceIn(0, 100)
 internal fun normalizeCardOpacityPercent(value: Int): Int = value.coerceIn(0, 100)
+internal fun normalizeCardGapDp(value: Int): Int =
+    value.coerceIn(MIN_CARD_GAP_DP, MAX_CARD_GAP_DP)
 internal fun sanitizeDockState(
     dockState: FloatingDockState?,
     dockConfig: FloatingDockConfig
@@ -46,8 +56,10 @@ internal fun normalizeFloatingWordSettings(settings: FloatingWordSettings): Floa
     val normalizedDockConfig = settings.dockConfig.normalized()
     return settings.copy(
         fieldConfigs = normalizeFieldConfigs(settings.fieldConfigs),
+        ballSizePercent = normalizeBallSizePercent(settings.ballSizePercent),
         ballOpacityPercent = normalizeBallOpacityPercent(settings.ballOpacityPercent),
         cardOpacityPercent = normalizeCardOpacityPercent(settings.cardOpacityPercent),
+        cardGapDp = normalizeCardGapDp(settings.cardGapDp),
         dockConfig = normalizedDockConfig,
         dockState = sanitizeDockState(settings.dockState, normalizedDockConfig)
     )
@@ -71,8 +83,10 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
         private const val KEY_BALL_Y = "floating_word_ball_y"
         private const val KEY_DOCK_CONFIG = "floating_word_dock_config"
         private const val KEY_DOCK_STATE = "floating_word_dock_state"
+        private const val KEY_BALL_SIZE_PERCENT = "floating_word_ball_size_percent"
         private const val KEY_BALL_OPACITY_PERCENT = "floating_word_ball_opacity_percent"
         private const val KEY_CARD_OPACITY_PERCENT = "floating_word_card_opacity_percent"
+        private const val KEY_CARD_GAP_DP = "floating_word_card_gap_dp"
     }
 
     private val fieldConfigType = object : TypeToken<List<FloatingWordFieldConfig>>() {}.type
@@ -126,8 +140,10 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
             KEY_BALL_Y,
             KEY_DOCK_CONFIG,
             KEY_DOCK_STATE,
+            KEY_BALL_SIZE_PERCENT,
             KEY_BALL_OPACITY_PERCENT,
-            KEY_CARD_OPACITY_PERCENT
+            KEY_CARD_OPACITY_PERCENT,
+            KEY_CARD_GAP_DP
         ).forEach(mmkv::removeValueForKey)
         state.value = readFromLocal()
     }
@@ -172,6 +188,10 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
                 selectedWordIds = selectedIds,
                 floatingBallX = mmkv.decodeInt(KEY_BALL_X, 0),
                 floatingBallY = mmkv.decodeInt(KEY_BALL_Y, 0),
+                ballSizePercent = mmkv.decodeInt(
+                    KEY_BALL_SIZE_PERCENT,
+                    DEFAULT_BALL_SIZE_PERCENT
+                ),
                 ballOpacityPercent = mmkv.decodeInt(
                     KEY_BALL_OPACITY_PERCENT,
                     DEFAULT_BALL_OPACITY_PERCENT
@@ -179,6 +199,10 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
                 cardOpacityPercent = mmkv.decodeInt(
                     KEY_CARD_OPACITY_PERCENT,
                     DEFAULT_CARD_OPACITY_PERCENT
+                ),
+                cardGapDp = mmkv.decodeInt(
+                    KEY_CARD_GAP_DP,
+                    DEFAULT_CARD_GAP_DP
                 ),
                 dockConfig = dockConfig,
                 dockState = dockState
@@ -212,8 +236,10 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
         mmkv.encode(KEY_SELECTED_IDS, gson.toJson(target.selectedWordIds))
         mmkv.encode(KEY_BALL_X, target.floatingBallX)
         mmkv.encode(KEY_BALL_Y, target.floatingBallY)
+        mmkv.encode(KEY_BALL_SIZE_PERCENT, target.ballSizePercent)
         mmkv.encode(KEY_BALL_OPACITY_PERCENT, target.ballOpacityPercent)
         mmkv.encode(KEY_CARD_OPACITY_PERCENT, target.cardOpacityPercent)
+        mmkv.encode(KEY_CARD_GAP_DP, target.cardGapDp)
         mmkv.encode(KEY_DOCK_CONFIG, gson.toJson(target.dockConfig))
         mmkv.encode(KEY_DOCK_STATE, target.dockState?.let(gson::toJson))
     }
@@ -234,8 +260,10 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
                     floatingBallY = settings.floatingBallY,
                     autoStartOnBoot = settings.autoStartOnBoot,
                     autoStartOnAppLaunch = settings.autoStartOnAppLaunch,
+                    ballSizePercent = settings.ballSizePercent,
                     ballOpacityPercent = settings.ballOpacityPercent,
                     cardOpacityPercent = settings.cardOpacityPercent,
+                    cardGapDp = settings.cardGapDp,
                     dockConfigJson = gson.toJson(settings.dockConfig),
                     dockStateJson = settings.dockState?.let(gson::toJson)
                 )

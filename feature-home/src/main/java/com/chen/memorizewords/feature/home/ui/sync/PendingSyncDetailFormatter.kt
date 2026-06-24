@@ -190,6 +190,7 @@ class PendingSyncDetailFormatter @Inject constructor(
                 label("\u5e94\u7528\u542f\u52a8\u65f6\u5f00\u542f", "autoStartOnAppLaunch"),
                 label("\u60ac\u6d6e\u7403\u900f\u660e\u5ea6", "ballOpacityPercent"),
                 label("\u5361\u7247\u900f\u660e\u5ea6", "cardOpacityPercent"),
+                label("\u5c0f\u4eba\u4e0e\u5f39\u6846\u95f4\u9694", "cardGapDp"),
                 label("\u505c\u9760\u914d\u7f6e", "dockConfigJson"),
                 label("\u505c\u9760\u72b6\u6001", "dockStateJson")
             )

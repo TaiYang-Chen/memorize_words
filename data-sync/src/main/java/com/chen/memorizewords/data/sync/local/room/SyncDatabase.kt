@@ -11,7 +11,7 @@ import com.chen.memorizewords.data.sync.local.room.model.sync.SyncOutboxEntity
         SyncOutboxEntity::class
     ],
     version = 1,
-    exportSchema = false
+    exportSchema = true
 )
 @TypeConverters(SyncRoomConverters::class)
 abstract class SyncDatabase : RoomDatabase() {

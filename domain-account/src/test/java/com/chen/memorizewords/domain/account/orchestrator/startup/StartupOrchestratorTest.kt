@@ -13,40 +13,40 @@ import kotlin.test.assertEquals
 
 class StartupOrchestratorTest {
     @Test
-    fun `fast launch returns auth when user is not authenticated`() {
+    fun `local launch returns auth when user is not authenticated`() = runBlocking {
         val orchestrator = createOrchestrator(isAuthenticated = false)
 
-        val destination = orchestrator.resolveLaunchDestinationFast()
+        val destination = orchestrator.resolveLaunchDestinationLocal()
 
         assertEquals(StartupLaunchDestination.AUTH, destination)
     }
 
     @Test
-    fun `fast launch returns home for authenticated user even when onboarding is incomplete`() {
+    fun `local launch returns onboarding for authenticated user when onboarding is incomplete`() = runBlocking {
         val orchestrator = createOrchestrator(
             isAuthenticated = true,
             onboardingCompleted = false
         )
 
-        val destination = orchestrator.resolveLaunchDestinationFast()
+        val destination = orchestrator.resolveLaunchDestinationLocal()
 
-        assertEquals(StartupLaunchDestination.HOME, destination)
+        assertEquals(StartupLaunchDestination.ONBOARDING, destination)
     }
 
     @Test
-    fun `fast launch returns home for authenticated user when onboarding is complete`() {
+    fun `local launch returns home for authenticated user when onboarding is complete`() = runBlocking {
         val orchestrator = createOrchestrator(
             isAuthenticated = true,
             onboardingCompleted = true
         )
 
-        val destination = orchestrator.resolveLaunchDestinationFast()
+        val destination = orchestrator.resolveLaunchDestinationLocal()
 
         assertEquals(StartupLaunchDestination.HOME, destination)
     }
 
     @Test
-    fun `network launch returns home for authenticated user with available token`() = runBlocking {
+    fun `network launch returns onboarding for authenticated user with available token when onboarding is incomplete`() = runBlocking {
         val orchestrator = createOrchestrator(
             isAuthenticated = true,
             onboardingCompleted = false,
@@ -55,11 +55,11 @@ class StartupOrchestratorTest {
 
         val destination = orchestrator.resolveLaunchDestination(hasNetwork = true)
 
-        assertEquals(StartupLaunchDestination.HOME, destination)
+        assertEquals(StartupLaunchDestination.ONBOARDING, destination)
     }
 
     @Test
-    fun `network launch returns home for authenticated user with temporarily unavailable token`() = runBlocking {
+    fun `network launch returns onboarding for authenticated user with temporarily unavailable token when onboarding is incomplete`() = runBlocking {
         val orchestrator = createOrchestrator(
             isAuthenticated = true,
             onboardingCompleted = false,
@@ -68,17 +68,31 @@ class StartupOrchestratorTest {
 
         val destination = orchestrator.resolveLaunchDestination(hasNetwork = true)
 
-        assertEquals(StartupLaunchDestination.HOME, destination)
+        assertEquals(StartupLaunchDestination.ONBOARDING, destination)
+    }
+
+    @Test
+    fun `session warmup does not notify kickout when cached session is invalid`() = runBlocking {
+        val tokenProvider = FakeTokenProvider(AccessTokenState.InvalidSession)
+        val orchestrator = createOrchestrator(
+            isAuthenticated = true,
+            tokenProvider = tokenProvider
+        )
+
+        orchestrator.warmUpSessionStateIfNeeded(hasNetwork = true)
+
+        assertEquals(false, tokenProvider.lastNotifyKickoutOnInvalidSession)
     }
 
     private fun createOrchestrator(
         isAuthenticated: Boolean,
         onboardingCompleted: Boolean = false,
-        accessTokenState: AccessTokenState = AccessTokenState.NoSession
+        accessTokenState: AccessTokenState = AccessTokenState.NoSession,
+        tokenProvider: FakeTokenProvider = FakeTokenProvider(accessTokenState)
     ): StartupOrchestrator {
         return StartupOrchestrator(
             authStateProvider = FakeAuthStateProvider(isAuthenticated),
-            tokenProvider = FakeTokenProvider(accessTokenState),
+            tokenProvider = tokenProvider,
             onboardingStateReader = FakeStartupOnboardingStateReader(onboardingCompleted),
             floatingAutoStartReader = FakeStartupFloatingAutoStartReader(),
             sessionKickoutNotifier = FakeSessionKickoutNotifier()
@@ -97,7 +111,14 @@ private class FakeAuthStateProvider(
 private class FakeTokenProvider(
     private val accessTokenState: AccessTokenState
 ) : TokenProvider {
-    override suspend fun resolveAccessTokenState(): AccessTokenState = accessTokenState
+    var lastNotifyKickoutOnInvalidSession: Boolean? = null
+
+    override suspend fun resolveAccessTokenState(
+        notifyKickoutOnInvalidSession: Boolean
+    ): AccessTokenState {
+        lastNotifyKickoutOnInvalidSession = notifyKickoutOnInvalidSession
+        return accessTokenState
+    }
 
     override fun getAccessTokenIfValid(): String? {
         return (accessTokenState as? AccessTokenState.Available)?.token
@@ -107,7 +128,7 @@ private class FakeTokenProvider(
 private class FakeStartupOnboardingStateReader(
     private val completed: Boolean
 ) : StartupOnboardingStateReader {
-    override fun isOnboardingCompleted(): Boolean = completed
+    override suspend fun isOnboardingCompleted(): Boolean = completed
 }
 
 private class FakeStartupFloatingAutoStartReader : StartupFloatingAutoStartReader {

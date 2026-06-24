@@ -1,21 +1,14 @@
 package com.chen.memorizewords
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.content.Intent
 import android.os.Bundle
 import android.os.SystemClock
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.splashscreen.SplashScreenViewProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
-import com.chen.memorizewords.core.navigation.AuthEntry
-import com.chen.memorizewords.core.navigation.HomeEntry
-import com.chen.memorizewords.core.navigation.OnboardingEntry
-import com.chen.memorizewords.domain.account.orchestrator.startup.StartupLaunchDestination
+import com.chen.memorizewords.core.navigation.AppRoute
 import com.chen.memorizewords.domain.account.orchestrator.startup.StartupOrchestrator
+import com.chen.memorizewords.startup.StartupRouteIntentFactory
+import com.chen.memorizewords.startup.StartupRouteResolver
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.delay
@@ -26,105 +19,46 @@ class SplashActivity : AppCompatActivity() {
 
     companion object {
         private const val MIN_SPLASH_DISPLAY_DURATION_MS = 1000L
-        private const val SPLASH_EXIT_ANIMATION_DURATION_MS = 320L
     }
 
     @Inject
     lateinit var startupOrchestrator: StartupOrchestrator
 
     @Inject
-    lateinit var homeEntry: HomeEntry
+    lateinit var startupRouteResolver: StartupRouteResolver
 
     @Inject
-    lateinit var authEntry: AuthEntry
-
-    @Inject
-    lateinit var onboardingEntry: OnboardingEntry
+    lateinit var startupRouteIntentFactory: StartupRouteIntentFactory
 
     private var hasRouted = false
+    private var keepSplashOnScreen = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
+        splashScreen.setKeepOnScreenCondition { keepSplashOnScreen }
         super.onCreate(savedInstanceState)
         window.setBackgroundDrawableResource(R.color.app_splash_background)
-        setContentView(R.layout.activity_splash)
-        findViewById<View>(R.id.logo_card).alpha = 0f
-        splashScreen.setOnExitAnimationListener(::animateSplashIconToLogo)
 
         val splashShownAt = SystemClock.elapsedRealtime()
 
         lifecycleScope.launch {
-            val targetIntent = when (startupOrchestrator.resolveLaunchDestinationFast()) {
-                StartupLaunchDestination.HOME -> homeEntry.createHomeIntent(this@SplashActivity)
-                StartupLaunchDestination.ONBOARDING ->
-                    onboardingEntry.createOnboardingIntent(this@SplashActivity)
-                StartupLaunchDestination.AUTH -> authEntry.createAuthIntent(this@SplashActivity)
-            }
+            val targetRoute = startupRouteResolver.resolveRoute(
+                startupOrchestrator.resolveLaunchDestinationLocal()
+            )
             val elapsed = SystemClock.elapsedRealtime() - splashShownAt
             val remaining = MIN_SPLASH_DISPLAY_DURATION_MS - elapsed
             if (remaining > 0) {
                 delay(remaining)
             }
-            routeToTarget(targetIntent)
+            routeToTarget(targetRoute)
         }
     }
 
-    private fun animateSplashIconToLogo(provider: SplashScreenViewProvider) {
-        val iconView = provider.iconView
-        val targetView = findViewById<View>(R.id.logo_card)
-
-        if (iconView.width == 0 || iconView.height == 0 ||
-            targetView.width == 0 || targetView.height == 0
-        ) {
-            targetView.alpha = 1f
-            provider.remove()
-            return
-        }
-
-        val iconLocation = IntArray(2)
-        val targetLocation = IntArray(2)
-        iconView.getLocationInWindow(iconLocation)
-        targetView.getLocationInWindow(targetLocation)
-
-        val iconCenterX = iconLocation[0] + iconView.width / 2f
-        val iconCenterY = iconLocation[1] + iconView.height / 2f
-        val targetCenterX = targetLocation[0] + targetView.width / 2f
-        val targetCenterY = targetLocation[1] + targetView.height / 2f
-
-        iconView.pivotX = iconView.width / 2f
-        iconView.pivotY = iconView.height / 2f
-        var hasRemovedProvider = false
-
-        fun finishSplashExit() {
-            if (hasRemovedProvider) return
-            hasRemovedProvider = true
-            targetView.alpha = 1f
-            provider.remove()
-        }
-
-        iconView.animate()
-            .translationX(targetCenterX - iconCenterX)
-            .translationY(targetCenterY - iconCenterY)
-            .scaleX(targetView.width.toFloat() / iconView.width)
-            .scaleY(targetView.height.toFloat() / iconView.height)
-            .setDuration(SPLASH_EXIT_ANIMATION_DURATION_MS)
-            .setInterpolator(FastOutSlowInInterpolator())
-            .setListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator) {
-                    finishSplashExit()
-                }
-
-                override fun onAnimationCancel(animation: Animator) {
-                    finishSplashExit()
-                }
-            })
-            .start()
-    }
-
-    private fun routeToTarget(targetIntent: Intent) {
+    private fun routeToTarget(targetRoute: AppRoute) {
         if (hasRouted) return
         hasRouted = true
-        startActivity(targetIntent)
+        keepSplashOnScreen = false
+        startActivity(startupRouteIntentFactory.createIntent(this, targetRoute))
         finish()
     }
 }

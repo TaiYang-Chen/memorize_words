@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <solid android:color="@color/feature_onboarding_goal_control_track" />
+    <solid android:color="@color/feature_onboarding_daily_goal_panel_background" />
     <corners android:radius="@dimen/feature_onboarding_goal_panel_corner_radius" />
 </shape>

@@ -63,4 +63,5 @@ dependencies {
     implementation(libs.wechat.sdk.android)
 
     debugImplementation(libs.debug.db)
+    testImplementation(kotlin("test"))
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="104dp"
+    android:viewportWidth="120"
+    android:viewportHeight="104">
+    <path android:fillColor="#9936D37F" android:pathData="M16,88c12,-10 76,-10 92,0c-16,8 -76,8 -92,0z" />
+    <path android:fillColor="#6636D37F" android:pathData="M28,76c-6,-12 -10,-25 -3,-28c6,-3 13,11 17,23z" />
+    <path android:fillColor="#6636D37F" android:pathData="M101,78c6,-11 13,-18 17,-14c5,5 -5,17 -14,21z" />
+    <path android:fillColor="#5536D37F" android:pathData="M34,80c-1,-12 3,-21 8,-21c5,1 5,12 0,23z" />
+    <path android:fillColor="#5536D37F" android:pathData="M91,82c0,-12 5,-22 10,-20c5,2 4,13 -4,22z" />
+    <path android:fillColor="#3354C9C0" android:pathData="M84,16m-5,0a5,5 0,1 0,10 0a5,5 0,1 0,-10 0" />
+    <path android:fillColor="#2254C9C0" android:pathData="M109,35m-6,0a6,6 0,1 0,12 0a6,6 0,1 0,-12 0" />
+    <path android:fillColor="#2254C9C0" android:pathData="M73,29m-3,0a3,3 0,1 0,6 0a3,3 0,1 0,-6 0" />
+    <path android:fillColor="#FF56A7FF" android:pathData="M74,23m-36,0a36,36 0,1 0,72 0a36,36 0,1 0,-72 0" android:fillAlpha="0.2" />
+    <path android:fillColor="#FF56A7FF" android:pathData="M76,23m-34,0a34,34 0,1 0,68 0a34,34 0,1 0,-68 0" />
+    <path android:fillColor="#FF78BBFF" android:pathData="M76,23m-27,0a27,27 0,1 0,54 0a27,27 0,1 0,-54 0" />
+    <path android:fillColor="#FF54A8FF" android:pathData="M76,23m-24,0a24,24 0,1 0,48 0a24,24 0,1 0,-48 0" />
+    <path android:strokeColor="#FFE5F3FF" android:strokeWidth="3" android:strokeLineCap="round" android:pathData="M76,4v4M95,23h-4M76,42v-4M57,23h4" />
+    <path android:strokeColor="#FFFFE176" android:strokeWidth="5" android:strokeLineCap="round" android:pathData="M76,23L83,6" />
+    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="5" android:strokeLineCap="round" android:pathData="M76,23L89,37" />
+    <path android:fillColor="#FFFFFFFF" android:pathData="M76,23m-7,0a7,7 0,1 0,14 0a7,7 0,1 0,-14 0" />
+</vector>

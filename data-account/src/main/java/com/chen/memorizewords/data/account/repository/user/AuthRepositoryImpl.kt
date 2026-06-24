@@ -1,5 +1,6 @@
 package com.chen.memorizewords.data.account.repository.user
 
+import com.chen.memorizewords.data.account.local.mmkv.auth.AuthLocalDataSource
 import com.chen.memorizewords.data.account.mapper.toDomain
 import com.chen.memorizewords.data.account.remote.user.AuthRemoteDataSource
 import com.chen.memorizewords.data.account.remoteapi.api.auth.BindSocialRequest
@@ -11,6 +12,7 @@ import com.chen.memorizewords.data.account.remoteapi.api.auth.SendSmsCodeRequest
 import com.chen.memorizewords.domain.account.model.AuthLoginResult
 import com.chen.memorizewords.domain.account.model.user.SmsCodeMeta
 import com.chen.memorizewords.domain.account.model.user.User
+import com.chen.memorizewords.domain.account.repository.LocalAccountRepository
 import com.chen.memorizewords.domain.account.repository.user.AuthRepository
 import com.chen.memorizewords.domain.account.time.ClockProvider
 import kotlinx.coroutines.Dispatchers
@@ -19,6 +21,7 @@ import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val remote: AuthRemoteDataSource,
+    private val local: AuthLocalDataSource,
     private val clockProvider: ClockProvider
 ) : AuthRepository {
     override suspend fun loginByPassword(
@@ -116,6 +119,13 @@ class AuthRepositoryImpl @Inject constructor(
                     newPassword = newPassword
                 )
             )
+        }
+    }
+
+    override suspend fun onboardingCompleted(): Result<Unit> {
+        return withContext(Dispatchers.IO) {
+            local.onboardingCompleted()
+            remote.onboardingCompleted()
         }
     }
 

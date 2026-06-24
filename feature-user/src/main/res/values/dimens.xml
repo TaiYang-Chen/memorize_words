@@ -31,4 +31,5 @@
     <dimen name="feature_user_profile_vip_vertical_padding">4dp</dimen>
     <dimen name="feature_user_profile_vip_drawable_padding">4dp</dimen>
     <dimen name="feature_user_profile_vip_text_size">11sp</dimen>
+    <dimen name="feature_user_change_password_form_text_size">14sp</dimen>
 </resources>

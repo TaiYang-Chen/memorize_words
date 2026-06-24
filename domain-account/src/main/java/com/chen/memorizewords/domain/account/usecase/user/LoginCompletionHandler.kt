@@ -20,7 +20,12 @@ class LoginCompletionHandler @Inject constructor(
     private val syncFacade: SyncFacade
 ) {
     suspend fun complete(loginResult: AuthLoginResult): User {
-        val user = loginResult.user
+        val previousUser = localAccountRepository.getCurrentUser()
+        val user = loginResult.user.copy(
+            localAvatarPath = previousUser?.takeIf {
+                it.userId == loginResult.user.userId && it.avatarUrl == loginResult.user.avatarUrl
+            }?.localAvatarPath
+        )
         accountSessionRepository.saveSession(loginResult.session)
         localAccountRepository.saveUser(user)
         syncAfterLoginWithRetry()

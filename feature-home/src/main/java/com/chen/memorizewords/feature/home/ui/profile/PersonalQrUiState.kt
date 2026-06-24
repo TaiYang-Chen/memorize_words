@@ -4,5 +4,6 @@ data class PersonalQrUiState(
     val userId: Long = 0L,
     val nickname: String = "",
     val avatarUrl: String? = null,
+    val localAvatarPath: String? = null,
     val payload: String = PersonalQrPayload.create(0L, "")
 )

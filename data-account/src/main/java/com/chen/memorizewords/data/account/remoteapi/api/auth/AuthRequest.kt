@@ -72,10 +72,23 @@ class AuthRequest @Inject constructor(
             .await<ApiResponse<Unit>, Unit>()
     }
 
+
+    suspend fun onboardingCompleted(): NetworkResult<Unit> = requestExecutor.executeAuthenticated {
+        authApiService.onboardingCompleted()
+            .await<ApiResponse<Unit>, Unit>()
+    }
+
     suspend fun bindSocial(
         request: BindSocialRequest
     ): NetworkResult<ProfileDto> = requestExecutor.executeAuthenticated {
         authApiService.bindSocial(request)
+            .await<ApiResponse<ProfileDto>, ProfileDto>()
+    }
+
+    suspend fun bindEmail(
+        request: BindEmailRequest
+    ): NetworkResult<ProfileDto> = requestExecutor.executeAuthenticated {
+        authApiService.bindEmail(request)
             .await<ApiResponse<ProfileDto>, ProfileDto>()
     }
 

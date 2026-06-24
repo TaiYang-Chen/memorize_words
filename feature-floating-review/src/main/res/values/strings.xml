@@ -5,9 +5,12 @@
     <string name="module_floating_review_back">返回</string>
     <string name="module_floating_review_auto_start">启动应用时启动悬浮球</string>
     <string name="module_floating_review_appearance_title">外观设置</string>
+    <string name="module_floating_review_ball_size_title">悬浮球大小</string>
     <string name="module_floating_review_ball_opacity_title">悬浮球透明度</string>
     <string name="module_floating_review_card_opacity_title">卡片透明度</string>
     <string name="module_floating_review_card_opacity_value">%1$d%%</string>
+    <string name="module_floating_review_card_gap_title">小人与弹框间隔</string>
+    <string name="module_floating_review_card_gap_value">%1$ddp</string>
     <string name="module_floating_review_source_title">词源</string>
     <string name="module_floating_review_source_current">当前词书复习词</string>
     <string name="module_floating_review_source_self">自选单词</string>

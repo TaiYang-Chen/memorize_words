@@ -1,6 +1,7 @@
 package com.chen.memorizewords.data.account.session
 
 import android.content.Context
+import com.chen.memorizewords.data.account.local.avatar.AvatarLocalDataSource
 import com.chen.memorizewords.data.account.local.mmkv.auth.AuthLocalDataSource
 import com.chen.memorizewords.domain.account.auth.SessionKickoutNotifier
 import com.chen.memorizewords.domain.sync.PostLoginBootstrapResetter
@@ -16,7 +17,8 @@ class LocalAuthSessionCleaner @Inject constructor(
     private val authLocalDataSource: AuthLocalDataSource,
     private val sessionKickoutNotifier: SessionKickoutNotifier,
     private val localUserDataOwnerDataSource: LocalUserDataOwnerDataSource,
-    private val postLoginBootstrapResetter: PostLoginBootstrapResetter
+    private val postLoginBootstrapResetter: PostLoginBootstrapResetter,
+    private val avatarLocalDataSource: AvatarLocalDataSource
 ) : LocalAuthStateCleaner {
 
     private val isClearing = AtomicBoolean(false)
@@ -28,9 +30,11 @@ class LocalAuthSessionCleaner @Inject constructor(
         }
         try {
             postLoginBootstrapResetter.resetPostLoginBootstrap()
+            val avatarPath = authLocalDataSource.getUser()?.localAvatarPath
             authLocalDataSource.getUserId()?.let(localUserDataOwnerDataSource::saveOwnerUserId)
             sessionLocalDataSource.clear()
             authLocalDataSource.clear()
+            avatarLocalDataSource.deleteAvatar(avatarPath)
             if (notifyKickout) {
                 sessionKickoutNotifier.notifyKickout()
             }

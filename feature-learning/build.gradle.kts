@@ -67,6 +67,7 @@ dependencies {
 
     debugImplementation(libs.androidx.ui.tooling)
 
+    testImplementation(kotlin("test"))
 }
 
 if (enablePaparazzi.get()) {

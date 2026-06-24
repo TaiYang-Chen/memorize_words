@@ -2,6 +2,8 @@ package com.chen.memorizewords.data.account.di
 
 import com.chen.memorizewords.data.account.local.mmkv.auth.AuthLocalDataSource
 import com.chen.memorizewords.data.account.local.mmkv.auth.AuthLocalDataSourceImpl
+import com.chen.memorizewords.data.account.local.avatar.AvatarLocalDataSource
+import com.chen.memorizewords.data.account.local.avatar.AvatarLocalDataSourceImpl
 import com.chen.memorizewords.data.account.remote.user.AuthRemoteDataSource
 import com.chen.memorizewords.data.account.remote.user.RemoteAuthDataSourceImpl
 import com.chen.memorizewords.data.account.remoteapi.api.auth.AuthApiService
@@ -42,7 +44,10 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import android.content.Context
+import javax.inject.Qualifier
 import javax.inject.Provider
 import javax.inject.Singleton
 import retrofit2.Retrofit
@@ -98,6 +103,12 @@ object DataAccountModule {
 
     @Provides
     @Singleton
+    fun provideAvatarLocalDataSource(impl: AvatarLocalDataSourceImpl): AvatarLocalDataSource {
+        return impl
+    }
+
+    @Provides
+    @Singleton
     fun provideLocalAccountStore(authLocalDataSource: AuthLocalDataSource): LocalAccountStore {
         return authLocalDataSource
     }
@@ -110,7 +121,15 @@ object DataAccountModule {
 
     @Provides
     @Singleton
-    fun provideSessionLocalDataSource(mmkv: MMKV): SessionLocalDataSource {
+    @AccountSessionStorage
+    fun provideAccountSessionMMKV(@ApplicationContext context: Context): MMKV {
+        MMKV.initialize(context.applicationContext)
+        return MMKV.mmkvWithID("account_session", MMKV.SINGLE_PROCESS_MODE)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSessionLocalDataSource(@AccountSessionStorage mmkv: MMKV): SessionLocalDataSource {
         return TokenLocalDataSource(mmkv)
     }
 
@@ -178,3 +197,7 @@ object DataAccountModule {
         return UnauthorizedSessionHandler(localAuthStateCleaner)
     }
 }
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class AccountSessionStorage

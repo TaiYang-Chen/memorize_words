@@ -191,10 +191,9 @@
         <TextView
             android:id="@+id/compose_btn"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="54dp"
             android:layout_margin="16dp"
             android:gravity="center"
-            android:padding="16dp"
             android:textColor="#fff"
             android:stateListAnimator="@animator/module_learning_btn_scale_animator"
             android:background="@drawable/module_learning_select_radius_black"

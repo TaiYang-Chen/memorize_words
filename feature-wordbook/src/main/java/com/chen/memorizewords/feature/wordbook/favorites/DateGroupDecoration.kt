@@ -1,67 +1,97 @@
 package com.chen.memorizewords.feature.wordbook.favorites
 
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
+import android.graphics.RectF
 import android.graphics.Typeface
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.chen.memorizewords.feature.wordbook.R
 
 class DateGroupDecoration(
     private val adapter: FavoritesPagingAdapter
 ) : RecyclerView.ItemDecoration() {
-    private val headerHeight = 72
 
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#999999")
-        textSize = 36f
         typeface = Typeface.DEFAULT_BOLD
     }
+    private val backgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val badgeBounds = RectF()
 
-    /** 给需要显示日期的 item 预留顶部空间 */
     override fun getItemOffsets(
         outRect: Rect,
         view: View,
         parent: RecyclerView,
         state: RecyclerView.State
     ) {
-        val pos = parent.getChildAdapterPosition(view)
-        if (pos == RecyclerView.NO_POSITION) return
+        val position = parent.getChildAdapterPosition(view)
+        if (position == RecyclerView.NO_POSITION) return
 
-        val curDate = adapter.getDateSafely(pos)
-        val preDate = adapter.getDateSafely(pos - 1)
+        val currentDate = adapter.getDateSafely(position)
+        val previousDate = adapter.getDateSafely(position - 1)
 
-        if (curDate != null && curDate != preDate) {
-            outRect.top = headerHeight
+        if (currentDate != null && currentDate != previousDate) {
+            outRect.top = view.resources.getDimensionPixelSize(
+                R.dimen.feature_wordbook_favorites_date_header_height
+            )
         }
     }
 
-    /** 在预留的区域内绘制日期 */
     override fun onDraw(
-        c: Canvas,
+        canvas: Canvas,
         parent: RecyclerView,
         state: RecyclerView.State
     ) {
-        for (i in 0 until parent.childCount) {
-            val view = parent.getChildAt(i)
-            val pos = parent.getChildAdapterPosition(view)
+        val resources = parent.resources
+        val headerHeight = resources.getDimensionPixelSize(
+            R.dimen.feature_wordbook_favorites_date_header_height
+        )
+        val badgeHeight = resources.getDimension(
+            R.dimen.feature_wordbook_favorites_date_badge_height
+        )
+        val badgePaddingHorizontal = resources.getDimension(
+            R.dimen.feature_wordbook_favorites_date_badge_padding_horizontal
+        )
+        val badgeTopPadding = ((headerHeight - badgeHeight) / 2f).coerceAtLeast(0f)
 
-            if (pos == RecyclerView.NO_POSITION) continue
+        backgroundPaint.color = ContextCompat.getColor(
+            parent.context,
+            R.color.feature_wordbook_favorites_date_background
+        )
+        textPaint.color = ContextCompat.getColor(
+            parent.context,
+            R.color.feature_wordbook_favorites_date_text
+        )
+        textPaint.textSize = resources.getDimension(
+            R.dimen.feature_wordbook_favorites_date_text_size
+        )
 
-            val curDate = adapter.getDateSafely(pos)
-            val preDate = adapter.getDateSafely(pos - 1)
+        for (index in 0 until parent.childCount) {
+            val view = parent.getChildAt(index)
+            val position = parent.getChildAdapterPosition(view)
+            if (position == RecyclerView.NO_POSITION) continue
 
-            if (curDate != null && curDate != preDate) {
-                val left = view.paddingLeft.toFloat()
-                val top = view.top - 10
+            val currentDate = adapter.getDateSafely(position)
+            val previousDate = adapter.getDateSafely(position - 1)
 
-                c.drawText(
-                    curDate,
-                    left,
-                    top.toFloat(),
-                    textPaint
+            if (currentDate != null && currentDate != previousDate) {
+                val left = view.left.toFloat()
+                val top = view.top - headerHeight + badgeTopPadding
+                val width = textPaint.measureText(currentDate) + badgePaddingHorizontal * 2
+                badgeBounds.set(left, top, left + width, top + badgeHeight)
+
+                canvas.drawRoundRect(
+                    badgeBounds,
+                    badgeHeight / 2f,
+                    badgeHeight / 2f,
+                    backgroundPaint
                 )
+
+                val fontMetrics = textPaint.fontMetrics
+                val baseline = top + (badgeHeight - fontMetrics.ascent - fontMetrics.descent) / 2f
+                canvas.drawText(currentDate, left + badgePaddingHorizontal, baseline, textPaint)
             }
         }
     }

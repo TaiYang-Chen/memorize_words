@@ -16,3 +16,7 @@ sealed interface NetworkCallResult<out T> {
 interface AccessTokenSource {
     fun currentAccessToken(): String?
 }
+
+object CoreNetworkHeaders {
+    const val SKIP_AUTHORIZATION = "X-Skip-Authorization"
+}

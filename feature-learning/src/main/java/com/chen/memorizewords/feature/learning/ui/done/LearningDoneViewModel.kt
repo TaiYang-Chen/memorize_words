@@ -6,10 +6,8 @@ import com.chen.memorizewords.core.navigation.AppRoute
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.domain.study.orchestrator.learning.LearningSessionFacade
 import com.chen.memorizewords.domain.word.query.WordReadFacade
-import com.chen.memorizewords.domain.study.service.StudyStatsFacade
 import com.chen.memorizewords.domain.wordbook.usecase.GetCurrentWordBookUseCase
 import com.chen.memorizewords.domain.wordbook.usecase.GetStudyPlanUseCase
-import com.chen.memorizewords.domain.study.model.record.TodayCheckInEntryState
 import com.chen.memorizewords.domain.word.model.WordListRow
 import com.chen.memorizewords.domain.word.model.enums.PartOfSpeech
 import com.chen.memorizewords.domain.word.model.word.Word
@@ -30,7 +28,6 @@ class LearningDoneViewModel @Inject constructor(
     private val learningSessionFacade: LearningSessionFacade,
     private val getCurrentWordBookUseCase: GetCurrentWordBookUseCase,
     private val getStudyPlanUseCase: GetStudyPlanUseCase,
-    private val studyStatsFacade: StudyStatsFacade,
     private val resourceProvider: ResourceProvider
 ) : BaseViewModel() {
 
@@ -53,10 +50,6 @@ class LearningDoneViewModel @Inject constructor(
         C("C")
     }
 
-    sealed interface Route {
-        data object ToCheckIn : Route
-    }
-
     private val _uiState = MutableStateFlow(LearningDoneUiState())
     val uiState: StateFlow<LearningDoneUiState> = _uiState.asStateFlow()
 
@@ -67,7 +60,6 @@ class LearningDoneViewModel @Inject constructor(
     private var sessionWordCount: Int = 0
     private var sessionWordIds: List<Long> = emptyList()
     private var loadedKey: String? = null
-    private var hasRequestedCheckInNavigation = false
 
     fun loadSession(
         sessionTypeValue: Int,
@@ -82,7 +74,6 @@ class LearningDoneViewModel @Inject constructor(
             "${sessionTypeValue}_${sessionWordCount}_${answeredCount}_${correctCount}_${wrongCount}_${studyDurationMs}_${wordIds.size}"
         if (loadedKey == key) return
         loadedKey = key
-        hasRequestedCheckInNavigation = false
         this.sessionTypeValue = sessionTypeValue
         this.sessionWordCount = sessionWordCount
         this.sessionWordIds = wordIds
@@ -131,14 +122,6 @@ class LearningDoneViewModel @Inject constructor(
         viewModelScope.launch {
             val words = withContext(Dispatchers.IO) { wordReadFacade.getWordsByIds(wordIds) }
             _wordRows.value = buildWordRows(words)
-        }
-
-        viewModelScope.launch {
-            val state = withContext(Dispatchers.IO) { studyStatsFacade.getTodayCheckInEntryState() }
-            if (shouldNavigateToCheckIn(sessionType, state, hasRequestedCheckInNavigation)) {
-                hasRequestedCheckInNavigation = true
-                navigateRoute(Route.ToCheckIn)
-            }
         }
     }
 
@@ -243,17 +226,6 @@ class LearningDoneViewModel @Inject constructor(
                 sessionWordCount = sessionWordCount
             )
         }
-    }
-}
-
-internal fun shouldNavigateToCheckIn(
-    sessionType: LearningSessionType,
-    state: TodayCheckInEntryState,
-    hasRequestedCheckInNavigation: Boolean
-): Boolean {
-    return when (sessionType) {
-        LearningSessionType.NEW,
-        LearningSessionType.REVIEW -> state.shouldNavigate && !hasRequestedCheckInNavigation
     }
 }
 
