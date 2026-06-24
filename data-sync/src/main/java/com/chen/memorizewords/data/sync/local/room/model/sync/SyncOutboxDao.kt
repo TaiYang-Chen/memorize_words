@@ -137,6 +137,17 @@ interface SyncOutboxDao {
     @Query(
         """
         UPDATE sync_outbox
+        SET next_retry_at = :now,
+            updated_at = :now
+        WHERE state = 'RETRY_WAITING'
+          AND next_retry_at > :now
+        """
+    )
+    suspend fun resumeRetryWaiting(now: Long): Int
+
+    @Query(
+        """
+        UPDATE sync_outbox
         SET state = 'BLOCKED',
             last_error = :lastError,
             failure_kind = :failureKind,

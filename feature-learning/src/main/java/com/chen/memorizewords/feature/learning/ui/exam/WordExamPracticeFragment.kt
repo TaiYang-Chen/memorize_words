@@ -11,7 +11,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -50,12 +53,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -242,19 +246,24 @@ private fun HeaderBar(
                 text = title,
                 modifier = Modifier
                     .align(Alignment.Center)
+                    .fillMaxWidth()
                     .padding(horizontal = dimensions.headerTitleSideInset),
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center,
-                fontSize = dimensions.headerTitleSize
+                fontSize = dimensions.headerTitleSize,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 TextButton(
-                    modifier = Modifier.height(dimensions.headerIconTouch),
+                    modifier = Modifier
+                        .width(dimensions.headerTitleSideInset)
+                        .height(dimensions.headerIconTouch),
                     onClick = onBack,
-                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp)
+                    contentPadding = PaddingValues(horizontal = 0.dp, vertical = 0.dp)
                 ) {
                     Text(
                         text = "\u8fd4\u56de",
@@ -262,7 +271,10 @@ private fun HeaderBar(
                     )
                 }
                 Spacer(modifier = Modifier.weight(1f))
-                Box {
+                Box(
+                    modifier = Modifier.width(dimensions.headerTitleSideInset),
+                    contentAlignment = Alignment.CenterEnd
+                ) {
                     IconButton(
                         modifier = Modifier.size(dimensions.headerIconTouch),
                         onClick = { menuExpanded = true }
@@ -606,6 +618,7 @@ private fun ExamItemCard(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun ItemHeader(
     itemUi: WordExamPracticeItemUi,
@@ -617,18 +630,22 @@ private fun ItemHeader(
     Column(verticalArrangement = Arrangement.spacedBy(dimensions.answerGap)) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.spacedBy(dimensions.statusGap),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = "${questionTypeLabel(item.questionType)}  ${examCategoryLabel(item.examCategory)}",
+                modifier = Modifier.weight(1f),
                 style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
             )
             Text(
                 text = difficultyLabel(item.difficultyLevel),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
+                textAlign = TextAlign.End
             )
         }
         if (item.paperName.isNotBlank()) {
@@ -638,10 +655,10 @@ private fun ItemHeader(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-        Row(
+        FlowRow(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(dimensions.statusGap),
-            verticalAlignment = Alignment.CenterVertically
+            verticalArrangement = Arrangement.spacedBy(dimensions.answerGap)
         ) {
             StatusTag(
                 text = if (item.state?.favorite == true) "\u5df2\u6536\u85cf" else "\u672a\u6536\u85cf",
@@ -663,7 +680,6 @@ private fun ItemHeader(
                     dimensions = dimensions
                 )
             }
-            Spacer(modifier = Modifier.weight(1f))
             TextButton(
                 enabled = !readOnlyCache,
                 onClick = onToggleFavorite,
@@ -773,50 +789,100 @@ private fun MatchingSection(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
-        Row(horizontalArrangement = Arrangement.spacedBy(dimensions.matchingColumnGap)) {
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(dimensions.choiceGap)
-            ) {
-                Text(
-                    text = "\u5de6\u4fa7",
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Medium
-                )
-                itemUi.item.leftItems.forEachIndexed { index, text ->
-                    val selected = itemUi.pendingLeftIndex == index
-                    ChoiceRow(
-                        text = "${index + 1}. $text",
-                        selected = selected,
-                        onClick = { onSelectLeft(index) },
-                        dimensions = dimensions
+        BoxWithConstraints {
+            val stackColumns = maxWidth <= dimensions.matchingStackBreakpoint
+            if (stackColumns) {
+                Column(verticalArrangement = Arrangement.spacedBy(dimensions.matchingColumnGap)) {
+                    MatchingLeftColumn(
+                        itemUi = itemUi,
+                        onSelectLeft = onSelectLeft,
+                        dimensions = dimensions,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    MatchingRightColumn(
+                        itemUi = itemUi,
+                        onSelectRight = onSelectRight,
+                        dimensions = dimensions,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            } else {
+                Row(horizontalArrangement = Arrangement.spacedBy(dimensions.matchingColumnGap)) {
+                    MatchingLeftColumn(
+                        itemUi = itemUi,
+                        onSelectLeft = onSelectLeft,
+                        dimensions = dimensions,
+                        modifier = Modifier.weight(1f)
+                    )
+                    MatchingRightColumn(
+                        itemUi = itemUi,
+                        onSelectRight = onSelectRight,
+                        dimensions = dimensions,
+                        modifier = Modifier.weight(1f)
                     )
                 }
             }
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(dimensions.choiceGap)
-            ) {
-                Text(
-                    text = "\u53f3\u4fa7",
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Medium
-                )
-                itemUi.item.rightItems.forEachIndexed { index, text ->
-                    val matchedLeft = itemUi.matchingPairs.entries.firstOrNull { it.value == index }?.key
-                    val selected = matchedLeft != null
-                    ChoiceRow(
-                        text = if (matchedLeft == null) {
-                            "${optionPrefix(index)}. $text"
-                        } else {
-                            "${optionPrefix(index)}. $text   (${matchedLeft + 1})"
-                        },
-                        selected = selected,
-                        onClick = { onSelectRight(index) },
-                        dimensions = dimensions
-                    )
-                }
-            }
+        }
+    }
+}
+
+@Composable
+private fun MatchingLeftColumn(
+    itemUi: WordExamPracticeItemUi,
+    onSelectLeft: (Int) -> Unit,
+    dimensions: ExamDimensions,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(dimensions.choiceGap)
+    ) {
+        Text(
+            text = "\u5de6\u4fa7",
+            style = MaterialTheme.typography.titleSmall,
+            fontWeight = FontWeight.Medium
+        )
+        itemUi.item.leftItems.forEachIndexed { index, text ->
+            val selected = itemUi.pendingLeftIndex == index
+            ChoiceRow(
+                text = "${index + 1}. $text",
+                selected = selected,
+                onClick = { onSelectLeft(index) },
+                dimensions = dimensions
+            )
+        }
+    }
+}
+
+@Composable
+private fun MatchingRightColumn(
+    itemUi: WordExamPracticeItemUi,
+    onSelectRight: (Int) -> Unit,
+    dimensions: ExamDimensions,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(dimensions.choiceGap)
+    ) {
+        Text(
+            text = "\u53f3\u4fa7",
+            style = MaterialTheme.typography.titleSmall,
+            fontWeight = FontWeight.Medium
+        )
+        itemUi.item.rightItems.forEachIndexed { index, text ->
+            val matchedLeft = itemUi.matchingPairs.entries.firstOrNull { it.value == index }?.key
+            val selected = matchedLeft != null
+            ChoiceRow(
+                text = if (matchedLeft == null) {
+                    "${optionPrefix(index)}. $text"
+                } else {
+                    "${optionPrefix(index)}. $text   (${matchedLeft + 1})"
+                },
+                selected = selected,
+                onClick = { onSelectRight(index) },
+                dimensions = dimensions
+            )
         }
     }
 }
@@ -955,6 +1021,7 @@ private fun rememberExamDimensions(): ExamDimensions {
         choiceGap = dimensionResourceDp(R.dimen.feature_learning_exam_choice_gap),
         clozeGap = dimensionResourceDp(R.dimen.feature_learning_exam_cloze_gap),
         matchingColumnGap = dimensionResourceDp(R.dimen.feature_learning_exam_matching_column_gap),
+        matchingStackBreakpoint = dimensionResourceDp(R.dimen.feature_learning_exam_matching_stack_breakpoint),
         translationMinLines = androidx.compose.ui.res.integerResource(
             id = R.integer.feature_learning_exam_translation_min_lines
         ),
@@ -970,7 +1037,7 @@ private fun dimensionResourceDp(@DimenRes id: Int): Dp {
 @Composable
 private fun dimensionResourceSp(@DimenRes id: Int): TextUnit {
     val density = LocalDensity.current
-    val resources = LocalContext.current.resources
+    val resources = LocalResources.current
     return with(density) { resources.getDimension(id).toSp() }
 }
 
@@ -1005,6 +1072,7 @@ private data class ExamDimensions(
     val choiceGap: Dp,
     val clozeGap: Dp,
     val matchingColumnGap: Dp,
+    val matchingStackBreakpoint: Dp,
     val translationMinLines: Int,
     val answerGap: Dp
 )

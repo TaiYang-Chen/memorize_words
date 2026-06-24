@@ -12,7 +12,7 @@ import javax.inject.Singleton
 class SyncOutboxStore @Inject constructor(
     private val syncDatabase: SyncDatabase,
     private val syncOutboxDao: SyncOutboxDao
-) {
+) : SyncOutboxRetryWaitResumer {
 
     suspend fun enqueueLatest(
         bizType: String,
@@ -58,9 +58,17 @@ class SyncOutboxStore @Inject constructor(
         }
     }
 
+    override suspend fun resumeRetryWaiting(now: Long) {
+        syncOutboxDao.resumeRetryWaiting(now)
+    }
+
     companion object {
         const val DEFAULT_LEASE_DURATION_MS: Long = 2 * 60 * 1000L
     }
+}
+
+interface SyncOutboxRetryWaitResumer {
+    suspend fun resumeRetryWaiting(now: Long = System.currentTimeMillis())
 }
 
 internal fun buildQueuedOutboxEntity(

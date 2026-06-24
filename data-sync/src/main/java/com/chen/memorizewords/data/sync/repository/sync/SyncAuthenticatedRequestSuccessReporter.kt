@@ -6,10 +6,12 @@ import javax.inject.Singleton
 
 @Singleton
 class SyncAuthenticatedRequestSuccessReporter @Inject constructor(
-    private val syncOutboxWorkScheduler: SyncOutboxWorkScheduler
+    private val syncOutboxRetryWaitResumer: SyncOutboxRetryWaitResumer,
+    private val syncOutboxDrainScheduler: SyncOutboxDrainScheduler
 ) : AuthenticatedRequestSuccessReporter {
 
-    override fun onAuthenticatedRequestSucceeded() {
-        syncOutboxWorkScheduler.scheduleDrain()
+    override suspend fun onAuthenticatedRequestSucceeded() {
+        syncOutboxRetryWaitResumer.resumeRetryWaiting()
+        syncOutboxDrainScheduler.scheduleImmediateDrain()
     }
 }

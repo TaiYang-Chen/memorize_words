@@ -36,7 +36,13 @@ class DataSyncNetworkRequestExecutor @Inject constructor(
             is AccessTokenState.Available -> {
                 val result = executePublic(block)
                 if (result is NetworkResult.Success) {
-                    authenticatedRequestSuccessReporter.onAuthenticatedRequestSucceeded()
+                    try {
+                        authenticatedRequestSuccessReporter.onAuthenticatedRequestSucceeded()
+                    } catch (cancelled: CancellationException) {
+                        throw cancelled
+                    } catch (_: Throwable) {
+                        // Sync wake-up is opportunistic; it must not fail the successful API call.
+                    }
                 }
                 result
             }

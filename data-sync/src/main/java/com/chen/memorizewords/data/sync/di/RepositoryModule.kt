@@ -8,6 +8,10 @@ import com.chen.memorizewords.data.sync.repository.sync.DataSyncOutboxWriter
 import com.chen.memorizewords.data.sync.repository.sync.DataSyncPostLoginBootstrapResetter
 import com.chen.memorizewords.data.sync.repository.sync.SyncRepositoryImpl
 import com.chen.memorizewords.data.sync.repository.sync.SyncAuthenticatedRequestSuccessReporter
+import com.chen.memorizewords.data.sync.repository.sync.SyncOutboxDrainScheduler
+import com.chen.memorizewords.data.sync.repository.sync.SyncOutboxRetryWaitResumer
+import com.chen.memorizewords.data.sync.repository.sync.SyncOutboxStore
+import com.chen.memorizewords.data.sync.repository.sync.SyncOutboxWorkScheduler
 import com.chen.memorizewords.domain.sync.PostLoginBootstrapResetter
 import com.chen.memorizewords.domain.sync.SyncConflictPolicy
 import com.chen.memorizewords.domain.sync.SyncLogoutFlusher
@@ -49,6 +53,16 @@ abstract class RepositoryModule {
     abstract fun bindAuthenticatedRequestSuccessReporter(
         impl: SyncAuthenticatedRequestSuccessReporter
     ): AuthenticatedRequestSuccessReporter
+
+    @Binds
+    abstract fun bindSyncOutboxRetryWaitResumer(
+        impl: SyncOutboxStore
+    ): SyncOutboxRetryWaitResumer
+
+    @Binds
+    abstract fun bindSyncOutboxDrainScheduler(
+        impl: SyncOutboxWorkScheduler
+    ): SyncOutboxDrainScheduler
 
     @Binds
     abstract fun bindDownloadRepository(impl: DownloadRepositoryImpl): DownloadRepository

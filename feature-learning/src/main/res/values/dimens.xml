@@ -33,5 +33,6 @@
     <dimen name="feature_learning_exam_choice_gap">8dp</dimen>
     <dimen name="feature_learning_exam_cloze_gap">8dp</dimen>
     <dimen name="feature_learning_exam_matching_column_gap">12dp</dimen>
+    <dimen name="feature_learning_exam_matching_stack_breakpoint">328dp</dimen>
     <dimen name="feature_learning_exam_answer_gap">8dp</dimen>
 </resources>

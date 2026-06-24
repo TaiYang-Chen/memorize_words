@@ -6,6 +6,7 @@ object SyncWorkConstants {
     const val UNIQUE_SYNC_OUTBOX_DRAIN = "sync_outbox_drain"
 
     const val TAG_SYNC_OUTBOX_DRAIN = "sync_outbox_drain"
+    const val TAG_SYNC_OUTBOX_IMMEDIATE_DRAIN = "sync_outbox_immediate_drain"
     const val TAG_DATA_BOOTSTRAP = "data_bootstrap"
     const val TAG_POST_LOGIN_BOOTSTRAP = "post_login_bootstrap"
 
@@ -92,7 +93,10 @@ object SyncWorkConstants {
     const val WORK_WORD_BOOK_SELECTION_SYNC = "work_word_book_selection_sync"
 
     const val WORK_SYNC_OUTBOX_DRAIN = "work_sync_outbox_drain"
+    private const val WORK_SYNC_OUTBOX_IMMEDIATE_DRAIN_PREFIX = "work_sync_outbox_immediate_drain_"
     const val WORK_POST_LOGIN_BOOTSTRAP = "work_post_login_bootstrap"
+
+    fun immediateDrainWorkName(id: String): String = "$WORK_SYNC_OUTBOX_IMMEDIATE_DRAIN_PREFIX$id"
 
     const val TAG_PRACTICE_SETTINGS_SYNC = "practice_settings_sync"
     const val WORK_PRACTICE_SETTINGS_SYNC = "work_practice_settings_sync"
