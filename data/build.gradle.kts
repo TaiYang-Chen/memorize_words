@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         val apiBaseUrl = providers.gradleProperty("memorize.apiBaseUrl")
-            .orElse("https://example.invalid/api/")
+            .orElse("http://192.168.2.6:8080/api/")
             .get()
         val enableNetworkBodyLogging = providers.gradleProperty("memorize.enableNetworkBodyLogging")
             .orElse("false")

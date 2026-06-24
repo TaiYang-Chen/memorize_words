@@ -9,6 +9,14 @@ class BearerAuthInterceptor(
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
+        if (originalRequest.header(CoreNetworkHeaders.SKIP_AUTHORIZATION) != null) {
+            return chain.proceed(
+                originalRequest.newBuilder()
+                    .removeHeader(CoreNetworkHeaders.SKIP_AUTHORIZATION)
+                    .build()
+            )
+        }
+
         if (!routePolicy.requiresAuthorization(originalRequest.url.encodedPath)) {
             return chain.proceed(originalRequest)
         }

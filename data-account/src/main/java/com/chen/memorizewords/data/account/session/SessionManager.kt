@@ -22,7 +22,9 @@ class SessionManager(
         return if (session.expiresAt > currentTimeMillis()) session.accessToken else null
     }
 
-    override suspend fun resolveAccessTokenState(): AccessTokenState = withContext(Dispatchers.IO) {
+    override suspend fun resolveAccessTokenState(
+        notifyKickoutOnInvalidSession: Boolean
+    ): AccessTokenState = withContext(Dispatchers.IO) {
         val cached = local.getSession() ?: return@withContext AccessTokenState.NoSession
         if (cached.expiresAt > currentTimeMillis()) {
             return@withContext AccessTokenState.Available(cached.accessToken)
@@ -44,7 +46,9 @@ class SessionManager(
                 }
 
                 SessionRefreshResult.InvalidSession -> {
-                    localAuthSessionCleaner.clearLocalAuthState()
+                    localAuthSessionCleaner.clearLocalAuthState(
+                        notifyKickout = notifyKickoutOnInvalidSession
+                    )
                     AccessTokenState.InvalidSession
                 }
 

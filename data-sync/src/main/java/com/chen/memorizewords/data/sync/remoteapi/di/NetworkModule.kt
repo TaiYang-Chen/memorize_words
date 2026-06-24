@@ -38,7 +38,7 @@ object NetworkModule {
         }
         return CoreNetworkConfig(
             baseUrl = GlobalConfig.baseUrl,
-            enableBodyLogging = false
+            enableBodyLogging = true
         )
     }
 

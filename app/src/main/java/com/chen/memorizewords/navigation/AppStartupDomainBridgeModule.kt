@@ -10,7 +10,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlinx.coroutines.runBlocking
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -32,10 +31,8 @@ abstract class AppStartupDomainBridgeModule {
 class WordBookStartupOnboardingStateReader @Inject constructor(
     private val localAccountRepository: LocalAccountRepository
 ) : StartupOnboardingStateReader {
-    override fun isOnboardingCompleted(): Boolean {
-        return runBlocking {
-            localAccountRepository.getCurrentUser()?.onboardingCompleted == true
-        }
+    override suspend fun isOnboardingCompleted(): Boolean {
+        return localAccountRepository.getCurrentUser()?.onboardingCompleted == true
     }
 }
 
