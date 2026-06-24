@@ -186,6 +186,7 @@ private fun ShadowingAudioIssue.toDomain(): DomainShadowingAudioIssue {
 private fun SpeechProviderType.toDomain(): DomainSpeechProviderType {
     return when (this) {
         SpeechProviderType.BAIDU -> DomainSpeechProviderType.BAIDU
+        SpeechProviderType.ALIYUN -> DomainSpeechProviderType.ALIYUN
     }
 }
 

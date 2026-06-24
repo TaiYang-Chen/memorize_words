@@ -16,7 +16,6 @@ import com.chen.memorizewords.speech.api.SpeechProviderAdapter
 import com.chen.memorizewords.speech.api.SpeechProviderType
 import com.chen.memorizewords.speech.api.SpeechResult
 import com.chen.memorizewords.speech.api.SpeechTask
-import com.chen.memorizewords.speech.api.WordAudioResult
 import com.chen.memorizewords.speech.remoteapi.api.practice.PracticeSpeechRequest
 import com.chen.memorizewords.speech.remoteapi.api.practice.TtsRequestDto
 import com.chen.memorizewords.speech.remoteapi.api.practice.ShadowingAudioIssueDto
@@ -40,7 +39,6 @@ class BaiduSpeechProviderAdapter @Inject constructor(
 
     override val provider: SpeechProviderType = SpeechProviderType.BAIDU
     override val capabilities: Set<SpeechCapability> = setOf(
-        SpeechCapability.WORD_TTS,
         SpeechCapability.SENTENCE_TTS,
         SpeechCapability.SHADOWING_EVALUATION
     )
@@ -56,13 +54,11 @@ class BaiduSpeechProviderAdapter @Inject constructor(
                 task = task
             )
 
-            is SpeechTask.SynthesizeWord -> synthesize(
-                text = task.text,
-                locale = task.locale,
-                voice = task.voice,
-                audioFormat = task.audioFormat,
+            is SpeechTask.SynthesizeWord -> failureResult(
+                provider = provider,
                 traceId = traceId,
-                task = task
+                failure = SpeechFailure.Unsupported("Baidu is reserved for sentence TTS in this app."),
+                message = "Baidu is reserved for sentence TTS in this app."
             )
 
             is SpeechTask.EvaluateShadowing -> evaluate(task, traceId)
@@ -91,14 +87,6 @@ class BaiduSpeechProviderAdapter @Inject constructor(
             )
             val cacheKey = backendAudio.cacheKey ?: speechCacheStore.stableHash(task.cacheDescriptor(provider.name))
             when (task) {
-                is SpeechTask.SynthesizeWord -> WordAudioResult(
-                    provider = provider,
-                    traceId = traceId,
-                    audioOutput = output,
-                    cacheKey = cacheKey,
-                    isFromCache = false
-                )
-
                 is SpeechTask.SynthesizeSentence -> SentenceAudioResult(
                     provider = provider,
                     traceId = traceId,

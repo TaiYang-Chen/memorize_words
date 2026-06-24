@@ -5,7 +5,7 @@ plugins {
 android {
     namespace = "com.chen.memorizewords.speech"
     defaultConfig {
-        val wordTtsProvider = (project.findProperty("WORD_TTS_PROVIDER") as String?) ?: "BAIDU"
+        val wordTtsProvider = (project.findProperty("WORD_TTS_PROVIDER") as String?) ?: "ALIYUN"
         val sentenceTtsProvider = (project.findProperty("SENTENCE_TTS_PROVIDER") as String?) ?: "BAIDU"
         val evaluationProvider = (project.findProperty("EVALUATION_PROVIDER") as String?) ?: "BAIDU"
 

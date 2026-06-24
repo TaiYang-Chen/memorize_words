@@ -63,7 +63,7 @@ object SpeechConfigModule {
     @Singleton
     fun provideSpeechRuntimeConfig(): SpeechRuntimeConfig {
         return SpeechRuntimeConfig(
-            wordTtsProvider = parseProvider(BuildConfig.WORD_TTS_PROVIDER, SpeechProviderType.BAIDU),
+            wordTtsProvider = parseProvider(BuildConfig.WORD_TTS_PROVIDER, SpeechProviderType.ALIYUN),
             sentenceTtsProvider = parseProvider(BuildConfig.SENTENCE_TTS_PROVIDER, SpeechProviderType.BAIDU),
             evaluationProvider = parseProvider(BuildConfig.EVALUATION_PROVIDER, SpeechProviderType.BAIDU)
         )

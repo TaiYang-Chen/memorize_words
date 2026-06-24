@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -258,8 +259,9 @@ class WordLearningTestFragment : Fragment() {
         ) {
             Row(
                 modifier = Modifier
-                    .padding(horizontal = 20.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .padding(horizontal = 20.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -290,6 +292,8 @@ class WordLearningTestFragment : Fragment() {
                         tint = textColor,
                         modifier = Modifier.size(24.dp)
                     )
+                } else {
+                    Spacer(modifier = Modifier.size(24.dp))
                 }
             }
         }

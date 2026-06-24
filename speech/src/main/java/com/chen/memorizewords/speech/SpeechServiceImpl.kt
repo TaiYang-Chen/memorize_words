@@ -28,6 +28,7 @@ import kotlinx.coroutines.sync.withLock
 @Singleton
 class SpeechServiceImpl @Inject constructor(
     private val baiduAdapter: BaiduSpeechProviderAdapter,
+    private val aliyunAdapter: AliyunSpeechProviderAdapter,
     private val providerSelector: SpeechProviderSelector,
     private val speechCacheStore: SpeechCacheStore,
     private val runtimeConfig: SpeechRuntimeConfig
@@ -203,6 +204,7 @@ class SpeechServiceImpl @Inject constructor(
     private fun resolveAdapter(provider: SpeechProviderType): SpeechProviderAdapter {
         return when (provider) {
             SpeechProviderType.BAIDU -> baiduAdapter
+            SpeechProviderType.ALIYUN -> aliyunAdapter
         }
     }
 

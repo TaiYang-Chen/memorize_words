@@ -13,8 +13,8 @@ class DefaultSpeechProviderSelector @Inject constructor(
 
     override fun select(task: SpeechTask): SpeechProviderType {
         return when (task) {
-            is SpeechTask.SynthesizeWord -> runtimeConfig.wordTtsProvider
-            is SpeechTask.SynthesizeSentence -> runtimeConfig.sentenceTtsProvider
+            is SpeechTask.SynthesizeWord -> SpeechProviderType.ALIYUN
+            is SpeechTask.SynthesizeSentence -> SpeechProviderType.BAIDU
             is SpeechTask.EvaluateShadowing -> runtimeConfig.evaluationProvider
         }
     }

@@ -56,6 +56,20 @@ private fun synthesisCacheDescriptor(
             .put("cacheSchemaVersion", 1)
             .toString()
     }
+    if (providerName.equals("ALIYUN", ignoreCase = true)) {
+        return JSONObject()
+            .put("provider", "ALIYUN")
+            .put("text", text.replace("\r\n", "\n").replace('\r', '\n').trim())
+            .put("locale", locale)
+            .put("voice", aliyunCacheVoice(voice, locale))
+            .put("format", aliyunCacheFormat(audioFormat))
+            .put("sampleRate", ALIYUN_DEFAULT_SAMPLE_RATE)
+            .put("speechRate", 0)
+            .put("pitchRate", 0)
+            .put("volume", 50)
+            .put("cacheSchemaVersion", 1)
+            .toString()
+    }
     return listOf(
         providerName,
         capabilityName,
@@ -75,6 +89,32 @@ private fun baiduCacheVoice(voice: String): String {
         "0"
     } else {
         normalized
+    }
+}
+
+private const val ALIYUN_DEFAULT_SAMPLE_RATE = 16000
+
+private fun aliyunCacheVoice(voice: String, locale: String): String {
+    val normalized = voice.trim()
+    if (normalized.isNotBlank() && !normalized.equals("default", ignoreCase = true)) {
+        return normalized
+    }
+    return if (locale.equals("en-GB", ignoreCase = true)) {
+        "Harry"
+    } else {
+        "Abby"
+    }
+}
+
+private fun aliyunCacheFormat(
+    audioFormat: com.chen.memorizewords.speech.api.SpeechAudioFormat
+): String {
+    val encoding = audioFormat.encoding.lowercase(Locale.US)
+    val mimeType = audioFormat.mimeType.lowercase(Locale.US)
+    return when {
+        encoding.contains("wav") || mimeType.contains("wav") -> "wav"
+        encoding.contains("pcm") || mimeType.contains("pcm") -> "pcm"
+        else -> "mp3"
     }
 }
 
