@@ -55,6 +55,18 @@ class AuthRequest @Inject constructor(
                 .await<ApiResponse<LoginResponseDto>, LoginResponseDto>()
         }
 
+    suspend fun getFusionAuthToken(): NetworkResult<FusionAuthTokenDto> =
+        requestExecutor.executePublic {
+            authApiService.getFusionAuthToken()
+                .await<ApiResponse<FusionAuthTokenDto>, FusionAuthTokenDto>()
+        }
+
+    suspend fun fusionLogin(request: FusionLoginRequest): NetworkResult<LoginResponseDto> =
+        requestExecutor.executePublic {
+            authApiService.fusionLogin(request)
+                .await<ApiResponse<LoginResponseDto>, LoginResponseDto>()
+        }
+
     suspend fun logout(): NetworkResult<Unit> = requestExecutor.executeAuthenticated {
         authApiService.logout()
             .await<ApiResponse<Unit>, Unit>()

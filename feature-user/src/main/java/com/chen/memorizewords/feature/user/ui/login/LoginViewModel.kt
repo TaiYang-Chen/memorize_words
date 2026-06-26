@@ -22,6 +22,7 @@ class LoginViewModel @Inject constructor(
         data object ToWeChatOneTapLogin : Route
         data object ToQQOneTapLogin : Route
         data object ToSmsCodeLogin : Route
+        data object ToFusionPhoneLogin : Route
     }
 
     val email = MutableStateFlow("1563011912@qq.com")
@@ -68,5 +69,9 @@ class LoginViewModel @Inject constructor(
 
     fun navigateToSmsCodeLogin() {
         navigateRoute(Route.ToSmsCodeLogin)
+    }
+
+    fun navigateToFusionPhoneLogin() {
+        navigateRoute(Route.ToFusionPhoneLogin)
     }
 }

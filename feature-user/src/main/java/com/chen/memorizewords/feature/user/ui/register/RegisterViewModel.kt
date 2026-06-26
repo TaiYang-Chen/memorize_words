@@ -4,8 +4,8 @@ import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.domain.account.usecase.user.LoginDataSyncError
 import com.chen.memorizewords.domain.account.usecase.user.LoginError
-import com.chen.memorizewords.domain.account.usecase.user.RegisterUseCase
-import com.chen.memorizewords.domain.account.usecase.user.SendEmailCodeUseCase
+import com.chen.memorizewords.domain.account.usecase.user.PhoneRegisterUseCase
+import com.chen.memorizewords.domain.account.usecase.user.SendRegisterSmsCodeUseCase
 import com.chen.memorizewords.feature.user.R
 import com.chen.memorizewords.feature.user.ui.resolveAuthFailureMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,13 +18,13 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val registerUseCase: RegisterUseCase,
-    private val sendEmailCodeUseCase: SendEmailCodeUseCase,
+    private val phoneRegisterUseCase: PhoneRegisterUseCase,
+    private val sendRegisterSmsCodeUseCase: SendRegisterSmsCodeUseCase,
     private val resourceProvider: ResourceProvider
 ) : BaseViewModel() {
 
-    val email = MutableStateFlow("")
-    val emailCode = MutableStateFlow("")
+    val phone = MutableStateFlow("")
+    val smsCode = MutableStateFlow("")
     val password = MutableStateFlow("")
     val sendCodeText = MutableStateFlow(resourceProvider.getString(R.string.module_user_send_code))
     val isSendCodeEnabled = MutableStateFlow(true)
@@ -35,14 +35,14 @@ class RegisterViewModel @Inject constructor(
         if (!isSendCodeEnabled.value) return
         showSendCodeSending()
         viewModelScope.launch {
-            sendEmailCodeUseCase(email.value, scene = "register").onSuccess { meta ->
+            sendRegisterSmsCodeUseCase(phone.value).onSuccess { meta ->
                 showToast(resourceProvider.getString(R.string.module_user_login_sms_sent))
                 startCountDown(meta.resendIntervalSeconds)
             }.onFailure { failure ->
                 restoreSendCodeButton()
                 when (failure) {
-                    is LoginError.EmptyEmail ->
-                        showToast(resourceProvider.getString(R.string.module_user_login_email_required))
+                    is LoginError.EmptyPhone ->
+                        showToast(resourceProvider.getString(R.string.module_user_login_phone_required))
                     else -> showToast(
                         resolveAuthFailureMessage(
                             failure,
@@ -66,7 +66,7 @@ class RegisterViewModel @Inject constructor(
 
     fun register() {
         launchWithLoading("\u6CE8\u518C\u4E2D...") {
-            registerUseCase(email.value, emailCode.value, password.value).onSuccess {
+            phoneRegisterUseCase(phone.value, smsCode.value, password.value).onSuccess {
                 showToast("\u6CE8\u518C\u6210\u529F")
                 finish()
             }.onFailure { failure ->
@@ -74,8 +74,8 @@ class RegisterViewModel @Inject constructor(
                     is LoginDataSyncError ->
                         showToast(resourceProvider.getString(R.string.module_user_login_sync_failed))
 
-                    is LoginError.EmptyEmail ->
-                        showToast(resourceProvider.getString(R.string.module_user_login_email_required))
+                    is LoginError.EmptyPhone ->
+                        showToast(resourceProvider.getString(R.string.module_user_login_phone_required))
 
                     is LoginError.EmptySmsCode ->
                         showToast(resourceProvider.getString(R.string.module_user_login_sms_required))

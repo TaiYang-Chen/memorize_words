@@ -125,6 +125,49 @@ class StatsDashboardUiTest {
     }
 
     @Test
+    fun heatmapDayLabelShowsDateTodayAndBlanksOutsideMonth() {
+        assertEquals(
+            "18",
+            heatmapDayLabel(
+                CalendarDayCellUi(
+                    date = "2026-06-18",
+                    dayText = "18",
+                    isCurrentMonth = true,
+                    isToday = false,
+                    isSelected = false,
+                    status = CalendarStudyStatus.NONE
+                )
+            )
+        )
+        assertEquals(
+            "今",
+            heatmapDayLabel(
+                CalendarDayCellUi(
+                    date = "2026-06-26",
+                    dayText = "26",
+                    isCurrentMonth = true,
+                    isToday = true,
+                    isSelected = false,
+                    status = CalendarStudyStatus.STUDIED
+                )
+            )
+        )
+        assertEquals(
+            "",
+            heatmapDayLabel(
+                CalendarDayCellUi(
+                    date = "2026-05-31",
+                    dayText = "31",
+                    isCurrentMonth = false,
+                    isToday = false,
+                    isSelected = false,
+                    status = CalendarStudyStatus.NONE
+                )
+            )
+        )
+    }
+
+    @Test
     fun buildReportRowsSummarizesWeek() {
         val rows = buildReportRows(
             wordStats = listOf(

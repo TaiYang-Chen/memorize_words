@@ -50,6 +50,9 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.qq.open.sdk)
     implementation(libs.wechat.sdk.android)
+    implementation(files("libs/fusionauth-1.2.15-online-release.aar"))
+    implementation(files("libs/umeng-common-9.5.6.aar"))
+    implementation(files("libs/umeng-asms-v1.8.0.aar"))
     implementation(libs.wheel.picker)
     implementation(libs.yalantis.ucrop)
 }

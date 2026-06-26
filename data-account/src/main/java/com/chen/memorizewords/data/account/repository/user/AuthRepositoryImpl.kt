@@ -5,11 +5,13 @@ import com.chen.memorizewords.data.account.mapper.toDomain
 import com.chen.memorizewords.data.account.remote.user.AuthRemoteDataSource
 import com.chen.memorizewords.data.account.remoteapi.api.auth.BindSocialRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.ChangePasswordRequest
+import com.chen.memorizewords.data.account.remoteapi.api.auth.FusionLoginRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.LoginRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.RegisterRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.SendEmailCodeRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.SendSmsCodeRequest
 import com.chen.memorizewords.domain.account.model.AuthLoginResult
+import com.chen.memorizewords.domain.account.model.FusionAuthToken
 import com.chen.memorizewords.domain.account.model.user.SmsCodeMeta
 import com.chen.memorizewords.domain.account.model.user.User
 import com.chen.memorizewords.domain.account.repository.LocalAccountRepository
@@ -41,6 +43,12 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun sendLoginSmsCode(phone: String): Result<SmsCodeMeta> = runCatching {
         withContext(Dispatchers.IO) {
             remote.sendLoginSmsCode(SendSmsCodeRequest(phone = phone)).getOrThrow().toDomain()
+        }
+    }
+
+    override suspend fun sendRegisterSmsCode(phone: String): Result<SmsCodeMeta> = runCatching {
+        withContext(Dispatchers.IO) {
+            remote.sendLoginSmsCode(SendSmsCodeRequest(phone = phone, scene = "register")).getOrThrow().toDomain()
         }
     }
 
@@ -108,6 +116,41 @@ class AuthRepositoryImpl @Inject constructor(
                 password = password
             )
             remote.register(request).getOrThrow().toDomain(clockProvider.nowEpochMillis())
+        }
+    }
+
+    override suspend fun registerByPhone(
+        phone: String,
+        smsCode: String,
+        password: String
+    ): Result<AuthLoginResult> = runCatching {
+        withContext(Dispatchers.IO) {
+            val request = RegisterRequest(
+                phone = phone,
+                smsCode = smsCode,
+                password = password,
+                registerMethod = "phone"
+            )
+            remote.register(request).getOrThrow().toDomain(clockProvider.nowEpochMillis())
+        }
+    }
+
+    override suspend fun getFusionAuthToken(): Result<FusionAuthToken> = runCatching {
+        withContext(Dispatchers.IO) {
+            val dto = remote.getFusionAuthToken().getOrThrow()
+            FusionAuthToken(
+                authToken = dto.authToken,
+                schemeCode = dto.schemeCode,
+                expiresIn = dto.expiresIn
+            )
+        }
+    }
+
+    override suspend fun loginByFusionVerifyToken(verifyToken: String): Result<AuthLoginResult> = runCatching {
+        withContext(Dispatchers.IO) {
+            remote.fusionLogin(FusionLoginRequest(verifyToken))
+                .getOrThrow()
+                .toDomain(clockProvider.nowEpochMillis())
         }
     }
 

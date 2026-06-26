@@ -4,6 +4,8 @@ import com.chen.memorizewords.data.account.remoteapi.api.auth.LoginRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.RegisterRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.SendSmsCodeRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.SendEmailCodeRequest
+import com.chen.memorizewords.data.account.remoteapi.api.auth.FusionAuthTokenDto
+import com.chen.memorizewords.data.account.remoteapi.api.auth.FusionLoginRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.ChangePasswordRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.BindSocialRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.BindEmailRequest
@@ -35,6 +37,10 @@ interface AuthRemoteDataSource {
     suspend fun sendEmailCode(request: SendEmailCodeRequest): Result<SendSmsCodeResponseDto>
 
     suspend fun register(request: RegisterRequest): Result<LoginResponseDto>
+
+    suspend fun getFusionAuthToken(): Result<FusionAuthTokenDto>
+
+    suspend fun fusionLogin(request: FusionLoginRequest): Result<LoginResponseDto>
 
     suspend fun getProfile(): Result<ProfileDto>
 

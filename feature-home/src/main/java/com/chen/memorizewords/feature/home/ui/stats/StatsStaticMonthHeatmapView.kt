@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
+import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -19,6 +20,11 @@ class StatsStaticMonthHeatmapView @JvmOverloads constructor(
         color = 0xFF071436.toInt()
         style = Paint.Style.STROKE
         strokeWidth = dp(1.5f)
+    }
+    private val dayTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        textAlign = Paint.Align.CENTER
+        typeface = Typeface.DEFAULT_BOLD
+        textSize = dp(9f)
     }
     private val cellRect = RectF()
     private var cells: List<CalendarDayCellUi> = emptyList()
@@ -100,6 +106,12 @@ class StatsStaticMonthHeatmapView @JvmOverloads constructor(
             if (cell.isSelected) {
                 canvas.drawRoundRect(cellRect, radius, radius, selectedStrokePaint)
             }
+            val dayLabel = heatmapDayLabel(cell)
+            if (dayLabel.isNotEmpty()) {
+                dayTextPaint.color = textColorForStatus(cell.status)
+                val baseline = centerY - (dayTextPaint.descent() + dayTextPaint.ascent()) / 2f
+                canvas.drawText(dayLabel, centerX, baseline, dayTextPaint)
+            }
         }
     }
 
@@ -112,6 +124,17 @@ class StatsStaticMonthHeatmapView @JvmOverloads constructor(
         }
     }
 
+    private fun textColorForStatus(status: CalendarStudyStatus): Int {
+        return when (status) {
+            CalendarStudyStatus.NEW_DONE,
+            CalendarStudyStatus.REVIEW_DONE,
+            CalendarStudyStatus.ALL_DONE -> 0xFFFFFFFF.toInt()
+            CalendarStudyStatus.NONE,
+            CalendarStudyStatus.CHECKED_IN,
+            CalendarStudyStatus.STUDIED -> 0xFF60708A.toInt()
+        }
+    }
+
     private fun dp(value: Float): Float {
         return value * resources.displayMetrics.density
     }
@@ -121,6 +144,14 @@ class StatsStaticMonthHeatmapView @JvmOverloads constructor(
         private const val ROW_COUNT = 6
         private const val DAY_COUNT = 42
         private const val CELL_SIZE_DP = 22f
+    }
+}
+
+internal fun heatmapDayLabel(cell: CalendarDayCellUi): String {
+    return when {
+        !cell.isCurrentMonth -> ""
+        cell.isToday -> "今"
+        else -> cell.dayText
     }
 }
 

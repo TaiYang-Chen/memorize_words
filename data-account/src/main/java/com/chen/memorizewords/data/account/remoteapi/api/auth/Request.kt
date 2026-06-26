@@ -18,10 +18,12 @@ data class LoginRequest(
 
 @JsonClass(generateAdapter = false)
 data class RegisterRequest(
-    val email: String,
-    val emailCode: String,
+    val email: String? = null,
+    val emailCode: String? = null,
     val password: String,
-    val registerMethod: String = "email"
+    val registerMethod: String = "email",
+    val phone: String? = null,
+    val smsCode: String? = null
 )
 
 @JsonClass(generateAdapter = false)
@@ -38,6 +40,16 @@ data class SendEmailCodeRequest(
 
 @JsonClass(generateAdapter = false)
 data class RefreshRequest(val refreshToken: String)
+
+@JsonClass(generateAdapter = false)
+data class FusionLoginRequest(val verifyToken: String)
+
+@JsonClass(generateAdapter = false)
+data class FusionAuthTokenDto(
+    val authToken: String,
+    val schemeCode: String,
+    val expiresIn: Int
+)
 
 @JsonClass(generateAdapter = false)
 data class ChangePasswordRequest(

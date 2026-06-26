@@ -43,6 +43,10 @@ class LoginFragment : BaseFragment<LoginViewModel, ModuleUserFragmentLoginBindin
             LoginViewModel.Route.ToSmsCodeLogin -> {
                 findNavController().navigate(R.id.action_loginFragment_to_smsCodeLoginFragment)
             }
+
+            LoginViewModel.Route.ToFusionPhoneLogin -> {
+                findNavController().navigate(R.id.action_loginFragment_to_fusionPhoneLoginFragment)
+            }
         }
     }
 
@@ -57,6 +61,9 @@ class LoginFragment : BaseFragment<LoginViewModel, ModuleUserFragmentLoginBindin
     private fun setupNavigationClicks() {
         databind.tvCodeLogin.setOnClickListener {
             viewModel.navigateToSmsCodeLogin()
+        }
+        databind.tvFusionPhoneLogin.setOnClickListener {
+            viewModel.navigateToFusionPhoneLogin()
         }
         databind.ivWechatLogin.setOnClickListener {
             viewModel.navigateToWeChatOneTapLogin()

@@ -1,5 +1,6 @@
 package com.chen.memorizewords.domain.account.repository.user
 import com.chen.memorizewords.domain.account.model.AuthLoginResult
+import com.chen.memorizewords.domain.account.model.FusionAuthToken
 import com.chen.memorizewords.domain.account.model.user.User
 import com.chen.memorizewords.domain.account.model.user.SmsCodeMeta
 
@@ -8,6 +9,8 @@ interface AuthRepository {
     suspend fun loginByPassword(phoneNumber: String, password: String): Result<AuthLoginResult>
 
     suspend fun sendLoginSmsCode(phone: String): Result<SmsCodeMeta>
+
+    suspend fun sendRegisterSmsCode(phone: String): Result<SmsCodeMeta>
 
     suspend fun sendEmailCode(email: String, scene: String = "login"): Result<SmsCodeMeta>
 
@@ -20,6 +23,12 @@ interface AuthRepository {
     suspend fun loginByQq(oauthCode: String, state: String? = null): Result<AuthLoginResult>
 
     suspend fun register(email: String, emailCode: String, password: String): Result<AuthLoginResult>
+
+    suspend fun registerByPhone(phone: String, smsCode: String, password: String): Result<AuthLoginResult>
+
+    suspend fun getFusionAuthToken(): Result<FusionAuthToken>
+
+    suspend fun loginByFusionVerifyToken(verifyToken: String): Result<AuthLoginResult>
 
     suspend fun changePassword(oldPassword: String, newPassword: String): Result<Unit>
 
