@@ -1,6 +1,7 @@
 package com.chen.memorizewords.data.wordbook.sync
 
 import com.chen.memorizewords.core.common.calendar.CheckInConfigDataSource
+import com.chen.memorizewords.core.network.remote.HttpStatusException
 import com.chen.memorizewords.data.wordbook.remote.datasync.RemoteUserSyncDataSource
 import com.chen.memorizewords.domain.study.model.favorites.WordFavorites
 import com.chen.memorizewords.domain.sync.CheckInRecordSyncPayload
@@ -110,7 +111,11 @@ class WordBookUserSyncOutboxHandler @Inject constructor(
 
             OutboxTopic.WORD_BOOK_DELETE -> {
                 val payload = gson.fromJson(record.payload, WordBookDeleteSyncPayload::class.java)
-                remoteUserSyncDataSource.removeMyWordBook(payload.bookId).getOrThrow()
+                val result = remoteUserSyncDataSource.removeMyWordBook(payload.bookId)
+                if (result.isSuccess || result.exceptionOrNull().isDeletedWordBookAlreadyAbsent()) {
+                    return
+                }
+                result.getOrThrow()
             }
 
             OutboxTopic.WORD_STATE_UPSERT -> {
@@ -189,4 +194,10 @@ class WordBookUserSyncOutboxHandler @Inject constructor(
             }
         }
     }
+}
+
+private fun Throwable?.isDeletedWordBookAlreadyAbsent(): Boolean {
+    return this is HttpStatusException &&
+        code == 400 &&
+        message.orEmpty().contains("bookId invalid", ignoreCase = true)
 }

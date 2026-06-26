@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 @Singleton
 class SyncRepositoryImpl @Inject constructor(
@@ -29,7 +30,8 @@ class SyncRepositoryImpl @Inject constructor(
     private val syncOutboxWorkScheduler: SyncOutboxWorkScheduler,
     private val postLoginBootstrapStateStore: PostLoginBootstrapStateStore,
     private val learningPrerequisitesRestorer: LearningPrerequisitesRestorer,
-    private val errorLogger: PostLoginBootstrapErrorLogger
+    private val errorLogger: PostLoginBootstrapErrorLogger,
+    private val staleBlockedWordBookDeleteOutboxCleaner: StaleBlockedWordBookDeleteOutboxCleaner
 ) : SyncRepository {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
@@ -68,6 +70,12 @@ class SyncRepositoryImpl @Inject constructor(
     private val postLoginBootstrapStateFlow = postLoginBootstrapStateStore.observeState()
         .distinctUntilChanged()
         .stateIn(scope, SharingStarted.Eagerly, postLoginBootstrapStateStore.getState())
+
+    init {
+        scope.launch {
+            staleBlockedWordBookDeleteOutboxCleaner.clean()
+        }
+    }
 
     override fun startPostLoginBootstrap() {
         if (postLoginBootstrapStateStore.getState() != PostLoginBootstrapState.Running) {

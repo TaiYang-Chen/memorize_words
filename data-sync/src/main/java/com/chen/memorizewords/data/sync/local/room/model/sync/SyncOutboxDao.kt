@@ -173,6 +173,16 @@ interface SyncOutboxDao {
     @Query("DELETE FROM sync_outbox WHERE biz_key = :bizKey")
     suspend fun deleteByBizKey(bizKey: String)
 
+    @Query(
+        """
+        DELETE FROM sync_outbox
+        WHERE state = 'BLOCKED'
+          AND biz_type = 'WORD_BOOK_DELETE'
+          AND last_error LIKE 'TERMINAL|http:400|%bookId invalid%'
+        """
+    )
+    suspend fun deleteBlockedWordBookDeleteBookIdInvalid(): Int
+
     @Query("DELETE FROM sync_outbox")
     suspend fun deleteAll()
 }
