@@ -4,13 +4,18 @@ import android.graphics.drawable.LayerDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.view.doOnLayout
+import androidx.core.view.updateLayoutParams
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.chen.memorizewords.core.ui.image.WordBookCoverImageLoader
 import com.chen.memorizewords.domain.wordbook.model.WordBook
 import com.chen.memorizewords.domain.wordbook.model.shop.DownloadState
 import com.chen.memorizewords.feature.wordbook.R
 import com.chen.memorizewords.feature.wordbook.databinding.ModuleWordbookItemBookShopBinding
+import kotlin.math.min
+import kotlin.math.roundToInt
 
 class BookShopAdapter(
     private val onActionClick: (BookShopUi) -> Unit
@@ -48,6 +53,16 @@ class BookShopAdapter(
                 R.drawable.module_wordbook_bg_download_btn_progress
             )?.mutate() as? LayerDrawable
         }
+        private val cardDesignWidthPx by lazy(LazyThreadSafetyMode.NONE) {
+            binding.root.resources.getDimensionPixelSize(
+                R.dimen.feature_wordbook_shop_card_design_width
+            )
+        }
+        private val cardDesignHeightPx by lazy(LazyThreadSafetyMode.NONE) {
+            binding.root.resources.getDimensionPixelSize(
+                R.dimen.feature_wordbook_shop_card_design_height
+            )
+        }
 
         fun bindFull(
             item: BookShopUi,
@@ -55,6 +70,7 @@ class BookShopAdapter(
         ) {
             bindBookInfo(item.book)
             bindAction(item, onActionClick)
+            bindScale()
         }
 
         private fun bindBookInfo(book: WordBook) {
@@ -62,7 +78,7 @@ class BookShopAdapter(
             binding.tvDesc.text = book.description.ifBlank { DEFAULT_BOOK_DESCRIPTION }
             binding.tvCount.text = formatBookShopWordCount(book.totalWords)
             binding.tvMeta.text = formatBookShopMeta(binding.root.context, book)
-            BookShopWordBookImageLoader.load(
+            WordBookCoverImageLoader.load(
                 imageView = binding.ivCover,
                 fallbackView = binding.ivCoverFallback,
                 rawUrl = book.imgUrl
@@ -103,6 +119,27 @@ class BookShopAdapter(
             }
 
             binding.btnAction.setOnClickListener { onActionClick(item) }
+        }
+
+        private fun bindScale() {
+            binding.root.doOnLayout { root ->
+                val availableWidth = root.width - root.paddingStart - root.paddingEnd
+                if (availableWidth <= 0) return@doOnLayout
+
+                val scale = min(1f, availableWidth / cardDesignWidthPx.toFloat())
+                binding.cardCanvas.pivotX = 0f
+                binding.cardCanvas.pivotY = 0f
+                binding.cardCanvas.scaleX = scale
+                binding.cardCanvas.scaleY = scale
+                binding.cardCanvas.translationX = if (scale == 1f) {
+                    ((availableWidth - cardDesignWidthPx) / 2f).coerceAtLeast(0f)
+                } else {
+                    0f
+                }
+                binding.root.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                    height = (cardDesignHeightPx * scale).roundToInt()
+                }
+            }
         }
 
         private fun applyProgressBackground(progress: Int) {

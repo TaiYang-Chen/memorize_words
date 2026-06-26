@@ -10,6 +10,7 @@ import androidx.core.view.updateLayoutParams
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.chen.memorizewords.core.ui.image.WordBookCoverImageLoader
 import com.chen.memorizewords.domain.wordbook.model.WordBook
 import com.chen.memorizewords.feature.onboarding.databinding.ItemOnboardingWordBookBinding
 import java.text.NumberFormat
@@ -119,7 +120,7 @@ class OnboardingSelectWordBookAdapter(
         }
 
         private fun bindCover(wordBook: WordBook) {
-            OnboardingWordBookImageLoader.load(
+            WordBookCoverImageLoader.load(
                 imageView = binding.ivCover,
                 fallbackView = binding.ivCoverFallback,
                 rawUrl = wordBook.imgUrl

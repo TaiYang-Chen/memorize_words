@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -76,6 +77,7 @@
                     android:layout_marginEnd="@dimen/feature_onboarding_book_selected_icon_spacing"
                     android:ellipsize="end"
                     android:maxLines="1"
+                    tools:text="四级高频词汇"
                     android:textColor="@color/feature_onboarding_book_card_title"
                     android:textSize="@dimen/feature_onboarding_book_title_text_size"
                     android:textStyle="bold"
@@ -93,8 +95,9 @@
                     android:ellipsize="end"
                     android:lineSpacingExtra="2dp"
                     android:maxLines="2"
+                    tools:text="收录了大学英语四级考试历年真题中出现频率最高的核心词汇。内容涵盖阅读、听力、写作等全模块的高频考点，采用科学记忆法编排，帮助你高效突破四级词汇难关。适合正在备战四级的大学生们日常背诵与复习。"
                     android:textColor="@color/feature_onboarding_book_card_description"
-                    android:textSize="@dimen/feature_onboarding_book_description_text_size"
+                    android:textSize="11sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/coverContainer"
                     app:layout_constraintTop_toBottomOf="@id/tvTitle" />
@@ -102,16 +105,15 @@
                 <TextView
                     android:id="@+id/tvCount"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/feature_onboarding_book_badge_height"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/feature_onboarding_book_card_content_spacing"
                     android:background="@drawable/feature_onboarding_bg_word_book_count_badge"
                     android:gravity="center"
                     android:includeFontPadding="false"
-                    android:minWidth="@dimen/feature_onboarding_book_badge_min_width"
-                    android:paddingStart="@dimen/feature_onboarding_book_badge_padding_horizontal"
-                    android:paddingEnd="@dimen/feature_onboarding_book_badge_padding_horizontal"
+                    android:padding="4dp"
+                    tools:text="793"
                     android:textColor="@color/feature_onboarding_book_badge_text"
-                    android:textSize="@dimen/feature_onboarding_book_badge_text_size"
+                    android:textSize="8sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@id/coverContainer"
                     app:layout_constraintStart_toEndOf="@id/coverContainer" />
@@ -124,7 +126,7 @@
                     android:gravity="center_vertical"
                     android:includeFontPadding="false"
                     android:textColor="@color/feature_onboarding_book_card_meta"
-                    android:textSize="@dimen/feature_onboarding_book_learner_text_size"
+                    android:textSize="8sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@id/tvCount"
                     app:layout_constraintStart_toEndOf="@id/tvCount"

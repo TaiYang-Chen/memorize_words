@@ -71,9 +71,21 @@
                 android:textSize="@dimen/feature_wordbook_my_book_status_text_size"
                 android:textStyle="bold"
                 android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btnDelete"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:visibility="visible" />
+
+            <ImageButton
+                android:id="@+id/btnDelete"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/feature_wordbook_my_book_delete"
+                android:padding="8dp"
+                android:src="@android:drawable/ic_menu_delete"
+                android:tint="@color/feature_wordbook_my_book_subtitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tvTitle"
@@ -89,7 +101,7 @@
                 app:layout_constraintEnd_toStartOf="@id/tvStatus"
                 app:layout_constraintStart_toEndOf="@id/coverContainer"
                 app:layout_constraintTop_toTopOf="@id/coverContainer"
-                app:layout_goneMarginEnd="0dp"
+                app:layout_goneMarginEnd="8dp"
                 tools:text="IELTS Core Words" />
 
             <TextView

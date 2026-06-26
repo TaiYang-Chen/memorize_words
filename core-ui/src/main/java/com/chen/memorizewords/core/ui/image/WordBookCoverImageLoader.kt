@@ -1,14 +1,14 @@
-package com.chen.memorizewords.feature.wordbook.shop
+package com.chen.memorizewords.core.ui.image
 
 import android.widget.ImageView
 import androidx.core.view.isVisible
 import coil.Coil
 import coil.request.ImageRequest
 
-internal object BookShopWordBookImageLoader {
+object WordBookCoverImageLoader {
 
     fun load(imageView: ImageView, fallbackView: ImageView, rawUrl: String?) {
-        val displayUrl = toDisplayUrl(rawUrl)
+        val displayUrl = WordBookCoverUrlNormalizer.toDisplayUrl(rawUrl)
         if (displayUrl == null) {
             imageView.setImageDrawable(null)
             imageView.isVisible = false
@@ -43,19 +43,26 @@ internal object BookShopWordBookImageLoader {
 
         Coil.imageLoader(imageView.context).enqueue(request)
     }
+}
 
-    private fun toDisplayUrl(rawUrl: String?): String? {
+object WordBookCoverUrlNormalizer {
+    private const val LOCALHOST = "localhost"
+    private const val EMULATOR_HOST = "10.0.2.2"
+    private const val DEFAULT_BASE_URL = "http://10.0.2.2:8080"
+
+    @JvmStatic
+    fun toDisplayUrl(rawUrl: String?): String? {
         val raw = rawUrl?.trim().orEmpty()
         if (raw.isEmpty()) return null
         val lower = raw.lowercase()
         return when {
             lower.startsWith("http://") || lower.startsWith("https://") -> {
-                raw.replace("http://localhost", "http://10.0.2.2")
-                    .replace("https://localhost", "https://10.0.2.2")
+                raw.replace("http://$LOCALHOST", "http://$EMULATOR_HOST")
+                    .replace("https://$LOCALHOST", "https://$EMULATOR_HOST")
             }
 
-            raw.startsWith("/") -> "http://10.0.2.2:8080$raw"
-            else -> "http://10.0.2.2:8080/$raw"
+            raw.startsWith("/") -> "$DEFAULT_BASE_URL$raw"
+            else -> "$DEFAULT_BASE_URL/$raw"
         }
     }
 }

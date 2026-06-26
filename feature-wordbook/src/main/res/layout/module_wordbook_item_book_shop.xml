@@ -1,126 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/feature_wordbook_bg_shop_book_card"
-        android:paddingStart="@dimen/feature_wordbook_shop_card_padding_horizontal"
-        android:paddingTop="@dimen/feature_wordbook_shop_card_padding_vertical"
-        android:paddingEnd="@dimen/feature_wordbook_shop_card_padding_horizontal"
-        android:paddingBottom="@dimen/feature_wordbook_shop_card_padding_vertical">
+        android:layout_marginBottom="@dimen/feature_wordbook_shop_card_spacing">
 
-        <FrameLayout
-            android:id="@+id/coverContainer"
-            android:layout_width="@dimen/feature_wordbook_shop_cover_width"
-            android:layout_height="@dimen/feature_wordbook_shop_cover_height"
-            android:background="@drawable/feature_wordbook_bg_shop_book_cover"
-            android:padding="@dimen/feature_wordbook_shop_cover_inner_padding"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardCanvas"
+            android:layout_width="@dimen/feature_wordbook_shop_card_design_width"
+            android:layout_height="@dimen/feature_wordbook_shop_card_design_height"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            app:cardBackgroundColor="@color/feature_wordbook_shop_card_background"
+            app:cardCornerRadius="@dimen/feature_wordbook_shop_card_corner_radius"
+            app:cardElevation="0dp"
+            app:rippleColor="@color/feature_wordbook_shop_card_ripple"
+            app:strokeColor="@color/feature_wordbook_shop_card_stroke"
+            app:strokeWidth="@dimen/feature_wordbook_shop_card_stroke_width">
 
-            <ImageView
-                android:id="@+id/iv_cover"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:adjustViewBounds="true"
-                android:contentDescription="@null"
-                android:scaleType="fitCenter"
-                android:visibility="gone" />
+                android:paddingStart="@dimen/feature_wordbook_shop_card_padding_horizontal"
+                android:paddingTop="@dimen/feature_wordbook_shop_card_padding_vertical"
+                android:paddingEnd="@dimen/feature_wordbook_shop_card_padding_horizontal"
+                android:paddingBottom="@dimen/feature_wordbook_shop_card_padding_vertical">
 
-            <ImageView
-                android:id="@+id/iv_cover_fallback"
-                android:layout_width="@dimen/feature_wordbook_shop_cover_fallback_size"
-                android:layout_height="@dimen/feature_wordbook_shop_cover_fallback_size"
-                android:layout_gravity="center"
-                android:contentDescription="@null"
-                android:src="@drawable/module_wordbook_ic_book"
-                app:tint="@color/feature_wordbook_shop_cover_fallback_tint" />
-        </FrameLayout>
+                <FrameLayout
+                    android:id="@+id/coverContainer"
+                    android:layout_width="@dimen/feature_wordbook_shop_cover_width"
+                    android:layout_height="@dimen/feature_wordbook_shop_cover_height"
+                    android:background="@drawable/feature_wordbook_bg_shop_book_cover"
+                    android:padding="@dimen/feature_wordbook_shop_cover_inner_padding"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/feature_wordbook_shop_card_content_spacing"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="@color/feature_wordbook_shop_card_title"
-            android:textSize="@dimen/feature_wordbook_shop_title_text_size"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/coverContainer"
-            app:layout_constraintTop_toTopOf="@id/coverContainer" />
+                    <ImageView
+                        android:id="@+id/iv_cover"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@null"
+                        android:scaleType="fitCenter"
+                        android:visibility="gone"
+                        tools:src="@drawable/module_wordbook_ic_book"
+                        tools:visibility="visible" />
 
-        <TextView
-            android:id="@+id/tv_desc"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/feature_wordbook_shop_card_content_spacing"
-            android:layout_marginTop="@dimen/feature_wordbook_shop_description_margin_top"
-            android:layout_marginEnd="@dimen/feature_wordbook_shop_description_end_spacing"
-            android:ellipsize="end"
-            android:lineSpacingExtra="2dp"
-            android:maxLines="2"
-            android:textColor="@color/feature_wordbook_shop_card_description"
-            android:textSize="@dimen/feature_wordbook_shop_description_text_size"
-            app:layout_constraintEnd_toStartOf="@id/btn_action"
-            app:layout_constraintStart_toEndOf="@id/coverContainer"
-            app:layout_constraintTop_toBottomOf="@id/tv_title" />
+                    <ImageView
+                        android:id="@+id/iv_cover_fallback"
+                        android:layout_width="@dimen/feature_wordbook_shop_cover_fallback_size"
+                        android:layout_height="@dimen/feature_wordbook_shop_cover_fallback_size"
+                        android:layout_gravity="center"
+                        android:contentDescription="@null"
+                        android:src="@drawable/module_wordbook_ic_book"
+                        app:tint="@color/feature_wordbook_shop_cover_fallback_tint" />
+                </FrameLayout>
 
-        <TextView
-            android:id="@+id/tv_count"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/feature_wordbook_shop_badge_height"
-            android:layout_marginStart="@dimen/feature_wordbook_shop_card_content_spacing"
-            android:background="@drawable/feature_wordbook_bg_shop_book_count_badge"
-            android:gravity="center"
-            android:includeFontPadding="false"
-            android:minWidth="@dimen/feature_wordbook_shop_badge_min_width"
-            android:paddingStart="@dimen/feature_wordbook_shop_badge_padding_horizontal"
-            android:paddingEnd="@dimen/feature_wordbook_shop_badge_padding_horizontal"
-            android:textColor="@color/feature_wordbook_shop_badge_text"
-            android:textSize="@dimen/feature_wordbook_shop_badge_text_size"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/coverContainer"
-            app:layout_constraintStart_toEndOf="@id/coverContainer" />
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/feature_wordbook_shop_card_content_spacing"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/feature_wordbook_shop_card_title"
+                    android:textSize="@dimen/feature_wordbook_shop_title_text_size"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/coverContainer"
+                    app:layout_constraintTop_toTopOf="@id/coverContainer"
+                    tools:text="Book title" />
 
-        <TextView
-            android:id="@+id/tv_meta"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/feature_wordbook_shop_meta_margin_start"
-            android:ellipsize="end"
-            android:includeFontPadding="false"
-            android:maxLines="1"
-            android:textColor="@color/feature_wordbook_shop_card_meta"
-            android:textSize="@dimen/feature_wordbook_shop_meta_text_size"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/tv_count"
-            app:layout_constraintEnd_toStartOf="@id/btn_action"
-            app:layout_constraintStart_toEndOf="@id/tv_count" />
+                <TextView
+                    android:id="@+id/tv_desc"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/feature_wordbook_shop_card_content_spacing"
+                    android:layout_marginTop="@dimen/feature_wordbook_shop_description_margin_top"
+                    android:layout_marginEnd="@dimen/feature_wordbook_shop_description_end_spacing"
+                    android:ellipsize="end"
+                    android:lineSpacingExtra="2dp"
+                    android:maxLines="2"
+                    android:textColor="@color/feature_wordbook_shop_card_description"
+                    android:textSize="@dimen/feature_wordbook_shop_description_text_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/coverContainer"
+                    app:layout_constraintTop_toBottomOf="@id/tv_title"
+                    tools:text="A concise description of this word book." />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_action"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/module_wordbook_selector_ff8000_radius"
-            android:backgroundTint="@null"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:textSize="11sp"
-            android:minWidth="@dimen/feature_wordbook_shop_action_min_width"
-            android:minHeight="@dimen/feature_wordbook_shop_action_min_height"
-            android:text="@string/module_wordbook_download"
-            android:textAllCaps="false"
-            app:backgroundTint="@null"
-            app:cornerRadius="16dp"
-            app:layout_constraintBottom_toBottomOf="@id/coverContainer"
-            app:layout_constraintEnd_toEndOf="parent" />
+                <TextView
+                    android:id="@+id/tv_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/feature_wordbook_shop_card_content_spacing"
+                    android:background="@drawable/feature_wordbook_bg_shop_book_count_badge"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:minWidth="@dimen/feature_wordbook_shop_badge_min_width"
+                    android:padding="@dimen/feature_wordbook_shop_badge_padding_horizontal"
+                    android:textColor="@color/feature_wordbook_shop_badge_text"
+                    android:textSize="@dimen/feature_wordbook_shop_badge_text_size"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/coverContainer"
+                    app:layout_constraintStart_toEndOf="@id/coverContainer"
+                    tools:text="793 词" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/tv_meta"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/feature_wordbook_shop_meta_margin_start"
+                    android:ellipsize="end"
+                    android:includeFontPadding="false"
+                    android:maxLines="1"
+                    android:textColor="@color/feature_wordbook_shop_card_meta"
+                    android:textSize="@dimen/feature_wordbook_shop_meta_text_size"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_count"
+                    app:layout_constraintEnd_toStartOf="@id/btn_action"
+                    app:layout_constraintStart_toEndOf="@id/tv_count"
+                    app:layout_constraintTop_toTopOf="@id/tv_count"
+                    tools:text="3.2w 人在学" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/module_wordbook_selector_ff8000_radius"
+                    android:backgroundTint="@null"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:minWidth="@dimen/feature_wordbook_shop_action_min_width"
+                    android:minHeight="@dimen/feature_wordbook_shop_action_min_height"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:text="@string/module_wordbook_download"
+                    android:textAllCaps="false"
+                    android:textSize="10sp"
+                    app:backgroundTint="@null"
+                    app:cornerRadius="16dp"
+                    app:layout_constraintBottom_toBottomOf="@id/coverContainer"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:text="下载" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </FrameLayout>
 </layout>

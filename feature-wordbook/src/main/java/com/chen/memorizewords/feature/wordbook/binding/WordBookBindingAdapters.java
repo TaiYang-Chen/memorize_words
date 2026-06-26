@@ -4,6 +4,7 @@ import android.widget.ImageView;
 
 import androidx.databinding.BindingAdapter;
 
+import com.chen.memorizewords.core.ui.image.WordBookCoverUrlNormalizer;
 import com.chen.memorizewords.feature.wordbook.R;
 
 import coil.Coil;
@@ -30,19 +31,6 @@ public final class WordBookBindingAdapters {
     }
 
     private static String toDisplayUrl(String rawUrl) {
-        String raw = rawUrl == null ? "" : rawUrl.trim();
-        if (raw.isEmpty()) {
-            return null;
-        }
-        String lower = raw.toLowerCase();
-        if (lower.startsWith("http://") || lower.startsWith("https://")) {
-            return raw
-                    .replace("http://localhost", "http://10.0.2.2")
-                    .replace("https://localhost", "https://10.0.2.2");
-        }
-        if (raw.startsWith("/")) {
-            return "http://10.0.2.2:8080" + raw;
-        }
-        return "http://10.0.2.2:8080/" + raw;
+        return WordBookCoverUrlNormalizer.toDisplayUrl(rawUrl);
     }
 }

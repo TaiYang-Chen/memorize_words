@@ -11,6 +11,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
+import com.chen.memorizewords.core.ui.image.WordBookCoverImageLoader
 import com.chen.memorizewords.domain.wordbook.model.learning.LearningTestMode
 import com.chen.memorizewords.domain.wordbook.model.WordBook
 import com.chen.memorizewords.domain.wordbook.repository.WordOrderType
@@ -245,7 +246,7 @@ class OnboardingStudyPlanFragment :
     private fun bindWordBookInfo(wordBook: WordBook) {
         databind.tvBookTitle.text = wordBook.title
         databind.tvBookSummary.text = buildWordBookSummary(wordBook)
-        OnboardingWordBookImageLoader.load(
+        WordBookCoverImageLoader.load(
             imageView = databind.ivBookCover,
             fallbackView = databind.ivBookCoverFallback,
             rawUrl = wordBook.imgUrl

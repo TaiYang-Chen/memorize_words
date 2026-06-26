@@ -48,6 +48,11 @@ class UserDataSyncRequest @Inject constructor(
             .await<ApiResponse<Unit>, Unit>()
     }
 
+    suspend fun removeMyWordBook(bookId: Long): NetworkResult<Unit> = requestExecutor.executeAuthenticated {
+        apiService.removeMyWordBook(bookId)
+            .await<ApiResponse<Unit>, Unit>()
+    }
+
     suspend fun getWordStates(
         bookId: Long,
         page: Int,

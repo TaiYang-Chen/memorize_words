@@ -12,6 +12,8 @@ import com.chen.memorizewords.domain.account.repository.user.LogoutDataLossRiskE
 import com.chen.memorizewords.domain.account.usecase.user.CacheLoadedAvatarUseCase
 import com.chen.memorizewords.domain.account.usecase.user.GetUserFlowUseCase
 import com.chen.memorizewords.domain.account.usecase.user.LogoutUseCase
+import com.chen.memorizewords.domain.account.usecase.membership.ObserveMembershipStatusUseCase
+import com.chen.memorizewords.domain.account.usecase.membership.RefreshMembershipStatusUseCase
 import com.chen.memorizewords.domain.study.model.record.DailyDurationStats
 import com.chen.memorizewords.domain.study.model.record.DailyWordStats
 import com.chen.memorizewords.domain.study.service.StudyStatsFacade
@@ -39,6 +41,8 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     getUserFlowUseCase: GetUserFlowUseCase,
     private val logoutUseCase: LogoutUseCase,
+    observeMembershipStatusUseCase: ObserveMembershipStatusUseCase,
+    private val refreshMembershipStatusUseCase: RefreshMembershipStatusUseCase,
     private val studyStatsFacade: StudyStatsFacade,
     private val cacheLoadedAvatarUseCase: CacheLoadedAvatarUseCase,
     private val resourceProvider: ResourceProvider
@@ -76,6 +80,10 @@ class ProfileViewModel @Inject constructor(
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
 
     private val continuousCheckInDays = studyStatsFacade.getContinuousCheckInDays()
+
+    private val membershipStatus =
+        observeMembershipStatusUseCase()
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     private val currentBusinessDate: StateFlow<String> =
         flow {
@@ -153,6 +161,55 @@ class ProfileViewModel @Inject constructor(
                 resourceProvider.getString(R.string.feature_home_profile_empty_account_id)
             )
         )
+
+    val membershipTitleText: StateFlow<String> =
+        membershipStatus
+            .map { status ->
+                if (status?.active == true) {
+                    resourceProvider.getString(R.string.feature_home_profile_member_active_title)
+                } else {
+                    resourceProvider.getString(R.string.feature_home_profile_member_checkin_title)
+                }
+            }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5_000),
+                resourceProvider.getString(R.string.feature_home_profile_member_checkin_title)
+            )
+
+    val membershipSubtitleText: StateFlow<String> =
+        membershipStatus
+            .map { status ->
+                val validUntilDate = status?.validUntilDate
+                if (status?.active == true && !validUntilDate.isNullOrBlank()) {
+                    resourceProvider.getString(
+                        R.string.feature_home_profile_member_valid_until,
+                        validUntilDate
+                    )
+                } else {
+                    resourceProvider.getString(R.string.feature_home_profile_member_checkin_subtitle)
+                }
+            }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5_000),
+                resourceProvider.getString(R.string.feature_home_profile_member_checkin_subtitle)
+            )
+
+    val membershipActionText: StateFlow<String> =
+        membershipStatus
+            .map { status ->
+                if (status?.todayCheckedIn == true) {
+                    resourceProvider.getString(R.string.feature_home_profile_member_checked_today)
+                } else {
+                    resourceProvider.getString(R.string.feature_home_profile_member_checkin_action)
+                }
+            }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5_000),
+                resourceProvider.getString(R.string.feature_home_profile_member_checkin_action)
+            )
 
     val totalStudyDurationHoursText: StateFlow<String> =
         studyStatsFacade.getStudyTotalDurationMs()
@@ -243,6 +300,12 @@ class ProfileViewModel @Inject constructor(
 
     fun toPersonalQr() {
         navigateRoute(Route.OpenPersonalQr)
+    }
+
+    init {
+        viewModelScope.launch {
+            refreshMembershipStatusUseCase()
+        }
     }
 
     fun cacheLoadedAvatar(imageBytes: ByteArray, avatarUrl: String?) {

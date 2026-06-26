@@ -5,6 +5,7 @@ import com.chen.memorizewords.core.common.calendar.CheckInConfigDataSource
 import com.chen.memorizewords.data.sync.remote.datasync.RemoteUserSyncDataSource
 import com.chen.memorizewords.data.sync.remote.learningsync.RemoteLearningSyncDataSource
 import com.chen.memorizewords.data.sync.remoteapi.dto.wordbook.WordBookDto
+import com.chen.memorizewords.domain.account.repository.membership.MembershipRepository
 import com.chen.memorizewords.domain.floating.FloatingSnapshotLocalStatePort
 import com.chen.memorizewords.domain.floating.FloatingSettingsLocalStatePort
 import com.chen.memorizewords.domain.floating.model.FloatingWordDisplayRecord
@@ -48,6 +49,7 @@ class PrimaryServerBootstrapContributor @Inject constructor(
     private val remoteWordBookRepository: RemoteWordBookRepository,
     private val wordBookContentReadinessPort: WordBookContentReadinessPort,
     private val checkInConfigDataSource: CheckInConfigDataSource,
+    private val membershipRepository: MembershipRepository,
     private val errorLogger: PostLoginBootstrapErrorLogger
 ) : ServerBootstrapContributor {
 
@@ -104,6 +106,10 @@ class PrimaryServerBootstrapContributor @Inject constructor(
                 checkInConfigDataSource.saveCachedMakeupCardBalance(status.makeupCardBalance)
                 checkInConfigDataSource.saveLastCheckInSyncAt(System.currentTimeMillis())
             }
+        }
+
+        bootstrapStep("refreshMembershipStatus") {
+            membershipRepository.refreshStatus().getOrThrow()
         }
 
         val remoteBooks = bootstrapStep("getMyWordBooks") {

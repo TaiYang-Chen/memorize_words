@@ -49,6 +49,10 @@ class MyWordBooksFragment :
             viewModel.onSetCurrentWordBook(it.bookId)
         }
 
+        adapter.setOnDeleteClickListener {
+            viewModel.onRequestDeleteWordBook(it)
+        }
+
         databind.radioGroupFilter.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.btnAll -> viewModel.setFilter("All")
@@ -89,5 +93,14 @@ class MyWordBooksFragment :
                 navController.navigate(R.id.action_myWordBooks_to_shop)
             }
         }
+    }
+
+    override fun onConfirmBottomDialog(event: UiEvent.Dialog.ConfirmBottom) {
+        val action = event.action.orEmpty()
+        if (!action.startsWith(MyWordBooksViewModel.ACTION_DELETE_WORD_BOOK)) return
+        val bookId = action.substringAfter(":", missingDelimiterValue = "")
+            .toLongOrNull()
+            ?: return
+        viewModel.onDeleteWordBookConfirmed(bookId)
     }
 }

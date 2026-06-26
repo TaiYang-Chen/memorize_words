@@ -11,6 +11,7 @@ interface WordBookRepository {
     fun getMyWordBooksMinimalFlow(): Flow<List<WordBookInfo>>
     fun getCurrentWordBookMinimalFlow(): Flow<WordBookInfo?>
     suspend fun setCurrentWordBook(bookId: Long)
+    suspend fun deleteMyWordBook(bookId: Long): Result<Unit>
     suspend fun getCurrentWordBook(): WordBook?
 
     suspend fun getBookNameById(bookId: Long): String?

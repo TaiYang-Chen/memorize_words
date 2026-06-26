@@ -68,7 +68,11 @@ class BookShopFragment :
                     }
 
                     is DownloadState.Downloading -> {
-                        viewModel.onCancelDownload(item.book.id)
+                        if (item.downloadState.progress <= 0) {
+                            requestNotificationPermissionIfNeeded(item)
+                        } else {
+                            viewModel.onCancelDownload(item.book.id)
+                        }
                     }
 
                     is DownloadState.Downloaded -> {

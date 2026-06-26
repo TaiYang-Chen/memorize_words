@@ -1,7 +1,5 @@
 ﻿package com.chen.memorizewords.data.wordbook.repository
 
-import androidx.room.withTransaction
-import com.chen.memorizewords.data.wordbook.local.WordBookDatabase
 import com.chen.memorizewords.data.wordbook.local.room.model.study.progress.word.WordLearningStateDao
 import com.chen.memorizewords.data.wordbook.local.room.model.study.progress.wordbook.WordBookProgressDao
 import com.chen.memorizewords.data.wordbook.local.room.model.study.progress.wordbook.WordBookProgressEntity
@@ -38,14 +36,17 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class WordBookRepositoryImpl @Inject constructor(
-    private val wordBookDatabase: WordBookDatabase,
+    private val transactionRunner: WordBookTransactionRunner,
     private val wordLearningStateDao: WordLearningStateDao,
     private val wordBookProgressDao: WordBookProgressDao,
     private val bookWordsDao: BookWordItemDao,
     private val wordDao: WordDao,
     private val wordBookDao: WordBookDao,
     private val currentWordBookSelectionDao: CurrentWordBookSelectionDao,
-    private val SyncOutboxWriter: SyncOutboxWriter,    private val gson: Gson
+    private val myWordBookRemoteRemover: MyWordBookRemoteRemover,
+    private val wordBookWorkCanceller: WordBookWorkCanceller,
+    private val SyncOutboxWriter: SyncOutboxWriter,
+    private val gson: Gson
 ) : WordBookRepository, CurrentWordBookLocalStatePort {
 
     override fun getMyWordBooksMinimalFlow(): Flow<List<WordBookInfo>> {
@@ -95,7 +96,7 @@ class WordBookRepositoryImpl @Inject constructor(
     override suspend fun setCurrentWordBook(bookId: Long) {
         withContext(Dispatchers.IO) {
             if (!wordBookDao.exists(bookId)) return@withContext
-            wordBookDatabase.withTransaction {
+            transactionRunner.runInTransaction {
                 currentWordBookSelectionDao.upsert(CurrentWordBookSelectionEntity(bookId = bookId))
                 SyncOutboxWriter.enqueueLatest(
                     bizType = OutboxTopic.WORD_BOOK_SELECTION,
@@ -103,6 +104,21 @@ class WordBookRepositoryImpl @Inject constructor(
                     operation = SyncOperation.UPSERT,
                     payload = gson.toJson(WordBookSelectionSyncPayload(bookId = bookId))
                 )
+            }
+        }
+    }
+
+    override suspend fun deleteMyWordBook(bookId: Long): Result<Unit> {
+        return withContext(Dispatchers.IO) {
+            runCatching {
+                require(bookId > 0L) { "bookId invalid" }
+                ensureDeletableMyWordBook(bookId)
+                myWordBookRemoteRemover.removeMyWordBook(bookId).getOrThrow()
+                transactionRunner.runInTransaction {
+                    ensureDeletableMyWordBook(bookId)
+                    wordBookDao.deleteByIds(listOf(bookId))
+                }
+                wordBookWorkCanceller.cancel(bookId)
             }
         }
     }
@@ -190,7 +206,7 @@ class WordBookRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             if (bookId <= 0L) return@withContext
             val book = wordBookDao.getWordBookById(bookId) ?: return@withContext
-            wordBookDatabase.withTransaction {
+            transactionRunner.runInTransaction {
                 wordBookProgressDao.ensureProgressRow(bookId = bookId)
                 wordBookProgressDao.incrementAnswerStats(
                     bookId = bookId,
@@ -218,6 +234,15 @@ class WordBookRepositoryImpl @Inject constructor(
     override suspend fun clearLocalState() {
         withContext(Dispatchers.IO) {
             currentWordBookSelectionDao.deleteAll()
+        }
+    }
+
+    private suspend fun ensureDeletableMyWordBook(bookId: Long) {
+        if (!wordBookDao.exists(bookId)) {
+            throw NoSuchElementException("Word book with id=$bookId not found")
+        }
+        if (currentWordBookSelectionDao.getById()?.bookId == bookId) {
+            throw IllegalStateException("current wordbook cannot be deleted")
         }
     }
 
@@ -255,7 +280,7 @@ class WordBookRepositoryImpl @Inject constructor(
         val progress = wordBookProgressDao.getProgress(bookId) ?: return
         val learnedCount = wordLearningStateDao.getLearnedCountByBookId(bookId)
         val masteredCount = wordLearningStateDao.getMasteredCountByBookId(bookId)
-        wordBookDatabase.withTransaction {
+        transactionRunner.runInTransaction {
             SyncOutboxWriter.enqueueLatest(
                 bizType = OutboxTopic.WORD_BOOK_PROGRESS,
                 bizKey = "word_book_progress:$bookId",

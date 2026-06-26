@@ -216,4 +216,20 @@
     <string name="feature_home_profile_my_books">我的词书</string>
     <string name="feature_home_profile_learning_report">学习报告</string>
     <string name="feature_home_profile_settings">设置</string>
+    <string name="feature_home_profile_member_checkin_title">签到免费得会员</string>
+    <string name="feature_home_profile_member_active_title">Pro 会员</string>
+    <string name="feature_home_profile_member_checkin_subtitle">每天来会员中心签到，免费获得 1 天会员</string>
+    <string name="feature_home_profile_member_valid_until">会员有效期至 %1$s</string>
+    <string name="feature_home_profile_member_checkin_action">去签到</string>
+    <string name="feature_home_profile_member_checked_today">今日已签到</string>
+    <string name="feature_home_membership_status_active">Pro 会员有效</string>
+    <string name="feature_home_membership_status_normal">签到免费得会员</string>
+    <string name="feature_home_membership_status_active_subtitle">有效期至 %1$s，剩余 %2$d 天</string>
+    <string name="feature_home_membership_status_normal_subtitle">每天签到可免费获得 1 天 Pro 会员</string>
+    <string name="feature_home_membership_note">会员有效期按服务端自然日计算；签到成功后立即生效，今日重复签到不会重复增加天数。</string>
+    <string name="feature_home_membership_checkin_button">签到领取 1 天会员</string>
+    <string name="feature_home_membership_checked_button">今日已签到</string>
+    <string name="feature_home_membership_checkin_success">已获得 1 天会员</string>
+    <string name="feature_home_membership_checkin_duplicate">今日已签到</string>
+    <string name="feature_home_membership_checkin_failed">签到失败，请稍后重试</string>
 </resources>

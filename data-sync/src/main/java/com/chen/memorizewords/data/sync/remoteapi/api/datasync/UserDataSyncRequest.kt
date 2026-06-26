@@ -330,4 +330,16 @@ class UserDataSyncRequest @Inject constructor(
             )
         ).await<ApiResponse<Unit>, Unit>()
     }
+
+    suspend fun getMembershipStatus(): NetworkResult<MembershipStatusDto> =
+        requestExecutor.executeAuthenticated {
+            apiService.getMembershipStatus()
+                .await<ApiResponse<MembershipStatusDto>, MembershipStatusDto>()
+        }
+
+    suspend fun checkInMembership(): NetworkResult<MembershipCheckInRewardDto> =
+        requestExecutor.executeAuthenticated {
+            apiService.checkInMembership()
+                .await<ApiResponse<MembershipCheckInRewardDto>, MembershipCheckInRewardDto>()
+        }
 }

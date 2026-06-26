@@ -13,11 +13,15 @@ import com.chen.memorizewords.data.wordbook.remote.wordbook.RemoteWordBookDataSo
 import com.chen.memorizewords.data.wordbook.remoteapi.api.datasync.UserDataSyncApiService
 import com.chen.memorizewords.data.wordbook.remoteapi.api.wordbook.WordBookApiService
 import com.chen.memorizewords.data.wordbook.repository.LearningProgressRepositoryImpl
+import com.chen.memorizewords.data.wordbook.repository.MyWordBookRemoteRemover
 import com.chen.memorizewords.data.wordbook.repository.RemoteWordBookRepositoryImpl
+import com.chen.memorizewords.data.wordbook.repository.RemoteUserSyncMyWordBookRemoteRemover
 import com.chen.memorizewords.data.wordbook.repository.RoomWordBookTransactionRunner
 import com.chen.memorizewords.data.wordbook.repository.WordBookTransactionRunner
+import com.chen.memorizewords.data.wordbook.repository.WordBookWorkCanceller
 import com.chen.memorizewords.data.wordbook.repository.WordBookRepositoryImpl
 import com.chen.memorizewords.data.wordbook.repository.WordRepositoryImpl
+import com.chen.memorizewords.data.wordbook.repository.WorkManagerWordBookWorkCanceller
 import com.chen.memorizewords.data.wordbook.repository.bootstrap.WordBookSnapshotLocalStateStore
 import com.chen.memorizewords.data.wordbook.repository.WordBookUpdateRepositoryImpl
 import com.chen.memorizewords.data.wordbook.repository.onboarding.OnboardingRepositoryImpl
@@ -58,6 +62,16 @@ abstract class DataWordBookModule {
     abstract fun bindWordBookTransactionRunner(
         impl: RoomWordBookTransactionRunner
     ): WordBookTransactionRunner
+
+    @Binds
+    abstract fun bindWordBookWorkCanceller(
+        impl: WorkManagerWordBookWorkCanceller
+    ): WordBookWorkCanceller
+
+    @Binds
+    abstract fun bindMyWordBookRemoteRemover(
+        impl: RemoteUserSyncMyWordBookRemoteRemover
+    ): MyWordBookRemoteRemover
 
     @Binds
     abstract fun bindCurrentWordBookLocalStatePort(

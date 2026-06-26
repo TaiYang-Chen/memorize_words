@@ -7,18 +7,23 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.chen.memorizewords.core.ui.image.WordBookCoverImageLoader
 import com.chen.memorizewords.domain.wordbook.model.WordBookInfo
 import com.chen.memorizewords.feature.wordbook.R
 import com.chen.memorizewords.feature.wordbook.databinding.ModuleWordbookItemWordbookBinding
-import com.chen.memorizewords.feature.wordbook.shop.BookShopWordBookImageLoader
 
 class MyWordBookAdapter :
     ListAdapter<WordBookInfo, MyWordBookAdapter.WordBookViewHolder>(DiffCallback) {
 
     private var onItemClickListener: ((WordBookInfo) -> Unit)? = null
+    private var onDeleteClickListener: ((WordBookInfo) -> Unit)? = null
 
     fun setOnItemClickListener(listener: (WordBookInfo) -> Unit) {
         onItemClickListener = listener
+    }
+
+    fun setOnDeleteClickListener(listener: (WordBookInfo) -> Unit) {
+        onDeleteClickListener = listener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WordBookViewHolder {
@@ -28,14 +33,18 @@ class MyWordBookAdapter :
     }
 
     override fun onBindViewHolder(holder: WordBookViewHolder, position: Int) {
-        holder.bind(getItem(position), onItemClickListener)
+        holder.bind(getItem(position), onItemClickListener, onDeleteClickListener)
     }
 
     class WordBookViewHolder(
         private val binding: ModuleWordbookItemWordbookBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: WordBookInfo, listener: ((WordBookInfo) -> Unit)?) {
+        fun bind(
+            item: WordBookInfo,
+            listener: ((WordBookInfo) -> Unit)?,
+            deleteListener: ((WordBookInfo) -> Unit)?
+        ) {
             val context = binding.root.context
             val resources = context.resources
             val subtitle = item.description.trim().ifEmpty { item.category.trim() }
@@ -101,8 +110,10 @@ class MyWordBookAdapter :
                 progressStudy.setProgress1(safeProgress)
                 progressStudy.setProgress2(safeMastered)
 
-                BookShopWordBookImageLoader.load(ivCover, ivCoverFallback, item.imgUrl)
+                WordBookCoverImageLoader.load(ivCover, ivCoverFallback, item.imgUrl)
                 rootCard.setOnClickListener { listener?.invoke(item) }
+                btnDelete.isVisible = !item.isSelected
+                btnDelete.setOnClickListener { deleteListener?.invoke(item) }
                 executePendingBindings()
             }
         }

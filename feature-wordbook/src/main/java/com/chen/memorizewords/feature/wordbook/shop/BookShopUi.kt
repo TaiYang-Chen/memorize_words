@@ -19,7 +19,9 @@ data class BookShopUi(
     val actionText: String
         get() = when (downloadState) {
             is DownloadState.NotDownloaded -> "下载"
-            is DownloadState.Downloading -> "暂停 ${downloadState.progress}%"
+            is DownloadState.Downloading -> {
+                if (downloadState.progress <= 0) "重试" else "暂停 ${downloadState.progress}%"
+            }
             is DownloadState.Paused -> "继续 ${downloadState.progress}%"
             is DownloadState.Downloaded,
             is DownloadState.UpdateAvailable -> "已下载"

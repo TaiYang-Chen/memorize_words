@@ -2,9 +2,7 @@
 
 import android.content.Context
 import androidx.work.BackoffPolicy
-import androidx.work.Constraints
 import androidx.work.ExistingWorkPolicy
-import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
@@ -109,11 +107,6 @@ class RemoteWordBookRepositoryImpl @Inject constructor(
         markPaused(book.id, paused = false)
 
         val request = OneTimeWorkRequestBuilder<WordBookDownloadWorker>()
-            .setConstraints(
-                Constraints.Builder()
-                    .setRequiredNetworkType(NetworkType.CONNECTED)
-                    .build()
-            )
             .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
             .setInputData(
                 androidx.work.workDataOf(
@@ -132,7 +125,7 @@ class RemoteWordBookRepositoryImpl @Inject constructor(
 
         workManager?.enqueueUniqueWork(
             WordBookDownloadWorkConstants.uniqueWorkName(book.id),
-            if (forceRefresh) ExistingWorkPolicy.REPLACE else ExistingWorkPolicy.KEEP,
+            ExistingWorkPolicy.REPLACE,
             request
         )
         return DownloadCommandResult(message = "Download queued")

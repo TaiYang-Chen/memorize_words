@@ -99,6 +99,10 @@ class RemoteUserSyncDataSourceImpl @Inject constructor(
         return remoteResultAdapter.toResult { request.addMyWordBook(bookId) }
     }
 
+    override suspend fun removeMyWordBook(bookId: Long): Result<Unit> {
+        return remoteResultAdapter.toResult { request.removeMyWordBook(bookId) }
+    }
+
     override suspend fun getWordStates(
         bookId: Long,
         page: Int,

@@ -7,6 +7,8 @@ import com.chen.memorizewords.data.sync.remoteapi.api.datasync.CheckInRecordDto
 import com.chen.memorizewords.data.sync.remoteapi.api.datasync.CheckInStatusDto
 import com.chen.memorizewords.data.sync.remoteapi.api.datasync.DailyStudyDurationDto
 import com.chen.memorizewords.data.sync.remoteapi.api.datasync.FavoriteDto
+import com.chen.memorizewords.data.sync.remoteapi.api.datasync.MembershipCheckInRewardDto
+import com.chen.memorizewords.data.sync.remoteapi.api.datasync.MembershipStatusDto
 import com.chen.memorizewords.data.sync.remoteapi.api.datasync.PendingWordBookUpdateDto
 import com.chen.memorizewords.data.sync.remoteapi.api.datasync.StudyRecordDto
 import com.chen.memorizewords.data.sync.remoteapi.api.datasync.WordBookUpdateActionRequest
@@ -114,4 +116,7 @@ interface RemoteUserSyncDataSource {
         signedAt: Long,
         updatedAt: Long
     ): Result<Unit>
+
+    suspend fun getMembershipStatus(): Result<MembershipStatusDto>
+    suspend fun checkInMembership(): Result<MembershipCheckInRewardDto>
 }

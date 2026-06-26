@@ -6,6 +6,7 @@ import com.chen.memorizewords.data.sync.repository.sync.DataSyncLogoutFlusher
 import com.chen.memorizewords.data.sync.repository.sync.DataSyncOutboxReader
 import com.chen.memorizewords.data.sync.repository.sync.DataSyncOutboxWriter
 import com.chen.memorizewords.data.sync.repository.sync.DataSyncPostLoginBootstrapResetter
+import com.chen.memorizewords.data.sync.repository.membership.MembershipRepositoryImpl
 import com.chen.memorizewords.data.sync.repository.sync.SyncRepositoryImpl
 import com.chen.memorizewords.data.sync.repository.sync.SyncAuthenticatedRequestSuccessReporter
 import com.chen.memorizewords.data.sync.repository.sync.SyncOutboxDrainScheduler
@@ -20,6 +21,7 @@ import com.chen.memorizewords.domain.sync.SyncOutboxWriter
 import com.chen.memorizewords.domain.wordbook.repository.download.DownloadRepository
 import com.chen.memorizewords.domain.sync.repository.SyncRepository
 import com.chen.memorizewords.domain.sync.service.AuthenticatedRequestSuccessReporter
+import com.chen.memorizewords.domain.account.repository.membership.MembershipRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -66,4 +68,7 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindDownloadRepository(impl: DownloadRepositoryImpl): DownloadRepository
+
+    @Binds
+    abstract fun bindMembershipRepository(impl: MembershipRepositoryImpl): MembershipRepository
 }

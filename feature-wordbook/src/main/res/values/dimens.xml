@@ -5,8 +5,8 @@
 
     <dimen name="feature_wordbook_shop_card_spacing">14dp</dimen>
     <dimen name="feature_wordbook_shop_card_design_width">343dp</dimen>
-    <dimen name="feature_wordbook_shop_card_design_height">154dp</dimen>
-    <dimen name="feature_wordbook_shop_card_corner_radius">18dp</dimen>
+    <dimen name="feature_wordbook_shop_card_design_height">146dp</dimen>
+    <dimen name="feature_wordbook_shop_card_corner_radius">14dp</dimen>
     <dimen name="feature_wordbook_shop_card_stroke_width">1dp</dimen>
     <dimen name="feature_wordbook_shop_card_padding_horizontal">16dp</dimen>
     <dimen name="feature_wordbook_shop_card_padding_vertical">14dp</dimen>
@@ -19,18 +19,18 @@
 
     <dimen name="feature_wordbook_shop_title_text_size">18sp</dimen>
     <dimen name="feature_wordbook_shop_description_margin_top">8dp</dimen>
-    <dimen name="feature_wordbook_shop_description_text_size">15sp</dimen>
+    <dimen name="feature_wordbook_shop_description_text_size">11sp</dimen>
     <dimen name="feature_wordbook_shop_description_end_spacing">8dp</dimen>
     <dimen name="feature_wordbook_shop_meta_margin_start">10dp</dimen>
-    <dimen name="feature_wordbook_shop_meta_text_size">12sp</dimen>
+    <dimen name="feature_wordbook_shop_meta_text_size">8sp</dimen>
 
-    <dimen name="feature_wordbook_shop_badge_height">26dp</dimen>
+    <dimen name="feature_wordbook_shop_badge_height">18dp</dimen>
     <dimen name="feature_wordbook_shop_badge_min_width">56dp</dimen>
-    <dimen name="feature_wordbook_shop_badge_padding_horizontal">10dp</dimen>
-    <dimen name="feature_wordbook_shop_badge_text_size">12sp</dimen>
+    <dimen name="feature_wordbook_shop_badge_padding_horizontal">4dp</dimen>
+    <dimen name="feature_wordbook_shop_badge_text_size">8sp</dimen>
 
-    <dimen name="feature_wordbook_shop_action_min_height">32dp</dimen>
-    <dimen name="feature_wordbook_shop_action_min_width">88dp</dimen>
+    <dimen name="feature_wordbook_shop_action_min_height">28dp</dimen>
+    <dimen name="feature_wordbook_shop_action_min_width">64dp</dimen>
 
     <dimen name="feature_wordbook_my_book_card_min_height">158dp</dimen>
     <dimen name="feature_wordbook_my_book_card_corner_radius">12dp</dimen>

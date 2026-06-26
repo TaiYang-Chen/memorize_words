@@ -223,6 +223,24 @@ data class CheckInRecordDto(
     val updatedAt: Long
 )
 
+@JsonClass(generateAdapter = false)
+data class MembershipStatusDto(
+    val level: String,
+    val active: Boolean,
+    val validUntilDate: String?,
+    val remainingDays: Int,
+    val totalGrantedDays: Int,
+    val todayCheckedIn: Boolean
+)
+
+@JsonClass(generateAdapter = false)
+data class MembershipCheckInRewardDto(
+    val granted: Boolean,
+    val grantDays: Int,
+    val rewardDate: String,
+    val membership: MembershipStatusDto
+)
+
 interface UserDataSyncApiService {
     companion object {
         const val PATH_STUDY_PLAN = "me/study-plan"
@@ -252,6 +270,8 @@ interface UserDataSyncApiService {
         const val PATH_CHECKIN_STATUS = "me/checkin/status"
         const val PATH_CHECKIN_RECORDS = "me/checkin/records"
         const val PATH_CHECKIN_RECORD_ITEM = "me/checkin/records/{date}"
+        const val PATH_MEMBERSHIP = "me/membership"
+        const val PATH_MEMBERSHIP_CHECKIN = "me/membership/checkin"
     }
 
     @GET(PATH_STUDY_PLAN)
@@ -415,4 +435,10 @@ interface UserDataSyncApiService {
         @Path("date") date: String,
         @Body request: CheckInRecordSyncRequest
     ): Call<ApiResponse<Unit>>
+
+    @GET(PATH_MEMBERSHIP)
+    fun getMembershipStatus(): Call<ApiResponse<MembershipStatusDto>>
+
+    @POST(PATH_MEMBERSHIP_CHECKIN)
+    fun checkInMembership(): Call<ApiResponse<MembershipCheckInRewardDto>>
 }

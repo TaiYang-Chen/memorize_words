@@ -34,4 +34,5 @@
     <string name="feature_wordbook_my_book_status_studying">正在学习</string>
     <string name="feature_wordbook_my_book_progress_label">已学: %1$d / %2$d</string>
     <string name="feature_wordbook_my_book_mastered_label">熟练: %1$d</string>
+    <string name="feature_wordbook_my_book_delete">&#21024;&#38500;&#35789;&#20070;</string>
 </resources>

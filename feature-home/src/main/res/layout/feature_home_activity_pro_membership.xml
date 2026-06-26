@@ -60,19 +60,21 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/feature_home_tv_member_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/feature_home_profile_member_status_normal"
+                    android:text="@string/feature_home_membership_status_normal"
                     android:textColor="#13EC80"
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/feature_home_tv_member_status_subtitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:lineSpacingExtra="3dp"
-                    android:text="@string/feature_home_profile_member_status_subtitle"
+                    android:text="@string/feature_home_membership_status_normal_subtitle"
                     android:textColor="#CBD5E1"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -127,11 +129,12 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/feature_home_tv_member_note"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:lineSpacingExtra="3dp"
-                android:text="@string/feature_home_profile_member_note"
+                android:text="@string/feature_home_membership_note"
                 android:textColor="#64748B"
                 android:textSize="13sp" />
         </LinearLayout>
@@ -144,7 +147,7 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/feature_home_bg_profile_primary_button"
         android:gravity="center"
-        android:text="@string/feature_home_profile_member_open"
+        android:text="@string/feature_home_membership_checkin_button"
         android:textColor="#0F172A"
         android:textSize="15sp"
         android:textStyle="bold" />

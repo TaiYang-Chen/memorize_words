@@ -117,6 +117,7 @@ class SetWordAsMasteredUseCaseTest {
         override fun getMyWordBooksMinimalFlow(): Flow<List<WordBookInfo>> = emptyFlow()
         override fun getCurrentWordBookMinimalFlow(): Flow<WordBookInfo?> = emptyFlow()
         override suspend fun setCurrentWordBook(bookId: Long) = Unit
+        override suspend fun deleteMyWordBook(bookId: Long): Result<Unit> = error("Not needed")
         override suspend fun getCurrentWordBook(): WordBook? = null
         override suspend fun getBookNameById(bookId: Long): String? = null
         override suspend fun getWordRowsPage(query: WordListQuery) = error("Not needed")
