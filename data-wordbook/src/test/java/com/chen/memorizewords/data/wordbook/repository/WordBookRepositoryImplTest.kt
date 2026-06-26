@@ -8,9 +8,11 @@ import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.wordbook.W
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.wordbook.WordBookEntity
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.words.BookWordItemDao
 import com.chen.memorizewords.data.wordbook.local.room.model.words.word.WordDao
-import com.chen.memorizewords.data.wordbook.remote.datasync.RemoteUserSyncDataSource
 import com.chen.memorizewords.domain.sync.OutboxCommand
+import com.chen.memorizewords.domain.sync.OutboxTopic
+import com.chen.memorizewords.domain.sync.SyncOperation
 import com.chen.memorizewords.domain.sync.SyncOutboxWriter
+import com.chen.memorizewords.domain.sync.WordBookDeleteSyncPayload
 import com.google.gson.Gson
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Proxy
@@ -29,8 +31,7 @@ class WordBookRepositoryImplTest {
     fun `delete my wordbook removes local book after remote success`() = runBlocking {
         val fixture = RepositoryFixture(
             books = listOf(wordBook(1L), wordBook(2L)),
-            selectedBookId = 1L,
-            remoteDeleteResult = Result.success(Unit)
+            selectedBookId = 1L
         )
 
         val result = fixture.repository.deleteMyWordBook(2L)
@@ -38,33 +39,41 @@ class WordBookRepositoryImplTest {
         assertTrue(result.isSuccess)
         assertFalse(fixture.wordBookDao.books.containsKey(2L))
         assertEquals(listOf(2L), fixture.wordBookDao.deletedBookIds)
-        assertEquals(listOf(2L), fixture.remoteDataSource.removedBookIds)
+        assertTrue(fixture.remoteRemover.removedBookIds.isEmpty())
         assertEquals(listOf(2L), fixture.workCanceller.cancelledBookIds)
+
+        val command = fixture.syncOutboxWriter.commands.single()
+        assertEquals(OutboxTopic.WORD_BOOK_DELETE, command.topic)
+        assertEquals("word_book_delete:2", command.key)
+        assertEquals(SyncOperation.DELETE, command.operation)
+        assertEquals(
+            2L,
+            Gson().fromJson(command.payload, WordBookDeleteSyncPayload::class.java).bookId
+        )
     }
 
     @Test
-    fun `delete my wordbook keeps local book when remote fails`() = runBlocking {
+    fun `delete my wordbook removes local book without remote call`() = runBlocking {
         val fixture = RepositoryFixture(
             books = listOf(wordBook(1L), wordBook(2L)),
-            selectedBookId = 1L,
-            remoteDeleteResult = Result.failure(IllegalStateException("server down"))
+            selectedBookId = 1L
         )
 
         val result = fixture.repository.deleteMyWordBook(2L)
 
-        assertTrue(result.isFailure)
-        assertTrue(fixture.wordBookDao.books.containsKey(2L))
-        assertTrue(fixture.wordBookDao.deletedBookIds.isEmpty())
-        assertEquals(listOf(2L), fixture.remoteDataSource.removedBookIds)
-        assertTrue(fixture.workCanceller.cancelledBookIds.isEmpty())
+        assertTrue(result.isSuccess)
+        assertFalse(fixture.wordBookDao.books.containsKey(2L))
+        assertEquals(listOf(2L), fixture.wordBookDao.deletedBookIds)
+        assertTrue(fixture.remoteRemover.removedBookIds.isEmpty())
+        assertEquals(listOf(2L), fixture.workCanceller.cancelledBookIds)
+        assertEquals(listOf(OutboxTopic.WORD_BOOK_DELETE), fixture.syncOutboxWriter.commands.map { it.topic })
     }
 
     @Test
     fun `delete my wordbook rejects current wordbook before remote call`() = runBlocking {
         val fixture = RepositoryFixture(
             books = listOf(wordBook(1L), wordBook(2L)),
-            selectedBookId = 2L,
-            remoteDeleteResult = Result.success(Unit)
+            selectedBookId = 2L
         )
 
         val result = fixture.repository.deleteMyWordBook(2L)
@@ -72,16 +81,16 @@ class WordBookRepositoryImplTest {
         assertTrue(result.isFailure)
         assertIs<IllegalStateException>(result.exceptionOrNull())
         assertTrue(fixture.wordBookDao.books.containsKey(2L))
-        assertTrue(fixture.remoteDataSource.removedBookIds.isEmpty())
+        assertTrue(fixture.remoteRemover.removedBookIds.isEmpty())
         assertTrue(fixture.wordBookDao.deletedBookIds.isEmpty())
+        assertTrue(fixture.syncOutboxWriter.commands.isEmpty())
     }
 
     @Test
     fun `delete my wordbook flow removes deleted item`() = runBlocking {
         val fixture = RepositoryFixture(
             books = listOf(wordBook(1L), wordBook(2L)),
-            selectedBookId = 1L,
-            remoteDeleteResult = Result.success(Unit)
+            selectedBookId = 1L
         )
 
         fixture.repository.deleteMyWordBook(2L).getOrThrow()
@@ -92,13 +101,13 @@ class WordBookRepositoryImplTest {
 
     private class RepositoryFixture(
         books: List<WordBookEntity>,
-        selectedBookId: Long?,
-        remoteDeleteResult: Result<Unit>
+        selectedBookId: Long?
     ) {
         val wordBookDao = FakeWordBookDao(books)
         val currentSelectionDao = FakeCurrentWordBookSelectionDao(selectedBookId)
-        val remoteDataSource = FakeRemoteUserSyncDataSource(remoteDeleteResult)
+        val remoteRemover = FakeMyWordBookRemoteRemover()
         val workCanceller = FakeWordBookWorkCanceller()
+        val syncOutboxWriter = FakeSyncOutboxWriter()
 
         val repository = WordBookRepositoryImpl(
             transactionRunner = FakeWordBookTransactionRunner(),
@@ -108,9 +117,9 @@ class WordBookRepositoryImplTest {
             wordDao = throwingProxy(),
             wordBookDao = wordBookDao.proxy,
             currentWordBookSelectionDao = currentSelectionDao.proxy,
-            remoteUserSyncDataSource = remoteDataSource.proxy,
+            myWordBookRemoteRemover = remoteRemover,
             wordBookWorkCanceller = workCanceller,
-            SyncOutboxWriter = FakeSyncOutboxWriter(),
+            SyncOutboxWriter = syncOutboxWriter,
             gson = Gson()
         )
     }
@@ -160,19 +169,12 @@ class WordBookRepositoryImplTest {
         }
     }
 
-    private class FakeRemoteUserSyncDataSource(
-        private val deleteResult: Result<Unit>
-    ) {
+    private class FakeMyWordBookRemoteRemover : MyWordBookRemoteRemover {
         val removedBookIds = mutableListOf<Long>()
 
-        val proxy: RemoteUserSyncDataSource = proxy { methodName, args ->
-            when {
-                methodName.startsWith("removeMyWordBook") -> {
-                    removedBookIds += args.first() as Long
-                    deleteResult
-                }
-                else -> unexpected(methodName)
-            }
+        override suspend fun removeMyWordBook(bookId: Long): Result<Unit> {
+            removedBookIds += bookId
+            return Result.success(Unit)
         }
     }
 
@@ -189,7 +191,11 @@ class WordBookRepositoryImplTest {
     }
 
     private class FakeSyncOutboxWriter : SyncOutboxWriter {
-        override suspend fun enqueueLatest(command: OutboxCommand) = Unit
+        val commands = mutableListOf<OutboxCommand>()
+
+        override suspend fun enqueueLatest(command: OutboxCommand) {
+            commands += command
+        }
     }
 
     private companion object {

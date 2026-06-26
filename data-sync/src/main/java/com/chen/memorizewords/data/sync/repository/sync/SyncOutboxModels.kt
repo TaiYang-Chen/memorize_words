@@ -7,6 +7,7 @@ object SyncOutboxBizType {
     const val PRACTICE_SESSION = "PRACTICE_SESSION"
     const val FAVORITE = "FAVORITE"
     const val WORD_BOOK_PROGRESS = "WORD_BOOK_PROGRESS"
+    const val WORD_BOOK_DELETE = "WORD_BOOK_DELETE"
     const val WORD_STATE_UPSERT = "WORD_STATE_UPSERT"
     const val WORD_STATE_DELETE_BY_BOOK = "WORD_STATE_DELETE_BY_BOOK"
     const val WORD_BOOK_SELECTION = "WORD_BOOK_SELECTION"
@@ -96,6 +97,10 @@ data class WordBookProgressSyncPayload(
     val wrongCount: Int,
     val studyDayCount: Int,
     val lastStudyDate: String
+)
+
+data class WordBookDeleteSyncPayload(
+    val bookId: Long
 )
 
 data class WordBookSelectionSyncPayload(

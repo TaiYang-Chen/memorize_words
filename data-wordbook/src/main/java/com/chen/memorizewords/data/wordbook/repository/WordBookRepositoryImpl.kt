@@ -14,6 +14,7 @@ import com.chen.memorizewords.data.wordbook.local.room.model.words.word.toDomain
 import com.chen.memorizewords.domain.sync.OutboxTopic
 import com.chen.memorizewords.domain.sync.SyncOperation
 import com.chen.memorizewords.domain.sync.SyncOutboxWriter
+import com.chen.memorizewords.domain.sync.WordBookDeleteSyncPayload
 import com.chen.memorizewords.domain.sync.WordBookProgressSyncPayload
 import com.chen.memorizewords.domain.sync.WordBookSelectionSyncPayload
 import com.chen.memorizewords.core.common.paging.PageSlice
@@ -113,10 +114,15 @@ class WordBookRepositoryImpl @Inject constructor(
             runCatching {
                 require(bookId > 0L) { "bookId invalid" }
                 ensureDeletableMyWordBook(bookId)
-                myWordBookRemoteRemover.removeMyWordBook(bookId).getOrThrow()
                 transactionRunner.runInTransaction {
                     ensureDeletableMyWordBook(bookId)
                     wordBookDao.deleteByIds(listOf(bookId))
+                    SyncOutboxWriter.enqueueLatest(
+                        bizType = OutboxTopic.WORD_BOOK_DELETE,
+                        bizKey = "word_book_delete:$bookId",
+                        operation = SyncOperation.DELETE,
+                        payload = gson.toJson(WordBookDeleteSyncPayload(bookId = bookId))
+                    )
                 }
                 wordBookWorkCanceller.cancel(bookId)
             }

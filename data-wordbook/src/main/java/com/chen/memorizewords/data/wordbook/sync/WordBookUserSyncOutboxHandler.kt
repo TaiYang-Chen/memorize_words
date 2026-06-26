@@ -13,6 +13,7 @@ import com.chen.memorizewords.domain.sync.StudyPlanSyncPayload
 import com.chen.memorizewords.domain.sync.StudyRecordSyncPayload
 import com.chen.memorizewords.domain.sync.SyncOperation
 import com.chen.memorizewords.domain.sync.SyncOutboxHandler
+import com.chen.memorizewords.domain.sync.WordBookDeleteSyncPayload
 import com.chen.memorizewords.domain.sync.WordBookProgressSyncPayload
 import com.chen.memorizewords.domain.sync.WordBookSelectionSyncPayload
 import com.chen.memorizewords.domain.sync.WordStateDeleteByBookSyncPayload
@@ -38,6 +39,7 @@ class WordBookUserSyncOutboxHandler @Inject constructor(
         OutboxTopic.DAILY_STUDY_DURATION,
         OutboxTopic.FAVORITE,
         OutboxTopic.WORD_BOOK_PROGRESS,
+        OutboxTopic.WORD_BOOK_DELETE,
         OutboxTopic.WORD_STATE_UPSERT,
         OutboxTopic.WORD_STATE_DELETE_BY_BOOK,
         OutboxTopic.WORD_BOOK_SELECTION,
@@ -104,6 +106,11 @@ class WordBookUserSyncOutboxHandler @Inject constructor(
                     studyDayCount = payload.studyDayCount,
                     lastStudyDate = payload.lastStudyDate
                 ).getOrThrow()
+            }
+
+            OutboxTopic.WORD_BOOK_DELETE -> {
+                val payload = gson.fromJson(record.payload, WordBookDeleteSyncPayload::class.java)
+                remoteUserSyncDataSource.removeMyWordBook(payload.bookId).getOrThrow()
             }
 
             OutboxTopic.WORD_STATE_UPSERT -> {
