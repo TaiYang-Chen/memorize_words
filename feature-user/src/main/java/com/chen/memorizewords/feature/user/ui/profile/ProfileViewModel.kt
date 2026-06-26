@@ -4,14 +4,17 @@ import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.core.ui.vm.UiEvent
+import com.chen.memorizewords.domain.account.model.LogoutOutcome
 import com.chen.memorizewords.domain.account.model.user.User
 import com.chen.memorizewords.domain.account.model.user.avatarLoadSource
+import com.chen.memorizewords.domain.account.repository.user.LogoutDataLossRiskException
 import com.chen.memorizewords.domain.account.usecase.user.BindSocialUseCase
 import com.chen.memorizewords.domain.account.usecase.user.CacheLoadedAvatarUseCase
 import com.chen.memorizewords.domain.account.usecase.user.ChangeAvatarUseCase
 import com.chen.memorizewords.domain.account.usecase.user.ChangeGenderUseCase
 import com.chen.memorizewords.domain.account.usecase.user.ChangeNicknameUseCase
 import com.chen.memorizewords.domain.account.usecase.user.GetUserFlowUseCase
+import com.chen.memorizewords.domain.account.usecase.user.LogoutUseCase
 import com.chen.memorizewords.feature.user.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -28,11 +31,14 @@ class ProfileViewModel @Inject constructor(
     private val changeAvatarUseCase: ChangeAvatarUseCase,
     private val bindSocialUseCase: BindSocialUseCase,
     private val cacheLoadedAvatarUseCase: CacheLoadedAvatarUseCase,
+    private val logoutUseCase: LogoutUseCase,
     private val resourceProvider: ResourceProvider
 ) : BaseViewModel() {
 
     companion object {
         const val ACTION_CHANGE_NICKNAME = "change_nickname"
+        const val ACTION_LOGOUT_CONFIRM = "logout_confirm"
+        const val ACTION_FORCE_LOGOUT = "force_logout"
         const val DIALOG_CHANGE_GENDER = "changeGender"
         const val DIALOG_AVATAR_ACTIONS = "avatarActions"
         const val DIALOG_BIND_WECHAT = "bindWechat"
@@ -41,6 +47,7 @@ class ProfileViewModel @Inject constructor(
 
     sealed interface Route {
         data class ToAvatarPreview(val avatarSource: String) : Route
+        data class OpenAuth(val clearTask: Boolean = false) : Route
         data object ToChangePassword : Route
         data object ToDeleteAccountConfirm : Route
         data object ToBindPhone : Route
@@ -135,6 +142,24 @@ class ProfileViewModel @Inject constructor(
         navigateRoute(Route.ToBindEmail)
     }
 
+    fun requestLogoutConfirmation() {
+        showConfirmDialog(
+            action = ACTION_LOGOUT_CONFIRM,
+            title = resourceProvider.getString(R.string.feature_user_profile_logout_confirm_title),
+            message = resourceProvider.getString(R.string.feature_user_profile_logout_confirm_message),
+            confirmText = resourceProvider.getString(R.string.feature_user_profile_logout_confirm_action),
+            cancelText = resourceProvider.getString(R.string.feature_user_profile_logout_cancel_action)
+        )
+    }
+
+    fun onLogoutConfirmed() {
+        logout()
+    }
+
+    fun onForceLogoutConfirmed() {
+        forceLogout()
+    }
+
     fun startBindWechat() {
         emitEvent(UiEvent.Dialog.CustomConfirmDialog(DIALOG_BIND_WECHAT))
     }
@@ -220,6 +245,44 @@ class ProfileViewModel @Inject constructor(
 
     fun displayAccountId(user: User?): String =
         user?.userId?.takeIf { it > 0 }?.toString().orEmpty()
+
+    private fun logout() {
+        viewModelScope.launch {
+            logoutUseCase().onSuccess { outcome ->
+                if (outcome is LogoutOutcome.LocalClearedRemoteFailed) {
+                    val fallback = resourceProvider.getString(R.string.feature_user_profile_logout_failed)
+                    showToast(outcome.cause.message?.ifBlank { fallback } ?: fallback)
+                }
+                navigateRoute(Route.OpenAuth(clearTask = true))
+            }.onFailure { failure ->
+                if (failure is LogoutDataLossRiskException) {
+                    showConfirmDialog(
+                        action = ACTION_FORCE_LOGOUT,
+                        title = resourceProvider.getString(R.string.feature_user_profile_logout_risk_title),
+                        message = resourceProvider.getString(R.string.feature_user_profile_logout_risk_message)
+                    )
+                    return@onFailure
+                }
+                val fallback = resourceProvider.getString(R.string.feature_user_profile_logout_failed)
+                showToast(failure.message?.ifBlank { fallback } ?: fallback)
+            }
+        }
+    }
+
+    private fun forceLogout() {
+        viewModelScope.launch {
+            logoutUseCase(force = true).onSuccess { outcome ->
+                if (outcome is LogoutOutcome.LocalClearedRemoteFailed) {
+                    val fallback = resourceProvider.getString(R.string.feature_user_profile_logout_failed)
+                    showToast(outcome.cause.message?.ifBlank { fallback } ?: fallback)
+                }
+            }.onFailure { failure ->
+                val fallback = resourceProvider.getString(R.string.feature_user_profile_logout_failed)
+                showToast(failure.message?.ifBlank { fallback } ?: fallback)
+            }
+            navigateRoute(Route.OpenAuth(clearTask = true))
+        }
+    }
 
     private fun bindSocial(platform: String, oauthCode: String, state: String?) {
         viewModelScope.launch {

@@ -16,6 +16,14 @@
     <string name="feature_user_profile_value_unbound">未绑定</string>
     <string name="feature_user_profile_member_gold">黄金会员</string>
     <string name="feature_user_profile_change_password">修改密码</string>
+    <string name="feature_user_profile_logout">退出登录</string>
+    <string name="feature_user_profile_logout_confirm_title">确认退出登录</string>
+    <string name="feature_user_profile_logout_confirm_message">退出后需要重新登录，是否继续？</string>
+    <string name="feature_user_profile_logout_confirm_action">退出登录</string>
+    <string name="feature_user_profile_logout_cancel_action">取消</string>
+    <string name="feature_user_profile_logout_failed">退出登录失败</string>
+    <string name="feature_user_profile_logout_risk_title">同步风险提示</string>
+    <string name="feature_user_profile_logout_risk_message">当前有学习数据尚未同步，继续退出可能导致记录丢失，是否继续？</string>
     <string name="feature_user_profile_delete_account">注销账户</string>
     <string name="feature_user_profile_copy_account_id">复制账号 ID</string>
     <string name="feature_user_profile_account_id_copied">账号 ID 已复制</string>

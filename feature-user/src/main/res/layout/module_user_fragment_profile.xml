@@ -472,6 +472,29 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/feature_user_profile_row_height"
                             android:gravity="center_vertical"
+                            android:onClick="@{()->viewModel.requestLogoutConfirmation()}"
+                            android:paddingStart="@dimen/feature_user_profile_row_horizontal_padding"
+                            android:paddingEnd="@dimen/feature_user_profile_row_horizontal_padding">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/feature_user_profile_logout"
+                                android:textColor="@color/feature_user_profile_label"
+                                android:textSize="@dimen/feature_user_profile_label_size" />
+
+                            <ImageView
+                                android:layout_width="@dimen/feature_user_profile_chevron_size"
+                                android:layout_height="@dimen/feature_user_profile_chevron_size"
+                                android:contentDescription="@null"
+                                android:src="@drawable/feature_user_ic_profile_chevron_right" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/feature_user_profile_row_height"
+                            android:gravity="center_vertical"
                             android:onClick="@{()->viewModel.toDeleteAccountConfirm()}"
                             android:paddingStart="@dimen/feature_user_profile_row_horizontal_padding"
                             android:paddingEnd="@dimen/feature_user_profile_row_horizontal_padding">

@@ -32,6 +32,7 @@ import com.chen.memorizewords.feature.user.R
 import com.chen.memorizewords.feature.user.auth.social.QQAuthProvider
 import com.chen.memorizewords.feature.user.auth.social.WeChatAuthProvider
 import com.chen.memorizewords.feature.user.databinding.ModuleUserFragmentProfileBinding
+import com.chen.memorizewords.feature.user.ui.AuthActivity
 import com.chen.memorizewords.feature.user.ui.profile.avatar.AvatarActionBottomSheetDialog
 import com.chen.memorizewords.feature.user.ui.profile.avatar.AvatarImageProcessor
 import com.yalantis.ucrop.UCrop
@@ -115,6 +116,16 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ModuleUserFragmentProfile
                 )
             }
 
+            is ProfileViewModel.Route.OpenAuth -> {
+                startActivity(
+                    Intent(requireContext(), AuthActivity::class.java).apply {
+                        if (target.clearTask) {
+                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        }
+                    }
+                )
+            }
+
             ProfileViewModel.Route.ToChangePassword -> {
                 findNavController().navigate(
                     R.id.action_module_login_profilefragment_to_changePasswordFragment
@@ -139,6 +150,18 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ModuleUserFragmentProfile
                 )
             }
         }
+    }
+
+    override fun onConfirmDialog(event: UiEvent.Dialog.Confirm) {
+        if (event.action == ProfileViewModel.ACTION_LOGOUT_CONFIRM) {
+            viewModel.onLogoutConfirmed()
+            return
+        }
+        if (event.action == ProfileViewModel.ACTION_FORCE_LOGOUT) {
+            viewModel.onForceLogoutConfirmed()
+            return
+        }
+        super.onConfirmDialog(event)
     }
 
     override fun customConfirmDialog(event: UiEvent.Dialog.CustomConfirmDialog) {
