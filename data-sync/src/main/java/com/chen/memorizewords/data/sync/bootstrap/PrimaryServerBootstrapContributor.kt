@@ -117,14 +117,11 @@ class PrimaryServerBootstrapContributor @Inject constructor(
         }
         val selectedBookId = remoteBooks.firstOrNull { it.isSelected }?.id
             ?: onboardingSnapshot?.selectedWordBookId
+        val prioritizedRemoteBooks = prioritizeSelectedBook(remoteBooks, selectedBookId)
+        val selectedRemoteBook = prioritizedRemoteBooks.firstOrNull { it.id == selectedBookId }
 
-        remoteBooks.forEach { dto ->
-            bootstrapStep("ensureBookContentReady(bookId=${dto.id})") {
-                wordBookContentReadinessPort.ensureContentReady(
-                    book = dto.toDomain(),
-                    forceRefresh = false
-                )
-            }
+        selectedRemoteBook?.let { dto ->
+            ensureBookContentReady(dto)
         }
         val restoredSelectedBookId = bootstrapStep("restoreCurrentWordBookSelection") {
             restoreCurrentWordBookSelection(
@@ -133,31 +130,39 @@ class PrimaryServerBootstrapContributor @Inject constructor(
             )
         }
 
-        remoteBooks.forEach { book ->
-            val states = bootstrapStep("getWordStates(bookId=${book.id})") {
-                loadPagedSnapshot { page, count ->
-                    remoteUserSyncDataSource.getWordStates(
-                        bookId = book.id,
-                        page = page,
-                        count = count
-                    )
-                }
-            }
-            bootstrapStep("overwriteWordStates(bookId=${book.id})") {
-                studySnapshotLocalStatePort.overwriteLearningStatesForBookFromRemote(
-                    book.id,
-                    states.map { it.toDomain(book.id) }
-                )
-                wordBookSnapshotLocalStatePort.overwriteLearningStatesForBookFromRemote(
-                    book.id,
-                    states.map { it.toSnapshot(book.id) }
-                )
-            }
+        bootstrapStep("overwriteCurrentWordBook") {
+            currentWordBookLocalStatePort.overwriteFromRemote(restoredSelectedBookId)
+        }
+
+        restoredSelectedBookId?.let { bookId ->
+            synchronizeWordStatesForBook(bookId)
         }
 
         val wordBookProgressList = bootstrapStep("getWordBookProgressList") {
             remoteUserSyncDataSource.getWordBookProgressList().getOrThrow()
         }
+
+        restoredSelectedBookId?.let { bookId ->
+            val currentProgress = wordBookProgressList
+                .filter { it.bookId == bookId }
+                .map { it.toDomain() }
+            bootstrapStep("upsertCurrentWordBookProgress(bookId=$bookId)") {
+                wordBookSnapshotLocalStatePort.upsertProgressFromRemote(currentProgress)
+            }
+        }
+
+        prioritizedRemoteBooks
+            .filter { it.id != restoredSelectedBookId }
+            .forEach { dto ->
+                ensureBookContentReady(dto)
+            }
+
+        prioritizedRemoteBooks
+            .filter { it.id != restoredSelectedBookId }
+            .forEach { book ->
+                synchronizeWordStatesForBook(book.id)
+            }
+
         bootstrapStep("overwriteWordBookProgress") {
             wordBookSnapshotLocalStatePort.overwriteProgressFromRemote(
                 wordBookProgressList.map { it.toDomain() }
@@ -234,9 +239,36 @@ class PrimaryServerBootstrapContributor @Inject constructor(
                 floatingDisplayRecords.map { it.toDomain() }
             )
         }
+    }
 
-        bootstrapStep("overwriteCurrentWordBook") {
-            currentWordBookLocalStatePort.overwriteFromRemote(restoredSelectedBookId)
+    private suspend fun ensureBookContentReady(dto: WordBookDto) {
+        bootstrapStep("ensureBookContentReady(bookId=${dto.id})") {
+            wordBookContentReadinessPort.ensureContentReady(
+                book = dto.toDomain(),
+                forceRefresh = false
+            )
+        }
+    }
+
+    private suspend fun synchronizeWordStatesForBook(bookId: Long) {
+        val states = bootstrapStep("getWordStates(bookId=$bookId)") {
+            loadPagedSnapshot { page, count ->
+                remoteUserSyncDataSource.getWordStates(
+                    bookId = bookId,
+                    page = page,
+                    count = count
+                )
+            }
+        }
+        bootstrapStep("overwriteWordStates(bookId=$bookId)") {
+            studySnapshotLocalStatePort.overwriteLearningStatesForBookFromRemote(
+                bookId,
+                states.map { it.toDomain(bookId) }
+            )
+            wordBookSnapshotLocalStatePort.overwriteLearningStatesForBookFromRemote(
+                bookId,
+                states.map { it.toSnapshot(bookId) }
+            )
         }
     }
 
@@ -275,6 +307,17 @@ class PrimaryServerBootstrapContributor @Inject constructor(
             )
         }
         return safeSelectedBookId
+    }
+
+    private fun prioritizeSelectedBook(
+        remoteBooks: List<WordBookDto>,
+        selectedBookId: Long?
+    ): List<WordBookDto> {
+        val safeSelectedBookId = selectedBookId?.takeIf { it > 0L } ?: return remoteBooks
+        return remoteBooks.sortedWith(
+            compareBy<WordBookDto> { it.id != safeSelectedBookId }
+                .thenBy { it.id }
+        )
     }
 
     private suspend fun <T> loadPagedSnapshot(

@@ -1,8 +1,12 @@
 package com.chen.memorizewords.feature.home.ui.home
 
 import com.chen.memorizewords.domain.study.model.learning.LearningSessionRequest
+import com.chen.memorizewords.domain.sync.model.HomeStartupSnapshot
+import com.chen.memorizewords.domain.sync.model.PostLoginBootstrapState
+import com.chen.memorizewords.domain.wordbook.model.WordBook
 import com.chen.memorizewords.domain.wordbook.model.WordBookInfo
 import com.chen.memorizewords.domain.wordbook.model.study.StudyPlan
+import com.chen.memorizewords.domain.wordbook.model.study.progress.wordbook.WordBookProgress
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -196,5 +200,147 @@ class HomeLearningProgressTest {
         assertEquals("15分钟", ui.estimatedStudyMinutesText)
         assertEquals("2 天", ui.continuousDaysText)
         assertEquals("6 天", ui.expectedCompletionText)
+    }
+    @Test
+    fun `startup snapshot fills current book while local progress is empty`() {
+        val local = WordBookInfo(
+            bookId = 1001L,
+            title = "CET4",
+            totalWords = 3000,
+            learningWords = 0,
+            masteredWords = 0,
+            studyDayCount = 0,
+            accuracyRate = 0f
+        )
+        val snapshot = buildSnapshot()
+
+        val resolved = resolveHomeStartupWordBookInfo(local, snapshot)
+
+        requireNotNull(resolved)
+        assertEquals(120, resolved.learningWords)
+        assertEquals(40, resolved.masteredWords)
+        assertEquals(5, resolved.studyDayCount)
+        assertEquals(75.0f, resolved.accuracyRate)
+        assertEquals(3000, resolved.totalWords)
+    }
+
+    @Test
+    fun `startup snapshot does not replace local progress after local states are ready`() {
+        val local = WordBookInfo(
+            bookId = 1001L,
+            title = "CET4",
+            totalWords = 3000,
+            learningWords = 130,
+            masteredWords = 45,
+            studyDayCount = 6,
+            accuracyRate = 80f
+        )
+
+        val resolved = resolveHomeStartupWordBookInfo(local, buildSnapshot())
+
+        assertEquals(local, resolved)
+    }
+
+    @Test
+    fun `startup snapshot is only used for the same business date`() {
+        val snapshot = buildSnapshot()
+
+        assertEquals(snapshot, resolveSameBusinessDateSnapshot(snapshot, "2026-03-24"))
+        assertEquals(null, resolveSameBusinessDateSnapshot(snapshot, "2026-03-25"))
+    }
+
+    @Test
+    fun `fresh startup snapshot tolerates temporary local business date mismatch`() {
+        val snapshot = buildSnapshot().copy(capturedAtMs = 1_000L)
+
+        assertEquals(
+            snapshot,
+            resolveUsableHomeStartupSnapshot(
+                snapshot = snapshot,
+                businessDate = "2026-03-25",
+                nowMs = 2_000L
+            )
+        )
+        assertEquals(
+            null,
+            resolveUsableHomeStartupSnapshot(
+                snapshot = snapshot,
+                businessDate = "2026-03-25",
+                nowMs = 16 * 60 * 1000L + 1_000L
+            )
+        )
+    }
+
+    @Test
+    fun `startup snapshot is disabled after post login bootstrap succeeds`() {
+        val snapshot = buildSnapshot()
+
+        assertEquals(
+            null,
+            resolveUsableHomeStartupSnapshot(
+                snapshot = snapshot,
+                businessDate = snapshot.businessDate,
+                postLoginBootstrapState = PostLoginBootstrapState.Succeeded
+            )
+        )
+    }
+
+    @Test
+    fun `startup snapshot remains available when post login bootstrap fails`() {
+        val snapshot = buildSnapshot()
+
+        assertEquals(
+            snapshot,
+            resolveUsableHomeStartupSnapshot(
+                snapshot = snapshot,
+                businessDate = snapshot.businessDate,
+                postLoginBootstrapState = PostLoginBootstrapState.Failed
+            )
+        )
+    }
+
+    @Test
+    fun `startup counters keep bootstrap values while local database is empty`() {
+        assertEquals(7, resolveHomeStartupCount(localCount = 0, snapshotCount = 7))
+        assertEquals(3, resolveHomeStartupCount(localCount = 3, snapshotCount = 7))
+        assertEquals(60_000L, resolveHomeStartupDuration(localDurationMs = 0L, snapshotDurationMs = 60_000L))
+        assertEquals(30_000L, resolveHomeStartupDuration(localDurationMs = 30_000L, snapshotDurationMs = 60_000L))
+    }
+
+    private fun buildSnapshot(): HomeStartupSnapshot {
+        return HomeStartupSnapshot(
+            userId = 7L,
+            businessDate = "2026-03-24",
+            serverTime = 1770000000000L,
+            currentWordBook = WordBook(
+                id = 1001L,
+                title = "CET4",
+                category = "exam",
+                imgUrl = "",
+                description = "",
+                totalWords = 3000,
+                contentVersion = 3L,
+                isSelected = true,
+                isPublic = true,
+                createdByUserId = null
+            ),
+            currentWordBookProgress = WordBookProgress(
+                wordBookId = 1001L,
+                wordBookName = "CET4",
+                learningCount = 120,
+                masteredCount = 40,
+                totalCount = 3000,
+                correctCount = 3,
+                wrongCount = 1,
+                studyDayCount = 5,
+                lastStudyDate = "2026-03-24"
+            ),
+            studyPlan = StudyPlan(dailyNewCount = 15, dailyReviewCount = 30),
+            todayNewWordCount = 4,
+            todayReviewWordCount = 6,
+            todayStudyDurationMs = 60_000L,
+            continuousCheckInDays = 2,
+            totalStudyDayCount = 8
+        )
     }
 }

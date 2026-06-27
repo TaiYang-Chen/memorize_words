@@ -11,7 +11,10 @@ import com.chen.memorizewords.domain.account.usecase.user.GetCurrentUserUseCase
 import com.chen.memorizewords.domain.study.model.learning.LearningSessionRequest as DomainLearningSessionRequest
 import com.chen.memorizewords.domain.study.orchestrator.learning.LearningSessionFacade
 import com.chen.memorizewords.domain.study.service.StudyStatsFacade
+import com.chen.memorizewords.domain.sync.model.HomeStartupSnapshot
+import com.chen.memorizewords.domain.sync.model.PostLoginBootstrapState
 import com.chen.memorizewords.domain.sync.model.SyncBannerState
+import com.chen.memorizewords.domain.sync.repository.HomeStartupSnapshotRepository
 import com.chen.memorizewords.domain.sync.service.SyncFacade
 import com.chen.memorizewords.domain.word.model.word.Word
 import com.chen.memorizewords.domain.wordbook.model.WordBookInfo
@@ -22,6 +25,10 @@ import com.chen.memorizewords.feature.home.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.Locale
 import javax.inject.Inject
+import kotlin.math.roundToInt
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -32,6 +39,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 internal const val WORD_BOOK_INFO_PLACEHOLDER = "--"
+private const val BUSINESS_DATE_POLL_INTERVAL_MS = 60_000L
+private const val FRESH_STARTUP_SNAPSHOT_MS = 15 * 60 * 1000L
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -41,11 +50,18 @@ class HomeViewModel @Inject constructor(
     private val learningSessionFacade: LearningSessionFacade,
     private val studyStatsFacade: StudyStatsFacade,
     private val syncFacade: SyncFacade,
+    private val homeStartupSnapshotRepository: HomeStartupSnapshotRepository,
     private val resourceProvider: ResourceProvider
 ) : BaseViewModel() {
 
     private val textFormatter = HomeTextFormatter(resourceProvider)
     private val learningLauncher = HomeLearningLauncher(learningSessionFacade)
+    private val initialBusinessDate = studyStatsFacade.getCurrentBusinessDate()
+    private val startupSnapshot = resolveUsableHomeStartupSnapshot(
+        snapshot = homeStartupSnapshotRepository.getSnapshot(),
+        businessDate = initialBusinessDate,
+        postLoginBootstrapState = syncFacade.getCurrentPostLoginBootstrapState()
+    )
 
     companion object {
         const val CUSTOM_DIALOG_HOME_BOOST_NEW_WORDS = "home_boost_new_words"
@@ -71,34 +87,112 @@ class HomeViewModel @Inject constructor(
     private var pendingBoostBookId: Long? = null
     private var pendingBoostPlan: StudyPlan? = null
 
+    private val currentBusinessDate: StateFlow<String> =
+        flow {
+            while (true) {
+                emit(studyStatsFacade.getCurrentBusinessDate())
+                delay(BUSINESS_DATE_POLL_INTERVAL_MS)
+            }
+        }.distinctUntilChanged()
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), initialBusinessDate)
+
+    private val startupSnapshotFlow: StateFlow<HomeStartupSnapshot?> =
+        combine(
+            homeStartupSnapshotRepository.observeSnapshot(),
+            currentBusinessDate,
+            syncFacade.observePostLoginBootstrapState()
+        ) { snapshot, businessDate, postLoginBootstrapState ->
+            resolveUsableHomeStartupSnapshot(
+                snapshot = snapshot,
+                businessDate = businessDate,
+                postLoginBootstrapState = postLoginBootstrapState
+            )
+        }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), startupSnapshot)
+
     val wordBookInfo: StateFlow<WordBookInfo?> =
-        getCurrentWordBookInfoFlowUseCase()
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+        combine(
+            getCurrentWordBookInfoFlowUseCase(),
+            startupSnapshotFlow
+        ) { localInfo, snapshot ->
+            resolveHomeStartupWordBookInfo(localInfo, snapshot)
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5_000),
+            resolveHomeStartupWordBookInfo(null, startupSnapshot)
+        )
 
     val studyPlan: StateFlow<StudyPlan> =
-        getStudyPlanFlowUseCase()
-            .map { plan -> plan ?: StudyPlan() }
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), StudyPlan())
+        combine(
+            getStudyPlanFlowUseCase(),
+            startupSnapshotFlow
+        ) { plan, snapshot ->
+            plan ?: snapshot?.studyPlan ?: StudyPlan()
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5_000),
+            startupSnapshot?.studyPlan ?: StudyPlan()
+        )
 
     val studyTotalDayCount: StateFlow<Int> =
-        studyStatsFacade.getStudyTotalDayCount()
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
+        combine(
+            studyStatsFacade.getStudyTotalDayCount(),
+            startupSnapshotFlow
+        ) { localCount, snapshot ->
+            resolveHomeStartupCount(localCount, snapshot?.totalStudyDayCount ?: 0)
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5_000),
+            startupSnapshot?.totalStudyDayCount ?: 0
+        )
 
     private val continuousCheckInDays: StateFlow<Int> =
-        studyStatsFacade.getContinuousCheckInDays()
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
+        combine(
+            studyStatsFacade.getContinuousCheckInDays(),
+            startupSnapshotFlow
+        ) { localCount, snapshot ->
+            resolveHomeStartupCount(localCount, snapshot?.continuousCheckInDays ?: 0)
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5_000),
+            startupSnapshot?.continuousCheckInDays ?: 0
+        )
 
     val todayNewCount: StateFlow<Int> =
-        studyStatsFacade.getTodayNewWordCount()
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
+        combine(
+            studyStatsFacade.getTodayNewWordCount(),
+            startupSnapshotFlow
+        ) { localCount, snapshot ->
+            resolveHomeStartupCount(localCount, snapshot?.todayNewWordCount ?: 0)
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5_000),
+            startupSnapshot?.todayNewWordCount ?: 0
+        )
 
     val todayReviewCount: StateFlow<Int> =
-        studyStatsFacade.getTodayReviewWordCount()
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
+        combine(
+            studyStatsFacade.getTodayReviewWordCount(),
+            startupSnapshotFlow
+        ) { localCount, snapshot ->
+            resolveHomeStartupCount(localCount, snapshot?.todayReviewWordCount ?: 0)
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5_000),
+            startupSnapshot?.todayReviewWordCount ?: 0
+        )
 
     private val todayStudyDurationMs: StateFlow<Long> =
-        studyStatsFacade.getTodayStudyDurationMs()
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0L)
+        combine(
+            studyStatsFacade.getTodayStudyDurationMs(),
+            startupSnapshotFlow
+        ) { localDuration, snapshot ->
+            resolveHomeStartupDuration(localDuration, snapshot?.todayStudyDurationMs ?: 0L)
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5_000),
+            startupSnapshot?.todayStudyDurationMs ?: 0L
+        )
 
     val dashboardUiState: StateFlow<HomeDashboardUiState> =
         combine(
@@ -123,13 +217,13 @@ class HomeViewModel @Inject constructor(
             viewModelScope,
             SharingStarted.WhileSubscribed(5_000),
             buildHomeDashboardUiState(
-                wordBookInfo = null,
-                plan = StudyPlan(),
-                todayNewCount = 0,
-                todayReviewCount = 0,
-                todayStudyDurationMs = 0L,
-                continuousDays = 0,
-                totalStudyDays = 0
+                wordBookInfo = wordBookInfo.value,
+                plan = studyPlan.value,
+                todayNewCount = todayNewCount.value,
+                todayReviewCount = todayReviewCount.value,
+                todayStudyDurationMs = todayStudyDurationMs.value,
+                continuousDays = continuousCheckInDays.value,
+                totalStudyDays = studyTotalDayCount.value
             )
         )
 
@@ -138,17 +232,29 @@ class HomeViewModel @Inject constructor(
     val wordBookLearningWordsText: StateFlow<String> =
         wordBookInfo
             .map { info -> formatWordBookNumberText(info?.learningWords) }
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), WORD_BOOK_INFO_PLACEHOLDER)
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5_000),
+                formatWordBookNumberText(wordBookInfo.value?.learningWords)
+            )
     val wordBookMasteredWordsText: StateFlow<String> = masteredWordsTextCompat()
     val wordBookTotalWordsText: StateFlow<String> = totalWordsTextCompat()
     val wordBookRemainWordsText: StateFlow<String> =
         wordBookInfo
             .map { info -> formatWordBookNumberText(info?.remainWords) }
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), WORD_BOOK_INFO_PLACEHOLDER)
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5_000),
+                formatWordBookNumberText(wordBookInfo.value?.remainWords)
+            )
     val wordBookStudyDayCountText: StateFlow<String> =
         wordBookInfo
             .map { info -> formatWordBookNumberText(info?.studyDayCount) }
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), WORD_BOOK_INFO_PLACEHOLDER)
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5_000),
+                formatWordBookNumberText(wordBookInfo.value?.studyDayCount)
+            )
     val wordBookAccuracyRateText: StateFlow<String> = accuracyRateTextCompat()
     val wordBookRemainDaysText: StateFlow<String> = expectedCompletionTextCompat()
     val streakText: StateFlow<String> = dashboardField { it.streakText }
@@ -219,7 +325,7 @@ class HomeViewModel @Inject constructor(
         }.stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5_000),
-            resourceProvider.getString(R.string.home_learn_button_start)
+            textFormatter.formatLearnButtonText(todayNewCount.value, studyPlan.value)
         )
 
     val learnPlanText: StateFlow<Spanned> =
@@ -228,7 +334,11 @@ class HomeViewModel @Inject constructor(
         }.stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5_000),
-            textFormatter.defaultLearnPlanText()
+            textFormatter.formatLearnPlanText(
+                todayNewCount.value,
+                todayReviewCount.value,
+                studyPlan.value
+            )
         )
 
     val syncBannerState: StateFlow<SyncBannerState> =
@@ -604,6 +714,107 @@ internal fun formatExpectedCompletionText(info: WordBookInfo?, plan: StudyPlan):
         return WORD_BOOK_INFO_PLACEHOLDER
     }
     return "${(remainingWords + dailyNewCount - 1) / dailyNewCount} \u5929"
+}
+
+internal fun resolveSameBusinessDateSnapshot(
+    snapshot: HomeStartupSnapshot?,
+    businessDate: String
+): HomeStartupSnapshot? {
+    return snapshot?.takeIf { it.businessDate == businessDate }
+}
+
+internal fun resolveUsableHomeStartupSnapshot(
+    snapshot: HomeStartupSnapshot?,
+    businessDate: String,
+    postLoginBootstrapState: PostLoginBootstrapState = PostLoginBootstrapState.Idle,
+    nowMs: Long = System.currentTimeMillis()
+): HomeStartupSnapshot? {
+    if (postLoginBootstrapState == PostLoginBootstrapState.Succeeded) {
+        return null
+    }
+    val candidate = snapshot ?: return null
+    if (candidate.businessDate == businessDate) {
+        return candidate
+    }
+    val capturedAtMs = candidate.capturedAtMs.takeIf { it > 0L } ?: return null
+    val ageMs = nowMs - capturedAtMs
+    return candidate.takeIf { ageMs in 0..FRESH_STARTUP_SNAPSHOT_MS }
+}
+
+internal fun resolveHomeStartupWordBookInfo(
+    localInfo: WordBookInfo?,
+    snapshot: HomeStartupSnapshot?
+): WordBookInfo? {
+    val snapshotInfo = snapshot?.toWordBookInfo() ?: return localInfo
+    val local = localInfo ?: return snapshotInfo
+    if (local.bookId != snapshotInfo.bookId) {
+        return local
+    }
+    return if (shouldUseSnapshotProgress(local, snapshotInfo)) {
+        local.copy(
+            totalWords = maxOf(local.totalWords, snapshotInfo.totalWords),
+            learningWords = snapshotInfo.learningWords,
+            masteredWords = snapshotInfo.masteredWords,
+            studyDayCount = snapshotInfo.studyDayCount,
+            accuracyRate = snapshotInfo.accuracyRate
+        )
+    } else {
+        local
+    }
+}
+
+internal fun resolveHomeStartupCount(localCount: Int, snapshotCount: Int): Int {
+    return if (localCount <= 0 && snapshotCount > 0) snapshotCount else localCount.coerceAtLeast(0)
+}
+
+internal fun resolveHomeStartupDuration(localDurationMs: Long, snapshotDurationMs: Long): Long {
+    return if (localDurationMs <= 0L && snapshotDurationMs > 0L) {
+        snapshotDurationMs
+    } else {
+        localDurationMs.coerceAtLeast(0L)
+    }
+}
+
+private fun HomeStartupSnapshot.toWordBookInfo(): WordBookInfo? {
+    val book = currentWordBook ?: return null
+    val progress = currentWordBookProgress
+    val totalWords = progress?.totalCount?.takeIf { it > 0 } ?: book.totalWords
+    return WordBookInfo(
+        bookId = book.id,
+        title = book.title,
+        category = book.category,
+        imgUrl = book.imgUrl,
+        description = book.description,
+        totalWords = totalWords,
+        learningWords = progress?.learningCount ?: 0,
+        masteredWords = progress?.masteredCount ?: 0,
+        studyDayCount = progress?.studyDayCount ?: 0,
+        accuracyRate = calculateSnapshotAccuracyRate(
+            correctCount = progress?.correctCount ?: 0,
+            wrongCount = progress?.wrongCount ?: 0
+        ),
+        isSelected = true,
+        createdByUserId = book.createdByUserId
+    )
+}
+
+private fun shouldUseSnapshotProgress(localInfo: WordBookInfo, snapshotInfo: WordBookInfo): Boolean {
+    val localHasProgress = localInfo.learningWords > 0 ||
+        localInfo.masteredWords > 0 ||
+        localInfo.studyDayCount > 0 ||
+        localInfo.accuracyRate > 0f
+    val snapshotHasProgress = snapshotInfo.learningWords > 0 ||
+        snapshotInfo.masteredWords > 0 ||
+        snapshotInfo.studyDayCount > 0 ||
+        snapshotInfo.accuracyRate > 0f
+    return !localHasProgress && snapshotHasProgress
+}
+
+private fun calculateSnapshotAccuracyRate(correctCount: Int, wrongCount: Int): Float {
+    val total = correctCount + wrongCount
+    if (total <= 0) return 0f
+    val rate = correctCount * 100f / total.toFloat()
+    return (rate * 10f).roundToInt() / 10f
 }
 
 internal fun resolveReviewWordCount(plan: StudyPlan): Int {

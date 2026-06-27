@@ -17,6 +17,8 @@ interface StudySnapshotLocalStatePort {
     suspend fun overwriteFavoritesFromRemote(favorites: List<WordFavorites>)
     suspend fun overwriteLearningStatesForBookFromRemote(bookId: Long, states: List<WordLearningState>)
     suspend fun overwriteStudyRecordsFromRemote(records: List<DailyStudyRecords>)
+    suspend fun upsertStudyRecordsFromRemote(records: List<DailyStudyRecords>)
     suspend fun overwriteDailyDurationsFromRemote(durations: List<StudyDailyDurationSnapshot>)
+    suspend fun upsertDailyDurationsFromRemote(durations: List<StudyDailyDurationSnapshot>)
     suspend fun overwriteCheckInRecordsFromRemote(records: List<CheckInRecord>)
 }

@@ -7,6 +7,7 @@ import com.chen.memorizewords.data.sync.local.mmkv.download.UpdateDownloadStore
 import com.chen.memorizewords.data.sync.local.room.model.sync.SyncOutboxDao
 import com.chen.memorizewords.data.sync.repository.sync.SyncWorkConstants
 import com.chen.memorizewords.domain.account.UserScopedDataResetContributor
+import com.chen.memorizewords.domain.sync.repository.HomeStartupSnapshotRepository
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoSet
@@ -21,7 +22,8 @@ class DataSyncUserScopedDataResetContributor @Inject constructor(
     @ApplicationContext context: Context,
     private val syncOutboxDao: SyncOutboxDao,
     private val checkInConfigDataSource: CheckInConfigDataSource,
-    private val updateDownloadStore: UpdateDownloadStore
+    private val updateDownloadStore: UpdateDownloadStore,
+    private val homeStartupSnapshotRepository: HomeStartupSnapshotRepository
 ) : UserScopedDataResetContributor {
     private val appContext = context.applicationContext
 
@@ -30,6 +32,7 @@ class DataSyncUserScopedDataResetContributor @Inject constructor(
         syncOutboxDao.deleteAll()
         checkInConfigDataSource.clearUserScopedState()
         updateDownloadStore.clear()
+        homeStartupSnapshotRepository.clearSnapshot()
     }
 
     private fun cancelUserScopedWork() {

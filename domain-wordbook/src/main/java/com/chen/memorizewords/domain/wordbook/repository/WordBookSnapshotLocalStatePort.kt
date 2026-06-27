@@ -22,4 +22,6 @@ interface WordBookSnapshotLocalStatePort {
     )
 
     suspend fun overwriteProgressFromRemote(progress: List<WordBookProgress>)
+
+    suspend fun upsertProgressFromRemote(progress: List<WordBookProgress>)
 }

@@ -7,6 +7,7 @@ import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.current.Cu
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.current.CurrentWordBookSelectionEntity
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.wordbook.WordBookDao
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.wordbook.toDomain
+import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.wordbook.toEntity
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.words.BookWordItemDao
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.words.WordListRowProjection
 import com.chen.memorizewords.data.wordbook.local.room.model.words.word.WordDao
@@ -221,6 +222,19 @@ class WordBookRepositoryImpl @Inject constructor(
                 )
             }
             enqueueWordBookProgressOutbox(bookId, book.title, book.totalWords)
+        }
+    }
+
+    override suspend fun upsertBookAndSelectionFromRemote(book: WordBook?) {
+        withContext(Dispatchers.IO) {
+            if (book == null || book.id <= 0L) {
+                currentWordBookSelectionDao.deleteAll()
+                return@withContext
+            }
+            transactionRunner.runInTransaction {
+                wordBookDao.insertWordBook(book.toEntity())
+                currentWordBookSelectionDao.upsert(CurrentWordBookSelectionEntity(bookId = book.id))
+            }
         }
     }
 

@@ -33,18 +33,15 @@ class WordBookSnapshotLocalStateStore @Inject constructor(
         wordBookDatabase.withTransaction {
             wordBookProgressDao.deleteAll()
             if (progress.isNotEmpty()) {
-                wordBookProgressDao.upsertAll(
-                    progress.map { item ->
-                        WordBookProgressEntity(
-                            wordBookId = item.wordBookId,
-                            correctCount = item.correctCount,
-                            wrongCount = item.wrongCount,
-                            studyDayCount = item.studyDayCount,
-                            lastStudyDate = item.lastStudyDate.ifBlank { null }
-                        )
-                    }
-                )
+                wordBookProgressDao.upsertAll(progress.map { it.toEntity() })
             }
+        }
+    }
+
+    override suspend fun upsertProgressFromRemote(progress: List<WordBookProgress>) {
+        if (progress.isEmpty()) return
+        wordBookDatabase.withTransaction {
+            wordBookProgressDao.upsertAll(progress.map { it.toEntity() })
         }
     }
 }
@@ -61,5 +58,15 @@ private fun WordBookLearningStateSnapshot.toEntity(): WordLearningStateEntity {
         repetition = repetition,
         interval = interval,
         efactor = efactor
+    )
+}
+
+private fun WordBookProgress.toEntity(): WordBookProgressEntity {
+    return WordBookProgressEntity(
+        wordBookId = wordBookId,
+        correctCount = correctCount,
+        wrongCount = wrongCount,
+        studyDayCount = studyDayCount,
+        lastStudyDate = lastStudyDate.ifBlank { null }
     )
 }

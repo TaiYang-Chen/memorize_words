@@ -66,22 +66,26 @@ class StudySnapshotLocalStateStore @Inject constructor(
         }
     }
 
+    override suspend fun upsertStudyRecordsFromRemote(records: List<DailyStudyRecords>) {
+        if (records.isEmpty()) return
+        studyDatabase.withTransaction {
+            wordStudyRecordsDao.upsertAll(records.map { it.toEntity() })
+        }
+    }
+
     override suspend fun overwriteDailyDurationsFromRemote(durations: List<StudyDailyDurationSnapshot>) {
         studyDatabase.withTransaction {
             dailyStudyDurationDao.deleteAll()
             if (durations.isNotEmpty()) {
-                dailyStudyDurationDao.upsertAll(
-                    durations.map { duration ->
-                        DailyStudyDurationEntity(
-                            date = duration.date,
-                            totalDurationMs = duration.totalDurationMs,
-                            updatedAt = duration.updatedAt,
-                            isNewPlanCompleted = duration.isNewPlanCompleted,
-                            isReviewPlanCompleted = duration.isReviewPlanCompleted
-                        )
-                    }
-                )
+                dailyStudyDurationDao.upsertAll(durations.map { it.toEntity() })
             }
+        }
+    }
+
+    override suspend fun upsertDailyDurationsFromRemote(durations: List<StudyDailyDurationSnapshot>) {
+        if (durations.isEmpty()) return
+        studyDatabase.withTransaction {
+            dailyStudyDurationDao.upsertAll(durations.map { it.toEntity() })
         }
     }
 
@@ -101,5 +105,15 @@ private fun CheckInRecord.toEntity(): CheckInRecordEntity {
         type = type,
         signedAt = signedAt,
         updatedAt = updatedAt
+    )
+}
+
+private fun StudyDailyDurationSnapshot.toEntity(): DailyStudyDurationEntity {
+    return DailyStudyDurationEntity(
+        date = date,
+        totalDurationMs = totalDurationMs,
+        updatedAt = updatedAt,
+        isNewPlanCompleted = isNewPlanCompleted,
+        isReviewPlanCompleted = isReviewPlanCompleted
     )
 }

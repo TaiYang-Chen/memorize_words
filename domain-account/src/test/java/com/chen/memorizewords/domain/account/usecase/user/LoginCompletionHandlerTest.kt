@@ -4,7 +4,9 @@ import com.chen.memorizewords.domain.account.model.AccountSession
 import com.chen.memorizewords.domain.account.model.AuthLoginResult
 import com.chen.memorizewords.domain.account.model.user.User
 import com.chen.memorizewords.domain.account.repository.AccountSessionRepository
+import com.chen.memorizewords.domain.account.repository.LoginBootstrapApplier
 import com.chen.memorizewords.domain.account.repository.LocalAccountRepository
+import com.chen.memorizewords.domain.sync.model.LoginBootstrap
 import com.chen.memorizewords.domain.sync.model.LearningPrerequisitesSnapshot
 import com.chen.memorizewords.domain.sync.model.PostLoginBootstrapState
 import com.chen.memorizewords.domain.sync.model.SyncBannerState
@@ -13,7 +15,6 @@ import com.chen.memorizewords.domain.sync.repository.SyncRepository
 import com.chen.memorizewords.domain.sync.service.SyncFacade
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
@@ -21,70 +22,71 @@ import kotlinx.coroutines.runBlocking
 class LoginCompletionHandlerTest {
 
     @Test
-    fun `complete saves login state and syncs after login`() = runBlocking {
+    fun `complete saves login state applies bootstrap and starts background sync`() = runBlocking {
         val localAccountRepository = FakeLocalAccountRepository()
+        val accountSessionRepository = FakeAccountSessionRepository()
+        val loginBootstrapApplier = FakeLoginBootstrapApplier()
+        val syncRepository = FakeSyncRepository()
+        val handler = LoginCompletionHandler(
+            localAccountRepository = localAccountRepository,
+            accountSessionRepository = accountSessionRepository,
+            loginBootstrapApplier = loginBootstrapApplier,
+            syncFacade = SyncFacade(syncRepository)
+        )
+        val loginResult = createLoginResult()
+
+        val user = handler.complete(loginResult)
+
+        assertEquals(loginResult.user, user)
+        assertEquals(loginResult.user, localAccountRepository.savedUser)
+        assertEquals(loginResult.session, accountSessionRepository.savedSession)
+        assertEquals(1, loginBootstrapApplier.applyCalls)
+        assertEquals(1, syncRepository.startPostLoginBootstrapCalls)
+        assertEquals(0, syncRepository.syncAfterLoginCalls)
+        assertEquals(1, localAccountRepository.saveUserCalls)
+        assertEquals(1, accountSessionRepository.saveSessionCalls)
+    }
+
+    @Test
+    fun `complete keeps local avatar for same user avatar`() = runBlocking {
+        val localAccountRepository = FakeLocalAccountRepository()
+        localAccountRepository.savedUser = createLoginResult().user.copy(localAvatarPath = "/local/avatar.jpg")
         val accountSessionRepository = FakeAccountSessionRepository()
         val syncRepository = FakeSyncRepository()
         val handler = LoginCompletionHandler(
             localAccountRepository = localAccountRepository,
             accountSessionRepository = accountSessionRepository,
+            loginBootstrapApplier = FakeLoginBootstrapApplier(),
             syncFacade = SyncFacade(syncRepository)
         )
         val loginResult = createLoginResult()
 
         val user = handler.complete(loginResult)
 
-        assertEquals(loginResult.user, user)
-        assertEquals(loginResult.user, localAccountRepository.savedUser)
+        assertEquals("/local/avatar.jpg", user.localAvatarPath)
+        assertEquals(user, localAccountRepository.savedUser)
         assertEquals(loginResult.session, accountSessionRepository.savedSession)
-        assertEquals(1, syncRepository.syncAfterLoginCalls)
+        assertEquals(1, syncRepository.startPostLoginBootstrapCalls)
+        assertEquals(0, syncRepository.syncAfterLoginCalls)
         assertEquals(1, localAccountRepository.saveUserCalls)
         assertEquals(1, accountSessionRepository.saveSessionCalls)
     }
 
     @Test
-    fun `complete retries post login sync and succeeds`() = runBlocking {
-        val localAccountRepository = FakeLocalAccountRepository()
-        val accountSessionRepository = FakeAccountSessionRepository()
-        val syncRepository = FakeSyncRepository(
-            syncResults = listOf(
-                Result.failure(RuntimeException("offline")),
-                Result.failure(RuntimeException("server busy")),
-                Result.success(Unit)
-            )
-        )
-        val handler = LoginCompletionHandler(
-            localAccountRepository = localAccountRepository,
-            accountSessionRepository = accountSessionRepository,
-            syncFacade = SyncFacade(syncRepository)
-        )
-        val loginResult = createLoginResult()
-
-        val user = handler.complete(loginResult)
-
-        assertEquals(loginResult.user, user)
-        assertEquals(loginResult.user, localAccountRepository.savedUser)
-        assertEquals(loginResult.session, accountSessionRepository.savedSession)
-        assertEquals(3, syncRepository.syncAfterLoginCalls)
-        assertEquals(1, localAccountRepository.saveUserCalls)
-        assertEquals(1, accountSessionRepository.saveSessionCalls)
-    }
-
-    @Test
-    fun `complete throws sync error after three post login sync retries fail`() = runBlocking {
-        val syncRepository = FakeSyncRepository(
-            syncResults = listOf(Result.failure(RuntimeException("offline")))
-        )
+    fun `complete still enters app when bootstrap apply fails`() = runBlocking {
+        val syncRepository = FakeSyncRepository()
         val handler = LoginCompletionHandler(
             localAccountRepository = FakeLocalAccountRepository(),
             accountSessionRepository = FakeAccountSessionRepository(),
+            loginBootstrapApplier = FakeLoginBootstrapApplier(failure = RuntimeException("local db failed")),
             syncFacade = SyncFacade(syncRepository)
         )
 
-        assertFailsWith<LoginDataSyncError> {
-            handler.complete(createLoginResult())
-        }
-        assertEquals(4, syncRepository.syncAfterLoginCalls)
+        val user = handler.complete(createLoginResult())
+
+        assertEquals(7L, user.userId)
+        assertEquals(1, syncRepository.startPostLoginBootstrapCalls)
+        assertEquals(0, syncRepository.syncAfterLoginCalls)
     }
 }
 
@@ -107,7 +109,8 @@ private fun createLoginResult(): AuthLoginResult {
             refreshToken = "refresh",
             expiresAtEpochMillis = 123_456L
         ),
-        onboardingSnapshot = null
+        onboardingSnapshot = null,
+        bootstrap = LoginBootstrap()
     )
 }
 
@@ -133,6 +136,19 @@ private class FakeLocalAccountRepository : LocalAccountRepository {
     }
 }
 
+private class FakeLoginBootstrapApplier(
+    private val failure: Throwable? = null
+) : LoginBootstrapApplier {
+    var applyCalls: Int = 0
+    var lastBootstrap: LoginBootstrap? = null
+
+    override suspend fun apply(bootstrap: LoginBootstrap?) {
+        applyCalls++
+        lastBootstrap = bootstrap
+        failure?.let { throw it }
+    }
+}
+
 private class FakeAccountSessionRepository : AccountSessionRepository {
     var savedSession: AccountSession? = null
     var saveSessionCalls: Int = 0
@@ -151,8 +167,11 @@ private class FakeSyncRepository(
     private val syncResults: List<Result<Unit>> = listOf(Result.success(Unit))
 ) : SyncRepository {
     var syncAfterLoginCalls: Int = 0
+    var startPostLoginBootstrapCalls: Int = 0
 
-    override fun startPostLoginBootstrap() = Unit
+    override fun startPostLoginBootstrap() {
+        startPostLoginBootstrapCalls++
+    }
 
     override suspend fun syncAfterLogin(): Result<Unit> {
         syncAfterLoginCalls++

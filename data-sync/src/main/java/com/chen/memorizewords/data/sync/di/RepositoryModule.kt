@@ -13,12 +13,16 @@ import com.chen.memorizewords.data.sync.repository.sync.SyncOutboxDrainScheduler
 import com.chen.memorizewords.data.sync.repository.sync.SyncOutboxRetryWaitResumer
 import com.chen.memorizewords.data.sync.repository.sync.SyncOutboxStore
 import com.chen.memorizewords.data.sync.repository.sync.SyncOutboxWorkScheduler
+import com.chen.memorizewords.data.sync.bootstrap.HomeStartupSnapshotStore
+import com.chen.memorizewords.data.sync.bootstrap.LoginBootstrapApplierImpl
+import com.chen.memorizewords.domain.account.repository.LoginBootstrapApplier
 import com.chen.memorizewords.domain.sync.PostLoginBootstrapResetter
 import com.chen.memorizewords.domain.sync.SyncConflictPolicy
 import com.chen.memorizewords.domain.sync.SyncLogoutFlusher
 import com.chen.memorizewords.domain.sync.SyncOutboxReader
 import com.chen.memorizewords.domain.sync.SyncOutboxWriter
 import com.chen.memorizewords.domain.wordbook.repository.download.DownloadRepository
+import com.chen.memorizewords.domain.sync.repository.HomeStartupSnapshotRepository
 import com.chen.memorizewords.domain.sync.repository.SyncRepository
 import com.chen.memorizewords.domain.sync.service.AuthenticatedRequestSuccessReporter
 import com.chen.memorizewords.domain.account.repository.membership.MembershipRepository
@@ -50,6 +54,16 @@ abstract class RepositoryModule {
     abstract fun bindPostLoginBootstrapResetter(
         impl: DataSyncPostLoginBootstrapResetter
     ): PostLoginBootstrapResetter
+
+    @Binds
+    abstract fun bindLoginBootstrapApplier(
+        impl: LoginBootstrapApplierImpl
+    ): LoginBootstrapApplier
+
+    @Binds
+    abstract fun bindHomeStartupSnapshotRepository(
+        impl: HomeStartupSnapshotStore
+    ): HomeStartupSnapshotRepository
 
     @Binds
     abstract fun bindAuthenticatedRequestSuccessReporter(

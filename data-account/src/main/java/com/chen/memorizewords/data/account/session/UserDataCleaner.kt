@@ -36,6 +36,7 @@ internal fun isUserScopedMmkvKey(key: String): Boolean {
         key.startsWith("floating_word_") ||
         key.startsWith("checkin_") ||
         key.startsWith("membership_") ||
+        key.startsWith("home_startup_") ||
         key.startsWith("onboarding_") ||
         key.startsWith("wordbook_")
 }
