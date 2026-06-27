@@ -66,7 +66,7 @@
                 android:paddingBottom="4dp"
                 android:paddingStart="@dimen/feature_wordbook_my_book_status_padding_horizontal"
                 android:paddingEnd="@dimen/feature_wordbook_my_book_status_padding_horizontal"
-                android:text="&#27491;&#22312;&#23398;&#20064;"
+                android:text="正在学习"
                 android:textColor="@color/feature_wordbook_my_book_status_text"
                 android:textSize="@dimen/feature_wordbook_my_book_status_text_size"
                 android:textStyle="bold"
@@ -75,17 +75,25 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:visibility="visible" />
 
-            <ImageButton
+
+            <TextView
                 android:id="@+id/btnDelete"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/feature_wordbook_my_book_delete"
-                android:padding="8dp"
-                android:src="@android:drawable/ic_menu_delete"
-                android:tint="@color/feature_wordbook_my_book_subtitle"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingStart="@dimen/feature_wordbook_my_book_status_padding_horizontal"
+                android:paddingEnd="@dimen/feature_wordbook_my_book_status_padding_horizontal"
+                android:text="删除"
+                android:textColor="#FF0000"
+                android:textSize="@dimen/feature_wordbook_my_book_status_text_size"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
             <TextView
                 android:id="@+id/tvTitle"

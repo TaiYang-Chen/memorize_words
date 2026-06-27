@@ -5,50 +5,39 @@
 
     <data />
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/feature_wordbook_shop_card_spacing">
-
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardCanvas"
-            android:layout_width="@dimen/feature_wordbook_shop_card_design_width"
-            android:layout_height="@dimen/feature_wordbook_shop_card_design_height"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
-            app:cardBackgroundColor="@color/feature_wordbook_shop_card_background"
-            app:cardCornerRadius="@dimen/feature_wordbook_shop_card_corner_radius"
-            app:cardElevation="0dp"
-            app:rippleColor="@color/feature_wordbook_shop_card_ripple"
-            app:strokeColor="@color/feature_wordbook_shop_card_stroke"
-            app:strokeWidth="@dimen/feature_wordbook_shop_card_stroke_width">
+            app:cardBackgroundColor="@android:color/white"
+            app:cardCornerRadius="@dimen/feature_wordbook_my_book_card_corner_radius"
+            app:cardUseCompatPadding="false"
+            app:strokeWidth="1dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingStart="@dimen/feature_wordbook_shop_card_padding_horizontal"
-                android:paddingTop="@dimen/feature_wordbook_shop_card_padding_vertical"
-                android:paddingEnd="@dimen/feature_wordbook_shop_card_padding_horizontal"
-                android:paddingBottom="@dimen/feature_wordbook_shop_card_padding_vertical">
+                android:padding="8dp">
 
                 <FrameLayout
                     android:id="@+id/coverContainer"
                     android:layout_width="@dimen/feature_wordbook_shop_cover_width"
                     android:layout_height="@dimen/feature_wordbook_shop_cover_height"
-                    android:background="@drawable/feature_wordbook_bg_shop_book_cover"
+                    android:background="@drawable/feature_wordbook_bg_my_book_cover"
                     android:padding="@dimen/feature_wordbook_shop_cover_inner_padding"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
-                        android:id="@+id/iv_cover"
+                        android:id="@+id/ivCover"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:adjustViewBounds="true"
                         android:contentDescription="@null"
-                        android:scaleType="fitCenter"
+                        android:scaleType="centerCrop"
                         android:visibility="gone"
                         tools:src="@drawable/module_wordbook_ic_book"
                         tools:visibility="visible" />
@@ -151,5 +140,4 @@
                     tools:text="下载" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
-    </FrameLayout>
 </layout>

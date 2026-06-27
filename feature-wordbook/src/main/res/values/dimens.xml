@@ -6,15 +6,15 @@
     <dimen name="feature_wordbook_shop_card_spacing">14dp</dimen>
     <dimen name="feature_wordbook_shop_card_design_width">343dp</dimen>
     <dimen name="feature_wordbook_shop_card_design_height">146dp</dimen>
-    <dimen name="feature_wordbook_shop_card_corner_radius">14dp</dimen>
+    <dimen name="feature_wordbook_shop_card_corner_radius">12dp</dimen>
     <dimen name="feature_wordbook_shop_card_stroke_width">1dp</dimen>
     <dimen name="feature_wordbook_shop_card_padding_horizontal">16dp</dimen>
     <dimen name="feature_wordbook_shop_card_padding_vertical">14dp</dimen>
     <dimen name="feature_wordbook_shop_card_content_spacing">14dp</dimen>
 
-    <dimen name="feature_wordbook_shop_cover_width">88dp</dimen>
-    <dimen name="feature_wordbook_shop_cover_height">104dp</dimen>
-    <dimen name="feature_wordbook_shop_cover_inner_padding">10dp</dimen>
+    <dimen name="feature_wordbook_shop_cover_width">84dp</dimen>
+    <dimen name="feature_wordbook_shop_cover_height">112dp</dimen>
+    <dimen name="feature_wordbook_shop_cover_inner_padding">0dp</dimen>
     <dimen name="feature_wordbook_shop_cover_fallback_size">26dp</dimen>
 
     <dimen name="feature_wordbook_shop_title_text_size">18sp</dimen>
