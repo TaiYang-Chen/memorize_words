@@ -125,13 +125,11 @@ class LearningMainFragment :
     override fun onNavigationRoute(event: UiEvent.Navigation.Route) {
         when (val target = event.target) {
             LearningViewModel.Route.ToCheckIn -> {
-                findNavController().navigate(
-                    R.id.action_learningMainFragment_to_learningCheckInFragment
-                )
+                navigateFromLearningMain(R.id.action_learningMainFragment_to_learningCheckInFragment)
             }
 
             is LearningViewModel.Route.ToLearningDone -> {
-                findNavController().navigate(
+                navigateFromLearningMain(
                     R.id.action_learningMainFragment_to_learningDoneFragment,
                     bundleOf(
                         "words" to target.wordIds,
@@ -146,7 +144,7 @@ class LearningMainFragment :
             }
 
             is LearningViewModel.Route.ToWordExamPractice -> {
-                findNavController().navigate(
+                navigateFromLearningMain(
                     R.id.action_learningMainFragment_to_wordExamPracticeFragment,
                     bundleOf(
                         "wordId" to target.wordId,
@@ -157,6 +155,12 @@ class LearningMainFragment :
 
             else -> Unit
         }
+    }
+
+    private fun navigateFromLearningMain(actionId: Int, args: Bundle? = null) {
+        val navController = findNavController()
+        if (navController.currentDestination?.id != R.id.learningMainFragment) return
+        navController.navigate(actionId, args)
     }
 
     override fun onConfirmDialog(event: UiEvent.Dialog.Confirm) {

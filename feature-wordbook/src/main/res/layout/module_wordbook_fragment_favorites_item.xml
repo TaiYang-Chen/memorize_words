@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data />
 
     <LinearLayout
+        android:id="@+id/rootContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/feature_wordbook_favorites_card_spacing"
         android:background="@drawable/feature_wordbook_bg_favorites_card"
+        android:clickable="true"
         android:elevation="2dp"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
         android:gravity="center_vertical"
         android:minHeight="@dimen/feature_wordbook_favorites_card_min_height"
         android:orientation="horizontal"
@@ -23,58 +26,40 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/tvWord"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tvWord"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxWidth="@dimen/feature_wordbook_favorites_word_max_width"
-                    android:maxLines="1"
-                    android:textColor="@color/feature_wordbook_favorites_text_primary"
-                    android:textSize="@dimen/feature_wordbook_favorites_word_text_size"
-                    android:textStyle="bold"
-                    tools:text="Ephemeral" />
-
-                <TextView
-                    android:id="@+id/tvPartOfSpeech"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/feature_wordbook_favorites_part_height"
-                    android:layout_marginStart="12dp"
-                    android:background="@drawable/feature_wordbook_bg_favorites_part_badge"
-                    android:gravity="center"
-                    android:minWidth="48dp"
-                    android:paddingHorizontal="@dimen/feature_wordbook_favorites_part_padding_horizontal"
-                    android:textColor="@color/feature_wordbook_favorites_badge_text"
-                    android:textSize="@dimen/feature_wordbook_favorites_part_text_size"
-                    android:textStyle="bold"
-                    tools:text="adj." />
-            </LinearLayout>
+                android:ellipsize="end"
+                android:includeFontPadding="false"
+                android:maxLines="1"
+                android:textColor="@color/feature_wordbook_favorites_text_primary"
+                android:textSize="@dimen/feature_wordbook_favorites_word_text_size"
+                android:textStyle="bold"
+                tools:text="manufacture" />
 
             <TextView
                 android:id="@+id/tvMeaning"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="9dp"
                 android:ellipsize="end"
                 android:lineSpacingExtra="2dp"
                 android:maxLines="2"
                 android:textColor="@color/feature_wordbook_favorites_text_secondary"
                 android:textSize="@dimen/feature_wordbook_favorites_meaning_text_size"
-                tools:text="short-lived, temporary" />
+                tools:text="v. 生产 n. 制成品" />
         </LinearLayout>
 
         <ImageView
-            android:layout_width="@dimen/feature_wordbook_favorites_star_size"
-            android:layout_height="@dimen/feature_wordbook_favorites_star_size"
-            android:layout_marginStart="16dp"
-            android:contentDescription="@string/module_wordbook_nav_favorites_title"
-            android:src="@drawable/feature_wordbook_ic_favorite_star_outline"
-            app:tint="@color/feature_wordbook_favorites_accent" />
+            android:id="@+id/ivSelection"
+            android:layout_width="@dimen/feature_wordbook_favorites_selection_size"
+            android:layout_height="@dimen/feature_wordbook_favorites_selection_size"
+            android:layout_marginStart="12dp"
+            android:background="@drawable/module_wordbook_white_radio_16dp_not_border"
+            android:contentDescription="@null"
+            android:visibility="gone"
+            tools:src="@drawable/module_wordbook_ic_check_circle"
+            tools:visibility="visible" />
     </LinearLayout>
 </layout>

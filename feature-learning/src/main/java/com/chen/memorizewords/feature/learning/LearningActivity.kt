@@ -45,19 +45,23 @@ class LearningActivity :
 
     override fun initView(savedInstanceState: Bundle?) {
         if (savedInstanceState != null) return
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_learning)
+                as? NavHostFragment ?: return
+        val navController = navHostFragment.navController
+        val graph = navController.navInflater.inflate(R.navigation.learning_nav)
         val wordId = intent.getLongExtra(EXTRA_OPEN_WORD_ID, -1L)
-        if (wordId <= 0L) return
-        databind.root.post {
-            val navHostFragment =
-                supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_learning)
-                    as? NavHostFragment ?: return@post
-            navHostFragment.navController.navigate(
-                R.id.action_global_wordEntryDetailFragment,
+        if (wordId > 0L) {
+            graph.setStartDestination(R.id.wordEntryDetailFragment)
+            navController.setGraph(
+                graph,
                 bundleOf(
                     "wordId" to wordId,
                     "fromFloating" to intent.getBooleanExtra(EXTRA_OPEN_FROM_FLOATING, false)
                 )
             )
+        } else {
+            navController.graph = graph
         }
     }
 

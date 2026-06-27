@@ -73,4 +73,6 @@
     <color name="feature_wordbook_favorites_badge_text">#56616B</color>
     <color name="feature_wordbook_favorites_date_background">#DDE8EE</color>
     <color name="feature_wordbook_favorites_date_text">#5F6972</color>
+    <color name="feature_wordbook_favorites_card_selected_stroke">#007AFF</color>
+    <color name="feature_wordbook_favorites_delete_background">#E5484D</color>
 </resources>

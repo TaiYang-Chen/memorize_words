@@ -19,10 +19,10 @@ class ToggleFavoriteUseCase @Inject constructor(
             favoritesRepository.removeFavorite(word.id)
         } else {
 
-            var str = ""
-            wordRepository.getWordDefinitions(word.id).map { definitions ->
-                str += "${definitions.partOfSpeech} ${definitions.meaningChinese} "
-            }
+            val str = wordRepository.getWordDefinitions(word.id)
+                .joinToString(separator = " ") { definitions ->
+                    "${definitions.partOfSpeech.abbr} ${definitions.meaningChinese}"
+                }
 
             favoritesRepository.addFavorite(
                 WordFavorites(
