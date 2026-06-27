@@ -16,9 +16,27 @@ class WeChatOneTapLoginViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider
 ) : BaseViewModel() {
 
+    private var pendingOauthCode: String? = null
+    private var pendingState: String? = null
+
     fun loginByWechat(oauthCode: String, state: String?) {
-        launchWithLoading("\u767B\u5F55\u4E2D...") {
-            wechatLoginUseCase(oauthCode, state).onSuccess {
+        pendingOauthCode = oauthCode
+        pendingState = state
+        loginByWechat(oauthCode, state, cancelDeletion = false)
+    }
+
+    fun confirmCancelDeletionAndLogin() {
+        val oauthCode = pendingOauthCode
+        if (oauthCode.isNullOrBlank()) {
+            showToast(resourceProvider.getString(R.string.module_user_account_deletion_restore_failed))
+            return
+        }
+        loginByWechat(oauthCode, pendingState, cancelDeletion = true)
+    }
+
+    private fun loginByWechat(oauthCode: String, state: String?, cancelDeletion: Boolean) {
+        launchWithLoading(resourceProvider.getString(R.string.module_user_login_loading)) {
+            wechatLoginUseCase(oauthCode, state, cancelDeletion).onSuccess {
                 showToast(resourceProvider.getString(R.string.module_user_login_success))
                 finish()
             }.onFailure { failure ->
@@ -28,6 +46,10 @@ class WeChatOneTapLoginViewModel @Inject constructor(
 
                     is LoginError.EmptyOauthCode ->
                         showToast(resourceProvider.getString(R.string.module_user_wechat_auth_failed))
+
+                    is LoginError.AccountDeletionPending ->
+                        showCancelDeletionConfirmDialog()
+
                     else -> showToast(
                         resolveAuthFailureMessage(
                             failure,
@@ -37,5 +59,19 @@ class WeChatOneTapLoginViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun showCancelDeletionConfirmDialog() {
+        showConfirmDialog(
+            action = ACTION_CANCEL_DELETION_LOGIN,
+            title = resourceProvider.getString(R.string.module_user_account_deletion_pending_title),
+            message = resourceProvider.getString(R.string.module_user_account_deletion_pending_message),
+            confirmText = resourceProvider.getString(R.string.module_user_account_deletion_pending_confirm),
+            cancelText = resourceProvider.getString(R.string.module_user_account_deletion_pending_cancel)
+        )
+    }
+
+    companion object {
+        const val ACTION_CANCEL_DELETION_LOGIN = "wechat_cancel_deletion_login"
     }
 }

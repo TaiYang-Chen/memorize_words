@@ -7,10 +7,18 @@ class WeChatLoginUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     private val loginCompletionHandler: LoginCompletionHandler
 ) {
-    suspend operator fun invoke(oauthCode: String, state: String? = null): Result<User> {
+    suspend operator fun invoke(
+        oauthCode: String,
+        state: String? = null,
+        cancelDeletion: Boolean = false
+    ): Result<User> {
         return runCatching {
             if (oauthCode.isBlank()) throw LoginError.EmptyOauthCode()
-            val loginResult = authRepository.loginByWechat(oauthCode.trim(), state).getOrThrow()
+            val loginResult = authRepository.loginByWechat(
+                oauthCode.trim(),
+                state,
+                cancelDeletion = cancelDeletion
+            ).getOrThrow()
             loginCompletionHandler.complete(loginResult)
         }
     }

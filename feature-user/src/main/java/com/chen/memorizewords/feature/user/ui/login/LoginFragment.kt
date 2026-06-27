@@ -46,6 +46,14 @@ class LoginFragment : BaseFragment<LoginViewModel, ModuleUserFragmentLoginBindin
         }
     }
 
+    override fun onConfirmDialog(event: UiEvent.Dialog.Confirm) {
+        if (event.action == LoginViewModel.ACTION_CANCEL_DELETION_LOGIN) {
+            viewModel.confirmCancelDeletionAndLogin()
+            return
+        }
+        super.onConfirmDialog(event)
+    }
+
     private fun setupPasswordToggle() {
         updatePasswordInputType()
         databind.ivEye.setOnClickListener {

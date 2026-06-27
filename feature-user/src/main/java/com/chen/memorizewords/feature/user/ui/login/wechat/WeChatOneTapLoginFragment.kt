@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
+import com.chen.memorizewords.core.ui.vm.UiEvent
 import com.chen.memorizewords.feature.user.R
 import com.chen.memorizewords.feature.user.auth.social.WeChatAuthProvider
 import com.chen.memorizewords.feature.user.databinding.ModuleUserFragmentWechatOneTapLoginBinding
@@ -27,6 +28,14 @@ class WeChatOneTapLoginFragment :
         databind.btnWechatAuthorize.setOnClickListener {
             startWechatAuth()
         }
+    }
+
+    override fun onConfirmDialog(event: UiEvent.Dialog.Confirm) {
+        if (event.action == WeChatOneTapLoginViewModel.ACTION_CANCEL_DELETION_LOGIN) {
+            viewModel.confirmCancelDeletionAndLogin()
+            return
+        }
+        super.onConfirmDialog(event)
     }
 
     private fun startWechatAuth() {

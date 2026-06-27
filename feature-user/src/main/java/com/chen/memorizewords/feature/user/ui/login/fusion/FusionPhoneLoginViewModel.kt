@@ -16,9 +16,25 @@ class FusionPhoneLoginViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider
 ) : BaseViewModel() {
 
+    private var pendingVerifyToken: String? = null
+
     fun loginByFusionVerifyToken(verifyToken: String) {
+        pendingVerifyToken = verifyToken
+        loginByFusionVerifyToken(verifyToken, cancelDeletion = false)
+    }
+
+    fun confirmCancelDeletionAndLogin() {
+        val verifyToken = pendingVerifyToken
+        if (verifyToken.isNullOrBlank()) {
+            showToast(resourceProvider.getString(R.string.module_user_account_deletion_restore_failed))
+            return
+        }
+        loginByFusionVerifyToken(verifyToken, cancelDeletion = true)
+    }
+
+    private fun loginByFusionVerifyToken(verifyToken: String, cancelDeletion: Boolean) {
         launchWithLoading(resourceProvider.getString(R.string.module_user_login_loading)) {
-            fusionPhoneLoginUseCase(verifyToken).onSuccess {
+            fusionPhoneLoginUseCase(verifyToken, cancelDeletion).onSuccess {
                 showToast(resourceProvider.getString(R.string.module_user_login_success))
                 finish()
             }.onFailure { failure ->
@@ -29,6 +45,9 @@ class FusionPhoneLoginViewModel @Inject constructor(
                     is LoginError.EmptyOauthCode ->
                         showToast(resourceProvider.getString(R.string.module_user_fusion_login_failed))
 
+                    is LoginError.AccountDeletionPending ->
+                        showCancelDeletionConfirmDialog()
+
                     else -> showToast(
                         resolveAuthFailureMessage(
                             failure,
@@ -38,5 +57,19 @@ class FusionPhoneLoginViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun showCancelDeletionConfirmDialog() {
+        showConfirmDialog(
+            action = ACTION_CANCEL_DELETION_LOGIN,
+            title = resourceProvider.getString(R.string.module_user_account_deletion_pending_title),
+            message = resourceProvider.getString(R.string.module_user_account_deletion_pending_message),
+            confirmText = resourceProvider.getString(R.string.module_user_account_deletion_pending_confirm),
+            cancelText = resourceProvider.getString(R.string.module_user_account_deletion_pending_cancel)
+        )
+    }
+
+    companion object {
+        const val ACTION_CANCEL_DELETION_LOGIN = "fusion_cancel_deletion_login"
     }
 }

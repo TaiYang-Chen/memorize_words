@@ -28,8 +28,16 @@ class LoginViewModel @Inject constructor(
     val password = MutableStateFlow("123456")
 
     fun login() {
-        launchWithLoading("登录中...") {
-            loginUseCase(email.value, password.value).onSuccess {
+        login(cancelDeletion = false)
+    }
+
+    fun confirmCancelDeletionAndLogin() {
+        login(cancelDeletion = true)
+    }
+
+    private fun login(cancelDeletion: Boolean) {
+        launchWithLoading(resourceProvider.getString(R.string.module_user_login_loading)) {
+            loginUseCase(email.value, password.value, cancelDeletion).onSuccess {
                 showToast(resourceProvider.getString(R.string.module_user_login_success))
                 finish()
             }.onFailure { failure ->
@@ -43,6 +51,9 @@ class LoginViewModel @Inject constructor(
                     is LoginError.EmptyPassword ->
                         showToast(resourceProvider.getString(R.string.module_user_login_password_required))
 
+                    is LoginError.AccountDeletionPending ->
+                        showCancelDeletionConfirmDialog()
+
                     else -> showToast(
                         resolveAuthFailureMessage(
                             failure,
@@ -52,6 +63,16 @@ class LoginViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun showCancelDeletionConfirmDialog() {
+        showConfirmDialog(
+            action = ACTION_CANCEL_DELETION_LOGIN,
+            title = resourceProvider.getString(R.string.module_user_account_deletion_pending_title),
+            message = resourceProvider.getString(R.string.module_user_account_deletion_pending_message),
+            confirmText = resourceProvider.getString(R.string.module_user_account_deletion_pending_confirm),
+            cancelText = resourceProvider.getString(R.string.module_user_account_deletion_pending_cancel)
+        )
     }
 
     fun navigateToRegister() {
@@ -68,5 +89,9 @@ class LoginViewModel @Inject constructor(
 
     fun navigateToFusionPhoneLogin() {
         navigateRoute(Route.ToFusionPhoneLogin)
+    }
+
+    companion object {
+        const val ACTION_CANCEL_DELETION_LOGIN = "cancel_deletion_login"
     }
 }

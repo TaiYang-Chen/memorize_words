@@ -17,6 +17,8 @@ import com.chen.memorizewords.domain.account.model.user.User
 import com.chen.memorizewords.domain.account.repository.LocalAccountRepository
 import com.chen.memorizewords.domain.account.repository.user.AuthRepository
 import com.chen.memorizewords.domain.account.time.ClockProvider
+import com.chen.memorizewords.domain.account.usecase.user.LoginError
+import com.chen.memorizewords.core.network.remote.HttpStatusException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -28,15 +30,17 @@ class AuthRepositoryImpl @Inject constructor(
 ) : AuthRepository {
     override suspend fun loginByPassword(
         phoneNumber: String,
-        password: String
+        password: String,
+        cancelDeletion: Boolean
     ): Result<AuthLoginResult> = runCatching {
         withContext(Dispatchers.IO) {
             val request = LoginRequest(
                 loginMethod = "password",
                 emailOrPhone = phoneNumber,
-                password = password
+                password = password,
+                cancelDeletion = cancelDeletion
             )
-            remote.login(request).getOrThrow().toDomain(clockProvider.nowEpochMillis())
+            remote.login(request).getOrMapAccountDeletionPending().toDomain(clockProvider.nowEpochMillis())
         }
     }
 
@@ -46,38 +50,53 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun loginByEmailCode(email: String, code: String): Result<AuthLoginResult> = runCatching {
+    override suspend fun loginByEmailCode(
+        email: String,
+        code: String,
+        cancelDeletion: Boolean
+    ): Result<AuthLoginResult> = runCatching {
         withContext(Dispatchers.IO) {
             val request = LoginRequest(
                 loginMethod = "email_code",
                 email = email,
-                emailCode = code
+                emailCode = code,
+                cancelDeletion = cancelDeletion
             )
-            remote.login(request).getOrThrow().toDomain(clockProvider.nowEpochMillis())
+            remote.login(request).getOrMapAccountDeletionPending().toDomain(clockProvider.nowEpochMillis())
         }
     }
 
-    override suspend fun loginByWechat(oauthCode: String, state: String?): Result<AuthLoginResult> = runCatching {
+    override suspend fun loginByWechat(
+        oauthCode: String,
+        state: String?,
+        cancelDeletion: Boolean
+    ): Result<AuthLoginResult> = runCatching {
         withContext(Dispatchers.IO) {
             val request = LoginRequest(
                 loginMethod = "wechat",
                 oauthCode = oauthCode,
                 platform = "wechat",
-                state = state
+                state = state,
+                cancelDeletion = cancelDeletion
             )
-            remote.loginByWechat(request).getOrThrow().toDomain(clockProvider.nowEpochMillis())
+            remote.loginByWechat(request).getOrMapAccountDeletionPending().toDomain(clockProvider.nowEpochMillis())
         }
     }
 
-    override suspend fun loginByQq(oauthCode: String, state: String?): Result<AuthLoginResult> = runCatching {
+    override suspend fun loginByQq(
+        oauthCode: String,
+        state: String?,
+        cancelDeletion: Boolean
+    ): Result<AuthLoginResult> = runCatching {
         withContext(Dispatchers.IO) {
             val request = LoginRequest(
                 loginMethod = "qq",
                 oauthCode = oauthCode,
                 platform = "qq",
-                state = state
+                state = state,
+                cancelDeletion = cancelDeletion
             )
-            remote.loginByQq(request).getOrThrow().toDomain(clockProvider.nowEpochMillis())
+            remote.loginByQq(request).getOrMapAccountDeletionPending().toDomain(clockProvider.nowEpochMillis())
         }
     }
 
@@ -107,10 +126,13 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun loginByFusionVerifyToken(verifyToken: String): Result<AuthLoginResult> = runCatching {
+    override suspend fun loginByFusionVerifyToken(
+        verifyToken: String,
+        cancelDeletion: Boolean
+    ): Result<AuthLoginResult> = runCatching {
         withContext(Dispatchers.IO) {
-            remote.fusionLogin(FusionLoginRequest(verifyToken))
-                .getOrThrow()
+            remote.fusionLogin(FusionLoginRequest(verifyToken, cancelDeletion))
+                .getOrMapAccountDeletionPending()
                 .toDomain(clockProvider.nowEpochMillis())
         }
     }
@@ -169,6 +191,15 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun deleteAccountRemote(): Result<Unit> = runCatching {
         withContext(Dispatchers.IO) {
             remote.deleteAccount().getOrThrow()
+        }
+    }
+
+    private fun <T> Result<T>.getOrMapAccountDeletionPending(): T {
+        return getOrElse { failure ->
+            if (failure is HttpStatusException && failure.code == 409) {
+                throw LoginError.AccountDeletionPending(failure.message)
+            }
+            throw failure
         }
     }
 }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
+import com.chen.memorizewords.core.ui.vm.UiEvent
 import com.chen.memorizewords.feature.user.R
 import com.chen.memorizewords.feature.user.auth.social.QQAuthProvider
 import com.chen.memorizewords.feature.user.databinding.ModuleUserFragmentQqOneTapLoginBinding
@@ -27,6 +28,14 @@ class QQOneTapLoginFragment :
         databind.btnQqAuthorize.setOnClickListener {
             startQqAuth()
         }
+    }
+
+    override fun onConfirmDialog(event: UiEvent.Dialog.Confirm) {
+        if (event.action == QQOneTapLoginViewModel.ACTION_CANCEL_DELETION_LOGIN) {
+            viewModel.confirmCancelDeletionAndLogin()
+            return
+        }
+        super.onConfirmDialog(event)
     }
 
     private fun startQqAuth() {

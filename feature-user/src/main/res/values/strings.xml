@@ -100,6 +100,11 @@
     <string name="module_user_delete_account_deleting">注销中...</string>
     <string name="module_user_delete_account_submitted">已提交注销申请</string>
     <string name="module_user_delete_account_failed">注销失败</string>
+    <string name="module_user_account_deletion_pending_title">账号处于注销冷静期</string>
+    <string name="module_user_account_deletion_pending_message">继续登录将取消注销申请并恢复账号。</string>
+    <string name="module_user_account_deletion_pending_confirm">继续登录</string>
+    <string name="module_user_account_deletion_pending_cancel">暂不登录</string>
+    <string name="module_user_account_deletion_restore_failed">恢复账号失败，请重新登录</string>
 
     <string name="module_user_profile_nickname_title">昵称</string>
     <string name="module_user_profile_update_success">修改成功</string>

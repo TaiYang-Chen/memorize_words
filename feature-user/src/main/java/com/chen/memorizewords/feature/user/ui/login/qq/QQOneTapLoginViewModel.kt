@@ -16,9 +16,27 @@ class QQOneTapLoginViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider
 ) : BaseViewModel() {
 
+    private var pendingOauthCode: String? = null
+    private var pendingState: String? = null
+
     fun loginByQq(oauthCode: String, state: String?) {
-        launchWithLoading("\u767B\u5F55\u4E2D...") {
-            qqLoginUseCase(oauthCode, state).onSuccess {
+        pendingOauthCode = oauthCode
+        pendingState = state
+        loginByQq(oauthCode, state, cancelDeletion = false)
+    }
+
+    fun confirmCancelDeletionAndLogin() {
+        val oauthCode = pendingOauthCode
+        if (oauthCode.isNullOrBlank()) {
+            showToast(resourceProvider.getString(R.string.module_user_account_deletion_restore_failed))
+            return
+        }
+        loginByQq(oauthCode, pendingState, cancelDeletion = true)
+    }
+
+    private fun loginByQq(oauthCode: String, state: String?, cancelDeletion: Boolean) {
+        launchWithLoading(resourceProvider.getString(R.string.module_user_login_loading)) {
+            qqLoginUseCase(oauthCode, state, cancelDeletion).onSuccess {
                 showToast(resourceProvider.getString(R.string.module_user_login_success))
                 finish()
             }.onFailure { failure ->
@@ -28,6 +46,10 @@ class QQOneTapLoginViewModel @Inject constructor(
 
                     is LoginError.EmptyOauthCode ->
                         showToast(resourceProvider.getString(R.string.module_user_qq_auth_failed))
+
+                    is LoginError.AccountDeletionPending ->
+                        showCancelDeletionConfirmDialog()
+
                     else -> showToast(
                         resolveAuthFailureMessage(
                             failure,
@@ -37,5 +59,19 @@ class QQOneTapLoginViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun showCancelDeletionConfirmDialog() {
+        showConfirmDialog(
+            action = ACTION_CANCEL_DELETION_LOGIN,
+            title = resourceProvider.getString(R.string.module_user_account_deletion_pending_title),
+            message = resourceProvider.getString(R.string.module_user_account_deletion_pending_message),
+            confirmText = resourceProvider.getString(R.string.module_user_account_deletion_pending_confirm),
+            cancelText = resourceProvider.getString(R.string.module_user_account_deletion_pending_cancel)
+        )
+    }
+
+    companion object {
+        const val ACTION_CANCEL_DELETION_LOGIN = "qq_cancel_deletion_login"
     }
 }

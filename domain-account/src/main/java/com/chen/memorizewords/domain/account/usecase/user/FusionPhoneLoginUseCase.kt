@@ -8,10 +8,16 @@ class FusionPhoneLoginUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     private val loginCompletionHandler: LoginCompletionHandler
 ) {
-    suspend operator fun invoke(verifyToken: String): Result<User> {
+    suspend operator fun invoke(
+        verifyToken: String,
+        cancelDeletion: Boolean = false
+    ): Result<User> {
         return runCatching {
             if (verifyToken.isBlank()) throw LoginError.EmptyOauthCode()
-            val loginResult = authRepository.loginByFusionVerifyToken(verifyToken.trim()).getOrThrow()
+            val loginResult = authRepository.loginByFusionVerifyToken(
+                verifyToken.trim(),
+                cancelDeletion = cancelDeletion
+            ).getOrThrow()
             loginCompletionHandler.complete(loginResult)
         }
     }

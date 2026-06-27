@@ -12,7 +12,8 @@ data class LoginRequest(
     val emailCode: String? = null,
     val oauthCode: String? = null,
     val platform: String? = null,
-    val state: String? = null
+    val state: String? = null,
+    val cancelDeletion: Boolean = false
 )
 
 @JsonClass(generateAdapter = false)
@@ -33,7 +34,10 @@ data class SendEmailCodeRequest(
 data class RefreshRequest(val refreshToken: String)
 
 @JsonClass(generateAdapter = false)
-data class FusionLoginRequest(val verifyToken: String)
+data class FusionLoginRequest(
+    val verifyToken: String,
+    val cancelDeletion: Boolean = false
+)
 
 @JsonClass(generateAdapter = false)
 data class FusionRegisterRequest(
