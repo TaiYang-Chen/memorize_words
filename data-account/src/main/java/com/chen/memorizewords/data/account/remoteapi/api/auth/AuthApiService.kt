@@ -25,10 +25,6 @@ interface AuthApiService {
     fun register(@Body request: RegisterRequest): Call<ApiResponse<LoginResponseDto>>
 
     @Headers("${CoreNetworkHeaders.SKIP_AUTHORIZATION}: true")
-    @POST("auth/sms/send-code")
-    fun sendSmsCode(@Body request: SendSmsCodeRequest): Call<ApiResponse<SendSmsCodeResponseDto>>
-
-    @Headers("${CoreNetworkHeaders.SKIP_AUTHORIZATION}: true")
     @POST("auth/email/send-code")
     fun sendEmailCode(@Body request: SendEmailCodeRequest): Call<ApiResponse<SendSmsCodeResponseDto>>
 
@@ -43,6 +39,10 @@ interface AuthApiService {
     @Headers("${CoreNetworkHeaders.SKIP_AUTHORIZATION}: true")
     @POST("auth/fusion/login")
     fun fusionLogin(@Body request: FusionLoginRequest): Call<ApiResponse<LoginResponseDto>>
+
+    @Headers("${CoreNetworkHeaders.SKIP_AUTHORIZATION}: true")
+    @POST("auth/fusion/register")
+    fun fusionRegister(@Body request: FusionRegisterRequest): Call<ApiResponse<LoginResponseDto>>
 
     @GET("me")
     fun getProfile(): Call<ApiResponse<ProfileDto>>
@@ -61,6 +61,9 @@ interface AuthApiService {
 
     @POST("auth/bind-email")
     fun bindEmail(@Body request: BindEmailRequest): Call<ApiResponse<ProfileDto>>
+
+    @POST("auth/bind-phone")
+    fun bindPhone(@Body request: BindPhoneRequest): Call<ApiResponse<ProfileDto>>
 
     @Multipart
     @POST("upload/avatar")

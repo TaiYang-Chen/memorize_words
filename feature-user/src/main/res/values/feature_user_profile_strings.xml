@@ -14,7 +14,7 @@
     <string name="feature_user_profile_label_wechat">微信号</string>
     <string name="feature_user_profile_label_qq">QQ号</string>
     <string name="feature_user_profile_value_unbound">未绑定</string>
-    <string name="feature_user_profile_member_gold">黄金会员</string>
+    <string name="feature_user_profile_member_normal">普通用户</string>
     <string name="feature_user_profile_change_password">修改密码</string>
     <string name="feature_user_profile_logout">退出登录</string>
     <string name="feature_user_profile_logout_confirm_title">确认退出登录</string>

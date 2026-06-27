@@ -48,14 +48,23 @@
     <string name="module_user_wechat_login_failed">微信登录失败</string>
 
     <string name="module_user_bind_phone_title">绑定手机号</string>
+    <string name="module_user_bind_phone_fusion_title">本机号码一键绑定</string>
+    <string name="module_user_bind_phone_sms_title">验证码绑定</string>
     <string name="module_user_bind_phone_phone_hint">手机号</string>
     <string name="module_user_bind_phone_sms_hint">验证码</string>
-    <string name="module_user_bind_phone_confirm">确认绑定</string>
+    <string name="module_user_bind_phone_confirm">本机号码一键绑定</string>
+    <string name="module_user_bind_phone_sms_confirm">确认绑定</string>
     <string name="module_user_bind_phone_phone_invalid">请输入正确的手机号</string>
     <string name="module_user_bind_phone_code_invalid">请输入正确的验证码</string>
-    <string name="module_user_bind_phone_sms_coming_soon">绑定手机验证码功能即将上线</string>
-    <string name="module_user_bind_phone_feature_coming_soon">绑定手机号功能即将上线</string>
-    <string name="module_user_bind_phone_unavailable_notice">绑定手机号暂未开放，当前版本仅保留入口展示，后续接入真实能力后再开放填写与验证码操作。</string>
+    <string name="module_user_bind_phone_verified">已验证</string>
+    <string name="module_user_bind_phone_sms_coming_soon">当前使用本机号码一键认证绑定</string>
+    <string name="module_user_bind_phone_feature_coming_soon">请使用本机号码一键认证绑定</string>
+    <string name="module_user_bind_phone_unavailable_notice">将通过运营商安全认证校验本机号码。</string>
+    <string name="module_user_bind_phone_fusion_notice">将通过运营商安全认证校验本机号码。认证成功后，手机号会绑定到当前账号，用于登录、账号找回与安全验证。</string>
+    <string name="module_user_bind_phone_loading">正在绑定手机号...</string>
+    <string name="module_user_bind_phone_success">手机号绑定成功</string>
+    <string name="module_user_bind_phone_failed">手机号绑定失败</string>
+    <string name="module_user_bind_phone_auth_failed">本机号码认证失败</string>
 
     <string name="module_user_bind_email_title">绑定邮箱</string>
     <string name="module_user_change_email_title">换绑邮箱</string>

@@ -5,13 +5,16 @@ import com.chen.memorizewords.data.account.local.mmkv.auth.AuthLocalDataSource
 import com.chen.memorizewords.data.account.remote.user.AuthRemoteDataSource
 import com.chen.memorizewords.data.account.remoteapi.api.auth.AvatarUploadDto
 import com.chen.memorizewords.data.account.remoteapi.api.auth.BindEmailRequest
+import com.chen.memorizewords.data.account.remoteapi.api.auth.BindPhoneRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.BindSocialRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.ChangePasswordRequest
+import com.chen.memorizewords.data.account.remoteapi.api.auth.FusionAuthTokenDto
+import com.chen.memorizewords.data.account.remoteapi.api.auth.FusionLoginRequest
+import com.chen.memorizewords.data.account.remoteapi.api.auth.FusionRegisterRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.LoginRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.ProfilePatchRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.RegisterRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.SendEmailCodeRequest
-import com.chen.memorizewords.data.account.remoteapi.api.auth.SendSmsCodeRequest
 import com.chen.memorizewords.data.account.remoteapi.dto.LoginResponseDto
 import com.chen.memorizewords.data.account.remoteapi.dto.ProfileDto
 import com.chen.memorizewords.data.account.remoteapi.dto.SendSmsCodeResponseDto
@@ -57,6 +60,41 @@ class UserRepositoryImplTest {
             assertEquals(BindEmailRequest("new@example.com", "123456"), remote.capturedBindEmailRequest)
             assertEquals("new@example.com", result.getOrThrow().email)
             assertEquals("new@example.com", local.getUser()?.email)
+            assertEquals(true, local.getUser()?.onboardingCompleted)
+        }
+    }
+
+    @Test
+    fun `bindPhone sends fusion token and saves returned profile locally`() {
+        runBlocking {
+            val local = FakeAuthLocalDataSource(
+                user(
+                    email = "old@example.com",
+                    onboardingCompleted = true
+                )
+            )
+            val remote = FakeAuthRemoteDataSource(
+                bindPhoneProfile = ProfileDto(
+                    userId = 7L,
+                    email = "old@example.com",
+                    nickname = "Demo",
+                    gender = null,
+                    avatarUrl = null,
+                    phone = "13800000000",
+                    qq = null,
+                    wechat = null,
+                    emailVerified = true,
+                    onboardingCompleted = null
+                )
+            )
+            val repository = UserRepositoryImpl(remote, local, FakeAvatarLocalDataSource())
+
+            val result = repository.bindPhoneByFusionVerifyToken("verify-token")
+
+            assertTrue(result.isSuccess)
+            assertEquals(BindPhoneRequest("verify-token"), remote.capturedBindPhoneRequest)
+            assertEquals("13800000000", result.getOrThrow().phone)
+            assertEquals("13800000000", local.getUser()?.phone)
             assertEquals(true, local.getUser()?.onboardingCompleted)
         }
     }
@@ -133,27 +171,29 @@ class UserRepositoryImplTest {
 
     private class FakeAuthRemoteDataSource(
         private val bindEmailProfile: ProfileDto? = null,
+        private val bindPhoneProfile: ProfileDto? = null,
         private val updateProfile: ProfileDto? = null
     ) : AuthRemoteDataSource {
         var capturedBindEmailRequest: BindEmailRequest? = null
+        var capturedBindPhoneRequest: BindPhoneRequest? = null
 
         override suspend fun login(loginRequest: LoginRequest): Result<LoginResponseDto> = unused()
-
-        override suspend fun loginBySms(loginRequest: LoginRequest): Result<LoginResponseDto> = unused()
 
         override suspend fun loginByWechat(loginRequest: LoginRequest): Result<LoginResponseDto> = unused()
 
         override suspend fun loginByQq(loginRequest: LoginRequest): Result<LoginResponseDto> = unused()
-
-        override suspend fun sendLoginSmsCode(
-            request: SendSmsCodeRequest
-        ): Result<SendSmsCodeResponseDto> = unused()
 
         override suspend fun sendEmailCode(
             request: SendEmailCodeRequest
         ): Result<SendSmsCodeResponseDto> = unused()
 
         override suspend fun register(request: RegisterRequest): Result<LoginResponseDto> = unused()
+
+        override suspend fun getFusionAuthToken(): Result<FusionAuthTokenDto> = unused()
+
+        override suspend fun fusionLogin(request: FusionLoginRequest): Result<LoginResponseDto> = unused()
+
+        override suspend fun fusionRegister(request: FusionRegisterRequest): Result<LoginResponseDto> = unused()
 
         override suspend fun getProfile(): Result<ProfileDto> = unused()
 
@@ -170,6 +210,11 @@ class UserRepositoryImplTest {
         override suspend fun bindEmail(request: BindEmailRequest): Result<ProfileDto> {
             capturedBindEmailRequest = request
             return bindEmailProfile?.let { Result.success(it) } ?: unused()
+        }
+
+        override suspend fun bindPhone(request: BindPhoneRequest): Result<ProfileDto> {
+            capturedBindPhoneRequest = request
+            return bindPhoneProfile?.let { Result.success(it) } ?: unused()
         }
 
         override suspend fun uploadAvatar(file: MultipartBody.Part): Result<AvatarUploadDto> = unused()

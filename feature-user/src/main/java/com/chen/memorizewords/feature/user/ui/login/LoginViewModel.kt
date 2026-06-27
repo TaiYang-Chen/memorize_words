@@ -21,7 +21,6 @@ class LoginViewModel @Inject constructor(
         data object ToRegister : Route
         data object ToWeChatOneTapLogin : Route
         data object ToQQOneTapLogin : Route
-        data object ToSmsCodeLogin : Route
         data object ToFusionPhoneLogin : Route
     }
 
@@ -65,10 +64,6 @@ class LoginViewModel @Inject constructor(
 
     fun navigateToQQOneTapLogin() {
         navigateRoute(Route.ToQQOneTapLogin)
-    }
-
-    fun navigateToSmsCodeLogin() {
-        navigateRoute(Route.ToSmsCodeLogin)
     }
 
     fun navigateToFusionPhoneLogin() {

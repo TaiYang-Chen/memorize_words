@@ -8,13 +8,7 @@ interface AuthRepository {
 
     suspend fun loginByPassword(phoneNumber: String, password: String): Result<AuthLoginResult>
 
-    suspend fun sendLoginSmsCode(phone: String): Result<SmsCodeMeta>
-
-    suspend fun sendRegisterSmsCode(phone: String): Result<SmsCodeMeta>
-
     suspend fun sendEmailCode(email: String, scene: String = "login"): Result<SmsCodeMeta>
-
-    suspend fun loginBySms(phone: String, code: String): Result<AuthLoginResult>
 
     suspend fun loginByEmailCode(email: String, code: String): Result<AuthLoginResult>
 
@@ -24,11 +18,11 @@ interface AuthRepository {
 
     suspend fun register(email: String, emailCode: String, password: String): Result<AuthLoginResult>
 
-    suspend fun registerByPhone(phone: String, smsCode: String, password: String): Result<AuthLoginResult>
-
     suspend fun getFusionAuthToken(): Result<FusionAuthToken>
 
     suspend fun loginByFusionVerifyToken(verifyToken: String): Result<AuthLoginResult>
+
+    suspend fun registerByFusionVerifyToken(verifyToken: String, password: String): Result<AuthLoginResult>
 
     suspend fun changePassword(oldPassword: String, newPassword: String): Result<Unit>
 

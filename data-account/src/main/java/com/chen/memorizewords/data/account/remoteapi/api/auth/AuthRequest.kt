@@ -30,13 +30,6 @@ class AuthRequest @Inject constructor(
             .await<ApiResponse<LoginResponseDto>, LoginResponseDto>()
     }
 
-    suspend fun sendLoginSmsCode(
-        request: SendSmsCodeRequest
-    ): NetworkResult<SendSmsCodeResponseDto> = requestExecutor.executePublic {
-        authApiService.sendSmsCode(request)
-            .await<ApiResponse<SendSmsCodeResponseDto>, SendSmsCodeResponseDto>()
-    }
-
     suspend fun sendEmailCode(
         request: SendEmailCodeRequest
     ): NetworkResult<SendSmsCodeResponseDto> = requestExecutor.executePublic {
@@ -64,6 +57,12 @@ class AuthRequest @Inject constructor(
     suspend fun fusionLogin(request: FusionLoginRequest): NetworkResult<LoginResponseDto> =
         requestExecutor.executePublic {
             authApiService.fusionLogin(request)
+                .await<ApiResponse<LoginResponseDto>, LoginResponseDto>()
+        }
+
+    suspend fun fusionRegister(request: FusionRegisterRequest): NetworkResult<LoginResponseDto> =
+        requestExecutor.executePublic {
+            authApiService.fusionRegister(request)
                 .await<ApiResponse<LoginResponseDto>, LoginResponseDto>()
         }
 
@@ -101,6 +100,13 @@ class AuthRequest @Inject constructor(
         request: BindEmailRequest
     ): NetworkResult<ProfileDto> = requestExecutor.executeAuthenticated {
         authApiService.bindEmail(request)
+            .await<ApiResponse<ProfileDto>, ProfileDto>()
+    }
+
+    suspend fun bindPhone(
+        request: BindPhoneRequest
+    ): NetworkResult<ProfileDto> = requestExecutor.executeAuthenticated {
+        authApiService.bindPhone(request)
             .await<ApiResponse<ProfileDto>, ProfileDto>()
     }
 

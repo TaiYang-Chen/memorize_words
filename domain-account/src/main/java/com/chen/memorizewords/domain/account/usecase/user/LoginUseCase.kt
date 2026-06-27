@@ -5,6 +5,7 @@ import javax.inject.Inject
 
 sealed class LoginError : Throwable() {
     class EmptyPhone : LoginError()
+    class InvalidPhone : LoginError()
     class EmptyEmail : LoginError()
     class EmptyPassword : LoginError()
     class EmptySmsCode : LoginError()

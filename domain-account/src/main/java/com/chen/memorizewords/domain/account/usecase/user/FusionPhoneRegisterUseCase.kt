@@ -4,18 +4,16 @@ import com.chen.memorizewords.domain.account.model.user.User
 import com.chen.memorizewords.domain.account.repository.user.AuthRepository
 import javax.inject.Inject
 
-class PhoneRegisterUseCase @Inject constructor(
+class FusionPhoneRegisterUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     private val loginCompletionHandler: LoginCompletionHandler
 ) {
-    suspend operator fun invoke(phone: String, smsCode: String, password: String): Result<User> {
+    suspend operator fun invoke(verifyToken: String, password: String): Result<User> {
         return runCatching {
-            if (phone.isBlank()) throw LoginError.EmptyPhone()
-            if (smsCode.isBlank()) throw LoginError.EmptySmsCode()
+            if (verifyToken.isBlank()) throw LoginError.EmptyPhone()
             if (password.isBlank()) throw LoginError.EmptyPassword()
-            val loginResult = authRepository.registerByPhone(
-                phone = phone.trim(),
-                smsCode = smsCode.trim(),
+            val loginResult = authRepository.registerByFusionVerifyToken(
+                verifyToken = verifyToken.trim(),
                 password = password
             ).getOrThrow()
             loginCompletionHandler.complete(loginResult)

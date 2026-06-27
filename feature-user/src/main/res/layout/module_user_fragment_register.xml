@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -16,34 +15,31 @@
         android:layout_height="match_parent"
         android:background="@android:color/white">
 
-        <!-- 欢迎登录 -->
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="128dp"
-            android:text="注册"
+            android:text="@string/module_user_nav_register_title"
             android:textColor="#111111"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- 没有账号？立即注册 -->
         <TextView
-            android:onClick="@{()->viewModel.back()}"
             android:id="@+id/tvRegister"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="已有账号？ 去登录"
+            android:onClick="@{() -> viewModel.back()}"
+            android:text="@string/module_user_back_to_password_login"
             android:textColor="#2979FF"
             android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="@+id/tvTitle"
-            app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+            app:layout_constraintStart_toStartOf="@id/tvTitle"
+            app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
-        <!-- 账号输入框 -->
         <EditText
             android:id="@+id/etAccount"
             android:layout_width="0dp"
@@ -62,8 +58,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/clCode"
+        <FrameLayout
+            android:id="@+id/flPassword"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_marginTop="16dp"
@@ -73,60 +69,11 @@
             app:layout_constraintTop_toBottomOf="@id/etAccount">
 
             <EditText
-                android:id="@+id/etCode"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:hint="@string/module_user_sms_code_hint"
-                android:inputType="number"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:text="@={viewModel.smsCode}"
-                android:textSize="15sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/btnSendCode"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/btnSendCode"
-                android:layout_width="112dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="4dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:enabled="@{viewModel.isSendCodeEnabled}"
-                android:focusable="true"
-                android:gravity="center"
-                android:maxLines="1"
-                android:onClick="@{() -> viewModel.sendCode()}"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:text="@{viewModel.sendCodeText}"
-                android:textColor="@color/module_user_send_code_text_color"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <!-- 密码输入框容器 -->
-        <FrameLayout
-            android:id="@+id/flPassword"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/module_user_login_bg_edit_text"
-            app:layout_constraintEnd_toEndOf="@id/etAccount"
-            app:layout_constraintStart_toStartOf="@id/etAccount"
-            app:layout_constraintTop_toBottomOf="@id/clCode">
-
-            <EditText
                 android:id="@+id/etPassword"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"
-                android:hint="请输入密码"
+                android:hint="@string/module_user_login_password_hint"
                 android:inputType="textPassword"
                 android:paddingStart="16dp"
                 android:paddingEnd="48dp"
@@ -142,7 +89,6 @@
                 android:src="@drawable/module_user_login_ic_pass_invisible" />
         </FrameLayout>
 
-        <!-- 登录按钮 -->
         <Button
             android:id="@+id/btnLogin"
             android:layout_width="0dp"
@@ -150,8 +96,7 @@
             android:layout_marginTop="32dp"
             android:background="@drawable/module_user_login_bg_login_btn"
             android:backgroundTint="@null"
-            android:onClick="@{()->viewModel.register()}"
-            android:text="注册"
+            android:text="@string/module_user_nav_register_title"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             app:backgroundTint="@null"

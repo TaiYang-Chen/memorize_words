@@ -206,7 +206,7 @@
                                 android:paddingTop="@dimen/feature_user_profile_vip_vertical_padding"
                                 android:paddingEnd="@dimen/feature_user_profile_vip_horizontal_padding"
                                 android:paddingBottom="@dimen/feature_user_profile_vip_vertical_padding"
-                                android:text="@string/feature_user_profile_member_gold"
+                                android:text="@string/feature_user_profile_member_normal"
                                 android:textColor="@color/feature_user_profile_vip_text"
                                 android:textSize="@dimen/feature_user_profile_vip_text_size"
                                 android:textStyle="bold"

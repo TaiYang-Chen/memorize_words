@@ -8,44 +8,32 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
 
-class BindEmailUseCaseTest {
+class BindPhoneUseCaseTest {
 
     @Test
-    fun `blank email returns empty email error`() {
+    fun `blank verify token returns empty oauth code error`() {
         runBlocking {
-            val result = BindEmailUseCase(FakeUserRepository())("", "123456")
+            val result = BindPhoneUseCase(FakeUserRepository())("")
 
             assertTrue(result.isFailure)
-            assertIs<LoginError.EmptyEmail>(result.exceptionOrNull())
+            assertIs<LoginError.EmptyOauthCode>(result.exceptionOrNull())
         }
     }
 
     @Test
-    fun `blank code returns empty sms code error`() {
-        runBlocking {
-            val result = BindEmailUseCase(FakeUserRepository())("demo@example.com", "")
-
-            assertTrue(result.isFailure)
-            assertIs<LoginError.EmptySmsCode>(result.exceptionOrNull())
-        }
-    }
-
-    @Test
-    fun `valid input is trimmed before binding email`() {
+    fun `valid verify token is trimmed before binding phone`() {
         runBlocking {
             val repo = FakeUserRepository()
-            val result = BindEmailUseCase(repo)(" demo@example.com ", " 123456 ")
+            val result = BindPhoneUseCase(repo)(" verify-token ")
 
             assertTrue(result.isSuccess)
-            assertEquals("demo@example.com", repo.boundEmail)
-            assertEquals("123456", repo.boundEmailCode)
-            assertEquals("demo@example.com", result.getOrThrow().email)
+            assertEquals("verify-token", repo.boundVerifyToken)
+            assertEquals("13800000000", result.getOrThrow().phone)
         }
     }
 
     private class FakeUserRepository : UserRepository {
-        var boundEmail: String? = null
-        var boundEmailCode: String? = null
+        var boundVerifyToken: String? = null
 
         override suspend fun updateNickname(nickname: String): Result<User> = unused()
 
@@ -53,13 +41,12 @@ class BindEmailUseCaseTest {
 
         override suspend fun updatePhone(phone: String): Result<User> = unused()
 
-        override suspend fun bindPhoneByFusionVerifyToken(verifyToken: String): Result<User> = unused()
-
-        override suspend fun bindEmail(email: String, emailCode: String): Result<User> {
-            boundEmail = email
-            boundEmailCode = emailCode
-            return Result.success(user(email = email))
+        override suspend fun bindPhoneByFusionVerifyToken(verifyToken: String): Result<User> {
+            boundVerifyToken = verifyToken
+            return Result.success(user())
         }
+
+        override suspend fun bindEmail(email: String, emailCode: String): Result<User> = unused()
 
         override suspend fun updateWechat(wechat: String): Result<User> = unused()
 
@@ -71,13 +58,13 @@ class BindEmailUseCaseTest {
 
         override suspend fun cacheLoadedAvatar(imageBytes: ByteArray, avatarUrl: String?): Result<User> = unused()
 
-        private fun user(email: String): User = User(
+        private fun user(): User = User(
             userId = 1L,
-            email = email,
+            email = "demo@example.com",
             nickname = "Demo",
             gender = null,
             avatarUrl = null,
-            phone = null,
+            phone = "13800000000",
             qq = null,
             wechat = null,
             emailVerified = true,

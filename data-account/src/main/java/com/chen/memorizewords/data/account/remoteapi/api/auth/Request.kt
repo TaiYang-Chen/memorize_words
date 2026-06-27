@@ -9,7 +9,6 @@ data class LoginRequest(
     val email: String? = null,
     val phone: String? = null,
     val password: String? = null,
-    val smsCode: String? = null,
     val emailCode: String? = null,
     val oauthCode: String? = null,
     val platform: String? = null,
@@ -21,15 +20,7 @@ data class RegisterRequest(
     val email: String? = null,
     val emailCode: String? = null,
     val password: String,
-    val registerMethod: String = "email",
-    val phone: String? = null,
-    val smsCode: String? = null
-)
-
-@JsonClass(generateAdapter = false)
-data class SendSmsCodeRequest(
-    val phone: String,
-    val scene: String = "login"
+    val registerMethod: String = "email"
 )
 
 @JsonClass(generateAdapter = false)
@@ -43,6 +34,12 @@ data class RefreshRequest(val refreshToken: String)
 
 @JsonClass(generateAdapter = false)
 data class FusionLoginRequest(val verifyToken: String)
+
+@JsonClass(generateAdapter = false)
+data class FusionRegisterRequest(
+    val verifyToken: String,
+    val password: String
+)
 
 @JsonClass(generateAdapter = false)
 data class FusionAuthTokenDto(
@@ -69,6 +66,9 @@ data class BindEmailRequest(
     val email: String,
     val emailCode: String
 )
+
+@JsonClass(generateAdapter = false)
+data class BindPhoneRequest(val verifyToken: String)
 
 @JsonClass(generateAdapter = false)
 data class AvatarUploadDto(

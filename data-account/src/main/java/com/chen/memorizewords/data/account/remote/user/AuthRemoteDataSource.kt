@@ -2,13 +2,14 @@ package com.chen.memorizewords.data.account.remote.user
 
 import com.chen.memorizewords.data.account.remoteapi.api.auth.LoginRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.RegisterRequest
-import com.chen.memorizewords.data.account.remoteapi.api.auth.SendSmsCodeRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.SendEmailCodeRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.FusionAuthTokenDto
 import com.chen.memorizewords.data.account.remoteapi.api.auth.FusionLoginRequest
+import com.chen.memorizewords.data.account.remoteapi.api.auth.FusionRegisterRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.ChangePasswordRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.BindSocialRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.BindEmailRequest
+import com.chen.memorizewords.data.account.remoteapi.api.auth.BindPhoneRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.AvatarUploadDto
 import com.chen.memorizewords.data.account.remoteapi.api.auth.ProfilePatchRequest
 import com.chen.memorizewords.data.account.remoteapi.dto.LoginResponseDto
@@ -26,13 +27,9 @@ interface AuthRemoteDataSource {
 
     suspend fun login(loginRequest: LoginRequest): Result<LoginResponseDto>
 
-    suspend fun loginBySms(loginRequest: LoginRequest): Result<LoginResponseDto>
-
     suspend fun loginByWechat(loginRequest: LoginRequest): Result<LoginResponseDto>
 
     suspend fun loginByQq(loginRequest: LoginRequest): Result<LoginResponseDto>
-
-    suspend fun sendLoginSmsCode(request: SendSmsCodeRequest): Result<SendSmsCodeResponseDto>
 
     suspend fun sendEmailCode(request: SendEmailCodeRequest): Result<SendSmsCodeResponseDto>
 
@@ -41,6 +38,8 @@ interface AuthRemoteDataSource {
     suspend fun getFusionAuthToken(): Result<FusionAuthTokenDto>
 
     suspend fun fusionLogin(request: FusionLoginRequest): Result<LoginResponseDto>
+
+    suspend fun fusionRegister(request: FusionRegisterRequest): Result<LoginResponseDto>
 
     suspend fun getProfile(): Result<ProfileDto>
 
@@ -55,6 +54,8 @@ interface AuthRemoteDataSource {
     suspend fun bindSocial(request: BindSocialRequest): Result<ProfileDto>
 
     suspend fun bindEmail(request: BindEmailRequest): Result<ProfileDto>
+
+    suspend fun bindPhone(request: BindPhoneRequest): Result<ProfileDto>
 
     suspend fun uploadAvatar(file: MultipartBody.Part): Result<AvatarUploadDto>
 
