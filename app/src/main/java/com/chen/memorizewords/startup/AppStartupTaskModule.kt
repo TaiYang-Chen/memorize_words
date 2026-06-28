@@ -29,6 +29,13 @@ abstract class AppStartupTaskModule {
     @Binds
     @IntoSet
     @Singleton
+    abstract fun bindForegroundSyncStartupTask(
+        impl: ForegroundSyncStartupTask
+    ): ApplicationStartupTask
+
+    @Binds
+    @IntoSet
+    @Singleton
     abstract fun bindForegroundWordBookStartupTask(
         impl: ForegroundWordBookStartupTask
     ): ApplicationStartupTask

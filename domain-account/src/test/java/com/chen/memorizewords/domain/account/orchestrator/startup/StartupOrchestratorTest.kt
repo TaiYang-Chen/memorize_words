@@ -72,7 +72,35 @@ class StartupOrchestratorTest {
     }
 
     @Test
-    fun `session warmup does not notify kickout when cached session is invalid`() = runBlocking {
+    fun `network launch returns auth for authenticated user with invalid session`() = runBlocking {
+        val orchestrator = createOrchestrator(
+            isAuthenticated = true,
+            onboardingCompleted = true,
+            accessTokenState = AccessTokenState.InvalidSession
+        )
+
+        val destination = orchestrator.resolveLaunchDestination(hasNetwork = true)
+
+        assertEquals(StartupLaunchDestination.AUTH, destination)
+    }
+
+    @Test
+    fun `network launch returns local destination when authenticated user is offline`() = runBlocking {
+        val tokenProvider = FakeTokenProvider(AccessTokenState.InvalidSession)
+        val orchestrator = createOrchestrator(
+            isAuthenticated = true,
+            onboardingCompleted = true,
+            tokenProvider = tokenProvider
+        )
+
+        val destination = orchestrator.resolveLaunchDestination(hasNetwork = false)
+
+        assertEquals(StartupLaunchDestination.HOME, destination)
+        assertEquals(null, tokenProvider.lastNotifyKickoutOnInvalidSession)
+    }
+
+    @Test
+    fun `session warmup notifies kickout when cached session is invalid`() = runBlocking {
         val tokenProvider = FakeTokenProvider(AccessTokenState.InvalidSession)
         val orchestrator = createOrchestrator(
             isAuthenticated = true,
@@ -81,7 +109,7 @@ class StartupOrchestratorTest {
 
         orchestrator.warmUpSessionStateIfNeeded(hasNetwork = true)
 
-        assertEquals(false, tokenProvider.lastNotifyKickoutOnInvalidSession)
+        assertEquals(true, tokenProvider.lastNotifyKickoutOnInvalidSession)
     }
 
     private fun createOrchestrator(

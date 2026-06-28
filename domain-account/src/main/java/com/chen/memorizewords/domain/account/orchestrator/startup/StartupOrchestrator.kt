@@ -41,7 +41,7 @@ class StartupOrchestrator @Inject constructor(
 
     suspend fun warmUpSessionStateIfNeeded(hasNetwork: Boolean) {
         if (!hasNetwork || !authStateProvider.isAuthenticated()) return
-        tokenProvider.resolveAccessTokenState(notifyKickoutOnInvalidSession = false)
+        tokenProvider.resolveAccessTokenState(notifyKickoutOnInvalidSession = true)
     }
 
     suspend fun shouldAutoStartFloating(canDrawOverlays: Boolean): Boolean {

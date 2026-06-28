@@ -7,6 +7,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.chen.memorizewords.core.navigation.AppRoute
 import com.chen.memorizewords.domain.account.orchestrator.startup.StartupOrchestrator
+import com.chen.memorizewords.startup.NetworkMonitor
 import com.chen.memorizewords.startup.StartupRouteIntentFactory
 import com.chen.memorizewords.startup.StartupRouteResolver
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,6 +31,9 @@ class SplashActivity : AppCompatActivity() {
     @Inject
     lateinit var startupRouteIntentFactory: StartupRouteIntentFactory
 
+    @Inject
+    lateinit var networkMonitor: NetworkMonitor
+
     private var hasRouted = false
     private var keepSplashOnScreen = true
 
@@ -43,7 +47,9 @@ class SplashActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             val targetRoute = startupRouteResolver.resolveRoute(
-                startupOrchestrator.resolveLaunchDestinationLocal()
+                startupOrchestrator.resolveLaunchDestination(
+                    hasNetwork = networkMonitor.isCurrentlyOnline()
+                )
             )
             val elapsed = SystemClock.elapsedRealtime() - splashShownAt
             val remaining = MIN_SPLASH_DISPLAY_DURATION_MS - elapsed
