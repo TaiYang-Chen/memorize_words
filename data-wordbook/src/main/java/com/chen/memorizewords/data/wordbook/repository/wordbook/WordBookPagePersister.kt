@@ -3,6 +3,8 @@
 import androidx.room.withTransaction
 import com.chen.memorizewords.data.wordbook.local.WordBookDatabase
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.words.WordBookItemEntity
+import com.chen.memorizewords.data.wordbook.local.room.model.words.example.WordExampleEntity
+import com.chen.memorizewords.data.wordbook.local.room.model.words.form.WordFormEntity
 import com.chen.memorizewords.data.wordbook.remoteapi.dto.wordbook.WordDto
 import com.chen.memorizewords.data.wordbook.local.room.model.words.word.toAntonymEntities as wordToAntonymEntities
 import com.chen.memorizewords.data.wordbook.local.room.model.words.word.toAssociationEntities as wordToAssociationEntities
@@ -35,19 +37,39 @@ internal suspend fun WordBookDatabase.persistWordBookPage(
     val wordUserMetaDao = wordUserMetaDao()
 
     withTransaction {
-        items.forEach { word ->
-            wordDao.insert(word.wordToEntity())
+        val pageWordIds = items.map { it.id }.toSet()
+        val referencedFormWordIds = items
+            .flatMap { word -> word.wordFormDtos.mapNotNull { it.formWordId } }
+            .filter { it > 0L }
+            .toSet()
+        val existingReferencedWordIds = if (referencedFormWordIds.isEmpty()) {
+            emptySet()
+        } else {
+            wordDao.getByIds(referencedFormWordIds.toList()).map { it.id }.toSet()
+        }
+        val validFormWordIds = pageWordIds + existingReferencedWordIds
 
-            bookWordItemDao.insert(
+        wordDao.insertAll(items.map { it.wordToEntity() })
+        bookWordItemDao.insertAll(
+            items.map { word ->
                 WordBookItemEntity(
                     wordBookId = bookId,
                     wordId = word.id
                 )
-            )
+            }
+        )
 
+        items.forEach { word ->
             val definitions = word.definitionDtos.map { it.definitionToEntity() }
-            val examples = word.exampleDtos.map { it.exampleToEntity() }
-            val forms = word.wordFormDtos.map { it.formToEntity() }
+            val validDefinitionIds = definitions.map { it.id }.toSet()
+            val examples = sanitizeWordExamples(
+                examples = word.exampleDtos.map { it.exampleToEntity() },
+                validDefinitionIds = validDefinitionIds
+            )
+            val forms = sanitizeWordForms(
+                forms = word.wordFormDtos.map { it.formToEntity() },
+                validWordIds = validFormWordIds
+            )
             val roots = word.rootWords.map { it.wordRootToEntity() }
             val rootTags = word.rootWords.flatMap { it.rootToTagEntities() }
             val rootRelations = word.rootWords.mapIndexed { index, root ->
@@ -84,6 +106,34 @@ internal suspend fun WordBookDatabase.persistWordBookPage(
             if (associations.isNotEmpty()) wordRelationDao.insertAssociations(associations)
 
             wordUserMetaDao.upsert(word.wordToUserMetaEntity())
+        }
+    }
+}
+
+internal fun sanitizeWordForms(
+    forms: List<WordFormEntity>,
+    validWordIds: Set<Long>
+): List<WordFormEntity> {
+    return forms.map { form ->
+        val formWordId = form.formWordId
+        if (formWordId == null || formWordId in validWordIds) {
+            form
+        } else {
+            form.copy(formWordId = null)
+        }
+    }
+}
+
+internal fun sanitizeWordExamples(
+    examples: List<WordExampleEntity>,
+    validDefinitionIds: Set<Long>
+): List<WordExampleEntity> {
+    return examples.map { example ->
+        val definitionId = example.definitionId
+        if (definitionId == null || definitionId in validDefinitionIds) {
+            example
+        } else {
+            example.copy(definitionId = null)
         }
     }
 }

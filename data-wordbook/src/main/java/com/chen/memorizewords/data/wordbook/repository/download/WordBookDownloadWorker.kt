@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.content.pm.ServiceInfo
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -49,6 +50,7 @@ class WordBookDownloadWorker(
                 Data.Builder()
                     .putLong(WordBookDownloadWorkConstants.KEY_BOOK_ID, bookId)
                     .putString(WordBookDownloadWorkConstants.KEY_ERROR_MESSAGE, "Invalid book id")
+                    .putBoolean(WordBookDownloadWorkConstants.KEY_CANCELLED, false)
                     .build()
             )
         }
@@ -64,10 +66,12 @@ class WordBookDownloadWorker(
         val notificationId = buildNotificationId(bookId)
         ensureNotificationChannel()
 
+        var stage = STAGE_START_FOREGROUND
         return try {
             if (runInForeground) {
                 updateForeground(notificationId, bookTitle, 0, expectedTotal)
             }
+            stage = STAGE_DOWNLOAD_CONTENT
             val downloadResult = contentDownloader.downloadContent(
                 bookId = bookId,
                 expectedTotal = expectedTotal,
@@ -99,6 +103,7 @@ class WordBookDownloadWorker(
                 throw CancellationException()
             }
 
+            stage = STAGE_SYNC_WORD_STATES
             syncWordStates(
                 bookId = bookId,
                 pageSize = DEFAULT_PAGE_SIZE,
@@ -107,9 +112,11 @@ class WordBookDownloadWorker(
             )
 
             if (reportMyBook) {
+                stage = STAGE_ADD_MY_WORD_BOOK
                 remoteUserSyncDataSource.addMyWordBook(bookId).getOrThrow()
             }
 
+            stage = STAGE_NOTIFY_COMPLETED
             notifyCompleted(notificationId, bookTitle)
             Result.success(
                 Data.Builder()
@@ -122,17 +129,28 @@ class WordBookDownloadWorker(
                     .putInt(WordBookDownloadWorkConstants.KEY_PROGRESS, downloadResult.progressPercent)
                     .build()
             )
-        } catch (cancelled: CancellationException) {
-            throw cancelled
+        } catch (_: CancellationException) {
+            Result.failure(
+                Data.Builder()
+                    .putLong(WordBookDownloadWorkConstants.KEY_BOOK_ID, bookId)
+                    .putString(
+                        WordBookDownloadWorkConstants.KEY_ERROR_MESSAGE,
+                        DOWNLOAD_CANCELLED_MESSAGE
+                    )
+                    .putBoolean(WordBookDownloadWorkConstants.KEY_CANCELLED, true)
+                    .build()
+            )
         } catch (_: IOException) {
             Result.retry()
         } catch (t: Throwable) {
-            val message = t.message ?: "Download failed"
+            val message = "[$stage] ${t.message ?: "Download failed"}"
+            Log.e(TAG, "Word book download failed at $stage, bookId=$bookId", t)
             notifyFailed(notificationId, bookTitle, message)
             Result.failure(
                 Data.Builder()
                     .putLong(WordBookDownloadWorkConstants.KEY_BOOK_ID, bookId)
                     .putString(WordBookDownloadWorkConstants.KEY_ERROR_MESSAGE, message)
+                    .putBoolean(WordBookDownloadWorkConstants.KEY_CANCELLED, false)
                     .build()
             )
         }
@@ -299,3 +317,10 @@ interface WordBookDownloadWorkerEntryPoint {
 }
 
 private const val DEFAULT_PAGE_SIZE = 50
+private const val DOWNLOAD_CANCELLED_MESSAGE = "Download cancelled"
+private const val TAG = "WordBookDownloadWorker"
+private const val STAGE_START_FOREGROUND = "start_foreground"
+private const val STAGE_DOWNLOAD_CONTENT = "download_content"
+private const val STAGE_SYNC_WORD_STATES = "sync_word_states"
+private const val STAGE_ADD_MY_WORD_BOOK = "add_my_wordbook"
+private const val STAGE_NOTIFY_COMPLETED = "notify_completed"

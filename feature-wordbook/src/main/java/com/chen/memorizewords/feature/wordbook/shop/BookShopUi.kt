@@ -20,7 +20,7 @@ data class BookShopUi(
         get() = when (downloadState) {
             is DownloadState.NotDownloaded -> "下载"
             is DownloadState.Downloading -> {
-                if (downloadState.progress <= 0) "重试" else "暂停 ${downloadState.progress}%"
+                if (downloadState.progress <= 0) "下载中" else "暂停 ${downloadState.progress}%"
             }
             is DownloadState.Paused -> "继续 ${downloadState.progress}%"
             is DownloadState.Downloaded,

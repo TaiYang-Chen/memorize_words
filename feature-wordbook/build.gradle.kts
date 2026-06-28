@@ -34,6 +34,7 @@ dependencies {
     implementation(libs.coil)
     implementation(libs.hilt.android)
     implementation(libs.material)
+    testImplementation(kotlin("test"))
     ksp(libs.hilt.compiler)
 
 }

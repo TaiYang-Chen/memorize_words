@@ -166,34 +166,20 @@ class RemoteWordBookRepositoryImpl @Inject constructor(
             .mapNotNull { info ->
                 val bookId = info.getBookId()
                 if (bookId <= 0L) return@mapNotNull null
-                bookId to info
-            }
-            .groupBy({ it.first }, { it.second })
-            .mapValues { (_, infos) ->
-                val activeInfo = infos.firstOrNull {
-                    it.state == WorkInfo.State.RUNNING ||
-                        it.state == WorkInfo.State.ENQUEUED ||
-                        it.state == WorkInfo.State.BLOCKED
-                }
-                if (activeInfo != null) {
-                    return@mapValues BookWorkState(
-                        isActive = true,
-                        progress = activeInfo.getProgressPercent(),
-                        hasFailed = false,
-                        errorMessage = null
-                    )
-                }
-
-                val failedInfo = infos.firstOrNull { it.state == WorkInfo.State.FAILED }
-                BookWorkState(
-                    isActive = false,
-                    progress = 0,
-                    hasFailed = failedInfo != null,
-                    errorMessage = failedInfo?.outputData?.getString(
+                bookId to BookWorkSnapshot(
+                    state = info.state,
+                    progress = info.getProgressPercent(),
+                    isCancelled = info.outputData.getBoolean(
+                        WordBookDownloadWorkConstants.KEY_CANCELLED,
+                        false
+                    ),
+                    errorMessage = info.outputData.getString(
                         WordBookDownloadWorkConstants.KEY_ERROR_MESSAGE
                     )
                 )
             }
+            .groupBy({ it.first }, { it.second })
+            .mapValues { (_, infos) -> resolveBookWorkState(infos) }
     }
 
     private fun WorkInfo.getBookId(): Long {
@@ -227,9 +213,56 @@ class RemoteWordBookRepositoryImpl @Inject constructor(
 internal data class BookWorkState(
     val isActive: Boolean,
     val progress: Int,
+    val isSucceeded: Boolean,
     val hasFailed: Boolean,
     val errorMessage: String?
 )
+
+internal data class BookWorkSnapshot(
+    val state: WorkInfo.State,
+    val progress: Int = 0,
+    val isCancelled: Boolean = false,
+    val errorMessage: String? = null
+)
+
+internal fun resolveBookWorkState(infos: List<BookWorkSnapshot>): BookWorkState {
+    val activeInfo = infos.firstOrNull {
+        it.state == WorkInfo.State.RUNNING ||
+            it.state == WorkInfo.State.ENQUEUED ||
+            it.state == WorkInfo.State.BLOCKED
+    }
+    if (activeInfo != null) {
+        return BookWorkState(
+            isActive = true,
+            progress = activeInfo.progress.coerceIn(0, 100),
+            isSucceeded = false,
+            hasFailed = false,
+            errorMessage = null
+        )
+    }
+
+    val succeededInfo = infos.firstOrNull { it.state == WorkInfo.State.SUCCEEDED }
+    if (succeededInfo != null) {
+        return BookWorkState(
+            isActive = false,
+            progress = succeededInfo.progress.coerceIn(0, 100),
+            isSucceeded = true,
+            hasFailed = false,
+            errorMessage = null
+        )
+    }
+
+    val failedInfo = infos.firstOrNull {
+        it.state == WorkInfo.State.FAILED && !it.isCancelled
+    }
+    return BookWorkState(
+        isActive = false,
+        progress = 0,
+        isSucceeded = false,
+        hasFailed = failedInfo != null,
+        errorMessage = failedInfo?.errorMessage
+    )
+}
 
 internal fun WordBookDto.toShopDomain(): WordBook {
     return WordBook(
@@ -260,9 +293,9 @@ internal fun resolveShopDownloadState(
         workState?.isActive == true -> DownloadState.Downloading(
             maxOf(countProgress, workState.progress)
         )
-        isPaused && downloadedCount > 0 -> DownloadState.Paused(countProgress)
+        isDownloaded || workState?.isSucceeded == true -> DownloadState.Downloaded
         workState?.hasFailed == true -> DownloadState.Failed(workState.errorMessage ?: "下载失败")
-        isDownloaded -> DownloadState.Downloaded
+        isPaused && downloadedCount > 0 -> DownloadState.Paused(countProgress)
         downloadedCount > 0 -> DownloadState.Paused(countProgress)
         else -> DownloadState.NotDownloaded
     }

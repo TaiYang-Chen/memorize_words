@@ -14,6 +14,7 @@ object WordBookDownloadWorkConstants {
     const val KEY_DOWNLOADED_WORDS = "downloaded_words"
     const val KEY_PROGRESS = "progress"
     const val KEY_ERROR_MESSAGE = "error_message"
+    const val KEY_CANCELLED = "cancelled"
     const val KEY_PAUSED_BOOK_IDS = "wordbook_paused_book_ids"
     const val KEY_REPORT_MY_BOOK = "report_my_book"
     const val KEY_FORCE_REFRESH = "force_refresh"
