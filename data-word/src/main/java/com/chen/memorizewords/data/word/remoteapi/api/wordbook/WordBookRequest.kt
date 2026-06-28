@@ -6,6 +6,9 @@ import com.chen.memorizewords.data.word.remoteapi.dto.wordbook.WordDefinitionDto
 import com.chen.memorizewords.data.word.remoteapi.dto.wordbook.WordDto
 import com.chen.memorizewords.data.word.remoteapi.dto.wordbook.WordExampleDto
 import com.chen.memorizewords.data.word.remoteapi.dto.wordbook.WordFormDto
+import com.chen.memorizewords.data.word.remoteapi.dto.wordbook.WordMemoryDto
+import com.chen.memorizewords.data.word.remoteapi.dto.wordbook.WordPronunciationDto
+import com.chen.memorizewords.data.word.remoteapi.dto.wordbook.WordRelationsDto
 import com.chen.memorizewords.core.network.http.ApiResponse
 import com.chen.memorizewords.core.network.http.PageData
 import com.chen.memorizewords.core.network.http.NetworkResult
@@ -55,8 +58,8 @@ class WordBookRequest @Inject constructor(
     }
 
     suspend fun lookupWord(word: String, normalizedWord: String): NetworkResult<WordDto?> {
-        if (word.isBlank() || normalizedWord.isBlank()) {
-            return NetworkResult.Failure.GenericError("word and normalizedWord cannot be blank")
+        if (word.isBlank() && normalizedWord.isBlank()) {
+            return NetworkResult.Failure.GenericError("term or normalized is required")
         }
         return requestExecutor.executeAuthenticated {
             wordBookApiService.lookupWord(WordLookupRequest(word, normalizedWord))
@@ -108,46 +111,39 @@ class WordBookRequest @Inject constructor(
                 val wordText = "word$wordId"
                 val definition = WordDefinitionDto(
                     id = wordId,
-                    wordId = wordId,
-                    partOfSpeech = "n",
-                    definition = "mock definition $wordId"
+                    pos = "n",
+                    meaning = "mock definition $wordId"
                 )
                 val example = WordExampleDto(
                     id = wordId,
-                    wordId = wordId,
                     definitionId = wordId,
-                    englishSentence = "This is $wordText.",
-                    chineseTranslation = "This is $wordText.",
-                    difficultyLevel = 3
+                    sentence = "This is $wordText.",
+                    translation = "This is $wordText.",
+                    difficulty = 3
                 )
                 val form = WordFormDto(
                     id = wordId,
-                    wordId = wordId,
-                    formWordId = null,
-                    formType = "PLURAL",
-                    formText = "${wordText}s"
+                    targetWordId = null,
+                    type = "PLURAL",
+                    text = "${wordText}s"
                 )
 
                 WordDto(
                     id = wordId,
-                    word = wordText,
-                    normalizedWord = wordText,
-                    phoneticUS = "/word$wordId/",
-                    phoneticUK = "/word$wordId/",
-                    hasIrregularForms = false,
-                    memoryTip = "tip $wordId",
-                    rootMemoryTip = null,
-                    mnemonicImageUrl = null,
-                    memoryAssociations = listOf("assoc$wordId"),
-                    wordFamily = "family$wordId",
-                    synonyms = listOf("syn$wordId"),
-                    antonyms = listOf("ant$wordId"),
-                    tags = listOf("mock"),
-                    notes = "note $wordId",
-                    definitionDtos = arrayListOf(definition),
-                    exampleDtos = arrayListOf(example),
-                    wordFormDtos = arrayListOf(form),
-                    rootWords = arrayListOf()
+                    term = wordText,
+                    normalized = wordText,
+                    pronunciation = WordPronunciationDto(us = "/word$wordId/", uk = "/word$wordId/"),
+                    definitions = listOf(definition),
+                    examples = listOf(example),
+                    forms = listOf(form),
+                    relations = WordRelationsDto(
+                        synonyms = listOf("syn$wordId"),
+                        antonyms = listOf("ant$wordId"),
+                        tags = listOf("mock"),
+                        associations = listOf("assoc$wordId")
+                    ),
+                    roots = emptyList(),
+                    memory = WordMemoryDto(hint = "tip $wordId", notes = "note $wordId")
                 )
             }
         }

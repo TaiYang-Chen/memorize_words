@@ -64,7 +64,7 @@ import com.chen.memorizewords.data.wordbook.local.room.model.words.word.WordEnti
         RootExampleEntity::class,
         RootWordEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 @TypeConverters(WordBookRoomConverters::class)

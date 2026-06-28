@@ -35,6 +35,7 @@ class DestructiveRoomDatabaseFactory(
                 }
             )
             .addMigrations(*migrations)
+            .fallbackToDestructiveMigration(dropAllTables = true)
             .configure()
             .build()
     }

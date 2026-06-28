@@ -19,8 +19,8 @@ data class WordBookWordsRequest(
 
 @JsonClass(generateAdapter = false)
 data class WordLookupRequest(
-    val word: String,
-    val normalizedWord: String
+    val term: String,
+    val normalized: String
 )
 
 interface WordBookApiService {
