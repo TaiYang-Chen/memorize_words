@@ -1,5 +1,8 @@
 package com.chen.memorizewords.feature.learning.ui.fragment
 
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexWrap
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
@@ -26,6 +29,9 @@ import com.chen.memorizewords.feature.learning.adapter.SynonymsAdapter
 import com.chen.memorizewords.feature.learning.adapter.clearGlobalClickableWordHighlight
 import com.chen.memorizewords.feature.learning.databinding.FragmentWordLearningDetailBinding
 import com.chen.memorizewords.feature.learning.ui.learning.LearningViewModel
+import com.chen.memorizewords.feature.learning.ui.visibleWordExamples
+import com.chen.memorizewords.feature.learning.ui.visibleWordForms
+import com.chen.memorizewords.feature.learning.ui.visibleWordRoots
 import com.chen.memorizewords.feature.learning.ui.speech.audioOutputOrNull
 import com.chen.memorizewords.feature.learning.ui.speech.prepareSpeechOutputAsync
 import com.chen.memorizewords.domain.practice.speech.SpeechAudioOutput
@@ -107,7 +113,7 @@ class WordLearningDetailFragment :
 
     private fun initRvSynonyms() {
         databind.rvSynonyms.adapter = synonymsAdapter
-        databind.rvSynonyms.layoutManager = WaterfallFlowLayoutManager()
+        databind.rvSynonyms.layoutManager = FlexboxLayoutManager()
         databind.rvSynonyms.isNestedScrollingEnabled = false
     }
 
@@ -124,43 +130,47 @@ class WordLearningDetailFragment :
             }
             launch {
                 viewModel.wordExamples.collect {
-                    examplesAdapter.submitList(it)
+                    val examples = it.visibleWordExamples()
+                    examplesAdapter.submitList(examples)
                     setOptionalSectionVisible(
                         databind.sectionExamplesHeader,
                         databind.rvExamples,
-                        it.isNotEmpty()
+                        examples.isNotEmpty()
                     )
                 }
             }
             launch {
                 viewModel.wordRoots.collect {
-                    rootsAdapter.submitList(it)
+                    val roots = it.visibleWordRoots()
+                    rootsAdapter.submitList(roots)
                     setOptionalSectionVisible(
                         databind.sectionRootsHeader,
                         databind.rvRoot,
-                        it.isNotEmpty()
+                        roots.isNotEmpty()
                     )
                 }
             }
             launch {
                 viewModel.currentWord.collect { word ->
-                    val synonyms = word?.synonyms.orEmpty()
-                    val antonyms = word?.antonyms.orEmpty()
-                    synonymsAdapter.submitList(synonyms, antonyms)
+                    val hasRelations = synonymsAdapter.submitRelations(
+                        word?.synonyms.orEmpty(),
+                        word?.antonyms.orEmpty()
+                    )
                     setOptionalSectionVisible(
                         databind.sectionSynonymsHeader,
                         databind.rvSynonyms,
-                        synonyms.isNotEmpty() || antonyms.isNotEmpty()
+                        hasRelations
                     )
                 }
             }
             launch {
                 viewModel.wordForm.collect {
-                    formAdapter.submitList(it)
+                    val forms = it.visibleWordForms()
+                    formAdapter.submitList(forms)
                     setOptionalSectionVisible(
                         databind.sectionInflectionHeader,
                         databind.rvInflection,
-                        it.isNotEmpty()
+                        forms.isNotEmpty()
                     )
                 }
             }

@@ -90,21 +90,17 @@ class MyWordBookAdapter :
                     }
                 }
 
-                rootCard.strokeWidth = if (item.isSelected) {
+                rootCard.strokeWidth =
                     resources.getDimensionPixelSize(R.dimen.feature_wordbook_my_book_card_stroke_width)
-                } else {
-                    0
-                }
                 rootCard.strokeColor = ContextCompat.getColor(
                     context,
                     if (item.isSelected) {
                         R.color.feature_wordbook_my_book_card_stroke_selected
                     } else {
-                        android.R.color.transparent
+                        R.color.feature_wordbook_my_book_card_stroke_normal
                     }
                 )
-                rootCard.cardElevation =
-                    if (item.isSelected) 0f else resources.getDimension(R.dimen.feature_wordbook_my_book_card_elevation)
+                rootCard.cardElevation = 0f
 
                 progressStudy.setMax(safeMax)
                 progressStudy.setProgress1(safeProgress)
