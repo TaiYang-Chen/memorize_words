@@ -2,6 +2,7 @@ package com.chen.memorizewords.feature.learning.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import com.chen.memorizewords.domain.word.model.word.WordForm
 import com.chen.memorizewords.feature.learning.databinding.HomeRvItemInflectionBinding
@@ -37,5 +38,6 @@ class FormAdapter :
         iTEM: WordForm
     ) {
         dB.data = iTEM
+        dB.tvFormDefinition.isVisible = !iTEM.formDefinition.isNullOrBlank()
     }
 }

@@ -13,25 +13,36 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/module_learning_bg_radius_fff"
+        android:gravity="center"
         android:orientation="horizontal"
         android:padding="10dp">
 
+
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:text="@{data.formType.displayName}"
             android:textColor="#2984f7"
-            android:textStyle="bold"
-            tools:text="sus-" />
+            tools:text="复数复数复数" />
 
         <TextView
-            android:layout_weight="1"
-            android:gravity="end"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
             android:text="@{data.formText}"
             android:textColor="#133856"
-            android:textStyle="bold"
-            tools:text="这个颜色" />
+            tools:text="utilities" />
+
+        <TextView
+            android:id="@+id/tv_form_definition"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:text="@{data.formDefinition}"
+            android:textColor="#5f7185"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:textSize="13sp"
+            tools:text="实用工具；公用事业" />
     </LinearLayout>
 </layout>

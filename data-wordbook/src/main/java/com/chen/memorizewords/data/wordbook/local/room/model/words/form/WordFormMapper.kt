@@ -10,7 +10,8 @@ fun WordFormEntity.toDomain(): WordForm {
         wordId = wordId,
         formWordId = formWordId,
         formType = formType.toDomain(),
-        formText = formText
+        formText = formText,
+        formDefinition = formDefinition
     )
 }
 
@@ -20,7 +21,8 @@ fun WordFormDto.toEntity(): WordFormEntity {
         wordId = wordId,
         formWordId = formWordId,
         formType = WordFormEntity.FormType.fromString(formType) ?: WordFormEntity.FormType.OTHER,
-        formText = formText
+        formText = formText,
+        formDefinition = formDefinition
     )
 }
 
@@ -30,7 +32,8 @@ fun WordForm.toEntity(): WordFormEntity {
         wordId = wordId,
         formWordId = formWordId,
         formType = formType.toEntity(),
-        formText = formText
+        formText = formText,
+        formDefinition = formDefinition
     )
 }
 

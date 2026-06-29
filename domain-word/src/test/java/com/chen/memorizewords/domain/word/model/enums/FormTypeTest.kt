@@ -10,6 +10,7 @@ class FormTypeTest {
         assertEquals("现在分词", FormType.PRESENT_PARTICIPLE.displayName)
         assertEquals("过去分词", FormType.PAST_PARTICIPLE.displayName)
         assertEquals("复数", FormType.PLURAL.displayName)
+        assertEquals("原形", FormType.BASE_FORM.displayName)
         assertEquals("第三人称单数", FormType.THIRD_SINGULAR.displayName)
         assertEquals("过去式", FormType.PAST_TENSE.displayName)
         assertEquals("其他形式", FormType.OTHER.displayName)

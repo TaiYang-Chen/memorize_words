@@ -6,5 +6,6 @@ data class WordForm(
     val wordId: Long,
     val formWordId: Long? = null,
     val formType: FormType,
-    val formText: String
+    val formText: String,
+    val formDefinition: String? = null
 )

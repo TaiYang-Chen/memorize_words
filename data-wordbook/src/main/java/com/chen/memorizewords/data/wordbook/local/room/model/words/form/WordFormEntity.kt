@@ -42,6 +42,8 @@ data class WordFormEntity(
     val formType: FormType,
     @ColumnInfo(name = "form_text")
     val formText: String,
+    @ColumnInfo(name = "form_definition")
+    val formDefinition: String? = null,
 ) {
     enum class FormType {
         NOUN,
@@ -51,6 +53,7 @@ data class WordFormEntity(
         ADVERB_FORM,
         PLURAL,
         SINGULAR,
+        BASE_FORM,
         POSSESSIVE,
         THIRD_SINGULAR,
         PAST_TENSE,

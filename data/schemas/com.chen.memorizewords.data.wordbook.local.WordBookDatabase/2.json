@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "f3c7393dfee57ea45afe3fb2c2601a11",
+    "identityHash": "fa7cbf5e29784a19d0a6c0f512356f5f",
     "entities": [
       {
         "tableName": "word_book",
@@ -709,7 +709,7 @@
       },
       {
         "tableName": "word_forms",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `word_id` INTEGER NOT NULL, `form_word_id` INTEGER, `form_type` TEXT NOT NULL, `form_text` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`word_id`) REFERENCES `words`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`form_word_id`) REFERENCES `words`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `word_id` INTEGER NOT NULL, `form_word_id` INTEGER, `form_type` TEXT NOT NULL, `form_text` TEXT NOT NULL, `form_definition` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`word_id`) REFERENCES `words`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`form_word_id`) REFERENCES `words`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
         "fields": [
           {
             "fieldPath": "id",
@@ -739,6 +739,11 @@
             "columnName": "form_text",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "formDefinition",
+            "columnName": "form_definition",
+            "affinity": "TEXT"
           }
         ],
         "primaryKey": {
@@ -1521,7 +1526,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f3c7393dfee57ea45afe3fb2c2601a11')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fa7cbf5e29784a19d0a6c0f512356f5f')"
     ]
   }
 }

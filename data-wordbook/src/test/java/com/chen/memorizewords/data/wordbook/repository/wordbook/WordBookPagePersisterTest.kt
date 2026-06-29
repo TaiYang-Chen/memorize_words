@@ -22,6 +22,7 @@ class WordBookPagePersisterTest {
 
         assertEquals(11L, sanitized[0].formWordId)
         assertEquals(99L, sanitized[1].formWordId)
+        assertEquals("form definition 1", sanitized[0].formDefinition)
     }
 
     @Test
@@ -88,7 +89,8 @@ class WordBookPagePersisterTest {
             wordId = wordId,
             formWordId = formWordId,
             formType = WordFormEntity.FormType.OTHER,
-            formText = "form-$id"
+            formText = "form-$id",
+            formDefinition = "form definition $id"
         )
     }
 

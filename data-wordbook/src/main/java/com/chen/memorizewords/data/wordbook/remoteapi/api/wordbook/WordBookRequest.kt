@@ -125,7 +125,8 @@ class WordBookRequest @Inject constructor(
                     id = wordId,
                     targetWordId = null,
                     type = "PLURAL",
-                    text = "${wordText}s"
+                    text = "${wordText}s",
+                    formDefinition = "mock form definition $wordId"
                 )
 
                 WordDto(

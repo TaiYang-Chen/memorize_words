@@ -4,6 +4,7 @@ enum class FormType(val displayName: String) {
     PLURAL("复数"),                     // 复数
     POSSESSIVE("所有格"),                 // 所有格
     SINGULAR("单数"),                   // 单数（用于本身就是复数的词）
+    BASE_FORM("原形"),                  // 原形
 
     // 动词变化
     THIRD_SINGULAR("第三人称单数"),            // 第三人称单数
@@ -34,7 +35,7 @@ enum class FormType(val displayName: String) {
     OTHER("其他形式");                     // 其他形式
 
     companion object {
-        fun fromString(value: String): FormType {
+    fun fromString(value: String): FormType {
             return try {
                 valueOf(value.uppercase())
             } catch (e: IllegalArgumentException) {

@@ -100,7 +100,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="词性变化"
+                android:text="词形变化"
                 android:textColor="#aab8c8"
                 android:textSize="14sp"
                 android:textStyle="bold" />
