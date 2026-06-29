@@ -2,6 +2,7 @@ package com.chen.memorizewords.feature.learning.ui.fragment
 
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
@@ -24,6 +25,9 @@ import com.chen.memorizewords.feature.learning.adapter.FormAdapter
 import com.chen.memorizewords.feature.learning.adapter.RootsAdapter
 import com.chen.memorizewords.feature.learning.adapter.SynonymsAdapter
 import com.chen.memorizewords.feature.learning.databinding.FragmentWordEntryDetailBinding
+import com.chen.memorizewords.feature.learning.ui.visibleWordExamples
+import com.chen.memorizewords.feature.learning.ui.visibleWordForms
+import com.chen.memorizewords.feature.learning.ui.visibleWordRoots
 import com.chen.memorizewords.feature.learning.ui.speech.audioOutputOrNull
 import com.chen.memorizewords.feature.learning.ui.speech.prepareSpeechOutputAsync
 import dagger.hilt.android.AndroidEntryPoint
@@ -106,14 +110,15 @@ class WordEntryDetailFragment :
         lifecycleScope.launch {
             launch {
                 viewModel.currentWord.collect { word ->
-                    val synonyms = word?.synonyms.orEmpty()
-                    val antonyms = word?.antonyms.orEmpty()
                     renderPhonetic(word)
-                    synonymsAdapter.submitList(synonyms, antonyms)
+                    val hasRelations = synonymsAdapter.submitRelations(
+                        word?.synonyms.orEmpty(),
+                        word?.antonyms.orEmpty()
+                    )
                     setOptionalSectionVisible(
                         databind.sectionSynonymsHeader,
                         databind.rvSynonyms,
-                        synonyms.isNotEmpty() || antonyms.isNotEmpty()
+                        hasRelations
                     )
                 }
             }
@@ -124,31 +129,34 @@ class WordEntryDetailFragment :
             }
             launch {
                 viewModel.wordExamples.collect { examples ->
-                    examplesAdapter.submitList(examples)
+                    val visibleExamples = examples.visibleWordExamples()
+                    examplesAdapter.submitList(visibleExamples)
                     setOptionalSectionVisible(
                         databind.sectionExamplesHeader,
                         databind.rvExamples,
-                        examples.isNotEmpty()
+                        visibleExamples.isNotEmpty()
                     )
                 }
             }
             launch {
                 viewModel.wordRoots.collect { roots ->
-                    rootsAdapter.submitList(roots)
+                    val visibleRoots = roots.visibleWordRoots()
+                    rootsAdapter.submitList(visibleRoots)
                     setOptionalSectionVisible(
                         databind.sectionRootsHeader,
                         databind.rvRoot,
-                        roots.isNotEmpty()
+                        visibleRoots.isNotEmpty()
                     )
                 }
             }
             launch {
                 viewModel.wordForm.collect { forms ->
-                    formAdapter.submitList(forms)
+                    val visibleForms = forms.visibleWordForms()
+                    formAdapter.submitList(visibleForms)
                     setOptionalSectionVisible(
                         databind.sectionInflectionHeader,
                         databind.rvInflection,
-                        forms.isNotEmpty()
+                        visibleForms.isNotEmpty()
                     )
                 }
             }
@@ -160,6 +168,8 @@ class WordEntryDetailFragment :
         setOptionalSectionVisible(databind.sectionInflectionHeader, databind.rvInflection, false)
         setOptionalSectionVisible(databind.sectionRootsHeader, databind.rvRoot, false)
         setOptionalSectionVisible(databind.sectionSynonymsHeader, databind.rvSynonyms, false)
+
+        Log.d("TAG", "hideOptionalSections: ${databind.rvSynonyms}")
     }
 
     private fun setOptionalSectionVisible(header: View, list: View, visible: Boolean) {

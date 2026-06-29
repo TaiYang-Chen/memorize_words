@@ -71,7 +71,7 @@ fun WordFormItem(
         ) {
             // 左侧：词性标签
             Text(
-                text = wordForm.formType.name,
+                text = wordForm.formType.displayName,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF333333),
@@ -82,7 +82,7 @@ fun WordFormItem(
 
             // 中间：单词
             Text(
-                text = wordForm.formType.name,
+                text = wordForm.formType.displayName,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
                 color = Color.Black,
@@ -109,7 +109,7 @@ fun WordFormsCardExample() {
         // 这个对象需要提供 "n."、"progress" 和 "进步；发展"
         // 但是现有 WordForm 结构无法同时提供这三者。
         // 我们必须根据 WordFormItem 的现有代码进行妥协来创建预览。
-        // WordFormItem 显示: formType, formType.name, formText
+        // WordFormItem 显示: formType.displayName, formType.displayName, formText
         // 为了预览正确，我们不得不“滥用”字段：
         WordForm(
             id = 1,

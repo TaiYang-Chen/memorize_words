@@ -27,12 +27,13 @@ class SynonymsAdapter() :
         }
     }
 
-    fun submitList(list1: List<String>, list2: List<String>) {
+    fun submitRelations(list1: List<String>, list2: List<String>): Boolean {
         val items = buildList {
             list1.forEach { add(Synonyms(true, it)) }
             list2.forEach { add(Synonyms(false, it)) }
         }
         submitList(items)
+        return items.isNotEmpty()
     }
 
     override fun onCreateDataBinding(

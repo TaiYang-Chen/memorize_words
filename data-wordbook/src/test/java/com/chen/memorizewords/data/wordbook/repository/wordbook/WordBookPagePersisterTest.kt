@@ -35,6 +35,30 @@ class WordBookPagePersisterTest {
     }
 
     @Test
+    fun `form keeps current word id`() {
+        val sanitized = sanitizeWordForms(
+            forms = listOf(form(id = 1L, wordId = 10L, formWordId = 10L)),
+            validWordIds = setOf(10L)
+        )
+
+        assertEquals(10L, sanitized.single().formWordId)
+    }
+
+    @Test
+    fun `lookup style form drops remote target word id when target is not local`() {
+        val sanitized = sanitizeWordForms(
+            forms = listOf(
+                form(id = 11174L, wordId = 1084804L, formWordId = 788481L),
+                form(id = 147652L, wordId = 1084804L, formWordId = 1084253L)
+            ),
+            validWordIds = setOf(1084804L)
+        )
+
+        assertNull(sanitized[0].formWordId)
+        assertNull(sanitized[1].formWordId)
+    }
+
+    @Test
     fun `example keeps definition id when definition belongs to current word`() {
         val sanitized = sanitizeWordExamples(
             examples = listOf(example(id = 1L, wordId = 10L, definitionId = 100L)),

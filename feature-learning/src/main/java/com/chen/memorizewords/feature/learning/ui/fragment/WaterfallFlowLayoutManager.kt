@@ -1,7 +1,9 @@
 package com.chen.memorizewords.feature.learning.ui.fragment
 
 import android.R.attr.lineHeight
+import android.util.Log
 import android.view.View
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kotlin.math.max
 
@@ -40,11 +42,7 @@ class WaterfallFlowLayoutManager : RecyclerView.LayoutManager() {
 
         if (width <= 0) return
 
-        // 如果布局信息已过期，重新计算
-        if (isLayoutDirty) {
-            calculateItemFrames(recycler)
-            isLayoutDirty = false
-        }
+        calculateItemFrames(recycler)
 
         // 回收所有视图
         detachAndScrapAttachedViews(recycler)
@@ -60,6 +58,8 @@ class WaterfallFlowLayoutManager : RecyclerView.LayoutManager() {
             addView(view)
             measureChildWithMargins(view, 0, 0)
             layoutDecorated(view, frame.left, frame.top, frame.right, frame.bottom)
+
+            Log.d("Waterfall", "laid out: left=${view.left}, top=${view.top}, right=${view.right}, bottom=${view.bottom}, text=${(view as? TextView)?.text}")
         }
 
         // 对于wrap_content，需要重新请求测量
@@ -84,6 +84,8 @@ class WaterfallFlowLayoutManager : RecyclerView.LayoutManager() {
             // 测量item
             measureChildWithMargins(view, 0, 0)
             val viewWidth = getDecoratedMeasuredWidth(view)
+
+            Log.e("TAG", "calculateItemFrames: $viewWidth", )
 
             // 如果当前行放不下，换行
             if (currentX + viewWidth > availableWidth + paddingLeft && currentX > paddingLeft) {
@@ -115,12 +117,6 @@ class WaterfallFlowLayoutManager : RecyclerView.LayoutManager() {
         val widthMode = View.MeasureSpec.getMode(widthSpec)
         val heightSize = View.MeasureSpec.getSize(heightSpec)
         val heightMode = View.MeasureSpec.getMode(heightSpec)
-
-        // 如果宽度为0或布局信息已过期，重新计算
-        if (width == 0 || isLayoutDirty) {
-            calculateItemFrames(recycler)
-            isLayoutDirty = false
-        }
 
         var measuredWidth = widthSize
         var measuredHeight = heightSize

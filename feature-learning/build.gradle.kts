@@ -61,6 +61,7 @@ dependencies {
     implementation(libs.androidx.gridlayout)
     implementation(libs.material)
     implementation(libs.coil)
+    implementation(libs.flexbox)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)

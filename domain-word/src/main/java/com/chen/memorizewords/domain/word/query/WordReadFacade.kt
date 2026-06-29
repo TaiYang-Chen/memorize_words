@@ -47,8 +47,9 @@ class WordReadFacade @Inject constructor(
     }
 
     suspend fun getWordDetail(word: Word): WordDetail {
+        val fullWord = wordRepository.getWordById(word.id) ?: word
         return WordDetail(
-            word = word,
+            word = fullWord,
             definitions = getWordDefinitions(word.id),
             examples = getWordExamples(word.id),
             roots = getWordRoots(word.id),

@@ -1,8 +1,5 @@
 package com.chen.memorizewords.feature.learning.ui.fragment
 
-import com.google.android.flexbox.FlexboxLayoutManager
-import com.google.android.flexbox.FlexDirection
-import com.google.android.flexbox.FlexWrap
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
@@ -36,6 +33,9 @@ import com.chen.memorizewords.feature.learning.ui.speech.audioOutputOrNull
 import com.chen.memorizewords.feature.learning.ui.speech.prepareSpeechOutputAsync
 import com.chen.memorizewords.domain.practice.speech.SpeechAudioOutput
 import com.chen.memorizewords.domain.practice.speech.SpeechTask
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.launch
@@ -113,7 +113,10 @@ class WordLearningDetailFragment :
 
     private fun initRvSynonyms() {
         databind.rvSynonyms.adapter = synonymsAdapter
-        databind.rvSynonyms.layoutManager = FlexboxLayoutManager()
+        databind.rvSynonyms.layoutManager = FlexboxLayoutManager(requireContext()).apply {
+            flexDirection = FlexDirection.ROW
+            flexWrap = FlexWrap.WRAP
+        }
         databind.rvSynonyms.isNestedScrollingEnabled = false
     }
 

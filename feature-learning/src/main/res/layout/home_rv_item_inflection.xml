@@ -19,7 +19,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{data.formType.name()}"
+            android:text="@{data.formType.displayName}"
             android:textColor="#2984f7"
             android:textStyle="bold"
             tools:text="sus-" />

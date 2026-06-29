@@ -54,6 +54,14 @@ class WordLearningDetailViewModel @Inject constructor(
     }
 
     fun setWord(word: Word) {
+        val current = _currentWord.value
+        if (current?.id == word.id) {
+            if (word.visibleRelationCount() > current.visibleRelationCount()) {
+                _currentWord.value = word
+            }
+            return
+        }
+        clearDetailSections()
         _currentWord.value = word
     }
 
@@ -133,9 +141,23 @@ class WordLearningDetailViewModel @Inject constructor(
     }
 
     private fun applyWordDetail(detail: WordDetail) {
+        if (_currentWord.value != detail.word) {
+            _currentWord.value = detail.word
+        }
         _definitions.value = detail.definitions
         _wordExamples.value = detail.examples
         _wordRoots.value = detail.roots
         _wordForm.value = detail.forms
+    }
+
+    private fun clearDetailSections() {
+        _definitions.value = emptyList()
+        _wordExamples.value = emptyList()
+        _wordRoots.value = emptyList()
+        _wordForm.value = emptyList()
+    }
+
+    private fun Word.visibleRelationCount(): Int {
+        return synonyms.count { it.isNotBlank() } + antonyms.count { it.isNotBlank() }
     }
 }

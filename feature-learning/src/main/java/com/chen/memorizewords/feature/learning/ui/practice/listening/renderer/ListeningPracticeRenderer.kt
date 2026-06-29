@@ -42,6 +42,9 @@ import com.chen.memorizewords.feature.learning.ui.practice.ListeningReportWordUi
 import com.chen.memorizewords.feature.learning.ui.practice.ListeningSpellingLetterUi
 import com.chen.memorizewords.feature.learning.ui.practice.ListeningSpellingSlotFeedback
 import com.chen.memorizewords.feature.learning.ui.practice.ListeningSpellingSlotUi
+import com.chen.memorizewords.feature.learning.ui.visibleWordExamples
+import com.chen.memorizewords.feature.learning.ui.visibleWordForms
+import com.chen.memorizewords.feature.learning.ui.visibleWordRoots
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 
@@ -185,29 +188,35 @@ internal class ListeningPracticeRenderer(
         studyDefinitionsAdapter.submitList(state.studyDefinitions)
         binding.layoutStudyMemoryTip.isVisible = state.studyMemoryTip.isNotBlank()
         binding.tvStudyMemoryTip.text = state.studyMemoryTip
-        studyExamplesAdapter.submitList(state.studyExamples)
+        val studyExamples = state.studyExamples.visibleWordExamples()
+        studyExamplesAdapter.submitList(studyExamples)
         setOptionalSectionVisible(
             binding.sectionStudyExamplesHeader,
             binding.rvStudyExamples,
-            state.studyExamples.isNotEmpty()
+            studyExamples.isNotEmpty()
         )
-        studyFormAdapter.submitList(state.studyForms)
+        val studyForms = state.studyForms.visibleWordForms()
+        studyFormAdapter.submitList(studyForms)
         setOptionalSectionVisible(
             binding.sectionStudyInflectionHeader,
             binding.rvStudyInflection,
-            state.studyForms.isNotEmpty()
+            studyForms.isNotEmpty()
         )
-        studyRootsAdapter.submitList(state.studyRoots)
+        val studyRoots = state.studyRoots.visibleWordRoots()
+        studyRootsAdapter.submitList(studyRoots)
         setOptionalSectionVisible(
             binding.sectionStudyRootsHeader,
             binding.rvStudyRoot,
-            state.studyRoots.isNotEmpty()
+            studyRoots.isNotEmpty()
         )
-        studySynonymsAdapter.submitList(state.studySynonyms, state.studyAntonyms)
+        val hasStudyRelations = studySynonymsAdapter.submitRelations(
+            state.studySynonyms,
+            state.studyAntonyms
+        )
         setOptionalSectionVisible(
             binding.sectionStudySynonymsHeader,
             binding.rvStudySynonyms,
-            state.studySynonyms.isNotEmpty() || state.studyAntonyms.isNotEmpty()
+            hasStudyRelations
         )
 
         renderReportState(state)

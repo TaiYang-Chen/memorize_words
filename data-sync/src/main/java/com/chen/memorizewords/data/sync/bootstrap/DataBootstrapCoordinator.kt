@@ -20,28 +20,18 @@ class DataBootstrapCoordinator @Inject constructor(
     private val appContext = context.applicationContext
 
     fun scheduleBootstrapWork() {
-        val request = OneTimeWorkRequestBuilder<DataBootstrapWorker>()
-            .setConstraints(networkConstraints())
-            .addTag(SyncWorkConstants.TAG_DATA_BOOTSTRAP)
-            .build()
-
         WorkManager.getInstance(appContext).enqueueUniqueWork(
             SyncWorkConstants.UNIQUE_DATA_BOOTSTRAP,
-            ExistingWorkPolicy.KEEP,
-            request
+            DATA_BOOTSTRAP_POLICY,
+            buildDataBootstrapRequest()
         )
     }
 
     fun schedulePostLoginBootstrapWork() {
-        val request = OneTimeWorkRequestBuilder<PostLoginBootstrapWorker>()
-            .setConstraints(networkConstraints())
-            .addTag(SyncWorkConstants.TAG_POST_LOGIN_BOOTSTRAP)
-            .build()
-
         WorkManager.getInstance(appContext).enqueueUniqueWork(
             SyncWorkConstants.UNIQUE_POST_LOGIN_BOOTSTRAP,
-            ExistingWorkPolicy.KEEP,
-            request
+            POST_LOGIN_BOOTSTRAP_POLICY,
+            buildPostLoginBootstrapRequest()
         )
     }
 
@@ -61,9 +51,24 @@ class DataBootstrapCoordinator @Inject constructor(
             }
     }
 
-    private fun networkConstraints(): Constraints {
-        return Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .build()
-    }
+}
+
+internal val DATA_BOOTSTRAP_POLICY = ExistingWorkPolicy.KEEP
+internal val POST_LOGIN_BOOTSTRAP_POLICY = ExistingWorkPolicy.REPLACE
+
+internal fun buildDataBootstrapRequest() =
+    OneTimeWorkRequestBuilder<DataBootstrapWorker>()
+        .setConstraints(networkConstraints())
+        .addTag(SyncWorkConstants.TAG_DATA_BOOTSTRAP)
+        .build()
+
+internal fun buildPostLoginBootstrapRequest() =
+    OneTimeWorkRequestBuilder<PostLoginBootstrapWorker>()
+        .addTag(SyncWorkConstants.TAG_POST_LOGIN_BOOTSTRAP)
+        .build()
+
+private fun networkConstraints(): Constraints {
+    return Constraints.Builder()
+        .setRequiredNetworkType(NetworkType.CONNECTED)
+        .build()
 }

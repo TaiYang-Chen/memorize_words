@@ -27,6 +27,8 @@ import com.chen.memorizewords.data.wordbook.local.room.model.words.word.toSynony
 import com.chen.memorizewords.data.wordbook.local.room.model.words.word.toTagEntities as wordToTagEntities
 import com.chen.memorizewords.data.wordbook.local.room.model.words.word.toUserMetaEntity as wordToUserMetaEntity
 import com.chen.memorizewords.data.wordbook.remote.wordbook.RemoteWordBookDataSource
+import com.chen.memorizewords.data.wordbook.repository.wordbook.sanitizeWordExamples
+import com.chen.memorizewords.data.wordbook.repository.wordbook.sanitizeWordForms
 import com.chen.memorizewords.domain.study.model.progress.word.WordLearningState
 import com.chen.memorizewords.domain.study.model.progress.word.calculateSm2Review
 import com.chen.memorizewords.domain.sync.OutboxTopic
@@ -160,9 +162,21 @@ class WordRepositoryImpl @Inject constructor(
             if (remoteWordDto != null) {
                 transactionRunner.runInTransaction {
                     wordDao.insert(remoteWordDto.wordToEntity())
-                    wordDefinitionDao.insert(remoteWordDto.definitionDtos.map { it.definitionToEntity() })
-                    wordExampleDao.insert(remoteWordDto.exampleDtos.map { it.exampleToEntity() })
-                    wordFormDao.insert(remoteWordDto.wordFormDtos.map { it.formToEntity() })
+
+                    val definitions = remoteWordDto.definitionDtos.map { it.definitionToEntity() }
+                    val validDefinitionIds = definitions.map { it.id }.toSet()
+                    val referencedFormWordIds = remoteWordDto.wordFormDtos
+                        .mapNotNull { it.formWordId }
+                        .filter { it > 0L && it != remoteWordDto.id }
+                        .toSet()
+                    val existingReferencedWordIds = if (referencedFormWordIds.isEmpty()) {
+                        emptySet()
+                    } else {
+                        wordDao.getByIds(referencedFormWordIds.toList()).map { it.id }.toSet()
+                    }
+                    val validFormWordIds = existingReferencedWordIds + remoteWordDto.id
+
+                    wordDefinitionDao.insert(definitions)
                     val rootEntities = remoteWordDto.rootWords.map { it.wordRootToEntity() }
                     val rootTags = remoteWordDto.rootWords.flatMap { it.rootToTagEntities() }
                     wordRootDao.insertRoots(rootEntities)
@@ -194,6 +208,19 @@ class WordRepositoryImpl @Inject constructor(
                     if (associations.isNotEmpty()) wordRelationDao.insertAssociations(associations)
 
                     wordUserMetaDao.upsert(remoteWordDto.wordToUserMetaEntity())
+
+                    wordExampleDao.insert(
+                        sanitizeWordExamples(
+                            examples = remoteWordDto.exampleDtos.map { it.exampleToEntity() },
+                            validDefinitionIds = validDefinitionIds
+                        )
+                    )
+                    wordFormDao.insert(
+                        sanitizeWordForms(
+                            forms = remoteWordDto.wordFormDtos.map { it.formToEntity() },
+                            validWordIds = validFormWordIds
+                        )
+                    )
                 }
                 val inserted = wordDao.getWordWithRelationsById(remoteWordDto.id)?.toDomain()
                     ?: Word(

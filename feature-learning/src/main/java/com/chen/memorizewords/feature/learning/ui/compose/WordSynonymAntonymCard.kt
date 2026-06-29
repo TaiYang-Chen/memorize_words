@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.chen.memorizewords.feature.learning.ui.visibleRelationWords
 
 @Composable
 fun WordSynonymAntonymCard(
@@ -27,32 +28,32 @@ fun WordSynonymAntonymCard(
     antonyms: List<String>,
     modifier: Modifier = Modifier
 ) {
+    val visibleSynonyms = synonyms.visibleRelationWords()
+    val visibleAntonyms = antonyms.visibleRelationWords()
+
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(20.dp),
         horizontalAlignment = Alignment.Start
     ) {
-        // 显示同义词部分
-        if (synonyms.isNotEmpty()) {
+        if (visibleSynonyms.isNotEmpty()) {
             SynonymAntonymSection(
                 title = "同义词",
-                words = synonyms,
-                tagColor = Color(0xFFE6F7FF)  // 浅青色，与图片完全一致
+                words = visibleSynonyms,
+                tagColor = Color(0xFFE6F7FF)
             )
         }
 
-        // 间距
-        if (synonyms.isNotEmpty() && antonyms.isNotEmpty()) {
+        if (visibleSynonyms.isNotEmpty() && visibleAntonyms.isNotEmpty()) {
             Spacer(modifier = Modifier.height(24.dp))
         }
 
-        // 显示反义词部分
-        if (antonyms.isNotEmpty()) {
+        if (visibleAntonyms.isNotEmpty()) {
             SynonymAntonymSection(
                 title = "反义词",
-                words = antonyms,
-                tagColor = Color(0xFFFFF0F5)  // 浅粉色，与图片完全一致
+                words = visibleAntonyms,
+                tagColor = Color(0xFFFFF0F5)
             )
         }
     }
@@ -65,7 +66,6 @@ private fun SynonymAntonymSection(
     tagColor: Color
 ) {
     Column {
-        // 标题
         Text(
             text = title,
             fontSize = 16.sp,
@@ -74,7 +74,6 @@ private fun SynonymAntonymSection(
             modifier = Modifier.padding(bottom = 12.dp)
         )
 
-        // ✅ 自适应标签布局
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -89,7 +88,6 @@ private fun SynonymAntonymSection(
         }
     }
 }
-
 
 @Composable
 private fun WordTag(
@@ -115,19 +113,8 @@ private fun WordTag(
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
 fun PreviewWordSynonymAntonymCard() {
-    // 1. 创建模拟的同义词列表
-    val sampleSynonyms = listOf(
-        "progress", "advance", "development", "growth", "improvement"
-    )
-
-    // 2. 创建模拟的反义词列表
-    val sampleAntonyms = listOf(
-        "regress", "decline", "retreat"
-    )
-
-    // 3. 将模拟数据传入 WordSynonymAntonymCard 组件
     WordSynonymAntonymCard(
-        synonyms = sampleSynonyms,
-        antonyms = sampleAntonyms
+        synonyms = listOf("progress", "advance", "development", "growth", "improvement"),
+        antonyms = listOf("regress", "decline", "retreat")
     )
 }
