@@ -35,7 +35,6 @@ class CoreNetworkRoutePolicy(
             "/auth/refresh",
             "/auth/email/send-code",
             "/auth/fusion/token",
-            "/auth/fusion/login",
             "/auth/fusion/register"
         )
         val DEFAULT_CLIENT_CACHEABLE_GET_PATH_SUFFIXES = setOf(

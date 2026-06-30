@@ -5,7 +5,6 @@ import com.chen.memorizewords.data.account.mapper.toDomain
 import com.chen.memorizewords.data.account.remote.user.AuthRemoteDataSource
 import com.chen.memorizewords.data.account.remoteapi.api.auth.BindSocialRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.ChangePasswordRequest
-import com.chen.memorizewords.data.account.remoteapi.api.auth.FusionLoginRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.FusionRegisterRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.LoginRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.RegisterRequest
@@ -123,17 +122,6 @@ class AuthRepositoryImpl @Inject constructor(
                 schemeCode = dto.schemeCode,
                 expiresIn = dto.expiresIn
             )
-        }
-    }
-
-    override suspend fun loginByFusionVerifyToken(
-        verifyToken: String,
-        cancelDeletion: Boolean
-    ): Result<AuthLoginResult> = runCatching {
-        withContext(Dispatchers.IO) {
-            remote.fusionLogin(FusionLoginRequest(verifyToken, cancelDeletion))
-                .getOrMapAccountDeletionPending()
-                .toDomain(clockProvider.nowEpochMillis())
         }
     }
 

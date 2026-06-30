@@ -7,14 +7,6 @@
     <string name="module_user_login_account_hint">请输入邮箱</string>
     <string name="module_user_login_password_hint">请输入密码</string>
     <string name="module_user_login_button">登录</string>
-    <string name="module_user_login_by_sms">验证码登录</string>
-
-    <string name="module_user_sms_login_title">手机验证码登录</string>
-    <string name="module_user_fusion_phone_login">手机号一键登录</string>
-    <string name="module_user_fusion_phone_title">手机号一键登录</string>
-    <string name="module_user_fusion_phone_desc">使用本机号码快速登录，首次使用会自动创建账号。</string>
-    <string name="module_user_fusion_authorize_button">使用本机号码登录</string>
-    <string name="module_user_fusion_login_failed">手机号一键登录失败</string>
     <string name="module_user_login_loading">登录中...</string>
     <string name="module_user_sms_code_hint">请输入验证码</string>
     <string name="module_user_back_to_password_login">返回账号密码登录</string>
@@ -138,7 +130,6 @@
     <string name="module_user_nav_register_title">注册</string>
     <string name="module_user_nav_wechat_login_title">微信授权登录</string>
     <string name="module_user_nav_qq_login_title">QQ授权登录</string>
-    <string name="module_user_nav_sms_login_title">验证码登录</string>
     <string name="module_user_nav_profile_title">个人信息</string>
     <string name="module_user_nav_change_password_title">修改密码</string>
     <string name="module_user_nav_bind_phone_title">绑定手机号</string>

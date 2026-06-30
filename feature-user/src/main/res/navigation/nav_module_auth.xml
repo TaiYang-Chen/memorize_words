@@ -17,9 +17,6 @@
         <action
             android:id="@+id/action_loginFragment_to_qqOneTapLoginFragment"
             app:destination="@id/qqOneTapLoginFragment" />
-        <action
-            android:id="@+id/action_loginFragment_to_fusionPhoneLoginFragment"
-            app:destination="@id/fusionPhoneLoginFragment" />
     </fragment>
 
     <fragment
@@ -40,11 +37,6 @@
         android:id="@+id/qqOneTapLoginFragment"
         android:name="com.chen.memorizewords.feature.user.ui.login.qq.QQOneTapLoginFragment"
         android:label="@string/module_user_nav_qq_login_title" />
-
-    <fragment
-        android:id="@+id/fusionPhoneLoginFragment"
-        android:name="com.chen.memorizewords.feature.user.ui.login.fusion.FusionPhoneLoginFragment"
-        android:label="@string/module_user_fusion_phone_title" />
 
     <fragment
         android:id="@+id/module_login_profilefragment"

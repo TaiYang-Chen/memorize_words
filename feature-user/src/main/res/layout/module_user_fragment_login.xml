@@ -103,30 +103,6 @@
             app:layout_constraintStart_toStartOf="@id/flPassword"
             app:layout_constraintTop_toBottomOf="@id/flPassword" />
 
-        <TextView
-            android:id="@+id/tvCodeLogin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/module_user_login_by_sms"
-            android:textColor="#666666"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btnLogin" />
-
-        <TextView
-            android:id="@+id/tvFusionPhoneLogin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="@string/module_user_fusion_phone_login"
-            android:textColor="#2979FF"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvCodeLogin" />
-
         <LinearLayout
             android:id="@+id/llThirdLogin"
             android:layout_width="wrap_content"

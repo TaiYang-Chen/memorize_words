@@ -6,7 +6,6 @@ import com.chen.memorizewords.data.account.remoteapi.api.auth.AuthRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.RegisterRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.SendEmailCodeRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.FusionAuthTokenDto
-import com.chen.memorizewords.data.account.remoteapi.api.auth.FusionLoginRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.FusionRegisterRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.ChangePasswordRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.BindSocialRequest
@@ -47,10 +46,6 @@ class RemoteAuthDataSourceImpl @Inject constructor(
 
     override suspend fun getFusionAuthToken(): Result<FusionAuthTokenDto> {
         return remoteResultAdapter.toResult { authRequest.getFusionAuthToken() }
-    }
-
-    override suspend fun fusionLogin(request: FusionLoginRequest): Result<LoginResponseDto> {
-        return remoteResultAdapter.toResult { authRequest.fusionLogin(request) }
     }
 
     override suspend fun fusionRegister(request: FusionRegisterRequest): Result<LoginResponseDto> {

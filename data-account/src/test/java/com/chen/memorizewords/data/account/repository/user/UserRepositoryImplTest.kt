@@ -9,7 +9,6 @@ import com.chen.memorizewords.data.account.remoteapi.api.auth.BindPhoneRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.BindSocialRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.ChangePasswordRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.FusionAuthTokenDto
-import com.chen.memorizewords.data.account.remoteapi.api.auth.FusionLoginRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.FusionRegisterRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.LoginRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.ProfilePatchRequest
@@ -190,8 +189,6 @@ class UserRepositoryImplTest {
         override suspend fun register(request: RegisterRequest): Result<LoginResponseDto> = unused()
 
         override suspend fun getFusionAuthToken(): Result<FusionAuthTokenDto> = unused()
-
-        override suspend fun fusionLogin(request: FusionLoginRequest): Result<LoginResponseDto> = unused()
 
         override suspend fun fusionRegister(request: FusionRegisterRequest): Result<LoginResponseDto> = unused()
 

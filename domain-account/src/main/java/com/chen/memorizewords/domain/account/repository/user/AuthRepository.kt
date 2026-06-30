@@ -36,11 +36,6 @@ interface AuthRepository {
 
     suspend fun getFusionAuthToken(): Result<FusionAuthToken>
 
-    suspend fun loginByFusionVerifyToken(
-        verifyToken: String,
-        cancelDeletion: Boolean = false
-    ): Result<AuthLoginResult>
-
     suspend fun registerByFusionVerifyToken(verifyToken: String, password: String): Result<AuthLoginResult>
 
     suspend fun changePassword(oldPassword: String, newPassword: String): Result<Unit>

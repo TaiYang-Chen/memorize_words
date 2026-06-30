@@ -34,12 +34,6 @@ data class SendEmailCodeRequest(
 data class RefreshRequest(val refreshToken: String)
 
 @JsonClass(generateAdapter = false)
-data class FusionLoginRequest(
-    val verifyToken: String,
-    val cancelDeletion: Boolean = false
-)
-
-@JsonClass(generateAdapter = false)
 data class FusionRegisterRequest(
     val verifyToken: String,
     val password: String
