@@ -185,7 +185,7 @@ internal class ListeningPracticeRenderer(
         binding.btnStudyUk.isEnabled = true
         binding.tvStudyPhonetic.text = state.studyPhoneticChipText
         binding.layoutStudyPhoneticBar.isVisible = state.studyPhoneticChipText.isNotBlank()
-        studyDefinitionsAdapter.submitList(state.studyDefinitions)
+        studyDefinitionsAdapter.submitGroupedDefinitions(state.studyDefinitions)
         binding.layoutStudyMemoryTip.isVisible = state.studyMemoryTip.isNotBlank()
         binding.tvStudyMemoryTip.text = state.studyMemoryTip
         val studyExamples = state.studyExamples.visibleWordExamples()

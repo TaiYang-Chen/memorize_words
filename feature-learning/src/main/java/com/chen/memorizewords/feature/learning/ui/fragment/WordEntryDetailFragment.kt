@@ -124,7 +124,7 @@ class WordEntryDetailFragment :
             }
             launch {
                 viewModel.definitions.collect { definitions ->
-                    definitionsAdapter.submitList(definitions)
+                    definitionsAdapter.submitGroupedDefinitions(definitions)
                 }
             }
             launch {

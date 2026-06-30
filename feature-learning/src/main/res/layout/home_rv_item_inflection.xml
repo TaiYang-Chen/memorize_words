@@ -19,7 +19,7 @@
 
 
         <TextView
-            android:layout_width="100dp"
+            android:layout_width="90dp"
             android:layout_height="wrap_content"
             android:text="@{data.formType.displayName}"
             android:textColor="#2984f7"
@@ -36,7 +36,7 @@
 
         <TextView
             android:id="@+id/tv_form_definition"
-            android:layout_width="180dp"
+            android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:text="@{data.formDefinition}"
             android:textColor="#5f7185"

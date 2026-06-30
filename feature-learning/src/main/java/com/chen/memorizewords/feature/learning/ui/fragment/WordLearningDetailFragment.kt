@@ -129,7 +129,7 @@ class WordLearningDetailFragment :
     override fun createObserver() {
         lifecycleScope.launch {
             launch {
-                viewModel.definitions.collect { definitionsAdapter.submitList(it) }
+                viewModel.definitions.collect { definitionsAdapter.submitGroupedDefinitions(it) }
             }
             launch {
                 viewModel.wordExamples.collect {

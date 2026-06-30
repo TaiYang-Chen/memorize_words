@@ -40,4 +40,27 @@ class DefinitionsAdapter :
     ) {
         dB.data = iTEM
     }
+
+    fun submitGroupedDefinitions(definitions: List<WordDefinitions>) {
+        submitList(definitions.groupByPartOfSpeech())
+    }
+
+    private fun List<WordDefinitions>.groupByPartOfSpeech(): List<WordDefinitions> {
+        return groupBy { it.partOfSpeech }
+            .values
+            .mapNotNull { group ->
+                val first = group.firstOrNull() ?: return@mapNotNull null
+                val meanings = group
+                    .map { it.meaningChinese.trim() }
+                    .filter { it.isNotEmpty() }
+                    .distinct()
+                    .joinToString(separator = "，")
+
+                if (meanings.isBlank()) {
+                    null
+                } else {
+                    first.copy(meaningChinese = meanings)
+                }
+            }
+    }
 }
