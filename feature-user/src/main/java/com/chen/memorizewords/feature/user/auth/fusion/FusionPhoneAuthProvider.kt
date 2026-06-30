@@ -9,6 +9,7 @@ import com.alicom.fusion.auth.AlicomFusionBusiness
 import com.alicom.fusion.auth.AlicomFusionLog
 import com.alicom.fusion.auth.HalfWayVerifyResult
 import com.alicom.fusion.auth.config.AlicomFusionSceneUtil
+import com.alicom.fusion.auth.config.AlicomFusionCheckUtil
 import com.alicom.fusion.auth.error.AlicomFusionEvent
 import com.alicom.fusion.auth.net.FusionRequestUtils
 import com.alicom.fusion.auth.numberauth.NumberAuthUtil
@@ -152,12 +153,17 @@ class FusionPhoneAuthProvider @Inject constructor(
     ): Result<Unit> = runCatching {
         val applicationContext = context.applicationContext
         val normalizedPhone = phone.trim()
-        ensureFusionTokenReady(applicationContext, templateId, normalizedPhone).getOrThrow()
+        ensureFusionTokenReady(templateId).getOrThrow()
         NumberAuthUtil.getInstance().setTemplatedId(templateId)
         FusionSmsManager.a(applicationContext, smsNodeId)
 
-        val response = withContext(Dispatchers.IO) {
-            FusionRequestUtils.sendVerifyNumCode(applicationContext, normalizedPhone)
+        val response = try {
+            withContext(Dispatchers.IO) {
+                FusionRequestUtils.sendVerifyNumCode(applicationContext, normalizedPhone)
+            }
+        } catch (throwable: Throwable) {
+            Log.e(TAG, "Fusion sms send failed. templateId=$templateId, smsNodeId=$smsNodeId", throwable)
+            throw FusionPhoneAuthException(DEFAULT_ERROR_MESSAGE)
         }
         if (!response.isSuccess) {
             throw FusionPhoneAuthException(response.message ?: DEFAULT_ERROR_MESSAGE)
@@ -206,95 +212,30 @@ class FusionPhoneAuthProvider @Inject constructor(
         smsSession = null
     }
 
-    private suspend fun ensureFusionTokenReady(
-        context: Context,
-        templateId: String,
-        phoneForVerification: String
-    ): Result<Unit> = runCatching {
+    private suspend fun ensureFusionTokenReady(templateId: String): Result<Unit> = runCatching {
         val token = withContext(Dispatchers.IO) {
             getFusionAuthTokenUseCase().getOrThrow()
         }
-        withContext(Dispatchers.Main) {
-            suspendCancellableCoroutine { continuation ->
-                val fusionBusiness = AlicomFusionBusiness()
-                business?.destory()
-                business = fusionBusiness
-                AlicomFusionBusiness.useSDKSupplyUMSDK(false, "")
-                AlicomFusionLog.setLogEnable(false)
+        AlicomFusionLog.setLogEnable(false)
+        prepareFusionTokenForSms(templateId, token.authToken)
+    }
 
-                val authToken = AlicomFusionAuthToken().apply {
-                    setAuthToken(token.authToken)
-                }
-                fusionBusiness.initWithToken(context, token.schemeCode, authToken)
-                fusionBusiness.setAlicomFusionAuthCallBack(object : AlicomFusionAuthCallBack {
-                    override fun onSDKTokenUpdate(): AlicomFusionAuthToken {
-                        return AlicomFusionAuthToken().apply {
-                            setAuthToken(token.authToken)
-                        }
-                    }
-
-                    override fun onSDKTokenAuthSuccess() {
-                        Log.i(TAG, "Fusion token ready for sms. templateId=$templateId")
-                        NumberAuthUtil.getInstance().setTemplatedId(templateId)
-                        if (continuation.isActive) {
-                            continuation.resume(Result.success(Unit))
-                        }
-                    }
-
-                    override fun onSDKTokenAuthFailure(
-                        token: AlicomFusionAuthToken?,
-                        event: AlicomFusionEvent?
-                    ) {
-                        Log.w(TAG, "Fusion token auth failure. ${event.describe(templateId)}")
-                        if (continuation.isActive) {
-                            continuation.resume(Result.failure(FusionPhoneAuthException(event.message())))
-                        }
-                    }
-
-                    override fun onVerifySuccess(
-                        verifyToken: String?,
-                        nodeName: String?,
-                        event: AlicomFusionEvent?
-                    ) = Unit
-
-                    override fun onHalfWayVerifySuccess(
-                        nodeName: String?,
-                        maskToken: String?,
-                        event: AlicomFusionEvent?,
-                        halfWayVerifyResult: HalfWayVerifyResult?
-                    ) {
-                        halfWayVerifyResult?.verifyResult(!maskToken.isNullOrBlank())
-                    }
-
-                    override fun onVerifyFailed(
-                        event: AlicomFusionEvent?,
-                        nodeName: String?
-                    ) = Unit
-
-                    override fun onTemplateFinish(event: AlicomFusionEvent?) = Unit
-
-                    override fun onAuthEvent(event: AlicomFusionEvent?) {
-                        Log.i(TAG, "Fusion auth event. ${event.describe(templateId)}")
-                    }
-
-                    override fun onGetPhoneNumberForVerification(
-                        nodeName: String?,
-                        event: AlicomFusionEvent?
-                    ): String {
-                        Log.i(TAG, "Fusion requested phone for sms. templateId=$templateId, nodeName=$nodeName, ${event.describe(templateId)}")
-                        return phoneForVerification
-                    }
-
-                    override fun onVerifyInterrupt(event: AlicomFusionEvent?) = Unit
-                })
-
-                continuation.invokeOnCancellation {
-                    fusionBusiness.destory()
-                    if (business === fusionBusiness) {
-                        business = null
-                    }
-                }
-            }.getOrThrow()
+    private fun prepareFusionTokenForSms(templateId: String, sdkToken: String) {
+        NumberAuthUtil.getInstance().setTemplatedId(templateId)
+        val validateResult = AlicomFusionCheckUtil.checkRealTokenVailed(sdkToken)
+        if (validateResult != TOKEN_VALID) {
+            Log.w(TAG, "Fusion token invalid for sms. templateId=$templateId, result=$validateResult")
+            throw FusionPhoneAuthException(DEFAULT_ERROR_MESSAGE)
+        }
+        AlicomFusionSceneUtil.getInstance().setSdkToken(sdkToken)
+        val authToken = AlicomFusionSceneUtil.getInstance().authToken
+        if (authToken == null ||
+            authToken.stsToken.isNullOrBlank() ||
+            authToken.accessKeyId.isNullOrBlank() ||
+            authToken.accessKeySecret.isNullOrBlank()
+        ) {
+            Log.w(TAG, "Fusion token missing required fields for sms. templateId=$templateId")
+            throw FusionPhoneAuthException(DEFAULT_ERROR_MESSAGE)
         }
     }
 
@@ -349,6 +290,7 @@ class FusionPhoneAuthProvider @Inject constructor(
         const val TAG = "FusionPhoneAuth"
         const val LOGIN_SCENE_ID = "100001"
         const val SMS_AUTH_TYPE = 4
+        const val TOKEN_VALID = 0
         const val DEFAULT_ERROR_MESSAGE = "Fusion phone auth failed"
     }
 

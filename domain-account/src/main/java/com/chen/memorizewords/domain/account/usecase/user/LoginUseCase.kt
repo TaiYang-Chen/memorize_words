@@ -1,14 +1,18 @@
 package com.chen.memorizewords.domain.account.usecase.user
+import com.chen.memorizewords.domain.account.model.classifyAuthIdentifier
 import com.chen.memorizewords.domain.account.model.user.User
 import com.chen.memorizewords.domain.account.repository.user.AuthRepository
 import javax.inject.Inject
 
 sealed class LoginError : Throwable() {
+    class EmptyIdentifier : LoginError()
+    class EmptyAccount : LoginError()
     class EmptyPhone : LoginError()
     class InvalidPhone : LoginError()
     class EmptyEmail : LoginError()
     class EmptyPassword : LoginError()
     class EmptySmsCode : LoginError()
+    class EmptyVerifyToken : LoginError()
     class EmptyOauthCode : LoginError()
     class AccountDeletionPending(override val message: String?) : LoginError()
 }
@@ -18,15 +22,17 @@ class LoginUseCase @Inject constructor(
     private val loginCompletionHandler: LoginCompletionHandler
 ) {
     suspend operator fun invoke(
-        email: String,
+        identifier: String,
         password: String,
         cancelDeletion: Boolean = false
     ): Result<User> {
         return runCatching {
-            if (email.isBlank()) throw LoginError.EmptyEmail()
+            if (identifier.isBlank()) throw LoginError.EmptyIdentifier()
             if (password.isBlank()) throw LoginError.EmptyPassword()
+            val authIdentifier = classifyAuthIdentifier(identifier)
             val loginResult = authRepository.loginByPassword(
-                phoneNumber = email.trim(),
+                identifier = authIdentifier.value,
+                identifierType = authIdentifier.type,
                 password = password,
                 cancelDeletion = cancelDeletion
             ).getOrThrow()

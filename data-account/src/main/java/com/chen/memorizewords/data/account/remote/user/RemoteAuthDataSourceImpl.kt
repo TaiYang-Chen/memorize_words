@@ -6,7 +6,6 @@ import com.chen.memorizewords.data.account.remoteapi.api.auth.AuthRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.RegisterRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.SendEmailCodeRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.FusionAuthTokenDto
-import com.chen.memorizewords.data.account.remoteapi.api.auth.FusionRegisterRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.ChangePasswordRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.BindSocialRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.BindEmailRequest
@@ -28,14 +27,6 @@ class RemoteAuthDataSourceImpl @Inject constructor(
         return remoteResultAdapter.toResult { authRequest.login(loginRequest) }
     }
 
-    override suspend fun loginByWechat(loginRequest: LoginRequest): Result<LoginResponseDto> {
-        return remoteResultAdapter.toResult { authRequest.login(loginRequest) }
-    }
-
-    override suspend fun loginByQq(loginRequest: LoginRequest): Result<LoginResponseDto> {
-        return remoteResultAdapter.toResult { authRequest.login(loginRequest) }
-    }
-
     override suspend fun sendEmailCode(request: SendEmailCodeRequest): Result<SendSmsCodeResponseDto> {
         return remoteResultAdapter.toResult { authRequest.sendEmailCode(request) }
     }
@@ -46,10 +37,6 @@ class RemoteAuthDataSourceImpl @Inject constructor(
 
     override suspend fun getFusionAuthToken(): Result<FusionAuthTokenDto> {
         return remoteResultAdapter.toResult { authRequest.getFusionAuthToken() }
-    }
-
-    override suspend fun fusionRegister(request: FusionRegisterRequest): Result<LoginResponseDto> {
-        return remoteResultAdapter.toResult { authRequest.fusionRegister(request) }
     }
 
     override suspend fun getProfile(): Result<ProfileDto> {

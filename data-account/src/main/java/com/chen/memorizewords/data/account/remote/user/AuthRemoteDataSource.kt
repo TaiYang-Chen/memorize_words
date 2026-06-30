@@ -4,7 +4,6 @@ import com.chen.memorizewords.data.account.remoteapi.api.auth.LoginRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.RegisterRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.SendEmailCodeRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.FusionAuthTokenDto
-import com.chen.memorizewords.data.account.remoteapi.api.auth.FusionRegisterRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.ChangePasswordRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.BindSocialRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.BindEmailRequest
@@ -26,17 +25,11 @@ interface AuthRemoteDataSource {
 
     suspend fun login(loginRequest: LoginRequest): Result<LoginResponseDto>
 
-    suspend fun loginByWechat(loginRequest: LoginRequest): Result<LoginResponseDto>
-
-    suspend fun loginByQq(loginRequest: LoginRequest): Result<LoginResponseDto>
-
     suspend fun sendEmailCode(request: SendEmailCodeRequest): Result<SendSmsCodeResponseDto>
 
     suspend fun register(request: RegisterRequest): Result<LoginResponseDto>
 
     suspend fun getFusionAuthToken(): Result<FusionAuthTokenDto>
-
-    suspend fun fusionRegister(request: FusionRegisterRequest): Result<LoginResponseDto>
 
     suspend fun getProfile(): Result<ProfileDto>
 

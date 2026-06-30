@@ -9,7 +9,6 @@ import com.chen.memorizewords.data.account.remoteapi.api.auth.BindPhoneRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.BindSocialRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.ChangePasswordRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.FusionAuthTokenDto
-import com.chen.memorizewords.data.account.remoteapi.api.auth.FusionRegisterRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.LoginRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.ProfilePatchRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.RegisterRequest
@@ -178,10 +177,6 @@ class UserRepositoryImplTest {
 
         override suspend fun login(loginRequest: LoginRequest): Result<LoginResponseDto> = unused()
 
-        override suspend fun loginByWechat(loginRequest: LoginRequest): Result<LoginResponseDto> = unused()
-
-        override suspend fun loginByQq(loginRequest: LoginRequest): Result<LoginResponseDto> = unused()
-
         override suspend fun sendEmailCode(
             request: SendEmailCodeRequest
         ): Result<SendSmsCodeResponseDto> = unused()
@@ -189,8 +184,6 @@ class UserRepositoryImplTest {
         override suspend fun register(request: RegisterRequest): Result<LoginResponseDto> = unused()
 
         override suspend fun getFusionAuthToken(): Result<FusionAuthTokenDto> = unused()
-
-        override suspend fun fusionRegister(request: FusionRegisterRequest): Result<LoginResponseDto> = unused()
 
         override suspend fun getProfile(): Result<ProfileDto> = unused()
 

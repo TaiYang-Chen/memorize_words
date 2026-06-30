@@ -5,10 +5,10 @@ import com.chen.memorizewords.data.account.mapper.toDomain
 import com.chen.memorizewords.data.account.remote.user.AuthRemoteDataSource
 import com.chen.memorizewords.data.account.remoteapi.api.auth.BindSocialRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.ChangePasswordRequest
-import com.chen.memorizewords.data.account.remoteapi.api.auth.FusionRegisterRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.LoginRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.RegisterRequest
 import com.chen.memorizewords.data.account.remoteapi.api.auth.SendEmailCodeRequest
+import com.chen.memorizewords.domain.account.model.AuthIdentifierType
 import com.chen.memorizewords.domain.account.model.AuthLoginResult
 import com.chen.memorizewords.domain.account.model.FusionAuthToken
 import com.chen.memorizewords.domain.account.model.user.SmsCodeMeta
@@ -28,14 +28,16 @@ class AuthRepositoryImpl @Inject constructor(
     private val clockProvider: ClockProvider
 ) : AuthRepository {
     override suspend fun loginByPassword(
-        phoneNumber: String,
+        identifier: String,
+        identifierType: AuthIdentifierType,
         password: String,
         cancelDeletion: Boolean
     ): Result<AuthLoginResult> = runCatching {
         withContext(Dispatchers.IO) {
             val request = LoginRequest(
                 loginMethod = "password",
-                emailOrPhone = phoneNumber,
+                identifier = identifier,
+                identifierType = identifierType.wireValue,
                 password = password,
                 cancelDeletion = cancelDeletion
             )
@@ -65,50 +67,59 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun loginByWechat(
-        oauthCode: String,
-        state: String?,
+    override suspend fun loginByPhoneCode(
+        phone: String,
+        verifyToken: String,
         cancelDeletion: Boolean
     ): Result<AuthLoginResult> = runCatching {
         withContext(Dispatchers.IO) {
             val request = LoginRequest(
-                loginMethod = "wechat",
-                oauthCode = oauthCode,
-                platform = "wechat",
-                state = state,
+                loginMethod = "phone_code",
+                phone = phone,
+                verifyToken = verifyToken,
                 cancelDeletion = cancelDeletion
             )
-            remote.loginByWechat(request).getOrMapAccountDeletionPending().toDomain(clockProvider.nowEpochMillis())
+            remote.login(request).getOrMapAccountDeletionPending().toDomain(clockProvider.nowEpochMillis())
         }
     }
 
-    override suspend fun loginByQq(
-        oauthCode: String,
-        state: String?,
-        cancelDeletion: Boolean
-    ): Result<AuthLoginResult> = runCatching {
-        withContext(Dispatchers.IO) {
-            val request = LoginRequest(
-                loginMethod = "qq",
-                oauthCode = oauthCode,
-                platform = "qq",
-                state = state,
-                cancelDeletion = cancelDeletion
-            )
-            remote.loginByQq(request).getOrMapAccountDeletionPending().toDomain(clockProvider.nowEpochMillis())
-        }
-    }
-
-    override suspend fun register(
-        email: String,
-        emailCode: String,
+    override suspend fun registerByAccount(
+        account: String,
         password: String
     ): Result<AuthLoginResult> = runCatching {
         withContext(Dispatchers.IO) {
             val request = RegisterRequest(
-                email = email,
-                emailCode = emailCode,
+                registerMethod = "account_password",
+                account = account,
                 password = password
+            )
+            remote.register(request).getOrThrow().toDomain(clockProvider.nowEpochMillis())
+        }
+    }
+
+    override suspend fun registerByEmailCode(
+        email: String,
+        emailCode: String
+    ): Result<AuthLoginResult> = runCatching {
+        withContext(Dispatchers.IO) {
+            val request = RegisterRequest(
+                registerMethod = "email_code",
+                email = email,
+                emailCode = emailCode
+            )
+            remote.register(request).getOrThrow().toDomain(clockProvider.nowEpochMillis())
+        }
+    }
+
+    override suspend fun registerByPhoneCode(
+        phone: String,
+        verifyToken: String
+    ): Result<AuthLoginResult> = runCatching {
+        withContext(Dispatchers.IO) {
+            val request = RegisterRequest(
+                registerMethod = "phone_code",
+                phone = phone,
+                verifyToken = verifyToken
             )
             remote.register(request).getOrThrow().toDomain(clockProvider.nowEpochMillis())
         }
@@ -122,17 +133,6 @@ class AuthRepositoryImpl @Inject constructor(
                 schemeCode = dto.schemeCode,
                 expiresIn = dto.expiresIn
             )
-        }
-    }
-
-    override suspend fun registerByFusionVerifyToken(
-        verifyToken: String,
-        password: String
-    ): Result<AuthLoginResult> = runCatching {
-        withContext(Dispatchers.IO) {
-            remote.fusionRegister(FusionRegisterRequest(verifyToken, password))
-                .getOrThrow()
-                .toDomain(clockProvider.nowEpochMillis())
         }
     }
 

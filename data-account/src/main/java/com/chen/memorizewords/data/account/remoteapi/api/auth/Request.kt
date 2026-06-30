@@ -5,23 +5,25 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = false)
 data class LoginRequest(
     val loginMethod: String = "password",
-    val emailOrPhone: String? = null,
+    val identifierType: String? = null,
+    val identifier: String? = null,
     val email: String? = null,
     val phone: String? = null,
     val password: String? = null,
     val emailCode: String? = null,
-    val oauthCode: String? = null,
-    val platform: String? = null,
-    val state: String? = null,
+    val verifyToken: String? = null,
     val cancelDeletion: Boolean = false
 )
 
 @JsonClass(generateAdapter = false)
 data class RegisterRequest(
+    val account: String? = null,
     val email: String? = null,
+    val phone: String? = null,
     val emailCode: String? = null,
-    val password: String,
-    val registerMethod: String = "email"
+    val verifyToken: String? = null,
+    val password: String? = null,
+    val registerMethod: String
 )
 
 @JsonClass(generateAdapter = false)
@@ -32,12 +34,6 @@ data class SendEmailCodeRequest(
 
 @JsonClass(generateAdapter = false)
 data class RefreshRequest(val refreshToken: String)
-
-@JsonClass(generateAdapter = false)
-data class FusionRegisterRequest(
-    val verifyToken: String,
-    val password: String
-)
 
 @JsonClass(generateAdapter = false)
 data class FusionAuthTokenDto(

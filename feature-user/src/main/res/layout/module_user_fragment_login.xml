@@ -47,10 +47,10 @@
             android:layout_marginEnd="32dp"
             android:background="@drawable/module_user_login_bg_edit_text"
             android:hint="@string/module_user_login_account_hint"
-            android:inputType="textEmailAddress"
+            android:inputType="text"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:text="@={viewModel.email}"
+            android:text="@={viewModel.identifier}"
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -104,33 +104,36 @@
             app:layout_constraintTop_toBottomOf="@id/flPassword" />
 
         <LinearLayout
-            android:id="@+id/llThirdLogin"
-            android:layout_width="wrap_content"
+            android:id="@+id/llCodeLogin"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="48dp"
+            android:layout_marginTop="18dp"
+            android:gravity="center"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintEnd_toEndOf="@id/btnLogin"
+            app:layout_constraintStart_toStartOf="@id/btnLogin"
+            app:layout_constraintTop_toBottomOf="@id/btnLogin">
 
-            <ImageView
-                android:id="@+id/ivWechatLogin"
-                android:layout_width="40dp"
+            <TextView
+                android:id="@+id/tvPhoneCodeLogin"
+                android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:background="@drawable/module_user_login_bg_third_icon"
-                android:contentDescription="@string/module_user_wechat_one_tap_title"
-                android:padding="8dp"
-                android:src="@drawable/module_user_ic_wechat" />
+                android:gravity="center"
+                android:onClick="@{() -> viewModel.navigateToPhoneCodeLogin()}"
+                android:text="@string/module_user_phone_code_login"
+                android:textColor="#2979FF"
+                android:textSize="14sp" />
 
-            <ImageView
-                android:id="@+id/ivQqLogin"
-                android:layout_width="40dp"
+            <TextView
+                android:id="@+id/tvEmailCodeLogin"
+                android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_marginStart="24dp"
-                android:background="@drawable/module_user_login_bg_third_icon"
-                android:contentDescription="@string/module_user_qq_one_tap_title"
-                android:padding="8dp"
-                android:src="@drawable/module_user_ic_qq" />
+                android:gravity="center"
+                android:onClick="@{() -> viewModel.navigateToEmailCodeLogin()}"
+                android:text="@string/module_user_email_code_login"
+                android:textColor="#2979FF"
+                android:textSize="14sp" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -23,7 +23,6 @@ class LoginFragment : BaseFragment<LoginViewModel, ModuleUserFragmentLoginBindin
         databind.viewModel = viewModel
         databind.lifecycleOwner = viewLifecycleOwner
         setupPasswordToggle()
-        setupNavigationClicks()
     }
 
     override fun onNavigationRoute(event: UiEvent.Navigation.Route) {
@@ -32,12 +31,12 @@ class LoginFragment : BaseFragment<LoginViewModel, ModuleUserFragmentLoginBindin
                 findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
             }
 
-            LoginViewModel.Route.ToWeChatOneTapLogin -> {
-                findNavController().navigate(R.id.action_loginFragment_to_wechatOneTapLoginFragment)
+            LoginViewModel.Route.ToPhoneCodeLogin -> {
+                findNavController().navigate(R.id.action_loginFragment_to_phoneCodeLoginFragment)
             }
 
-            LoginViewModel.Route.ToQQOneTapLogin -> {
-                findNavController().navigate(R.id.action_loginFragment_to_qqOneTapLoginFragment)
+            LoginViewModel.Route.ToEmailCodeLogin -> {
+                findNavController().navigate(R.id.action_loginFragment_to_emailCodeLoginFragment)
             }
 
         }
@@ -56,15 +55,6 @@ class LoginFragment : BaseFragment<LoginViewModel, ModuleUserFragmentLoginBindin
         databind.ivEye.setOnClickListener {
             isPasswordVisible = !isPasswordVisible
             updatePasswordInputType()
-        }
-    }
-
-    private fun setupNavigationClicks() {
-        databind.ivWechatLogin.setOnClickListener {
-            viewModel.navigateToWeChatOneTapLogin()
-        }
-        databind.ivQqLogin.setOnClickListener {
-            viewModel.navigateToQQOneTapLogin()
         }
     }
 

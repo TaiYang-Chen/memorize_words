@@ -102,44 +102,11 @@
 
     <issue
         id="ResourceName"
-        message="Resource named &apos;`module_user_fragment_qq_one_tap_login`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_fragment_qq_one_tap_login`&apos; ?"
-        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
-        errorLine2=" ~~~~~~">
-        <location
-            file="src/main/res/layout/module_user_fragment_qq_one_tap_login.xml"
-            line="2"
-            column="2"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
         message="Resource named &apos;`module_user_fragment_register`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_fragment_register`&apos; ?"
         errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
         errorLine2=" ~~~~~~">
         <location
             file="src/main/res/layout/module_user_fragment_register.xml"
-            line="2"
-            column="2"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_user_fragment_sms_code_login`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_fragment_sms_code_login`&apos; ?"
-        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
-        errorLine2=" ~~~~~~">
-        <location
-            file="src/main/res/layout/module_user_fragment_sms_code_login.xml"
-            line="2"
-            column="2"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_user_fragment_wechat_one_tap_login`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_fragment_wechat_one_tap_login`&apos; ?"
-        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
-        errorLine2=" ~~~~~~">
-        <location
-            file="src/main/res/layout/module_user_fragment_wechat_one_tap_login.xml"
             line="2"
             column="2"/>
     </issue>
@@ -322,17 +289,6 @@
 
     <issue
         id="ResourceName"
-        message="Resource named &apos;`module_user_sms_login_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_sms_login_title`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_user_sms_login_title&quot;>手机验证码登录&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="12"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
         message="Resource named &apos;`module_user_sms_code_hint`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_sms_code_hint`&apos; ?"
         errorLine1="    &lt;string name=&quot;module_user_sms_code_hint&quot;>请输入验证码&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
@@ -350,72 +306,6 @@
         <location
             file="src/main/res/values/strings.xml"
             line="14"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_user_wechat_one_tap_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_wechat_one_tap_title`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_user_wechat_one_tap_title&quot;>微信一键登录&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="16"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_user_wechat_one_tap_desc`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_wechat_one_tap_desc`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_user_wechat_one_tap_desc&quot;>授权微信后可快速登录，首次使用会自动创建账号。&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="17"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_user_wechat_authorize_button`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_wechat_authorize_button`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_user_wechat_authorize_button&quot;>使用微信授权登录&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="18"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_user_qq_one_tap_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_qq_one_tap_title`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_user_qq_one_tap_title&quot;>QQ一键登录&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="20"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_user_qq_one_tap_desc`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_qq_one_tap_desc`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_user_qq_one_tap_desc&quot;>授权QQ后可快速登录，首次使用会自动创建账号。&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="21"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_user_qq_authorize_button`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_qq_authorize_button`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_user_qq_authorize_button&quot;>使用QQ授权登录&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="22"
             column="13"/>
     </issue>
 
@@ -548,50 +438,6 @@
         <location
             file="src/main/res/values/strings.xml"
             line="36"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_user_qq_auth_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_qq_auth_failed`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_user_qq_auth_failed&quot;>QQ授权失败&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="37"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_user_wechat_auth_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_wechat_auth_failed`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_user_wechat_auth_failed&quot;>微信授权失败&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="38"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_user_qq_login_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_qq_login_failed`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_user_qq_login_failed&quot;>QQ登录失败&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="39"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_user_wechat_login_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_wechat_login_failed`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_user_wechat_login_failed&quot;>微信登录失败&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="40"
             column="13"/>
     </issue>
 
@@ -1241,39 +1087,6 @@
         <location
             file="src/main/res/values/strings.xml"
             line="104"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_user_nav_wechat_login_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_nav_wechat_login_title`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_user_nav_wechat_login_title&quot;>微信授权登录&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="105"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_user_nav_qq_login_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_nav_qq_login_title`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_user_nav_qq_login_title&quot;>QQ授权登录&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="106"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_user_nav_sms_login_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_nav_sms_login_title`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_user_nav_sms_login_title&quot;>验证码登录&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="107"
             column="13"/>
     </issue>
 

@@ -4,29 +4,35 @@
 
     <string name="module_user_login_title">欢迎登录</string>
     <string name="module_user_login_go_register">没有账号？立即注册</string>
-    <string name="module_user_login_account_hint">请输入邮箱</string>
+    <string name="module_user_login_account_hint">请输入账户/邮箱/手机号</string>
     <string name="module_user_login_password_hint">请输入密码</string>
     <string name="module_user_login_button">登录</string>
     <string name="module_user_login_loading">登录中...</string>
+    <string name="module_user_phone_code_login">手机验证码登录</string>
+    <string name="module_user_email_code_login">邮箱验证码登录</string>
+    <string name="module_user_phone_code_login_title">手机验证码登录</string>
+    <string name="module_user_email_code_login_title">邮箱验证码登录</string>
+    <string name="module_user_phone_code_register">手机验证码注册</string>
+    <string name="module_user_email_code_register">邮箱验证码注册</string>
+    <string name="module_user_phone_code_register_title">手机验证码注册</string>
+    <string name="module_user_email_code_register_title">邮箱验证码注册</string>
+    <string name="module_user_register_account_hint">请输入账户</string>
+    <string name="module_user_register_account_required">请输入账户</string>
+    <string name="module_user_register_loading">注册中...</string>
+    <string name="module_user_register_success">注册成功</string>
     <string name="module_user_sms_code_hint">请输入验证码</string>
     <string name="module_user_back_to_password_login">返回账号密码登录</string>
 
-    <string name="module_user_wechat_one_tap_title">微信一键登录</string>
-    <string name="module_user_wechat_one_tap_desc">授权微信后可快速登录，首次使用会自动创建账号。</string>
-    <string name="module_user_wechat_authorize_button">使用微信授权登录</string>
-
-    <string name="module_user_qq_one_tap_title">QQ一键登录</string>
-    <string name="module_user_qq_one_tap_desc">授权QQ后可快速登录，首次使用会自动创建账号。</string>
-    <string name="module_user_qq_authorize_button">使用QQ授权登录</string>
-
     <string name="module_user_common_back">返回</string>
     <string name="module_user_send_code">发送验证码</string>
+    <string name="module_user_send_code_sending">发送中...</string>
     <string name="module_user_resend_code">重新发送</string>
     <string name="module_user_countdown_seconds">%1$d秒</string>
 
     <string name="module_user_login_success">登录成功</string>
     <string name="module_user_login_failed">登录失败</string>
     <string name="module_user_login_sync_failed">登录成功但数据同步失败，请重试</string>
+    <string name="module_user_login_identifier_required">请输入账户/邮箱/手机号</string>
     <string name="module_user_login_phone_required">请输入手机号</string>
     <string name="module_user_login_email_required">请输入邮箱</string>
     <string name="module_user_login_password_required">请输入密码</string>
@@ -34,11 +40,6 @@
     <string name="module_user_login_sms_required">请输入验证码</string>
     <string name="module_user_send_code_failed">验证码发送失败</string>
     <string name="module_user_register_failed">注册失败</string>
-    <string name="module_user_qq_auth_failed">QQ授权失败</string>
-    <string name="module_user_wechat_auth_failed">微信授权失败</string>
-    <string name="module_user_qq_login_failed">QQ登录失败</string>
-    <string name="module_user_wechat_login_failed">微信登录失败</string>
-
     <string name="module_user_bind_phone_title">绑定手机号</string>
     <string name="module_user_bind_phone_fusion_title">本机号码一键绑定</string>
     <string name="module_user_bind_phone_sms_title">验证码绑定</string>
@@ -128,8 +129,10 @@
     <string name="module_user_social_wechat_authorize_cancelled">微信授权已取消</string>
     <string name="module_user_nav_login_title">登录</string>
     <string name="module_user_nav_register_title">注册</string>
-    <string name="module_user_nav_wechat_login_title">微信授权登录</string>
-    <string name="module_user_nav_qq_login_title">QQ授权登录</string>
+    <string name="module_user_nav_phone_code_login_title">手机验证码登录</string>
+    <string name="module_user_nav_email_code_login_title">邮箱验证码登录</string>
+    <string name="module_user_nav_phone_code_register_title">手机验证码注册</string>
+    <string name="module_user_nav_email_code_register_title">邮箱验证码注册</string>
     <string name="module_user_nav_profile_title">个人信息</string>
     <string name="module_user_nav_change_password_title">修改密码</string>
     <string name="module_user_nav_bind_phone_title">绑定手机号</string>

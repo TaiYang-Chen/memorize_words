@@ -12,11 +12,11 @@
             android:id="@+id/action_loginFragment_to_registerFragment"
             app:destination="@id/registerFragment" />
         <action
-            android:id="@+id/action_loginFragment_to_wechatOneTapLoginFragment"
-            app:destination="@id/wechatOneTapLoginFragment" />
+            android:id="@+id/action_loginFragment_to_phoneCodeLoginFragment"
+            app:destination="@id/phoneCodeLoginFragment" />
         <action
-            android:id="@+id/action_loginFragment_to_qqOneTapLoginFragment"
-            app:destination="@id/qqOneTapLoginFragment" />
+            android:id="@+id/action_loginFragment_to_emailCodeLoginFragment"
+            app:destination="@id/emailCodeLoginFragment" />
     </fragment>
 
     <fragment
@@ -26,17 +26,33 @@
         <action
             android:id="@+id/action_registerFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_registerFragment_to_phoneCodeRegisterFragment"
+            app:destination="@id/phoneCodeRegisterFragment" />
+        <action
+            android:id="@+id/action_registerFragment_to_emailCodeRegisterFragment"
+            app:destination="@id/emailCodeRegisterFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/wechatOneTapLoginFragment"
-        android:name="com.chen.memorizewords.feature.user.ui.login.wechat.WeChatOneTapLoginFragment"
-        android:label="@string/module_user_nav_wechat_login_title" />
+        android:id="@+id/phoneCodeLoginFragment"
+        android:name="com.chen.memorizewords.feature.user.ui.login.phone.PhoneCodeLoginFragment"
+        android:label="@string/module_user_nav_phone_code_login_title" />
 
     <fragment
-        android:id="@+id/qqOneTapLoginFragment"
-        android:name="com.chen.memorizewords.feature.user.ui.login.qq.QQOneTapLoginFragment"
-        android:label="@string/module_user_nav_qq_login_title" />
+        android:id="@+id/emailCodeLoginFragment"
+        android:name="com.chen.memorizewords.feature.user.ui.login.email.EmailCodeLoginFragment"
+        android:label="@string/module_user_nav_email_code_login_title" />
+
+    <fragment
+        android:id="@+id/phoneCodeRegisterFragment"
+        android:name="com.chen.memorizewords.feature.user.ui.register.phone.PhoneCodeRegisterFragment"
+        android:label="@string/module_user_nav_phone_code_register_title" />
+
+    <fragment
+        android:id="@+id/emailCodeRegisterFragment"
+        android:name="com.chen.memorizewords.feature.user.ui.register.email.EmailCodeRegisterFragment"
+        android:label="@string/module_user_nav_email_code_register_title" />
 
     <fragment
         android:id="@+id/module_login_profilefragment"

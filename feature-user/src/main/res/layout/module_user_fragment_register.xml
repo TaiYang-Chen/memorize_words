@@ -48,11 +48,11 @@
             android:layout_marginTop="56dp"
             android:layout_marginEnd="32dp"
             android:background="@drawable/module_user_login_bg_edit_text"
-            android:hint="@string/module_user_login_account_hint"
-            android:inputType="phone"
+            android:hint="@string/module_user_register_account_hint"
+            android:inputType="text"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:text="@={viewModel.phone}"
+            android:text="@={viewModel.account}"
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -96,6 +96,7 @@
             android:layout_marginTop="32dp"
             android:background="@drawable/module_user_login_bg_login_btn"
             android:backgroundTint="@null"
+            android:onClick="@{() -> viewModel.register()}"
             android:text="@string/module_user_nav_register_title"
             android:textColor="@android:color/white"
             android:textSize="16sp"
@@ -103,6 +104,39 @@
             app:layout_constraintEnd_toEndOf="@id/flPassword"
             app:layout_constraintStart_toStartOf="@id/flPassword"
             app:layout_constraintTop_toBottomOf="@id/flPassword" />
+
+        <LinearLayout
+            android:id="@+id/llCodeRegister"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="@id/btnLogin"
+            app:layout_constraintStart_toStartOf="@id/btnLogin"
+            app:layout_constraintTop_toBottomOf="@id/btnLogin">
+
+            <TextView
+                android:id="@+id/tvPhoneCodeRegister"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:onClick="@{() -> viewModel.navigateToPhoneCodeRegister()}"
+                android:text="@string/module_user_phone_code_register"
+                android:textColor="#2979FF"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvEmailCodeRegister"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="24dp"
+                android:gravity="center"
+                android:onClick="@{() -> viewModel.navigateToEmailCodeRegister()}"
+                android:text="@string/module_user_email_code_register"
+                android:textColor="#2979FF"
+                android:textSize="14sp" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

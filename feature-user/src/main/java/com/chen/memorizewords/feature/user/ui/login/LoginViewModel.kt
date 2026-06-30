@@ -19,12 +19,12 @@ class LoginViewModel @Inject constructor(
 
     sealed interface Route {
         data object ToRegister : Route
-        data object ToWeChatOneTapLogin : Route
-        data object ToQQOneTapLogin : Route
+        data object ToPhoneCodeLogin : Route
+        data object ToEmailCodeLogin : Route
     }
 
-    val email = MutableStateFlow("1563011912@qq.com")
-    val password = MutableStateFlow("123456")
+    val identifier = MutableStateFlow("")
+    val password = MutableStateFlow("")
 
     fun login() {
         login(cancelDeletion = false)
@@ -36,7 +36,7 @@ class LoginViewModel @Inject constructor(
 
     private fun login(cancelDeletion: Boolean) {
         launchWithLoading(resourceProvider.getString(R.string.module_user_login_loading)) {
-            loginUseCase(email.value, password.value, cancelDeletion).onSuccess {
+            loginUseCase(identifier.value, password.value, cancelDeletion).onSuccess {
                 showToast(resourceProvider.getString(R.string.module_user_login_success))
                 finish()
             }.onFailure { failure ->
@@ -44,8 +44,8 @@ class LoginViewModel @Inject constructor(
                     is LoginDataSyncError ->
                         showToast(resourceProvider.getString(R.string.module_user_login_sync_failed))
 
-                    is LoginError.EmptyEmail ->
-                        showToast(resourceProvider.getString(R.string.module_user_login_email_required))
+                    is LoginError.EmptyIdentifier ->
+                        showToast(resourceProvider.getString(R.string.module_user_login_identifier_required))
 
                     is LoginError.EmptyPassword ->
                         showToast(resourceProvider.getString(R.string.module_user_login_password_required))
@@ -78,12 +78,12 @@ class LoginViewModel @Inject constructor(
         navigateRoute(Route.ToRegister)
     }
 
-    fun navigateToWeChatOneTapLogin() {
-        navigateRoute(Route.ToWeChatOneTapLogin)
+    fun navigateToPhoneCodeLogin() {
+        navigateRoute(Route.ToPhoneCodeLogin)
     }
 
-    fun navigateToQQOneTapLogin() {
-        navigateRoute(Route.ToQQOneTapLogin)
+    fun navigateToEmailCodeLogin() {
+        navigateRoute(Route.ToEmailCodeLogin)
     }
 
     companion object {

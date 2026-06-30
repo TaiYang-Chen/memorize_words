@@ -36,10 +36,6 @@ interface AuthApiService {
     @GET("auth/fusion/token")
     fun getFusionAuthToken(): Call<ApiResponse<FusionAuthTokenDto>>
 
-    @Headers("${CoreNetworkHeaders.SKIP_AUTHORIZATION}: true")
-    @POST("auth/fusion/register")
-    fun fusionRegister(@Body request: FusionRegisterRequest): Call<ApiResponse<LoginResponseDto>>
-
     @GET("me")
     fun getProfile(): Call<ApiResponse<ProfileDto>>
 

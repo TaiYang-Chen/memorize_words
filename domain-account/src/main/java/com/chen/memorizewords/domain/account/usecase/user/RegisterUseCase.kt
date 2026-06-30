@@ -8,14 +8,12 @@ class RegisterUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     private val loginCompletionHandler: LoginCompletionHandler
 ) {
-    suspend operator fun invoke(email: String, emailCode: String, password: String): Result<User> {
+    suspend operator fun invoke(account: String, password: String): Result<User> {
         return runCatching {
-            if (email.isBlank()) throw LoginError.EmptyEmail()
-            if (emailCode.isBlank()) throw LoginError.EmptySmsCode()
+            if (account.isBlank()) throw LoginError.EmptyAccount()
             if (password.isBlank()) throw LoginError.EmptyPassword()
-            val loginResult = authRepository.register(
-                email = email.trim(),
-                emailCode = emailCode.trim(),
+            val loginResult = authRepository.registerByAccount(
+                account = account.trim(),
                 password = password
             ).getOrThrow()
             loginCompletionHandler.complete(loginResult)
