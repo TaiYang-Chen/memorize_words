@@ -1,6 +1,7 @@
 package com.chen.memorizewords.feature.learning.ui.practice.listening.presentation
 
 import com.chen.memorizewords.core.common.resource.ResourceProvider
+import com.chen.memorizewords.domain.practice.ListeningPronunciationPreference
 import com.chen.memorizewords.domain.word.model.word.PronunciationType
 import com.chen.memorizewords.domain.word.model.word.Word
 import com.chen.memorizewords.feature.learning.R
@@ -59,14 +60,12 @@ internal class ListeningUiMapper(
         )
     }
 
-    fun phoneticChip(word: Word): String {
-        return resourceProvider.getString(
-            R.string.practice_listening_phonetic_chip,
-            normalizePhonetic(
-                word.phoneticUS?.takeIf { it.isNotBlank() }
-                    ?: word.phoneticUK?.takeIf { it.isNotBlank() }
-            )
-        )
+    fun phoneticChip(
+        word: Word,
+        preference: ListeningPronunciationPreference
+    ): String {
+        val pronunciationType = preference.toPronunciationType()
+        return normalizePhonetic(resolvePhoneticValue(word, pronunciationType))
     }
 
     fun studyPronunciation(
@@ -102,12 +101,8 @@ internal class ListeningUiMapper(
         }
     }
 
-    fun resolveReportSpeechLocale(word: Word): String {
-        return when {
-            !word.phoneticUS.isNullOrBlank() -> LISTENING_SPEECH_LOCALE_US
-            !word.phoneticUK.isNullOrBlank() -> LISTENING_SPEECH_LOCALE_UK
-            else -> LISTENING_SPEECH_LOCALE_US
-        }
+    fun resolveReportSpeechLocale(preference: ListeningPronunciationPreference): String {
+        return resolveSpeechLocale(preference.toPronunciationType())
     }
 
     fun normalizePhonetic(phonetic: String?): String {
@@ -131,5 +126,12 @@ internal class ListeningUiMapper(
             PronunciationType.US -> word.phoneticUS
             PronunciationType.UK -> word.phoneticUK
         }?.takeIf { it.isNotBlank() }
+    }
+
+    private fun ListeningPronunciationPreference.toPronunciationType(): PronunciationType {
+        return when (this) {
+            ListeningPronunciationPreference.US -> PronunciationType.US
+            ListeningPronunciationPreference.UK -> PronunciationType.UK
+        }
     }
 }

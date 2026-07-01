@@ -20,9 +20,14 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updatePadding
 import androidx.gridlayout.widget.GridLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.core.view.WindowInsetsCompat
+import com.chen.memorizewords.domain.practice.ListeningAnswerAreaPosition
+import com.chen.memorizewords.domain.practice.ListeningPronunciationPreference
 import com.chen.memorizewords.feature.learning.LinearSpacingItemDecoration
 import com.chen.memorizewords.feature.learning.R
 import com.chen.memorizewords.feature.learning.adapter.DefinitionsAdapter
@@ -45,6 +50,7 @@ import com.chen.memorizewords.feature.learning.ui.practice.ListeningSpellingSlot
 import com.chen.memorizewords.feature.learning.ui.visibleWordExamples
 import com.chen.memorizewords.feature.learning.ui.visibleWordForms
 import com.chen.memorizewords.feature.learning.ui.visibleWordRoots
+import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 
@@ -75,9 +81,14 @@ internal class ListeningPracticeRenderer(
     private val spellingSlotViews = mutableListOf<View>()
     private val spellingLetterButtons = mutableMapOf<Long, MaterialButton>()
     private var spellingDeleteButton: MaterialButton? = null
+    private val baseScrollBottomPadding = binding.scrollContent.paddingBottom
+    private val baseBottomActionsBottomPadding = binding.layoutBottomActions.paddingBottom
+    private var navigationBarBottomInset: Int = 0
 
     init {
         initStudyLists()
+        initInsets()
+        initAccessibility()
     }
 
     private fun initStudyLists() {
@@ -105,11 +116,45 @@ internal class ListeningPracticeRenderer(
         binding.rvStudyInflection.isNestedScrollingEnabled = false
     }
 
+    private fun initInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
+            navigationBarBottomInset =
+                insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
+            binding.layoutBottomActions.updatePadding(
+                bottom = baseBottomActionsBottomPadding + navigationBarBottomInset
+            )
+            updateScrollContentBottomPadding()
+            insets
+        }
+        binding.layoutBottomActions.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+            updateScrollContentBottomPadding()
+        }
+        ViewCompat.requestApplyInsets(binding.root)
+    }
+
+    private fun initAccessibility() {
+        binding.btnRevealAnswer.contentDescription =
+            context.getString(R.string.practice_listening_action_reveal)
+        binding.btnSkip.contentDescription =
+            context.getString(R.string.practice_listening_action_skip)
+        binding.btnSubmitSpelling.contentDescription =
+            context.getString(R.string.practice_listening_submit)
+        binding.btnPlayStudyAudio.contentDescription =
+            context.getString(R.string.practice_listening_play_audio)
+    }
+
     fun render(state: ListeningPracticeViewModel.ListeningUiState) {
         renderHeader(state)
-        binding.tvModeBadge.text = state.modeBadgeText
+        binding.progressHeader.max = state.progressMax.coerceAtLeast(1)
+        binding.progressHeader.setProgressCompat(
+            state.progressValue.coerceAtLeast(0),
+            false
+        )
+        binding.tvModeBadge.text = state.modeTitle.ifBlank { state.modeBadgeText }
         binding.tvPhonetic.text = state.phoneticChipText
+        renderPracticePronunciationPreference(state.pronunciationPreference)
         binding.tvPrompt.text = state.instructionPrimaryText.ifBlank { state.promptText }
+        renderAnswerAreaPosition(state)
         renderPromptAlignment(state)
         binding.tvPromptHint.text = state.instructionSecondaryText.ifBlank { state.promptHint }
         binding.tvPromptHint.isVisible =
@@ -120,8 +165,13 @@ internal class ListeningPracticeRenderer(
         binding.layoutReportRoot.isVisible = state.showReportState
         binding.layoutMeaningOptions.isVisible = state.showMeaningQuestion
         binding.layoutSpellingQuestion.isVisible = state.showSpellingQuestion
-        binding.layoutPracticeActions.isVisible =
+        renderScrollBehavior(state)
+        val showPracticeActions =
             state.footerMode == ListeningFooterMode.PRACTICE_ACTIONS && !state.showReportState
+        val showSpellingSubmit =
+            showPracticeActions && state.showSpellingQuestion && !state.showStudyState
+        binding.btnSubmitSpelling.isVisible = showSpellingSubmit
+        binding.layoutPracticeActions.isVisible = showPracticeActions
 
         binding.tvFeedback.isVisible = state.feedbackMessage.isNotBlank()
         binding.tvFeedback.text = state.feedbackMessage
@@ -171,7 +221,9 @@ internal class ListeningPracticeRenderer(
             practiceInteractionEnabled = practiceInteractionEnabled,
             hasSelectedLetters = state.spellingSlots.any { it.sourceLetterId != null }
         )
-        binding.btnSubmitSpelling.isEnabled = state.spellingSubmitEnabled
+        binding.btnSubmitSpelling.isEnabled =
+            showSpellingSubmit && state.spellingSubmitEnabled && practiceInteractionEnabled
+        binding.btnSubmitSpelling.alpha = if (binding.btnSubmitSpelling.isEnabled) 1f else 0.45f
 
         binding.tvStudyWord.text = state.studyWord
         val checkedPronunciationId = when (state.studyPronunciationType) {
@@ -225,6 +277,7 @@ internal class ListeningPracticeRenderer(
             state.footerMode == ListeningFooterMode.PRIMARY_ACTION &&
                 state.primaryButtonText.isNotBlank()
         binding.btnPrimaryAction.text = state.primaryButtonText
+        binding.btnPrimaryAction.contentDescription = state.primaryButtonText
         binding.btnPrimaryAction.isEnabled = state.primaryButtonEnabled
         if (state.showReportState) {
             binding.btnPrimaryAction.icon =
@@ -238,7 +291,10 @@ internal class ListeningPracticeRenderer(
             binding.btnPrimaryAction.iconPadding = 0
         }
         binding.layoutBottomActions.isVisible =
-            binding.layoutPracticeActions.isVisible || binding.btnPrimaryAction.isVisible
+            binding.layoutPracticeActions.isVisible ||
+                binding.btnSubmitSpelling.isVisible ||
+                binding.btnPrimaryAction.isVisible
+        updateScrollContentBottomPadding()
 
         triggerPendingAnimations(state)
         triggerAutoPlay(state)
@@ -256,16 +312,63 @@ internal class ListeningPracticeRenderer(
         }
     }
 
+    private fun renderPracticePronunciationPreference(
+        preference: ListeningPronunciationPreference
+    ) {
+        val checkedPronunciationId = when (preference) {
+            ListeningPronunciationPreference.US -> R.id.btn_practice_us
+            ListeningPronunciationPreference.UK -> R.id.btn_practice_uk
+        }
+        if (binding.practiceLanguageRadioGroup.checkedRadioButtonId != checkedPronunciationId) {
+            binding.practiceLanguageRadioGroup.check(checkedPronunciationId)
+        }
+    }
+
+    private fun renderAnswerAreaPosition(state: ListeningPracticeViewModel.ListeningUiState) {
+        val topMargin = when (state.answerAreaPosition) {
+            ListeningAnswerAreaPosition.TOP -> dp(8)
+            ListeningAnswerAreaPosition.MIDDLE -> dp(56)
+            ListeningAnswerAreaPosition.BOTTOM -> resolveBottomAnswerAreaMargin(state)
+        }
+        val params = binding.layoutAnswerArea.layoutParams as? LinearLayout.LayoutParams
+            ?: return
+        if (params.topMargin == topMargin) return
+        binding.layoutAnswerArea.layoutParams = params.apply {
+            this.topMargin = topMargin
+        }
+    }
+
+    private fun renderScrollBehavior(state: ListeningPracticeViewModel.ListeningUiState) {
+        val allowUserScroll = state.showStudyState || state.showReportState
+        binding.scrollContent.isUserScrollEnabled = allowUserScroll
+    }
+
+    private fun resolveBottomAnswerAreaMargin(
+        state: ListeningPracticeViewModel.ListeningUiState
+    ): Int {
+        if (!state.showSpellingQuestion) return dp(168)
+        val letterItemCount = state.spellingLetterPool.size + 1
+        val columnCount = resolveSpellingGridColumnCount(letterItemCount)
+        val rowCount = ((letterItemCount + columnCount - 1) / columnCount).coerceAtLeast(1)
+        return when {
+            rowCount >= 4 -> dp(96)
+            rowCount == 3 -> dp(132)
+            else -> dp(148)
+        }
+    }
+
     private fun renderHeader(state: ListeningPracticeViewModel.ListeningUiState) {
         if (state.showReportState) {
             binding.tvScreenTitle.text =
                 context.getString(R.string.practice_listening_report_header_title)
+            binding.progressHeader.isVisible = false
             binding.btnSettings.setImageResource(R.drawable.module_learning_share_24dp_444f5f)
             binding.btnSettings.isEnabled = false
             binding.btnSettings.isClickable = false
             binding.btnSettings.alpha = 1f
             return
         }
+        binding.progressHeader.isVisible = true
         binding.tvScreenTitle.text = state.screenTitleText
         binding.btnSettings.setImageResource(R.drawable.module_learning_ic_settings)
         binding.btnSettings.isEnabled = true
@@ -298,8 +401,8 @@ internal class ListeningPracticeRenderer(
         }
         button.isVisible = true
         button.isEnabled = isEnabled
-        button.iconGravity = MaterialButton.ICON_GRAVITY_TEXT_END
-        button.iconPadding = dp(12)
+        button.iconGravity = MaterialButton.ICON_GRAVITY_END
+        button.iconPadding = 0
         button.iconSize = dp(24)
         when (feedback) {
             ListeningMeaningOptionFeedback.CORRECT ->
@@ -372,6 +475,7 @@ internal class ListeningPracticeRenderer(
         button.strokeWidth = dp(strokeWidthDp)
         button.text = text
         button.setTextColor(Color.parseColor(textColor))
+        button.setPaddingRelative(dp(20), 0, if (iconRes == null) dp(20) else dp(54), 0)
         button.icon = iconRes?.let { AppCompatResources.getDrawable(button.context, it) }
         button.iconTint = iconTint?.let { ColorStateList.valueOf(Color.parseColor(it)) }
     }
@@ -427,9 +531,11 @@ internal class ListeningPracticeRenderer(
         isLast: Boolean
     ) {
         slotView.layoutParams =
-            LinearLayout.LayoutParams(dp(18), ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+            FlexboxLayout.LayoutParams(dp(20), ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                topMargin = dp(2)
+                bottomMargin = dp(4)
                 if (!isLast) {
-                    marginEnd = dp(8)
+                    marginEnd = dp(6)
                 }
             }
         val isWrong = slot.feedback == ListeningSpellingSlotFeedback.WRONG
@@ -455,9 +561,10 @@ internal class ListeningPracticeRenderer(
     ) {
         val grid = binding.gridSpellingLetters
         grid.removeAllViews()
-        grid.columnCount = SPELLING_GRID_COLUMN_COUNT
+        val columnCount = resolveSpellingGridColumnCount(letters.size + 1)
+        grid.columnCount = columnCount
         grid.rowCount =
-            ((letters.size + 1 + SPELLING_GRID_COLUMN_COUNT - 1) / SPELLING_GRID_COLUMN_COUNT)
+            ((letters.size + 1 + columnCount - 1) / columnCount)
         val activeIds = letters.mapTo(mutableSetOf()) { it.id }
         spellingLetterButtons.keys.removeAll { it !in activeIds }
         letters.forEachIndexed { index, letter ->
@@ -467,7 +574,7 @@ internal class ListeningPracticeRenderer(
                 letter = letter,
                 practiceInteractionEnabled = practiceInteractionEnabled
             )
-            grid.addView(button, createSpellingGridLayoutParams(index))
+            grid.addView(button, createSpellingGridLayoutParams(index, columnCount))
         }
         val deleteButton = spellingDeleteButton ?: buildSpellingDeleteButton().also {
             spellingDeleteButton = it
@@ -477,20 +584,34 @@ internal class ListeningPracticeRenderer(
             practiceInteractionEnabled = practiceInteractionEnabled,
             hasSelectedLetters = hasSelectedLetters
         )
-        grid.addView(deleteButton, createSpellingGridLayoutParams(letters.size))
+        grid.addView(deleteButton, createSpellingGridLayoutParams(letters.size, columnCount))
     }
 
-    private fun createSpellingGridLayoutParams(index: Int): GridLayout.LayoutParams {
-        val row = index / SPELLING_GRID_COLUMN_COUNT
-        val column = index % SPELLING_GRID_COLUMN_COUNT
+    private fun resolveSpellingGridColumnCount(itemCount: Int): Int {
+        val availableWidth = (binding.scrollContent.width - dp(32)).coerceAtLeast(0)
+        return when {
+            itemCount >= 16 && availableWidth >= dp(300) -> 6
+            availableWidth < dp(300) -> 4
+            else -> 5
+        }
+    }
+
+    private fun createSpellingGridLayoutParams(
+        index: Int,
+        columnCount: Int
+    ): GridLayout.LayoutParams {
+        val row = index / columnCount
+        val column = index % columnCount
+        val buttonSize = if (columnCount >= 6) dp(40) else dp(44)
+        val buttonMargin = if (columnCount >= 6) dp(5) else dp(6)
         return GridLayout.LayoutParams(
             GridLayout.spec(row, GridLayout.CENTER),
             GridLayout.spec(column, GridLayout.CENTER)
         ).apply {
-            width = dp(44)
-            height = dp(44)
+            width = buttonSize
+            height = buttonSize
             setGravity(Gravity.CENTER)
-            setMargins(dp(6), dp(6), dp(6), dp(6))
+            setMargins(buttonMargin, buttonMargin, buttonMargin, buttonMargin)
         }
     }
 
@@ -541,6 +662,7 @@ internal class ListeningPracticeRenderer(
             elevation = dp(1).toFloat()
             strokeWidth = dp(1)
             icon = AppCompatResources.getDrawable(context, R.drawable.module_learning_clear)
+            contentDescription = context.getString(R.string.practice_listening_spelling_delete)
             iconGravity = MaterialButton.ICON_GRAVITY_TEXT_START
             iconPadding = 0
             iconTint = ColorStateList.valueOf(Color.parseColor("#4B5563"))
@@ -704,6 +826,8 @@ internal class ListeningPracticeRenderer(
                             setCardBackgroundColor(Color.parseColor("#F8FAFC"))
                             isClickable = true
                             isFocusable = true
+                            contentDescription =
+                                context.getString(R.string.practice_listening_play_audio)
                             setOnClickListener { callbacks.onReportWordAudioRequested(row) }
 
                             addView(
@@ -839,6 +963,13 @@ internal class ListeningPracticeRenderer(
         }
     }
 
+    private fun updateScrollContentBottomPadding() {
+        binding.scrollContent.updatePadding(
+            bottom = baseScrollBottomPadding +
+                if (binding.layoutBottomActions.isVisible) dp(12) else 0
+        )
+    }
+
     private fun dp(value: Int): Int {
         return (value * binding.root.resources.displayMetrics.density).toInt()
     }
@@ -875,9 +1006,5 @@ internal class ListeningPracticeRenderer(
             canvas.drawText(text, start, end, x, y.toFloat(), paint)
             paint.typeface = oldTypeface
         }
-    }
-
-    private companion object {
-        const val SPELLING_GRID_COLUMN_COUNT = 5
     }
 }

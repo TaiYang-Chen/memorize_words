@@ -9,6 +9,7 @@
     <string name="practice_listening_select_mode_hint">右上角可以随时切换辨音选义或辨音拼写，切换后会重新开始当前听力测试。</string>
     <string name="practice_listening_exit_confirm_message">是否退出当前练习？</string>
     <string name="practice_listening_exit_confirm_action">退出</string>
+    <string name="practice_listening_cancel">取消</string>
     <string name="practice_listening_loading">正在生成本轮听力测试...</string>
     <string name="practice_listening_empty_report">当前没有可练习的单词，换一组再试试。</string>
 
@@ -39,9 +40,17 @@
     <string name="practice_listening_report_summary">完成 %1$d/%2$d 个单词，累计作答 %3$d 次，答对 %4$d 次。</string>
 
     <string name="practice_listening_phonetic_empty">暂无音标</string>
-    <string name="practice_listening_phonetic_chip">美音 | %1$s</string>
+    <string name="practice_listening_phonetic_chip">%1$s | %2$s</string>
 
-    <string name="practice_listening_settings_title">选择听力模式</string>
+    <string name="practice_listening_settings_title">听力设置</string>
+    <string name="practice_listening_settings_mode_section">练习模式</string>
+    <string name="practice_listening_answer_area_position_title">作答区域位置</string>
+    <string name="practice_listening_answer_area_position_desc">调整题干和选项/拼写区的位置</string>
+    <string name="practice_listening_answer_area_position_top">上</string>
+    <string name="practice_listening_answer_area_position_middle">中</string>
+    <string name="practice_listening_answer_area_position_bottom">下</string>
+    <string name="practice_listening_back">返回</string>
+    <string name="practice_listening_play_audio">播放发音</string>
 
     <string name="practice_listening_action_reveal">查看答案</string>
     <string name="practice_listening_action_skip">跳过本题</string>

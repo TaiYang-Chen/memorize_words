@@ -58,7 +58,7 @@ internal class SpellingListeningQuestionStrategy : ListeningQuestionStrategy {
         val answerCharacters = answerCharacters(word.word).map(Char::toString)
         val random = Random(word.id * SEED_MULTIPLIER + shuffleSeedCounter)
         val poolCharacters = answerCharacters.toMutableList()
-        val targetPoolSize = maxOf(POOL_TARGET_COUNT, answerCharacters.size)
+        val targetPoolSize = maxOf(targetPoolSize(answerCharacters.size), answerCharacters.size)
         repeat(targetPoolSize - answerCharacters.size) {
             poolCharacters += DISTRACTOR_ALPHABET.random(random).toString()
         }
@@ -160,8 +160,16 @@ internal class SpellingListeningQuestionStrategy : ListeningQuestionStrategy {
         return answer.filterNot(Char::isWhitespace).toList()
     }
 
+    private fun targetPoolSize(answerLength: Int): Int {
+        return when {
+            answerLength <= 5 -> 10
+            answerLength <= 8 -> 12
+            answerLength <= 12 -> answerLength + 4
+            else -> answerLength + 2
+        }
+    }
+
     companion object {
-        private const val POOL_TARGET_COUNT = 19
         private const val DISTRACTOR_ALPHABET = "abcdefghijklmnopqrstuvwxyz"
         private const val SEED_MULTIPLIER = 37
     }

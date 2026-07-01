@@ -1,5 +1,6 @@
 package com.chen.memorizewords.core.ui.dialog.prefabricated
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import com.chen.memorizewords.core.ui.databinding.DialogWarnBinding
@@ -23,6 +24,16 @@ class ShowConfirmDialog(
         databind.message.text = data.message
         databind.confirm.text = data.confirmText
         databind.cancel.text = data.cancelText
+        databind.cancel.setTextColor(Color.parseColor("#6B7280"))
+        databind.confirm.setTextColor(
+            Color.parseColor(
+                if (data.confirmText in DANGER_CONFIRM_TEXTS) {
+                    "#E5484D"
+                } else {
+                    "#111827"
+                }
+            )
+        )
         databind.confirm.setOnClickListener {
             onConfirm?.invoke()
             dismiss()
@@ -31,5 +42,9 @@ class ShowConfirmDialog(
             onCancel?.invoke()
             dismiss()
         }
+    }
+
+    private companion object {
+        val DANGER_CONFIRM_TEXTS = setOf("退出", "删除", "注销")
     }
 }

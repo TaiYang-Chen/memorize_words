@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.chen.memorizewords.domain.practice.ListeningAnswerAreaPosition
 import com.chen.memorizewords.feature.learning.R
 import com.chen.memorizewords.feature.learning.databinding.DialogListeningModePickerBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -52,6 +53,7 @@ class ListeningModeDialogFragment : BottomSheetDialogFragment() {
         bindContent()
         bindActions()
         renderSelection(viewModel.uiState.value.mode)
+        renderAnswerAreaPosition(viewModel.uiState.value.answerAreaPosition)
     }
 
     override fun onStart() {
@@ -83,6 +85,15 @@ class ListeningModeDialogFragment : BottomSheetDialogFragment() {
     private fun bindActions() {
         binding.cardMeaning.setOnClickListener { onModeSelected(ListeningPracticeMode.MEANING) }
         binding.cardSpelling.setOnClickListener { onModeSelected(ListeningPracticeMode.SPELLING) }
+        binding.btnAnswerPositionTop.setOnClickListener {
+            onAnswerAreaPositionSelected(ListeningAnswerAreaPosition.TOP)
+        }
+        binding.btnAnswerPositionMiddle.setOnClickListener {
+            onAnswerAreaPositionSelected(ListeningAnswerAreaPosition.MIDDLE)
+        }
+        binding.btnAnswerPositionBottom.setOnClickListener {
+            onAnswerAreaPositionSelected(ListeningAnswerAreaPosition.BOTTOM)
+        }
     }
 
     private fun onModeSelected(mode: ListeningPracticeMode) {
@@ -91,6 +102,11 @@ class ListeningModeDialogFragment : BottomSheetDialogFragment() {
             viewModel.onModeChanged(mode)
         }
         dismiss()
+    }
+
+    private fun onAnswerAreaPositionSelected(position: ListeningAnswerAreaPosition) {
+        viewModel.onAnswerAreaPositionChanged(position)
+        renderAnswerAreaPosition(position)
     }
 
     private fun renderSelection(selectedMode: ListeningPracticeMode) {
@@ -105,6 +121,37 @@ class ListeningModeDialogFragment : BottomSheetDialogFragment() {
             titleView = binding.tvSpellingTitle,
             descriptionView = binding.tvSpellingDescription,
             selected = selectedMode == ListeningPracticeMode.SPELLING
+        )
+    }
+
+    private fun renderAnswerAreaPosition(selectedPosition: ListeningAnswerAreaPosition) {
+        renderPositionButton(
+            button = binding.btnAnswerPositionTop,
+            selected = selectedPosition == ListeningAnswerAreaPosition.TOP
+        )
+        renderPositionButton(
+            button = binding.btnAnswerPositionMiddle,
+            selected = selectedPosition == ListeningAnswerAreaPosition.MIDDLE
+        )
+        renderPositionButton(
+            button = binding.btnAnswerPositionBottom,
+            selected = selectedPosition == ListeningAnswerAreaPosition.BOTTOM
+        )
+    }
+
+    private fun renderPositionButton(
+        button: TextView,
+        selected: Boolean
+    ) {
+        button.setBackgroundResource(
+            if (selected) {
+                R.drawable.module_learning_bg_listening_mode_option_selected
+            } else {
+                R.drawable.module_learning_bg_listening_mode_option_normal
+            }
+        )
+        button.setTextColor(
+            if (selected) Color.parseColor("#111827") else Color.parseColor("#6B7280")
         )
     }
 

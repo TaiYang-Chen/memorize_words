@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.chen.memorizewords.core.ui.fragment.BaseVmDbFragment
 import com.chen.memorizewords.core.ui.vm.UiEvent
+import com.chen.memorizewords.domain.practice.ListeningPronunciationPreference
 import com.chen.memorizewords.domain.practice.PracticeMode
 import com.chen.memorizewords.feature.learning.PracticeActivity
 import com.chen.memorizewords.feature.learning.R
@@ -117,6 +118,13 @@ class ListeningPracticeFragment :
         databind.btnBack.setOnClickListener { handleExitRequest() }
         databind.btnSettings.setOnClickListener { showModeDialog() }
         databind.btnPlayAudio.setOnClickListener { playCurrentAudio() }
+        databind.practiceLanguageRadioGroup.setOnCheckedChangeListener { _, checkedId ->
+            val preference = when (checkedId) {
+                R.id.btn_practice_uk -> ListeningPronunciationPreference.UK
+                else -> ListeningPronunciationPreference.US
+            }
+            viewModel.onPracticePronunciationPreferenceChanged(preference)
+        }
         databind.studyLanguageRadioGroup.setOnCheckedChangeListener { _, checkedId ->
             val pronunciationType = when (checkedId) {
                 R.id.btn_study_uk -> PronunciationType.UK

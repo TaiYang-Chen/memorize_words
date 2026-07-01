@@ -14,6 +14,8 @@ import com.chen.memorizewords.domain.word.model.word.WordRoot
 import com.chen.memorizewords.domain.practice.PracticeKind
 import com.chen.memorizewords.domain.practice.PracticeAnswerRecord
 import com.chen.memorizewords.domain.practice.PracticeAnswerStatus
+import com.chen.memorizewords.domain.practice.ListeningAnswerAreaPosition
+import com.chen.memorizewords.domain.practice.ListeningPronunciationPreference
 import com.chen.memorizewords.domain.practice.PracticeReport
 import com.chen.memorizewords.domain.practice.PracticeReportRepository
 import com.chen.memorizewords.domain.practice.PracticeQueueType
@@ -28,6 +30,7 @@ import com.chen.memorizewords.domain.study.usecase.word.study.GetWordLearningSta
 import com.chen.memorizewords.feature.learning.R
 import com.chen.memorizewords.feature.learning.ui.practice.listening.LISTENING_CORRECT_FEEDBACK_DURATION_MS
 import com.chen.memorizewords.feature.learning.ui.practice.listening.LISTENING_MEANING_SELECTION_TRANSITION_DELAY_MS
+import com.chen.memorizewords.feature.learning.ui.practice.listening.LISTENING_SPEECH_LOCALE_UK
 import com.chen.memorizewords.feature.learning.ui.practice.listening.LISTENING_SPEECH_LOCALE_US
 import com.chen.memorizewords.feature.learning.ui.practice.listening.LISTENING_WRONG_MEANING_SELECTION_TRANSITION_DELAY_MS
 import com.chen.memorizewords.feature.learning.ui.practice.listening.LISTENING_WRONG_SPELLING_FEEDBACK_DURATION_MS
@@ -173,6 +176,8 @@ class ListeningPracticeViewModel @Inject constructor(
         val loading: Boolean = false,
         val hasStarted: Boolean = false,
         val mode: ListeningPracticeMode = ListeningPracticeMode.MEANING,
+        val answerAreaPosition: ListeningAnswerAreaPosition = ListeningAnswerAreaPosition.MIDDLE,
+        val pronunciationPreference: ListeningPronunciationPreference = ListeningPronunciationPreference.US,
         val modeTitle: String = "",
         val modeDescription: String = "",
         val headerProgressText: String = "0/0",
@@ -252,6 +257,10 @@ class ListeningPracticeViewModel @Inject constructor(
         val questionType: ListeningQuestionType
     )
 
+    private var answerAreaPosition: ListeningAnswerAreaPosition = ListeningAnswerAreaPosition.MIDDLE
+    private var pronunciationPreference: ListeningPronunciationPreference =
+        ListeningPronunciationPreference.US
+
     private val _uiState = MutableStateFlow(initialState())
     val uiState: StateFlow<ListeningUiState> = _uiState.asStateFlow()
 
@@ -288,6 +297,9 @@ class ListeningPracticeViewModel @Inject constructor(
 
     suspend fun startSavedSession() {
         val savedModeName = listeningPracticePreferencesRepository.getLastListeningPracticeModeName()
+        answerAreaPosition = listeningPracticePreferencesRepository.getAnswerAreaPosition()
+        pronunciationPreference =
+            listeningPracticePreferencesRepository.getPronunciationPreference()
         startSession(resolveListeningPracticeMode(savedModeName))
     }
 
@@ -297,6 +309,51 @@ class ListeningPracticeViewModel @Inject constructor(
             dispatchSession(ListeningAction.ChangeMode(mode))
             startSession(mode)
         }
+    }
+
+    fun onAnswerAreaPositionChanged(position: ListeningAnswerAreaPosition) {
+        if (position == answerAreaPosition) return
+        answerAreaPosition = position
+        viewModelScope.launch {
+            listeningPracticePreferencesRepository.saveAnswerAreaPosition(position)
+        }
+        _uiState.value = _uiState.value.copy(answerAreaPosition = position)
+    }
+
+    fun onPracticePronunciationPreferenceChanged(
+        preference: ListeningPronunciationPreference
+    ) {
+        if (preference == pronunciationPreference) return
+        pronunciationPreference = preference
+        viewModelScope.launch {
+            listeningPracticePreferencesRepository.savePronunciationPreference(preference)
+        }
+        val current = _uiState.value
+        val wordId = activeCard?.wordId
+        val runtime = wordId?.let(runtimes::get)
+        val nextLocale = resolvePracticeSpeechLocale()
+        val nextSpeechKey = wordId?.let { ListeningWordSpeechKey(it, nextLocale) }
+        if (currentScreen == ListeningScreenState.PRACTICE && runtime != null && nextSpeechKey != null) {
+            currentSpeechCacheKey = nextSpeechKey
+            val cachedSpeech = speechController.cachedWordSpeech(nextSpeechKey)
+            _uiState.value = current.copy(
+                pronunciationPreference = preference,
+                phoneticChipText = uiMapper.phoneticChip(runtime.word, preference),
+                studySpeechLocale = nextLocale,
+                speech = cachedSpeech,
+                autoPlayRequestId = nextAutoPlayRequestIdIfNeeded(cachedSpeech)
+            )
+            requestSpeech(runtime.word, shouldAutoPlay = true)
+            return
+        }
+        _uiState.value = current.copy(
+            pronunciationPreference = preference,
+            studySpeechLocale = if (current.showStudyState) {
+                current.studySpeechLocale
+            } else {
+                nextLocale
+            }
+        )
     }
 
     suspend fun consumeModeSwitchHint(): Boolean {
@@ -326,7 +383,7 @@ class ListeningPracticeViewModel @Inject constructor(
             },
             message = resourceProvider.getString(R.string.practice_listening_exit_confirm_message),
             confirmText = resourceProvider.getString(R.string.practice_listening_exit_confirm_action),
-            cancelText = resourceProvider.getString(android.R.string.cancel)
+            cancelText = resourceProvider.getString(R.string.practice_listening_cancel)
         )
     }
 
@@ -349,6 +406,7 @@ class ListeningPracticeViewModel @Inject constructor(
                 loading = true,
                 hasStarted = true,
                 mode = mode,
+                answerAreaPosition = answerAreaPosition,
                 modeTitle = listeningModeDisplayName(mode),
                 modeDescription = resourceProvider.getString(mode.descriptionRes),
                 headerProgressText = resourceProvider.getString(
@@ -710,6 +768,8 @@ class ListeningPracticeViewModel @Inject constructor(
             loading = false,
             hasStarted = true,
             mode = _uiState.value.mode,
+            answerAreaPosition = answerAreaPosition,
+            pronunciationPreference = pronunciationPreference,
             modeTitle = listeningModeDisplayName(_uiState.value.mode),
             modeDescription = resourceProvider.getString(_uiState.value.mode.descriptionRes),
             headerProgressText = progressText,
@@ -739,7 +799,7 @@ class ListeningPracticeViewModel @Inject constructor(
             footerMode = ListeningFooterMode.PRACTICE_ACTIONS,
             promptText = instructionPrimary,
             promptHint = instructionSecondary,
-            phoneticChipText = uiMapper.phoneticChip(runtime.word),
+            phoneticChipText = uiMapper.phoneticChip(runtime.word, pronunciationPreference),
             feedbackMessage = feedbackMessage,
             feedbackTone = feedbackTone,
             questionType = questionType,
@@ -765,7 +825,7 @@ class ListeningPracticeViewModel @Inject constructor(
             showSpellingQuestion = questionType == ListeningQuestionType.SPELLING,
             showStudyState = false,
             showReportState = false,
-            studyPronunciationType = PronunciationType.US,
+            studyPronunciationType = pronunciationPreference.toPronunciationType(),
             studyPhoneticLocaleLabel = "",
             studyPhoneticChipText = "",
             studySpeechLocale = resolvePracticeSpeechLocale(),
@@ -994,7 +1054,10 @@ class ListeningPracticeViewModel @Inject constructor(
         viewedAnswer: Boolean = false
     ) {
         dispatchSession(ListeningAction.ShowStudy)
-        val studyPhoneticUi = uiMapper.studyPronunciation(runtime.word)
+        val studyPhoneticUi = uiMapper.studyPronunciation(
+            runtime.word,
+            pronunciationPreference.toPronunciationType()
+        )
         val studySpeechKey = ListeningWordSpeechKey(runtime.word.id, studyPhoneticUi.speechLocale)
         currentSpeechCacheKey = studySpeechKey
         val progressText = resourceProvider.getString(
@@ -1086,6 +1149,8 @@ class ListeningPracticeViewModel @Inject constructor(
             loading = false,
             hasStarted = true,
             mode = _uiState.value.mode,
+            answerAreaPosition = answerAreaPosition,
+            pronunciationPreference = pronunciationPreference,
             modeTitle = listeningModeDisplayName(_uiState.value.mode),
             modeDescription = resourceProvider.getString(_uiState.value.mode.descriptionRes),
             headerProgressText = progressText,
@@ -1125,7 +1190,7 @@ class ListeningPracticeViewModel @Inject constructor(
             spellingSubmitEnabled = false,
             showStudyState = false,
             showReportState = true,
-            studyPronunciationType = PronunciationType.US,
+            studyPronunciationType = pronunciationPreference.toPronunciationType(),
             studyPhoneticLocaleLabel = "",
             studyPhoneticChipText = "",
             studySpeechLocale = resolvePracticeSpeechLocale(),
@@ -1210,7 +1275,7 @@ class ListeningPracticeViewModel @Inject constructor(
             meaningText = runtime.definitions.firstOrNull()?.meaningChinese
                 ?.takeIf { it.isNotBlank() }
                 ?: resourceProvider.getString(R.string.learning_share_empty_definitions),
-            speechLocale = uiMapper.resolveReportSpeechLocale(runtime.word),
+            speechLocale = uiMapper.resolveReportSpeechLocale(pronunciationPreference),
             progressText = "${runtime.consecutiveCorrect.coerceAtMost(reviewQueuePolicy.reviewTarget())}/${reviewQueuePolicy.reviewTarget()}",
             isCompleted = !runtime.reviewRequired
         )
@@ -1320,7 +1385,12 @@ class ListeningPracticeViewModel @Inject constructor(
         return "${card.questionType.name}:${card.queueType.name}:${card.wordId}:${reportTracker.nextOrdinal()}"
     }
 
-    private fun resolvePracticeSpeechLocale(): String = LISTENING_SPEECH_LOCALE_US
+    private fun resolvePracticeSpeechLocale(): String {
+        return when (pronunciationPreference) {
+            ListeningPronunciationPreference.US -> LISTENING_SPEECH_LOCALE_US
+            ListeningPronunciationPreference.UK -> LISTENING_SPEECH_LOCALE_UK
+        }
+    }
 
     private fun resolveCurrentSpeechLocale(): String {
         return if (currentScreen == ListeningScreenState.STUDY) {
@@ -1409,6 +1479,8 @@ class ListeningPracticeViewModel @Inject constructor(
         )
         return ListeningUiState(
             mode = defaultMode,
+            answerAreaPosition = answerAreaPosition,
+            pronunciationPreference = pronunciationPreference,
             modeTitle = listeningModeDisplayName(defaultMode),
             modeDescription = resourceProvider.getString(defaultMode.descriptionRes),
             headerProgressText = progressText,
@@ -1429,5 +1501,12 @@ class ListeningPracticeViewModel @Inject constructor(
 
     companion object {
         const val ACTION_EXIT_LISTENING_PRACTICE = "action_exit_listening_practice"
+    }
+}
+
+private fun ListeningPronunciationPreference.toPronunciationType(): PronunciationType {
+    return when (this) {
+        ListeningPronunciationPreference.US -> PronunciationType.US
+        ListeningPronunciationPreference.UK -> PronunciationType.UK
     }
 }

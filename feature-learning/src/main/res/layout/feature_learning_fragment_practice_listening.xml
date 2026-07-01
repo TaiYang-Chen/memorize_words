@@ -8,15 +8,16 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/page_margin"
         android:background="@android:color/white">
 
         <LinearLayout
             android:id="@+id/layout_header_root"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/title_margin"
             android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingTop="32dp"
+            android:paddingEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -27,11 +28,12 @@
 
                 <ImageView
                     android:id="@+id/btn_back"
-                    android:layout_width="@dimen/title_icon_size"
-                    android:layout_height="@dimen/title_icon_size"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="center_vertical|start"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@null"
+                    android:contentDescription="@string/practice_listening_back"
+                    android:padding="9dp"
                     android:src="@drawable/ic_arrow_back" />
 
                 <TextView
@@ -45,27 +47,36 @@
 
                 <ImageView
                     android:id="@+id/btn_settings"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="center_vertical|end"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@null"
+                    android:contentDescription="@string/practice_listening_settings_title"
+                    android:padding="10dp"
                     android:src="@drawable/module_learning_ic_settings" />
             </FrameLayout>
 
-            <View
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/progress_header"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#EDF1F5" />
+                android:layout_height="3dp"
+                android:layout_marginTop="3dp"
+                android:max="1"
+                android:progress="0"
+                app:indicatorColor="#2F80ED"
+                app:trackColor="#EDF1F5"
+                app:trackCornerRadius="2dp"
+                app:trackThickness="3dp" />
         </LinearLayout>
 
-        <androidx.core.widget.NestedScrollView
+        <com.chen.memorizewords.feature.learning.ui.practice.listening.view.LockableNestedScrollView
             android:id="@+id/scroll_content"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:clipToPadding="false"
             android:fillViewport="true"
-            android:paddingBottom="12dp"
+            android:overScrollMode="never"
+            android:paddingBottom="24dp"
             app:layout_constraintBottom_toTopOf="@id/layout_bottom_actions"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -75,7 +86,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingTop="18dp">
+                android:paddingStart="16dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="16dp">
 
                 <LinearLayout
                     android:id="@+id/layout_practice_root"
@@ -91,26 +104,27 @@
                         android:background="@drawable/module_learning_bg_listening_mode_badge"
                         android:drawablePadding="5dp"
                         android:gravity="center"
-                        android:minHeight="28dp"
-                        android:paddingStart="14dp"
-                        android:paddingTop="5dp"
-                        android:paddingEnd="14dp"
-                        android:paddingBottom="5dp"
+                        android:minHeight="24dp"
+                        android:paddingStart="12dp"
+                        android:paddingTop="3dp"
+                        android:paddingEnd="12dp"
+                        android:paddingBottom="3dp"
                         android:textColor="#20242D"
-                        android:textSize="9sp"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
                         tools:text="当前模式：辨音选义" />
 
                     <FrameLayout
                         android:id="@+id/layout_audio_focus"
-                        android:layout_width="148dp"
-                        android:layout_height="148dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_width="118dp"
+                        android:layout_height="118dp"
+                        android:layout_marginTop="14dp"
                         android:background="@drawable/module_learning_bg_listening_audio_rings">
 
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/card_audio"
-                            android:layout_width="72dp"
-                            android:layout_height="72dp"
+                            android:layout_width="64dp"
+                            android:layout_height="64dp"
                             android:layout_gravity="center"
                             app:cardBackgroundColor="@android:color/white"
                             app:cardCornerRadius="36dp"
@@ -123,25 +137,83 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:background="?attr/selectableItemBackgroundBorderless"
-                                android:contentDescription="@null"
-                                android:padding="18dp"
+                                android:contentDescription="@string/practice_listening_play_audio"
+                                android:padding="16dp"
                                 android:src="@drawable/module_learning_ic_volume_up" />
                         </com.google.android.material.card.MaterialCardView>
                     </FrameLayout>
 
-                    <TextView
-                        android:id="@+id/tv_phonetic"
-                        android:layout_width="wrap_content"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/layout_practice_phonetic_bar"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="18dp"
-                        android:gravity="center"
-                        android:textColor="#7A849A"
-                        android:textSize="13sp" />
+                        android:layout_marginTop="10dp"
+                        android:minHeight="25dp">
+
+                        <RadioGroup
+                            android:id="@+id/practice_language_radio_group"
+                            android:layout_width="50dp"
+                            android:layout_height="25dp"
+                            android:layout_marginEnd="8dp"
+                            android:background="@drawable/module_learning_toggle_background"
+                            android:orientation="horizontal"
+                            android:padding="2dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/tv_phonetic"
+                            app:layout_constraintHorizontal_chainStyle="packed"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <RadioButton
+                                android:id="@+id/btn_practice_us"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:background="@drawable/module_learning_toggle_item_selector"
+                                android:button="@null"
+                                android:checked="true"
+                                android:gravity="center"
+                                android:padding="2dp"
+                                android:text="美"
+                                android:textColor="@drawable/module_learning_toggle_text_selector"
+                                android:textSize="10sp" />
+
+                            <RadioButton
+                                android:id="@+id/btn_practice_uk"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:background="@drawable/module_learning_toggle_item_selector"
+                                android:button="@null"
+                                android:gravity="center"
+                                android:padding="2dp"
+                                android:text="英"
+                                android:textColor="@drawable/module_learning_toggle_text_selector"
+                                android:textSize="10sp" />
+                        </RadioGroup>
+
+                        <TextView
+                            android:id="@+id/tv_phonetic"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:gravity="center"
+                            android:maxWidth="210dp"
+                            android:maxLines="1"
+                            android:textColor="#7A849A"
+                            android:textSize="13sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/practice_language_radio_group"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="美音 | /ˌɪntərˈnæʃənəl/" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <LinearLayout
+                        android:id="@+id/layout_answer_area"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="8dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
                         android:gravity="center"
                         android:orientation="vertical">
 
@@ -149,8 +221,10 @@
                             android:id="@+id/tv_prompt"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:gravity="center"
                             android:textColor="#1F2937"
                             android:textSize="15sp"
+                            android:textStyle="bold"
                             tools:text="请听发音，选出正确的释义" />
 
                         <TextView
@@ -286,9 +360,9 @@
                             android:id="@+id/layout_spelling_question"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="20dp"
+                            android:layout_marginTop="16dp"
                             android:orientation="vertical"
-                            android:paddingBottom="8dp"
+                            android:paddingBottom="4dp"
                             android:visibility="gone">
 
                             <LinearLayout
@@ -297,13 +371,13 @@
                                 android:gravity="center_horizontal"
                                 android:orientation="vertical">
 
-                                <LinearLayout
+                                <com.google.android.flexbox.FlexboxLayout
                                     android:id="@+id/layout_spelling_slots"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:gravity="center"
-                                    android:orientation="horizontal"
-                                    android:showDividers="none"
+                                    app:alignItems="center"
+                                    app:flexWrap="wrap"
+                                    app:justifyContent="center"
                                     tools:ignore="UselessParent" />
 
                                 <TextView
@@ -326,24 +400,10 @@
                                     android:id="@+id/grid_spelling_letters"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="18dp"
+                                    android:layout_marginTop="14dp"
                                     app:columnCount="5"
                                     app:alignmentMode="alignMargins"
                                     app:useDefaultMargins="false" />
-
-                                <com.google.android.material.button.MaterialButton
-                                    android:id="@+id/btn_submit_spelling"
-                                    android:layout_width="156dp"
-                                    android:layout_height="42dp"
-                                    android:layout_marginTop="18dp"
-                                    android:insetTop="0dp"
-                                    android:insetBottom="0dp"
-                                    android:text="@string/practice_listening_submit"
-                                    android:textAllCaps="false"
-                                    android:textColor="@android:color/white"
-                                    android:textSize="14sp"
-                                    app:backgroundTint="#2F80ED"
-                                    app:cornerRadius="12dp" />
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
@@ -840,7 +900,7 @@
                         android:orientation="vertical" />
                 </LinearLayout>
             </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
+        </com.chen.memorizewords.feature.learning.ui.practice.listening.view.LockableNestedScrollView>
 
         <LinearLayout
             android:id="@+id/layout_bottom_actions"
@@ -848,11 +908,28 @@
             android:layout_height="wrap_content"
             android:background="@drawable/module_learning_bg_listening_footer"
             android:orientation="vertical"
-            android:paddingTop="14dp"
-            android:paddingBottom="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_submit_spelling"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="@string/practice_listening_submit"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:backgroundTint="#2F80ED"
+                app:cornerRadius="14dp" />
 
             <LinearLayout
                 android:id="@+id/layout_practice_actions"
@@ -861,6 +938,7 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingStart="18dp"
+                android:paddingTop="4dp"
                 android:paddingEnd="18dp"
                 android:visibility="gone">
 
@@ -870,7 +948,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:minHeight="28dp"
+                    android:minHeight="30dp"
                     android:text="@string/practice_listening_action_reveal"
                     android:textColor="#8A91A5"
                     android:textSize="14sp" />
@@ -881,7 +959,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="end"
-                    android:minHeight="28dp"
+                    android:minHeight="30dp"
                     android:text="@string/practice_listening_action_skip"
                     android:textColor="#8A91A5"
                     android:textSize="14sp" />
