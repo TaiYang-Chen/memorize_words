@@ -67,11 +67,12 @@
 
     <string name="practice_word_picker_title">自主选词</string>
     <string name="practice_word_picker_search_hint">搜索单词</string>
-    <string name="practice_word_picker_select_all_visible">全选可见</string>
-    <string name="practice_word_picker_clear_selection">清空选择</string>
-    <string name="practice_word_picker_selected_count_default">已选 0 个</string>
-    <string name="practice_word_picker_selected_count">已选 %1$d 个</string>
+    <string name="practice_word_picker_select_all_visible">全选</string>
+    <string name="practice_word_picker_clear_selection">清空</string>
+    <string name="practice_word_picker_selected_count_default">0 已选</string>
+    <string name="practice_word_picker_selected_count">%1$d 已选</string>
     <string name="practice_word_picker_confirm">确定</string>
+    <string name="practice_word_picker_exit">退出</string>
     <string name="practice_word_picker_confirm_empty">请至少选择一个单词</string>
     <string name="practice_word_picker_empty">暂无可选单词</string>
 

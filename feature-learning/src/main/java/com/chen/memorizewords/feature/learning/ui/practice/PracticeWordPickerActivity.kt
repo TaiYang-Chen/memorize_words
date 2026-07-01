@@ -26,7 +26,6 @@ import com.chen.memorizewords.feature.learning.databinding.ActivityPracticeWordP
 import com.chen.memorizewords.feature.learning.ui.practice.PracticeWordPickerViewModel
 import com.chen.memorizewords.core.navigation.PracticeEntryExtras
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -37,6 +36,9 @@ class PracticeWordPickerActivity : AppCompatActivity() {
         const val EXTRA_SELECTED_WORD_IDS = PracticeEntryExtras.EXTRA_SELECTED_WORD_IDS
         const val EXTRA_INITIAL_SELECTED_WORD_IDS =
             PracticeEntryExtras.EXTRA_INITIAL_SELECTED_WORD_IDS
+
+        private const val ENABLED_ACTION_ALPHA = 1f
+        private const val DISABLED_ACTION_ALPHA = 0.35f
     }
 
     private lateinit var binding: ActivityPracticeWordPickerBinding
@@ -49,7 +51,7 @@ class PracticeWordPickerActivity : AppCompatActivity() {
         binding = ActivityPracticeWordPickerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.topAppBar.setNavigationOnClickListener { finish() }
+        binding.btnExit.setOnClickListener { finish() }
         binding.recyclerWords.layoutManager = LinearLayoutManager(this)
         binding.recyclerWords.adapter = adapter
 
@@ -84,7 +86,11 @@ class PracticeWordPickerActivity : AppCompatActivity() {
 
         viewModel.uiState.observeWith(this) { state ->
             val showEmptyState = state.isEmpty || state.isSearchEmpty
-            adapter.submit(state.filteredWords, state.selectedIds)
+            adapter.submit(
+                newItems = state.filteredWords,
+                selectedIds = state.selectedIds,
+                definitionTextByWordId = state.definitionTextByWordId
+            )
             binding.tvSelectedCount.text = getString(
                 R.string.practice_word_picker_selected_count,
                 state.selectedIds.size
@@ -101,6 +107,11 @@ class PracticeWordPickerActivity : AppCompatActivity() {
             binding.btnSelectAll.isEnabled = state.filteredWords.isNotEmpty()
             binding.btnClear.isEnabled = state.selectedIds.isNotEmpty()
             binding.btnConfirm.isEnabled = !state.isEmpty
+            binding.btnSelectAll.alpha =
+                if (state.filteredWords.isNotEmpty()) ENABLED_ACTION_ALPHA else DISABLED_ACTION_ALPHA
+            binding.btnClear.alpha =
+                if (state.selectedIds.isNotEmpty()) ENABLED_ACTION_ALPHA else DISABLED_ACTION_ALPHA
+            binding.btnConfirm.alpha = if (state.isEmpty) DISABLED_ACTION_ALPHA else ENABLED_ACTION_ALPHA
         }
 
         viewModel.loadWords(intent.getLongArrayExtra(EXTRA_INITIAL_SELECTED_WORD_IDS))
@@ -112,11 +123,16 @@ private class WordPickerAdapter(
     private val onToggle: (Long) -> Unit
 ) : ListAdapter<WordPickerItem, WordPickerViewHolder>(DIFF) {
 
-    fun submit(newItems: List<Word>, selectedIds: Set<Long>) {
+    fun submit(
+        newItems: List<Word>,
+        selectedIds: Set<Long>,
+        definitionTextByWordId: Map<Long, String>
+    ) {
         submitList(
             newItems.map { word ->
                 WordPickerItem(
                     word = word,
+                    definitionText = definitionTextByWordId[word.id].orEmpty(),
                     selected = selectedIds.contains(word.id)
                 )
             }
@@ -150,6 +166,7 @@ private class WordPickerAdapter(
 
 private data class WordPickerItem(
     val word: Word,
+    val definitionText: String,
     val selected: Boolean
 )
 
@@ -165,7 +182,8 @@ private class WordPickerViewHolder(
     fun bind(item: WordPickerItem) {
         val word = item.word
         tvWord.text = word.word
-        tvPhonetic.text = word.phoneticUS ?: word.phoneticUK ?: ""
+        tvPhonetic.text = item.definitionText
+        tvPhonetic.isVisible = item.definitionText.isNotBlank()
         checkbox.isChecked = item.selected
         itemView.setOnClickListener { onToggle(word.id) }
         checkbox.setOnClickListener { onToggle(word.id) }

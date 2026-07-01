@@ -30,6 +30,7 @@ swiperefreshlayout = "1.1.0"
 coil = "2.6.0"
 workRuntime = "2.10.0"
 material3 = "1.4.0"
+media = "1.7.0"
 ui = "1.10.2"
 uiToolingPreview = "1.10.2"
 uiTooling = "1.10.2"
@@ -87,6 +88,7 @@ androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "s
 androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workRuntime" }
 coil = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+androidx-media = { group = "androidx.media", name = "media", version.ref = "media" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "uiToolingPreview" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "uiTooling" }
 androidx-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "runtime" }

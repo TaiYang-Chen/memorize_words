@@ -9,4 +9,6 @@
     <color name="feature_learning_audio_loop_play_button">#FFD600</color>
     <color name="feature_learning_audio_loop_control_disabled">#C7CCD4</color>
     <color name="feature_learning_audio_loop_divider">#ECEEEA</color>
+    <color name="feature_learning_audio_loop_status_bg">#FFF7D1</color>
+    <color name="feature_learning_audio_loop_status_text">#6B5600</color>
 </resources>

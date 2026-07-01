@@ -19,7 +19,15 @@ enum class PracticeEntryType {
 
 enum class AudioLoopPlaybackMode {
     WORD_ONLY,
-    WORD_WITH_EXAMPLE
+    WORD_WITH_EXAMPLE,
+    WORD_WITH_MEANING,
+    DICTATION,
+    FULL_DETAIL
+}
+
+enum class AudioLoopPlayOrder {
+    SEQUENTIAL,
+    RANDOM
 }
 
 data class PracticeSettings(
@@ -29,7 +37,15 @@ data class PracticeSettings(
     val showPhonetic: Boolean = true,
     val showMeaning: Boolean = false,
     val playbackMode: AudioLoopPlaybackMode = AudioLoopPlaybackMode.WORD_ONLY,
-    val playTimes: Int = 1
+    val playTimes: Int = 1,
+    val wordRepeatTimes: Int = 1,
+    val exampleRepeatTimes: Int = 1,
+    val dictationPauseSeconds: Int = 5,
+    val revealDelaySeconds: Int = 0,
+    val playbackSpeed: Float = 1.0f,
+    val timedStopMinutes: Int = 0,
+    val keepScreenOn: Boolean = false,
+    val playOrder: AudioLoopPlayOrder = AudioLoopPlayOrder.SEQUENTIAL
 )
 
 data class PracticeSessionRecord(

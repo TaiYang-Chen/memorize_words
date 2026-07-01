@@ -4,6 +4,8 @@ import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.domain.word.model.word.Word
 import com.chen.memorizewords.domain.practice.PracticeWordProvider
+import com.chen.memorizewords.domain.word.model.word.WordDefinitions
+import com.chen.memorizewords.domain.word.usecase.GetWordDefinitionsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,12 +15,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PracticeWordPickerViewModel @Inject constructor(
-    private val wordProvider: PracticeWordProvider
+    private val wordProvider: PracticeWordProvider,
+    private val getWordDefinitions: GetWordDefinitionsUseCase
 ) : BaseViewModel() {
 
     data class UiState(
         val allWords: List<Word> = emptyList(),
         val filteredWords: List<Word> = emptyList(),
+        val definitionTextByWordId: Map<Long, String> = emptyMap(),
         val selectedIds: Set<Long> = emptySet(),
         val query: String = "",
         val isEmpty: Boolean = true,
@@ -34,6 +38,9 @@ class PracticeWordPickerViewModel @Inject constructor(
         initialized = true
         viewModelScope.launch {
             val words = wordProvider.loadReviewWordsForPicker()
+            val definitionTextByWordId = words.associate { word ->
+                word.id to buildDefinitionText(getWordDefinitions(word.id).firstOrNull())
+            }
             val availableIds = words.mapTo(mutableSetOf()) { it.id }
             val selectedIds = initialSelectedIds
                 ?.filter { it in availableIds }
@@ -42,6 +49,7 @@ class PracticeWordPickerViewModel @Inject constructor(
             _uiState.value = UiState(
                 allWords = words,
                 filteredWords = words,
+                definitionTextByWordId = definitionTextByWordId,
                 selectedIds = selectedIds,
                 query = "",
                 isEmpty = words.isEmpty(),
@@ -88,5 +96,12 @@ class PracticeWordPickerViewModel @Inject constructor(
     fun clearSelection() {
         val current = _uiState.value
         _uiState.value = current.copy(selectedIds = emptySet())
+    }
+
+    private fun buildDefinitionText(definition: WordDefinitions?): String {
+        if (definition == null) return ""
+        val meaning = definition.meaningChinese.trim()
+        if (meaning.isEmpty()) return ""
+        return "${definition.partOfSpeech.abbr} $meaning"
     }
 }

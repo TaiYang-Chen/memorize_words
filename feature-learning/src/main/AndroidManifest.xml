@@ -5,6 +5,10 @@
         <activity android:name=".LearningActivity" />
         <activity android:name=".PracticeActivity" />
         <activity android:name=".PracticeWordPickerActivity" />
+        <service
+            android:name=".ui.practice.audioLoop.AudioLoopPlaybackService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
     </application>
 </manifest>
 

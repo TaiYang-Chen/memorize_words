@@ -12,9 +12,9 @@
         <LinearLayout
             android:id="@+id/layout_header_start"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="14dp"
-            android:layout_marginTop="16dp"
+            android:layout_height="@dimen/title_height"
+            android:layout_marginStart="@dimen/page_margin"
+            android:layout_marginTop="@dimen/title_margin"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +34,7 @@
                 android:id="@+id/tv_progress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="6dp"
                 android:text="0/0"
                 android:textColor="@color/feature_learning_audio_loop_text_primary"
                 android:textSize="15sp"
@@ -45,11 +45,13 @@
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="@dimen/title_margin"
             android:text="@string/feature_learning_audio_loop_title"
             android:textColor="@color/feature_learning_audio_loop_text_primary"
-            android:textSize="21sp"
+            android:textSize="@dimen/title_text_size"
             android:textStyle="bold"
+            android:minHeight="@dimen/title_height"
+            android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -60,7 +62,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginEnd="18dp"
-            android:layout_marginBottom="22dp"
             android:gravity="center_horizontal"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -86,7 +87,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginBottom="16dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -102,8 +104,8 @@
 
                 <ImageButton
                     android:id="@+id/btn_previous"
-                    android:layout_width="52dp"
-                    android:layout_height="52dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_marginStart="10dp"
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/feature_learning_audio_loop_action_previous"
@@ -113,12 +115,12 @@
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_play_pause"
-                    android:layout_width="104dp"
-                    android:layout_height="104dp"
+                    android:layout_width="76dp"
+                    android:layout_height="76dp"
                     android:layout_marginStart="12dp"
                     android:layout_marginEnd="12dp"
                     app:cardBackgroundColor="@color/feature_learning_audio_loop_play_button"
-                    app:cardCornerRadius="52dp"
+                    app:cardCornerRadius="38dp"
                     app:cardElevation="6dp">
 
                     <ImageView
@@ -126,15 +128,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:contentDescription="@string/feature_learning_audio_loop_action_toggle"
-                        android:padding="28dp"
+                        android:padding="20dp"
                         android:src="@drawable/feature_learning_ic_play"
                         app:tint="@color/feature_learning_audio_loop_text_primary" />
                 </com.google.android.material.card.MaterialCardView>
 
                 <ImageButton
                     android:id="@+id/btn_next"
-                    android:layout_width="52dp"
-                    android:layout_height="52dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/feature_learning_audio_loop_action_next"
                     android:padding="10dp"
@@ -174,7 +176,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
-                android:paddingTop="72dp">
+                android:paddingTop="36dp">
 
                 <TextView
                     android:id="@+id/tv_word"
@@ -182,30 +184,96 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textColor="@color/feature_learning_audio_loop_text_primary"
-                    android:textSize="50sp"
-                    android:textStyle="bold" />
+                    android:textSize="40sp"
+                    android:textStyle="bold"
+                    android:maxLines="2"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="26sp"
+                    android:autoSizeMaxTextSize="40sp"
+                    android:autoSizeStepGranularity="1sp" />
 
-                <TextView
-                    android:id="@+id/tv_phonetic_chip"
+                <LinearLayout
+                    android:id="@+id/layout_audio_loop_phonetic"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:background="@drawable/feature_learning_bg_audio_loop_chip"
-                    android:paddingStart="16dp"
-                    android:paddingTop="8dp"
-                    android:paddingEnd="16dp"
-                    android:paddingBottom="8dp"
-                    android:textColor="@color/feature_learning_audio_loop_chip_text"
-                    android:textSize="15sp" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <RadioGroup
+                        android:id="@+id/audio_loop_language_radio_group"
+                        android:layout_width="50dp"
+                        android:layout_height="25dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/module_learning_toggle_background"
+                        android:orientation="horizontal"
+                        android:padding="2dp">
+
+                        <RadioButton
+                            android:id="@+id/btn_audio_loop_us"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/module_learning_toggle_item_selector"
+                            android:button="@null"
+                            android:checked="true"
+                            android:gravity="center"
+                            android:padding="2dp"
+                            android:text="@string/feature_learning_audio_loop_pronunciation_us"
+                            android:textColor="@drawable/module_learning_toggle_text_selector"
+                            android:textSize="10sp" />
+
+                        <RadioButton
+                            android:id="@+id/btn_audio_loop_uk"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/module_learning_toggle_item_selector"
+                            android:button="@null"
+                            android:gravity="center"
+                            android:padding="2dp"
+                            android:text="@string/feature_learning_audio_loop_pronunciation_uk"
+                            android:textColor="@drawable/module_learning_toggle_text_selector"
+                            android:textSize="10sp" />
+                    </RadioGroup>
+
+                    <TextView
+                        android:id="@+id/tv_phonetic_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/feature_learning_bg_audio_loop_chip"
+                        android:paddingStart="16dp"
+                        android:paddingTop="8dp"
+                        android:paddingEnd="16dp"
+                        android:paddingBottom="8dp"
+                        android:textColor="@color/feature_learning_audio_loop_chip_text"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_entry_status_chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/feature_learning_bg_audio_loop_status_chip"
+                    android:paddingStart="14dp"
+                    android:paddingTop="6dp"
+                    android:paddingEnd="14dp"
+                    android:paddingBottom="6dp"
+                    android:textColor="@color/feature_learning_audio_loop_status_text"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tv_supporting"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="160dp"
+                    android:layout_marginTop="72dp"
                     android:gravity="center"
                     android:textColor="@color/feature_learning_audio_loop_text_secondary"
-                    android:textSize="18sp" />
+                    android:textSize="16sp"
+                    android:maxLines="4" />
 
                 <TextView
                     android:id="@+id/tv_supporting_translation"
@@ -223,7 +291,7 @@
                     android:layout_marginTop="22dp"
                     android:gravity="center"
                     android:textColor="@color/feature_learning_audio_loop_text_primary"
-                    android:textSize="22sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView

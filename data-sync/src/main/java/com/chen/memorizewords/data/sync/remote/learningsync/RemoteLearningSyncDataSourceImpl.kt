@@ -11,6 +11,7 @@ import com.chen.memorizewords.domain.floating.model.FloatingWordOrderType
 import com.chen.memorizewords.domain.floating.model.FloatingWordSettings
 import com.chen.memorizewords.domain.floating.model.FloatingWordSourceType
 import com.chen.memorizewords.domain.practice.AudioLoopPlaybackMode
+import com.chen.memorizewords.domain.practice.AudioLoopPlayOrder
 import com.chen.memorizewords.domain.practice.PracticeSessionRecord
 import com.chen.memorizewords.domain.practice.PracticeSettings
 import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.FloatingDisplayRecordDto
@@ -53,6 +54,14 @@ class RemoteLearningSyncDataSourceImpl @Inject constructor(
                     showMeaning = settings.showMeaning,
                     playbackMode = settings.playbackMode.name,
                     playTimes = settings.playTimes.coerceAtLeast(1),
+                    wordRepeatTimes = settings.wordRepeatTimes.coerceAtLeast(1),
+                    exampleRepeatTimes = settings.exampleRepeatTimes.coerceAtLeast(1),
+                    dictationPauseSeconds = settings.dictationPauseSeconds.coerceAtLeast(0),
+                    revealDelaySeconds = settings.revealDelaySeconds.coerceAtLeast(0),
+                    playbackSpeed = settings.playbackSpeed.coerceIn(0.5f, 2.0f),
+                    timedStopMinutes = settings.timedStopMinutes.coerceAtLeast(0),
+                    keepScreenOn = settings.keepScreenOn,
+                    playOrder = settings.playOrder.name,
                     provider = PRACTICE_SETTINGS_PROVIDER
                 )
             )
@@ -175,7 +184,16 @@ fun PracticeSettingsDto.toDomain(): PracticeSettings {
         showMeaning = showMeaning,
         playbackMode = runCatching { AudioLoopPlaybackMode.valueOf(playbackMode) }
             .getOrDefault(AudioLoopPlaybackMode.WORD_ONLY),
-        playTimes = playTimes.coerceAtLeast(1)
+        playTimes = playTimes.coerceAtLeast(1),
+        wordRepeatTimes = wordRepeatTimes.coerceAtLeast(1),
+        exampleRepeatTimes = exampleRepeatTimes.coerceAtLeast(1),
+        dictationPauseSeconds = dictationPauseSeconds.coerceAtLeast(0),
+        revealDelaySeconds = revealDelaySeconds.coerceAtLeast(0),
+        playbackSpeed = playbackSpeed.coerceIn(0.5f, 2.0f),
+        timedStopMinutes = timedStopMinutes.coerceAtLeast(0),
+        keepScreenOn = keepScreenOn,
+        playOrder = runCatching { AudioLoopPlayOrder.valueOf(playOrder) }
+            .getOrDefault(AudioLoopPlayOrder.SEQUENTIAL)
     )
 }
 

@@ -9,6 +9,7 @@ import com.chen.memorizewords.domain.floating.model.FloatingWordOrderType
 import com.chen.memorizewords.domain.floating.model.FloatingWordSettings
 import com.chen.memorizewords.domain.floating.model.FloatingWordSourceType
 import com.chen.memorizewords.domain.practice.AudioLoopPlaybackMode
+import com.chen.memorizewords.domain.practice.AudioLoopPlayOrder
 import com.chen.memorizewords.domain.practice.PracticeEntryType
 import com.chen.memorizewords.domain.practice.PracticeMode
 import com.chen.memorizewords.domain.practice.PracticeSessionRecord
@@ -85,7 +86,17 @@ class DataSyncLearningOutboxHandler @Inject constructor(
                         playbackMode = runCatching {
                             AudioLoopPlaybackMode.valueOf(payload.playbackMode)
                         }.getOrDefault(AudioLoopPlaybackMode.WORD_ONLY),
-                        playTimes = payload.playTimes.coerceAtLeast(1)
+                        playTimes = payload.playTimes.coerceAtLeast(1),
+                        wordRepeatTimes = payload.wordRepeatTimes.coerceAtLeast(1),
+                        exampleRepeatTimes = payload.exampleRepeatTimes.coerceAtLeast(1),
+                        dictationPauseSeconds = payload.dictationPauseSeconds.coerceAtLeast(0),
+                        revealDelaySeconds = payload.revealDelaySeconds.coerceAtLeast(0),
+                        playbackSpeed = payload.playbackSpeed.coerceIn(0.5f, 2.0f),
+                        timedStopMinutes = payload.timedStopMinutes.coerceAtLeast(0),
+                        keepScreenOn = payload.keepScreenOn,
+                        playOrder = runCatching {
+                            AudioLoopPlayOrder.valueOf(payload.playOrder)
+                        }.getOrDefault(AudioLoopPlayOrder.SEQUENTIAL)
                     )
                 ).getOrThrow()
             }

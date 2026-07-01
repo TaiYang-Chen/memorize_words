@@ -147,6 +147,14 @@ data class PracticeSettingsSyncPayload(
     val showMeaning: Boolean,
     val playbackMode: String = "WORD_ONLY",
     val playTimes: Int = 1,
+    val wordRepeatTimes: Int = 1,
+    val exampleRepeatTimes: Int = 1,
+    val dictationPauseSeconds: Int = 5,
+    val revealDelaySeconds: Int = 0,
+    val playbackSpeed: Float = 1.0f,
+    val timedStopMinutes: Int = 0,
+    val keepScreenOn: Boolean = false,
+    val playOrder: String = "SEQUENTIAL",
     val provider: String = "BAIDU"
 )
 
