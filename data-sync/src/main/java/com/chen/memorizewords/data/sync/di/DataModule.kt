@@ -3,6 +3,7 @@ package com.chen.memorizewords.data.sync.di
 import android.content.Context
 import com.chen.memorizewords.core.common.calendar.CheckInBusinessCalendar
 import com.chen.memorizewords.data.sync.local.mmkv.checkin.CheckInConfigDataSource
+import com.chen.memorizewords.data.sync.local.mmkv.appupdate.AppUpdateLocalStateStore
 import com.chen.memorizewords.data.sync.local.mmkv.checkin.CheckInConfigDataSourceImpl
 import com.chen.memorizewords.data.sync.local.mmkv.download.UpdateDownloadStore
 import com.chen.memorizewords.data.sync.local.mmkv.onboarding.OnboardingSnapshotDataSource
@@ -10,6 +11,7 @@ import com.chen.memorizewords.data.sync.local.mmkv.onboarding.OnboardingSnapshot
 import com.chen.memorizewords.data.sync.local.mmkv.plan.StudyPlanDataSource
 import com.chen.memorizewords.data.sync.local.mmkv.plan.StudyPlanDataSourceImpl
 import com.google.gson.Gson
+import com.chen.memorizewords.domain.sync.appupdate.AppUpdateLocalStateRepository
 import com.tencent.mmkv.MMKV
 import dagger.Module
 import dagger.Provides
@@ -71,5 +73,14 @@ object DataModule {
         gson: Gson
     ): UpdateDownloadStore {
         return UpdateDownloadStore(mmkv, gson)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAppUpdateLocalStateRepository(
+        mmkv: MMKV,
+        gson: Gson
+    ): AppUpdateLocalStateRepository {
+        return AppUpdateLocalStateStore(mmkv, gson)
     }
 }

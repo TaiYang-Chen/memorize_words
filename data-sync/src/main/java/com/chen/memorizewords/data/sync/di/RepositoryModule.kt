@@ -1,6 +1,7 @@
 package com.chen.memorizewords.data.sync.di
 
 import com.chen.memorizewords.data.sync.repository.download.DownloadRepositoryImpl
+import com.chen.memorizewords.data.sync.remote.appupdate.AppUpdateRepositoryImpl
 import com.chen.memorizewords.data.sync.repository.sync.DataSyncConflictPolicy
 import com.chen.memorizewords.data.sync.repository.sync.DataSyncLogoutFlusher
 import com.chen.memorizewords.data.sync.repository.sync.DataSyncOutboxReader
@@ -26,6 +27,7 @@ import com.chen.memorizewords.domain.sync.repository.HomeStartupSnapshotReposito
 import com.chen.memorizewords.domain.sync.repository.SyncRepository
 import com.chen.memorizewords.domain.sync.service.AuthenticatedRequestSuccessReporter
 import com.chen.memorizewords.domain.account.repository.membership.MembershipRepository
+import com.chen.memorizewords.domain.sync.appupdate.AppUpdateRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -85,4 +87,7 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindMembershipRepository(impl: MembershipRepositoryImpl): MembershipRepository
+
+    @Binds
+    abstract fun bindAppUpdateRepository(impl: AppUpdateRepositoryImpl): AppUpdateRepository
 }

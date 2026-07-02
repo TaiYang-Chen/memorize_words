@@ -10,6 +10,7 @@ import com.chen.memorizewords.domain.account.auth.TokenProvider
 import com.chen.memorizewords.data.sync.remoteapi.GlobalConfig
 import com.chen.memorizewords.core.network.http.ApiResponseAdapterFactory
 import com.chen.memorizewords.data.sync.remoteapi.api.datasync.UserDataSyncApiService
+import com.chen.memorizewords.data.sync.remoteapi.api.appupdate.AppUpdateApiService
 import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.LearningSyncApiService
 import com.chen.memorizewords.data.sync.remoteapi.constants.NetworkConstants
 import com.chen.memorizewords.data.sync.remoteapi.eventlistener.NetworkEventListener
@@ -122,5 +123,11 @@ object NetworkModule {
     @Singleton
     fun provideLearningSyncApiService(retrofit: Retrofit): LearningSyncApiService {
         return retrofit.create(LearningSyncApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAppUpdateApiService(retrofit: Retrofit): AppUpdateApiService {
+        return retrofit.create(AppUpdateApiService::class.java)
     }
 }
