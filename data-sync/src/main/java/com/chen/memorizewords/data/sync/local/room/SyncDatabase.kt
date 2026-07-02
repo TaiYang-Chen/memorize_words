@@ -10,7 +10,7 @@ import com.chen.memorizewords.data.sync.local.room.model.sync.SyncOutboxEntity
     entities = [
         SyncOutboxEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 @TypeConverters(SyncRoomConverters::class)

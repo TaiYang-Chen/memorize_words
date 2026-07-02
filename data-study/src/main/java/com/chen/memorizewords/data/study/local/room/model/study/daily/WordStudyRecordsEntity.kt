@@ -9,6 +9,8 @@ import androidx.room.PrimaryKey
     tableName = "word_study_records",
     indices = [
         Index(value = ["date", "word_id", "is_new_word"], unique = true),
+        Index(value = ["date", "is_new_word"]),
+        Index(value = ["date", "id"]),
         Index("word_id")
     ]
 )

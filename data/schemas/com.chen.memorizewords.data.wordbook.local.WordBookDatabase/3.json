@@ -1,0 +1,1555 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 3,
+    "identityHash": "f993b191edf48d2edbd499225ddec8a8",
+    "entities": [
+      {
+        "tableName": "word_book",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `category` TEXT NOT NULL, `image` TEXT NOT NULL, `description` TEXT NOT NULL, `total_words` INTEGER NOT NULL, `content_version` INTEGER NOT NULL, `is_new` INTEGER NOT NULL, `is_hot` INTEGER NOT NULL, `is_public` INTEGER NOT NULL, `created_by_user_id` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "category",
+            "columnName": "category",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imgUrl",
+            "columnName": "image",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "totalWords",
+            "columnName": "total_words",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "contentVersion",
+            "columnName": "content_version",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isNew",
+            "columnName": "is_new",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isHot",
+            "columnName": "is_hot",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isPublic",
+            "columnName": "is_public",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdByUserId",
+            "columnName": "created_by_user_id",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "current_word_book_selection",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`selection_id` INTEGER NOT NULL, `book_id` INTEGER NOT NULL, PRIMARY KEY(`selection_id`), FOREIGN KEY(`book_id`) REFERENCES `word_book`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "selectionId",
+            "columnName": "selection_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bookId",
+            "columnName": "book_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "selection_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_current_word_book_selection_book_id",
+            "unique": true,
+            "columnNames": [
+              "book_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_current_word_book_selection_book_id` ON `${TABLE_NAME}` (`book_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "word_book",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "book_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "word_book_sync_state",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`book_id` INTEGER NOT NULL, `local_version` INTEGER NOT NULL, `remote_version` INTEGER NOT NULL, `pending_target_version` INTEGER, `ignored_version` INTEGER, `last_prompted_version` INTEGER, `deferred_until` INTEGER, `last_prompt_at` INTEGER, `last_prompt_source` TEXT, `last_checked_at` INTEGER, `last_completed_at` INTEGER, `last_failure_reason` TEXT, PRIMARY KEY(`book_id`), FOREIGN KEY(`book_id`) REFERENCES `word_book`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "bookId",
+            "columnName": "book_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localVersion",
+            "columnName": "local_version",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "remoteVersion",
+            "columnName": "remote_version",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pendingTargetVersion",
+            "columnName": "pending_target_version",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "ignoredVersion",
+            "columnName": "ignored_version",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "lastPromptedVersion",
+            "columnName": "last_prompted_version",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "deferredUntil",
+            "columnName": "deferred_until",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "lastPromptAt",
+            "columnName": "last_prompt_at",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "lastPromptSource",
+            "columnName": "last_prompt_source",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "lastCheckedAt",
+            "columnName": "last_checked_at",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "lastCompletedAt",
+            "columnName": "last_completed_at",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "lastFailureReason",
+            "columnName": "last_failure_reason",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "book_id"
+          ]
+        },
+        "foreignKeys": [
+          {
+            "table": "word_book",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "book_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "word_book_words",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`word_book_id` INTEGER NOT NULL, `word_id` INTEGER NOT NULL, PRIMARY KEY(`word_book_id`, `word_id`), FOREIGN KEY(`word_book_id`) REFERENCES `word_book`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`word_id`) REFERENCES `words`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "wordBookId",
+            "columnName": "word_book_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wordId",
+            "columnName": "word_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "word_book_id",
+            "word_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_word_book_words_word_book_id",
+            "unique": false,
+            "columnNames": [
+              "word_book_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_book_words_word_book_id` ON `${TABLE_NAME}` (`word_book_id`)"
+          },
+          {
+            "name": "index_word_book_words_word_id",
+            "unique": false,
+            "columnNames": [
+              "word_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_book_words_word_id` ON `${TABLE_NAME}` (`word_id`)"
+          },
+          {
+            "name": "index_word_book_words_word_book_id_word_id",
+            "unique": false,
+            "columnNames": [
+              "word_book_id",
+              "word_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_book_words_word_book_id_word_id` ON `${TABLE_NAME}` (`word_book_id`, `word_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "word_book",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "word_book_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "words",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "word_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "word_book_progress",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`book_id` INTEGER NOT NULL, `correct_count` INTEGER NOT NULL, `wrong_count` INTEGER NOT NULL, `study_day_count` INTEGER NOT NULL, `last_study_date` TEXT, PRIMARY KEY(`book_id`), FOREIGN KEY(`book_id`) REFERENCES `word_book`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "wordBookId",
+            "columnName": "book_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "correctCount",
+            "columnName": "correct_count",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wrongCount",
+            "columnName": "wrong_count",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "studyDayCount",
+            "columnName": "study_day_count",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastStudyDate",
+            "columnName": "last_study_date",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "book_id"
+          ]
+        },
+        "foreignKeys": [
+          {
+            "table": "word_book",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "book_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "word_learning_state",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`word_id` INTEGER NOT NULL, `book_id` INTEGER NOT NULL, `total_learn_count` INTEGER NOT NULL, `last_learn_time` INTEGER NOT NULL, `next_review_time` INTEGER NOT NULL, `mastery_level` INTEGER NOT NULL, `user_status` INTEGER NOT NULL, `interval` INTEGER NOT NULL, `repetition` INTEGER NOT NULL, `efactor` REAL NOT NULL, PRIMARY KEY(`word_id`, `book_id`), FOREIGN KEY(`word_id`) REFERENCES `words`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`book_id`) REFERENCES `word_book`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "wordId",
+            "columnName": "word_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bookId",
+            "columnName": "book_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "totalLearnCount",
+            "columnName": "total_learn_count",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastLearnTime",
+            "columnName": "last_learn_time",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nextReviewTime",
+            "columnName": "next_review_time",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "masteryLevel",
+            "columnName": "mastery_level",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userStatus",
+            "columnName": "user_status",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "interval",
+            "columnName": "interval",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "repetition",
+            "columnName": "repetition",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "efactor",
+            "columnName": "efactor",
+            "affinity": "REAL",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "word_id",
+            "book_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_word_learning_state_word_id",
+            "unique": false,
+            "columnNames": [
+              "word_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_learning_state_word_id` ON `${TABLE_NAME}` (`word_id`)"
+          },
+          {
+            "name": "index_word_learning_state_book_id",
+            "unique": false,
+            "columnNames": [
+              "book_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_learning_state_book_id` ON `${TABLE_NAME}` (`book_id`)"
+          },
+          {
+            "name": "index_word_learning_state_next_review_time",
+            "unique": false,
+            "columnNames": [
+              "next_review_time"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_learning_state_next_review_time` ON `${TABLE_NAME}` (`next_review_time`)"
+          },
+          {
+            "name": "index_word_learning_state_book_id_user_status",
+            "unique": false,
+            "columnNames": [
+              "book_id",
+              "user_status"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_learning_state_book_id_user_status` ON `${TABLE_NAME}` (`book_id`, `user_status`)"
+          },
+          {
+            "name": "index_word_learning_state_book_id_next_review_time",
+            "unique": false,
+            "columnNames": [
+              "book_id",
+              "next_review_time"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_learning_state_book_id_next_review_time` ON `${TABLE_NAME}` (`book_id`, `next_review_time`)"
+          },
+          {
+            "name": "index_word_learning_state_book_id_user_status_next_review_time_last_learn_time_word_id",
+            "unique": false,
+            "columnNames": [
+              "book_id",
+              "user_status",
+              "next_review_time",
+              "last_learn_time",
+              "word_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_learning_state_book_id_user_status_next_review_time_last_learn_time_word_id` ON `${TABLE_NAME}` (`book_id`, `user_status`, `next_review_time`, `last_learn_time`, `word_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "words",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "word_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "word_book",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "book_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "words",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `word` TEXT NOT NULL, `normalized_word` TEXT NOT NULL, `phonetic_us` TEXT, `phonetic_uk` TEXT, `has_irregular_forms` INTEGER NOT NULL, `word_family` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "word",
+            "columnName": "word",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "normalizedWord",
+            "columnName": "normalized_word",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "phoneticUS",
+            "columnName": "phonetic_us",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "phoneticUK",
+            "columnName": "phonetic_uk",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "hasIrregularForms",
+            "columnName": "has_irregular_forms",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wordFamily",
+            "columnName": "word_family",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_words_normalized_word",
+            "unique": true,
+            "columnNames": [
+              "normalized_word"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_words_normalized_word` ON `${TABLE_NAME}` (`normalized_word`)"
+          }
+        ]
+      },
+      {
+        "tableName": "word_definitions",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `word_id` INTEGER NOT NULL, `part_of_speech` TEXT NOT NULL, `meaning_chinese` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`word_id`) REFERENCES `words`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wordId",
+            "columnName": "word_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "partOfSpeech",
+            "columnName": "part_of_speech",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "meaningChinese",
+            "columnName": "meaning_chinese",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_word_definitions_word_id",
+            "unique": false,
+            "columnNames": [
+              "word_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_definitions_word_id` ON `${TABLE_NAME}` (`word_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "words",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "word_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "word_examples",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `word_id` INTEGER NOT NULL, `definition_id` INTEGER, `english_sentence` TEXT NOT NULL, `chinese_translation` TEXT, `difficulty_level` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`word_id`) REFERENCES `words`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`definition_id`) REFERENCES `word_definitions`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wordId",
+            "columnName": "word_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "definitionId",
+            "columnName": "definition_id",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "englishSentence",
+            "columnName": "english_sentence",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "chineseTranslation",
+            "columnName": "chinese_translation",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "difficultyLevel",
+            "columnName": "difficulty_level",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_word_examples_word_id",
+            "unique": false,
+            "columnNames": [
+              "word_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_examples_word_id` ON `${TABLE_NAME}` (`word_id`)"
+          },
+          {
+            "name": "index_word_examples_definition_id",
+            "unique": false,
+            "columnNames": [
+              "definition_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_examples_definition_id` ON `${TABLE_NAME}` (`definition_id`)"
+          },
+          {
+            "name": "index_word_examples_difficulty_level",
+            "unique": false,
+            "columnNames": [
+              "difficulty_level"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_examples_difficulty_level` ON `${TABLE_NAME}` (`difficulty_level`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "words",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "word_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "word_definitions",
+            "onDelete": "SET NULL",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "definition_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "word_forms",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `word_id` INTEGER NOT NULL, `form_word_id` INTEGER, `form_type` TEXT NOT NULL, `form_text` TEXT NOT NULL, `form_definition` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`word_id`) REFERENCES `words`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`form_word_id`) REFERENCES `words`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wordId",
+            "columnName": "word_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "formWordId",
+            "columnName": "form_word_id",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "formType",
+            "columnName": "form_type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "formText",
+            "columnName": "form_text",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "formDefinition",
+            "columnName": "form_definition",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_word_forms_word_id",
+            "unique": false,
+            "columnNames": [
+              "word_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_forms_word_id` ON `${TABLE_NAME}` (`word_id`)"
+          },
+          {
+            "name": "index_word_forms_form_word_id",
+            "unique": false,
+            "columnNames": [
+              "form_word_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_forms_form_word_id` ON `${TABLE_NAME}` (`form_word_id`)"
+          },
+          {
+            "name": "index_word_forms_form_type",
+            "unique": false,
+            "columnNames": [
+              "form_type"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_forms_form_type` ON `${TABLE_NAME}` (`form_type`)"
+          },
+          {
+            "name": "index_word_forms_form_text",
+            "unique": false,
+            "columnNames": [
+              "form_text"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_forms_form_text` ON `${TABLE_NAME}` (`form_text`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "words",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "word_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "words",
+            "onDelete": "SET NULL",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "form_word_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "word_user_meta",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`word_id` INTEGER NOT NULL, `memory_tip` TEXT, `mnemonic_image_url` TEXT, `notes` TEXT, `root_memory_tip` TEXT, `is_user_selected` INTEGER NOT NULL, PRIMARY KEY(`word_id`), FOREIGN KEY(`word_id`) REFERENCES `words`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "wordId",
+            "columnName": "word_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "memoryTip",
+            "columnName": "memory_tip",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "mnemonicImageUrl",
+            "columnName": "mnemonic_image_url",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "notes",
+            "columnName": "notes",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "rootMemoryTip",
+            "columnName": "root_memory_tip",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "isUserSelected",
+            "columnName": "is_user_selected",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "word_id"
+          ]
+        },
+        "foreignKeys": [
+          {
+            "table": "words",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "word_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "word_synonyms",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`word_id` INTEGER NOT NULL, `value` TEXT NOT NULL, `normalized_value` TEXT NOT NULL, PRIMARY KEY(`word_id`, `value`), FOREIGN KEY(`word_id`) REFERENCES `words`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "wordId",
+            "columnName": "word_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "value",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "normalizedValue",
+            "columnName": "normalized_value",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "word_id",
+            "value"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_word_synonyms_word_id",
+            "unique": false,
+            "columnNames": [
+              "word_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_synonyms_word_id` ON `${TABLE_NAME}` (`word_id`)"
+          },
+          {
+            "name": "index_word_synonyms_normalized_value",
+            "unique": false,
+            "columnNames": [
+              "normalized_value"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_synonyms_normalized_value` ON `${TABLE_NAME}` (`normalized_value`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "words",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "word_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "word_antonyms",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`word_id` INTEGER NOT NULL, `value` TEXT NOT NULL, `normalized_value` TEXT NOT NULL, PRIMARY KEY(`word_id`, `value`), FOREIGN KEY(`word_id`) REFERENCES `words`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "wordId",
+            "columnName": "word_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "value",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "normalizedValue",
+            "columnName": "normalized_value",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "word_id",
+            "value"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_word_antonyms_word_id",
+            "unique": false,
+            "columnNames": [
+              "word_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_antonyms_word_id` ON `${TABLE_NAME}` (`word_id`)"
+          },
+          {
+            "name": "index_word_antonyms_normalized_value",
+            "unique": false,
+            "columnNames": [
+              "normalized_value"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_antonyms_normalized_value` ON `${TABLE_NAME}` (`normalized_value`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "words",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "word_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "word_tags",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`word_id` INTEGER NOT NULL, `value` TEXT NOT NULL, `normalized_value` TEXT NOT NULL, PRIMARY KEY(`word_id`, `value`), FOREIGN KEY(`word_id`) REFERENCES `words`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "wordId",
+            "columnName": "word_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "value",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "normalizedValue",
+            "columnName": "normalized_value",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "word_id",
+            "value"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_word_tags_word_id",
+            "unique": false,
+            "columnNames": [
+              "word_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_tags_word_id` ON `${TABLE_NAME}` (`word_id`)"
+          },
+          {
+            "name": "index_word_tags_normalized_value",
+            "unique": false,
+            "columnNames": [
+              "normalized_value"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_tags_normalized_value` ON `${TABLE_NAME}` (`normalized_value`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "words",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "word_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "word_associations",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`word_id` INTEGER NOT NULL, `value` TEXT NOT NULL, `normalized_value` TEXT NOT NULL, PRIMARY KEY(`word_id`, `value`), FOREIGN KEY(`word_id`) REFERENCES `words`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "wordId",
+            "columnName": "word_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "value",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "normalizedValue",
+            "columnName": "normalized_value",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "word_id",
+            "value"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_word_associations_word_id",
+            "unique": false,
+            "columnNames": [
+              "word_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_associations_word_id` ON `${TABLE_NAME}` (`word_id`)"
+          },
+          {
+            "name": "index_word_associations_normalized_value",
+            "unique": false,
+            "columnNames": [
+              "normalized_value"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_associations_normalized_value` ON `${TABLE_NAME}` (`normalized_value`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "words",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "word_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "word_roots",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `root_word` TEXT NOT NULL, `core_meaning` TEXT NOT NULL, `etymology` TEXT, `source_language` TEXT NOT NULL, `difficulty` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rootWord",
+            "columnName": "root_word",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "coreMeaning",
+            "columnName": "core_meaning",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "etymology",
+            "columnName": "etymology",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "sourceLanguage",
+            "columnName": "source_language",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "difficulty",
+            "columnName": "difficulty",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_word_roots_root_word",
+            "unique": true,
+            "columnNames": [
+              "root_word"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_word_roots_root_word` ON `${TABLE_NAME}` (`root_word`)"
+          },
+          {
+            "name": "index_word_roots_source_language",
+            "unique": false,
+            "columnNames": [
+              "source_language"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_roots_source_language` ON `${TABLE_NAME}` (`source_language`)"
+          },
+          {
+            "name": "index_word_roots_difficulty",
+            "unique": false,
+            "columnNames": [
+              "difficulty"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_roots_difficulty` ON `${TABLE_NAME}` (`difficulty`)"
+          }
+        ]
+      },
+      {
+        "tableName": "root_tags",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`root_id` INTEGER NOT NULL, `value` TEXT NOT NULL, `normalized_value` TEXT NOT NULL, PRIMARY KEY(`root_id`, `value`), FOREIGN KEY(`root_id`) REFERENCES `word_roots`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "rootId",
+            "columnName": "root_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "value",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "normalizedValue",
+            "columnName": "normalized_value",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "root_id",
+            "value"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_root_tags_root_id",
+            "unique": false,
+            "columnNames": [
+              "root_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_root_tags_root_id` ON `${TABLE_NAME}` (`root_id`)"
+          },
+          {
+            "name": "index_root_tags_normalized_value",
+            "unique": false,
+            "columnNames": [
+              "normalized_value"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_root_tags_normalized_value` ON `${TABLE_NAME}` (`normalized_value`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "word_roots",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "root_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "root_meanings",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `root_id` INTEGER NOT NULL, `meaning` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`root_id`) REFERENCES `word_roots`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rootId",
+            "columnName": "root_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "meaning",
+            "columnName": "meaning",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_root_meanings_root_id",
+            "unique": false,
+            "columnNames": [
+              "root_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_root_meanings_root_id` ON `${TABLE_NAME}` (`root_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "word_roots",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "root_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "root_variants",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `root_id` INTEGER NOT NULL, `variant` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`root_id`) REFERENCES `word_roots`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rootId",
+            "columnName": "root_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "variant",
+            "columnName": "variant",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_root_variants_root_id",
+            "unique": false,
+            "columnNames": [
+              "root_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_root_variants_root_id` ON `${TABLE_NAME}` (`root_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "word_roots",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "root_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "root_examples",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `meaning_id` INTEGER NOT NULL, `exampleSentence` TEXT NOT NULL, `translation` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`meaning_id`) REFERENCES `root_meanings`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "meaningId",
+            "columnName": "meaning_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "exampleSentence",
+            "columnName": "exampleSentence",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "translation",
+            "columnName": "translation",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_root_examples_meaning_id",
+            "unique": false,
+            "columnNames": [
+              "meaning_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_root_examples_meaning_id` ON `${TABLE_NAME}` (`meaning_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "root_meanings",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "meaning_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "word_root_relation",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`word_id` INTEGER NOT NULL, `root_id` INTEGER NOT NULL, `context` TEXT NOT NULL, `part_of_speech` TEXT NOT NULL, `sequence` INTEGER NOT NULL, PRIMARY KEY(`word_id`, `sequence`), FOREIGN KEY(`word_id`) REFERENCES `words`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`root_id`) REFERENCES `word_roots`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "wordId",
+            "columnName": "word_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rootId",
+            "columnName": "root_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "context",
+            "columnName": "context",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "partOfSpeech",
+            "columnName": "part_of_speech",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sequence",
+            "columnName": "sequence",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "word_id",
+            "sequence"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_word_root_relation_word_id",
+            "unique": false,
+            "columnNames": [
+              "word_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_root_relation_word_id` ON `${TABLE_NAME}` (`word_id`)"
+          },
+          {
+            "name": "index_word_root_relation_root_id",
+            "unique": false,
+            "columnNames": [
+              "root_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_root_relation_root_id` ON `${TABLE_NAME}` (`root_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "words",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "word_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "word_roots",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "root_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f993b191edf48d2edbd499225ddec8a8')"
+    ]
+  }
+}

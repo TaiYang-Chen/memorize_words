@@ -30,4 +30,16 @@ interface WordRelationDao {
 
     @Query("DELETE FROM word_associations WHERE word_id = :wordId")
     suspend fun deleteAssociationsByWordId(wordId: Long)
+
+    @Query("DELETE FROM word_synonyms WHERE word_id IN (:wordIds)")
+    suspend fun deleteSynonymsByWordIds(wordIds: List<Long>)
+
+    @Query("DELETE FROM word_antonyms WHERE word_id IN (:wordIds)")
+    suspend fun deleteAntonymsByWordIds(wordIds: List<Long>)
+
+    @Query("DELETE FROM word_tags WHERE word_id IN (:wordIds)")
+    suspend fun deleteTagsByWordIds(wordIds: List<Long>)
+
+    @Query("DELETE FROM word_associations WHERE word_id IN (:wordIds)")
+    suspend fun deleteAssociationsByWordIds(wordIds: List<Long>)
 }

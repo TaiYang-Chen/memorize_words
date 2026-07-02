@@ -36,6 +36,19 @@ class SyncOutboxStore @Inject constructor(
         }
     }
 
+    suspend fun enqueueLatest(commands: List<SyncOutboxWriteCommand>) {
+        if (commands.isEmpty()) return
+        syncDatabase.withTransaction {
+            val existingByBizKey = commands.map { it.bizKey }
+                .distinct()
+                .chunked(SQL_BIND_CHUNK_SIZE)
+                .flatMap { keys -> syncOutboxDao.getByBizKeys(keys) }
+                .associateBy { it.bizKey }
+            val entities = buildQueuedOutboxEntities(commands, existingByBizKey)
+            syncOutboxDao.upsertAll(entities)
+        }
+    }
+
     suspend fun claimNextBatch(
         limit: Int,
         now: Long = System.currentTimeMillis(),
@@ -67,9 +80,19 @@ class SyncOutboxStore @Inject constructor(
     }
 }
 
+data class SyncOutboxWriteCommand(
+    val bizType: String,
+    val bizKey: String,
+    val operation: SyncOutboxOperation,
+    val payload: String,
+    val updatedAt: Long
+)
+
 interface SyncOutboxRetryWaitResumer {
     suspend fun resumeRetryWaiting(now: Long = System.currentTimeMillis())
 }
+
+private const val SQL_BIND_CHUNK_SIZE = 500
 
 internal fun buildQueuedOutboxEntity(
     existing: SyncOutboxEntity?,
@@ -95,4 +118,20 @@ internal fun buildQueuedOutboxEntity(
         leaseExpiresAt = 0L,
         updatedAt = updatedAt
     )
+}
+
+internal fun buildQueuedOutboxEntities(
+    commands: List<SyncOutboxWriteCommand>,
+    existingByBizKey: Map<String, SyncOutboxEntity>
+): List<SyncOutboxEntity> {
+    return commands.map { command ->
+        buildQueuedOutboxEntity(
+            existing = existingByBizKey[command.bizKey],
+            bizType = command.bizType,
+            bizKey = command.bizKey,
+            operation = command.operation,
+            payload = command.payload,
+            updatedAt = command.updatedAt
+        )
+    }
 }

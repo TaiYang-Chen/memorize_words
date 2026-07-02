@@ -18,6 +18,12 @@ interface WordBookRepository {
     suspend fun getWordRowsPage(query: WordListQuery): PageSlice<WordListRow>
     suspend fun getWordIdsPage(wordBookId: Long, pageIndex: Int, pageSize: Int): List<Long>
     suspend fun getAllUnlearnedWordsForBook(bookId: Long): List<Word>
+    suspend fun getUnlearnedWordIdsForBook(
+        bookId: Long,
+        count: Int,
+        orderType: WordOrderType,
+        excludeIds: Set<Long> = emptySet()
+    ): List<Long>
     suspend fun updateBookStudyDay(bookId: Long, today: String)
     suspend fun recordAnswerResult(bookId: Long, isCorrect: Boolean, today: String)
 }

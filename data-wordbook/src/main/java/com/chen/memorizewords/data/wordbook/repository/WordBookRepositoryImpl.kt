@@ -27,6 +27,7 @@ import com.chen.memorizewords.domain.word.model.enums.PartOfSpeech
 import com.chen.memorizewords.domain.word.model.enums.WordFilter
 import com.chen.memorizewords.domain.word.model.word.Word
 import com.chen.memorizewords.domain.wordbook.repository.CurrentWordBookLocalStatePort
+import com.chen.memorizewords.domain.wordbook.repository.WordOrderType
 import com.chen.memorizewords.domain.wordbook.repository.WordBookRepository
 import com.google.gson.Gson
 import javax.inject.Inject
@@ -177,6 +178,37 @@ class WordBookRepositoryImpl @Inject constructor(
         val candidateIds = bookWordsDao.getUnlearnedWordIdsForBook(bookId)
         val words = wordDao.getWithRelationsByIds(candidateIds)
         return words.map { it.toDomain() }
+    }
+
+    override suspend fun getUnlearnedWordIdsForBook(
+        bookId: Long,
+        count: Int,
+        orderType: WordOrderType,
+        excludeIds: Set<Long>
+    ): List<Long> {
+        if (count <= 0) return emptyList()
+        if (!wordBookDao.exists(bookId)) {
+            throw NoSuchElementException("Word book with id=$bookId not found")
+        }
+        val limit = count.coerceAtLeast(1)
+        val excluded = excludeIds.toList()
+        return if (excluded.isEmpty()) {
+            when (orderType) {
+                WordOrderType.RANDOM -> bookWordsDao.getRandomUnlearnedWordIdsForBook(bookId, limit)
+                WordOrderType.ALPHABETIC_ASC -> bookWordsDao.getUnlearnedWordIdsAlphabeticAsc(bookId, limit)
+                WordOrderType.ALPHABETIC_DESC -> bookWordsDao.getUnlearnedWordIdsAlphabeticDesc(bookId, limit)
+                WordOrderType.LENGTH_ASC -> bookWordsDao.getUnlearnedWordIdsLengthAsc(bookId, limit)
+                WordOrderType.LENGTH_DESC -> bookWordsDao.getUnlearnedWordIdsLengthDesc(bookId, limit)
+            }
+        } else {
+            when (orderType) {
+                WordOrderType.RANDOM -> bookWordsDao.getRandomUnlearnedWordIdsForBookExcluding(bookId, limit, excluded)
+                WordOrderType.ALPHABETIC_ASC -> bookWordsDao.getUnlearnedWordIdsAlphabeticAscExcluding(bookId, limit, excluded)
+                WordOrderType.ALPHABETIC_DESC -> bookWordsDao.getUnlearnedWordIdsAlphabeticDescExcluding(bookId, limit, excluded)
+                WordOrderType.LENGTH_ASC -> bookWordsDao.getUnlearnedWordIdsLengthAscExcluding(bookId, limit, excluded)
+                WordOrderType.LENGTH_DESC -> bookWordsDao.getUnlearnedWordIdsLengthDescExcluding(bookId, limit, excluded)
+            }
+        }
     }
 
     override suspend fun updateBookStudyDay(bookId: Long, today: String) {

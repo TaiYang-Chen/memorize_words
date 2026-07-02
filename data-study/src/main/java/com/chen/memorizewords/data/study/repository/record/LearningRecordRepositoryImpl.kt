@@ -1,12 +1,9 @@
 ﻿package com.chen.memorizewords.data.study.repository.record
 
-import androidx.room.withTransaction
 import com.chen.memorizewords.core.common.calendar.CheckInBusinessCalendar
 import com.chen.memorizewords.core.common.calendar.CheckInConfig
 import com.chen.memorizewords.core.common.calendar.CheckInConfigDataSource
 import com.chen.memorizewords.core.common.calendar.UNKNOWN_MAKEUP_CARD_BALANCE
-import com.chen.memorizewords.data.study.local.mmkv.plan.StudyPlanDataSource
-import com.chen.memorizewords.data.study.local.StudyDatabase
 import com.chen.memorizewords.data.study.local.room.model.study.checkin.CheckInRecordDao
 import com.chen.memorizewords.data.study.local.room.model.study.checkin.CheckInRecordEntity
 import com.chen.memorizewords.data.study.local.room.model.study.daily.CalendarDayStatsProjection
@@ -17,13 +14,11 @@ import com.chen.memorizewords.data.study.local.room.model.study.daily.DailyStudy
 import com.chen.memorizewords.data.study.local.room.model.study.daily.DailyStudyWordRecordProjection
 import com.chen.memorizewords.data.study.local.room.model.study.daily.DailyWordStatsProjection
 import com.chen.memorizewords.data.study.local.room.model.study.daily.WordStudyRecordsDao
-import com.chen.memorizewords.data.study.local.room.model.study.daily.WordStudyRecordsEntity
+import com.chen.memorizewords.data.study.repository.local.StudyRecordLocalStore
 import com.chen.memorizewords.domain.sync.CheckInRecordSyncPayload
-import com.chen.memorizewords.domain.sync.DailyStudyDurationSyncPayload
-import com.chen.memorizewords.domain.sync.StudyRecordSyncPayload
+import com.chen.memorizewords.domain.sync.OutboxCommand
 import com.chen.memorizewords.domain.sync.OutboxRecord
 import com.chen.memorizewords.domain.sync.OutboxTopic
-import com.chen.memorizewords.domain.sync.SyncOperation
 import com.chen.memorizewords.domain.sync.SyncOutboxReader
 import com.chen.memorizewords.domain.sync.SyncOutboxWriter
 import com.chen.memorizewords.domain.study.model.record.CalendarDayStats
@@ -38,9 +33,9 @@ import com.chen.memorizewords.domain.study.model.record.MakeUpCheckInException
 import com.chen.memorizewords.domain.study.model.record.TodayCheckInEntryState
 import com.chen.memorizewords.domain.word.model.word.Word
 import com.chen.memorizewords.domain.study.repository.record.LearningRecordRepository
-import com.chen.memorizewords.domain.wordbook.model.study.StudyPlan
 import com.google.gson.Gson
 import javax.inject.Inject
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -50,15 +45,15 @@ import kotlinx.coroutines.flow.map
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class LearningRecordRepositoryImpl @Inject constructor(
-    private val studyDatabase: StudyDatabase,
     private val wordStudyRecordsDao: WordStudyRecordsDao,
     private val dailyStudyDurationDao: DailyStudyDurationDao,
     private val checkInRecordDao: CheckInRecordDao,
-    private val studyPlanDataSource: StudyPlanDataSource,
     private val checkInConfigDataSource: CheckInConfigDataSource,
     private val checkInBusinessCalendar: CheckInBusinessCalendar,
     private val syncOutboxReader: SyncOutboxReader,
-    private val SyncOutboxWriter: SyncOutboxWriter,    private val gson: Gson
+    private val studyRecordLocalStore: StudyRecordLocalStore,
+    private val syncOutboxWriter: SyncOutboxWriter,
+    private val gson: Gson
 ) : LearningRecordRepository {
 
     override fun getCurrentBusinessDate(): String {
@@ -70,94 +65,13 @@ class LearningRecordRepositoryImpl @Inject constructor(
         definition: String,
         isNewWord: Boolean
     ) {
-        val today = checkInBusinessCalendar.currentBusinessDate()
-        studyDatabase.withTransaction {
-            wordStudyRecordsDao.insert(
-                WordStudyRecordsEntity(
-                    date = today,
-                    wordId = word.id,
-                    word = word.word,
-                    definition = definition,
-                    isNewWord = isNewWord
-                )
-            )
-
-            val plan = studyPlanDataSource.getStudyPlan() ?: StudyPlan()
-            val todayNewCount = wordStudyRecordsDao.getTodayNewWordCountValue(today)
-            val todayReviewCount = wordStudyRecordsDao.getTodayReviewWordCountValue(today)
-            val dailyNewTarget = if (plan.dailyNewCount > 0) plan.dailyNewCount else 15
-            val reviewTarget = if (plan.dailyReviewCount > 0) plan.dailyReviewCount else dailyNewTarget * 3
-            val isNewDone = todayNewCount >= dailyNewTarget
-            val isReviewDone = todayReviewCount >= reviewTarget
-            dailyStudyDurationDao.upsertPlanCompletion(
-                date = today,
-                isNewCompleted = if (isNewDone) 1 else 0,
-                isReviewCompleted = if (isReviewDone) 1 else 0,
-                updatedAt = System.currentTimeMillis()
-            )
-
-            SyncOutboxWriter.enqueueLatest(
-                bizType = OutboxTopic.STUDY_RECORD,
-                bizKey = buildStudyRecordBizKey(today, word.id, isNewWord),
-                operation = SyncOperation.UPSERT,
-                payload = gson.toJson(
-                    StudyRecordSyncPayload(
-                        date = today,
-                        wordId = word.id,
-                        word = word.word,
-                        definition = definition,
-                        isNewWord = isNewWord
-                    )
-                )
-            )
-
-            dailyStudyDurationDao.getByDate(today)?.let { duration ->
-                SyncOutboxWriter.enqueueLatest(
-                    bizType = OutboxTopic.DAILY_STUDY_DURATION,
-                    bizKey = buildDailyStudyDurationBizKey(duration.date),
-                    operation = SyncOperation.UPSERT,
-                    payload = gson.toJson(
-                        DailyStudyDurationSyncPayload(
-                            date = duration.date,
-                            totalDurationMs = duration.totalDurationMs,
-                            updatedAt = duration.updatedAt,
-                            isNewPlanCompleted = duration.isNewPlanCompleted,
-                            isReviewPlanCompleted = duration.isReviewPlanCompleted
-                        )
-                    )
-                )
-            }
-        }
+        studyRecordLocalStore.addLearningRecord(word, definition, isNewWord)
+        flushPendingStudyOutbox()
     }
 
     override suspend fun addStudyDuration(durationMs: Long) {
-        if (durationMs <= 0L) return
-        val date = checkInBusinessCalendar.currentBusinessDate()
-        studyDatabase.withTransaction {
-            val updatedAt = System.currentTimeMillis()
-            dailyStudyDurationDao.addDuration(
-                date = date,
-                durationMs = durationMs,
-                updatedAt = updatedAt
-            )
-
-            dailyStudyDurationDao.getByDate(date)?.let { duration ->
-                SyncOutboxWriter.enqueueLatest(
-                    bizType = OutboxTopic.DAILY_STUDY_DURATION,
-                    bizKey = buildDailyStudyDurationBizKey(duration.date),
-                    operation = SyncOperation.UPSERT,
-                    payload = gson.toJson(
-                        DailyStudyDurationSyncPayload(
-                            date = duration.date,
-                            totalDurationMs = duration.totalDurationMs,
-                            updatedAt = duration.updatedAt,
-                            isNewPlanCompleted = duration.isNewPlanCompleted,
-                            isReviewPlanCompleted = duration.isReviewPlanCompleted
-                        )
-                    )
-                )
-            }
-        }
+        studyRecordLocalStore.addStudyDuration(durationMs)
+        flushPendingStudyOutbox()
     }
 
     override fun getStudyTotalDayCount(): Flow<Int> {
@@ -305,15 +219,8 @@ class LearningRecordRepositoryImpl @Inject constructor(
             signedAt = now,
             updatedAt = now
         )
-        studyDatabase.withTransaction {
-            checkInRecordDao.upsert(entity)
-            SyncOutboxWriter.enqueueLatest(
-                bizType = OutboxTopic.CHECKIN_RECORD,
-                bizKey = buildCheckInRecordBizKey(date),
-                operation = SyncOperation.UPSERT,
-                payload = gson.toJson(entity.toSyncPayload())
-            )
-        }
+        studyRecordLocalStore.upsertCheckInRecord(entity)
+        flushPendingStudyOutbox()
         return Result.success(entity.toDomain())
     }
 
@@ -335,33 +242,23 @@ class LearningRecordRepositoryImpl @Inject constructor(
             signedAt = now,
             updatedAt = now
         )
-        studyDatabase.withTransaction {
-            checkInRecordDao.upsert(entity)
-            SyncOutboxWriter.enqueueLatest(
-                bizType = OutboxTopic.CHECKIN_RECORD,
-                bizKey = buildCheckInRecordBizKey(today),
-                operation = SyncOperation.UPSERT,
-                payload = gson.toJson(entity.toSyncPayload())
-            )
-        }
+        studyRecordLocalStore.upsertCheckInRecord(entity)
+        flushPendingStudyOutbox()
         return Result.success(entity.toDomain())
     }
 
-    private fun buildStudyRecordBizKey(date: String, wordId: Long, isNewWord: Boolean): String {
-        return "study_record:$date:$wordId:$isNewWord"
+    private suspend fun flushPendingStudyOutbox() {
+        flushPendingOutboxCommands(
+            loadCommands = studyRecordLocalStore::getPendingOutboxCommands,
+            enqueueCommands = syncOutboxWriter::enqueueLatest,
+            deleteCommands = studyRecordLocalStore::deletePendingOutboxCommands
+        )
     }
 
     private fun isAutoCheckInEligible(duration: DailyStudyDurationEntity?): Boolean {
         return isAutoCheckInEligibleForDuration(duration)
     }
 
-    private fun buildDailyStudyDurationBizKey(date: String): String {
-        return "daily_study_duration:$date"
-    }
-
-    private fun buildCheckInRecordBizKey(date: String): String {
-        return "checkin_record:$date"
-    }
 
     private fun countPendingMakeupCheckIns(outboxEntities: List<OutboxRecord>): Int {
         return outboxEntities.count { entity ->
@@ -439,11 +336,20 @@ private fun CheckInRecordEntity.toDomain(): CheckInRecord {
     )
 }
 
-private fun CheckInRecordEntity.toSyncPayload(): CheckInRecordSyncPayload {
-    return CheckInRecordSyncPayload(
-        date = date,
-        type = type.name,
-        signedAt = signedAt,
-        updatedAt = updatedAt
-    )
+internal suspend fun flushPendingOutboxCommands(
+    loadCommands: suspend () -> List<OutboxCommand>,
+    enqueueCommands: suspend (List<OutboxCommand>) -> Unit,
+    deleteCommands: suspend (List<OutboxCommand>) -> Unit
+): Boolean {
+    val commands = loadCommands()
+    if (commands.isEmpty()) return true
+    return try {
+        enqueueCommands(commands)
+        deleteCommands(commands)
+        true
+    } catch (e: CancellationException) {
+        throw e
+    } catch (_: Exception) {
+        false
+    }
 }

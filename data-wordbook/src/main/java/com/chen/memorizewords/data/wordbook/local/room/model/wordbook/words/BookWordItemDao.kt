@@ -199,6 +199,201 @@ interface BookWordItemDao {
     """
     )
     suspend fun getUnlearnedWordIdsForBook(bookId: Long): List<Long>
+
+    @Query(
+        """
+        SELECT wbw.word_id
+        FROM word_book_words AS wbw
+        LEFT JOIN words AS wrd ON wrd.id = wbw.word_id
+        WHERE wbw.word_book_id = :bookId
+          AND wbw.word_id NOT IN (
+              SELECT word_id
+              FROM word_learning_state
+              WHERE book_id = :bookId
+          )
+        ORDER BY RANDOM()
+        LIMIT :limit
+        """
+    )
+    suspend fun getRandomUnlearnedWordIdsForBook(bookId: Long, limit: Int): List<Long>
+
+    @Query(
+        """
+        SELECT wbw.word_id
+        FROM word_book_words AS wbw
+        LEFT JOIN words AS wrd ON wrd.id = wbw.word_id
+        WHERE wbw.word_book_id = :bookId
+          AND wbw.word_id NOT IN (:excludeIds)
+          AND wbw.word_id NOT IN (
+              SELECT word_id
+              FROM word_learning_state
+              WHERE book_id = :bookId
+          )
+        ORDER BY RANDOM()
+        LIMIT :limit
+        """
+    )
+    suspend fun getRandomUnlearnedWordIdsForBookExcluding(
+        bookId: Long,
+        limit: Int,
+        excludeIds: List<Long>
+    ): List<Long>
+
+    @Query(
+        """
+        SELECT wbw.word_id
+        FROM word_book_words AS wbw
+        LEFT JOIN words AS wrd ON wrd.id = wbw.word_id
+        WHERE wbw.word_book_id = :bookId
+          AND wbw.word_id NOT IN (
+              SELECT word_id
+              FROM word_learning_state
+              WHERE book_id = :bookId
+          )
+        ORDER BY wrd.normalized_word ASC, wbw.word_id ASC
+        LIMIT :limit
+        """
+    )
+    suspend fun getUnlearnedWordIdsAlphabeticAsc(bookId: Long, limit: Int): List<Long>
+
+    @Query(
+        """
+        SELECT wbw.word_id
+        FROM word_book_words AS wbw
+        LEFT JOIN words AS wrd ON wrd.id = wbw.word_id
+        WHERE wbw.word_book_id = :bookId
+          AND wbw.word_id NOT IN (:excludeIds)
+          AND wbw.word_id NOT IN (
+              SELECT word_id
+              FROM word_learning_state
+              WHERE book_id = :bookId
+          )
+        ORDER BY wrd.normalized_word ASC, wbw.word_id ASC
+        LIMIT :limit
+        """
+    )
+    suspend fun getUnlearnedWordIdsAlphabeticAscExcluding(
+        bookId: Long,
+        limit: Int,
+        excludeIds: List<Long>
+    ): List<Long>
+
+    @Query(
+        """
+        SELECT wbw.word_id
+        FROM word_book_words AS wbw
+        LEFT JOIN words AS wrd ON wrd.id = wbw.word_id
+        WHERE wbw.word_book_id = :bookId
+          AND wbw.word_id NOT IN (
+              SELECT word_id
+              FROM word_learning_state
+              WHERE book_id = :bookId
+          )
+        ORDER BY wrd.normalized_word DESC, wbw.word_id ASC
+        LIMIT :limit
+        """
+    )
+    suspend fun getUnlearnedWordIdsAlphabeticDesc(bookId: Long, limit: Int): List<Long>
+
+    @Query(
+        """
+        SELECT wbw.word_id
+        FROM word_book_words AS wbw
+        LEFT JOIN words AS wrd ON wrd.id = wbw.word_id
+        WHERE wbw.word_book_id = :bookId
+          AND wbw.word_id NOT IN (:excludeIds)
+          AND wbw.word_id NOT IN (
+              SELECT word_id
+              FROM word_learning_state
+              WHERE book_id = :bookId
+          )
+        ORDER BY wrd.normalized_word DESC, wbw.word_id ASC
+        LIMIT :limit
+        """
+    )
+    suspend fun getUnlearnedWordIdsAlphabeticDescExcluding(
+        bookId: Long,
+        limit: Int,
+        excludeIds: List<Long>
+    ): List<Long>
+
+    @Query(
+        """
+        SELECT wbw.word_id
+        FROM word_book_words AS wbw
+        LEFT JOIN words AS wrd ON wrd.id = wbw.word_id
+        WHERE wbw.word_book_id = :bookId
+          AND wbw.word_id NOT IN (
+              SELECT word_id
+              FROM word_learning_state
+              WHERE book_id = :bookId
+          )
+        ORDER BY LENGTH(wrd.word) ASC, wbw.word_id ASC
+        LIMIT :limit
+        """
+    )
+    suspend fun getUnlearnedWordIdsLengthAsc(bookId: Long, limit: Int): List<Long>
+
+    @Query(
+        """
+        SELECT wbw.word_id
+        FROM word_book_words AS wbw
+        LEFT JOIN words AS wrd ON wrd.id = wbw.word_id
+        WHERE wbw.word_book_id = :bookId
+          AND wbw.word_id NOT IN (:excludeIds)
+          AND wbw.word_id NOT IN (
+              SELECT word_id
+              FROM word_learning_state
+              WHERE book_id = :bookId
+          )
+        ORDER BY LENGTH(wrd.word) ASC, wbw.word_id ASC
+        LIMIT :limit
+        """
+    )
+    suspend fun getUnlearnedWordIdsLengthAscExcluding(
+        bookId: Long,
+        limit: Int,
+        excludeIds: List<Long>
+    ): List<Long>
+
+    @Query(
+        """
+        SELECT wbw.word_id
+        FROM word_book_words AS wbw
+        LEFT JOIN words AS wrd ON wrd.id = wbw.word_id
+        WHERE wbw.word_book_id = :bookId
+          AND wbw.word_id NOT IN (
+              SELECT word_id
+              FROM word_learning_state
+              WHERE book_id = :bookId
+          )
+        ORDER BY LENGTH(wrd.word) DESC, wbw.word_id ASC
+        LIMIT :limit
+        """
+    )
+    suspend fun getUnlearnedWordIdsLengthDesc(bookId: Long, limit: Int): List<Long>
+
+    @Query(
+        """
+        SELECT wbw.word_id
+        FROM word_book_words AS wbw
+        LEFT JOIN words AS wrd ON wrd.id = wbw.word_id
+        WHERE wbw.word_book_id = :bookId
+          AND wbw.word_id NOT IN (:excludeIds)
+          AND wbw.word_id NOT IN (
+              SELECT word_id
+              FROM word_learning_state
+              WHERE book_id = :bookId
+          )
+        ORDER BY LENGTH(wrd.word) DESC, wbw.word_id ASC
+        LIMIT :limit
+        """
+    )
+    suspend fun getUnlearnedWordIdsLengthDescExcluding(
+        bookId: Long,
+        limit: Int,
+        excludeIds: List<Long>
+    ): List<Long>
 }
 
 data class BookWordCount(

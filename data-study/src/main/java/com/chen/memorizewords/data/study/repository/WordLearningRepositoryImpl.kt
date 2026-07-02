@@ -40,9 +40,7 @@ class WordLearningRepositoryImpl @Inject constructor(
     }
 
     override suspend fun upsertState(state: WordLearningState) {
-        studyDatabase.withTransaction {
-            dao.upsert(state.toEntity())
-        }
+        dao.upsert(state.toEntity())
     }
 
     override suspend fun getLearnedWordIdsByBook(bookId: Long): List<Long> {

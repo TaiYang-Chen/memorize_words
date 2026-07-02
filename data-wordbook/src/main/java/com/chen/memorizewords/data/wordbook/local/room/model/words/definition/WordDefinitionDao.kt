@@ -27,6 +27,9 @@ interface WordDefinitionDao {
     @Query("DELETE FROM word_definitions WHERE word_id = :wordId")
     suspend fun deleteByWordId(wordId: Long)
 
+    @Query("DELETE FROM word_definitions WHERE word_id IN (:wordIds)")
+    suspend fun deleteByWordIds(wordIds: List<Long>)
+
     @Update
     suspend fun update(definition: WordDefinitionEntity)
 

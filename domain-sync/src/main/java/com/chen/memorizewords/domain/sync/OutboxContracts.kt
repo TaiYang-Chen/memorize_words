@@ -50,6 +50,10 @@ data class SyncFailureDecision(
 interface SyncOutboxWriter {
     suspend fun enqueueLatest(command: OutboxCommand)
 
+    suspend fun enqueueLatest(commands: List<OutboxCommand>) {
+        commands.forEach { command -> enqueueLatest(command) }
+    }
+
     suspend fun enqueueLatest(
         bizType: String,
         bizKey: String,

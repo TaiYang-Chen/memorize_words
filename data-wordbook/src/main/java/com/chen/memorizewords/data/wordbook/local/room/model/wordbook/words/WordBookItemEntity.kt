@@ -26,7 +26,8 @@ import com.chen.memorizewords.data.wordbook.local.room.model.words.word.WordEnti
     ],
     indices = [
         Index("word_book_id"),
-        Index("word_id")
+        Index("word_id"),
+        Index(value = ["word_book_id", "word_id"])
     ]
 )
 data class WordBookItemEntity(

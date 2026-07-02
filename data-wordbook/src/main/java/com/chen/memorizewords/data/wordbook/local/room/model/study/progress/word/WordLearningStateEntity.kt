@@ -32,7 +32,8 @@ import com.chen.memorizewords.data.wordbook.local.room.model.words.word.WordEnti
         Index("book_id"),
         Index("next_review_time"),
         Index(value = ["book_id", "user_status"]),
-        Index(value = ["book_id", "next_review_time"])
+        Index(value = ["book_id", "next_review_time"]),
+        Index(value = ["book_id", "user_status", "next_review_time", "last_learn_time", "word_id"])
     ],
 )
 data class WordLearningStateEntity(

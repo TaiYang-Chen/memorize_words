@@ -158,9 +158,13 @@ class LearningViewModel @Inject constructor(
         initialWordIds: List<Long>
     ) {
         viewModelScope.launch {
+            val initialWordList = withContext(Dispatchers.IO) {
+                val words = wordReadFacade.getWordsByIds(initialWordIds)
+                orderWordsByIds(initialWordIds, words)
+            }
             loadData(
                 initialLearnedCount = initialLearnedCount,
-                initialWordList = wordReadFacade.getWordsByIds(initialWordIds)
+                initialWordList = initialWordList
             )
         }
     }
@@ -492,6 +496,11 @@ class LearningViewModel @Inject constructor(
             }
         }
     }
+}
+
+internal fun orderWordsByIds(ids: List<Long>, words: List<Word>): List<Word> {
+    val wordsById = words.associateBy { it.id }
+    return ids.mapNotNull(wordsById::get)
 }
 
 internal class LearningCompletionPersistenceGate {

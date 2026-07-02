@@ -25,7 +25,7 @@ class LearningSessionFacade @Inject constructor(
                 count = count,
                 orderType = orderType,
                 excludeIds = excludeIds
-            ).map { it.id }
+            )
         )
     }
 

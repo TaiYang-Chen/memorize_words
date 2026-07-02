@@ -13,6 +13,7 @@ import com.chen.memorizewords.domain.sync.OutboxTopic
 import com.chen.memorizewords.domain.sync.SyncOperation
 import com.chen.memorizewords.domain.sync.SyncOutboxWriter
 import com.chen.memorizewords.domain.sync.WordBookDeleteSyncPayload
+import com.chen.memorizewords.domain.wordbook.repository.WordOrderType
 import com.google.gson.Gson
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Proxy
@@ -99,9 +100,75 @@ class WordBookRepositoryImplTest {
         assertEquals(listOf(1L), bookIds)
     }
 
+    @Test
+    fun `unlearned word ids use lightweight random query without exclude ids`() = runBlocking {
+        val bookWordsDao = FakeBookWordItemDao(
+            responses = mapOf("getRandomUnlearnedWordIdsForBook" to listOf(4L, 2L))
+        )
+        val fixture = RepositoryFixture(
+            books = listOf(wordBook(1L)),
+            selectedBookId = 1L,
+            bookWordsDao = bookWordsDao.proxy
+        )
+
+        val ids = fixture.repository.getUnlearnedWordIdsForBook(
+            bookId = 1L,
+            count = 2,
+            orderType = WordOrderType.RANDOM
+        )
+
+        assertEquals(listOf(4L, 2L), ids)
+        assertEquals(listOf("getRandomUnlearnedWordIdsForBook"), bookWordsDao.calls.map { it.name })
+        assertEquals(2, bookWordsDao.calls.single().limit)
+    }
+
+    @Test
+    fun `unlearned word ids use lightweight ordered excluding query`() = runBlocking {
+        val bookWordsDao = FakeBookWordItemDao(
+            responses = mapOf("getUnlearnedWordIdsLengthDescExcluding" to listOf(9L, 7L))
+        )
+        val fixture = RepositoryFixture(
+            books = listOf(wordBook(1L)),
+            selectedBookId = 1L,
+            bookWordsDao = bookWordsDao.proxy
+        )
+
+        val ids = fixture.repository.getUnlearnedWordIdsForBook(
+            bookId = 1L,
+            count = 3,
+            orderType = WordOrderType.LENGTH_DESC,
+            excludeIds = setOf(5L, 6L)
+        )
+
+        assertEquals(listOf(9L, 7L), ids)
+        assertEquals(listOf("getUnlearnedWordIdsLengthDescExcluding"), bookWordsDao.calls.map { it.name })
+        assertEquals(3, bookWordsDao.calls.single().limit)
+        assertEquals(setOf(5L, 6L), bookWordsDao.calls.single().excludeIds.toSet())
+    }
+
+    @Test
+    fun `unlearned word ids return empty for non positive count before querying dao`() = runBlocking {
+        val bookWordsDao = FakeBookWordItemDao()
+        val fixture = RepositoryFixture(
+            books = listOf(wordBook(1L)),
+            selectedBookId = 1L,
+            bookWordsDao = bookWordsDao.proxy
+        )
+
+        val ids = fixture.repository.getUnlearnedWordIdsForBook(
+            bookId = 1L,
+            count = 0,
+            orderType = WordOrderType.ALPHABETIC_ASC
+        )
+
+        assertEquals(emptyList(), ids)
+        assertTrue(bookWordsDao.calls.isEmpty())
+    }
+
     private class RepositoryFixture(
         books: List<WordBookEntity>,
-        selectedBookId: Long?
+        selectedBookId: Long?,
+        bookWordsDao: BookWordItemDao = throwingProxy()
     ) {
         val wordBookDao = FakeWordBookDao(books)
         val currentSelectionDao = FakeCurrentWordBookSelectionDao(selectedBookId)
@@ -113,7 +180,7 @@ class WordBookRepositoryImplTest {
             transactionRunner = FakeWordBookTransactionRunner(),
             wordLearningStateDao = throwingProxy(),
             wordBookProgressDao = throwingProxy(),
-            bookWordsDao = throwingProxy(),
+            bookWordsDao = bookWordsDao,
             wordDao = throwingProxy(),
             wordBookDao = wordBookDao.proxy,
             currentWordBookSelectionDao = currentSelectionDao.proxy,
@@ -122,6 +189,52 @@ class WordBookRepositoryImplTest {
             SyncOutboxWriter = syncOutboxWriter,
             gson = Gson()
         )
+    }
+
+    private data class BookWordDaoCall(
+        val name: String,
+        val limit: Int,
+        val excludeIds: List<Long>
+    )
+
+    private class FakeBookWordItemDao(
+        private val responses: Map<String, List<Long>> = emptyMap()
+    ) {
+        val calls = mutableListOf<BookWordDaoCall>()
+
+        val proxy: BookWordItemDao = proxy { methodName, args ->
+            when (methodName) {
+                "getRandomUnlearnedWordIdsForBook",
+                "getUnlearnedWordIdsAlphabeticAsc",
+                "getUnlearnedWordIdsAlphabeticDesc",
+                "getUnlearnedWordIdsLengthAsc",
+                "getUnlearnedWordIdsLengthDesc" -> {
+                    calls += BookWordDaoCall(
+                        name = methodName,
+                        limit = args[1] as Int,
+                        excludeIds = emptyList()
+                    )
+                    responses[methodName].orEmpty()
+                }
+
+                "getRandomUnlearnedWordIdsForBookExcluding",
+                "getUnlearnedWordIdsAlphabeticAscExcluding",
+                "getUnlearnedWordIdsAlphabeticDescExcluding",
+                "getUnlearnedWordIdsLengthAscExcluding",
+                "getUnlearnedWordIdsLengthDescExcluding" -> {
+                    @Suppress("UNCHECKED_CAST")
+                    val excluded = args[2] as List<Long>
+                    calls += BookWordDaoCall(
+                        name = methodName,
+                        limit = args[1] as Int,
+                        excludeIds = excluded
+                    )
+                    responses[methodName].orEmpty()
+                }
+
+                else -> unexpected(methodName)
+            }
+        }
     }
 
     private class FakeWordBookDao(initialBooks: List<WordBookEntity>) {

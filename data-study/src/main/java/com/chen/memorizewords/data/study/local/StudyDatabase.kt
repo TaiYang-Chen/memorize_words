@@ -11,6 +11,8 @@ import com.chen.memorizewords.data.study.local.room.model.study.daily.WordStudyR
 import com.chen.memorizewords.data.study.local.room.model.study.daily.WordStudyRecordsEntity
 import com.chen.memorizewords.data.study.local.room.model.study.favorites.WordFavoriteEntity
 import com.chen.memorizewords.data.study.local.room.model.study.favorites.WordFavoritesDao
+import com.chen.memorizewords.data.study.local.room.model.study.outbox.StudyPendingOutboxDao
+import com.chen.memorizewords.data.study.local.room.model.study.outbox.StudyPendingOutboxEntity
 import com.chen.memorizewords.data.study.local.room.model.study.progress.word.WordLearningStateDao
 import com.chen.memorizewords.data.study.local.room.model.study.progress.word.WordLearningStateEntity
 import com.chen.memorizewords.data.study.local.room.model.study.progress.wordbook.WordBookProgressDao
@@ -23,9 +25,10 @@ import com.chen.memorizewords.data.study.local.room.model.study.progress.wordboo
         WordStudyRecordsEntity::class,
         WordFavoriteEntity::class,
         WordLearningStateEntity::class,
-        WordBookProgressEntity::class
+        WordBookProgressEntity::class,
+        StudyPendingOutboxEntity::class
     ],
-    version = 1,
+    version = 3,
     exportSchema = true
 )
 @TypeConverters(StudyRoomConverters::class)
@@ -36,4 +39,5 @@ abstract class StudyDatabase : RoomDatabase() {
     abstract fun wordFavoritesDao(): WordFavoritesDao
     abstract fun wordLearningStateDao(): WordLearningStateDao
     abstract fun wordBookProgressDao(): WordBookProgressDao
+    abstract fun studyPendingOutboxDao(): StudyPendingOutboxDao
 }

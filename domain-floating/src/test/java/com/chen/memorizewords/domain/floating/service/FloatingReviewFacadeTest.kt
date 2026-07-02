@@ -21,6 +21,7 @@ import com.chen.memorizewords.domain.wordbook.model.WordBook
 import com.chen.memorizewords.domain.wordbook.model.WordBookInfo
 import com.chen.memorizewords.domain.wordbook.model.WordListQuery
 import com.chen.memorizewords.domain.wordbook.repository.WordBookRepository
+import com.chen.memorizewords.domain.wordbook.repository.WordOrderType
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.flow.Flow
@@ -131,6 +132,12 @@ class FloatingReviewFacadeTest {
         override suspend fun getWordRowsPage(query: WordListQuery): PageSlice<WordListRow> = error("Not needed")
         override suspend fun getWordIdsPage(wordBookId: Long, pageIndex: Int, pageSize: Int): List<Long> = emptyList()
         override suspend fun getAllUnlearnedWordsForBook(bookId: Long): List<Word> = emptyList()
+        override suspend fun getUnlearnedWordIdsForBook(
+            bookId: Long,
+            count: Int,
+            orderType: WordOrderType,
+            excludeIds: Set<Long>
+        ): List<Long> = emptyList()
         override suspend fun updateBookStudyDay(bookId: Long, today: String) = Unit
         override suspend fun recordAnswerResult(bookId: Long, isCorrect: Boolean, today: String) = Unit
     }

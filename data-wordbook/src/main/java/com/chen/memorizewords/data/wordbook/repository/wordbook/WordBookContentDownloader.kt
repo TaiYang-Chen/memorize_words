@@ -12,6 +12,7 @@ import kotlin.math.min
 class WordBookContentDownloader @Inject constructor(
     private val database: WordBookDatabase,
     private val remoteWordBookDataSource: RemoteWordBookDataSource,
+    private val contentLocalStore: WordBookContentLocalStore,
     private val syncStateStore: WordBookSyncStateStore
 ) {
     suspend fun ensureContentReady(
@@ -72,7 +73,7 @@ class WordBookContentDownloader @Inject constructor(
 
                 if (pageData.items.isEmpty()) break
 
-                database.persistWordBookPage(bookId, pageData.items)
+                contentLocalStore.persistPage(bookId, pageData.items)
                 downloadedCount = database.wordBookItemDao().getWordCountByWordBookId(bookId)
                 progress(
                     WordBookContentDownloadProgress(

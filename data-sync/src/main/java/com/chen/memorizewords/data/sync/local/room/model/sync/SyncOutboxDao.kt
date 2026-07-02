@@ -20,6 +20,7 @@ interface SyncOutboxDao {
         """
         SELECT *
         FROM sync_outbox
+        WHERE state IN ('QUEUED', 'IN_FLIGHT', 'RETRY_WAITING', 'BLOCKED')
         """
     )
     fun observeAllPending(): Flow<List<SyncOutboxEntity>>
@@ -47,7 +48,16 @@ interface SyncOutboxDao {
     @Query("SELECT * FROM sync_outbox WHERE biz_key = :bizKey LIMIT 1")
     suspend fun getByBizKey(bizKey: String): SyncOutboxEntity?
 
-    @Query("SELECT COUNT(*) FROM sync_outbox")
+    @Query("SELECT * FROM sync_outbox WHERE biz_key IN (:bizKeys)")
+    suspend fun getByBizKeys(bizKeys: List<String>): List<SyncOutboxEntity>
+
+    @Query(
+        """
+        SELECT COUNT(*)
+        FROM sync_outbox
+        WHERE state IN ('QUEUED', 'IN_FLIGHT', 'RETRY_WAITING', 'BLOCKED')
+        """
+    )
     fun observePendingCount(): Flow<Int>
 
     @Query(
@@ -68,7 +78,13 @@ interface SyncOutboxDao {
     )
     fun observeBlockedCount(): Flow<Int>
 
-    @Query("SELECT COUNT(*) FROM sync_outbox")
+    @Query(
+        """
+        SELECT COUNT(*)
+        FROM sync_outbox
+        WHERE state IN ('QUEUED', 'IN_FLIGHT', 'RETRY_WAITING', 'BLOCKED')
+        """
+    )
     suspend fun getPendingCountValue(): Int
 
     @Query(

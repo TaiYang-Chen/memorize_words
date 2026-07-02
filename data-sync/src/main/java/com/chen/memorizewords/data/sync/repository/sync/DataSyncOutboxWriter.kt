@@ -23,6 +23,22 @@ class DataSyncOutboxWriter @Inject constructor(
         syncOutboxWorkScheduler.scheduleDrain()
     }
 
+    override suspend fun enqueueLatest(commands: List<OutboxCommand>) {
+        if (commands.isEmpty()) return
+        syncOutboxStore.enqueueLatest(
+            commands.map { command ->
+                SyncOutboxWriteCommand(
+                    bizType = command.topic,
+                    bizKey = command.key,
+                    operation = command.operation.toDataOperation(),
+                    payload = command.payload,
+                    updatedAt = command.updatedAtEpochMillis
+                )
+            }
+        )
+        syncOutboxWorkScheduler.scheduleDrain()
+    }
+
     private fun SyncOperation.toDataOperation(): SyncOutboxOperation {
         return when (this) {
             SyncOperation.UPSERT -> SyncOutboxOperation.UPSERT

@@ -15,7 +15,8 @@ import androidx.room.Index
         Index("book_id"),
         Index("next_review_time"),
         Index(value = ["book_id", "user_status"]),
-        Index(value = ["book_id", "next_review_time"])
+        Index(value = ["book_id", "next_review_time"]),
+        Index(value = ["book_id", "user_status", "next_review_time", "last_learn_time", "word_id"])
     ],
 )
 data class WordLearningStateEntity(

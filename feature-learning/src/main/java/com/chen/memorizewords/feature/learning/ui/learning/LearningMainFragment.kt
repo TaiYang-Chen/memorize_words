@@ -57,7 +57,7 @@ class LearningMainFragment :
 
     override fun initView(savedInstanceState: Bundle?) {
         databind.viewModel = viewModel
-        ensureChildFragments()
+        ensureTestFragment()
 
         val intent = requireActivity().intent
         val initialLearnedCount = intent?.getIntExtra(
@@ -198,43 +198,37 @@ class LearningMainFragment :
         super.onDestroyView()
     }
 
-    private fun ensureChildFragments() {
-        var changed = false
-        val testFragment = childFragmentManager.findFragmentByTag(testFragmentTag)
-            ?: WordLearningTestFragment().also { fragment ->
-                childFragmentManager.beginTransaction()
-                    .add(R.id.fragment_include, fragment, testFragmentTag)
-                    .commitNow()
-                changed = true
-            }
-        val detailFragment = childFragmentManager.findFragmentByTag(detailFragmentTag)
-            ?: WordLearningDetailFragment().also { fragment ->
-                childFragmentManager.beginTransaction()
-                    .add(R.id.fragment_include, fragment, detailFragmentTag)
-                    .hide(fragment)
-                    .commitNow()
-                changed = true
-            }
+    private fun ensureTestFragment() {
+        if (childFragmentManager.findFragmentByTag(testFragmentTag) != null) return
+        childFragmentManager.beginTransaction()
+            .add(R.id.fragment_include, WordLearningTestFragment(), testFragmentTag)
+            .commitNow()
+    }
 
-        if (changed) {
-            childFragmentManager.beginTransaction()
-                .show(testFragment)
-                .hide(detailFragment)
-                .commitNow()
-        }
+    private fun ensureDetailFragment() {
+        if (childFragmentManager.findFragmentByTag(detailFragmentTag) != null) return
+        val detailFragment = WordLearningDetailFragment()
+        childFragmentManager.beginTransaction()
+            .add(R.id.fragment_include, detailFragment, detailFragmentTag)
+            .hide(detailFragment)
+            .commitNow()
     }
 
     private fun renderState(state: LearningViewModel.LearningState) {
+        ensureTestFragment()
+        if (state == LearningViewModel.LearningState.DETAIL) {
+            ensureDetailFragment()
+        }
         val testFragment = childFragmentManager.findFragmentByTag(testFragmentTag) ?: return
-        val detailFragment = childFragmentManager.findFragmentByTag(detailFragmentTag) ?: return
+        val detailFragment = childFragmentManager.findFragmentByTag(detailFragmentTag)
         childFragmentManager.beginTransaction()
             .apply {
                 if (state == LearningViewModel.LearningState.TEST) {
                     show(testFragment)
-                    hide(detailFragment)
+                    detailFragment?.let(::hide)
                 } else {
                     hide(testFragment)
-                    show(detailFragment)
+                    detailFragment?.let(::show)
                 }
             }
             .commit()

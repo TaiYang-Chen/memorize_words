@@ -54,6 +54,9 @@ interface RootWordDao {
     @Query("DELETE FROM word_root_relation WHERE word_id = :wordId")
     suspend fun deleteByWordId(wordId: Long)
 
+    @Query("DELETE FROM word_root_relation WHERE word_id IN (:wordIds)")
+    suspend fun deleteByWordIds(wordIds: List<Long>)
+
     /**
      * 删除一个指定的单词-词根关联。
      *

@@ -88,6 +88,9 @@ object DataStudyDatabaseModule {
     fun provideWordBookProgressDao(database: StudyDatabase) = database.wordBookProgressDao()
 
     @Provides
+    fun provideStudyPendingOutboxDao(database: StudyDatabase) = database.studyPendingOutboxDao()
+
+    @Provides
     @Singleton
     fun provideStudyPlanDataSource(mmkv: MMKV): StudyPlanDataSource {
         return StudyPlanDataSourceImpl(mmkv)

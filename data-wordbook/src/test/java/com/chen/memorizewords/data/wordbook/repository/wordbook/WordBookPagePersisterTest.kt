@@ -79,6 +79,15 @@ class WordBookPagePersisterTest {
         assertNull(sanitized.single().definitionId)
     }
 
+    @Test
+    fun `sql id chunking keeps chunks below sqlite bind limit`() {
+        val chunks = (1L..1_001L).toList().chunkedSql()
+
+        assertEquals(listOf(500, 500, 1), chunks.map { it.size })
+        assertEquals(1L, chunks.first().first())
+        assertEquals(1_001L, chunks.last().single())
+    }
+
     private fun form(
         id: Long,
         wordId: Long,

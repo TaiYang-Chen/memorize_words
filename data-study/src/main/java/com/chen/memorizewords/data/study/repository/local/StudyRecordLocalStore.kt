@@ -1,0 +1,205 @@
+package com.chen.memorizewords.data.study.repository.local
+
+import androidx.room.withTransaction
+import com.chen.memorizewords.core.common.calendar.CheckInBusinessCalendar
+import com.chen.memorizewords.data.study.local.StudyDatabase
+import com.chen.memorizewords.data.study.local.mmkv.plan.StudyPlanDataSource
+import com.chen.memorizewords.data.study.local.room.model.study.checkin.CheckInRecordDao
+import com.chen.memorizewords.data.study.local.room.model.study.checkin.CheckInRecordEntity
+import com.chen.memorizewords.data.study.local.room.model.study.daily.DailyStudyDurationDao
+import com.chen.memorizewords.data.study.local.room.model.study.daily.DailyStudyDurationEntity
+import com.chen.memorizewords.data.study.local.room.model.study.daily.WordStudyRecordsDao
+import com.chen.memorizewords.data.study.local.room.model.study.daily.WordStudyRecordsEntity
+import com.chen.memorizewords.data.study.local.room.model.study.outbox.StudyPendingOutboxDao
+import com.chen.memorizewords.data.study.local.room.model.study.outbox.StudyPendingOutboxEntity
+import com.chen.memorizewords.domain.sync.CheckInRecordSyncPayload
+import com.chen.memorizewords.domain.sync.DailyStudyDurationSyncPayload
+import com.chen.memorizewords.domain.sync.OutboxCommand
+import com.chen.memorizewords.domain.sync.OutboxTopic
+import com.chen.memorizewords.domain.sync.StudyRecordSyncPayload
+import com.chen.memorizewords.domain.sync.SyncOperation
+import com.chen.memorizewords.domain.word.model.word.Word
+import com.chen.memorizewords.domain.wordbook.model.study.StudyPlan
+import com.google.gson.Gson
+import javax.inject.Inject
+
+class StudyRecordLocalStore @Inject constructor(
+    private val studyDatabase: StudyDatabase,
+    private val wordStudyRecordsDao: WordStudyRecordsDao,
+    private val dailyStudyDurationDao: DailyStudyDurationDao,
+    private val checkInRecordDao: CheckInRecordDao,
+    private val studyPendingOutboxDao: StudyPendingOutboxDao,
+    private val studyPlanDataSource: StudyPlanDataSource,
+    private val checkInBusinessCalendar: CheckInBusinessCalendar,
+    private val gson: Gson
+) {
+    suspend fun addLearningRecord(
+        word: Word,
+        definition: String,
+        isNewWord: Boolean
+    ): LocalWriteResult {
+        val today = checkInBusinessCalendar.currentBusinessDate()
+        val commands = studyDatabase.withTransaction {
+            wordStudyRecordsDao.insert(
+                WordStudyRecordsEntity(
+                    date = today,
+                    wordId = word.id,
+                    word = word.word,
+                    definition = definition,
+                    isNewWord = isNewWord
+                )
+            )
+
+            val plan = studyPlanDataSource.getStudyPlan() ?: StudyPlan()
+            val todayNewCount = wordStudyRecordsDao.getTodayNewWordCountValue(today)
+            val todayReviewCount = wordStudyRecordsDao.getTodayReviewWordCountValue(today)
+            val dailyNewTarget = if (plan.dailyNewCount > 0) plan.dailyNewCount else 15
+            val reviewTarget = if (plan.dailyReviewCount > 0) plan.dailyReviewCount else dailyNewTarget * 3
+            val updatedAt = System.currentTimeMillis()
+            dailyStudyDurationDao.upsertPlanCompletion(
+                date = today,
+                isNewCompleted = if (todayNewCount >= dailyNewTarget) 1 else 0,
+                isReviewCompleted = if (todayReviewCount >= reviewTarget) 1 else 0,
+                updatedAt = updatedAt
+            )
+
+            buildList {
+                add(
+                    OutboxCommand(
+                        topic = OutboxTopic.STUDY_RECORD,
+                        key = buildStudyRecordBizKey(today, word.id, isNewWord),
+                        operation = SyncOperation.UPSERT,
+                        payload = gson.toJson(
+                            StudyRecordSyncPayload(
+                                date = today,
+                                wordId = word.id,
+                                word = word.word,
+                                definition = definition,
+                                isNewWord = isNewWord
+                            )
+                        )
+                    )
+                )
+                dailyStudyDurationDao.getByDate(today)?.let { duration ->
+                    add(duration.toOutboxCommand(gson))
+                }
+            }.also { pendingCommands ->
+                persistPendingOutboxCommands(pendingCommands)
+            }
+        }
+        return LocalWriteResult(commands)
+    }
+
+    suspend fun addStudyDuration(durationMs: Long): LocalWriteResult {
+        if (durationMs <= 0L) return LocalWriteResult()
+        val date = checkInBusinessCalendar.currentBusinessDate()
+        val commands = studyDatabase.withTransaction {
+            val updatedAt = System.currentTimeMillis()
+            dailyStudyDurationDao.addDuration(
+                date = date,
+                durationMs = durationMs,
+                updatedAt = updatedAt
+            )
+            dailyStudyDurationDao.getByDate(date)
+                ?.let { listOf(it.toOutboxCommand(gson)) }
+                .orEmpty()
+                .also { pendingCommands ->
+                    persistPendingOutboxCommands(pendingCommands)
+                }
+        }
+        return LocalWriteResult(commands)
+    }
+
+    suspend fun upsertCheckInRecord(entity: CheckInRecordEntity): LocalWriteResult {
+        val commands = listOf(
+            OutboxCommand(
+                topic = OutboxTopic.CHECKIN_RECORD,
+                key = buildCheckInRecordBizKey(entity.date),
+                operation = SyncOperation.UPSERT,
+                payload = gson.toJson(entity.toSyncPayload())
+            )
+        )
+        studyDatabase.withTransaction {
+            checkInRecordDao.upsert(entity)
+            persistPendingOutboxCommands(commands)
+        }
+        return LocalWriteResult(commands)
+    }
+
+    suspend fun getPendingOutboxCommands(): List<OutboxCommand> {
+        return studyPendingOutboxDao.getAll().map { it.toOutboxCommand() }
+    }
+
+    suspend fun deletePendingOutboxCommands(commands: List<OutboxCommand>) {
+        commands.map { it.key }
+            .distinct()
+            .chunked(SQL_BIND_CHUNK_SIZE)
+            .forEach { keys -> studyPendingOutboxDao.deleteByBizKeys(keys) }
+    }
+
+    private suspend fun persistPendingOutboxCommands(commands: List<OutboxCommand>) {
+        if (commands.isNotEmpty()) {
+            studyPendingOutboxDao.upsertAll(commands.map { it.toPendingOutboxEntity() })
+        }
+    }
+}
+
+internal fun DailyStudyDurationEntity.toOutboxCommand(gson: Gson): OutboxCommand {
+    return OutboxCommand(
+        topic = OutboxTopic.DAILY_STUDY_DURATION,
+        key = buildDailyStudyDurationBizKey(date),
+        operation = SyncOperation.UPSERT,
+        payload = gson.toJson(
+            DailyStudyDurationSyncPayload(
+                date = date,
+                totalDurationMs = totalDurationMs,
+                updatedAt = updatedAt,
+                isNewPlanCompleted = isNewPlanCompleted,
+                isReviewPlanCompleted = isReviewPlanCompleted
+            )
+        )
+    )
+}
+
+internal fun buildStudyRecordBizKey(date: String, wordId: Long, isNewWord: Boolean): String {
+    return "study_record:$date:$wordId:$isNewWord"
+}
+
+internal fun buildDailyStudyDurationBizKey(date: String): String {
+    return "daily_study_duration:$date"
+}
+
+internal fun buildCheckInRecordBizKey(date: String): String {
+    return "checkin_record:$date"
+}
+
+internal fun CheckInRecordEntity.toSyncPayload(): CheckInRecordSyncPayload {
+    return CheckInRecordSyncPayload(
+        date = date,
+        type = type.name,
+        signedAt = signedAt,
+        updatedAt = updatedAt
+    )
+}
+
+private fun OutboxCommand.toPendingOutboxEntity(): StudyPendingOutboxEntity {
+    return StudyPendingOutboxEntity(
+        topic = topic,
+        bizKey = key,
+        operation = operation.name,
+        payload = payload,
+        updatedAt = updatedAtEpochMillis
+    )
+}
+
+private fun StudyPendingOutboxEntity.toOutboxCommand(): OutboxCommand {
+    return OutboxCommand(
+        topic = topic,
+        key = bizKey,
+        operation = SyncOperation.valueOf(operation),
+        payload = payload,
+        updatedAtEpochMillis = updatedAt
+    )
+}
+
+private const val SQL_BIND_CHUNK_SIZE = 500

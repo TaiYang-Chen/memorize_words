@@ -1,0 +1,178 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "6b8df2c2861fe964c0a62e0efbc1701b",
+    "entities": [
+      {
+        "tableName": "sync_outbox",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `biz_type` TEXT NOT NULL, `biz_key` TEXT NOT NULL, `operation` TEXT NOT NULL, `payload` TEXT NOT NULL, `state` TEXT NOT NULL, `retry_count` INTEGER NOT NULL, `last_error` TEXT, `failure_kind` TEXT, `last_attempt_at` INTEGER NOT NULL, `next_retry_at` INTEGER NOT NULL, `lease_token` TEXT, `lease_expires_at` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bizType",
+            "columnName": "biz_type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bizKey",
+            "columnName": "biz_key",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "operation",
+            "columnName": "operation",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "payload",
+            "columnName": "payload",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "state",
+            "columnName": "state",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "retryCount",
+            "columnName": "retry_count",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastError",
+            "columnName": "last_error",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "failureKind",
+            "columnName": "failure_kind",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "lastAttemptAt",
+            "columnName": "last_attempt_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nextRetryAt",
+            "columnName": "next_retry_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "leaseToken",
+            "columnName": "lease_token",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "leaseExpiresAt",
+            "columnName": "lease_expires_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updated_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_sync_outbox_biz_key",
+            "unique": true,
+            "columnNames": [
+              "biz_key"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_sync_outbox_biz_key` ON `${TABLE_NAME}` (`biz_key`)"
+          },
+          {
+            "name": "index_sync_outbox_biz_type_updated_at",
+            "unique": false,
+            "columnNames": [
+              "biz_type",
+              "updated_at"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_sync_outbox_biz_type_updated_at` ON `${TABLE_NAME}` (`biz_type`, `updated_at`)"
+          },
+          {
+            "name": "index_sync_outbox_state_next_retry_at_updated_at",
+            "unique": false,
+            "columnNames": [
+              "state",
+              "next_retry_at",
+              "updated_at"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_sync_outbox_state_next_retry_at_updated_at` ON `${TABLE_NAME}` (`state`, `next_retry_at`, `updated_at`)"
+          },
+          {
+            "name": "index_sync_outbox_state_lease_expires_at_updated_at",
+            "unique": false,
+            "columnNames": [
+              "state",
+              "lease_expires_at",
+              "updated_at"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_sync_outbox_state_lease_expires_at_updated_at` ON `${TABLE_NAME}` (`state`, `lease_expires_at`, `updated_at`)"
+          },
+          {
+            "name": "index_sync_outbox_state_updated_at_id",
+            "unique": false,
+            "columnNames": [
+              "state",
+              "updated_at",
+              "id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_sync_outbox_state_updated_at_id` ON `${TABLE_NAME}` (`state`, `updated_at`, `id`)"
+          },
+          {
+            "name": "index_sync_outbox_lease_token",
+            "unique": false,
+            "columnNames": [
+              "lease_token"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_sync_outbox_lease_token` ON `${TABLE_NAME}` (`lease_token`)"
+          },
+          {
+            "name": "index_sync_outbox_updated_at",
+            "unique": false,
+            "columnNames": [
+              "updated_at"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_sync_outbox_updated_at` ON `${TABLE_NAME}` (`updated_at`)"
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6b8df2c2861fe964c0a62e0efbc1701b')"
+    ]
+  }
+}

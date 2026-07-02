@@ -28,4 +28,7 @@ interface WordExampleDao {
 
     @Query("DELETE FROM word_examples WHERE word_id = :wordId")
     suspend fun deleteByWordId(wordId: Long)
+
+    @Query("DELETE FROM word_examples WHERE word_id IN (:wordIds)")
+    suspend fun deleteByWordIds(wordIds: List<Long>)
 }

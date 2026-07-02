@@ -36,6 +36,7 @@ class DestructiveRoomDatabaseFactory(
             )
             .addMigrations(*migrations)
             .fallbackToDestructiveMigration(dropAllTables = true)
+            .setJournalMode(RoomDatabase.JournalMode.WRITE_AHEAD_LOGGING)
             .configure()
             .build()
     }

@@ -1,5 +1,4 @@
 package com.chen.memorizewords.domain.study.usecase.word
-import com.chen.memorizewords.domain.word.model.word.Word
 import com.chen.memorizewords.domain.wordbook.repository.WordBookRepository
 import com.chen.memorizewords.domain.wordbook.repository.WordOrderType
 import javax.inject.Inject
@@ -12,17 +11,12 @@ class GetNewLearnWordsUseCase @Inject constructor(
         count: Int,
         orderType: WordOrderType = WordOrderType.RANDOM,
         excludeIds: Set<Long> = emptySet()
-    ): List<Word> {
-        val all = wordBookRepository.getAllUnlearnedWordsForBook(bookId)
-        val filtered = if (excludeIds.isEmpty()) all else all.filter { it.id !in excludeIds }
-        val sorted = when (orderType) {
-            WordOrderType.RANDOM -> filtered.shuffled()
-            WordOrderType.ALPHABETIC_ASC -> filtered.sortedBy { it.normalizedWord }
-            WordOrderType.ALPHABETIC_DESC -> filtered.sortedByDescending { it.normalizedWord }
-            WordOrderType.LENGTH_ASC -> filtered.sortedBy { it.word.length }
-            WordOrderType.LENGTH_DESC -> filtered.sortedByDescending { it.word.length }
-        }
-        val data = sorted.take(count)
-        return data
+    ): List<Long> {
+        return wordBookRepository.getUnlearnedWordIdsForBook(
+            bookId = bookId,
+            count = count,
+            orderType = orderType,
+            excludeIds = excludeIds
+        )
     }
 }

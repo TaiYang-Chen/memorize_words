@@ -15,6 +15,7 @@ import com.chen.memorizewords.data.sync.repository.sync.SyncOutboxState
         Index(value = ["biz_type", "updated_at"]),
         Index(value = ["state", "next_retry_at", "updated_at"]),
         Index(value = ["state", "lease_expires_at", "updated_at"]),
+        Index(value = ["state", "updated_at", "id"]),
         Index(value = ["lease_token"]),
         Index(value = ["updated_at"])
     ]
