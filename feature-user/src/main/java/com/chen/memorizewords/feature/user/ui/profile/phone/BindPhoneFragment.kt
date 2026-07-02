@@ -39,7 +39,7 @@ class BindPhoneFragment :
     }
 
     private fun sendFusionSmsCode() {
-        val phone = viewModel.getValidatedPhone() ?: return
+        val phone = viewModel.getValidatedPhoneForSendingCode() ?: return
         viewModel.showSendingCode()
         lifecycleScope.launch {
             fusionPhoneAuthProvider.sendSmsCodeInPlace(

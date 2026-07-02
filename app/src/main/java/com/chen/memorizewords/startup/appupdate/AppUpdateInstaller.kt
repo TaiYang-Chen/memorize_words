@@ -29,7 +29,10 @@ class AppUpdateInstaller @Inject constructor(
     @ApplicationContext private val context: Context,
     private val downloadRepository: DownloadRepository
 ) {
-    suspend fun downloadAndVerify(info: AppUpdateInfo): File {
+    suspend fun downloadAndVerify(
+        info: AppUpdateInfo,
+        onProgress: (Int) -> Unit = {}
+    ): File {
         val fileName = "memorize_words_${info.latestVersion.versionCode}.apk"
         val taskId = "app_update_${info.releaseId}"
         downloadRepository.start(
@@ -45,13 +48,23 @@ class AppUpdateInstaller @Inject constructor(
             )
         )
         val state = downloadRepository.observeState(taskId)
-            .first { it.status == DownloadStatus.Completed || it.status == DownloadStatus.Failed }
+            .first { state ->
+                if (state.status == DownloadStatus.Downloading) {
+                    onProgress(state.progress)
+                }
+                state.status == DownloadStatus.Completed || state.status == DownloadStatus.Failed
+            }
         if (state.status == DownloadStatus.Failed) {
             error(state.errorMessage ?: "Update package download failed")
         }
+        onProgress(100)
         val path = state.filePath ?: error("Update package path is empty")
         val file = File(path)
-        if (!file.exists()) error("Update package does not exist")
+        if (!file.exists() || !file.isFile) error("Update package does not exist")
+        val expectedSize = info.fileSizeBytes
+        if (expectedSize != null && expectedSize > 0L && file.length() != expectedSize) {
+            error("Update package size verification failed")
+        }
         val expectedSha = info.fileSha256
         if (!expectedSha.isNullOrBlank()) {
             val actualSha = sha256(file)

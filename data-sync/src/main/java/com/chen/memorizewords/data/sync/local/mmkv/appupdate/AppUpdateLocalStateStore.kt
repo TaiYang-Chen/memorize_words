@@ -2,6 +2,8 @@ package com.chen.memorizewords.data.sync.local.mmkv.appupdate
 
 import com.chen.memorizewords.domain.sync.appupdate.AppUpdateDismissRecord
 import com.chen.memorizewords.domain.sync.appupdate.AppUpdateCachedForceUpdate
+import com.chen.memorizewords.domain.sync.appupdate.AppUpdateDeferredRecord
+import com.chen.memorizewords.domain.sync.appupdate.AppUpdateIgnoreRecord
 import com.chen.memorizewords.domain.sync.appupdate.AppUpdateInfo
 import com.chen.memorizewords.domain.sync.appupdate.AppUpdateLocalStateRepository
 import com.google.gson.Gson
@@ -32,6 +34,40 @@ class AppUpdateLocalStateStore @Inject constructor(
         mmkv.encode(KEY_DISMISS_RECORD, gson.toJson(AppUpdateDismissRecord(releaseId, dismissedAtMillis)))
     }
 
+    override fun getIgnoreRecord(): AppUpdateIgnoreRecord? {
+        return mmkv.decodeString(KEY_IGNORE_RECORD)
+            ?.let { json -> runCatching { gson.fromJson(json, AppUpdateIgnoreRecord::class.java) }.getOrNull() }
+    }
+
+    override fun setIgnored(releaseId: Long, versionCode: Int, ignoredAtMillis: Long) {
+        mmkv.encode(
+            KEY_IGNORE_RECORD,
+            gson.toJson(AppUpdateIgnoreRecord(releaseId, versionCode, ignoredAtMillis))
+        )
+    }
+
+    override fun getDeferredRecord(): AppUpdateDeferredRecord? {
+        return mmkv.decodeString(KEY_DEFERRED_RECORD)
+            ?.let { json -> runCatching { gson.fromJson(json, AppUpdateDeferredRecord::class.java) }.getOrNull() }
+    }
+
+    override fun setDeferred(releaseId: Long, deferredUntilMillis: Long) {
+        mmkv.encode(KEY_DEFERRED_RECORD, gson.toJson(AppUpdateDeferredRecord(releaseId, deferredUntilMillis)))
+    }
+
+    override fun getCachedLatestInfo(): AppUpdateInfo? {
+        return mmkv.decodeString(KEY_LATEST_INFO)
+            ?.let { json -> runCatching { gson.fromJson(json, AppUpdateInfo::class.java) }.getOrNull() }
+    }
+
+    override fun setCachedLatestInfo(info: AppUpdateInfo?) {
+        if (info == null) {
+            mmkv.removeValueForKey(KEY_LATEST_INFO)
+        } else {
+            mmkv.encode(KEY_LATEST_INFO, gson.toJson(info))
+        }
+    }
+
     override fun getCachedForceUpdate(): AppUpdateCachedForceUpdate? {
         val json = mmkv.decodeString(KEY_FORCE_UPDATE) ?: return null
         return runCatching {
@@ -59,6 +95,9 @@ class AppUpdateLocalStateStore @Inject constructor(
     private companion object {
         const val KEY_INSTALL_ID = "app_update_install_id"
         const val KEY_DISMISS_RECORD = "app_update_dismiss_record"
+        const val KEY_IGNORE_RECORD = "app_update_ignore_record"
+        const val KEY_DEFERRED_RECORD = "app_update_deferred_record"
+        const val KEY_LATEST_INFO = "app_update_cached_latest_info"
         const val KEY_FORCE_UPDATE = "app_update_cached_force_update"
     }
 }

@@ -25,7 +25,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="发现新版本"
+                android:text="&#21457;&#29616;&#26032;&#29256;&#26412;"
                 android:textColor="#0f172a"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -40,11 +40,36 @@
                 android:textStyle="bold" />
 
             <LinearLayout
+                android:id="@+id/llUpdateMeta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical" />
+
+            <LinearLayout
                 android:id="@+id/llUpdateNotes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:orientation="vertical" />
+
+            <ProgressBar
+                android:id="@+id/pbUpdateDownload"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:layout_marginTop="16dp"
+                android:max="100"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tvUpdateProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="#475569"
+                android:textSize="13sp"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -59,7 +84,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/app_update_secondary_button_bg"
                     android:gravity="center"
-                    android:text="以后再说"
+                    android:text="&#31245;&#21518;&#25552;&#37266;"
                     android:textColor="#334155"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -72,7 +97,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/app_update_primary_button_bg"
                     android:gravity="center"
-                    android:text="立即更新"
+                    android:text="&#31435;&#21363;&#26356;&#26032;"
                     android:textColor="#FFFFFF"
                     android:textSize="15sp"
                     android:textStyle="bold" />

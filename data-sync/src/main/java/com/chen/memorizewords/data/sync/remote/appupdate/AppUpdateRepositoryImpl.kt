@@ -7,11 +7,13 @@ import com.chen.memorizewords.core.network.http.await
 import com.chen.memorizewords.data.sync.remoteapi.api.appupdate.AppUpdateApiService
 import com.chen.memorizewords.data.sync.remoteapi.api.appupdate.AppUpdateCheckRequestDto
 import com.chen.memorizewords.data.sync.remoteapi.api.appupdate.AppUpdateCheckResponseDto
+import com.chen.memorizewords.data.sync.remoteapi.GlobalConfig
 import com.chen.memorizewords.domain.sync.appupdate.AppUpdateCheck
 import com.chen.memorizewords.domain.sync.appupdate.AppUpdateCheckResult
 import com.chen.memorizewords.domain.sync.appupdate.AppUpdateInfo
 import com.chen.memorizewords.domain.sync.appupdate.AppUpdateRepository
 import com.chen.memorizewords.domain.sync.appupdate.AppVersion
+import com.chen.memorizewords.domain.sync.appupdate.VersionComparator
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -53,24 +55,39 @@ class AppUpdateRepositoryImpl @Inject constructor(
         if (releaseId == null || latestName.isNullOrBlank() || latestCode == null || downloadUrl.isNullOrBlank()) {
             return AppUpdateCheckResult.NoUpdate
         }
+        val domainCurrentVersion = AppVersion(
+            versionName = currentVersion?.versionName ?: request.versionName,
+            versionCode = currentVersion?.versionCode ?: request.versionCode
+        )
+        val domainLatestVersion = AppVersion(
+            versionName = latestName,
+            versionCode = latestCode
+        )
+        if (!VersionComparator.isRemoteNewer(domainCurrentVersion, domainLatestVersion)) {
+            return AppUpdateCheckResult.NoUpdate
+        }
         return AppUpdateCheckResult.UpdateAvailable(
             AppUpdateInfo(
                 releaseId = releaseId,
-                currentVersion = AppVersion(
-                    versionName = currentVersion?.versionName ?: request.versionName,
-                    versionCode = currentVersion?.versionCode ?: request.versionCode
-                ),
-                latestVersion = AppVersion(
-                    versionName = latestName,
-                    versionCode = latestCode
-                ),
+                currentVersion = domainCurrentVersion,
+                latestVersion = domainLatestVersion,
                 forceUpdate = forceUpdate,
                 releaseNotes = notes.take(5),
-                downloadUrl = downloadUrl,
+                downloadUrl = resolveDownloadUrl(downloadUrl),
                 fileSha256 = fileSha256,
-                fileSizeBytes = fileSizeBytes
+                fileSizeBytes = fileSizeBytes,
+                publishedAt = publishedAt,
+                riskTips = riskTips?.filter { it.isNotBlank() }.orEmpty(),
+                releaseLogUrl = releaseLogUrl?.takeIf { it.isNotBlank() }?.let(::resolveDownloadUrl)
             )
         )
+    }
+
+    private fun resolveDownloadUrl(url: String): String {
+        if (url.startsWith("http://", ignoreCase = true) || url.startsWith("https://", ignoreCase = true)) {
+            return url
+        }
+        return java.net.URL(java.net.URL(GlobalConfig.baseUrl), url).toString()
     }
 
     private fun NetworkResult.Failure.toException(): Throwable {

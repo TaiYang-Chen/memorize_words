@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.domain.account.usecase.user.BindPhoneUseCase
+import com.chen.memorizewords.domain.account.usecase.user.GetUserFlowUseCase
 import com.chen.memorizewords.domain.account.usecase.user.LoginError
 import com.chen.memorizewords.feature.user.R
 import com.chen.memorizewords.feature.user.ui.resolveAuthFailureMessage
@@ -12,10 +13,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 @HiltViewModel
 class BindPhoneViewModel @Inject constructor(
+    getUserFlowUseCase: GetUserFlowUseCase,
     private val bindPhoneUseCase: BindPhoneUseCase,
     private val resourceProvider: ResourceProvider
 ) : BaseViewModel() {
@@ -27,10 +31,26 @@ class BindPhoneViewModel @Inject constructor(
 
     private var verifiedPhone: String? = null
     private var countdownJob: Job? = null
+    private val currentUser = getUserFlowUseCase()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = null
+        )
 
     fun getValidatedPhone(): String? {
         val targetPhone = phone.value.orEmpty().trim()
         return targetPhone.takeIf(::validatePhone)
+    }
+
+    fun getValidatedPhoneForSendingCode(): String? {
+        val targetPhone = getValidatedPhone() ?: return null
+        val boundPhone = currentUser.value?.phone?.trim().orEmpty()
+        if (boundPhone.isNotBlank() && targetPhone == boundPhone) {
+            showToast(resourceProvider.getString(R.string.module_user_bind_phone_already_bound))
+            return null
+        }
+        return targetPhone
     }
 
     fun getValidatedSmsCode(): String? {

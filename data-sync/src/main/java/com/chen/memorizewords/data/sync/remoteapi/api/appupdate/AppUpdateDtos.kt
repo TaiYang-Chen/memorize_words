@@ -22,7 +22,10 @@ data class AppUpdateCheckResponseDto(
     val releaseNoteItems: List<String>? = null,
     val downloadUrl: String? = null,
     val fileSha256: String? = null,
-    val fileSizeBytes: Long? = null
+    val fileSizeBytes: Long? = null,
+    val publishedAt: String? = null,
+    val riskTips: List<String>? = null,
+    val releaseLogUrl: String? = null
 )
 
 data class VersionInfoDto(

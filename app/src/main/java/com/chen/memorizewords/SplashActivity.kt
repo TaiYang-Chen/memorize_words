@@ -1,9 +1,9 @@
 package com.chen.memorizewords
 
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import android.os.Bundle
 import android.os.SystemClock
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
@@ -61,7 +61,7 @@ class SplashActivity : AppCompatActivity(), AppUpdateDialogFragment.Listener {
             appUpdateInstaller.install(this, file)
             maybeRouteAfterInstallPermissionReturn()
         } else {
-            Toast.makeText(this, "请允许安装应用更新", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "\u8bf7\u5141\u8bb8\u5b89\u88c5\u5e94\u7528\u66f4\u65b0", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -103,7 +103,9 @@ class SplashActivity : AppCompatActivity(), AppUpdateDialogFragment.Listener {
         lifecycleScope.launch {
             updateDialog()?.setDownloading(true)
             runCatching {
-                val file = appUpdateInstaller.downloadAndVerify(updateInfo)
+                val file = appUpdateInstaller.downloadAndVerify(updateInfo) { progress ->
+                    updateDialog()?.setDownloadingProgress(progress)
+                }
                 pendingInstallFile = file
                 pendingInstallIsForce = updateInfo.forceUpdate
                 if (appUpdateInstaller.canInstallPackages()) {
@@ -116,7 +118,7 @@ class SplashActivity : AppCompatActivity(), AppUpdateDialogFragment.Listener {
                 updateDialog()?.setDownloading(false)
                 Toast.makeText(
                     this@SplashActivity,
-                    throwable.message ?: "Update failed. Please try again later.",
+                    throwable.message ?: "\u66f4\u65b0\u5931\u8d25\uff0c\u8bf7\u7a0d\u540e\u91cd\u8bd5",
                     Toast.LENGTH_SHORT
                 ).show()
             }

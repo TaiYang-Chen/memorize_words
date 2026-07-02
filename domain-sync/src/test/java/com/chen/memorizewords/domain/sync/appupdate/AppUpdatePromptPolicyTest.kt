@@ -52,6 +52,54 @@ class AppUpdatePromptPolicyTest {
     }
 
     @Test
+    fun `ignored optional release is hidden from automatic prompt`() {
+        val info = updateInfo(forceUpdate = false)
+        val ignoreRecord = AppUpdateIgnoreRecord(releaseId = 10L, versionCode = 2, ignoredAtMillis = 1_000L)
+
+        assertFalse(
+            policy.shouldShowUpdate(
+                info = info,
+                ignoreRecord = ignoreRecord,
+                deferredRecord = null,
+                nowMillis = 2_000L,
+                manual = false
+            )
+        )
+    }
+
+    @Test
+    fun `manual check shows ignored optional release`() {
+        val info = updateInfo(forceUpdate = false)
+        val ignoreRecord = AppUpdateIgnoreRecord(releaseId = 10L, versionCode = 2, ignoredAtMillis = 1_000L)
+
+        assertTrue(
+            policy.shouldShowUpdate(
+                info = info,
+                ignoreRecord = ignoreRecord,
+                deferredRecord = null,
+                nowMillis = 2_000L,
+                manual = true
+            )
+        )
+    }
+
+    @Test
+    fun `deferred optional release is hidden before deferred time`() {
+        val info = updateInfo(forceUpdate = false)
+        val deferredRecord = AppUpdateDeferredRecord(releaseId = 10L, deferredUntilMillis = 3_000L)
+
+        assertFalse(
+            policy.shouldShowUpdate(
+                info = info,
+                ignoreRecord = null,
+                deferredRecord = deferredRecord,
+                nowMillis = 2_000L,
+                manual = false
+            )
+        )
+    }
+
+    @Test
     fun `cached force update is reused within ttl`() {
         val info = updateInfo(forceUpdate = true)
         val cached = AppUpdateCachedForceUpdate(info = info, cachedAtMillis = 1_000L)
