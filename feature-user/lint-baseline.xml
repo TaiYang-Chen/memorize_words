@@ -476,17 +476,6 @@
 
     <issue
         id="ResourceName"
-        message="Resource named &apos;`module_user_bind_phone_confirm`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_phone_confirm`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_user_bind_phone_confirm&quot;>确认绑定&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="45"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
         message="Resource named &apos;`module_user_bind_phone_phone_invalid`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_phone_phone_invalid`&apos; ?"
         errorLine1="    &lt;string name=&quot;module_user_bind_phone_phone_invalid&quot;>请输入正确的手机号&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
@@ -504,39 +493,6 @@
         <location
             file="src/main/res/values/strings.xml"
             line="47"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_user_bind_phone_sms_coming_soon`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_phone_sms_coming_soon`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_user_bind_phone_sms_coming_soon&quot;>绑定手机验证码功能即将上线&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="48"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_user_bind_phone_feature_coming_soon`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_phone_feature_coming_soon`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_user_bind_phone_feature_coming_soon&quot;>绑定手机号功能即将上线&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="49"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_user_bind_phone_unavailable_notice`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_phone_unavailable_notice`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_user_bind_phone_unavailable_notice&quot;>绑定手机号暂未开放，当前版本仅保留入口展示，后续接入真实能力后再开放填写与验证码操作。&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="50"
             column="13"/>
     </issue>
 
@@ -674,17 +630,6 @@
 
     <issue
         id="ResourceName"
-        message="Resource named &apos;`module_user_change_pwd_coming_soon`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_change_pwd_coming_soon`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_user_change_pwd_coming_soon&quot;>修改密码功能即将上线&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="64"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
         message="Resource named &apos;`module_user_change_pwd_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_change_pwd_failed`&apos; ?"
         errorLine1="    &lt;string name=&quot;module_user_change_pwd_failed&quot;>修改密码失败&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
@@ -806,17 +751,6 @@
 
     <issue
         id="ResourceName"
-        message="Resource named &apos;`module_user_profile_avatar_coming_soon`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_profile_avatar_coming_soon`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_user_profile_avatar_coming_soon&quot;>头像功能即将上线&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="78"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
         message="Resource named &apos;`module_user_profile_avatar_update_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_profile_avatar_update_failed`&apos; ?"
         errorLine1="    &lt;string name=&quot;module_user_profile_avatar_update_failed&quot;>头像更新失败&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
@@ -834,17 +768,6 @@
         <location
             file="src/main/res/values/strings.xml"
             line="80"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_user_profile_bind_coming_soon`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_profile_bind_coming_soon`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_user_profile_bind_coming_soon&quot;>绑定功能即将上线&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="81"
             column="13"/>
     </issue>
 

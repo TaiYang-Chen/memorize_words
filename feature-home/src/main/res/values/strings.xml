@@ -143,7 +143,7 @@
     <string name="feature_home_profile_member_status_subtitle">签到后可领取限时体验权益</string>
     <string name="feature_home_profile_member_open">去签到</string>
     <string name="feature_home_profile_member_payment_pending_title">暂不接支付</string>
-    <string name="feature_home_profile_member_payment_pending_message">会员支付能力暂未接入，当前仅展示权益和入口闭环。</string>
+    <string name="feature_home_profile_member_payment_pending_message">会员支付能力当前不可用，当前仅展示权益和入口闭环。</string>
     <string name="feature_home_profile_member_benefits">体验权益</string>
     <string name="feature_home_profile_member_benefit_books">专项词库体验</string>
     <string name="feature_home_profile_member_benefit_stats">学习统计洞察体验</string>

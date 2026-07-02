@@ -114,14 +114,9 @@ class ProfileViewModel @Inject constructor(
             changeAvatarUseCase(imageBytes).onSuccess {
                 showToast(resourceProvider.getString(R.string.module_user_profile_avatar_update_success))
             }.onFailure { failure ->
-                val message = failure.message.orEmpty()
-                if (message.contains("404") || message.contains("501")) {
-                    showToast(resourceProvider.getString(R.string.module_user_profile_avatar_coming_soon))
-                } else {
-                    showToast(message.ifBlank {
-                        resourceProvider.getString(R.string.module_user_profile_avatar_update_failed)
-                    })
-                }
+                showToast(failure.message.orEmpty().ifBlank {
+                    resourceProvider.getString(R.string.module_user_profile_avatar_update_failed)
+                })
             }
         }
     }
@@ -293,14 +288,9 @@ class ProfileViewModel @Inject constructor(
             ).onSuccess {
                 showToast(resourceProvider.getString(R.string.module_user_profile_bind_success))
             }.onFailure { failure ->
-                val message = failure.message.orEmpty()
-                if (message.contains("404") || message.contains("501")) {
-                    showToast(resourceProvider.getString(R.string.module_user_profile_bind_coming_soon))
-                } else {
-                    showToast(message.ifBlank {
-                        resourceProvider.getString(R.string.module_user_profile_bind_failed)
-                    })
-                }
+                showToast(failure.message.orEmpty().ifBlank {
+                    resourceProvider.getString(R.string.module_user_profile_bind_failed)
+                })
             }
         }
     }

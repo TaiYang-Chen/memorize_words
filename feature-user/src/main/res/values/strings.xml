@@ -41,23 +41,17 @@
     <string name="module_user_send_code_failed">验证码发送失败</string>
     <string name="module_user_register_failed">注册失败</string>
     <string name="module_user_bind_phone_title">绑定手机号</string>
-    <string name="module_user_bind_phone_fusion_title">本机号码一键绑定</string>
     <string name="module_user_bind_phone_sms_title">验证码绑定</string>
     <string name="module_user_bind_phone_phone_hint">手机号</string>
     <string name="module_user_bind_phone_sms_hint">验证码</string>
-    <string name="module_user_bind_phone_confirm">本机号码一键绑定</string>
     <string name="module_user_bind_phone_sms_confirm">确认绑定</string>
     <string name="module_user_bind_phone_phone_invalid">请输入正确的手机号</string>
     <string name="module_user_bind_phone_code_invalid">请输入正确的验证码</string>
     <string name="module_user_bind_phone_verified">已验证</string>
-    <string name="module_user_bind_phone_sms_coming_soon">当前使用本机号码一键认证绑定</string>
-    <string name="module_user_bind_phone_feature_coming_soon">请使用本机号码一键认证绑定</string>
-    <string name="module_user_bind_phone_unavailable_notice">将通过运营商安全认证校验本机号码。</string>
-    <string name="module_user_bind_phone_fusion_notice">将通过运营商安全认证校验本机号码。认证成功后，手机号会绑定到当前账号，用于登录、账号找回与安全验证。</string>
     <string name="module_user_bind_phone_loading">正在绑定手机号...</string>
     <string name="module_user_bind_phone_success">手机号绑定成功</string>
     <string name="module_user_bind_phone_failed">手机号绑定失败</string>
-    <string name="module_user_bind_phone_auth_failed">本机号码认证失败</string>
+    <string name="module_user_bind_phone_auth_failed">验证码验证失败</string>
 
     <string name="module_user_bind_email_title">绑定邮箱</string>
     <string name="module_user_change_email_title">换绑邮箱</string>
@@ -83,7 +77,6 @@
     <string name="module_user_change_pwd_diff_old">新密码不能与旧密码相同</string>
     <string name="module_user_change_pwd_not_match">两次输入的密码不一致</string>
     <string name="module_user_change_pwd_success_relogin">密码修改成功，请重新登录</string>
-    <string name="module_user_change_pwd_coming_soon">修改密码功能即将上线</string>
     <string name="module_user_change_pwd_failed">修改密码失败</string>
 
     <string name="module_user_delete_account_title">注销账号</string>
@@ -102,10 +95,8 @@
     <string name="module_user_profile_nickname_title">昵称</string>
     <string name="module_user_profile_update_success">修改成功</string>
     <string name="module_user_profile_avatar_update_success">头像更新成功</string>
-    <string name="module_user_profile_avatar_coming_soon">头像功能即将上线</string>
     <string name="module_user_profile_avatar_update_failed">头像更新失败</string>
     <string name="module_user_profile_bind_success">绑定成功</string>
-    <string name="module_user_profile_bind_coming_soon">绑定功能即将上线</string>
     <string name="module_user_profile_bind_failed">绑定失败</string>
     <string name="module_user_profile_get_cropped_avatar_failed">获取裁剪头像失败</string>
     <string name="module_user_profile_crop_avatar_failed">头像裁剪失败</string>

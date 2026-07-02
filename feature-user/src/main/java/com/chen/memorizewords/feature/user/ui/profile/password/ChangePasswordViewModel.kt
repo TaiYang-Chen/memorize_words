@@ -61,14 +61,9 @@ class ChangePasswordViewModel @Inject constructor(
                 showToast(resourceProvider.getString(R.string.module_user_change_pwd_success_relogin))
                 navigateRoute(Route.ToLogin)
             }.onFailure { failure ->
-                val message = failure.message.orEmpty()
-                if (message.contains("404") || message.contains("501")) {
-                    showToast(resourceProvider.getString(R.string.module_user_change_pwd_coming_soon))
-                } else {
-                    showToast(message.ifBlank {
-                        resourceProvider.getString(R.string.module_user_change_pwd_failed)
-                    })
-                }
+                showToast(failure.message.orEmpty().ifBlank {
+                    resourceProvider.getString(R.string.module_user_change_pwd_failed)
+                })
             }
         }
     }

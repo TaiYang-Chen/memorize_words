@@ -1081,17 +1081,6 @@
 
     <issue
         id="ResourceName"
-        message="Resource named &apos;`module_feedback_user_feedback`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_user_feedback`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_feedback_user_feedback&quot;>用户反馈&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="9"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
         message="Resource named &apos;`module_feedback_official_website`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_official_website`&apos; ?"
         errorLine1="    &lt;string name=&quot;module_feedback_official_website&quot;>官方网站&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
@@ -1147,34 +1136,12 @@
 
     <issue
         id="ResourceName"
-        message="Resource named &apos;`module_feedback_update_unavailable`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_update_unavailable`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_feedback_update_unavailable&quot;>暂未开放&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="15"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
         message="Resource named &apos;`module_feedback_latest_version`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_latest_version`&apos; ?"
         errorLine1="    &lt;string name=&quot;module_feedback_latest_version&quot;>最新版&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
             line="16"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_feedback_about_feature_pending`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_feature_pending`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_feedback_about_feature_pending&quot;>%1$s暂未开放&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="17"
             column="13"/>
     </issue>
 
