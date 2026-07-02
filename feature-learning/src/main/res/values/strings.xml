@@ -54,6 +54,9 @@
     <string name="practice_spelling_handwriting_hint">仅辅助记忆，不参与判题</string>
     <string name="practice_spelling_submit_answer">提交答案</string>
     <string name="practice_spelling_input_hint">键盘输入答案或点击字母池</string>
+    <string name="practice_spelling_delete">删除一个字母</string>
+    <string name="practice_spelling_detail_back">返回拼写练习</string>
+    <string name="practice_spelling_detail_loading">正在加载单词详情...</string>
     <string name="practice_spelling_hint">提示</string>
     <string name="practice_spelling_attempt_status_default">尝试 0 次 · 提示 0 次</string>
     <string name="practice_spelling_attempt_status">尝试 %1$d 次 · 提示 %2$d 次</string>
@@ -64,6 +67,27 @@
     <string name="practice_spelling_revealed_answer">再试一次后仍未答对，正确答案：%1$s</string>
     <string name="practice_spelling_retry_feedback">还有 %1$d 处需要调整，请再试一次</string>
     <string name="practice_spelling_hint_applied">已提示第 %1$d/%2$d 个字符</string>
+    <string name="practice_spelling_back">返回拼写练习</string>
+    <string name="practice_spelling_handwriting_title">手写辅助</string>
+    <string name="practice_spelling_handwriting_expand">展开</string>
+    <string name="practice_spelling_handwriting_collapse">收起</string>
+    <string name="practice_spelling_handwriting_reset">重置</string>
+    <string name="practice_spelling_done_header">拼写结果</string>
+    <string name="practice_spelling_done_tag">拼写练习</string>
+    <string name="practice_spelling_done_title">本组完成</string>
+    <string name="practice_spelling_done_subtitle">完成 %1$d 个单词，错词 %2$d 个。</string>
+    <string name="practice_spelling_done_accuracy_format">%1$d%%</string>
+    <string name="practice_spelling_done_metric_completed">完成</string>
+    <string name="practice_spelling_done_metric_correct">正确</string>
+    <string name="practice_spelling_done_metric_wrong">错词</string>
+    <string name="practice_spelling_done_metric_hint">提示</string>
+    <string name="practice_spelling_done_review_title">错词复盘</string>
+    <string name="practice_spelling_done_review_empty">本组没有错词，拼写状态很好。可以继续下一组巩固节奏。</string>
+    <string name="practice_spelling_done_wrong_answer_format">你的答案：%1$s · 正确答案：%2$s</string>
+    <string name="practice_spelling_done_retry_wrong">再练错词</string>
+    <string name="practice_spelling_done_retry_set">再练一组</string>
+    <string name="practice_spelling_done_exit">完成退出</string>
+    <string name="practice_spelling_done_detail_back">返回拼写结果</string>
 
     <string name="practice_word_picker_title">自主选词</string>
     <string name="practice_word_picker_search_hint">搜索单词</string>

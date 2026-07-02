@@ -20,7 +20,6 @@ import com.chen.memorizewords.domain.practice.speech.SpeechAudioSuccess
 import com.chen.memorizewords.domain.practice.speech.SpeechTask
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import java.util.Locale
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -38,7 +37,24 @@ data class PracticeSessionSummary(
     val questionCount: Int = 0,
     val completedCount: Int = 0,
     val correctCount: Int = 0,
-    val submitCount: Int = 0
+    val submitCount: Int = 0,
+    val hintCount: Int = 0
+)
+
+data class SpellingQuestionResult(
+    val wordId: Long,
+    val word: String,
+    val submittedAnswer: String,
+    val expectedAnswer: String,
+    val isCorrect: Boolean,
+    val hintUsed: Boolean,
+    val revealed: Boolean,
+    val attemptCount: Int
+)
+
+data class SpellingCompletionResult(
+    val summary: PracticeSessionSummary,
+    val rows: List<SpellingQuestionResult>
 )
 
 @HiltViewModel
@@ -69,7 +85,8 @@ class SpellingPracticeViewModel @Inject constructor(
 
     data class AnswerSlot(
         val letter: String = "",
-        val isHintLocked: Boolean = false
+        val isHintLocked: Boolean = false,
+        val isWrong: Boolean = false
     )
 
     data class SpellingUiState(
@@ -83,6 +100,7 @@ class SpellingPracticeViewModel @Inject constructor(
         val progressText: String = "",
         val progressValue: Int = 0,
         val progressMax: Int = 0,
+        val currentWordId: Long = -1L,
         val currentWord: String = "",
         val speech: SpeechAudioSuccess? = null,
         val resultState: SpellingResultState = SpellingResultState.UNANSWERED,
@@ -94,8 +112,11 @@ class SpellingPracticeViewModel @Inject constructor(
         val canEditAnswer: Boolean = true,
         val isCompleted: Boolean = false,
         val autoPlayRequestId: Int = 0,
+        val autoOpenDetailRequestId: Int = 0,
+        val wrongShakeRequestId: Int = 0,
         val summary: PracticeSessionSummary = PracticeSessionSummary(),
-        val summaryText: String = ""
+        val summaryText: String = "",
+        val completionResult: SpellingCompletionResult? = null
     )
 
     private val _uiState = MutableStateFlow(SpellingUiState())
@@ -116,9 +137,13 @@ class SpellingPracticeViewModel @Inject constructor(
     private var currentResultState: SpellingResultState = SpellingResultState.UNANSWERED
     private var completedCount: Int = 0
     private var autoPlayRequestId: Int = 0
+    private var autoOpenDetailRequestId: Int = 0
     private var letterPoolChars: List<Char> = emptyList()
     private var engineSessionId: String = ""
+    private var wrongSlotIndexes: Set<Int> = emptySet()
+    private var wrongShakeRequestId: Int = 0
     private val reportTracker = PracticeSessionReportTracker()
+    private val questionResults = mutableListOf<SpellingQuestionResult>()
 
     fun loadWithSelection(selectedIds: LongArray?, randomCount: Int) {
         val newLoadKey = buildPracticeSelectionKey(selectedIds, randomCount)
@@ -142,6 +167,7 @@ class SpellingPracticeViewModel @Inject constructor(
         )
         if (sanitized == currentAnswer) return
         currentAnswer = sanitized
+        wrongSlotIndexes = emptySet()
         if (currentResultState == SpellingResultState.RETRYABLE_WRONG) {
             currentResultState = SpellingResultState.UNANSWERED
         }
@@ -152,6 +178,7 @@ class SpellingPracticeViewModel @Inject constructor(
         if (_uiState.value.isCompleted || !_uiState.value.canEditAnswer) return
         if (currentAnswer.length <= hintLockedLength) return
         currentAnswer = currentAnswer.dropLast(1)
+        wrongSlotIndexes = emptySet()
         if (currentResultState == SpellingResultState.RETRYABLE_WRONG) {
             currentResultState = SpellingResultState.UNANSWERED
         }
@@ -164,6 +191,7 @@ class SpellingPracticeViewModel @Inject constructor(
         currentAnswer = hintResult.answer
         hintLockedLength = hintResult.hintLockedLength
         hintCount = 1
+        wrongSlotIndexes = emptySet()
         if (currentResultState == SpellingResultState.RETRYABLE_WRONG) {
             currentResultState = SpellingResultState.UNANSWERED
         }
@@ -184,6 +212,11 @@ class SpellingPracticeViewModel @Inject constructor(
         val isCorrect = spellingAnswerPolicy.isCorrect(input, answerWord)
         if (isCorrect) {
             recordAnswer(PracticeAnswerStatus.CORRECT)
+            recordQuestionResult(
+                submittedAnswer = input,
+                isCorrect = true,
+                revealed = false
+            )
             currentResultState = SpellingResultState.CORRECT
             completedCount += 1
             publishCurrentState(
@@ -194,10 +227,17 @@ class SpellingPracticeViewModel @Inject constructor(
 
         recordAnswer(PracticeAnswerStatus.WRONG)
         if (attemptCount >= 2) {
+            recordQuestionResult(
+                submittedAnswer = input,
+                isCorrect = false,
+                revealed = true
+            )
             currentResultState = SpellingResultState.REVEALED_WRONG
             completedCount += 1
+            autoOpenDetailRequestId += 1
             currentAnswer = answerWord
             hintLockedLength = answerWord.length
+            wrongSlotIndexes = emptySet()
             publishCurrentState(
                 feedback = resourceProvider.getString(
                     R.string.practice_spelling_revealed_answer,
@@ -208,17 +248,20 @@ class SpellingPracticeViewModel @Inject constructor(
         }
 
         currentResultState = SpellingResultState.RETRYABLE_WRONG
+        wrongSlotIndexes = uiHelper.findWrongSlotIndexes(answerWord, input).toSet()
+        wrongShakeRequestId += 1
         publishCurrentState(
             feedback = buildRetryFeedback(input)
         )
     }
 
-    fun nextWord() {
-        if (!_uiState.value.canNext) return
+    fun nextWord(): Boolean {
+        if (!canMoveToNextWord()) return false
         val nextIndex = resolveNextPracticeIndex(index, words.size)
         if (nextIndex == null) {
             currentResultState = SpellingResultState.COMPLETED
             persistPracticeReport()
+            val summary = currentSummary()
             _uiState.value = SpellingUiState(
                 progressText = resourceProvider.getString(
                     R.string.practice_spelling_progress_text,
@@ -230,14 +273,24 @@ class SpellingPracticeViewModel @Inject constructor(
                 resultState = SpellingResultState.COMPLETED,
                 isCompleted = true,
                 canEditAnswer = false,
-                summary = currentSummary(),
-                summaryText = uiHelper.buildSummaryText(currentSummary())
+                summary = summary,
+                summaryText = uiHelper.buildSummaryText(summary),
+                completionResult = SpellingCompletionResult(
+                    summary = summary,
+                    rows = questionResults.toList()
+                )
             )
-            return
+            return true
         }
         index = nextIndex
         resetQuestionState()
         renderCurrent()
+        return true
+    }
+
+    private fun canMoveToNextWord(): Boolean {
+        return currentResultState == SpellingResultState.CORRECT ||
+            currentResultState == SpellingResultState.REVEALED_WRONG
     }
 
     private fun loadWords(selectedIds: LongArray?, randomCount: Int) {
@@ -253,6 +306,7 @@ class SpellingPracticeViewModel @Inject constructor(
             autoPlayRequestId = 0
             engineSessionId = "spelling:${System.currentTimeMillis()}:${loadKey.orEmpty()}"
             reportTracker.clear()
+            questionResults.clear()
             resetQuestionState()
             renderCurrent()
         }
@@ -266,6 +320,7 @@ class SpellingPracticeViewModel @Inject constructor(
         hintCount = 0
         currentResultState = SpellingResultState.UNANSWERED
         letterPoolChars = emptyList()
+        wrongSlotIndexes = emptySet()
     }
 
     private fun renderCurrent() {
@@ -288,7 +343,7 @@ class SpellingPracticeViewModel @Inject constructor(
         }
 
         val token = ++renderToken
-        answerWord = word.word.trim().uppercase(Locale.ROOT)
+        answerWord = word.word.trim()
         letterPoolChars = uiHelper.buildLetterPoolChars(answerWord)
         val cachedSpeech = assetLoader.cachedSpeech(word.id)
         val autoPlayForCachedSpeech = if (cachedSpeech != null) nextAutoPlayRequestId() else autoPlayRequestId
@@ -357,7 +412,12 @@ class SpellingPracticeViewModel @Inject constructor(
             },
             wordLength = answerWord.length,
             currentAnswer = currentAnswer,
-            answerSlots = uiHelper.buildAnswerSlots(answerWord, currentAnswer, hintLockedLength),
+            answerSlots = uiHelper.buildAnswerSlots(
+                answerWord,
+                currentAnswer,
+                hintLockedLength,
+                wrongSlotIndexes
+            ),
             letters = uiHelper.buildLetterItems(letterPoolChars, currentAnswer),
             feedback = feedback,
             progressText = resourceProvider.getString(
@@ -367,6 +427,7 @@ class SpellingPracticeViewModel @Inject constructor(
             ),
             progressValue = (index + 1).coerceAtMost(words.size),
             progressMax = words.size.coerceAtLeast(1),
+            currentWordId = words.getOrNull(index)?.id ?: -1L,
             currentWord = words.getOrNull(index)?.word.orEmpty(),
             speech = speech,
             resultState = currentResultState,
@@ -388,6 +449,8 @@ class SpellingPracticeViewModel @Inject constructor(
                 currentResultState != SpellingResultState.REVEALED_WRONG,
             isCompleted = isCompleted,
             autoPlayRequestId = autoPlayRequestId,
+            autoOpenDetailRequestId = autoOpenDetailRequestId,
+            wrongShakeRequestId = wrongShakeRequestId,
             summary = currentSummary(),
             summaryText = if (isCompleted) uiHelper.buildSummaryText(currentSummary()) else ""
         )
@@ -396,7 +459,8 @@ class SpellingPracticeViewModel @Inject constructor(
     private fun appendAnswer(letter: Char) {
         if (_uiState.value.isCompleted || !_uiState.value.canEditAnswer) return
         if (currentAnswer.length >= answerWord.length) return
-        currentAnswer += letter.toString().uppercase(Locale.ROOT)
+        currentAnswer += letter
+        wrongSlotIndexes = emptySet()
         if (currentResultState == SpellingResultState.RETRYABLE_WRONG) {
             currentResultState = SpellingResultState.UNANSWERED
         }
@@ -418,7 +482,16 @@ class SpellingPracticeViewModel @Inject constructor(
             questionCount = words.size,
             completedCount = completedCount,
             correctCount = report.correctCount,
-            submitCount = report.answeredCount
+            submitCount = report.answeredCount,
+            hintCount = questionResults.count { it.hintUsed } +
+                if (currentResultState != SpellingResultState.CORRECT &&
+                    currentResultState != SpellingResultState.REVEALED_WRONG &&
+                    hintCount > 0
+                ) {
+                    1
+                } else {
+                    0
+                }
         )
     }
 
@@ -452,6 +525,25 @@ class SpellingPracticeViewModel @Inject constructor(
                 submittedAnswer = currentAnswer.takeIf { it.isNotBlank() },
                 expectedAnswer = answerWord
             )
+        )
+    }
+
+    private fun recordQuestionResult(
+        submittedAnswer: String,
+        isCorrect: Boolean,
+        revealed: Boolean
+    ) {
+        val word = words.getOrNull(index) ?: return
+        if (questionResults.any { it.wordId == word.id }) return
+        questionResults += SpellingQuestionResult(
+            wordId = word.id,
+            word = word.word,
+            submittedAnswer = submittedAnswer,
+            expectedAnswer = answerWord,
+            isCorrect = isCorrect,
+            hintUsed = hintCount > 0,
+            revealed = revealed,
+            attemptCount = attemptCount
         )
     }
 

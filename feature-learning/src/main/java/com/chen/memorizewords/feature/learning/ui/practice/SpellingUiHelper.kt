@@ -36,14 +36,20 @@ internal class SpellingUiHelper(
 
     fun buildLetterPoolChars(word: String): List<Char> {
         if (word.isBlank()) return emptyList()
-        val distractorSource = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            .filterNot { word.contains(it) }
+        val alphabet = if (word.any { it.isLowerCase() }) {
+            "abcdefghijklmnopqrstuvwxyz"
+        } else {
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        }
+        val normalizedWordChars = word.map { it.lowercaseChar() }.toSet()
+        val distractorSource = alphabet
+            .filterNot { normalizedWordChars.contains(it.lowercaseChar()) }
             .toMutableList()
         val pool = word.toMutableList()
         val targetSize = max(word.length, 11)
         while (pool.size < targetSize) {
             if (distractorSource.isEmpty()) {
-                pool.add(('A' + (pool.size % 26)))
+                pool.add(alphabet[pool.size % alphabet.length])
             } else {
                 pool.add(distractorSource.removeAt(0))
             }
@@ -56,10 +62,13 @@ internal class SpellingUiHelper(
         answer: String
     ): List<SpellingPracticeViewModel.LetterItem> {
         if (poolChars.isEmpty()) return emptyList()
-        val answerCounts = answer.groupingBy { it }.eachCount()
+        val answerCounts = answer.groupingBy { it.lowercaseChar() }.eachCount()
         return poolChars.mapIndexed { idx, c ->
-            val consumed = answerCounts[c] ?: 0
-            val poolCountBefore = poolChars.take(idx + 1).count { it == c }
+            val normalizedChar = c.lowercaseChar()
+            val consumed = answerCounts[normalizedChar] ?: 0
+            val poolCountBefore = poolChars.take(idx + 1).count {
+                it.lowercaseChar() == normalizedChar
+            }
             SpellingPracticeViewModel.LetterItem(
                 id = idx,
                 letter = c,
@@ -71,21 +80,28 @@ internal class SpellingUiHelper(
     fun buildAnswerSlots(
         answerWord: String,
         currentAnswer: String,
-        hintLockedLength: Int
+        hintLockedLength: Int,
+        wrongIndexes: Set<Int> = emptySet()
     ): List<SpellingPracticeViewModel.AnswerSlot> {
         if (answerWord.isBlank()) return emptyList()
         return answerWord.indices.map { index ->
             SpellingPracticeViewModel.AnswerSlot(
                 letter = currentAnswer.getOrNull(index)?.toString().orEmpty(),
-                isHintLocked = index < hintLockedLength
+                isHintLocked = index < hintLockedLength,
+                isWrong = index in wrongIndexes
             )
         }
     }
 
+    fun findWrongSlotIndexes(answerWord: String, input: String): List<Int> {
+        if (answerWord.isBlank()) return emptyList()
+        return answerWord.indices.filter { index ->
+            input.getOrNull(index)?.lowercaseChar() != answerWord[index].lowercaseChar()
+        }
+    }
+
     fun buildRetryFeedback(answerWord: String, input: String): String {
-        val mismatchCount = answerWord.indices.count { index ->
-            input.getOrNull(index)?.uppercaseChar() != answerWord[index]
-        } + (answerWord.length - input.length).coerceAtLeast(0)
+        val mismatchCount = findWrongSlotIndexes(answerWord, input).size
         val count = mismatchCount.coerceAtLeast(1)
         return resourceProvider.getString(R.string.practice_spelling_retry_feedback, count)
     }

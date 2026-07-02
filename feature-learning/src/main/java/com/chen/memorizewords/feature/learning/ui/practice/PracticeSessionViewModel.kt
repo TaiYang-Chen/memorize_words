@@ -40,7 +40,7 @@ class PracticeSessionViewModel @Inject constructor(
             selectedIds = selectedIds,
             randomCount = randomCount
         )
-        if (sessionKey == newSessionKey) return
+        if (sessionKey == newSessionKey && !saved) return
         sessionKey = newSessionKey
         sessionMode = mode
         sessionEntryType = entryType

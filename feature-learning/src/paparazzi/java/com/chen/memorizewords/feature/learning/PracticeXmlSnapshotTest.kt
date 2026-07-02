@@ -96,6 +96,51 @@ class PracticeXmlSnapshotTest {
     }
 
     @Test
+    fun spellingPracticePhone() {
+        val view = inflate(R.layout.fragment_practice_spelling)
+        view.find<TextView>(R.id.tv_progress).text = "今日已练: 3/20"
+        view.find<TextView>(R.id.tv_word_length).text = "目标长度: 8"
+        view.find<TextView>(R.id.tv_meaning).text = "释义：v. 记住，熟记"
+        view.find<TextView>(R.id.tv_attempt_status).text = "尝试 1 次 · 提示 0 次"
+        view.find<TextView>(R.id.tv_result).apply {
+            text = "还有 2 处需要调整，请再试一次"
+            visibility = View.VISIBLE
+        }
+
+        val slots = view.find<LinearLayout>(R.id.layout_slots)
+        listOf("M", "E", "M", "O", "", "", "", "").forEachIndexed { index, value ->
+            slots.addView(spellingPracticeSlot(value, isWrong = index == 2))
+        }
+
+        val letters = view.find<android.widget.GridLayout>(R.id.grid_letters)
+        letters.columnCount = 5
+        listOf("R", "I", "Z", "E", "A", "T", "O", "N", "S", "").forEach { value ->
+            letters.addView(spellingPracticeLetterButton(value))
+        }
+
+        paparazzi.snapshot(view, "spelling_practice_phone")
+    }
+
+    @Test
+    fun spellingPracticeHandwritingExpandedPhone() {
+        val view = inflate(R.layout.fragment_practice_spelling)
+        view.find<TextView>(R.id.tv_progress).text = "今日已练: 3/20"
+        view.find<TextView>(R.id.tv_word_length).text = "目标长度: 8"
+        view.find<TextView>(R.id.tv_meaning).text = "释义：v. 记住，熟记"
+        view.find<View>(R.id.handwriting_drawer).layoutParams.height = 210
+        view.find<View>(R.id.handwriting_container).visibility = View.VISIBLE
+        view.find<TextView>(R.id.tv_handwriting_toggle).text = "收起"
+
+        val letters = view.find<android.widget.GridLayout>(R.id.grid_letters)
+        letters.columnCount = 5
+        listOf("R", "I", "Z", "E", "A").forEach { value ->
+            letters.addView(spellingPracticeLetterButton(value))
+        }
+
+        paparazzi.snapshot(view, "spelling_practice_handwriting_expanded_phone")
+    }
+
+    @Test
     fun examHostShellPhone() {
         val view = inflate(R.layout.activity_practice)
         view.find<com.google.android.material.appbar.MaterialToolbar>(R.id.top_app_bar).title =
@@ -133,6 +178,37 @@ class PracticeXmlSnapshotTest {
             layoutParams = GridLayout.LayoutParams().apply {
                 width = 48
                 height = 44
+                setMargins(5, 5, 5, 5)
+            }
+        }
+    }
+
+    private fun spellingPracticeSlot(text: String, isWrong: Boolean = false): TextView {
+        return TextView(paparazzi.context).apply {
+            this.text = text
+            textSize = 18f
+            gravity = android.view.Gravity.CENTER
+            setTextColor(if (isWrong) 0xFFDC2626.toInt() else 0xFF0F172A.toInt())
+            layoutParams = LinearLayout.LayoutParams(30, 36).apply {
+                marginStart = 4
+                marginEnd = 4
+            }
+            setBackgroundColor(if (isWrong) 0xFFFEF2F2.toInt() else 0xFFF8FAFC.toInt())
+        }
+    }
+
+    private fun spellingPracticeLetterButton(text: String): MaterialButton {
+        return MaterialButton(paparazzi.context).apply {
+            this.text = text
+            textSize = 16f
+            isAllCaps = false
+            minWidth = 0
+            minHeight = 0
+            insetTop = 0
+            insetBottom = 0
+            layoutParams = android.widget.GridLayout.LayoutParams().apply {
+                width = 56
+                height = 46
                 setMargins(5, 5, 5, 5)
             }
         }

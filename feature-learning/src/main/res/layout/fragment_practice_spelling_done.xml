@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/module_learning_bg_summary_root"
+        android:paddingStart="@dimen/page_margin"
+        android:paddingTop="@dimen/page_margin"
+        android:paddingEnd="@dimen/page_margin">
+
+        <FrameLayout
+            android:id="@+id/top_bar"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/title_height"
+            android:layout_marginTop="@dimen/title_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/btn_close"
+                android:layout_width="@dimen/title_icon_touch_size"
+                android:layout_height="@dimen/title_icon_touch_size"
+                android:layout_gravity="center_vertical|start"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/practice_spelling_done_exit"
+                android:padding="7dp"
+                android:src="@drawable/module_learning_close"
+                app:tint="#0F172A" />
+
+            <TextView
+                android:id="@+id/tv_header_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/practice_spelling_done_header"
+                android:textColor="#0F172A"
+                android:textSize="@dimen/title_text_size"
+                android:textStyle="bold" />
+        </FrameLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:paddingBottom="140dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/top_bar">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="12dp">
+
+                <LinearLayout
+                    android:id="@+id/card_hero"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/module_learning_bg_summary_hero"
+                    android:elevation="1dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:paddingStart="20dp"
+                    android:paddingTop="22dp"
+                    android:paddingEnd="20dp"
+                    android:paddingBottom="24dp">
+
+                    <TextView
+                        android:id="@+id/tv_done_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/module_learning_bg_summary_chip"
+                        android:includeFontPadding="false"
+                        android:paddingStart="14dp"
+                        android:paddingTop="6dp"
+                        android:paddingEnd="14dp"
+                        android:paddingBottom="6dp"
+                        android:text="@string/practice_spelling_done_tag"
+                        android:textColor="#723B07"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_accuracy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:textColor="#006C5B"
+                        android:textSize="48sp"
+                        android:textStyle="bold"
+                        tools:text="86%" />
+
+                    <TextView
+                        android:id="@+id/tv_done_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:text="@string/practice_spelling_done_title"
+                        android:textColor="#07111F"
+                        android:textSize="25sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_done_subtitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:lineSpacingExtra="4dp"
+                        android:textColor="#2F3A35"
+                        android:textSize="14sp"
+                        tools:text="完成 7 个单词，错词 1 个。" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/card_stats"
+                    android:layout_width="match_parent"
+                    android:layout_height="92dp"
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/module_learning_bg_summary_panel"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp">
+
+                    <include
+                        android:id="@+id/stat_completed"
+                        layout="@layout/include_practice_spelling_done_stat" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="52dp"
+                        android:background="@drawable/module_learning_bg_summary_divider" />
+
+                    <include
+                        android:id="@+id/stat_correct"
+                        layout="@layout/include_practice_spelling_done_stat" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="52dp"
+                        android:background="@drawable/module_learning_bg_summary_divider" />
+
+                    <include
+                        android:id="@+id/stat_wrong"
+                        layout="@layout/include_practice_spelling_done_stat" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="52dp"
+                        android:background="@drawable/module_learning_bg_summary_divider" />
+
+                    <include
+                        android:id="@+id/stat_hint"
+                        layout="@layout/include_practice_spelling_done_stat" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_review_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:includeFontPadding="false"
+                    android:text="@string/practice_spelling_done_review_title"
+                    android:textColor="#07111F"
+                    android:textSize="19sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_review_empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/module_learning_bg_summary_panel"
+                    android:lineSpacingExtra="4dp"
+                    android:paddingStart="18dp"
+                    android:paddingTop="16dp"
+                    android:paddingEnd="18dp"
+                    android:paddingBottom="16dp"
+                    android:text="@string/practice_spelling_done_review_empty"
+                    android:textColor="#26352F"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:id="@+id/layout_wrong_words"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="vertical" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <LinearLayout
+            android:id="@+id/action_panel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:elevation="8dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_primary"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:backgroundTint="@android:color/black"
+                app:cornerRadius="26dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_exit"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="@android:color/white"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="@string/practice_spelling_done_exit"
+                android:textAllCaps="false"
+                android:textColor="#334155"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:cornerRadius="25dp"
+                app:strokeColor="#D8DEE8"
+                app:strokeWidth="1dp" />
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_detail"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@android:color/white"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <FrameLayout
+                android:id="@+id/detail_header"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/title_height"
+                android:layout_marginStart="@dimen/page_margin"
+                android:layout_marginTop="@dimen/title_margin"
+                android:layout_marginEnd="@dimen/page_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageButton
+                    android:id="@+id/btn_detail_back"
+                    android:layout_width="@dimen/title_icon_touch_size"
+                    android:layout_height="@dimen/title_icon_touch_size"
+                    android:layout_gravity="center_vertical|start"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="@string/practice_spelling_done_detail_back"
+                    android:padding="7dp"
+                    android:src="@drawable/ic_arrow_back"
+                    app:tint="#0F172A" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/learning_nav_word_detail_title"
+                    android:textColor="#0F172A"
+                    android:textSize="@dimen/title_text_size"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/detail_scroll"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:clipToPadding="false"
+                android:overScrollMode="never"
+                android:paddingBottom="24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/detail_header">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingStart="18dp"
+                    android:paddingTop="18dp"
+                    android:paddingEnd="18dp">
+
+                    <TextView
+                        android:id="@+id/tv_detail_word"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="#0F172A"
+                        android:textSize="32sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_detail_phonetic"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:textColor="#64748B"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_detail_loading"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="28dp"
+                        android:gravity="center"
+                        android:text="@string/practice_spelling_detail_loading"
+                        android:textColor="#94A3B8"
+                        android:textSize="14sp" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_detail_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/learning_share_definitions_title"
+                            android:textColor="#0F172A"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:id="@+id/layout_detail_definitions"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:orientation="vertical" />
+
+                        <TextView
+                            android:id="@+id/tv_detail_examples_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="24dp"
+                            android:text="@string/learning_share_examples_title"
+                            android:textColor="#0F172A"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:id="@+id/layout_detail_examples"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:orientation="vertical" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

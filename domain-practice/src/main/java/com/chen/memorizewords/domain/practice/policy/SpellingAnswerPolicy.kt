@@ -9,7 +9,7 @@ data class SpellingHint(
 
 class SpellingAnswerPolicy {
     fun sanitizeAnswerInput(answerWord: String, raw: String): String {
-        val trimmed = raw.trim().uppercase(Locale.ROOT)
+        val trimmed = raw.trim()
         if (answerWord.isBlank()) return ""
         return trimmed.take(answerWord.length)
     }
@@ -24,7 +24,7 @@ class SpellingAnswerPolicy {
             sanitized.length < hintLockedLength ->
                 answerWord.take(hintLockedLength) + sanitized.drop(hintLockedLength)
 
-            !sanitized.startsWith(answerWord.take(hintLockedLength)) ->
+            hintLockedLength > 0 && !sanitized.startsWith(answerWord.take(hintLockedLength)) ->
                 answerWord.take(hintLockedLength) + sanitized.drop(hintLockedLength)
 
             else -> sanitized
@@ -38,7 +38,7 @@ class SpellingAnswerPolicy {
     ): SpellingHint? {
         if (answerWord.isBlank()) return null
         val revealIndex = currentAnswer.indices.firstOrNull { index ->
-            currentAnswer.getOrNull(index)?.uppercaseChar() != answerWord[index]
+            !currentAnswer.getOrNull(index).sameLetterAs(answerWord[index])
         } ?: currentAnswer.length
         if (revealIndex !in answerWord.indices) return null
         val builder = StringBuilder(answerWord.take(hintLockedLength))
@@ -65,5 +65,9 @@ class SpellingAnswerPolicy {
 
     private fun String.normalizeWithoutWhitespace(): String {
         return trim().lowercase(Locale.ROOT).filterNot(Char::isWhitespace)
+    }
+
+    private fun Char?.sameLetterAs(other: Char): Boolean {
+        return this?.lowercaseChar() == other.lowercaseChar()
     }
 }
