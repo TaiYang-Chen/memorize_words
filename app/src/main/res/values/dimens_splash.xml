@@ -1,22 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="app_splash_horizontal_padding">32dp</dimen>
-    <dimen name="app_splash_logo_top">160dp</dimen>
     <dimen name="app_splash_logo_card_size">56dp</dimen>
-    <dimen name="app_splash_logo_card_radius">12dp</dimen>
-    <dimen name="app_splash_logo_card_padding">16dp</dimen>
-    <dimen name="app_splash_logo_card_stroke_width">1dp</dimen>
-    <dimen name="app_splash_logo_icon_size">22dp</dimen>
-    <dimen name="app_splash_logo_card_elevation">6dp</dimen>
-    <dimen name="app_splash_brand_title_top">252dp</dimen>
-    <dimen name="app_splash_brand_subtitle_top">305dp</dimen>
-    <dimen name="app_splash_divider_width">1dp</dimen>
-    <dimen name="app_splash_divider_top">418dp</dimen>
-    <dimen name="app_splash_divider_bottom">502dp</dimen>
-    <dimen name="app_splash_quote_title_top">618dp</dimen>
-    <dimen name="app_splash_quote_subtitle_top">694dp</dimen>
-    <dimen name="app_splash_brand_title_text_size">26sp</dimen>
-    <dimen name="app_splash_brand_subtitle_text_size">10.5sp</dimen>
-    <dimen name="app_splash_quote_title_text_size">19sp</dimen>
-    <dimen name="app_splash_quote_subtitle_text_size">11sp</dimen>
 </resources>
