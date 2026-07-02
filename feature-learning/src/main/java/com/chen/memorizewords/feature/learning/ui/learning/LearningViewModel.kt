@@ -215,7 +215,7 @@ class LearningViewModel @Inject constructor(
             title = resourceProvider.getString(R.string.learning_exit_confirm_title),
             message = resourceProvider.getString(R.string.learning_exit_confirm_message),
             confirmText = resourceProvider.getString(R.string.learning_exit_confirm_action),
-            cancelText = resourceProvider.getString(android.R.string.cancel)
+            cancelText = resourceProvider.getString(R.string.learning_exit_confirm_cancel)
         )
     }
 

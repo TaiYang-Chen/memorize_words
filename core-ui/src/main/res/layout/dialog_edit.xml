@@ -92,7 +92,7 @@
                         android:padding="14dp"
                         android:stateListAnimator="@null"
                         android:text="确定"
-                        android:textColor="#FF9800"
+                        android:textColor="#6B7280"
                         android:textSize="16sp"
                         android:textAllCaps="false"
                         android:textStyle="bold"

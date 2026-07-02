@@ -25,15 +25,7 @@ class ShowConfirmDialog(
         databind.confirm.text = data.confirmText
         databind.cancel.text = data.cancelText
         databind.cancel.setTextColor(Color.parseColor("#6B7280"))
-        databind.confirm.setTextColor(
-            Color.parseColor(
-                if (data.confirmText in DANGER_CONFIRM_TEXTS) {
-                    "#E5484D"
-                } else {
-                    "#111827"
-                }
-            )
-        )
+        databind.confirm.setTextColor(Color.parseColor("#6B7280"))
         databind.confirm.setOnClickListener {
             onConfirm?.invoke()
             dismiss()
@@ -44,7 +36,4 @@ class ShowConfirmDialog(
         }
     }
 
-    private companion object {
-        val DANGER_CONFIRM_TEXTS = setOf("退出", "删除", "注销")
-    }
 }

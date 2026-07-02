@@ -126,6 +126,7 @@
     <string name="learning_exit_confirm_title">退出学习</string>
     <string name="learning_exit_confirm_message">是否退出当前学习？</string>
     <string name="learning_exit_confirm_action">退出</string>
+    <string name="learning_exit_confirm_cancel">取消</string>
     <string name="learning_share_sheet_title">分享单词</string>
     <string name="learning_share_action_copy">复制</string>
     <string name="learning_share_copied">已复制到剪贴板</string>
