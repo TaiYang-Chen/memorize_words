@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="practice_shadowing_done_header">跟读完成</string>
+    <string name="practice_shadowing_done_tag">本轮已完成</string>
+    <string name="practice_shadowing_done_title">跟读练习完成</string>
+    <string name="practice_shadowing_done_note">今天的发音记录已经保存。可以稍后回到单词详情里继续听原声、对比自己的发音。</string>
+    <string name="practice_shadowing_done_action">完成</string>
+    <string name="practice_shadowing_done_completed_format">%1$d/%2$d</string>
+    <string name="practice_shadowing_done_metric_completed">已练</string>
+    <string name="practice_shadowing_done_metric_recordings">录音</string>
+    <string name="practice_shadowing_done_metric_passed">达标</string>
+
+    <plurals name="practice_shadowing_done_subtitle">
+        <item quantity="one">这轮已经完成 %1$d 个单词，发音节奏保持得不错。</item>
+        <item quantity="other">这轮已经完成 %1$d 个单词，发音节奏保持得不错。</item>
+    </plurals>
+</resources>

@@ -29,3 +29,20 @@ data class ShadowingAudioIssue(
     val severity: ShadowingAudioIssueSeverity,
     val message: String? = null
 )
+
+data class ShadowingDetail(
+    val text: String,
+    val score: Int? = null,
+    val expected: String? = null,
+    val actual: String? = null,
+    val issueType: String? = null,
+    val message: String? = null
+)
+
+data class ShadowingRecordingQuality(
+    val volumeScore: Int? = null,
+    val speechRatio: Int? = null,
+    val durationMs: Long? = null,
+    val level: String? = null,
+    val message: String? = null
+)

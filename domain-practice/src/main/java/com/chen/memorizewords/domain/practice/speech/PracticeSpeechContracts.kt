@@ -2,7 +2,8 @@ package com.chen.memorizewords.domain.practice.speech
 
 enum class SpeechProviderType {
     BAIDU,
-    ALIYUN
+    ALIYUN,
+    XUNFEI
 }
 
 enum class SpeechCapability {
@@ -104,10 +105,10 @@ data class SpeechAudioFormat(
 
         fun defaultInput(): SpeechAudioFormat {
             return SpeechAudioFormat(
-                mimeType = "audio/mp4",
+                mimeType = "audio/wav",
                 sampleRateHz = 16000,
                 channelCount = 1,
-                encoding = "aac"
+                encoding = "pcm_s16le"
             )
         }
     }
@@ -198,6 +199,23 @@ data class ShadowingAudioIssue(
     val message: String? = null
 )
 
+data class ShadowingDetail(
+    val text: String,
+    val score: Int? = null,
+    val expected: String? = null,
+    val actual: String? = null,
+    val issueType: String? = null,
+    val message: String? = null
+)
+
+data class ShadowingRecordingQuality(
+    val volumeScore: Int? = null,
+    val speechRatio: Int? = null,
+    val durationMs: Long? = null,
+    val level: String? = null,
+    val message: String? = null
+)
+
 data class ShadowingEvaluationResult(
     override val provider: SpeechProviderType,
     override val traceId: String,
@@ -208,7 +226,14 @@ data class ShadowingEvaluationResult(
     val intonationScore: Int? = null,
     val stressScore: Int? = null,
     val speedScore: Int? = null,
+    val accuracyScore: Int? = null,
+    val standardScore: Int? = null,
     val audioIssues: List<ShadowingAudioIssue> = emptyList(),
+    val phoneDetails: List<ShadowingDetail> = emptyList(),
+    val syllableDetails: List<ShadowingDetail> = emptyList(),
+    val wordDetails: List<ShadowingDetail> = emptyList(),
+    val recordingQuality: ShadowingRecordingQuality? = null,
+    val rawProviderTraceId: String? = null,
     val analysisSource: ShadowingAnalysisSource = ShadowingAnalysisSource.PROVIDER_ONLY,
     val detailSourceNote: String? = null,
     val guidanceText: String? = null

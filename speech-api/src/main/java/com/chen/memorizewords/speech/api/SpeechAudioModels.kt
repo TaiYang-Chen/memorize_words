@@ -54,10 +54,10 @@ data class SpeechAudioFormat(
 
         fun defaultInput(): SpeechAudioFormat {
             return SpeechAudioFormat(
-                mimeType = "audio/mp4",
+                mimeType = "audio/wav",
                 sampleRateHz = 16000,
                 channelCount = 1,
-                encoding = "aac"
+                encoding = "pcm_s16le"
             )
         }
     }

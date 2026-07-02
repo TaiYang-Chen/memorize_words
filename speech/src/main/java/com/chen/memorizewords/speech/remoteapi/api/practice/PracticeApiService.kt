@@ -33,9 +33,12 @@ data class TtsResponseDto(
 
 @JsonClass(generateAdapter = false)
 data class ShadowingEvaluateRequestDto(
-    val word: String,
+    val referenceText: String,
     val provider: String,
-    val audioBase64: String
+    val audioBase64: String,
+    val audioFormat: String? = null,
+    val durationMs: Long? = null,
+    val waveformSamples: List<Int>? = null
 )
 
 @JsonClass(generateAdapter = false)
@@ -54,10 +57,36 @@ data class ShadowingEvaluateResponseDto(
     val intonationScore: Int? = null,
     val stressScore: Int? = null,
     val speedScore: Int? = null,
+    val accuracyScore: Int? = null,
+    val standardScore: Int? = null,
     val guidanceText: String? = null,
     val analysisSource: String? = null,
     val detailSourceNote: String? = null,
-    val audioIssues: List<ShadowingAudioIssueDto>? = null
+    val audioIssues: List<ShadowingAudioIssueDto>? = null,
+    val phoneDetails: List<ShadowingDetailDto>? = null,
+    val syllableDetails: List<ShadowingDetailDto>? = null,
+    val wordDetails: List<ShadowingDetailDto>? = null,
+    val recordingQuality: RecordingQualityDto? = null,
+    val rawProviderTraceId: String? = null
+)
+
+@JsonClass(generateAdapter = false)
+data class ShadowingDetailDto(
+    val text: String? = null,
+    val score: Int? = null,
+    val expected: String? = null,
+    val actual: String? = null,
+    val issueType: String? = null,
+    val message: String? = null
+)
+
+@JsonClass(generateAdapter = false)
+data class RecordingQualityDto(
+    val volumeScore: Int? = null,
+    val speechRatio: Int? = null,
+    val durationMs: Long? = null,
+    val level: String? = null,
+    val message: String? = null
 )
 
 @JsonClass(generateAdapter = false)

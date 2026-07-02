@@ -59,16 +59,21 @@ class ShadowingPracticeSessionPolicy(
         attemptsByWordId: Map<Long, List<ShadowingPracticeAttemptOutcome>>
     ): ShadowingPracticeSessionSummary {
         if (totalQuestionCount <= 0) return ShadowingPracticeSessionSummary()
+        val submittedOutcomesByWord = attemptsByWordId.mapValues { (_, outcomes) ->
+            outcomes.filter { outcome ->
+                outcome.evaluation != null || outcome.errorMessage.isNotBlank()
+            }
+        }
         return ShadowingPracticeSessionSummary(
             questionCount = totalQuestionCount,
-            completedCount = attemptsByWordId.values.count { outcomes -> outcomes.isNotEmpty() },
-            correctCount = attemptsByWordId.values.count { outcomes ->
+            completedCount = submittedOutcomesByWord.values.count { outcomes -> outcomes.isNotEmpty() },
+            correctCount = submittedOutcomesByWord.values.count { outcomes ->
                 outcomes.any { outcome ->
                     val evaluation = outcome.evaluation
                     evaluation != null && evaluation.totalScore >= passScore
                 }
             },
-            submitCount = attemptsByWordId.values.sumOf { outcomes -> outcomes.size }
+            submitCount = submittedOutcomesByWord.values.sumOf { outcomes -> outcomes.size }
         )
     }
 

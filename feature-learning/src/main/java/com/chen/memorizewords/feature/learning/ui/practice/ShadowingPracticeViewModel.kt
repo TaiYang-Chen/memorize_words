@@ -3,10 +3,9 @@ package com.chen.memorizewords.feature.learning.ui.practice
 import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
+import com.chen.memorizewords.core.ui.vm.UiEffect
 import com.chen.memorizewords.domain.practice.PracticeKind
-import com.chen.memorizewords.domain.practice.PracticeQueueType
 import com.chen.memorizewords.domain.practice.PracticeReportRepository
-import com.chen.memorizewords.domain.practice.PracticeReviewQueuePolicy
 import com.chen.memorizewords.domain.practice.PracticeSessionReportRecord
 import com.chen.memorizewords.domain.practice.PracticeSessionReportTracker
 import com.chen.memorizewords.domain.word.model.word.Word
@@ -46,6 +45,7 @@ enum class ShadowingStage {
 }
 
 data class ShadowingAttemptUi(
+    val attemptId: String,
     val attemptIndex: Int,
     val title: String,
     val scoreText: String,
@@ -59,10 +59,24 @@ data class ShadowingAttemptUi(
     val intonationScore: Int? = null,
     val stressScore: Int? = null,
     val speedScore: Int? = null,
+    val accuracyScore: Int? = null,
+    val standardScore: Int? = null,
     val scoreBreakdownText: String = "",
     val audioIssueText: String = "",
-    val detailSourceNote: String = ""
+    val detailSourceNote: String = "",
+    val weakPointText: String = "",
+    val errorMessage: String = "",
+    val hasEvaluation: Boolean = false,
+    val isSelected: Boolean = false,
+    val isEvaluating: Boolean = false
 )
+
+data class ShadowingPracticeDoneEffect(
+    val questionCount: Int,
+    val completedCount: Int,
+    val correctCount: Int,
+    val submitCount: Int
+) : UiEffect
 
 @HiltViewModel
 class ShadowingPracticeViewModel @Inject constructor(
@@ -100,11 +114,14 @@ class ShadowingPracticeViewModel @Inject constructor(
         val detailSourceNote: String = "",
         val isCompleted: Boolean = false,
         val nextActionText: String = "",
+        val canEvaluateLatestAttempt: Boolean = false,
+        val isEvaluatingLatestAttempt: Boolean = false,
         val autoPlaySequenceId: Int = 0,
         val summary: PracticeSessionSummary = PracticeSessionSummary()
     )
 
     private data class AttemptRecord(
+        val attemptId: String,
         val audioFilePath: String,
         val waveformSamples: List<Int>,
         val durationMs: Long,
@@ -117,10 +134,7 @@ class ShadowingPracticeViewModel @Inject constructor(
         var definitions: List<WordDefinitions> = emptyList(),
         var speech: SpeechAudioSuccess? = null,
         val attempts: MutableList<AttemptRecord> = mutableListOf(),
-        var reviewRequired: Boolean = false,
-        var reviewEnqueued: Boolean = false,
-        var isCurrentReviewRound: Boolean = false,
-        var autoReviewCount: Int = 0
+        var selectedAttemptId: String? = null
     )
 
     private val _uiState = MutableStateFlow(ShadowingUiState())
@@ -131,14 +145,16 @@ class ShadowingPracticeViewModel @Inject constructor(
 
     private var loadKey: String? = null
     private var runtimes: List<WordRuntime> = emptyList()
-    private val reviewQueuePolicy = PracticeReviewQueuePolicy()
     private val sessionPolicy = ShadowingPracticeSessionPolicy()
     private val reportTracker = PracticeSessionReportTracker()
     private var currentRuntimeIndex: Int? = null
     private var renderRequestToken: Int = 0
     private var evaluateRequestToken: Int = 0
+    private var nextAttemptSequence: Long = 0L
+    private var evaluatingAttemptId: String? = null
     private var sessionId: String = ""
     private var reportSaved: Boolean = false
+    private var doneEffectEmitted: Boolean = false
 
     fun loadWithSelection(selectedIds: LongArray?, randomCount: Int) {
         val newLoadKey = buildPracticeSelectionKey(selectedIds, randomCount)
@@ -151,35 +167,10 @@ class ShadowingPracticeViewModel @Inject constructor(
         back()
     }
 
-    fun onGuideClick() {
-        val state = _uiState.value
-        if (state.word.isBlank()) return
-        val title = resourceProvider.getString(R.string.practice_shadowing_guide_title)
-        val sections = buildList {
-            if (state.phoneticText.isNotBlank()) add(state.phoneticText)
-            if (state.meaningText.isNotBlank()) add(state.meaningText)
-            if (state.feedbackMessage.isNotBlank()) add(state.feedbackMessage)
-            if (state.latestAttempt?.recognizedText?.isNotBlank() == true) {
-                add(
-                    resourceProvider.getString(
-                        R.string.practice_shadowing_dialog_recognized,
-                        state.latestAttempt.recognizedText
-                    )
-                )
-            }
-            if (state.scoreBreakdownText.isNotBlank()) add(state.scoreBreakdownText)
-            if (state.audioIssueText.isNotBlank()) add(state.audioIssueText)
-            if (state.detailSourceNote.isNotBlank()) add(state.detailSourceNote)
-        }
-        showConfirmDialog(
-            title = title,
-            message = sections.joinToString(separator = "\n\n")
-        )
-    }
-
     fun onRecordingStarted() {
         val runtime = currentRuntime() ?: return
         if (_uiState.value.loading || _uiState.value.isCompleted) return
+        evaluatingAttemptId = null
         _uiState.value = buildUiState(
             runtime = runtime,
             stage = ShadowingStage.RECORDING,
@@ -206,25 +197,104 @@ class ShadowingPracticeViewModel @Inject constructor(
     ) {
         val runtimeIndex = currentRuntimeIndex ?: return
         val runtime = runtimes.getOrNull(runtimeIndex) ?: return
+        val attemptId = nextAttemptId(runtime.word.id)
         val attempt = AttemptRecord(
+            attemptId = attemptId,
             audioFilePath = audioFilePath,
             waveformSamples = waveformSamples.ifEmpty { listOf(16, 24, 18, 30, 20, 26, 14, 22) },
             durationMs = durationMs
         )
         runtime.attempts += attempt
+        runtime.selectedAttemptId = attemptId
         val autoPlaySequenceId = _uiState.value.autoPlaySequenceId + 1
         _uiState.value = buildUiState(
             runtime = runtime,
-            stage = ShadowingStage.EVALUATING,
+            stage = ShadowingStage.FEEDBACK,
             loading = false,
             autoPlaySequenceId = autoPlaySequenceId
         )
-        evaluateAttempt(runtimeIndex = runtimeIndex, attemptIndex = runtime.attempts.lastIndex)
+    }
+
+    fun evaluateLatestAttempt() {
+        val state = _uiState.value
+        if (
+            state.loading ||
+            state.stage == ShadowingStage.RECORDING ||
+            state.isEvaluatingLatestAttempt
+        ) {
+            return
+        }
+        val runtimeIndex = currentRuntimeIndex ?: return
+        val runtime = runtimes.getOrNull(runtimeIndex) ?: return
+        val selectedAttemptId = runtime.selectedAttemptId ?: runtime.attempts.lastOrNull()?.attemptId ?: return
+        val attemptIndex = runtime.attempts.indexOfFirst { it.attemptId == selectedAttemptId }
+        if (attemptIndex < 0) return
+        val attempt = runtime.attempts.getOrNull(attemptIndex) ?: return
+        if (attempt.evaluation != null) return
+        val localQualityMessage = localQualityMessage(attempt)
+        if (localQualityMessage != null) {
+            runtime.attempts[attemptIndex] = attempt.copy(errorMessage = localQualityMessage)
+            _uiState.value = buildUiState(
+                runtime = runtime,
+                stage = state.stage,
+                loading = false,
+                autoPlaySequenceId = state.autoPlaySequenceId
+            )
+            return
+        }
+        evaluatingAttemptId = attempt.attemptId
+        _uiState.value = buildUiState(
+            runtime = runtime,
+            stage = state.stage,
+            loading = false,
+            autoPlaySequenceId = state.autoPlaySequenceId,
+            isEvaluatingLatestAttempt = true
+        )
+        evaluateAttempt(runtimeIndex = runtimeIndex, attemptId = attempt.attemptId)
+    }
+
+    private fun localQualityMessage(attempt: AttemptRecord): String? {
+        if (attempt.durationMs in 1 until MIN_EVALUATE_DURATION_MS) {
+            return resourceProvider.getString(R.string.practice_shadowing_local_issue_too_short)
+        }
+        val samples = attempt.waveformSamples
+        if (samples.isEmpty()) return null
+        val averageVolume = samples.map { it.coerceIn(0, 100) }.average()
+        val speechRatio = samples.count { it >= MIN_SPEECH_SAMPLE_VOLUME } * 100 / samples.size
+        return when {
+            averageVolume < MIN_AVERAGE_VOLUME || speechRatio < MIN_SPEECH_RATIO -> {
+                resourceProvider.getString(R.string.practice_shadowing_local_issue_low_volume)
+            }
+
+            averageVolume > MAX_AVERAGE_VOLUME -> {
+                resourceProvider.getString(R.string.practice_shadowing_local_issue_clipping)
+            }
+
+            else -> null
+        }
+    }
+
+    fun selectAttempt(attemptId: String) {
+        val runtime = currentRuntime() ?: return
+        if (runtime.attempts.none { it.attemptId == attemptId }) return
+        runtime.selectedAttemptId = attemptId
+        _uiState.value = buildUiState(
+            runtime = runtime,
+            stage = _uiState.value.stage,
+            loading = false,
+            autoPlaySequenceId = _uiState.value.autoPlaySequenceId,
+            isEvaluatingLatestAttempt = evaluatingAttemptId == attemptId
+        )
     }
 
     fun retryCurrentWord() {
         val runtime = currentRuntime() ?: return
-        if (_uiState.value.loading || _uiState.value.stage == ShadowingStage.RECORDING) return
+        if (
+            _uiState.value.loading ||
+            _uiState.value.stage == ShadowingStage.RECORDING
+        ) {
+            return
+        }
         _uiState.value = buildUiState(
             runtime = runtime,
             stage = ShadowingStage.WAITING,
@@ -234,57 +304,69 @@ class ShadowingPracticeViewModel @Inject constructor(
     }
 
     fun nextWord() {
-        if (_uiState.value.loading || _uiState.value.stage == ShadowingStage.RECORDING) return
+        if (
+            _uiState.value.loading ||
+            _uiState.value.stage == ShadowingStage.RECORDING
+        ) {
+            return
+        }
         if (_uiState.value.isCompleted) {
             finish()
             return
         }
         val runtimeIndex = currentRuntimeIndex ?: return
-        val runtime = runtimes.getOrNull(runtimeIndex) ?: return
-        if (runtime.attempts.isEmpty()) {
-            enqueueReview(runtimeIndex)
-        }
+        runtimes.getOrNull(runtimeIndex) ?: return
         openNextWord()
     }
 
-    private fun evaluateAttempt(runtimeIndex: Int, attemptIndex: Int) {
+    private fun evaluateAttempt(runtimeIndex: Int, attemptId: String) {
         val runtime = runtimes.getOrNull(runtimeIndex) ?: return
+        val attemptIndex = runtime.attempts.indexOfFirst { it.attemptId == attemptId }
+        if (attemptIndex < 0) return
         val wordText = runtime.word.word.trim()
         if (wordText.isBlank()) {
+            if (evaluatingAttemptId == attemptId) {
+                evaluatingAttemptId = null
+            }
             _uiState.value = buildUiState(
                 runtime = runtime,
-                stage = ShadowingStage.FEEDBACK,
+                stage = _uiState.value.stage,
                 loading = false,
-                autoPlaySequenceId = _uiState.value.autoPlaySequenceId
+                autoPlaySequenceId = _uiState.value.autoPlaySequenceId,
+                isEvaluatingLatestAttempt = false
             )
             return
         }
         val requestToken = nextShadowingPracticeRequestToken(evaluateRequestToken)
         evaluateRequestToken = requestToken
+        val audioFilePath = runtime.attempts[attemptIndex].audioFilePath
+        val durationMs = runtime.attempts[attemptIndex].durationMs
+        val waveformSamples = runtime.attempts[attemptIndex].waveformSamples
         viewModelScope.launch {
             val result = withContext(Dispatchers.IO) {
                 evaluateShadowing(
                     SpeechTask.EvaluateShadowing(
                         referenceText = wordText,
                         audioInput = SpeechAudioInput.FileInput(
-                            runtime.attempts[attemptIndex].audioFilePath
+                            audioFilePath
                         ),
                         recordingMetadata = ShadowingRecordingMetadata(
-                            durationMs = runtime.attempts[attemptIndex].durationMs,
-                            waveformSamples = runtime.attempts[attemptIndex].waveformSamples
+                            durationMs = durationMs,
+                            waveformSamples = waveformSamples
                         )
                     )
                 )
             }
             val activeRuntimeIndex = currentRuntimeIndex
             if (
-                activeRuntimeIndex != runtimeIndex ||
+                evaluatingAttemptId != attemptId ||
                 evaluateRequestToken != requestToken
             ) {
                 return@launch
             }
             val latestRuntime = runtimes.getOrNull(runtimeIndex) ?: return@launch
-            val oldAttempt = latestRuntime.attempts.getOrNull(attemptIndex) ?: return@launch
+            val latestAttemptIndex = latestRuntime.attempts.indexOfFirst { it.attemptId == attemptId }
+            val oldAttempt = latestRuntime.attempts.getOrNull(latestAttemptIndex) ?: return@launch
             val updatedAttempt = when (result) {
                 is ShadowingEvaluationResult -> oldAttempt.copy(
                     evaluation = result,
@@ -293,35 +375,30 @@ class ShadowingPracticeViewModel @Inject constructor(
 
                 is SpeechFailureResult -> oldAttempt.copy(
                     evaluation = null,
-                    errorMessage = result.message
-                        ?: resourceProvider.getString(
-                            R.string.practice_shadowing_scoring_unavailable
-                        )
+                    errorMessage = normalizeShadowingFailureMessage(
+                        message = result.message,
+                        resourceProvider = resourceProvider
+                    )
                 )
 
                 else -> oldAttempt
             }
-            latestRuntime.attempts[attemptIndex] = updatedAttempt
+            latestRuntime.attempts[latestAttemptIndex] = updatedAttempt
             recordAttempt(
                 word = latestRuntime.word,
-                attemptIndex = attemptIndex,
+                attemptIndex = latestAttemptIndex,
                 attempt = updatedAttempt
             )
-            val needsReview = sessionPolicy.shouldScheduleReview(
-                evaluation = updatedAttempt.evaluation,
-                errorMessage = updatedAttempt.errorMessage
-            )
-            if (needsReview) {
-                latestRuntime.reviewRequired = true
-                enqueueReview(runtimeIndex)
-            } else {
-                clearReview(latestRuntime)
+            evaluatingAttemptId = null
+            if (activeRuntimeIndex != runtimeIndex) {
+                return@launch
             }
             _uiState.value = buildUiState(
                 runtime = latestRuntime,
-                stage = ShadowingStage.FEEDBACK,
+                stage = _uiState.value.stage,
                 loading = false,
-                autoPlaySequenceId = _uiState.value.autoPlaySequenceId
+                autoPlaySequenceId = _uiState.value.autoPlaySequenceId,
+                isEvaluatingLatestAttempt = false
             )
         }
     }
@@ -336,45 +413,41 @@ class ShadowingPracticeViewModel @Inject constructor(
             )
             runtimes = words.map { WordRuntime(word = it) }
             _sessionWordIds.value = words.map { it.id }
-            reviewQueuePolicy.reset(words.map { it.id })
             reportTracker.clear()
             reportSaved = false
             sessionId = "shadowing:${System.currentTimeMillis()}:${loadKey.orEmpty()}"
             currentRuntimeIndex = null
             renderRequestToken = nextShadowingPracticeRequestToken(renderRequestToken)
             evaluateRequestToken = nextShadowingPracticeRequestToken(evaluateRequestToken)
+            evaluatingAttemptId = null
+            nextAttemptSequence = 0L
+            doneEffectEmitted = false
             openNextWord()
         }
     }
 
     private fun openNextWord() {
-        val next = selectNextWord()
-        if (next == null) {
-            renderCompletedState()
-            return
-        }
-        val runtimeIndex = runtimeIndexByWordId(next.wordId) ?: run {
+        val runtimeIndex = selectNextWordIndex() ?: run {
             renderCompletedState()
             return
         }
         currentRuntimeIndex = runtimeIndex
-        runtimes.forEach { it.isCurrentReviewRound = false }
         val runtime = runtimes.getOrNull(runtimeIndex) ?: run {
             renderCompletedState()
             return
         }
-        runtime.isCurrentReviewRound = next.queueType == PracticeQueueType.REVIEW
-        if (next.queueType == PracticeQueueType.REVIEW) {
-            runtime.reviewEnqueued = false
-        }
         renderCurrentWord(runtimeIndex)
     }
 
-    private fun selectNextWord() = reviewQueuePolicy.selectNext()
+    private fun nextAttemptId(wordId: Long): String {
+        nextAttemptSequence += 1
+        return "shadowing_${wordId}_${System.currentTimeMillis()}_$nextAttemptSequence"
+    }
 
-    private fun runtimeIndexByWordId(wordId: Long): Int? {
-        val index = runtimes.indexOfFirst { it.word.id == wordId }
-        return index.takeIf { it >= 0 }
+    private fun selectNextWordIndex(): Int? {
+        if (runtimes.isEmpty()) return null
+        val currentIndex = currentRuntimeIndex ?: return 0
+        return (currentIndex + 1).takeIf { it < runtimes.size }
     }
 
     private fun renderCurrentWord(runtimeIndex: Int) {
@@ -434,31 +507,47 @@ class ShadowingPracticeViewModel @Inject constructor(
             statusTitle = resourceProvider.getString(R.string.practice_shadowing_finish_title),
             statusSubtitle = resourceProvider.getString(R.string.practice_shadowing_finish_subtitle),
             summaryText = summaryText(summary),
-            pendingReviewText = pendingReviewText(),
+            pendingReviewText = "",
             reviewTagText = "",
             isCompleted = true,
             nextActionText = resourceProvider.getString(R.string.practice_shadowing_finish_action),
             autoPlaySequenceId = _uiState.value.autoPlaySequenceId,
             summary = summary
         )
+        if (!doneEffectEmitted) {
+            doneEffectEmitted = true
+            emitEffect(
+                ShadowingPracticeDoneEffect(
+                    questionCount = summary.questionCount,
+                    completedCount = summary.completedCount,
+                    correctCount = summary.correctCount,
+                    submitCount = summary.submitCount
+                )
+            )
+        }
     }
 
     private fun buildUiState(
         runtime: WordRuntime,
         stage: ShadowingStage,
         loading: Boolean,
-        autoPlaySequenceId: Int
+        autoPlaySequenceId: Int,
+        isEvaluatingLatestAttempt: Boolean = false
     ): ShadowingUiState {
         val attempts = runtime.attempts.mapIndexed { index, attempt ->
             attempt.toUi(
                 index = index,
                 word = runtime.word.word,
-                resourceProvider = resourceProvider
+                resourceProvider = resourceProvider,
+                isSelected = runtime.selectedAttemptId == attempt.attemptId,
+                isEvaluating = evaluatingAttemptId == attempt.attemptId
             )
         }
-        val latestAttempt = attempts.lastOrNull()
+        val selectedAttempt = attempts.firstOrNull { it.isSelected } ?: attempts.lastOrNull()
+        if (selectedAttempt != null && runtime.selectedAttemptId != selectedAttempt.attemptId) {
+            runtime.selectedAttemptId = selectedAttempt.attemptId
+        }
         val summary = buildSummary()
-        val pendingReviewText = pendingReviewText()
         val nextActionText = when {
             stage == ShadowingStage.COMPLETED -> {
                 resourceProvider.getString(R.string.practice_shadowing_finish_action)
@@ -469,7 +558,11 @@ class ShadowingPracticeViewModel @Inject constructor(
         }
         val phonetic = buildPhonetic(runtime.word)
         val meaning = buildMeaning(runtime.definitions)
-        val feedback = buildFeedback(runtime.word.word, latestAttempt)
+        val feedback = buildFeedback(
+            word = runtime.word.word,
+            latestAttempt = selectedAttempt,
+            isEvaluatingLatestAttempt = selectedAttempt?.isEvaluating == true || isEvaluatingLatestAttempt
+        )
         val statusPair = buildStatus(stage = stage, runtime = runtime)
         return ShadowingUiState(
             loading = loading,
@@ -486,21 +579,26 @@ class ShadowingPracticeViewModel @Inject constructor(
             phoneticText = phonetic,
             meaningText = meaning,
             speech = runtime.speech,
-            latestAttempt = latestAttempt,
+            latestAttempt = selectedAttempt,
             attemptHistory = attempts,
             feedbackTitle = feedback.first,
             feedbackMessage = feedback.second,
             statusTitle = statusPair.first,
             statusSubtitle = statusPair.second,
             summaryText = summaryText(summary),
-            pendingReviewText = pendingReviewText,
-            isInReview = runtime.isCurrentReviewRound || runtime.reviewRequired,
-            reviewTagText = buildReviewTagText(runtime),
-            scoreBreakdownText = latestAttempt?.scoreBreakdownText.orEmpty(),
-            audioIssueText = latestAttempt?.audioIssueText.orEmpty(),
-            detailSourceNote = latestAttempt?.detailSourceNote.orEmpty(),
+            pendingReviewText = "",
+            isInReview = false,
+            reviewTagText = "",
+            scoreBreakdownText = selectedAttempt?.scoreBreakdownText.orEmpty(),
+            audioIssueText = selectedAttempt?.audioIssueText.orEmpty(),
+            detailSourceNote = selectedAttempt?.detailSourceNote.orEmpty(),
             isCompleted = false,
             nextActionText = nextActionText,
+            canEvaluateLatestAttempt = selectedAttempt != null &&
+                !selectedAttempt.hasEvaluation &&
+                stage != ShadowingStage.RECORDING &&
+                selectedAttempt.isEvaluating.not(),
+            isEvaluatingLatestAttempt = selectedAttempt?.isEvaluating == true || isEvaluatingLatestAttempt,
             autoPlaySequenceId = autoPlaySequenceId,
             summary = summary
         )
@@ -525,22 +623,6 @@ class ShadowingPracticeViewModel @Inject constructor(
             correctCount = summary.correctCount,
             submitCount = summary.submitCount
         )
-    }
-
-    private fun enqueueReview(runtimeIndex: Int) {
-        val runtime = runtimes.getOrNull(runtimeIndex) ?: return
-        runtime.reviewRequired = true
-        if (runtime.reviewEnqueued) return
-        if (runtime.autoReviewCount >= MAX_AUTO_REVIEW_ROUNDS) return
-        runtime.reviewEnqueued = true
-        runtime.autoReviewCount += 1
-        reviewQueuePolicy.enqueueReview(runtime.word.id)
-    }
-
-    private fun clearReview(runtime: WordRuntime) {
-        runtime.reviewRequired = false
-        runtime.reviewEnqueued = false
-        runtime.autoReviewCount = 0
     }
 
     private fun currentRuntime(): WordRuntime? {
@@ -582,34 +664,8 @@ class ShadowingPracticeViewModel @Inject constructor(
     }
 
     private fun isFinalAction(runtime: WordRuntime): Boolean {
-        return runtime.attempts.isNotEmpty() &&
-            reviewQueuePolicy.isEmpty()
-    }
-
-    private fun pendingReviewText(): String {
-        val pendingCount = runtimes.count { it.reviewRequired || it.reviewEnqueued }
-        return if (pendingCount > 0) {
-            resourceProvider.getString(
-                R.string.practice_shadowing_pending_review_format,
-                pendingCount
-            )
-        } else {
-            ""
-        }
-    }
-
-    private fun buildReviewTagText(runtime: WordRuntime): String {
-        return when {
-            runtime.isCurrentReviewRound -> {
-                resourceProvider.getString(R.string.practice_shadowing_reviewing_tag)
-            }
-
-            runtime.reviewRequired -> {
-                resourceProvider.getString(R.string.practice_shadowing_review_flagged_tag)
-            }
-
-            else -> ""
-        }
+        val runtimeIndex = runtimes.indexOf(runtime)
+        return runtime.attempts.isNotEmpty() && runtimeIndex == runtimes.lastIndex
     }
 
     private fun buildPhonetic(word: Word): String {
@@ -634,16 +690,25 @@ class ShadowingPracticeViewModel @Inject constructor(
 
     private fun buildFeedback(
         word: String,
-        latestAttempt: ShadowingAttemptUi?
+        latestAttempt: ShadowingAttemptUi?,
+        isEvaluatingLatestAttempt: Boolean
     ): Pair<String, String> {
+        if (isEvaluatingLatestAttempt) {
+            return resourceProvider.getString(R.string.practice_shadowing_status_evaluating_title) to
+                resourceProvider.getString(R.string.practice_shadowing_status_evaluating_subtitle)
+        }
         if (latestAttempt == null) {
             return resourceProvider.getString(R.string.practice_shadowing_feedback_waiting_title) to
                 resourceProvider.getString(R.string.practice_shadowing_feedback_waiting_body)
         }
         val totalScore = latestAttempt.totalScore
         if (totalScore == null) {
-            return resourceProvider.getString(R.string.practice_shadowing_feedback_retry_title) to
-                latestAttempt.guidanceText
+            val body = if (latestAttempt.errorMessage.isNotBlank()) {
+                latestAttempt.errorMessage
+            } else {
+                resourceProvider.getString(R.string.practice_shadowing_feedback_ready_body)
+            }
+            return resourceProvider.getString(R.string.practice_shadowing_feedback_ready_title) to body
         }
         val titleRes = when {
             totalScore >= 90 -> R.string.practice_shadowing_feedback_excellent_title
@@ -694,8 +759,14 @@ class ShadowingPracticeViewModel @Inject constructor(
             }
 
             ShadowingStage.FEEDBACK -> {
-                resourceProvider.getString(R.string.practice_shadowing_status_feedback_title) to
-                    summaryText(buildSummary())
+                val latestAttempt = runtime.attempts.lastOrNull()
+                if (latestAttempt != null && latestAttempt.evaluation == null) {
+                    resourceProvider.getString(R.string.practice_shadowing_feedback_ready_title) to
+                        resourceProvider.getString(R.string.practice_shadowing_feedback_ready_body)
+                } else {
+                    resourceProvider.getString(R.string.practice_shadowing_status_feedback_title) to
+                        summaryText(buildSummary())
+                }
             }
 
             ShadowingStage.COMPLETED -> {
@@ -718,7 +789,9 @@ class ShadowingPracticeViewModel @Inject constructor(
     private fun AttemptRecord.toUi(
         index: Int,
         word: String,
-        resourceProvider: ResourceProvider
+        resourceProvider: ResourceProvider,
+        isSelected: Boolean,
+        isEvaluating: Boolean
     ): ShadowingAttemptUi {
         val title = resourceProvider.getString(
             R.string.practice_shadowing_history_title_format,
@@ -726,7 +799,11 @@ class ShadowingPracticeViewModel @Inject constructor(
         )
         val evaluation = evaluation
         val scoreText = if (evaluation == null) {
-            resourceProvider.getString(R.string.practice_shadowing_history_no_score)
+            if (isEvaluating) {
+                resourceProvider.getString(R.string.practice_shadowing_history_evaluating)
+            } else {
+                resourceProvider.getString(R.string.practice_shadowing_history_no_score)
+            }
         } else {
             resourceProvider.getString(
                 R.string.practice_shadowing_score_brief_format,
@@ -735,8 +812,8 @@ class ShadowingPracticeViewModel @Inject constructor(
         }
         val recognizedText = when {
             evaluation?.recognizedText?.isNotBlank() == true -> evaluation.recognizedText
-            errorMessage.isNotBlank() -> errorMessage
-            else -> word
+            evaluation != null -> word
+            else -> ""
         }
         val guidanceText = buildAttemptGuidance(
             result = evaluation,
@@ -746,24 +823,12 @@ class ShadowingPracticeViewModel @Inject constructor(
         val intonationScore = evaluation?.intonationScore
         val stressScore = evaluation?.stressScore
         val speedScore = evaluation?.speedScore
-        val scoreBreakdownText = if (
-            intonationScore != null &&
-            stressScore != null &&
-            speedScore != null
-        ) {
-            resourceProvider.getString(
-                R.string.practice_shadowing_score_breakdown_format,
-                intonationScore,
-                stressScore,
-                speedScore
-            )
-        } else {
-            ""
-        }
+        val scoreBreakdownText = buildScoreBreakdown(evaluation, resourceProvider)
         val audioIssueText = buildAudioIssueText(
             result = evaluation,
             resourceProvider = resourceProvider
         )
+        val weakPointText = buildWeakPointText(evaluation, resourceProvider)
         val detailSourceNote = if (
             evaluation?.detailSourceNote?.isNotBlank() == true
         ) {
@@ -777,6 +842,7 @@ class ShadowingPracticeViewModel @Inject constructor(
             ""
         }
         return ShadowingAttemptUi(
+            attemptId = attemptId,
             attemptIndex = index + 1,
             title = title,
             scoreText = scoreText,
@@ -790,9 +856,16 @@ class ShadowingPracticeViewModel @Inject constructor(
             intonationScore = evaluation?.intonationScore,
             stressScore = evaluation?.stressScore,
             speedScore = evaluation?.speedScore,
+            accuracyScore = evaluation?.accuracyScore,
+            standardScore = evaluation?.standardScore,
             scoreBreakdownText = scoreBreakdownText,
             audioIssueText = audioIssueText,
-            detailSourceNote = detailSourceNote
+            detailSourceNote = detailSourceNote,
+            weakPointText = weakPointText,
+            errorMessage = errorMessage,
+            hasEvaluation = evaluation != null,
+            isSelected = isSelected,
+            isEvaluating = isEvaluating
         )
     }
 
@@ -812,7 +885,11 @@ class ShadowingPracticeViewModel @Inject constructor(
 
     companion object {
         private const val PASS_SCORE = 80
-        private const val MAX_AUTO_REVIEW_ROUNDS = 2
+        private const val MIN_EVALUATE_DURATION_MS = 450L
+        private const val MIN_SPEECH_SAMPLE_VOLUME = 12
+        private const val MIN_AVERAGE_VOLUME = 8.0
+        private const val MIN_SPEECH_RATIO = 15
+        private const val MAX_AVERAGE_VOLUME = 96.0
     }
 }
 
@@ -889,5 +966,117 @@ private fun buildAudioIssueText(
             R.string.practice_shadowing_detected_issues_format,
             messages.joinToString(separator = "; ")
         )
+    }
+}
+
+private fun buildScoreBreakdown(
+    result: ShadowingEvaluationResult?,
+    resourceProvider: ResourceProvider
+): String {
+    if (result == null) return ""
+    val items = buildList {
+        result.accuracyScore?.let {
+            add(resourceProvider.getString(R.string.practice_shadowing_metric_accuracy, it))
+        }
+        result.standardScore?.let {
+            add(resourceProvider.getString(R.string.practice_shadowing_metric_standard, it))
+        }
+        result.intonationScore?.let {
+            add(resourceProvider.getString(R.string.practice_shadowing_metric_intonation, it))
+        }
+        result.speedScore?.let {
+            add(resourceProvider.getString(R.string.practice_shadowing_metric_speed, it))
+        }
+    }
+    return items.joinToString(separator = " · ")
+}
+
+private fun buildWeakPointText(
+    result: ShadowingEvaluationResult?,
+    resourceProvider: ResourceProvider
+): String {
+    if (result == null) return ""
+    val weakPoints = (result.phoneDetails + result.syllableDetails + result.wordDetails)
+        .filter { detail -> (detail.score ?: 100) < 75 && detail.text.isNotBlank() }
+        .take(4)
+        .map { detail ->
+            val label = readablePronunciationUnit(detail.text)
+            if (detail.score == null) label else "$label ${detail.score}分"
+        }
+        .distinct()
+    if (weakPoints.isEmpty()) return ""
+    return resourceProvider.getString(
+        R.string.practice_shadowing_weak_points_format,
+        weakPoints.joinToString(separator = " · ")
+    )
+}
+
+private fun readablePronunciationUnit(rawText: String): String {
+    val normalized = rawText.trim()
+    if (normalized.isBlank()) return rawText
+    val key = normalized.lowercase(Locale.US).replace(Regex("[^a-z]"), "")
+    val phoneme = when (key) {
+        "ih" -> "短元音 /ɪ/"
+        "iy" -> "长元音 /iː/"
+        "eh" -> "短元音 /e/"
+        "ae" -> "短元音 /æ/"
+        "ah" -> "弱读元音 /ə/"
+        "er" -> "卷舌元音 /ɜː/"
+        "aa" -> "后元音 /ɑː/"
+        "ao" -> "后元音 /ɔː/"
+        "uh" -> "短元音 /ʊ/"
+        "uw" -> "长元音 /uː/"
+        "ey" -> "双元音 /eɪ/"
+        "ay" -> "双元音 /aɪ/"
+        "aw" -> "双元音 /aʊ/"
+        "ow" -> "双元音 /oʊ/"
+        "oy" -> "双元音 /ɔɪ/"
+        "th" -> "咬舌音 /θ/"
+        "dh" -> "咬舌音 /ð/"
+        "sh" -> "摩擦音 /ʃ/"
+        "zh" -> "摩擦音 /ʒ/"
+        "ch" -> "破擦音 /tʃ/"
+        "jh" -> "破擦音 /dʒ/"
+        "ng" -> "鼻音 /ŋ/"
+        "r" -> "卷舌音 /r/"
+        "l" -> "舌侧音 /l/"
+        "t" -> "词尾 /t/"
+        "d" -> "词尾 /d/"
+        "s" -> "词尾 /s/"
+        "z" -> "词尾 /z/"
+        "p" -> "爆破音 /p/"
+        "b" -> "爆破音 /b/"
+        "k" -> "爆破音 /k/"
+        "g" -> "爆破音 /g/"
+        "f" -> "摩擦音 /f/"
+        "v" -> "摩擦音 /v/"
+        "m" -> "鼻音 /m/"
+        "n" -> "鼻音 /n/"
+        "w" -> "半元音 /w/"
+        "y" -> "半元音 /j/"
+        "hh" -> "气音 /h/"
+        else -> null
+    }
+    return phoneme ?: normalized
+}
+
+private fun normalizeShadowingFailureMessage(
+    message: String?,
+    resourceProvider: ResourceProvider
+): String {
+    val raw = message?.trim().orEmpty()
+    if (raw.isBlank()) {
+        return resourceProvider.getString(R.string.practice_shadowing_scoring_unavailable)
+    }
+    val normalized = raw.lowercase(Locale.US)
+    return when {
+        "provider must be baidu" in normalized ||
+            "word is required" in normalized ||
+            "provider must be xunfei" in normalized ||
+            "referencetext is required" in normalized -> {
+            resourceProvider.getString(R.string.practice_shadowing_service_contract_mismatch)
+        }
+
+        else -> raw
     }
 }

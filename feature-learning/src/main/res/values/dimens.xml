@@ -35,4 +35,29 @@
     <dimen name="feature_learning_exam_matching_column_gap">12dp</dimen>
     <dimen name="feature_learning_exam_matching_stack_breakpoint">328dp</dimen>
     <dimen name="feature_learning_exam_answer_gap">8dp</dimen>
+
+    <dimen name="feature_learning_shadowing_page_margin">14dp</dimen>
+    <dimen name="feature_learning_shadowing_header_top">12dp</dimen>
+    <dimen name="feature_learning_shadowing_title_size">17sp</dimen>
+    <dimen name="feature_learning_shadowing_content_top">20dp</dimen>
+    <dimen name="feature_learning_shadowing_word_size">34sp</dimen>
+    <dimen name="feature_learning_shadowing_word_max_width">300dp</dimen>
+    <dimen name="feature_learning_shadowing_chip_text_size">12sp</dimen>
+    <dimen name="feature_learning_shadowing_chip_padding_horizontal">12dp</dimen>
+    <dimen name="feature_learning_shadowing_chip_padding_vertical">6dp</dimen>
+    <dimen name="feature_learning_shadowing_meaning_top">14dp</dimen>
+    <dimen name="feature_learning_shadowing_meaning_text_size">14sp</dimen>
+    <dimen name="feature_learning_shadowing_card_top">14dp</dimen>
+    <dimen name="feature_learning_shadowing_card_padding">12dp</dimen>
+    <dimen name="feature_learning_shadowing_wave_height">92dp</dimen>
+    <dimen name="feature_learning_shadowing_play_button">46dp</dimen>
+    <dimen name="feature_learning_shadowing_play_icon_padding">13dp</dimen>
+    <dimen name="feature_learning_shadowing_record_button">70dp</dimen>
+    <dimen name="feature_learning_shadowing_record_icon_padding">21dp</dimen>
+    <dimen name="feature_learning_shadowing_action_label_size">12sp</dimen>
+    <dimen name="feature_learning_shadowing_record_label_size">14sp</dimen>
+    <dimen name="feature_learning_shadowing_bottom_button_height">48dp</dimen>
+    <dimen name="feature_learning_shadowing_feedback_title_size">15sp</dimen>
+    <dimen name="feature_learning_shadowing_feedback_body_size">13sp</dimen>
+    <dimen name="feature_learning_shadowing_feedback_meta_size">12sp</dimen>
 </resources>

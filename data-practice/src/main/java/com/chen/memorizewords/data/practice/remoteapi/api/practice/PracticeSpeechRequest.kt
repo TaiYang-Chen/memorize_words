@@ -21,9 +21,12 @@ class PracticeSpeechRequest @Inject constructor(
         }
 
     suspend fun evaluateShadowing(
-        word: String,
+        referenceText: String,
         provider: String,
-        audioFilePath: String
+        audioFilePath: String,
+        audioFormat: String? = null,
+        durationMs: Long? = null,
+        waveformSamples: List<Int>? = null
     ): NetworkResult<ShadowingEvaluateResponseDto> = requestExecutor.executeAuthenticated {
         val file = File(audioFilePath)
         if (!file.exists() || !file.isFile) {
@@ -33,9 +36,12 @@ class PracticeSpeechRequest @Inject constructor(
             encodeAudioFileToBase64(file)
         }
         val req = ShadowingEvaluateRequestDto(
-            word = word,
+            referenceText = referenceText,
             provider = provider,
-            audioBase64 = payload
+            audioBase64 = payload,
+            audioFormat = audioFormat,
+            durationMs = durationMs,
+            waveformSamples = waveformSamples
         )
         apiService.evaluateShadowing(req)
             .await<ApiResponse<ShadowingEvaluateResponseDto>, ShadowingEvaluateResponseDto>()

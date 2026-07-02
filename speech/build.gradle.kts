@@ -7,7 +7,7 @@ android {
     defaultConfig {
         val wordTtsProvider = (project.findProperty("WORD_TTS_PROVIDER") as String?) ?: "ALIYUN"
         val sentenceTtsProvider = (project.findProperty("SENTENCE_TTS_PROVIDER") as String?) ?: "BAIDU"
-        val evaluationProvider = (project.findProperty("EVALUATION_PROVIDER") as String?) ?: "BAIDU"
+        val evaluationProvider = (project.findProperty("EVALUATION_PROVIDER") as String?) ?: "XUNFEI"
 
         buildConfigField("String", "WORD_TTS_PROVIDER", "\"$wordTtsProvider\"")
         buildConfigField("String", "SENTENCE_TTS_PROVIDER", "\"$sentenceTtsProvider\"")

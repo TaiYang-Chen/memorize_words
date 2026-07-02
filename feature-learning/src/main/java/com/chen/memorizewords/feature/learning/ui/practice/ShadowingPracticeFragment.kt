@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.MediaPlayer
-import android.media.MediaRecorder
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -19,10 +18,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.chen.memorizewords.core.ui.fragment.BaseVmDbFragment
+import com.chen.memorizewords.core.ui.vm.UiEffect
 import com.chen.memorizewords.feature.learning.PracticeActivity
 import com.chen.memorizewords.feature.learning.R
 import com.chen.memorizewords.feature.learning.databinding.FragmentPracticeShadowingBinding
 import com.chen.memorizewords.feature.learning.ui.speech.prepareSpeechOutputAsync
+import com.chen.memorizewords.feature.learning.ui.speech.speechOutputFileOrNull
 import com.chen.memorizewords.domain.practice.speech.SpeechAudioOutput
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
@@ -41,6 +42,13 @@ class ShadowingPracticeFragment :
         MINE
     }
 
+    private enum class PlaybackControlOrigin {
+        WAVE,
+        REFERENCE_BUTTON,
+        MINE_BUTTON,
+        AUTO
+    }
+
     private sealed class PlaybackSource(val target: PlaybackTarget) {
         data class Reference(val output: SpeechAudioOutput) : PlaybackSource(PlaybackTarget.REFERENCE) {
             override val key: String = "reference_${output.hashCode()}"
@@ -56,13 +64,13 @@ class ShadowingPracticeFragment :
     override val viewModel: ShadowingPracticeViewModel by viewModels()
     private val sessionViewModel: PracticeSessionViewModel by activityViewModels()
 
-    private var mediaRecorder: MediaRecorder? = null
+    private val wavRecorder = ShadowingWavRecorder()
     private var mediaPlayer: MediaPlayer? = null
     private var currentPlaybackSource: PlaybackSource? = null
+    private var currentPlaybackOrigin: PlaybackControlOrigin? = null
     private var isPlaybackPrepared: Boolean = false
     private var autoPlayJob: Job? = null
     private var playbackProgressJob: Job? = null
-    private var amplitudeJob: Job? = null
     private val currentWaveSamples = mutableListOf<Int>()
     private val managedRecordingFiles = mutableListOf<File>()
     private var currentRecordingFile: File? = null
@@ -71,6 +79,7 @@ class ShadowingPracticeFragment :
     private var permissionBlocked: Boolean = false
     private var lastAutoPlaySequenceId: Int = 0
     private var preservePlaybackOnAutoCancel: Boolean = false
+    private val waveformPeakCache = mutableMapOf<String, List<WaveformPeak>>()
 
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -95,7 +104,7 @@ class ShadowingPracticeFragment :
         bindActions()
         refreshPermissionState()
         databind.tvTitle.text = getString(R.string.practice_shadowing_title_compare)
-        databind.waveformView.setWaveformSamples(defaultWaveformSamples())
+        databind.waveformView.clearWaveform()
         val selectedIds = arguments?.getLongArray(PracticeActivity.ARG_SELECTED_WORD_IDS)
         val randomCount = arguments?.getInt(PracticeActivity.ARG_RANDOM_COUNT, 20) ?: 20
         viewModel.loadWithSelection(selectedIds, randomCount)
@@ -103,6 +112,13 @@ class ShadowingPracticeFragment :
 
     override fun createObserver() {
         observeUi()
+    }
+
+    override fun onUiEffect(effect: UiEffect) {
+        when (effect) {
+            is ShadowingPracticeDoneEffect -> showDonePage(effect)
+            else -> super.onUiEffect(effect)
+        }
     }
 
     override fun onResume() {
@@ -120,10 +136,12 @@ class ShadowingPracticeFragment :
 
     private fun bindActions() {
         databind.btnBack.setOnClickListener { viewModel.onBackClick() }
-        databind.tvGuideChip.setOnClickListener { viewModel.onGuideClick() }
         databind.cardPlayReference.setOnClickListener { toggleReferencePlayback() }
         databind.cardPlayMine.setOnClickListener { toggleMinePlayback() }
         databind.cardRecord.setOnClickListener { handleRecordAction() }
+        databind.btnEvaluatePronunciation.setOnClickListener {
+            viewModel.evaluateLatestAttempt()
+        }
         databind.btnNextWord.setOnClickListener { handleNextAction() }
         databind.cardWavePlayOverlay.setOnClickListener { handleWaveOverlayPlay() }
         databind.tvQuotaAction.setOnClickListener {
@@ -132,6 +150,24 @@ class ShadowingPracticeFragment :
         databind.waveformView.onSeekRequested = { fraction ->
             seekPlayback(fraction)
         }
+    }
+
+    private fun showDonePage(effect: ShadowingPracticeDoneEffect) {
+        abortRecording()
+        cancelAutoPlayback()
+        releasePlayer(resetProgress = true)
+        parentFragmentManager.beginTransaction()
+            .replace(
+                R.id.practice_fragment_container,
+                ShadowingPracticeDoneFragment.newInstance(
+                    questionCount = effect.questionCount,
+                    completedCount = effect.completedCount,
+                    correctCount = effect.correctCount,
+                    submitCount = effect.submitCount
+                ),
+                ShadowingPracticeDoneFragment.TAG
+            )
+            .commit()
     }
 
     private fun observeUi() {
@@ -164,15 +200,10 @@ class ShadowingPracticeFragment :
         databind.tvWaveSubtitle.text = state.statusSubtitle
         databind.tvFeedbackTitle.text = state.feedbackTitle
         databind.tvFeedbackMessage.text = state.feedbackMessage
-        databind.tvSummary.text = state.summaryText
-        databind.tvPendingReview.text = state.pendingReviewText
-        databind.tvPendingReview.isVisible = state.pendingReviewText.isNotBlank()
-        databind.tvReviewTag.text = state.reviewTagText
-        databind.tvReviewTag.isVisible = state.reviewTagText.isNotBlank()
         databind.layoutQuotaBanner.isVisible = false
 
         val latestAttempt = state.latestAttempt
-        databind.tvRecognized.isVisible = latestAttempt != null
+        databind.tvRecognized.isVisible = latestAttempt?.recognizedText?.isNotBlank() == true
         databind.tvRecognized.text = latestAttempt?.let {
             getString(R.string.practice_shadowing_recognized_format, it.recognizedText)
         }.orEmpty()
@@ -192,27 +223,41 @@ class ShadowingPracticeFragment :
                 attempt.scoreText
             }
         }.orEmpty()
+        databind.tvScoreDetail.isVisible =
+            latestAttempt?.hasEvaluation == true && !state.isEvaluatingLatestAttempt
+        databind.btnEvaluatePronunciation.isVisible = state.canEvaluateLatestAttempt
+        databind.btnEvaluatePronunciation.isEnabled = state.canEvaluateLatestAttempt
         databind.tvScoreBreakdown.text = state.scoreBreakdownText
-        databind.tvScoreBreakdown.isVisible = state.scoreBreakdownText.isNotBlank()
+        databind.tvScoreBreakdown.isVisible =
+            state.scoreBreakdownText.isNotBlank() && !state.isEvaluatingLatestAttempt
+        databind.tvWeakPoints.text = latestAttempt?.weakPointText.orEmpty()
+        databind.tvWeakPoints.isVisible =
+            latestAttempt?.weakPointText?.isNotBlank() == true && !state.isEvaluatingLatestAttempt
         databind.tvAudioIssue.text = state.audioIssueText
-        databind.tvAudioIssue.isVisible = state.audioIssueText.isNotBlank()
+        databind.tvAudioIssue.isVisible =
+            state.audioIssueText.isNotBlank() && !state.isEvaluatingLatestAttempt
         databind.tvDetailNote.text = state.detailSourceNote
-        databind.tvDetailNote.isVisible = state.detailSourceNote.isNotBlank()
+        databind.tvDetailNote.isVisible =
+            state.detailSourceNote.isNotBlank() && !state.isEvaluatingLatestAttempt
 
         val waveformSamples = when {
-            state.stage == ShadowingStage.RECORDING -> currentWaveSamples.ifEmpty { defaultWaveformSamples() }
+            state.stage == ShadowingStage.RECORDING -> currentWaveSamples
             latestAttempt != null -> latestAttempt.waveformSamples
-            else -> defaultWaveformSamples()
+            else -> emptyList()
         }
         if (state.stage == ShadowingStage.RECORDING) {
             databind.waveformView.startLiveWave()
         } else {
             databind.waveformView.stopLiveWave()
-            databind.waveformView.setWaveformSamples(waveformSamples)
+            val audioFilePath = latestAttempt?.audioFilePath
+            if (audioFilePath != null) {
+                setWaveformFromFile(File(audioFilePath), fallbackSamples = waveformSamples)
+            } else {
+                databind.waveformView.clearWaveform()
+            }
         }
         databind.cardWavePlayOverlay.isVisible =
             state.stage != ShadowingStage.RECORDING &&
-                state.stage != ShadowingStage.EVALUATING &&
                 (state.speech != null || latestAttempt != null)
 
         renderHistory(state.attemptHistory)
@@ -230,20 +275,30 @@ class ShadowingPracticeFragment :
                 setTextColor(
                     ContextCompat.getColor(
                         requireContext(),
-                        R.color.feature_learning_shadowing_text_primary
+                        if (item.isSelected) {
+                            android.R.color.white
+                        } else {
+                            R.color.feature_learning_shadowing_text_primary
+                        }
                     )
                 )
                 textSize = 13f
                 background = ContextCompat.getDrawable(
                     requireContext(),
-                    R.drawable.feature_learning_bg_shadowing_history
+                    if (item.isSelected) {
+                        R.drawable.feature_learning_bg_shadowing_history_selected
+                    } else {
+                        R.drawable.feature_learning_bg_shadowing_history
+                    }
                 )
                 setPadding(dp(14), dp(10), dp(14), dp(10))
                 setOnClickListener {
                     databind.waveformView.stopLiveWave()
-                    databind.waveformView.setWaveformSamples(item.waveformSamples)
-                    togglePlayback(PlaybackSource.Mine(item.audioFilePath))
+                    viewModel.selectAttempt(item.attemptId)
+                    setWaveformFromFile(File(item.audioFilePath), fallbackSamples = item.waveformSamples)
+                    togglePlayback(PlaybackSource.Mine(item.audioFilePath), PlaybackControlOrigin.WAVE)
                 }
+                alpha = if (item.isEvaluating) 0.72f else 1f
             }
             val params = LinearLayoutLayoutParamsFactory.wrapContent()
             params.marginEnd = if (index == history.lastIndex) 0 else dp(10)
@@ -278,11 +333,6 @@ class ShadowingPracticeFragment :
                 return
             }
 
-            ShadowingStage.EVALUATING -> {
-                showToast(getString(R.string.practice_shadowing_wait_for_feedback))
-                return
-            }
-
             else -> Unit
         }
         cancelAutoPlayback()
@@ -291,24 +341,33 @@ class ShadowingPracticeFragment :
     }
 
     private fun handleWaveOverlayPlay() {
-        if (viewModel.uiState.value.stage == ShadowingStage.EVALUATING) return
-        val current = currentPlaybackSource
-        if (current != null) {
-            togglePlayback(current)
-            return
+        if (currentPlaybackOrigin == PlaybackControlOrigin.WAVE) {
+            val current = currentPlaybackSource
+            if (current != null) {
+                togglePlayback(current, PlaybackControlOrigin.WAVE)
+                return
+            }
         }
         val state = viewModel.uiState.value
-        val source = state.latestAttempt?.audioFilePath?.let { PlaybackSource.Mine(it) }
-            ?: state.speech?.audioOutput?.let { PlaybackSource.Reference(it) }
-        if (source != null) {
-            togglePlayback(source)
+        val reference = state.speech?.audioOutput
+        val minePath = state.latestAttempt?.audioFilePath
+        when {
+            reference != null && minePath != null -> {
+                startWaveComparisonPlayback(reference, minePath)
+            }
+
+            minePath != null -> {
+                togglePlayback(PlaybackSource.Mine(minePath), PlaybackControlOrigin.WAVE)
+            }
+
+            reference != null -> {
+                togglePlayback(PlaybackSource.Reference(reference), PlaybackControlOrigin.WAVE)
+            }
         }
     }
 
     private fun toggleReferencePlayback() {
-        if (viewModel.uiState.value.stage == ShadowingStage.RECORDING ||
-            viewModel.uiState.value.stage == ShadowingStage.EVALUATING
-        ) {
+        if (viewModel.uiState.value.stage == ShadowingStage.RECORDING) {
             return
         }
         val output = viewModel.uiState.value.speech?.audioOutput
@@ -316,13 +375,11 @@ class ShadowingPracticeFragment :
             showToast(getString(R.string.practice_tts_not_ready))
             return
         }
-        togglePlayback(PlaybackSource.Reference(output))
+        togglePlayback(PlaybackSource.Reference(output), PlaybackControlOrigin.REFERENCE_BUTTON)
     }
 
     private fun toggleMinePlayback() {
-        if (viewModel.uiState.value.stage == ShadowingStage.RECORDING ||
-            viewModel.uiState.value.stage == ShadowingStage.EVALUATING
-        ) {
+        if (viewModel.uiState.value.stage == ShadowingStage.RECORDING) {
             return
         }
         val filePath = viewModel.uiState.value.latestAttempt?.audioFilePath
@@ -330,38 +387,56 @@ class ShadowingPracticeFragment :
             showToast(getString(R.string.practice_please_record_first))
             return
         }
-        togglePlayback(PlaybackSource.Mine(filePath))
+        togglePlayback(PlaybackSource.Mine(filePath), PlaybackControlOrigin.MINE_BUTTON)
     }
 
-    private fun togglePlayback(source: PlaybackSource) {
+    private fun togglePlayback(source: PlaybackSource, origin: PlaybackControlOrigin) {
         val current = currentPlaybackSource
         val sameSource = current?.key == source.key && mediaPlayer != null && isPlaybackPrepared
         cancelAutoPlayback(preservePlayback = sameSource)
         if (sameSource) {
             val player = mediaPlayer ?: return
-            if (player.isPlaying) {
+            val sameOrigin = currentPlaybackOrigin == origin
+            currentPlaybackOrigin = origin
+            if (player.isPlaying && sameOrigin) {
                 player.pause()
                 stopPlaybackProgressUpdates()
+                if (current?.target == PlaybackTarget.REFERENCE) {
+                    restoreUserWaveformIfAvailable()
+                }
             } else {
+                applyPlaybackWaveform(source)
+                if (player.duration > 0) {
+                    databind.waveformView.setPlaybackProgress(
+                        player.currentPosition.toFloat() / player.duration
+                    )
+                }
                 player.start()
                 startPlaybackProgressUpdates()
             }
             updatePlaybackUi()
             return
         }
-        startPlayback(source = source, startFraction = null)
+        startPlayback(source = source, origin = origin, startFraction = null)
+    }
+
+    private fun startWaveComparisonPlayback(reference: SpeechAudioOutput, minePath: String) {
+        cancelAutoPlayback()
+        releasePlayer(resetProgress = true)
+        autoPlayJob = viewLifecycleOwner.lifecycleScope.launch {
+            playSourceSuspending(PlaybackSource.Reference(reference), PlaybackControlOrigin.WAVE)
+            playSourceSuspending(PlaybackSource.Mine(minePath), PlaybackControlOrigin.WAVE)
+            releasePlayer(resetProgress = true)
+        }
     }
 
     private fun seekPlayback(fraction: Float) {
-        if (viewModel.uiState.value.stage == ShadowingStage.RECORDING ||
-            viewModel.uiState.value.stage == ShadowingStage.EVALUATING
-        ) {
+        if (viewModel.uiState.value.stage == ShadowingStage.RECORDING) {
             return
         }
-        val preferredSource = when (currentPlaybackSource?.target) {
-            PlaybackTarget.REFERENCE -> currentPlaybackSource
-            PlaybackTarget.MINE -> currentPlaybackSource
-            null -> {
+        val preferredSource = when {
+            currentPlaybackOrigin == PlaybackControlOrigin.WAVE -> currentPlaybackSource
+            else -> {
                 viewModel.uiState.value.latestAttempt?.audioFilePath?.let {
                     PlaybackSource.Mine(it)
                 } ?: viewModel.uiState.value.speech?.audioOutput?.let {
@@ -376,6 +451,7 @@ class ShadowingPracticeFragment :
         cancelAutoPlayback(preservePlayback = sameSource)
         if (sameSource) {
             val player = mediaPlayer ?: return
+            currentPlaybackOrigin = PlaybackControlOrigin.WAVE
             if (player.duration > 0) {
                 player.seekTo((player.duration * fraction).toInt())
                 if (!player.isPlaying) {
@@ -385,7 +461,11 @@ class ShadowingPracticeFragment :
                 updatePlaybackUi()
             }
         } else {
-            startPlayback(source = preferredSource, startFraction = fraction)
+            startPlayback(
+                source = preferredSource,
+                origin = PlaybackControlOrigin.WAVE,
+                startFraction = fraction
+            )
         }
     }
 
@@ -394,90 +474,63 @@ class ShadowingPracticeFragment :
         releasePlayer(resetProgress = true)
         val outputFile = File(
             requireContext().cacheDir,
-            "shadowing_${System.currentTimeMillis()}.m4a"
+            "shadowing_${System.currentTimeMillis()}.wav"
         )
         currentRecordingFile = outputFile
         managedRecordingFiles += outputFile
         currentWaveSamples.clear()
-        val recorder = runCatching {
-            MediaRecorder().apply {
-                setAudioSource(MediaRecorder.AudioSource.MIC)
-                setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-                setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-                setAudioSamplingRate(16000)
-                setAudioEncodingBitRate(96000)
-                setOutputFile(outputFile.absolutePath)
-                prepare()
-                start()
-            }
+        runCatching {
+            wavRecorder.start(
+                file = outputFile,
+                onAmplitude = { amplitude ->
+                    view?.post {
+                        val normalized = normalizeWaveSample(amplitude)
+                        currentWaveSamples += normalized
+                        if (currentWaveSamples.size > MAX_WAVE_SAMPLE_COUNT) {
+                            currentWaveSamples.removeAt(0)
+                        }
+                        databind.waveformView.updateLiveAmplitude(amplitude)
+                    }
+                },
+                onError = {
+                    view?.post {
+                        currentRecordingFile = null
+                        showToast(getString(R.string.practice_shadowing_recorder_failed))
+                        viewModel.onRecordingFailed(getString(R.string.practice_shadowing_recorder_failed))
+                    }
+                }
+            )
         }.getOrElse {
             currentRecordingFile = null
             showToast(getString(R.string.practice_shadowing_recorder_failed))
             viewModel.onRecordingFailed(getString(R.string.practice_shadowing_recorder_failed))
             return
         }
-        mediaRecorder = recorder
         recordingStartedAtMs = System.currentTimeMillis()
         databind.waveformView.startLiveWave()
-        startAmplitudePolling()
         viewModel.onRecordingStarted()
     }
 
     private fun stopRecordingAndEvaluate() {
-        stopAmplitudePolling()
         databind.waveformView.stopLiveWave()
-        val recorder = mediaRecorder ?: return
-        mediaRecorder = null
         val outputFile = currentRecordingFile
         currentRecordingFile = null
-        val durationMs = (System.currentTimeMillis() - recordingStartedAtMs).coerceAtLeast(0L)
         recordingStartedAtMs = 0L
-        val stopped = runCatching {
-            recorder.stop()
-            recorder.release()
-        }.isSuccess
-        if (!stopped || outputFile == null || !outputFile.exists()) {
-            runCatching { recorder.release() }
+        val result = runCatching { wavRecorder.stop() }.getOrNull()
+        if (result == null || outputFile == null || !outputFile.exists()) {
             showToast(getString(R.string.practice_shadowing_recording_missing))
             viewModel.onRecordingFailed(getString(R.string.practice_shadowing_recording_missing))
             return
         }
-        val waveform = currentWaveSamples.ifEmpty { defaultWaveformSamples() }
-        databind.waveformView.setWaveformSamples(waveform)
-        viewModel.onRecordingCompleted(outputFile.absolutePath, waveform, durationMs)
+        val waveform = currentWaveSamples.toList()
+        setWaveformFromFile(result.file, fallbackSamples = waveform)
+        viewModel.onRecordingCompleted(result.file.absolutePath, waveform, result.durationMs)
     }
 
     private fun abortRecording() {
-        stopAmplitudePolling()
-        val recorder = mediaRecorder ?: return
-        mediaRecorder = null
+        wavRecorder.cancel()
         currentRecordingFile = null
         recordingStartedAtMs = 0L
-        runCatching {
-            recorder.stop()
-            recorder.release()
-        }
-    }
-
-    private fun startAmplitudePolling() {
-        stopAmplitudePolling()
-        amplitudeJob = viewLifecycleOwner.lifecycleScope.launch {
-            while (mediaRecorder != null) {
-                val amplitude = runCatching { mediaRecorder?.maxAmplitude ?: 0 }.getOrDefault(0)
-                val normalized = normalizeWaveSample(amplitude)
-                currentWaveSamples += normalized
-                if (currentWaveSamples.size > MAX_WAVE_SAMPLE_COUNT) {
-                    currentWaveSamples.removeAt(0)
-                }
-                databind.waveformView.updateLiveAmplitude(amplitude)
-                delay(60L)
-            }
-        }
-    }
-
-    private fun stopAmplitudePolling() {
-        amplitudeJob?.cancel()
-        amplitudeJob = null
     }
 
     private fun maybeStartAutoPlayback(state: ShadowingPracticeViewModel.ShadowingUiState) {
@@ -489,16 +542,20 @@ class ShadowingPracticeFragment :
         lastAutoPlaySequenceId = state.autoPlaySequenceId
         cancelAutoPlayback()
         autoPlayJob = viewLifecycleOwner.lifecycleScope.launch {
-            playSourceSuspending(PlaybackSource.Reference(reference))
-            playSourceSuspending(PlaybackSource.Mine(minePath))
+            playSourceSuspending(PlaybackSource.Reference(reference), PlaybackControlOrigin.AUTO)
+            playSourceSuspending(PlaybackSource.Mine(minePath), PlaybackControlOrigin.AUTO)
             releasePlayer(resetProgress = true)
         }
     }
 
-    private suspend fun playSourceSuspending(source: PlaybackSource) {
+    private suspend fun playSourceSuspending(
+        source: PlaybackSource,
+        origin: PlaybackControlOrigin
+    ) {
         suspendCancellableCoroutine<Unit> { continuation ->
             startPlayback(
                 source = source,
+                origin = origin,
                 startFraction = null,
                 onCompletion = {
                     if (continuation.isActive) continuation.resume(Unit)
@@ -519,6 +576,7 @@ class ShadowingPracticeFragment :
 
     private fun startPlayback(
         source: PlaybackSource,
+        origin: PlaybackControlOrigin,
         startFraction: Float?,
         onCompletion: (() -> Unit)? = null,
         onError: (() -> Unit)? = null
@@ -526,7 +584,9 @@ class ShadowingPracticeFragment :
         releasePlayer(resetProgress = true)
         val player = MediaPlayer()
         currentPlaybackSource = source
+        currentPlaybackOrigin = origin
         isPlaybackPrepared = false
+        applyPlaybackWaveform(source)
         val prepared = when (source) {
             is PlaybackSource.Reference -> player.prepareSpeechOutputAsync(
                 output = source.output,
@@ -592,9 +652,11 @@ class ShadowingPracticeFragment :
             while (mediaPlayer != null) {
                 val player = mediaPlayer ?: break
                 if (player.isPlaying && player.duration > 0) {
-                    databind.waveformView.setPlaybackProgress(
-                        player.currentPosition.toFloat() / player.duration
-                    )
+                    if (currentPlaybackOrigin == PlaybackControlOrigin.WAVE) {
+                        databind.waveformView.setPlaybackProgress(
+                            player.currentPosition.toFloat() / player.duration
+                        )
+                    }
                 }
                 updatePlaybackUi()
                 delay(50L)
@@ -607,12 +669,16 @@ class ShadowingPracticeFragment :
         playbackProgressJob = null
     }
 
-    private fun releasePlayer(resetProgress: Boolean) {
+    private fun releasePlayer(
+        resetProgress: Boolean,
+        restoreUserWaveform: Boolean = true
+    ) {
         stopPlaybackProgressUpdates()
         val player = mediaPlayer
         mediaPlayer = null
         isPlaybackPrepared = false
         currentPlaybackSource = null
+        currentPlaybackOrigin = null
         if (resetProgress) {
             databind.waveformView.setPlaybackProgress(0f)
         }
@@ -621,6 +687,9 @@ class ShadowingPracticeFragment :
         }
         runCatching {
             player?.release()
+        }
+        if (resetProgress && restoreUserWaveform) {
+            restoreUserWaveformIfAvailable()
         }
         updatePlaybackUi()
     }
@@ -633,11 +702,13 @@ class ShadowingPracticeFragment :
 
     private fun updatePlaybackUi() {
         val current = currentPlaybackSource?.target
+        val origin = currentPlaybackOrigin
         val player = mediaPlayer
         val isPlaying = player?.isPlaying == true
+        val waveIsPlaying = isPlaying && origin == PlaybackControlOrigin.WAVE
 
         databind.ivWavePlay.setImageResource(
-            if (isPlaying) {
+            if (waveIsPlaying) {
                 R.drawable.feature_learning_ic_pause
             } else {
                 R.drawable.feature_learning_ic_play
@@ -646,21 +717,22 @@ class ShadowingPracticeFragment :
 
         databind.cardPlayReference.alpha = when {
             !databind.cardPlayReference.isEnabled -> 0.42f
-            current == PlaybackTarget.REFERENCE -> 1f
+            current == PlaybackTarget.REFERENCE &&
+                origin == PlaybackControlOrigin.REFERENCE_BUTTON -> 1f
             else -> 0.96f
         }
         databind.cardPlayMine.alpha = when {
             !databind.cardPlayMine.isEnabled -> 0.42f
-            current == PlaybackTarget.MINE -> 1f
+            current == PlaybackTarget.MINE &&
+                origin == PlaybackControlOrigin.MINE_BUTTON -> 1f
             else -> 0.96f
         }
     }
 
     private fun applyActionAvailability(state: ShadowingPracticeViewModel.ShadowingUiState) {
         val recording = state.stage == ShadowingStage.RECORDING
-        val evaluating = state.stage == ShadowingStage.EVALUATING
-        val canPlayReference = !recording && !evaluating && state.speech != null
-        val canPlayMine = !recording && !evaluating && state.latestAttempt != null
+        val canPlayReference = !recording && state.speech != null
+        val canPlayMine = !recording && state.latestAttempt != null
         val recordLabel = when {
             !hasRecordPermission() && permissionBlocked -> {
                 getString(R.string.practice_shadowing_enable_permission)
@@ -673,8 +745,8 @@ class ShadowingPracticeFragment :
 
         databind.cardPlayReference.isEnabled = canPlayReference
         databind.cardPlayMine.isEnabled = canPlayMine
-        databind.cardRecord.isEnabled = !state.loading && !state.isCompleted && !evaluating
-        databind.btnNextWord.isEnabled = !recording && !state.loading && !evaluating
+        databind.cardRecord.isEnabled = !state.loading && !state.isCompleted
+        databind.btnNextWord.isEnabled = !recording && !state.loading
         databind.btnNextWord.text = state.nextActionText
         databind.tvRecordLabel.text = recordLabel
 
@@ -728,6 +800,7 @@ class ShadowingPracticeFragment :
             }
         }
         managedRecordingFiles.clear()
+        waveformPeakCache.clear()
     }
 
     private fun normalizeWaveSample(amplitude: Int): Int {
@@ -735,12 +808,82 @@ class ShadowingPracticeFragment :
         return normalized.coerceIn(10, 100)
     }
 
-    private fun defaultWaveformSamples(): List<Int> {
-        return listOf(
-            12, 18, 16, 24, 14, 20, 15, 22,
-            18, 26, 16, 20, 14, 24, 16, 18,
-            22, 14, 18, 26, 15, 20, 14, 18
-        )
+    private fun setWaveformFromFile(file: File, fallbackSamples: List<Int>) {
+        val targetCount = waveformTargetPeakCount()
+        val cacheKey = "${file.absolutePath}:$targetCount:${file.lastModified()}:${file.length()}"
+        val peaks = waveformPeakCache.getOrPut(cacheKey) {
+            runCatching {
+                ShadowingWaveformExtractor.extractPeaks(file, targetCount)
+            }.getOrDefault(emptyList())
+        }
+        if (peaks.isNotEmpty()) {
+            databind.waveformView.setWaveformPeaks(peaks)
+        } else if (fallbackSamples.isNotEmpty()) {
+            databind.waveformView.setWaveformSamples(fallbackSamples)
+        } else {
+            databind.waveformView.clearWaveform()
+        }
+    }
+
+    private fun restoreUserWaveformIfAvailable(): Boolean {
+        if (view == null || viewModel.uiState.value.stage == ShadowingStage.RECORDING) {
+            return false
+        }
+        val attempt = viewModel.uiState.value.latestAttempt ?: return false
+        val audioFile = File(attempt.audioFilePath)
+        if (!audioFile.exists()) {
+            if (attempt.waveformSamples.isNotEmpty()) {
+                databind.waveformView.setWaveformSamples(attempt.waveformSamples)
+                databind.waveformView.setPlaybackProgress(0f)
+                return true
+            }
+            return false
+        }
+        setWaveformFromFile(audioFile, fallbackSamples = attempt.waveformSamples)
+        databind.waveformView.setPlaybackProgress(0f)
+        return true
+    }
+
+    private fun applyPlaybackWaveform(source: PlaybackSource) {
+        when (source) {
+            is PlaybackSource.Reference -> {
+                val referenceFile = speechOutputFileOrNull(source.output)
+                if (referenceFile != null && referenceFile.exists()) {
+                    setWaveformFromFile(referenceFile, fallbackSamples = REFERENCE_FALLBACK_WAVEFORM)
+                } else {
+                    databind.waveformView.setWaveformSamples(REFERENCE_FALLBACK_WAVEFORM)
+                }
+            }
+
+            is PlaybackSource.Mine -> {
+                setWaveformFromFile(
+                    file = File(source.filePath),
+                    fallbackSamples = waveformSamplesForFile(source.filePath)
+                )
+            }
+        }
+        databind.waveformView.setPlaybackProgress(0f)
+    }
+
+    private fun waveformSamplesForFile(filePath: String): List<Int> {
+        val state = viewModel.uiState.value
+        val latestAttempt = state.latestAttempt
+        if (latestAttempt?.audioFilePath == filePath) {
+            return latestAttempt.waveformSamples
+        }
+        return state.attemptHistory.firstOrNull { it.audioFilePath == filePath }
+            ?.waveformSamples
+            .orEmpty()
+    }
+
+    private fun waveformTargetPeakCount(): Int {
+        val viewWidth = databind.waveformView.width
+        val displayWidth = if (viewWidth > 0) {
+            viewWidth - databind.waveformView.paddingLeft - databind.waveformView.paddingRight
+        } else {
+            resources.displayMetrics.widthPixels - dp(48)
+        }
+        return displayWidth.coerceAtLeast(160)
     }
 
     private fun dp(value: Int): Int {
@@ -762,5 +905,10 @@ class ShadowingPracticeFragment :
 
     companion object {
         private const val MAX_WAVE_SAMPLE_COUNT = 96
+        private val REFERENCE_FALLBACK_WAVEFORM = listOf(
+            18, 24, 20, 30, 38, 34, 28, 42,
+            50, 44, 36, 30, 26, 34, 42, 32,
+            24, 20, 28, 36, 46, 40, 30, 22
+        )
     }
 }

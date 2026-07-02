@@ -7,7 +7,9 @@ import com.chen.memorizewords.domain.practice.speech.ShadowingAnalysisSource as 
 import com.chen.memorizewords.domain.practice.speech.ShadowingAudioIssue as DomainShadowingAudioIssue
 import com.chen.memorizewords.domain.practice.speech.ShadowingAudioIssueSeverity as DomainShadowingAudioIssueSeverity
 import com.chen.memorizewords.domain.practice.speech.ShadowingAudioIssueType as DomainShadowingAudioIssueType
+import com.chen.memorizewords.domain.practice.speech.ShadowingDetail as DomainShadowingDetail
 import com.chen.memorizewords.domain.practice.speech.ShadowingEvaluationResult as DomainShadowingEvaluationResult
+import com.chen.memorizewords.domain.practice.speech.ShadowingRecordingQuality as DomainShadowingRecordingQuality
 import com.chen.memorizewords.domain.practice.speech.ShadowingEvaluator
 import com.chen.memorizewords.domain.practice.speech.ShadowingRecordingMetadata as DomainShadowingRecordingMetadata
 import com.chen.memorizewords.domain.practice.speech.SpeechAudioFormat as DomainSpeechAudioFormat
@@ -25,7 +27,9 @@ import com.chen.memorizewords.speech.api.ShadowingAnalysisSource
 import com.chen.memorizewords.speech.api.ShadowingAudioIssue
 import com.chen.memorizewords.speech.api.ShadowingAudioIssueSeverity
 import com.chen.memorizewords.speech.api.ShadowingAudioIssueType
+import com.chen.memorizewords.speech.api.ShadowingDetail
 import com.chen.memorizewords.speech.api.ShadowingEvaluationResult
+import com.chen.memorizewords.speech.api.ShadowingRecordingQuality
 import com.chen.memorizewords.speech.api.ShadowingRecordingMetadata
 import com.chen.memorizewords.speech.api.SpeechAudioFormat
 import com.chen.memorizewords.speech.api.SpeechAudioInput
@@ -107,7 +111,14 @@ private fun SpeechResult.toDomain(): DomainSpeechResult {
             intonationScore = intonationScore,
             stressScore = stressScore,
             speedScore = speedScore,
+            accuracyScore = accuracyScore,
+            standardScore = standardScore,
             audioIssues = audioIssues.map { it.toDomain() },
+            phoneDetails = phoneDetails.map { it.toDomain() },
+            syllableDetails = syllableDetails.map { it.toDomain() },
+            wordDetails = wordDetails.map { it.toDomain() },
+            recordingQuality = recordingQuality?.toDomain(),
+            rawProviderTraceId = rawProviderTraceId,
             analysisSource = analysisSource.toDomain(),
             detailSourceNote = detailSourceNote,
             guidanceText = guidanceText
@@ -187,6 +198,7 @@ private fun SpeechProviderType.toDomain(): DomainSpeechProviderType {
     return when (this) {
         SpeechProviderType.BAIDU -> DomainSpeechProviderType.BAIDU
         SpeechProviderType.ALIYUN -> DomainSpeechProviderType.ALIYUN
+        SpeechProviderType.XUNFEI -> DomainSpeechProviderType.XUNFEI
     }
 }
 
@@ -199,6 +211,27 @@ private fun SpeechFailure.toDomain(): DomainSpeechFailure {
         is SpeechFailure.InvalidRequest -> DomainSpeechFailure.InvalidRequest(message)
         is SpeechFailure.Unknown -> DomainSpeechFailure.Unknown(message, causeCode)
     }
+}
+
+private fun ShadowingDetail.toDomain(): DomainShadowingDetail {
+    return DomainShadowingDetail(
+        text = text,
+        score = score,
+        expected = expected,
+        actual = actual,
+        issueType = issueType,
+        message = message
+    )
+}
+
+private fun ShadowingRecordingQuality.toDomain(): DomainShadowingRecordingQuality {
+    return DomainShadowingRecordingQuality(
+        volumeScore = volumeScore,
+        speechRatio = speechRatio,
+        durationMs = durationMs,
+        level = level,
+        message = message
+    )
 }
 
 private fun ShadowingAnalysisSource.toDomain(): DomainShadowingAnalysisSource {

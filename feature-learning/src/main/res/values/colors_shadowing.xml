@@ -10,9 +10,12 @@
     <color name="feature_learning_shadowing_banner_action_bg">#2A2A2A</color>
     <color name="feature_learning_shadowing_banner_action_text">#FFE100</color>
     <color name="feature_learning_shadowing_record_bg">#FFD900</color>
-    <color name="feature_learning_shadowing_wave_idle">#1C1C1C</color>
-    <color name="feature_learning_shadowing_wave_active">#4A4A4A</color>
-    <color name="feature_learning_shadowing_wave_live">#111111</color>
+    <color name="feature_learning_shadowing_wave_track_bg">#D9F6FB</color>
+    <color name="feature_learning_shadowing_wave_center">#8CC9DD</color>
+    <color name="feature_learning_shadowing_wave_idle">#2D92BE</color>
+    <color name="feature_learning_shadowing_wave_active">#064C96</color>
+    <color name="feature_learning_shadowing_wave_live">#075CA8</color>
+    <color name="feature_learning_shadowing_wave_rms">#663AABD3</color>
     <color name="feature_learning_shadowing_feedback_bg">#F7F7F5</color>
     <color name="feature_learning_shadowing_feedback_score">#111111</color>
     <color name="feature_learning_shadowing_feedback_pass">#1F9D57</color>

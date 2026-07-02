@@ -59,9 +59,7 @@ abstract class BaseVmFragment<VM : BaseViewModel> : Fragment() {
                         when (event) {
                             is UiEvent.Navigation.Finish -> requireActivity().finish()
                             is UiEvent.Navigation.Back -> {
-                                if (!findNavController().popBackStack()) {
-                                    requireActivity().finish()
-                                }
+                                handleBackNavigation()
                             }
                             is UiEvent.Navigation.Route -> onNavigationRoute(event)
                             is UiEvent.Dialog.ConfirmEdit -> {
@@ -118,6 +116,15 @@ abstract class BaseVmFragment<VM : BaseViewModel> : Fragment() {
     }
 
     open fun consumeUiEvent(event: UiEvent): Boolean = false
+
+    private fun handleBackNavigation() {
+        val popped = runCatching {
+            findNavController().popBackStack()
+        }.getOrDefault(false)
+        if (!popped) {
+            requireActivity().finish()
+        }
+    }
 
     open fun onNavigationRoute(event: UiEvent.Navigation.Route) {
     }

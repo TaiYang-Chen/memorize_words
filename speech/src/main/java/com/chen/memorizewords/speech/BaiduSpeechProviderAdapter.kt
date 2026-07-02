@@ -39,8 +39,7 @@ class BaiduSpeechProviderAdapter @Inject constructor(
 
     override val provider: SpeechProviderType = SpeechProviderType.BAIDU
     override val capabilities: Set<SpeechCapability> = setOf(
-        SpeechCapability.SENTENCE_TTS,
-        SpeechCapability.SHADOWING_EVALUATION
+        SpeechCapability.SENTENCE_TTS
     )
 
     override suspend fun execute(task: SpeechTask, traceId: String): SpeechResult {
@@ -194,9 +193,12 @@ class BaiduSpeechProviderAdapter @Inject constructor(
             }
         }
         val remoteResult = practiceSpeechRequest.evaluateShadowing(
-            word = task.referenceText,
+            referenceText = task.referenceText,
             provider = provider.name,
-            audioFilePath = normalizedInput.filePath
+            audioFilePath = normalizedInput.filePath,
+            audioFormat = normalizedInput.format.encoding,
+            durationMs = task.recordingMetadata.durationMs,
+            waveformSamples = task.recordingMetadata.waveformSamples
         )
         if (remoteResult is NetworkResult.Success) {
             return remoteResult.data.toSpeechResult(

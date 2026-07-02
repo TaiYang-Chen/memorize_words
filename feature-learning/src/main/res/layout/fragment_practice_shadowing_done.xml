@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/module_learning_bg_summary_root"
+        android:paddingStart="@dimen/page_margin"
+        android:paddingTop="@dimen/page_margin"
+        android:paddingEnd="@dimen/page_margin">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/topBar"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/title_height"
+            android:layout_marginTop="36dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/btnClose"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/practice_shadowing_done_action"
+                android:padding="8dp"
+                android:src="@drawable/module_learning_close"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="#2F3A35" />
+
+            <TextView
+                android:id="@+id/tvHeaderTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@string/practice_shadowing_done_header"
+                android:textColor="#006C5B"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/btnClose"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/btnClose"
+                app:layout_constraintTop_toTopOf="@id/btnClose"
+                tools:text="跟读完成" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollContent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:paddingBottom="132dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/topBar">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="12dp">
+
+                <LinearLayout
+                    android:id="@+id/cardHero"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/module_learning_bg_summary_hero"
+                    android:elevation="1dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:paddingStart="20dp"
+                    android:paddingTop="22dp"
+                    android:paddingEnd="20dp"
+                    android:paddingBottom="24dp">
+
+                    <FrameLayout
+                        android:layout_width="76dp"
+                        android:layout_height="76dp"
+                        android:background="@drawable/module_learning_bg_summary_medal_outer">
+
+                        <FrameLayout
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_gravity="center"
+                            android:background="@drawable/module_learning_bg_summary_medal_inner">
+
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:layout_gravity="center"
+                                android:contentDescription="@null"
+                                android:src="@drawable/module_learning_ic_summary_medal" />
+                        </FrameLayout>
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/tvDoneTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:background="@drawable/module_learning_bg_summary_chip"
+                        android:includeFontPadding="false"
+                        android:paddingStart="14dp"
+                        android:paddingTop="6dp"
+                        android:paddingEnd="14dp"
+                        android:paddingBottom="6dp"
+                        android:text="@string/practice_shadowing_done_tag"
+                        android:textColor="#723B07"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvDoneTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:text="@string/practice_shadowing_done_title"
+                        android:textColor="#07111F"
+                        android:textSize="27sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvDoneSubtitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:gravity="center"
+                        android:lineSpacingExtra="4dp"
+                        android:textColor="#2F3A35"
+                        android:textSize="14sp"
+                        tools:text="这轮已经完成 20 个单词，发音节奏保持得不错。" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/cardStats"
+                    android:layout_width="match_parent"
+                    android:layout_height="92dp"
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/module_learning_bg_summary_panel"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="14dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvMetricCompletedValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:includeFontPadding="false"
+                            android:textColor="#006C5B"
+                            android:textSize="22sp"
+                            android:textStyle="bold"
+                            tools:text="20/20" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:includeFontPadding="false"
+                            android:text="@string/practice_shadowing_done_metric_completed"
+                            android:textColor="#26352F"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="52dp"
+                        android:background="@drawable/module_learning_bg_summary_divider" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvMetricRecordingsValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:includeFontPadding="false"
+                            android:textColor="#006C5B"
+                            android:textSize="22sp"
+                            android:textStyle="bold"
+                            tools:text="18" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:includeFontPadding="false"
+                            android:text="@string/practice_shadowing_done_metric_recordings"
+                            android:textColor="#26352F"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="52dp"
+                        android:background="@drawable/module_learning_bg_summary_divider" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvMetricPassedValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:includeFontPadding="false"
+                            android:textColor="#006C5B"
+                            android:textSize="22sp"
+                            android:textStyle="bold"
+                            tools:text="16" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:includeFontPadding="false"
+                            android:text="@string/practice_shadowing_done_metric_passed"
+                            android:textColor="#26352F"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvDoneNote"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/module_learning_bg_summary_panel"
+                    android:lineSpacingExtra="4dp"
+                    android:paddingStart="18dp"
+                    android:paddingTop="16dp"
+                    android:paddingEnd="18dp"
+                    android:paddingBottom="16dp"
+                    android:text="@string/practice_shadowing_done_note"
+                    android:textColor="#26352F"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDone"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="@dimen/page_margin"
+            android:layout_marginEnd="@dimen/page_margin"
+            android:layout_marginBottom="28dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/practice_shadowing_done_action"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:backgroundTint="@android:color/black"
+            app:cornerRadius="26dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
