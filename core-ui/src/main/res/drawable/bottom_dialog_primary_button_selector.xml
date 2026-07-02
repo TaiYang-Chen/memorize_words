@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- 按下状态 -->
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
-            <!-- 按下时颜色加深 -->
-            <solid android:color="#F57C00" />
-            <!-- 圆角 -->
+            <gradient
+                android:angle="0"
+                android:endColor="@color/core_ui_bottom_dialog_button_pressed_end"
+                android:startColor="@color/core_ui_bottom_dialog_button_pressed_start" />
             <corners android:radius="24dp" />
-            <!-- 按下时阴影减小 -->
             <padding
                 android:bottom="1dp"
                 android:left="1dp"
@@ -16,14 +15,13 @@
         </shape>
     </item>
 
-    <!-- 默认状态 -->
     <item>
         <shape android:shape="rectangle">
-            <!-- 正常状态颜色 -->
-            <solid android:color="#FF9800" />
-            <!-- 圆角 -->
+            <gradient
+                android:angle="0"
+                android:endColor="@color/core_ui_bottom_dialog_button_end"
+                android:startColor="@color/core_ui_bottom_dialog_button_start" />
             <corners android:radius="24dp" />
-            <!-- 轻微内边距用于按下效果 -->
             <padding
                 android:bottom="2dp"
                 android:left="2dp"

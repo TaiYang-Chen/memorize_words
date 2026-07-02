@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="core_ui_bottom_dialog_button_start">#5C90FD</color>
+    <color name="core_ui_bottom_dialog_button_end">#7274FA</color>
+    <color name="core_ui_bottom_dialog_button_pressed_start">#3F79F5</color>
+    <color name="core_ui_bottom_dialog_button_pressed_end">#6252F0</color>
+    <color name="core_ui_bottom_dialog_icon_background">#EAF1FF</color>
+    <color name="core_ui_bottom_dialog_icon_foreground">#4A86FF</color>
+    <color name="core_ui_bottom_dialog_title">#111827</color>
+    <color name="core_ui_bottom_dialog_body">#6B7280</color>
+    <color name="core_ui_bottom_dialog_handle">#DDE4F0</color>
+</resources>
