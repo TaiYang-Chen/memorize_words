@@ -215,7 +215,7 @@
     <string name="feature_home_profile_vs_last_week_days">较上周 +1</string>
     <string name="feature_home_profile_my_books">我的词书</string>
     <string name="feature_home_profile_learning_report">学习报告</string>
-    <string name="feature_home_profile_settings">设置</string>
+    <string name="feature_home_profile_settings">个人信息</string>
     <string name="feature_home_profile_member_checkin_title">签到领取体验会员</string>
     <string name="feature_home_profile_member_active_title">体验会员</string>
     <string name="feature_home_profile_member_checkin_subtitle">每天签到可免费获得 1 天体验会员</string>

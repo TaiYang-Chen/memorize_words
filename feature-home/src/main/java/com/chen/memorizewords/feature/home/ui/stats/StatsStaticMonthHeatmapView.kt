@@ -8,6 +8,7 @@ import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import kotlin.math.ceil
 import kotlin.math.floor
 
 class StatsStaticMonthHeatmapView @JvmOverloads constructor(
@@ -28,10 +29,12 @@ class StatsStaticMonthHeatmapView @JvmOverloads constructor(
     }
     private val cellRect = RectF()
     private var cells: List<CalendarDayCellUi> = emptyList()
+    private var visibleRowCount: Int = ROW_COUNT
     private var onDayClick: ((CalendarDayCellUi) -> Unit)? = null
 
     fun submitCells(cells: List<CalendarDayCellUi>) {
         this.cells = cells.take(DAY_COUNT)
+        visibleRowCount = calculateVisibleRowCount(this.cells)
         invalidate()
     }
 
@@ -48,6 +51,7 @@ class StatsStaticMonthHeatmapView @JvmOverloads constructor(
                     status = status.toCalendarStudyStatus()
                 )
             }
+        visibleRowCount = ROW_COUNT
         invalidate()
     }
 
@@ -61,9 +65,12 @@ class StatsStaticMonthHeatmapView @JvmOverloads constructor(
             return super.onTouchEvent(event)
         }
         val columnWidth = width / COLUMN_COUNT.toFloat()
-        val rowHeight = height / ROW_COUNT.toFloat()
+        val rowHeight = height / visibleRowCount.toFloat()
         val column = floor(event.x / columnWidth).toInt()
         val row = floor(event.y / rowHeight).toInt()
+        if (row !in 0 until visibleRowCount) {
+            return super.onTouchEvent(event)
+        }
         val index = row * COLUMN_COUNT + column
         val cell = cells.getOrNull(index)
         return if (cell != null && cell.isCurrentMonth && cell.date.isNotBlank()) {
@@ -83,15 +90,16 @@ class StatsStaticMonthHeatmapView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val columnWidth = width / COLUMN_COUNT.toFloat()
-        val rowHeight = height / ROW_COUNT.toFloat()
+        val rowHeight = height / visibleRowCount.toFloat()
         val cellSize = minOf(
             dp(CELL_SIZE_DP),
             columnWidth * 0.74f,
             rowHeight * 0.96f
         ).coerceAtLeast(dp(8f))
         val radius = dp(4f)
+        val visibleCellCount = visibleRowCount * COLUMN_COUNT
 
-        cells.take(DAY_COUNT).forEachIndexed { dayIndex, cell ->
+        cells.take(visibleCellCount).forEachIndexed { dayIndex, cell ->
             val column = dayIndex % COLUMN_COUNT
             val row = dayIndex / COLUMN_COUNT
             cellPaint.color = colorForStatus(
@@ -113,6 +121,14 @@ class StatsStaticMonthHeatmapView @JvmOverloads constructor(
                 canvas.drawText(dayLabel, centerX, baseline, dayTextPaint)
             }
         }
+    }
+
+    private fun calculateVisibleRowCount(cells: List<CalendarDayCellUi>): Int {
+        val lastCurrentMonthIndex = cells.indexOfLast { it.isCurrentMonth }
+        if (lastCurrentMonthIndex == -1) return ROW_COUNT
+        return ceil((lastCurrentMonthIndex + 1) / COLUMN_COUNT.toFloat())
+            .toInt()
+            .coerceIn(1, ROW_COUNT)
     }
 
     private fun colorForStatus(status: Int): Int {

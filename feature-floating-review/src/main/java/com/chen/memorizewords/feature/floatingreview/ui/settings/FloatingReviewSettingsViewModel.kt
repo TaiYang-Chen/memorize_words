@@ -80,7 +80,7 @@ class FloatingReviewSettingsViewModel @Inject constructor(
     fun onBallOpacityChanged(ballOpacityPercent: Int) {
         updateSettings(
             refreshFloatingContent = false,
-            previewCard = true
+            serviceAction = FloatingWordActions.ACTION_APPLY_BALL_APPEARANCE
         ) {
             it.copy(ballOpacityPercent = ballOpacityPercent)
         }
@@ -89,7 +89,7 @@ class FloatingReviewSettingsViewModel @Inject constructor(
     fun onBallSizeChanged(ballSizePercent: Int) {
         updateSettings(
             refreshFloatingContent = false,
-            previewCard = true
+            serviceAction = FloatingWordActions.ACTION_APPLY_BALL_APPEARANCE
         ) {
             it.copy(ballSizePercent = ballSizePercent)
         }
@@ -111,6 +111,7 @@ class FloatingReviewSettingsViewModel @Inject constructor(
     private fun updateSettings(
         refreshFloatingContent: Boolean = true,
         previewCard: Boolean = false,
+        serviceAction: String? = null,
         transform: (FloatingWordSettings) -> FloatingWordSettings
     ) {
         viewModelScope.launch {
@@ -120,6 +121,9 @@ class FloatingReviewSettingsViewModel @Inject constructor(
             floatingReviewFacade.saveSettings(updated)
             if (previewCard) {
                 dispatchMemberOnlyFloatingAction(FloatingWordActions.ACTION_PREVIEW_CARD)
+            }
+            if (serviceAction != null) {
+                navigateRoute(Route.DispatchFloatingAction(serviceAction))
             }
             if (
                 updated.enabled &&

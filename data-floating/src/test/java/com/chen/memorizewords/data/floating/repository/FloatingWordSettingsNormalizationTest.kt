@@ -7,10 +7,24 @@ import kotlin.test.assertEquals
 class FloatingWordSettingsNormalizationTest {
 
     @Test
-    fun `card gap defaults to eighteen dp`() {
+    fun `appearance settings default to supported values`() {
         val settings = normalizeFloatingWordSettings(FloatingWordSettings())
 
+        assertEquals(DEFAULT_BALL_SIZE_PERCENT, settings.ballSizePercent)
         assertEquals(DEFAULT_CARD_GAP_DP, settings.cardGapDp)
+    }
+
+    @Test
+    fun `ball size is clamped to supported range`() {
+        val tooSmall = normalizeFloatingWordSettings(
+            FloatingWordSettings(ballSizePercent = MIN_BALL_SIZE_PERCENT - 1)
+        )
+        val tooLarge = normalizeFloatingWordSettings(
+            FloatingWordSettings(ballSizePercent = MAX_BALL_SIZE_PERCENT + 1)
+        )
+
+        assertEquals(MIN_BALL_SIZE_PERCENT, tooSmall.ballSizePercent)
+        assertEquals(MAX_BALL_SIZE_PERCENT, tooLarge.ballSizePercent)
     }
 
     @Test

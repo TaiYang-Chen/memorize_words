@@ -3,7 +3,7 @@ data class FloatingWordSettings(
     val enabled: Boolean = false,
     val autoStartOnBoot: Boolean = false,
     val autoStartOnAppLaunch: Boolean = false,
-    val ballSizePercent: Int = 100,
+    val ballSizePercent: Int = 60,
     val ballOpacityPercent: Int = 100,
     val cardOpacityPercent: Int = 100,
     val cardGapDp: Int = 40,

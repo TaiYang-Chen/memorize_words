@@ -130,10 +130,10 @@ data class FloatingSettingsSyncRequest(
     val floatingBallY: Int,
     val autoStartOnBoot: Boolean,
     val autoStartOnAppLaunch: Boolean,
-    val ballSizePercent: Int = 100,
+    val ballSizePercent: Int,
     val ballOpacityPercent: Int = 100,
     val cardOpacityPercent: Int,
-    val cardGapDp: Int = 40,
+    val cardGapDp: Int,
     val dockConfig: FloatingDockConfigDto? = null,
     val dockState: FloatingDockStateDto? = null
 )
@@ -149,10 +149,10 @@ data class FloatingSettingsDto(
     val floatingBallY: Int,
     val autoStartOnBoot: Boolean,
     val autoStartOnAppLaunch: Boolean,
-    val ballSizePercent: Int = 100,
+    val ballSizePercent: Int,
     val ballOpacityPercent: Int = 100,
     val cardOpacityPercent: Int = 100,
-    val cardGapDp: Int = 40,
+    val cardGapDp: Int,
     val dockConfig: FloatingDockConfigDto? = null,
     val dockState: FloatingDockStateDto? = null
 )

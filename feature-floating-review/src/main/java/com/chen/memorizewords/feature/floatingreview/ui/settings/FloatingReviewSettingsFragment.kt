@@ -37,10 +37,10 @@ class FloatingReviewSettingsFragment :
     BaseVmDbFragment<FloatingReviewSettingsViewModel, ModuleFloatingReviewFragmentSettingsBinding>() {
 
     private companion object {
-        const val MIN_BALL_SIZE_PERCENT = 60
-        const val MAX_BALL_SIZE_PERCENT = 140
+        const val MIN_BALL_SIZE_PERCENT = 1
+        const val MAX_BALL_SIZE_PERCENT = 200
         const val MIN_CARD_GAP_DP = 8
-        const val MAX_CARD_GAP_DP = 40
+        const val MAX_CARD_GAP_DP = 80
     }
 
     private data class SourceRowBinding(

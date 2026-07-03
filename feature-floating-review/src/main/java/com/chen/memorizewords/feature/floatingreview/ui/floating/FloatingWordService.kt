@@ -48,6 +48,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlin.math.abs
@@ -82,7 +83,7 @@ internal fun resolveBallAlpha(ballOpacityPercent: Int): Float {
 }
 
 internal fun resolveBallSizeScale(ballSizePercent: Int): Float {
-    return ballSizePercent.coerceIn(60, 140) / 100f
+    return ballSizePercent.coerceIn(1, 200) / 100f
 }
 
 internal fun advanceFloatingWordSequence(
@@ -157,10 +158,12 @@ class FloatingWordService : Service() {
         const val ACTION_STOP = FloatingWordActions.ACTION_STOP
         const val ACTION_REFRESH = FloatingWordActions.ACTION_REFRESH
         const val ACTION_PREVIEW_CARD = FloatingWordActions.ACTION_PREVIEW_CARD
+        const val ACTION_APPLY_BALL_APPEARANCE = FloatingWordActions.ACTION_APPLY_BALL_APPEARANCE
 
         private const val CHANNEL_ID = "floating_word_review_channel"
         private const val NOTIFICATION_ID = 5321
         private const val EMPTY_PLACEHOLDER = "-"
+        private const val PREVIEW_AUTO_HIDE_DELAY_MS = 1_200L
     }
 
     @Inject
@@ -179,6 +182,7 @@ class FloatingWordService : Service() {
     private var ballParams: WindowManager.LayoutParams? = null
     private var cardParams: WindowManager.LayoutParams? = null
     private var settingsJob: Job? = null
+    private var previewAutoHideJob: Job? = null
 
     private var words: List<Word> = emptyList()
     private var currentIndex = 0
@@ -218,12 +222,19 @@ class FloatingWordService : Service() {
             stopFloating()
             return START_NOT_STICKY
         }
+        if (action != ACTION_APPLY_BALL_APPEARANCE) {
+            startForeground(
+                NOTIFICATION_ID,
+                buildNotification(getString(R.string.module_floating_review_notification_ready))
+            )
+        }
         serviceScope.launch {
             if (!canUseFloatingReview()) {
                 stopFloating()
                 return@launch
             }
             when (action) {
+                ACTION_APPLY_BALL_APPEARANCE -> applyBallAppearanceIfAttached()
                 ACTION_PREVIEW_CARD -> if (ensureForegroundAndViews()) previewCard()
                 ACTION_REFRESH -> if (ensureForegroundAndViews()) refreshWords(showNext = false)
                 else -> if (ensureForegroundAndViews()) refreshWords(showNext = false)
@@ -240,6 +251,7 @@ class FloatingWordService : Service() {
     override fun onDestroy() {
         removeViews()
         settingsJob?.cancel()
+        previewAutoHideJob?.cancel()
         super.onDestroy()
     }
 
@@ -267,6 +279,21 @@ class FloatingWordService : Service() {
     private suspend fun canUseFloatingReview(): Boolean {
         return resolveMembershipFeatureAccessUseCase(MembershipFeature.FLOATING_REVIEW) ==
             MembershipFeatureAccess.ALLOWED
+    }
+
+    private suspend fun applyBallAppearanceIfAttached() {
+        if (ballView == null || ballParams == null) {
+            stopSelf()
+            return
+        }
+        if (!Settings.canDrawOverlays(this)) {
+            stopFloating()
+            return
+        }
+        currentSettings = floatingWordController.getSettings()
+        applyBallSize()
+        applyBallOpacity()
+        reconcileBallPosition(persistIfNeeded = false)
     }
 
     private fun refreshWords(showNext: Boolean) {
@@ -339,6 +366,8 @@ class FloatingWordService : Service() {
     }
 
     private fun removeViews() {
+        previewAutoHideJob?.cancel()
+        previewAutoHideJob = null
         ballView?.let { runCatching { windowManager.removeView(it) } }
         cardView?.let { runCatching { windowManager.removeView(it) } }
         ballView = null
@@ -507,12 +536,15 @@ class FloatingWordService : Service() {
     }
 
     private fun hideCard() {
+        previewAutoHideJob?.cancel()
+        previewAutoHideJob = null
         cardView?.visibility = View.GONE
     }
 
     private fun previewCard() {
         serviceScope.launch {
             runCatching {
+                val shouldAutoHideAfterPreview = !isCardVisible() || previewAutoHideJob != null
                 currentSettings = floatingWordController.getSettings()
                 applyFloatingAppearance()
                 val word = currentWord
@@ -548,10 +580,23 @@ class FloatingWordService : Service() {
                         showCard()
                     }
                 }
+                if (shouldAutoHideAfterPreview) {
+                    schedulePreviewAutoHide()
+                }
             }.onFailure {
                 renderEmptyCard()
                 showCard()
+                schedulePreviewAutoHide()
             }
+        }
+    }
+
+    private fun schedulePreviewAutoHide() {
+        previewAutoHideJob?.cancel()
+        previewAutoHideJob = serviceScope.launch {
+            delay(PREVIEW_AUTO_HIDE_DELAY_MS)
+            cardView?.visibility = View.GONE
+            previewAutoHideJob = null
         }
     }
 
