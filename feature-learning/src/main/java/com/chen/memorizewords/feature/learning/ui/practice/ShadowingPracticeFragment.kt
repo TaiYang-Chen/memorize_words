@@ -1,6 +1,7 @@
 package com.chen.memorizewords.feature.learning.ui.practice
 
 import android.Manifest
+import android.content.res.ColorStateList
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.MediaPlayer
@@ -733,8 +734,9 @@ class ShadowingPracticeFragment :
         val recording = state.stage == ShadowingStage.RECORDING
         val canPlayReference = !recording && state.speech != null
         val canPlayMine = !recording && state.latestAttempt != null
+        val permissionBlockedNow = !hasRecordPermission() && permissionBlocked
         val recordLabel = when {
-            !hasRecordPermission() && permissionBlocked -> {
+            permissionBlockedNow -> {
                 getString(R.string.practice_shadowing_enable_permission)
             }
 
@@ -753,16 +755,43 @@ class ShadowingPracticeFragment :
         databind.cardPlayReference.alpha = if (canPlayReference) 1f else 0.42f
         databind.cardPlayMine.alpha = if (canPlayMine) 1f else 0.42f
 
-        databind.cardRecord.setCardBackgroundColor(
-            ContextCompat.getColor(
-                requireContext(),
-                if (!hasRecordPermission() && permissionBlocked) {
-                    R.color.feature_learning_shadowing_disabled
-                } else {
-                    R.color.feature_learning_shadowing_record_bg
-                }
+        val recordStyle = when {
+            permissionBlockedNow -> RecordButtonStyle(
+                iconResId = R.drawable.feature_learning_ic_microphone,
+                backgroundColorResId = R.color.feature_learning_shadowing_disabled,
+                iconColorResId = R.color.feature_learning_shadowing_text_primary,
+                elevationDp = 3
             )
+
+            recording -> RecordButtonStyle(
+                iconResId = R.drawable.feature_learning_ic_stop,
+                backgroundColorResId = R.color.feature_learning_shadowing_record_recording_bg,
+                iconColorResId = R.color.feature_learning_shadowing_record_icon_recording,
+                elevationDp = 10
+            )
+
+            state.latestAttempt != null -> RecordButtonStyle(
+                iconResId = R.drawable.feature_learning_ic_microphone,
+                backgroundColorResId = R.color.feature_learning_shadowing_record_rerecord_bg,
+                iconColorResId = R.color.feature_learning_shadowing_record_icon,
+                elevationDp = 8
+            )
+
+            else -> RecordButtonStyle(
+                iconResId = R.drawable.feature_learning_ic_microphone,
+                backgroundColorResId = R.color.feature_learning_shadowing_record_bg,
+                iconColorResId = R.color.feature_learning_shadowing_record_icon,
+                elevationDp = 8
+            )
+        }
+        databind.ivRecordAction.setImageResource(recordStyle.iconResId)
+        databind.ivRecordAction.imageTintList = ColorStateList.valueOf(
+            ContextCompat.getColor(requireContext(), recordStyle.iconColorResId)
         )
+        databind.cardRecord.setCardBackgroundColor(
+            ContextCompat.getColor(requireContext(), recordStyle.backgroundColorResId)
+        )
+        databind.cardRecord.cardElevation = dp(recordStyle.elevationDp).toFloat()
     }
 
     private fun refreshPermissionState() {
@@ -902,6 +931,13 @@ class ShadowingPracticeFragment :
             )
         }
     }
+
+    private data class RecordButtonStyle(
+        val iconResId: Int,
+        val backgroundColorResId: Int,
+        val iconColorResId: Int,
+        val elevationDp: Int
+    )
 
     companion object {
         private const val MAX_WAVE_SAMPLE_COUNT = 96

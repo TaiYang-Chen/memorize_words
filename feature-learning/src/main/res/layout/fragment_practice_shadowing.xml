@@ -311,7 +311,9 @@
                     android:layout_marginTop="@dimen/feature_learning_shadowing_card_top"
                     app:cardBackgroundColor="@color/feature_learning_shadowing_card_bg"
                     app:cardCornerRadius="20dp"
-                    app:cardElevation="0dp">
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/feature_learning_shadowing_card_stroke"
+                    app:strokeWidth="1dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -394,26 +396,27 @@
                                     android:src="@drawable/feature_learning_ic_play" />
                             </com.google.android.material.card.MaterialCardView>
 
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btn_evaluate_pronunciation"
-                                android:layout_width="wrap_content"
-                                android:layout_height="34dp"
-                                android:layout_gravity="bottom|end"
-                                android:layout_marginEnd="10dp"
-                                android:layout_marginBottom="2dp"
-                                android:insetTop="0dp"
-                                android:insetBottom="0dp"
-                                android:minWidth="0dp"
-                                android:paddingStart="16dp"
-                                android:paddingEnd="16dp"
-                                android:text="@string/practice_shadowing_evaluate_action"
-                                android:textColor="@android:color/white"
-                                android:textSize="13sp"
-                                android:textStyle="bold"
-                                android:visibility="gone"
-                                app:backgroundTint="@color/feature_learning_shadowing_text_primary"
-                                app:cornerRadius="17dp" />
                         </FrameLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_evaluate_pronunciation"
+                            android:layout_width="wrap_content"
+                            android:layout_height="34dp"
+                            android:layout_gravity="end"
+                            android:layout_marginTop="6dp"
+                            android:layout_marginEnd="10dp"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:minWidth="0dp"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:text="@string/practice_shadowing_evaluate_action"
+                            android:textColor="@android:color/white"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:visibility="gone"
+                            app:backgroundTint="@color/feature_learning_shadowing_text_primary"
+                            app:cornerRadius="17dp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
