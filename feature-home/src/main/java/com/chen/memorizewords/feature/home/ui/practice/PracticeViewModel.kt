@@ -5,7 +5,7 @@ import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.domain.account.model.membership.MembershipFeature
 import com.chen.memorizewords.domain.account.model.membership.MembershipFeatureAccess
-import com.chen.memorizewords.domain.account.usecase.membership.ObserveMembershipFeatureAccessUseCase
+import com.chen.memorizewords.domain.account.usecase.membership.ObserveMembershipStatusUseCase
 import com.chen.memorizewords.domain.account.usecase.membership.ResolveMembershipFeatureAccessUseCase
 import com.chen.memorizewords.domain.floating.service.FloatingReviewFacade
 import com.chen.memorizewords.domain.practice.service.PracticeFacade
@@ -28,7 +28,7 @@ class PracticeViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val practiceUiMapper: PracticeUiMapper,
     private val floatingReviewFacade: FloatingReviewFacade,
-    observeMembershipFeatureAccessUseCase: ObserveMembershipFeatureAccessUseCase,
+    observeMembershipStatusUseCase: ObserveMembershipStatusUseCase,
     private val resolveMembershipFeatureAccessUseCase: ResolveMembershipFeatureAccessUseCase
 ) : BaseViewModel() {
 
@@ -60,20 +60,20 @@ class PracticeViewModel @Inject constructor(
         practiceFacade.getContinuousPracticeDays()
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
 
-    private val floatingFeatureAccess: StateFlow<MembershipFeatureAccess> =
-        observeMembershipFeatureAccessUseCase(MembershipFeature.FLOATING_REVIEW)
+    private val membershipStatus =
+        observeMembershipStatusUseCase()
             .stateIn(
                 viewModelScope,
                 SharingStarted.WhileSubscribed(5_000),
-                MembershipFeatureAccess.MEMBERSHIP_REQUIRED
+                null
             )
 
     val floatingEnabled: StateFlow<Boolean> =
         combine(
             floatingReviewFacade.observeSettings().map { it.enabled },
-            floatingFeatureAccess
-        ) { enabled, access ->
-            enabled && access == MembershipFeatureAccess.ALLOWED
+            membershipStatus
+        ) { enabled, status ->
+            enabled && status?.active == true
         }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
 
@@ -154,8 +154,8 @@ class PracticeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            floatingFeatureAccess.collect { access ->
-                if (access == MembershipFeatureAccess.MEMBERSHIP_REQUIRED) {
+            membershipStatus.collect { status ->
+                if (status != null && !status.active) {
                     disableFloatingIfNeeded()
                 }
             }
@@ -219,8 +219,13 @@ class PracticeViewModel @Inject constructor(
 
     private suspend fun setFloatingEnabled(enabled: Boolean) {
         val current = floatingReviewFacade.getSettings()
-        if (current.enabled == enabled) return
-        floatingReviewFacade.saveSettings(current.copy(enabled = enabled))
+        if (current.enabled == enabled && current.autoStartOnAppLaunch == enabled) return
+        floatingReviewFacade.saveSettings(
+            current.copy(
+                enabled = enabled,
+                autoStartOnAppLaunch = enabled
+            )
+        )
         navigateRoute(
             Route.DispatchFloatingAction(
                 action = if (enabled) {
@@ -235,7 +240,12 @@ class PracticeViewModel @Inject constructor(
     private suspend fun disableFloatingIfNeeded() {
         val current = floatingReviewFacade.getSettings()
         if (!current.enabled) return
-        floatingReviewFacade.saveSettings(current.copy(enabled = false))
+        floatingReviewFacade.saveSettings(
+            current.copy(
+                enabled = false,
+                autoStartOnAppLaunch = false
+            )
+        )
         navigateRoute(Route.DispatchFloatingAction(FloatingWordActions.ACTION_STOP))
     }
 
