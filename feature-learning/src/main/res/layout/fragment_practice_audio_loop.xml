@@ -130,7 +130,7 @@
                         android:contentDescription="@string/feature_learning_audio_loop_action_toggle"
                         android:padding="20dp"
                         android:src="@drawable/feature_learning_ic_play"
-                        app:tint="@color/feature_learning_audio_loop_text_primary" />
+                        app:tint="@android:color/white" />
                 </com.google.android.material.card.MaterialCardView>
 
                 <ImageButton
@@ -240,12 +240,12 @@
                     <TextView
                         android:id="@+id/tv_phonetic_chip"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="25dp"
                         android:background="@drawable/feature_learning_bg_audio_loop_chip"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
                         android:paddingStart="16dp"
-                        android:paddingTop="8dp"
                         android:paddingEnd="16dp"
-                        android:paddingBottom="8dp"
                         android:textColor="@color/feature_learning_audio_loop_chip_text"
                         android:textSize="15sp" />
                 </LinearLayout>

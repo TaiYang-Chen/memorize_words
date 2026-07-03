@@ -89,4 +89,5 @@
     <string name="feature_learning_audio_loop_supporting_word">%1$s</string>
     <string name="feature_learning_audio_loop_supporting_example">%1$s</string>
     <string name="feature_learning_audio_loop_supporting_example_translation">%1$s</string>
+    <string name="feature_learning_audio_loop_action_close">关闭</string>
 </resources>

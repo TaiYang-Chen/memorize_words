@@ -571,7 +571,7 @@
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:backgroundTint="@color/purple_primary"
+            app:backgroundTint="@color/feature_learning_audio_loop_play_button"
             app:cornerRadius="26dp"
             app:icon="@drawable/feature_learning_ic_audio_loop_save"
             app:iconGravity="textStart"

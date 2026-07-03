@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="#F7F8FA" />
+    <solid android:color="@color/feature_learning_audio_loop_bg" />
     <corners
         android:topLeftRadius="24dp"
         android:topRightRadius="24dp" />

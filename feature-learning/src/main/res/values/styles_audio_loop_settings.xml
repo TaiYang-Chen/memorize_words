@@ -96,6 +96,7 @@
         <item name="android:layout_height">48dp</item>
         <item name="android:clickable">false</item>
         <item name="android:focusable">false</item>
+        <item name="buttonTint">@color/feature_learning_audio_loop_settings_radio_tint</item>
     </style>
 
     <style name="FeatureLearningAudioLoopSettingsRow">
