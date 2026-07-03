@@ -3,6 +3,9 @@ import com.chen.memorizewords.domain.account.auth.AccessTokenState
 import com.chen.memorizewords.domain.account.auth.AuthStateProvider
 import com.chen.memorizewords.domain.account.auth.SessionKickoutNotifier
 import com.chen.memorizewords.domain.account.auth.TokenProvider
+import com.chen.memorizewords.domain.account.model.membership.MembershipFeature
+import com.chen.memorizewords.domain.account.model.membership.MembershipFeatureAccess
+import com.chen.memorizewords.domain.account.usecase.membership.ResolveMembershipFeatureAccessUseCase
 import javax.inject.Inject
 
 class StartupOrchestrator @Inject constructor(
@@ -10,6 +13,7 @@ class StartupOrchestrator @Inject constructor(
     private val tokenProvider: TokenProvider,
     private val onboardingStateReader: StartupOnboardingStateReader,
     private val floatingAutoStartReader: StartupFloatingAutoStartReader,
+    private val resolveMembershipFeatureAccessUseCase: ResolveMembershipFeatureAccessUseCase,
     val sessionKickoutNotifier: SessionKickoutNotifier
 ) {
     suspend fun resolveLaunchDestinationLocal(): StartupLaunchDestination {
@@ -47,6 +51,12 @@ class StartupOrchestrator @Inject constructor(
     suspend fun shouldAutoStartFloating(canDrawOverlays: Boolean): Boolean {
         if (!canDrawOverlays) return false
         if (!authStateProvider.isAuthenticated()) return false
+        if (
+            resolveMembershipFeatureAccessUseCase(MembershipFeature.FLOATING_REVIEW) !=
+            MembershipFeatureAccess.ALLOWED
+        ) {
+            return false
+        }
         return floatingAutoStartReader.isAutoStartEnabled()
     }
 

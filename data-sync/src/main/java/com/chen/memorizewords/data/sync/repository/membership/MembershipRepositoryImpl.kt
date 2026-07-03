@@ -31,6 +31,11 @@ class MembershipRepositoryImpl @Inject constructor(
             user?.userId?.let(statusCache::read)
         }.distinctUntilChanged()
 
+    override suspend fun getCachedStatus(): MembershipStatus? {
+        val userId = localAccountRepository.getCurrentUserId() ?: return null
+        return statusCache.read(userId)
+    }
+
     override suspend fun refreshStatus(): Result<MembershipStatus> = runCatching {
         val userId = currentUserId()
         val status = remoteUserSyncDataSource.getMembershipStatus().getOrThrow().toDomain()

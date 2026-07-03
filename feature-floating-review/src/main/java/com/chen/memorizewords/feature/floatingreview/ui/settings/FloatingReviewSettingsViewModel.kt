@@ -1,13 +1,18 @@
 package com.chen.memorizewords.feature.floatingreview.ui.settings
 
 import androidx.lifecycle.viewModelScope
+import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
+import com.chen.memorizewords.domain.account.model.membership.MembershipFeature
+import com.chen.memorizewords.domain.account.model.membership.MembershipFeatureAccess
+import com.chen.memorizewords.domain.account.usecase.membership.ResolveMembershipFeatureAccessUseCase
 import com.chen.memorizewords.domain.floating.service.FloatingReviewFacade
 import com.chen.memorizewords.domain.floating.model.FloatingWordFieldConfig
 import com.chen.memorizewords.domain.floating.model.FloatingWordOrderType
 import com.chen.memorizewords.domain.floating.model.FloatingWordSettings
 import com.chen.memorizewords.domain.floating.model.FloatingWordSourceType
 import com.chen.memorizewords.core.navigation.FloatingWordActions
+import com.chen.memorizewords.feature.floatingreview.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
@@ -27,7 +32,9 @@ internal fun shouldRefreshFloatingContent(
 
 @HiltViewModel
 class FloatingReviewSettingsViewModel @Inject constructor(
-    private val floatingReviewFacade: FloatingReviewFacade
+    private val floatingReviewFacade: FloatingReviewFacade,
+    private val resolveMembershipFeatureAccessUseCase: ResolveMembershipFeatureAccessUseCase,
+    private val resourceProvider: ResourceProvider
 ) : BaseViewModel() {
 
     sealed interface Route {
@@ -112,15 +119,24 @@ class FloatingReviewSettingsViewModel @Inject constructor(
             if (updated == current) return@launch
             floatingReviewFacade.saveSettings(updated)
             if (previewCard) {
-                navigateRoute(Route.DispatchFloatingAction(FloatingWordActions.ACTION_PREVIEW_CARD))
+                dispatchMemberOnlyFloatingAction(FloatingWordActions.ACTION_PREVIEW_CARD)
             }
             if (
                 updated.enabled &&
                 refreshFloatingContent &&
                 shouldRefreshFloatingContent(current, updated)
             ) {
-                navigateRoute(Route.DispatchFloatingAction(FloatingWordActions.ACTION_REFRESH))
+                dispatchMemberOnlyFloatingAction(FloatingWordActions.ACTION_REFRESH)
             }
+        }
+    }
+
+    private suspend fun dispatchMemberOnlyFloatingAction(action: String) {
+        val access = resolveMembershipFeatureAccessUseCase(MembershipFeature.FLOATING_REVIEW)
+        if (access == MembershipFeatureAccess.ALLOWED) {
+            navigateRoute(Route.DispatchFloatingAction(action))
+        } else {
+            showToast(resourceProvider.getString(R.string.module_floating_review_membership_required))
         }
     }
 }

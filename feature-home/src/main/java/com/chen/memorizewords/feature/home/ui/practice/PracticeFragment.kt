@@ -19,6 +19,7 @@ import com.chen.memorizewords.feature.home.R
 import com.chen.memorizewords.feature.home.databinding.ModuleHomeFragmentPracticeBinding
 import com.chen.memorizewords.core.navigation.FloatingWordEntry
 import com.chen.memorizewords.core.navigation.PracticeEntry
+import com.chen.memorizewords.feature.home.ui.profile.ProMembershipActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.launch
@@ -68,17 +69,13 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
         databind.switchFloatingCard.setOnCheckedChangeListener { _, isChecked ->
             if (ignoreSwitchUpdate) return@setOnCheckedChangeListener
             if (isChecked) {
-                if (Settings.canDrawOverlays(requireContext())) {
-                    viewModel.onFloatingEnabledChanged(true)
-                } else {
-                    updateFloatingSwitch(false)
-                    showOverlayPermissionDialog()
-                }
+                updateFloatingSwitch(false)
+                viewModel.onFloatingSwitchChecked(Settings.canDrawOverlays(requireContext()))
             } else {
                 viewModel.onFloatingEnabledChanged(false)
             }
         }
-        databind.btnFloatingSettings.setOnClickListener { openFloatingSettings() }
+        databind.btnFloatingSettings.setOnClickListener { viewModel.openFloatingSettings() }
     }
 
     override fun createObserver() {
@@ -124,6 +121,16 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
             is PracticeViewModel.Route.ToPracticeMode -> showSelectionSheet(target.mode)
             is PracticeViewModel.Route.DispatchFloatingAction -> {
                 floatingWordEntry.dispatchServiceAction(requireContext(), target.action)
+            }
+            PracticeViewModel.Route.ToFloatingSettings -> {
+                startActivity(floatingWordEntry.createSettingsIntent(requireContext()))
+            }
+            PracticeViewModel.Route.ToMembership -> {
+                startActivity(ProMembershipActivity.createIntent(requireContext()))
+            }
+            PracticeViewModel.Route.RequestFloatingOverlayPermission -> {
+                updateFloatingSwitch(false)
+                showOverlayPermissionDialog()
             }
         }
     }
@@ -171,10 +178,6 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
                 selectedIds = selectedIds
             )
         )
-    }
-
-    private fun openFloatingSettings() {
-        startActivity(floatingWordEntry.createSettingsIntent(requireContext()))
     }
 
     private fun updateFloatingSwitch(enabled: Boolean) {

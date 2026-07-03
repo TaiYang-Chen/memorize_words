@@ -30,6 +30,9 @@ import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import coil.load
 import com.chen.memorizewords.core.navigation.FloatingWordActions
+import com.chen.memorizewords.domain.account.model.membership.MembershipFeature
+import com.chen.memorizewords.domain.account.model.membership.MembershipFeatureAccess
+import com.chen.memorizewords.domain.account.usecase.membership.ResolveMembershipFeatureAccessUseCase
 import com.chen.memorizewords.domain.floating.model.FloatingDockState
 import com.chen.memorizewords.domain.floating.model.FloatingWordFieldConfig
 import com.chen.memorizewords.domain.floating.model.FloatingWordFieldType
@@ -163,6 +166,9 @@ class FloatingWordService : Service() {
     @Inject
     lateinit var floatingWordController: FloatingWordController
 
+    @Inject
+    lateinit var resolveMembershipFeatureAccessUseCase: ResolveMembershipFeatureAccessUseCase
+
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val dockManager = FloatingDockManager()
     private val speechLayoutEngine = FloatingSpeechLayoutEngine()
@@ -207,11 +213,21 @@ class FloatingWordService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        when (intent?.action) {
-            ACTION_STOP -> stopFloating()
-            ACTION_PREVIEW_CARD -> if (ensureForegroundAndViews()) previewCard()
-            ACTION_REFRESH -> if (ensureForegroundAndViews()) refreshWords(showNext = false)
-            else -> if (ensureForegroundAndViews()) refreshWords(showNext = false)
+        val action = intent?.action
+        if (action == ACTION_STOP) {
+            stopFloating()
+            return START_NOT_STICKY
+        }
+        serviceScope.launch {
+            if (!canUseFloatingReview()) {
+                stopFloating()
+                return@launch
+            }
+            when (action) {
+                ACTION_PREVIEW_CARD -> if (ensureForegroundAndViews()) previewCard()
+                ACTION_REFRESH -> if (ensureForegroundAndViews()) refreshWords(showNext = false)
+                else -> if (ensureForegroundAndViews()) refreshWords(showNext = false)
+            }
         }
         return START_STICKY
     }
@@ -246,6 +262,11 @@ class FloatingWordService : Service() {
         removeViews()
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
+    }
+
+    private suspend fun canUseFloatingReview(): Boolean {
+        return resolveMembershipFeatureAccessUseCase(MembershipFeature.FLOATING_REVIEW) ==
+            MembershipFeatureAccess.ALLOWED
     }
 
     private fun refreshWords(showNext: Boolean) {

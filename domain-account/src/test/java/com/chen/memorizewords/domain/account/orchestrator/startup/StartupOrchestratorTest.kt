@@ -4,6 +4,11 @@ import com.chen.memorizewords.domain.account.auth.AccessTokenState
 import com.chen.memorizewords.domain.account.auth.AuthStateProvider
 import com.chen.memorizewords.domain.account.auth.SessionKickoutNotifier
 import com.chen.memorizewords.domain.account.auth.TokenProvider
+import com.chen.memorizewords.domain.account.model.membership.MembershipFeatureAccess
+import com.chen.memorizewords.domain.account.model.membership.MembershipStatus
+import com.chen.memorizewords.domain.account.policy.MembershipEntitlementPolicy
+import com.chen.memorizewords.domain.account.repository.membership.MembershipRepository
+import com.chen.memorizewords.domain.account.usecase.membership.ResolveMembershipFeatureAccessUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.flowOf
@@ -112,17 +117,49 @@ class StartupOrchestratorTest {
         assertEquals(true, tokenProvider.lastNotifyKickoutOnInvalidSession)
     }
 
+    @Test
+    fun `floating auto start is disabled when membership is required`() = runBlocking {
+        val orchestrator = createOrchestrator(
+            isAuthenticated = true,
+            membershipFeatureAccess = MembershipFeatureAccess.MEMBERSHIP_REQUIRED,
+            floatingAutoStartEnabled = true
+        )
+
+        val shouldAutoStart = orchestrator.shouldAutoStartFloating(canDrawOverlays = true)
+
+        assertEquals(false, shouldAutoStart)
+    }
+
+    @Test
+    fun `floating auto start is enabled when membership and local settings allow it`() = runBlocking {
+        val orchestrator = createOrchestrator(
+            isAuthenticated = true,
+            membershipFeatureAccess = MembershipFeatureAccess.ALLOWED,
+            floatingAutoStartEnabled = true
+        )
+
+        val shouldAutoStart = orchestrator.shouldAutoStartFloating(canDrawOverlays = true)
+
+        assertEquals(true, shouldAutoStart)
+    }
+
     private fun createOrchestrator(
         isAuthenticated: Boolean,
         onboardingCompleted: Boolean = false,
         accessTokenState: AccessTokenState = AccessTokenState.NoSession,
-        tokenProvider: FakeTokenProvider = FakeTokenProvider(accessTokenState)
+        tokenProvider: FakeTokenProvider = FakeTokenProvider(accessTokenState),
+        membershipFeatureAccess: MembershipFeatureAccess = MembershipFeatureAccess.ALLOWED,
+        floatingAutoStartEnabled: Boolean = false
     ): StartupOrchestrator {
         return StartupOrchestrator(
             authStateProvider = FakeAuthStateProvider(isAuthenticated),
             tokenProvider = tokenProvider,
             onboardingStateReader = FakeStartupOnboardingStateReader(onboardingCompleted),
-            floatingAutoStartReader = FakeStartupFloatingAutoStartReader(),
+            floatingAutoStartReader = FakeStartupFloatingAutoStartReader(floatingAutoStartEnabled),
+            resolveMembershipFeatureAccessUseCase = ResolveMembershipFeatureAccessUseCase(
+                repository = FakeMembershipRepository(membershipFeatureAccess),
+                policy = MembershipEntitlementPolicy()
+            ),
             sessionKickoutNotifier = FakeSessionKickoutNotifier()
         )
     }
@@ -159,12 +196,28 @@ private class FakeStartupOnboardingStateReader(
     override suspend fun isOnboardingCompleted(): Boolean = completed
 }
 
-private class FakeStartupFloatingAutoStartReader : StartupFloatingAutoStartReader {
-    override suspend fun isAutoStartEnabled(): Boolean = false
+private class FakeStartupFloatingAutoStartReader(
+    private val enabled: Boolean
+) : StartupFloatingAutoStartReader {
+    override suspend fun isAutoStartEnabled(): Boolean = enabled
 }
 
 private class FakeSessionKickoutNotifier : SessionKickoutNotifier {
     override val events: Flow<Unit> = MutableSharedFlow()
 
     override suspend fun notifyKickout() = Unit
+}
+
+private class FakeMembershipRepository(
+    private val access: MembershipFeatureAccess
+) : MembershipRepository {
+    private val status = when (access) {
+        MembershipFeatureAccess.ALLOWED -> MembershipStatus(active = true)
+        MembershipFeatureAccess.MEMBERSHIP_REQUIRED -> MembershipStatus(active = false)
+    }
+
+    override fun observeStatus() = flowOf(null)
+    override suspend fun getCachedStatus() = status
+    override suspend fun refreshStatus() = error("Not used")
+    override suspend fun checkIn() = error("Not used")
 }

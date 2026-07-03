@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface MembershipRepository {
     fun observeStatus(): Flow<MembershipStatus?>
+    suspend fun getCachedStatus(): MembershipStatus?
     suspend fun refreshStatus(): Result<MembershipStatus>
     suspend fun checkIn(): Result<MembershipCheckInReward>
 }

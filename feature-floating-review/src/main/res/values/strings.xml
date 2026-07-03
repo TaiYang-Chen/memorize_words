@@ -41,4 +41,5 @@
     <string name="module_floating_review_phonetic_both">美 [%1$s]  英 [%2$s]</string>
     <string name="module_floating_review_phonetic_us_only">美 [%1$s]</string>
     <string name="module_floating_review_phonetic_uk_only">英 [%1$s]</string>
+    <string name="module_floating_review_membership_required">请先领取体验会员</string>
 </resources>

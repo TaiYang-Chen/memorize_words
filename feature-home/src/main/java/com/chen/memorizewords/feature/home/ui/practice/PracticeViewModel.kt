@@ -3,6 +3,10 @@ package com.chen.memorizewords.feature.home.ui.practice
 import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
+import com.chen.memorizewords.domain.account.model.membership.MembershipFeature
+import com.chen.memorizewords.domain.account.model.membership.MembershipFeatureAccess
+import com.chen.memorizewords.domain.account.usecase.membership.ObserveMembershipFeatureAccessUseCase
+import com.chen.memorizewords.domain.account.usecase.membership.ResolveMembershipFeatureAccessUseCase
 import com.chen.memorizewords.domain.floating.service.FloatingReviewFacade
 import com.chen.memorizewords.domain.practice.service.PracticeFacade
 import com.chen.memorizewords.domain.practice.PracticeMode
@@ -23,12 +27,17 @@ class PracticeViewModel @Inject constructor(
     private val practiceFacade: PracticeFacade,
     private val resourceProvider: ResourceProvider,
     private val practiceUiMapper: PracticeUiMapper,
-    private val floatingReviewFacade: FloatingReviewFacade
+    private val floatingReviewFacade: FloatingReviewFacade,
+    observeMembershipFeatureAccessUseCase: ObserveMembershipFeatureAccessUseCase,
+    private val resolveMembershipFeatureAccessUseCase: ResolveMembershipFeatureAccessUseCase
 ) : BaseViewModel() {
 
     sealed interface Route {
         data class ToPracticeMode(val mode: PracticeMode) : Route
         data class DispatchFloatingAction(val action: String) : Route
+        data object ToFloatingSettings : Route
+        data object ToMembership : Route
+        data object RequestFloatingOverlayPermission : Route
     }
 
     private val recentStats =
@@ -51,9 +60,21 @@ class PracticeViewModel @Inject constructor(
         practiceFacade.getContinuousPracticeDays()
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
 
+    private val floatingFeatureAccess: StateFlow<MembershipFeatureAccess> =
+        observeMembershipFeatureAccessUseCase(MembershipFeature.FLOATING_REVIEW)
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5_000),
+                MembershipFeatureAccess.MEMBERSHIP_REQUIRED
+            )
+
     val floatingEnabled: StateFlow<Boolean> =
-        floatingReviewFacade.observeSettings()
-            .map { it.enabled }
+        combine(
+            floatingReviewFacade.observeSettings().map { it.enabled },
+            floatingFeatureAccess
+        ) { enabled, access ->
+            enabled && access == MembershipFeatureAccess.ALLOWED
+        }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
 
     val todayDurationText: StateFlow<String> =
@@ -131,6 +152,16 @@ class PracticeViewModel @Inject constructor(
             )
         )
 
+    init {
+        viewModelScope.launch {
+            floatingFeatureAccess.collect { access ->
+                if (access == MembershipFeatureAccess.MEMBERSHIP_REQUIRED) {
+                    disableFloatingIfNeeded()
+                }
+            }
+        }
+    }
+
     fun openListening() {
         tryOpenPractice(PracticeMode.LISTENING)
     }
@@ -149,19 +180,63 @@ class PracticeViewModel @Inject constructor(
 
     fun onFloatingEnabledChanged(enabled: Boolean) {
         viewModelScope.launch {
-            val current = floatingReviewFacade.getSettings()
-            if (current.enabled == enabled) return@launch
-            floatingReviewFacade.saveSettings(current.copy(enabled = enabled))
-            navigateRoute(
-                Route.DispatchFloatingAction(
-                    action = if (enabled) {
-                        FloatingWordActions.ACTION_START
-                    } else {
-                        FloatingWordActions.ACTION_STOP
-                    }
-                )
-            )
+            if (enabled && !canUseFloatingReview()) {
+                navigateRoute(Route.ToMembership)
+                return@launch
+            }
+            setFloatingEnabled(enabled)
         }
+    }
+
+    fun onFloatingSwitchChecked(canDrawOverlays: Boolean) {
+        viewModelScope.launch {
+            if (!canUseFloatingReview()) {
+                navigateRoute(Route.ToMembership)
+                return@launch
+            }
+            if (canDrawOverlays) {
+                setFloatingEnabled(true)
+            } else {
+                navigateRoute(Route.RequestFloatingOverlayPermission)
+            }
+        }
+    }
+
+    fun openFloatingSettings() {
+        viewModelScope.launch {
+            if (canUseFloatingReview()) {
+                navigateRoute(Route.ToFloatingSettings)
+            } else {
+                navigateRoute(Route.ToMembership)
+            }
+        }
+    }
+
+    private suspend fun canUseFloatingReview(): Boolean {
+        return resolveMembershipFeatureAccessUseCase(MembershipFeature.FLOATING_REVIEW) ==
+            MembershipFeatureAccess.ALLOWED
+    }
+
+    private suspend fun setFloatingEnabled(enabled: Boolean) {
+        val current = floatingReviewFacade.getSettings()
+        if (current.enabled == enabled) return
+        floatingReviewFacade.saveSettings(current.copy(enabled = enabled))
+        navigateRoute(
+            Route.DispatchFloatingAction(
+                action = if (enabled) {
+                    FloatingWordActions.ACTION_START
+                } else {
+                    FloatingWordActions.ACTION_STOP
+                }
+            )
+        )
+    }
+
+    private suspend fun disableFloatingIfNeeded() {
+        val current = floatingReviewFacade.getSettings()
+        if (!current.enabled) return
+        floatingReviewFacade.saveSettings(current.copy(enabled = false))
+        navigateRoute(Route.DispatchFloatingAction(FloatingWordActions.ACTION_STOP))
     }
 
     private fun tryOpenPractice(mode: PracticeMode) {
