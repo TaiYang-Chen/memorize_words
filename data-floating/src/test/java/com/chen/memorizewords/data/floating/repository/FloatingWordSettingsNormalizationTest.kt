@@ -32,11 +32,15 @@ class FloatingWordSettingsNormalizationTest {
         val tooSmall = normalizeFloatingWordSettings(
             FloatingWordSettings(cardGapDp = MIN_CARD_GAP_DP - 1)
         )
+        val negativeInRange = normalizeFloatingWordSettings(
+            FloatingWordSettings(cardGapDp = -60)
+        )
         val tooLarge = normalizeFloatingWordSettings(
             FloatingWordSettings(cardGapDp = MAX_CARD_GAP_DP + 1)
         )
 
         assertEquals(MIN_CARD_GAP_DP, tooSmall.cardGapDp)
+        assertEquals(-60, negativeInRange.cardGapDp)
         assertEquals(MAX_CARD_GAP_DP, tooLarge.cardGapDp)
     }
 }

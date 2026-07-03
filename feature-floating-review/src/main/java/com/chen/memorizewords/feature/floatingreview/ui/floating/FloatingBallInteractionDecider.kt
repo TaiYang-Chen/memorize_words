@@ -2,6 +2,7 @@ package com.chen.memorizewords.feature.floatingreview.ui.floating
 
 internal sealed interface FloatingBallSingleTapAction {
     data object ShowCard : FloatingBallSingleTapAction
+    data object ShowNextCard : FloatingBallSingleTapAction
     data object HideCard : FloatingBallSingleTapAction
 }
 
@@ -10,12 +11,13 @@ internal sealed interface FloatingCardCloseAction {
 }
 
 internal fun resolveSingleTapAction(
-    isCardVisible: Boolean
+    isCardVisible: Boolean,
+    hasCurrentWord: Boolean
 ): FloatingBallSingleTapAction {
-    return if (isCardVisible) {
-        FloatingBallSingleTapAction.HideCard
-    } else {
-        FloatingBallSingleTapAction.ShowCard
+    return when {
+        isCardVisible -> FloatingBallSingleTapAction.HideCard
+        hasCurrentWord -> FloatingBallSingleTapAction.ShowCard
+        else -> FloatingBallSingleTapAction.ShowNextCard
     }
 }
 

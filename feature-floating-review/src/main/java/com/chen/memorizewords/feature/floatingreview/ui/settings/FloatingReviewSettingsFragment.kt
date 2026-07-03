@@ -39,8 +39,8 @@ class FloatingReviewSettingsFragment :
     private companion object {
         const val MIN_BALL_SIZE_PERCENT = 1
         const val MAX_BALL_SIZE_PERCENT = 200
-        const val MIN_CARD_GAP_DP = 8
-        const val MAX_CARD_GAP_DP = 80
+        const val MIN_CARD_GAP_DP = -100
+        const val MAX_CARD_GAP_DP = 100
     }
 
     private data class SourceRowBinding(
@@ -68,8 +68,6 @@ class FloatingReviewSettingsFragment :
     private var settings: FloatingWordSettings = FloatingWordSettings()
     private lateinit var adapter: FloatingWordFieldConfigAdapter
     private var ignoreViewUpdates: Boolean = false
-    private var initialFloatingEnabledCaptured: Boolean = false
-    private var wasFloatingEnabledOnEntry: Boolean = false
     private var previewServiceStartedTemporarily: Boolean = false
     private var hasShownPreviewPermissionToast: Boolean = false
 
@@ -108,7 +106,11 @@ class FloatingReviewSettingsFragment :
     }
 
     override fun onStop() {
-        if (previewServiceStartedTemporarily && !requireActivity().isChangingConfigurations) {
+        if (
+            previewServiceStartedTemporarily &&
+            !settings.enabled &&
+            !requireActivity().isChangingConfigurations
+        ) {
             floatingWordEntry.dispatchServiceAction(
                 requireContext(),
                 FloatingWordActions.ACTION_STOP
@@ -203,10 +205,6 @@ class FloatingReviewSettingsFragment :
 
     private fun renderSettings(updated: FloatingWordSettings) {
         settings = updated
-        if (!initialFloatingEnabledCaptured) {
-            initialFloatingEnabledCaptured = true
-            wasFloatingEnabledOnEntry = updated.enabled
-        }
         val root = view ?: return
         ignoreViewUpdates = true
         root.findViewById<TextView>(R.id.tvSelectedCount).text = getString(
@@ -305,7 +303,7 @@ class FloatingReviewSettingsFragment :
             return
         }
 
-        if (!wasFloatingEnabledOnEntry && !previewServiceStartedTemporarily) {
+        if (!settings.enabled && !previewServiceStartedTemporarily) {
             previewServiceStartedTemporarily = true
             floatingWordEntry.dispatchServiceAction(context, FloatingWordActions.ACTION_START)
         }

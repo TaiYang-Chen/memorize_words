@@ -16,13 +16,6 @@ data class FloatingSpeechPetBounds(
     val height: Int
 )
 
-data class FloatingSpeechPetVisualBounds(
-    val leftPercent: Float = 0.42f,
-    val topPercent: Float = 0.46f,
-    val rightPercent: Float = 0.96f,
-    val bottomPercent: Float = 0.96f
-)
-
 data class FloatingSpeechCardSize(
     val width: Int,
     val height: Int
@@ -33,8 +26,7 @@ data class FloatingSpeechLayoutConfig(
     val clearancePx: Int,
     val tailWidthPx: Int,
     val tailSafeInsetPx: Int,
-    val tailSlotHeightPx: Int,
-    val petVisualBounds: FloatingSpeechPetVisualBounds = FloatingSpeechPetVisualBounds()
+    val tailSlotHeightPx: Int
 )
 
 data class FloatingSpeechLayout(
@@ -57,34 +49,16 @@ class FloatingSpeechLayoutEngine {
         cardSize: FloatingSpeechCardSize,
         config: FloatingSpeechLayoutConfig
     ): FloatingSpeechLayout {
-        val visibleBounds = resolveVisibleBounds(petBounds, config.petVisualBounds)
-        val anchorX = (visibleBounds.left + (visibleBounds.right - visibleBounds.left) / 2f)
-            .roundToInt()
+        val anchorX = (petBounds.x + petBounds.width / 2f).roundToInt()
         val cardX = resolveCardX(safeArea, cardSize, config, anchorX)
-        val placement = resolvePlacement(safeArea, cardSize, config, visibleBounds)
-        val cardY = resolveCardY(safeArea, cardSize, config, visibleBounds, placement)
+        val placement = resolvePlacement(safeArea, cardSize, config, petBounds)
+        val cardY = resolveCardY(safeArea, cardSize, config, petBounds, placement)
         val tailCenterX = resolveTailCenterX(cardSize, config, anchorX - cardX)
         return FloatingSpeechLayout(
             cardX = cardX,
             cardY = cardY,
             tailCenterX = tailCenterX,
             placement = placement
-        )
-    }
-
-    private fun resolveVisibleBounds(
-        petBounds: FloatingSpeechPetBounds,
-        visualBounds: FloatingSpeechPetVisualBounds
-    ): FloatingSpeechResolvedPetBounds {
-        val left = petBounds.x + petBounds.width * visualBounds.leftPercent.coerceIn(0f, 1f)
-        val top = petBounds.y + petBounds.height * visualBounds.topPercent.coerceIn(0f, 1f)
-        val right = petBounds.x + petBounds.width * visualBounds.rightPercent.coerceIn(0f, 1f)
-        val bottom = petBounds.y + petBounds.height * visualBounds.bottomPercent.coerceIn(0f, 1f)
-        return FloatingSpeechResolvedPetBounds(
-            left = left.roundToInt(),
-            top = top.roundToInt(),
-            right = right.roundToInt(),
-            bottom = bottom.roundToInt()
         )
     }
 
@@ -103,11 +77,10 @@ class FloatingSpeechLayoutEngine {
         safeArea: FloatingSpeechSafeArea,
         cardSize: FloatingSpeechCardSize,
         config: FloatingSpeechLayoutConfig,
-        visibleBounds: FloatingSpeechResolvedPetBounds
+        petBounds: FloatingSpeechPetBounds
     ): FloatingSpeechPlacement {
         val minY = safeArea.top + config.edgeMarginPx
-        val panelHeight = resolvePanelHeight(cardSize, config)
-        return if (visibleBounds.top - panelHeight - config.clearancePx >= minY) {
+        return if (aboveCardY(cardSize, config, petBounds) >= minY) {
             FloatingSpeechPlacement.ABOVE_PET
         } else {
             FloatingSpeechPlacement.BELOW_PET
@@ -118,27 +91,26 @@ class FloatingSpeechLayoutEngine {
         safeArea: FloatingSpeechSafeArea,
         cardSize: FloatingSpeechCardSize,
         config: FloatingSpeechLayoutConfig,
-        visibleBounds: FloatingSpeechResolvedPetBounds,
+        petBounds: FloatingSpeechPetBounds,
         placement: FloatingSpeechPlacement
     ): Int {
         val minY = safeArea.top + config.edgeMarginPx
         val maxY = (safeArea.bottom - cardSize.height - config.edgeMarginPx).coerceAtLeast(minY)
-        val panelHeight = resolvePanelHeight(cardSize, config)
         val desiredY = when (placement) {
-            FloatingSpeechPlacement.ABOVE_PET ->
-                visibleBounds.top - panelHeight - config.clearancePx
+            FloatingSpeechPlacement.ABOVE_PET -> aboveCardY(cardSize, config, petBounds)
 
             FloatingSpeechPlacement.BELOW_PET ->
-                visibleBounds.bottom + config.clearancePx - config.tailSlotHeightPx
+                petBounds.y + petBounds.height + config.clearancePx - config.tailSlotHeightPx
         }
         return desiredY.coerceIn(minY, maxY)
     }
 
-    private fun resolvePanelHeight(
+    private fun aboveCardY(
         cardSize: FloatingSpeechCardSize,
-        config: FloatingSpeechLayoutConfig
+        config: FloatingSpeechLayoutConfig,
+        petBounds: FloatingSpeechPetBounds
     ): Int {
-        return (cardSize.height - config.tailSlotHeightPx).coerceAtLeast(0)
+        return petBounds.y - cardSize.height - config.clearancePx + config.tailSlotHeightPx
     }
 
     private fun resolveTailCenterX(
@@ -151,11 +123,4 @@ class FloatingSpeechLayoutEngine {
         val maxCenter = (cardSize.width - config.tailSafeInsetPx - halfTail).coerceAtLeast(minCenter)
         return desiredCenterX.coerceIn(minCenter, maxCenter)
     }
-
-    private data class FloatingSpeechResolvedPetBounds(
-        val left: Int,
-        val top: Int,
-        val right: Int,
-        val bottom: Int
-    )
 }

@@ -6,10 +6,18 @@ import kotlin.test.assertEquals
 class FloatingBallInteractionDeciderTest {
 
     @Test
-    fun `single tap shows card when card is hidden`() {
+    fun `single tap restores current card when card is hidden and word exists`() {
         assertEquals(
             FloatingBallSingleTapAction.ShowCard,
-            resolveSingleTapAction(isCardVisible = false)
+            resolveSingleTapAction(isCardVisible = false, hasCurrentWord = true)
+        )
+    }
+
+    @Test
+    fun `single tap advances when card is hidden and no word exists`() {
+        assertEquals(
+            FloatingBallSingleTapAction.ShowNextCard,
+            resolveSingleTapAction(isCardVisible = false, hasCurrentWord = false)
         )
     }
 
@@ -17,7 +25,7 @@ class FloatingBallInteractionDeciderTest {
     fun `single tap hides card when card is visible`() {
         assertEquals(
             FloatingBallSingleTapAction.HideCard,
-            resolveSingleTapAction(isCardVisible = true)
+            resolveSingleTapAction(isCardVisible = true, hasCurrentWord = true)
         )
     }
 

@@ -55,7 +55,7 @@ class FloatingWordFieldConfigAdapter(
 
         fun bind(item: FloatingWordFieldConfig) {
             tvLabel.text = labelProvider(item.type)
-            tvSize.text = item.fontSizeSp.toString()
+            tvSize.text = formatSizeValue(item)
             switchEnable.setOnCheckedChangeListener(null)
             switchEnable.isChecked = item.enabled
             switchEnable.setOnCheckedChangeListener { _, isChecked ->
@@ -69,6 +69,11 @@ class FloatingWordFieldConfigAdapter(
             val range = if (item.type == FloatingWordFieldType.IMAGE) 60..200 else 10..30
             val updated = item.copy(fontSizeSp = (item.fontSizeSp + delta).coerceIn(range))
             updateItem(updated)
+        }
+
+        private fun formatSizeValue(item: FloatingWordFieldConfig): String {
+            val label = if (item.type == FloatingWordFieldType.IMAGE) "尺寸" else "字号"
+            return "$label ${item.fontSizeSp}"
         }
 
         private fun updateItem(updated: FloatingWordFieldConfig) {

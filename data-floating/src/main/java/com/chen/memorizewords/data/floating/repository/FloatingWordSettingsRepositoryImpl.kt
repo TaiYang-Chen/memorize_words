@@ -24,11 +24,11 @@ import kotlinx.coroutines.flow.asStateFlow
 internal const val DEFAULT_BALL_OPACITY_PERCENT = 100
 internal const val DEFAULT_CARD_OPACITY_PERCENT = 100
 internal const val DEFAULT_BALL_SIZE_PERCENT = 60
-internal const val DEFAULT_CARD_GAP_DP = 40
+internal const val DEFAULT_CARD_GAP_DP = -20
 internal const val MIN_BALL_SIZE_PERCENT = 1
 internal const val MAX_BALL_SIZE_PERCENT = 200
-internal const val MIN_CARD_GAP_DP = 8
-internal const val MAX_CARD_GAP_DP = 80
+internal const val MIN_CARD_GAP_DP = -100
+internal const val MAX_CARD_GAP_DP = 100
 
 internal fun normalizeBallSizePercent(value: Int): Int =
     value.coerceIn(MIN_BALL_SIZE_PERCENT, MAX_BALL_SIZE_PERCENT)
