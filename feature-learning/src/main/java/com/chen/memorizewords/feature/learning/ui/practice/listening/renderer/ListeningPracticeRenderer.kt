@@ -24,8 +24,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.gridlayout.widget.GridLayout
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.chen.memorizewords.domain.practice.ListeningAnswerAreaPosition
 import com.chen.memorizewords.domain.practice.ListeningPronunciationPreference
 import com.chen.memorizewords.feature.learning.LinearSpacingItemDecoration
@@ -36,7 +36,6 @@ import com.chen.memorizewords.feature.learning.adapter.FormAdapter
 import com.chen.memorizewords.feature.learning.adapter.RootsAdapter
 import com.chen.memorizewords.feature.learning.adapter.SynonymsAdapter
 import com.chen.memorizewords.feature.learning.databinding.FeatureLearningFragmentPracticeListeningBinding
-import com.chen.memorizewords.feature.learning.ui.fragment.WaterfallFlowLayoutManager
 import com.chen.memorizewords.feature.learning.ui.practice.ListeningFeedbackTone
 import com.chen.memorizewords.feature.learning.ui.practice.ListeningFooterMode
 import com.chen.memorizewords.feature.learning.ui.practice.ListeningMeaningOptionFeedback
@@ -50,7 +49,10 @@ import com.chen.memorizewords.feature.learning.ui.practice.ListeningSpellingSlot
 import com.chen.memorizewords.feature.learning.ui.visibleWordExamples
 import com.chen.memorizewords.feature.learning.ui.visibleWordForms
 import com.chen.memorizewords.feature.learning.ui.visibleWordRoots
+import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayout
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.FlexWrap
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 
@@ -108,7 +110,10 @@ internal class ListeningPracticeRenderer(
         binding.rvStudyRoot.addItemDecoration(LinearSpacingItemDecoration(dp(16)))
 
         binding.rvStudySynonyms.adapter = studySynonymsAdapter
-        binding.rvStudySynonyms.layoutManager = WaterfallFlowLayoutManager()
+        binding.rvStudySynonyms.layoutManager = FlexboxLayoutManager(context).apply {
+            flexDirection = FlexDirection.ROW
+            flexWrap = FlexWrap.WRAP
+        }
         binding.rvStudySynonyms.isNestedScrollingEnabled = false
 
         binding.rvStudyInflection.adapter = studyFormAdapter

@@ -30,6 +30,9 @@ import com.chen.memorizewords.feature.learning.ui.visibleWordForms
 import com.chen.memorizewords.feature.learning.ui.visibleWordRoots
 import com.chen.memorizewords.feature.learning.ui.speech.audioOutputOrNull
 import com.chen.memorizewords.feature.learning.ui.speech.prepareSpeechOutputAsync
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.launch
@@ -95,7 +98,10 @@ class WordEntryDetailFragment :
         databind.rvRoot.addItemDecoration(LinearSpacingItemDecoration(16.dpToPx(requireContext())))
 
         databind.rvSynonyms.adapter = synonymsAdapter
-        databind.rvSynonyms.layoutManager = WaterfallFlowLayoutManager()
+        databind.rvSynonyms.layoutManager = FlexboxLayoutManager(requireContext()).apply {
+            flexDirection = FlexDirection.ROW
+            flexWrap = FlexWrap.WRAP
+        }
         databind.rvSynonyms.isNestedScrollingEnabled = false
 
         databind.rvInflection.adapter = formAdapter
