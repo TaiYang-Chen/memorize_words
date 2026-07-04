@@ -5,15 +5,20 @@ import com.chen.memorizewords.data.sync.remoteapi.api.datasync.MembershipCheckIn
 import com.chen.memorizewords.data.sync.remoteapi.api.datasync.MembershipStatusDto
 import com.chen.memorizewords.domain.account.model.membership.MembershipCheckInReward
 import com.chen.memorizewords.domain.account.model.membership.MembershipStatus
+import com.chen.memorizewords.domain.account.policy.currentLocalMembershipDate
+import com.chen.memorizewords.domain.account.policy.normalizeMembershipStatus
 import com.chen.memorizewords.domain.account.repository.LocalAccountRepository
 import com.chen.memorizewords.domain.account.repository.membership.MembershipRepository
 import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flow
 
 @Singleton
 class MembershipRepositoryImpl @Inject constructor(
@@ -27,9 +32,16 @@ class MembershipRepositoryImpl @Inject constructor(
     private val statusVersion = MutableStateFlow(0)
 
     override fun observeStatus() =
-        combine(localAccountRepository.getUserFlow(), statusVersion) { user, _ ->
-            user?.userId?.let(statusCache::read)
-        }.distinctUntilChanged()
+        combine(
+            localAccountRepository.getUserFlow(),
+            statusVersion,
+            observeCurrentDate()
+        ) { user, _, currentDate ->
+            user?.userId?.let { userId ->
+                statusCache.read(userId, currentDate)
+            }
+        }
+            .distinctUntilChanged()
 
     override suspend fun getCachedStatus(): MembershipStatus? {
         val userId = localAccountRepository.getCurrentUserId() ?: return null
@@ -59,6 +71,17 @@ class MembershipRepositoryImpl @Inject constructor(
         statusCache.write(userId, status)
         statusVersion.value = statusVersion.value + 1
     }
+
+    private fun observeCurrentDate(): Flow<String> = flow {
+        while (true) {
+            emit(currentLocalMembershipDate())
+            delay(CURRENT_DATE_REFRESH_INTERVAL_MS)
+        }
+    }.distinctUntilChanged()
+
+    private companion object {
+        const val CURRENT_DATE_REFRESH_INTERVAL_MS = 60_000L
+    }
 }
 
 internal class MembershipStatusCache(
@@ -68,6 +91,10 @@ internal class MembershipStatusCache(
     constructor(mmkv: MMKV, gson: Gson) : this(MmkvMembershipKeyValueStore(mmkv), gson)
 
     fun read(userId: Long): MembershipStatus? {
+        return read(userId, currentLocalMembershipDate())
+    }
+
+    fun read(userId: Long, currentDate: String): MembershipStatus? {
         val key = statusKey(userId)
         val json = keyValueStore.getString(key) ?: return null
         return runCatching {
@@ -75,7 +102,7 @@ internal class MembershipStatusCache(
         }.getOrElse {
             keyValueStore.remove(key)
             null
-        }
+        }?.let { normalizeMembershipStatus(it, currentDate) }
     }
 
     fun write(userId: Long, status: MembershipStatus) {

@@ -40,8 +40,69 @@ class MembershipStatusCacheTest {
         cache.write(1, userOneStatus)
         cache.write(2, userTwoStatus)
 
-        assertEquals(userOneStatus, cache.read(1))
+        assertEquals(userOneStatus, cache.read(1, currentDate = "2026-06-24"))
         assertEquals(userTwoStatus, cache.read(2))
+    }
+
+    @Test
+    fun `read normalizes expired cached active status`() {
+        cache.write(
+            1,
+            MembershipStatus(
+                level = "PRO",
+                active = true,
+                validUntilDate = "2026-06-23",
+                remainingDays = 1,
+                totalGrantedDays = 3,
+                todayCheckedIn = true
+            )
+        )
+
+        val status = cache.read(1, currentDate = "2026-06-24")
+
+        assertEquals(false, status?.active)
+        assertEquals(0, status?.remainingDays)
+        assertEquals("2026-06-23", status?.validUntilDate)
+    }
+
+    @Test
+    fun `read keeps cached active status through valid until date`() {
+        cache.write(
+            1,
+            MembershipStatus(
+                level = "PRO",
+                active = true,
+                validUntilDate = "2026-06-24",
+                remainingDays = 9,
+                totalGrantedDays = 3,
+                todayCheckedIn = true
+            )
+        )
+
+        val status = cache.read(1, currentDate = "2026-06-24")
+
+        assertEquals(true, status?.active)
+        assertEquals(1, status?.remainingDays)
+    }
+
+    @Test
+    fun `read normalizes invalid cached active date`() {
+        cache.write(
+            1,
+            MembershipStatus(
+                level = "PRO",
+                active = true,
+                validUntilDate = "2026-02-31",
+                remainingDays = 1,
+                totalGrantedDays = 3,
+                todayCheckedIn = true
+            )
+        )
+
+        val status = cache.read(1, currentDate = "2026-02-28")
+
+        assertEquals(false, status?.active)
+        assertEquals(0, status?.remainingDays)
     }
 
     @Test

@@ -8,10 +8,12 @@ import javax.inject.Inject
 class MembershipEntitlementPolicy @Inject constructor() {
     fun resolve(
         feature: MembershipFeature,
-        status: MembershipStatus?
+        status: MembershipStatus?,
+        currentDate: String = currentLocalMembershipDate()
     ): MembershipFeatureAccess {
+        val normalizedStatus = normalizeMembershipStatus(status, currentDate)
         return when (feature) {
-            MembershipFeature.FLOATING_REVIEW -> if (status?.active == true) {
+            MembershipFeature.FLOATING_REVIEW -> if (normalizedStatus?.active == true) {
                 MembershipFeatureAccess.ALLOWED
             } else {
                 MembershipFeatureAccess.MEMBERSHIP_REQUIRED

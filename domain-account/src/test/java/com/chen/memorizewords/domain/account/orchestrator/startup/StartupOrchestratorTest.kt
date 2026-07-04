@@ -212,7 +212,10 @@ private class FakeMembershipRepository(
     private val access: MembershipFeatureAccess
 ) : MembershipRepository {
     private val status = when (access) {
-        MembershipFeatureAccess.ALLOWED -> MembershipStatus(active = true)
+        MembershipFeatureAccess.ALLOWED -> MembershipStatus(
+            active = true,
+            validUntilDate = "2099-12-31"
+        )
         MembershipFeatureAccess.MEMBERSHIP_REQUIRED -> MembershipStatus(active = false)
     }
 

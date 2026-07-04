@@ -242,7 +242,7 @@ class PracticeViewModelTest {
         initialStatus: MembershipStatus? = null,
         active: Boolean? = null
     ) : MembershipRepository {
-        private val status = MutableStateFlow(active?.let { MembershipStatus(active = it) } ?: initialStatus)
+        private val status = MutableStateFlow(active?.let(::membershipStatus) ?: initialStatus)
 
         override fun observeStatus(): Flow<MembershipStatus?> = status
 
@@ -257,12 +257,23 @@ class PracticeViewModelTest {
                     granted = true,
                     grantDays = 1,
                     rewardDate = "2026-07-03",
-                    membership = MembershipStatus(active = true)
+                    membership = membershipStatus(active = true)
                 )
             )
 
         fun emit(value: MembershipStatus?) {
             status.value = value
+        }
+
+        private fun membershipStatus(active: Boolean): MembershipStatus {
+            return if (active) {
+                MembershipStatus(
+                    active = true,
+                    validUntilDate = "2099-12-31"
+                )
+            } else {
+                MembershipStatus(active = false)
+            }
         }
     }
 
