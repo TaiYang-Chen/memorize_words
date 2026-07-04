@@ -253,6 +253,8 @@ class AuthLoginRegisterUseCaseTest {
 
         override fun scheduleBootstrapSync() = Unit
 
+        override suspend fun discardLocalPendingSyncOnLogin() = Unit
+
         override fun observePostLoginBootstrapState(): Flow<PostLoginBootstrapState> =
             flowOf(PostLoginBootstrapState.Idle)
 

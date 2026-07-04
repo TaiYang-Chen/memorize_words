@@ -29,6 +29,7 @@ class LoginCompletionHandler @Inject constructor(
         )
         accountSessionRepository.saveSession(loginResult.session)
         localAccountRepository.saveUser(user)
+        syncFacade.discardLocalPendingSyncOnLogin()
         applyBootstrapIfPresent(loginResult)
         syncFacade.startPostLoginBootstrap()
         return user

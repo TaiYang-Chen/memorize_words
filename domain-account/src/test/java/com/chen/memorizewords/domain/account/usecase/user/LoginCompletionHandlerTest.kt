@@ -23,10 +23,11 @@ class LoginCompletionHandlerTest {
 
     @Test
     fun `complete saves login state applies bootstrap and starts background sync`() = runBlocking {
+        val calls = mutableListOf<String>()
         val localAccountRepository = FakeLocalAccountRepository()
         val accountSessionRepository = FakeAccountSessionRepository()
-        val loginBootstrapApplier = FakeLoginBootstrapApplier()
-        val syncRepository = FakeSyncRepository()
+        val loginBootstrapApplier = FakeLoginBootstrapApplier(calls = calls)
+        val syncRepository = FakeSyncRepository(calls = calls)
         val handler = LoginCompletionHandler(
             localAccountRepository = localAccountRepository,
             accountSessionRepository = accountSessionRepository,
@@ -42,9 +43,14 @@ class LoginCompletionHandlerTest {
         assertEquals(loginResult.session, accountSessionRepository.savedSession)
         assertEquals(1, loginBootstrapApplier.applyCalls)
         assertEquals(1, syncRepository.startPostLoginBootstrapCalls)
+        assertEquals(1, syncRepository.discardLocalPendingSyncOnLoginCalls)
         assertEquals(0, syncRepository.syncAfterLoginCalls)
         assertEquals(1, localAccountRepository.saveUserCalls)
         assertEquals(1, accountSessionRepository.saveSessionCalls)
+        assertEquals(
+            listOf("discardLocalPendingSyncOnLogin", "applyBootstrap", "startPostLoginBootstrap"),
+            calls
+        )
     }
 
     @Test
@@ -67,6 +73,7 @@ class LoginCompletionHandlerTest {
         assertEquals(user, localAccountRepository.savedUser)
         assertEquals(loginResult.session, accountSessionRepository.savedSession)
         assertEquals(1, syncRepository.startPostLoginBootstrapCalls)
+        assertEquals(1, syncRepository.discardLocalPendingSyncOnLoginCalls)
         assertEquals(0, syncRepository.syncAfterLoginCalls)
         assertEquals(1, localAccountRepository.saveUserCalls)
         assertEquals(1, accountSessionRepository.saveSessionCalls)
@@ -86,6 +93,7 @@ class LoginCompletionHandlerTest {
 
         assertEquals(7L, user.userId)
         assertEquals(1, syncRepository.startPostLoginBootstrapCalls)
+        assertEquals(1, syncRepository.discardLocalPendingSyncOnLoginCalls)
         assertEquals(0, syncRepository.syncAfterLoginCalls)
     }
 }
@@ -137,7 +145,8 @@ private class FakeLocalAccountRepository : LocalAccountRepository {
 }
 
 private class FakeLoginBootstrapApplier(
-    private val failure: Throwable? = null
+    private val failure: Throwable? = null,
+    private val calls: MutableList<String>? = null
 ) : LoginBootstrapApplier {
     var applyCalls: Int = 0
     var lastBootstrap: LoginBootstrap? = null
@@ -145,6 +154,7 @@ private class FakeLoginBootstrapApplier(
     override suspend fun apply(bootstrap: LoginBootstrap?) {
         applyCalls++
         lastBootstrap = bootstrap
+        calls?.add("applyBootstrap")
         failure?.let { throw it }
     }
 }
@@ -164,13 +174,16 @@ private class FakeAccountSessionRepository : AccountSessionRepository {
 }
 
 private class FakeSyncRepository(
-    private val syncResults: List<Result<Unit>> = listOf(Result.success(Unit))
+    private val syncResults: List<Result<Unit>> = listOf(Result.success(Unit)),
+    private val calls: MutableList<String>? = null
 ) : SyncRepository {
     var syncAfterLoginCalls: Int = 0
     var startPostLoginBootstrapCalls: Int = 0
+    var discardLocalPendingSyncOnLoginCalls: Int = 0
 
     override fun startPostLoginBootstrap() {
         startPostLoginBootstrapCalls++
+        calls?.add("startPostLoginBootstrap")
     }
 
     override suspend fun syncAfterLogin(): Result<Unit> {
@@ -187,6 +200,11 @@ private class FakeSyncRepository(
     }
 
     override fun scheduleBootstrapSync() = Unit
+
+    override suspend fun discardLocalPendingSyncOnLogin() {
+        discardLocalPendingSyncOnLoginCalls++
+        calls?.add("discardLocalPendingSyncOnLogin")
+    }
 
     override fun observePostLoginBootstrapState(): Flow<PostLoginBootstrapState> {
         return flowOf(PostLoginBootstrapState.Idle)

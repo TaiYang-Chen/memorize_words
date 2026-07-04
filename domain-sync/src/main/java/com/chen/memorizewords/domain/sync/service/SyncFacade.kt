@@ -26,6 +26,10 @@ class SyncFacade @Inject constructor(
     suspend fun restoreLearningPrerequisites(): Result<LearningPrerequisitesSnapshot> =
         syncRepository.restoreLearningPrerequisites()
 
+    suspend fun discardLocalPendingSyncOnLogin() {
+        syncRepository.discardLocalPendingSyncOnLogin()
+    }
+
     fun observePendingSyncRecords(): Flow<List<SyncPendingRecord>> =
         syncRepository.observePendingSyncRecords()
 

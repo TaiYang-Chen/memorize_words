@@ -4,6 +4,7 @@ import com.chen.memorizewords.data.sync.bootstrap.DataBootstrapCoordinator
 import com.chen.memorizewords.data.sync.bootstrap.PostLoginBootstrapErrorLogger
 import com.chen.memorizewords.data.sync.local.room.model.sync.SyncOutboxDao
 import com.chen.memorizewords.data.sync.local.room.model.sync.SyncOutboxEntity
+import com.chen.memorizewords.domain.account.auth.AuthStateProvider
 import com.chen.memorizewords.domain.sync.model.LearningPrerequisitesSnapshot
 import com.chen.memorizewords.domain.sync.model.PostLoginBootstrapState
 import com.chen.memorizewords.domain.sync.model.SyncBannerState
@@ -28,6 +29,7 @@ class SyncRepositoryImpl @Inject constructor(
     private val syncOutboxDao: SyncOutboxDao,
     private val networkMonitor: NetworkMonitor,
     private val syncOutboxWorkScheduler: SyncOutboxWorkScheduler,
+    private val authStateProvider: AuthStateProvider,
     private val postLoginBootstrapStateStore: PostLoginBootstrapStateStore,
     private val learningPrerequisitesRestorer: LearningPrerequisitesRestorer,
     private val errorLogger: PostLoginBootstrapErrorLogger,
@@ -56,9 +58,11 @@ class SyncRepositoryImpl @Inject constructor(
         pendingCountFlow,
         retryableCountFlow,
         blockedCountFlow,
-        networkMonitor.isOnline
-    ) { pendingCount, retryableCount, blockedCount, hasNetwork ->
+        networkMonitor.isOnline,
+        authStateProvider.observeAuthenticated()
+    ) { pendingCount, retryableCount, blockedCount, hasNetwork, isAuthenticated ->
         resolveSyncBannerState(
+            isAuthenticated = isAuthenticated,
             pendingCount = pendingCount,
             retryableCount = retryableCount,
             blockedCount = blockedCount,
@@ -109,6 +113,11 @@ class SyncRepositoryImpl @Inject constructor(
 
     override fun scheduleBootstrapSync() {
         dataBootstrapCoordinator.scheduleBootstrapWork()
+    }
+
+    override suspend fun discardLocalPendingSyncOnLogin() {
+        syncOutboxWorkScheduler.cancelDrain()
+        syncOutboxDao.deleteAll()
     }
 
     override fun observePostLoginBootstrapState(): Flow<PostLoginBootstrapState> =
@@ -163,12 +172,14 @@ private fun syncOutboxStatePriority(state: String): Int {
 }
 
 internal fun resolveSyncBannerState(
+    isAuthenticated: Boolean,
     pendingCount: Int,
     retryableCount: Int,
     blockedCount: Int,
     hasNetwork: Boolean
 ): SyncBannerState {
     return when {
+        !isAuthenticated -> SyncBannerState.Hidden
         pendingCount <= 0 -> SyncBannerState.Hidden
         !hasNetwork -> SyncBannerState.Offline(pendingCount)
         retryableCount > 0 -> SyncBannerState.Pending(pendingCount)

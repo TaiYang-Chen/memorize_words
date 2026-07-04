@@ -35,11 +35,20 @@ class SyncOutboxWorkScheduler @Inject constructor(
             buildSyncOutboxDrainRequest(tag = SyncWorkConstants.TAG_SYNC_OUTBOX_IMMEDIATE_DRAIN)
         )
     }
+
+    override fun cancelDrain() {
+        val workManager = runCatching { WorkManager.getInstance(appContext) }.getOrNull() ?: return
+        workManager.cancelUniqueWork(SyncWorkConstants.WORK_SYNC_OUTBOX_DRAIN)
+        workManager.cancelUniqueWork(SyncWorkConstants.WORK_SYNC_OUTBOX_IMMEDIATE_DRAIN)
+        workManager.cancelAllWorkByTag(SyncWorkConstants.TAG_SYNC_OUTBOX_DRAIN)
+        workManager.cancelAllWorkByTag(SyncWorkConstants.TAG_SYNC_OUTBOX_IMMEDIATE_DRAIN)
+    }
 }
 
 interface SyncOutboxDrainScheduler {
     fun scheduleDrain()
     fun scheduleImmediateDrain()
+    fun cancelDrain() = Unit
 }
 
 internal fun buildSyncOutboxDrainRequest(tag: String) =

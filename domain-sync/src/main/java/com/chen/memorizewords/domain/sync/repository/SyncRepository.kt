@@ -11,6 +11,7 @@ interface SyncRepository {
     suspend fun restoreLearningPrerequisites(): Result<LearningPrerequisitesSnapshot>
     fun getCurrentPostLoginBootstrapState(): PostLoginBootstrapState
     fun scheduleBootstrapSync()
+    suspend fun discardLocalPendingSyncOnLogin()
     fun observePostLoginBootstrapState(): Flow<PostLoginBootstrapState>
     fun observePendingSyncCount(): Flow<Int>
     fun observePendingSyncRecords(): Flow<List<SyncPendingRecord>>
