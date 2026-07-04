@@ -63,6 +63,10 @@ class FavoritesRepositoryImpl @Inject constructor(
         return favoritesDao.getByWordId(wordId) != null
     }
 
+    override suspend fun getAllFavoriteWordIds(): List<Long> {
+        return favoritesDao.getAllWordIds()
+    }
+
     override suspend fun getFavoritesPage(pageIndex: Int, pageSize: Int): PageSlice<WordFavorites> {
         val safePageIndex = pageIndex.coerceAtLeast(0)
         val safePageSize = pageSize.coerceAtLeast(1)

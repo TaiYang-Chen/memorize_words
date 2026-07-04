@@ -6,5 +6,6 @@ interface FavoritesRepository {
     suspend fun addFavorite(favorites: WordFavorites)
     suspend fun removeFavorite(wordId: Long)
     suspend fun isFavorite(wordId: Long): Boolean
+    suspend fun getAllFavoriteWordIds(): List<Long>
     suspend fun getFavoritesPage(pageIndex: Int, pageSize: Int): PageSlice<WordFavorites>
 }

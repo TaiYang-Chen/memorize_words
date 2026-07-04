@@ -3,6 +3,7 @@ import com.chen.memorizewords.core.common.paging.PageSlice
 import com.chen.memorizewords.domain.wordbook.model.WordBook
 import com.chen.memorizewords.domain.wordbook.model.WordBookInfo
 import com.chen.memorizewords.domain.wordbook.model.WordListQuery
+import com.chen.memorizewords.domain.wordbook.model.WordListSummary
 import com.chen.memorizewords.domain.word.model.WordListRow
 import com.chen.memorizewords.domain.word.model.word.Word
 import kotlinx.coroutines.flow.Flow
@@ -15,7 +16,9 @@ interface WordBookRepository {
     suspend fun getCurrentWordBook(): WordBook?
 
     suspend fun getBookNameById(bookId: Long): String?
+    suspend fun getWordListSummary(wordBookId: Long, now: Long = System.currentTimeMillis()): WordListSummary
     suspend fun getWordRowsPage(query: WordListQuery): PageSlice<WordListRow>
+    suspend fun getWordRowIds(query: WordListQuery, limit: Int): List<Long>
     suspend fun getWordIdsPage(wordBookId: Long, pageIndex: Int, pageSize: Int): List<Long>
     suspend fun getAllUnlearnedWordsForBook(bookId: Long): List<Word>
     suspend fun getUnlearnedWordIdsForBook(

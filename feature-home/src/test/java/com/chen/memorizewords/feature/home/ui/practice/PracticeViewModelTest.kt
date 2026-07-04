@@ -332,7 +332,12 @@ class PracticeViewModelTest {
         override suspend fun deleteMyWordBook(bookId: Long): Result<Unit> = Result.success(Unit)
         override suspend fun getCurrentWordBook(): WordBook? = null
         override suspend fun getBookNameById(bookId: Long): String? = null
+        override suspend fun getWordListSummary(
+            wordBookId: Long,
+            now: Long
+        ): com.chen.memorizewords.domain.wordbook.model.WordListSummary = com.chen.memorizewords.domain.wordbook.model.WordListSummary()
         override suspend fun getWordRowsPage(query: WordListQuery): PageSlice<WordListRow> = PageSlice(emptyList(), false)
+        override suspend fun getWordRowIds(query: WordListQuery, limit: Int): List<Long> = emptyList()
         override suspend fun getWordIdsPage(wordBookId: Long, pageIndex: Int, pageSize: Int): List<Long> = emptyList()
         override suspend fun getAllUnlearnedWordsForBook(bookId: Long): List<Word> = emptyList()
         override suspend fun getUnlearnedWordIdsForBook(

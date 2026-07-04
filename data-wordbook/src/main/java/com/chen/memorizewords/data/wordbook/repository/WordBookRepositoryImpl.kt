@@ -22,10 +22,13 @@ import com.chen.memorizewords.core.common.paging.PageSlice
 import com.chen.memorizewords.domain.wordbook.model.WordBook
 import com.chen.memorizewords.domain.wordbook.model.WordBookInfo
 import com.chen.memorizewords.domain.wordbook.model.WordListQuery
+import com.chen.memorizewords.domain.wordbook.model.WordListSummary
 import com.chen.memorizewords.domain.word.model.WordListRow
 import com.chen.memorizewords.domain.word.model.enums.PartOfSpeech
 import com.chen.memorizewords.domain.word.model.enums.WordFilter
+import com.chen.memorizewords.domain.word.model.enums.WordLearningStatus
 import com.chen.memorizewords.domain.word.model.word.Word
+import com.chen.memorizewords.domain.study.repository.word.FavoritesRepository
 import com.chen.memorizewords.domain.wordbook.repository.CurrentWordBookLocalStatePort
 import com.chen.memorizewords.domain.wordbook.repository.WordOrderType
 import com.chen.memorizewords.domain.wordbook.repository.WordBookRepository
@@ -46,6 +49,7 @@ class WordBookRepositoryImpl @Inject constructor(
     private val wordDao: WordDao,
     private val wordBookDao: WordBookDao,
     private val currentWordBookSelectionDao: CurrentWordBookSelectionDao,
+    private val favoritesRepository: FavoritesRepository,
     private val myWordBookRemoteRemover: MyWordBookRemoteRemover,
     private val wordBookWorkCanceller: WordBookWorkCanceller,
     private val SyncOutboxWriter: SyncOutboxWriter,
@@ -141,20 +145,59 @@ class WordBookRepositoryImpl @Inject constructor(
         return wordBookDao.getBookNameById(bookId)
     }
 
+    override suspend fun getWordListSummary(wordBookId: Long, now: Long): WordListSummary {
+        val favoriteIds = safeFavoriteIds()
+        val summary = bookWordsDao.getWordListSummary(
+            bookId = wordBookId,
+            favoriteWordIds = favoriteIds,
+            masteredLevel = MASTERED_LEVEL,
+            now = now
+        )
+        return WordListSummary(
+            totalCount = summary.totalCount,
+            learnedCount = summary.learnedCount ?: 0,
+            masteredCount = summary.masteredCount ?: 0,
+            reviewDueCount = summary.reviewDueCount ?: 0,
+            favoriteCount = summary.favoriteCount ?: 0
+        )
+    }
+
     override suspend fun getWordRowsPage(query: WordListQuery): PageSlice<WordListRow> {
         val safePageIndex = query.pageIndex.coerceAtLeast(0)
         val safePageSize = query.pageSize.coerceAtLeast(1)
         val offset = safePageIndex * safePageSize
+        val favoriteIds = safeFavoriteIds()
+        val favoriteIdSet = favoriteIds.toSet()
         val rows = loadWordRows(
             bookId = query.wordBookId,
             filter = query.filter,
+            keyword = query.normalizedKeyword,
+            sortType = query.sortType.name,
+            favoriteWordIds = favoriteIds,
+            now = query.now,
             limit = safePageSize + 1,
             offset = offset
         )
         val hasNext = rows.size > safePageSize
         return PageSlice(
-            items = rows.take(safePageSize).map { it.toDomain() },
+            items = rows.take(safePageSize).map { it.toDomain(favoriteIdSet, query.now) },
             hasNext = hasNext
+        )
+    }
+
+    override suspend fun getWordRowIds(query: WordListQuery, limit: Int): List<Long> {
+        if (limit <= 0) return emptyList()
+        val favoriteIds = safeFavoriteIds()
+        return bookWordsDao.getWordListRowIds(
+            bookId = query.wordBookId,
+            keyword = query.normalizedKeyword,
+            filter = query.filter.name,
+            sortType = query.sortType.name,
+            favoriteOnly = if (query.filter == WordFilter.FAVORITE) 1 else 0,
+            favoriteWordIds = favoriteIds,
+            masteredLevel = MASTERED_LEVEL,
+            now = query.now,
+            limit = limit
         )
     }
 
@@ -301,27 +344,25 @@ class WordBookRepositoryImpl @Inject constructor(
     private suspend fun loadWordRows(
         bookId: Long,
         filter: WordFilter,
+        keyword: String,
+        sortType: String,
+        favoriteWordIds: List<Long>,
+        now: Long,
         limit: Int,
         offset: Int
     ): List<WordListRowProjection> {
-        return when (filter) {
-            WordFilter.ALL -> bookWordsDao.getWordListRowsPageAll(bookId, limit, offset)
-            WordFilter.MASTERED -> bookWordsDao.getWordListRowsPageMastered(
-                bookId = bookId,
-                limit = limit,
-                offset = offset,
-                masteredLevel = MASTERED_LEVEL
-            )
-
-            WordFilter.LEARNED -> bookWordsDao.getWordListRowsPageLearned(
-                bookId = bookId,
-                limit = limit,
-                offset = offset,
-                masteredLevel = MASTERED_LEVEL
-            )
-
-            WordFilter.TO_LEARN -> bookWordsDao.getWordListRowsPageToLearn(bookId, limit, offset)
-        }
+        return bookWordsDao.getWordListRowsPage(
+            bookId = bookId,
+            keyword = keyword,
+            filter = filter.name,
+            sortType = sortType,
+            favoriteOnly = if (filter == WordFilter.FAVORITE) 1 else 0,
+            favoriteWordIds = favoriteWordIds,
+            masteredLevel = MASTERED_LEVEL,
+            now = now,
+            limit = limit,
+            offset = offset
+        )
     }
 
     private suspend fun enqueueWordBookProgressOutbox(
@@ -354,18 +395,42 @@ class WordBookRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun WordListRowProjection.toDomain(): WordListRow {
+    private suspend fun safeFavoriteIds(): List<Long> {
+        return favoritesRepository.getAllFavoriteWordIds().ifEmpty { listOf(NO_FAVORITE_WORD_ID) }
+    }
+
+    private fun WordListRowProjection.toDomain(favoriteIds: Set<Long>, now: Long): WordListRow {
+        val status = resolveLearningStatus(now)
         return WordListRow(
             wordId = wordId,
             word = word,
             phonetic = phonetic,
             partOfSpeech = PartOfSpeech.fromString(partOfSpeech),
             meanings = meanings,
-            masteryLevel = masteryLevel
+            masteryLevel = masteryLevel,
+            isFavorite = wordId in favoriteIds,
+            learningStatus = status,
+            totalLearnCount = totalLearnCount,
+            lastLearnTime = lastLearnTime,
+            nextReviewTime = nextReviewTime
         )
+    }
+
+    private fun WordListRowProjection.resolveLearningStatus(now: Long): WordLearningStatus {
+        val mastered = masteryLevel >= MASTERED_LEVEL || userStatus == USER_STATUS_MASTERED
+        if (mastered) return WordLearningStatus.MASTERED
+        val learned = totalLearnCount > 0 || masteryLevel > 0
+        val reviewDue = learned && nextReviewTime > 0 && nextReviewTime <= now
+        return when {
+            reviewDue -> WordLearningStatus.REVIEW_DUE
+            learned -> WordLearningStatus.LEARNED
+            else -> WordLearningStatus.TO_LEARN
+        }
     }
 
     private companion object {
         const val MASTERED_LEVEL = 5
+        const val USER_STATUS_MASTERED = 1
+        const val NO_FAVORITE_WORD_ID = -1L
     }
 }

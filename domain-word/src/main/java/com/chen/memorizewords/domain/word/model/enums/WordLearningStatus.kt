@@ -1,10 +1,8 @@
 package com.chen.memorizewords.domain.word.model.enums
 
-enum class WordFilter {
-    ALL,
+enum class WordLearningStatus {
     TO_LEARN,
     LEARNED,
     MASTERED,
-    REVIEW_DUE,
-    FAVORITE
+    REVIEW_DUE
 }

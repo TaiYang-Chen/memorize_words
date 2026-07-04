@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape>
+            <solid android:color="#F2F6FC" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <solid android:color="@color/feature_wordbook_word_list_surface" />
+        </shape>
+    </item>
+</selector>

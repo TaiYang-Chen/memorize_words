@@ -22,6 +22,9 @@ interface WordFavoritesDao {
     @Query("SELECT COUNT(*) FROM word_favorite")
     suspend fun countAll(): Int
 
+    @Query("SELECT word_id FROM word_favorite ORDER BY added_at DESC, word_id DESC")
+    suspend fun getAllWordIds(): List<Long>
+
     @Query(
         """
         SELECT

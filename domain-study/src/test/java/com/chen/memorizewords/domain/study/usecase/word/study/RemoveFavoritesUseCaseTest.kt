@@ -32,6 +32,8 @@ class RemoveFavoritesUseCaseTest {
 
         override suspend fun isFavorite(wordId: Long): Boolean = false
 
+        override suspend fun getAllFavoriteWordIds(): List<Long> = emptyList()
+
         override suspend fun getFavoritesPage(
             pageIndex: Int,
             pageSize: Int
