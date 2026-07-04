@@ -24,6 +24,7 @@ class MembershipStatusCacheTest {
             level = "PRO",
             active = true,
             validUntilDate = "2026-06-24",
+            validUntilAt = VALID_UNTIL_FUTURE,
             remainingDays = 1,
             totalGrantedDays = 3,
             todayCheckedIn = true
@@ -40,7 +41,7 @@ class MembershipStatusCacheTest {
         cache.write(1, userOneStatus)
         cache.write(2, userTwoStatus)
 
-        assertEquals(userOneStatus, cache.read(1, currentDate = "2026-06-24"))
+        assertEquals(userOneStatus, cache.read(1, currentTimeMillis = NOW))
         assertEquals(userTwoStatus, cache.read(2))
     }
 
@@ -52,13 +53,14 @@ class MembershipStatusCacheTest {
                 level = "PRO",
                 active = true,
                 validUntilDate = "2026-06-23",
+                validUntilAt = VALID_UNTIL_PAST,
                 remainingDays = 1,
                 totalGrantedDays = 3,
                 todayCheckedIn = true
             )
         )
 
-        val status = cache.read(1, currentDate = "2026-06-24")
+        val status = cache.read(1, currentTimeMillis = NOW)
 
         assertEquals(false, status?.active)
         assertEquals(0, status?.remainingDays)
@@ -66,27 +68,28 @@ class MembershipStatusCacheTest {
     }
 
     @Test
-    fun `read keeps cached active status through valid until date`() {
+    fun `read keeps cached active status before valid until minute`() {
         cache.write(
             1,
             MembershipStatus(
                 level = "PRO",
                 active = true,
                 validUntilDate = "2026-06-24",
+                validUntilAt = VALID_UNTIL_FUTURE,
                 remainingDays = 9,
                 totalGrantedDays = 3,
                 todayCheckedIn = true
             )
         )
 
-        val status = cache.read(1, currentDate = "2026-06-24")
+        val status = cache.read(1, currentTimeMillis = NOW)
 
         assertEquals(true, status?.active)
         assertEquals(1, status?.remainingDays)
     }
 
     @Test
-    fun `read normalizes invalid cached active date`() {
+    fun `read normalizes invalid cached active date without timestamp`() {
         cache.write(
             1,
             MembershipStatus(
@@ -99,7 +102,48 @@ class MembershipStatusCacheTest {
             )
         )
 
-        val status = cache.read(1, currentDate = "2026-02-28")
+        val status = cache.read(1, currentTimeMillis = NOW)
+
+        assertEquals(false, status?.active)
+        assertEquals(0, status?.remainingDays)
+    }
+
+    @Test
+    fun `read falls back legacy valid until date to end of local day`() {
+        cache.write(
+            1,
+            MembershipStatus(
+                level = "PRO",
+                active = true,
+                validUntilDate = "2026-06-24",
+                remainingDays = 9,
+                totalGrantedDays = 3,
+                todayCheckedIn = true
+            )
+        )
+
+        val status = cache.read(1, currentTimeMillis = NOW)
+
+        assertEquals(true, status?.active)
+        assertTrue((status?.validUntilAt ?: 0L) > NOW)
+        assertEquals(1, status?.remainingDays)
+    }
+
+    @Test
+    fun `read expires cached status at exact valid until minute`() {
+        cache.write(
+            1,
+            MembershipStatus(
+                level = "PRO",
+                active = true,
+                validUntilAt = NOW,
+                remainingDays = 1,
+                totalGrantedDays = 3,
+                todayCheckedIn = true
+            )
+        )
+
+        val status = cache.read(1, currentTimeMillis = NOW)
 
         assertEquals(false, status?.active)
         assertEquals(0, status?.remainingDays)
@@ -128,5 +172,11 @@ class MembershipStatusCacheTest {
         }
 
         fun contains(key: String): Boolean = values.containsKey(key)
+    }
+
+    private companion object {
+        const val NOW = 1_782_275_640_000L
+        const val VALID_UNTIL_FUTURE = 1_782_279_240_000L
+        const val VALID_UNTIL_PAST = 1_782_272_040_000L
     }
 }

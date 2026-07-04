@@ -9,9 +9,9 @@ class MembershipEntitlementPolicy @Inject constructor() {
     fun resolve(
         feature: MembershipFeature,
         status: MembershipStatus?,
-        currentDate: String = currentLocalMembershipDate()
+        currentTimeMillis: Long = currentMembershipTimeMillis()
     ): MembershipFeatureAccess {
-        val normalizedStatus = normalizeMembershipStatus(status, currentDate)
+        val normalizedStatus = normalizeMembershipStatus(status, currentTimeMillis)
         return when (feature) {
             MembershipFeature.FLOATING_REVIEW -> if (normalizedStatus?.active == true) {
                 MembershipFeatureAccess.ALLOWED

@@ -4,6 +4,7 @@ data class MembershipStatus(
     val level: String = "PRO",
     val active: Boolean = false,
     val validUntilDate: String? = null,
+    val validUntilAt: Long? = null,
     val remainingDays: Int = 0,
     val totalGrantedDays: Int = 0,
     val todayCheckedIn: Boolean = false

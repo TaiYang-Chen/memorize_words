@@ -23,6 +23,7 @@ import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -180,11 +181,11 @@ class ProfileViewModel @Inject constructor(
     val membershipSubtitleText: StateFlow<String> =
         membershipStatus
             .map { status ->
-                val validUntilDate = status?.validUntilDate
-                if (status?.active == true && !validUntilDate.isNullOrBlank()) {
+                val validUntilText = formatMembershipValidUntilMinute(status?.validUntilAt)
+                if (status?.active == true && !validUntilText.isNullOrBlank()) {
                     resourceProvider.getString(
                         R.string.feature_home_profile_member_valid_until,
-                        validUntilDate
+                        validUntilText
                     )
                 } else {
                     resourceProvider.getString(R.string.feature_home_profile_member_checkin_subtitle)
@@ -411,4 +412,9 @@ internal fun previousBusinessDate(date: String): String {
         }
         dateFormat.format(calendar.time)
     }
+}
+
+internal fun formatMembershipValidUntilMinute(validUntilAt: Long?): String? {
+    validUntilAt ?: return null
+    return SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date(validUntilAt))
 }

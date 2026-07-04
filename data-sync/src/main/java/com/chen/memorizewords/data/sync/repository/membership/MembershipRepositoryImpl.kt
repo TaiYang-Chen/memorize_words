@@ -5,7 +5,7 @@ import com.chen.memorizewords.data.sync.remoteapi.api.datasync.MembershipCheckIn
 import com.chen.memorizewords.data.sync.remoteapi.api.datasync.MembershipStatusDto
 import com.chen.memorizewords.domain.account.model.membership.MembershipCheckInReward
 import com.chen.memorizewords.domain.account.model.membership.MembershipStatus
-import com.chen.memorizewords.domain.account.policy.currentLocalMembershipDate
+import com.chen.memorizewords.domain.account.policy.currentMembershipTimeMillis
 import com.chen.memorizewords.domain.account.policy.normalizeMembershipStatus
 import com.chen.memorizewords.domain.account.repository.LocalAccountRepository
 import com.chen.memorizewords.domain.account.repository.membership.MembershipRepository
@@ -35,10 +35,10 @@ class MembershipRepositoryImpl @Inject constructor(
         combine(
             localAccountRepository.getUserFlow(),
             statusVersion,
-            observeCurrentDate()
-        ) { user, _, currentDate ->
+            observeCurrentTime()
+        ) { user, _, currentTimeMillis ->
             user?.userId?.let { userId ->
-                statusCache.read(userId, currentDate)
+                statusCache.read(userId, currentTimeMillis)
             }
         }
             .distinctUntilChanged()
@@ -72,9 +72,9 @@ class MembershipRepositoryImpl @Inject constructor(
         statusVersion.value = statusVersion.value + 1
     }
 
-    private fun observeCurrentDate(): Flow<String> = flow {
+    private fun observeCurrentTime(): Flow<Long> = flow {
         while (true) {
-            emit(currentLocalMembershipDate())
+            emit(currentMembershipTimeMillis())
             delay(CURRENT_DATE_REFRESH_INTERVAL_MS)
         }
     }.distinctUntilChanged()
@@ -91,10 +91,10 @@ internal class MembershipStatusCache(
     constructor(mmkv: MMKV, gson: Gson) : this(MmkvMembershipKeyValueStore(mmkv), gson)
 
     fun read(userId: Long): MembershipStatus? {
-        return read(userId, currentLocalMembershipDate())
+        return read(userId, currentMembershipTimeMillis())
     }
 
-    fun read(userId: Long, currentDate: String): MembershipStatus? {
+    fun read(userId: Long, currentTimeMillis: Long): MembershipStatus? {
         val key = statusKey(userId)
         val json = keyValueStore.getString(key) ?: return null
         return runCatching {
@@ -102,7 +102,7 @@ internal class MembershipStatusCache(
         }.getOrElse {
             keyValueStore.remove(key)
             null
-        }?.let { normalizeMembershipStatus(it, currentDate) }
+        }?.let { normalizeMembershipStatus(it, currentTimeMillis) }
     }
 
     fun write(userId: Long, status: MembershipStatus) {
@@ -141,6 +141,7 @@ private fun MembershipStatusDto.toDomain(): MembershipStatus {
         level = level,
         active = active,
         validUntilDate = validUntilDate,
+        validUntilAt = validUntilAt,
         remainingDays = remainingDays,
         totalGrantedDays = totalGrantedDays,
         todayCheckedIn = todayCheckedIn

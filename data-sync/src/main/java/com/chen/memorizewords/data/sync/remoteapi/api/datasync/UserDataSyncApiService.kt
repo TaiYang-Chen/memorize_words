@@ -228,6 +228,7 @@ data class MembershipStatusDto(
     val level: String,
     val active: Boolean,
     val validUntilDate: String?,
+    val validUntilAt: Long? = null,
     val remainingDays: Int,
     val totalGrantedDays: Int,
     val todayCheckedIn: Boolean

@@ -78,10 +78,11 @@ class ProMembershipViewModel @Inject constructor(
         } else {
             resourceProvider.getString(R.string.feature_home_membership_status_normal)
         }
-        val subtitle = if (active && !status?.validUntilDate.isNullOrBlank()) {
+        val validUntilText = formatMembershipValidUntilMinute(status?.validUntilAt)
+        val subtitle = if (active && !validUntilText.isNullOrBlank()) {
             resourceProvider.getString(
                 R.string.feature_home_membership_status_active_subtitle,
-                status?.validUntilDate.orEmpty(),
+                validUntilText,
                 status?.remainingDays ?: 0
             )
         } else {

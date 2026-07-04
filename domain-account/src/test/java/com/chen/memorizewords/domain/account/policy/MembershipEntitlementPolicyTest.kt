@@ -16,9 +16,10 @@ class MembershipEntitlementPolicyTest {
             status = MembershipStatus(
                 active = true,
                 validUntilDate = "2026-06-24",
+                validUntilAt = VALID_UNTIL_FUTURE,
                 remainingDays = 1
             ),
-            currentDate = "2026-06-24"
+            currentTimeMillis = NOW
         )
 
         assertEquals(MembershipFeatureAccess.ALLOWED, access)
@@ -29,7 +30,7 @@ class MembershipEntitlementPolicyTest {
         val access = policy.resolve(
             feature = MembershipFeature.FLOATING_REVIEW,
             status = MembershipStatus(active = false),
-            currentDate = "2026-06-24"
+            currentTimeMillis = NOW
         )
 
         assertEquals(MembershipFeatureAccess.MEMBERSHIP_REQUIRED, access)
@@ -40,7 +41,7 @@ class MembershipEntitlementPolicyTest {
         val access = policy.resolve(
             feature = MembershipFeature.FLOATING_REVIEW,
             status = null,
-            currentDate = "2026-06-24"
+            currentTimeMillis = NOW
         )
 
         assertEquals(MembershipFeatureAccess.MEMBERSHIP_REQUIRED, access)
@@ -52,35 +53,37 @@ class MembershipEntitlementPolicyTest {
             status = MembershipStatus(
                 active = true,
                 validUntilDate = "2026-06-23",
+                validUntilAt = VALID_UNTIL_PAST,
                 remainingDays = 1
             ),
-            currentDate = "2026-06-24"
+            currentTimeMillis = NOW
         )
 
         val access = policy.resolve(
             feature = MembershipFeature.FLOATING_REVIEW,
             status = normalized,
-            currentDate = "2026-06-24"
+            currentTimeMillis = NOW
         )
 
         assertEquals(MembershipFeatureAccess.MEMBERSHIP_REQUIRED, access)
     }
 
     @Test
-    fun `cached active membership remains valid through valid until date`() {
+    fun `cached active membership remains valid until future minute`() {
         val normalized = normalizeMembershipStatus(
             status = MembershipStatus(
                 active = true,
                 validUntilDate = "2026-06-24",
+                validUntilAt = VALID_UNTIL_FUTURE,
                 remainingDays = 7
             ),
-            currentDate = "2026-06-24"
+            currentTimeMillis = NOW
         )
 
         val access = policy.resolve(
             feature = MembershipFeature.FLOATING_REVIEW,
             status = normalized,
-            currentDate = "2026-06-24"
+            currentTimeMillis = NOW
         )
 
         assertEquals(MembershipFeatureAccess.ALLOWED, access)
@@ -88,24 +91,45 @@ class MembershipEntitlementPolicyTest {
     }
 
     @Test
-    fun `cached active membership with invalid date requires membership`() {
+    fun `cached active membership with invalid date and no timestamp requires membership`() {
         val normalized = normalizeMembershipStatus(
             status = MembershipStatus(
                 active = true,
                 validUntilDate = "2026-02-31",
                 remainingDays = 1
             ),
-            currentDate = "2026-02-28"
+            currentTimeMillis = NOW
         )
 
         val access = policy.resolve(
             feature = MembershipFeature.FLOATING_REVIEW,
             status = normalized,
-            currentDate = "2026-02-28"
+            currentTimeMillis = NOW
         )
 
         assertEquals(MembershipFeatureAccess.MEMBERSHIP_REQUIRED, access)
         assertEquals(false, normalized?.active)
         assertEquals(0, normalized?.remainingDays)
+    }
+
+    @Test
+    fun `cached active membership expires at exact expiry minute`() {
+        val normalized = normalizeMembershipStatus(
+            status = MembershipStatus(
+                active = true,
+                validUntilAt = NOW,
+                remainingDays = 1
+            ),
+            currentTimeMillis = NOW
+        )
+
+        assertEquals(false, normalized?.active)
+        assertEquals(0, normalized?.remainingDays)
+    }
+
+    private companion object {
+        const val NOW = 1_782_275_640_000L
+        const val VALID_UNTIL_FUTURE = 1_782_279_240_000L
+        const val VALID_UNTIL_PAST = 1_782_272_040_000L
     }
 }

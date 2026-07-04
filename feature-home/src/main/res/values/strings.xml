@@ -226,7 +226,7 @@
     <string name="feature_home_membership_status_normal">签到领取体验会员</string>
     <string name="feature_home_membership_status_active_subtitle">有效期至 %1$s，剩余 %2$d 天</string>
     <string name="feature_home_membership_status_normal_subtitle">每天签到可免费获得 1 天体验会员</string>
-    <string name="feature_home_membership_note">体验会员有效期按服务端自然日计算；签到成功后立即生效，今日重复签到不会重复增加天数。当前版本不提供付费开通。</string>
+    <string name="feature_home_membership_note">体验会员有效期按服务端时间精确到分钟计算；签到成功后立即生效，今日重复签到不会重复增加天数。当前版本不提供付费开通。</string>
     <string name="feature_home_membership_checkin_button">签到领取 1 天体验会员</string>
     <string name="feature_home_membership_checked_button">今日已签到</string>
     <string name="feature_home_membership_checkin_success">已获得 1 天体验会员</string>
