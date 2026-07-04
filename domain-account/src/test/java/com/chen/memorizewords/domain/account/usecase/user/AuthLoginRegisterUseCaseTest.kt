@@ -33,8 +33,8 @@ class AuthLoginRegisterUseCaseTest {
             val repo = FakeAuthRepository()
             val useCase = LoginUseCase(repo, createLoginCompletionHandler())
 
-            useCase(" alice ", "password").getOrThrow()
-            assertEquals("alice", repo.passwordIdentifier)
+            useCase(" 123abc ", "password").getOrThrow()
+            assertEquals("123abc", repo.passwordIdentifier)
             assertEquals(AuthIdentifierType.ACCOUNT, repo.passwordIdentifierType)
 
             useCase("demo@example.com", "password").getOrThrow()
@@ -53,7 +53,7 @@ class AuthLoginRegisterUseCaseTest {
             val useCase = LoginUseCase(FakeAuthRepository(), createLoginCompletionHandler())
 
             val missingIdentifier = useCase("", "password")
-            val missingPassword = useCase("alice", "")
+            val missingPassword = useCase("abc123", "")
 
             assertTrue(missingIdentifier.isFailure)
             assertIs<LoginError.EmptyIdentifier>(missingIdentifier.exceptionOrNull())
@@ -63,18 +63,57 @@ class AuthLoginRegisterUseCaseTest {
     }
 
     @Test
+    fun `password login rejects identifiers outside account email and phone namespaces`() {
+        runBlocking {
+            val repo = FakeAuthRepository()
+            val useCase = LoginUseCase(repo, createLoginCompletionHandler())
+
+            val result = useCase("abc_123", "password")
+
+            assertTrue(result.isFailure)
+            assertIs<LoginError.InvalidIdentifier>(result.exceptionOrNull())
+            assertEquals(null, repo.passwordIdentifier)
+        }
+    }
+
+    @Test
     fun `account register trims account and validates password`() {
         runBlocking {
             val repo = FakeAuthRepository()
             val useCase = RegisterUseCase(repo, createLoginCompletionHandler())
 
-            useCase(" alice ", "password").getOrThrow()
-            val missingPassword = useCase("alice", "")
+            useCase(" abc123 ", "password").getOrThrow()
+            val missingPassword = useCase("abc123", "")
 
-            assertEquals("alice", repo.registeredAccount)
+            assertEquals("abc123", repo.registeredAccount)
             assertEquals("password", repo.registeredAccountPassword)
             assertTrue(missingPassword.isFailure)
             assertIs<LoginError.EmptyPassword>(missingPassword.exceptionOrNull())
+        }
+    }
+
+    @Test
+    fun `account register rejects phone email special character chinese and embedded spaces`() {
+        runBlocking {
+            val invalidAccounts = listOf(
+                "13800000000",
+                "demo@example.com",
+                "abc_123",
+                "中文123",
+                "abc 123",
+                "123456"
+            )
+
+            invalidAccounts.forEach { account ->
+                val repo = FakeAuthRepository()
+                val useCase = RegisterUseCase(repo, createLoginCompletionHandler())
+
+                val result = useCase(account, "password")
+
+                assertTrue(result.isFailure, "Expected $account to fail")
+                assertIs<LoginError.InvalidAccount>(result.exceptionOrNull())
+                assertEquals(null, repo.registeredAccount)
+            }
         }
     }
 

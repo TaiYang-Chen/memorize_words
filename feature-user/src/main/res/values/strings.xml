@@ -16,8 +16,9 @@
     <string name="module_user_email_code_register">邮箱验证码注册</string>
     <string name="module_user_phone_code_register_title">手机验证码注册</string>
     <string name="module_user_email_code_register_title">邮箱验证码注册</string>
-    <string name="module_user_register_account_hint">请输入账户</string>
+    <string name="module_user_register_account_hint">账号：4-20位英文或数字，且必须包含字母</string>
     <string name="module_user_register_account_required">请输入账户</string>
+    <string name="module_user_register_account_invalid">账号只能包含英文和数字，且必须包含字母</string>
     <string name="module_user_register_loading">注册中...</string>
     <string name="module_user_register_success">注册成功</string>
     <string name="module_user_sms_code_hint">请输入验证码</string>
@@ -33,6 +34,7 @@
     <string name="module_user_login_failed">登录失败</string>
     <string name="module_user_login_sync_failed">登录成功但数据同步失败，请重试</string>
     <string name="module_user_login_identifier_required">请输入账户/邮箱/手机号</string>
+    <string name="module_user_login_identifier_invalid">请输入正确的账户/邮箱/手机号</string>
     <string name="module_user_login_phone_required">请输入手机号</string>
     <string name="module_user_login_email_required">请输入邮箱</string>
     <string name="module_user_login_password_required">请输入密码</string>

@@ -16,9 +16,19 @@ fun classifyAuthIdentifier(rawValue: String): AuthIdentifier {
     val type = when {
         value.contains('@') -> AuthIdentifierType.EMAIL
         PHONE_PATTERN.matches(value) -> AuthIdentifierType.PHONE
-        else -> AuthIdentifierType.ACCOUNT
+        AccountNamePolicy.isValid(value) -> AuthIdentifierType.ACCOUNT
+        else -> return AuthIdentifier(value = value, type = AuthIdentifierType.ACCOUNT)
     }
     return AuthIdentifier(value = value, type = type)
+}
+
+fun classifyValidAuthIdentifier(rawValue: String): AuthIdentifier? {
+    val identifier = classifyAuthIdentifier(rawValue)
+    return when (identifier.type) {
+        AuthIdentifierType.EMAIL,
+        AuthIdentifierType.PHONE -> identifier
+        AuthIdentifierType.ACCOUNT -> identifier.takeIf { AccountNamePolicy.isValid(it.value) }
+    }
 }
 
 private val PHONE_PATTERN = "^1[3-9]\\d{9}$".toRegex()

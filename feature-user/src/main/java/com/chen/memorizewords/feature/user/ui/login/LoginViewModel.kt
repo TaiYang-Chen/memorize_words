@@ -47,6 +47,9 @@ class LoginViewModel @Inject constructor(
                     is LoginError.EmptyIdentifier ->
                         showToast(resourceProvider.getString(R.string.module_user_login_identifier_required))
 
+                    is LoginError.InvalidIdentifier ->
+                        showToast(resourceProvider.getString(R.string.module_user_login_identifier_invalid))
+
                     is LoginError.EmptyPassword ->
                         showToast(resourceProvider.getString(R.string.module_user_login_password_required))
 

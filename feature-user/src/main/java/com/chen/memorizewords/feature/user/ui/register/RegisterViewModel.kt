@@ -38,6 +38,9 @@ class RegisterViewModel @Inject constructor(
                     is LoginError.EmptyAccount ->
                         showToast(resourceProvider.getString(R.string.module_user_register_account_required))
 
+                    is LoginError.InvalidAccount ->
+                        showToast(resourceProvider.getString(R.string.module_user_register_account_invalid))
+
                     is LoginError.EmptyPassword ->
                         showToast(resourceProvider.getString(R.string.module_user_login_password_required))
 

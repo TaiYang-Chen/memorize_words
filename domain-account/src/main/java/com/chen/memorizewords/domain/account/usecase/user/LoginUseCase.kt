@@ -1,5 +1,5 @@
 package com.chen.memorizewords.domain.account.usecase.user
-import com.chen.memorizewords.domain.account.model.classifyAuthIdentifier
+import com.chen.memorizewords.domain.account.model.classifyValidAuthIdentifier
 import com.chen.memorizewords.domain.account.model.user.User
 import com.chen.memorizewords.domain.account.repository.user.AuthRepository
 import javax.inject.Inject
@@ -7,6 +7,8 @@ import javax.inject.Inject
 sealed class LoginError : Throwable() {
     class EmptyIdentifier : LoginError()
     class EmptyAccount : LoginError()
+    class InvalidAccount : LoginError()
+    class InvalidIdentifier : LoginError()
     class EmptyPhone : LoginError()
     class InvalidPhone : LoginError()
     class EmptyEmail : LoginError()
@@ -29,7 +31,8 @@ class LoginUseCase @Inject constructor(
         return runCatching {
             if (identifier.isBlank()) throw LoginError.EmptyIdentifier()
             if (password.isBlank()) throw LoginError.EmptyPassword()
-            val authIdentifier = classifyAuthIdentifier(identifier)
+            val authIdentifier = classifyValidAuthIdentifier(identifier)
+                ?: throw LoginError.InvalidIdentifier()
             val loginResult = authRepository.loginByPassword(
                 identifier = authIdentifier.value,
                 identifierType = authIdentifier.type,
