@@ -20,7 +20,7 @@ import com.chen.memorizewords.domain.word.model.word.WordRoot
 @Composable
 fun WordEtymologyCard(roots: List<WordRoot>) {
     Column(
-        modifier = Modifier.padding(24.dp)
+        modifier = Modifier.padding(WordEtymologyCardDimensions.containerPadding)
     ) {
         roots.forEachIndexed { index, root ->
             EtymologyItem(
@@ -28,7 +28,7 @@ fun WordEtymologyCard(roots: List<WordRoot>) {
                 explanation = root.coreMeaning
             )
             if (index < roots.size - 1) {
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(WordEtymologyCardDimensions.itemSpacing))
             }
         }
     }
@@ -44,22 +44,31 @@ fun EtymologyItem(
     ) {
         Text(
             text = prefix,
-            fontSize = 16.sp,
+            fontSize = WordEtymologyCardDimensions.prefixTextSize,
             fontWeight = FontWeight.Bold,
             color = Color.Black,
-            modifier = Modifier.width(60.dp)
+            modifier = Modifier.width(WordEtymologyCardDimensions.prefixWidth)
         )
 
-        Spacer(modifier = Modifier.width(12.dp))
+        Spacer(modifier = Modifier.width(WordEtymologyCardDimensions.contentSpacing))
 
         Column {
             Text(
                 text = explanation,
-                fontSize = 14.sp,
+                fontSize = WordEtymologyCardDimensions.explanationTextSize,
                 color = Color.Black
             )
         }
     }
+}
+
+private object WordEtymologyCardDimensions {
+    val containerPadding = 24.dp
+    val itemSpacing = 12.dp
+    val prefixWidth = 60.dp
+    val contentSpacing = 12.dp
+    val prefixTextSize = 16.sp
+    val explanationTextSize = 14.sp
 }
 
 @Preview(showBackground = true, showSystemUi = false)

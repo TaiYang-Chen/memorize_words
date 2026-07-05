@@ -150,14 +150,15 @@ private fun WordExamPracticeScreen(
             )
 
             if (state.isLoading && state.items.isEmpty()) {
-                LoadingState()
+                LoadingState(dimensions = dimensions)
                 return@Column
             }
 
             if (state.errorMessage != null && state.items.isEmpty()) {
                 ErrorState(
                     message = state.errorMessage,
-                    onRetry = onRetry
+                    onRetry = onRetry,
+                    dimensions = dimensions
                 )
                 return@Column
             }
@@ -233,7 +234,7 @@ private fun HeaderBar(
     dimensions: ExamDimensions
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
-    Surface(shadowElevation = 2.dp) {
+    Surface(shadowElevation = dimensions.headerElevation) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -263,7 +264,10 @@ private fun HeaderBar(
                         .width(dimensions.headerTitleSideInset)
                         .height(dimensions.headerIconTouch),
                     onClick = onBack,
-                    contentPadding = PaddingValues(horizontal = 0.dp, vertical = 0.dp)
+                    contentPadding = PaddingValues(
+                        horizontal = dimensions.zero,
+                        vertical = dimensions.zero
+                    )
                 ) {
                     Text(
                         text = "\u8fd4\u56de",
@@ -312,14 +316,14 @@ private fun HeaderBar(
 }
 
 @Composable
-private fun LoadingState() {
+private fun LoadingState(dimensions: ExamDimensions) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             CircularProgressIndicator()
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(dimensions.loadingMessageGap))
             Text(text = "\u6b63\u5728\u52a0\u8f7d\u771f\u9898...")
         }
     }
@@ -328,7 +332,8 @@ private fun LoadingState() {
 @Composable
 private fun ErrorState(
     message: String,
-    onRetry: () -> Unit
+    onRetry: () -> Unit,
+    dimensions: ExamDimensions
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -336,7 +341,7 @@ private fun ErrorState(
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(dimensions.errorActionGap)
         ) {
             Text(
                 text = message,
@@ -438,7 +443,7 @@ private fun FilterPill(
 ) {
     Surface(
         modifier = Modifier.clickable(onClick = onClick),
-        shape = RoundedCornerShape(999.dp),
+        shape = RoundedCornerShape(dimensions.pillCorner),
         color = if (selected) Color(0xFFDCE4EC) else Color(0xFFF1F4F7)
     ) {
         Column(
@@ -497,7 +502,7 @@ private fun InlineErrorBanner(
                 modifier = Modifier.weight(1f),
                 color = MaterialTheme.colorScheme.onErrorContainer
             )
-            Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.width(dimensions.inlineActionGap))
             TextButton(onClick = onRetry) {
                 Text(text = "\u91cd\u8bd5")
             }
@@ -685,7 +690,7 @@ private fun ItemHeader(
                 onClick = onToggleFavorite,
                 contentPadding = PaddingValues(
                     horizontal = dimensions.statusHorizontalPadding,
-                    vertical = 0.dp
+                    vertical = dimensions.zero
                 )
             ) {
                 Text(
@@ -710,7 +715,7 @@ private fun StatusTag(
 ) {
     Box(
         modifier = Modifier
-            .background(containerColor, RoundedCornerShape(999.dp))
+            .background(containerColor, RoundedCornerShape(dimensions.pillCorner))
             .padding(
                 horizontal = dimensions.statusHorizontalPadding,
                 vertical = dimensions.statusVerticalPadding
@@ -939,7 +944,7 @@ private fun ChoiceRow(
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, borderColor, RoundedCornerShape(dimensions.blockCorner))
+            .border(dimensions.choiceBorderWidth, borderColor, RoundedCornerShape(dimensions.blockCorner))
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(dimensions.blockCorner),
         color = backgroundColor
@@ -1000,6 +1005,7 @@ private fun rememberExamDimensions(): ExamDimensions {
         headerTitleSize = dimensionResourceSp(R.dimen.feature_learning_exam_header_title_size),
         headerIconTouch = dimensionResourceDp(R.dimen.feature_learning_exam_header_icon_touch),
         headerIconSize = dimensionResourceDp(R.dimen.feature_learning_exam_header_icon_size),
+        headerElevation = 2.dp,
         filterBlockSpacing = dimensionResourceDp(R.dimen.feature_learning_exam_filter_block_spacing),
         categoryGap = dimensionResourceDp(R.dimen.feature_learning_exam_category_gap),
         categoryTextSize = dimensionResourceSp(R.dimen.feature_learning_exam_category_text_size),
@@ -1007,6 +1013,7 @@ private fun rememberExamDimensions(): ExamDimensions {
         pillHorizontalPadding = dimensionResourceDp(R.dimen.feature_learning_exam_pill_horizontal_padding),
         pillVerticalPadding = dimensionResourceDp(R.dimen.feature_learning_exam_pill_vertical_padding),
         pillTextSize = dimensionResourceSp(R.dimen.feature_learning_exam_pill_text_size),
+        pillCorner = 999.dp,
         cardInnerPadding = dimensionResourceDp(R.dimen.feature_learning_exam_card_inner_padding),
         cardSectionGap = dimensionResourceDp(R.dimen.feature_learning_exam_card_section_gap),
         blockPadding = dimensionResourceDp(R.dimen.feature_learning_exam_block_padding),
@@ -1019,13 +1026,18 @@ private fun rememberExamDimensions(): ExamDimensions {
         statusTextSize = dimensionResourceSp(R.dimen.feature_learning_exam_status_text_size),
         choicePadding = dimensionResourceDp(R.dimen.feature_learning_exam_choice_padding),
         choiceGap = dimensionResourceDp(R.dimen.feature_learning_exam_choice_gap),
+        choiceBorderWidth = 1.dp,
         clozeGap = dimensionResourceDp(R.dimen.feature_learning_exam_cloze_gap),
         matchingColumnGap = dimensionResourceDp(R.dimen.feature_learning_exam_matching_column_gap),
         matchingStackBreakpoint = dimensionResourceDp(R.dimen.feature_learning_exam_matching_stack_breakpoint),
         translationMinLines = androidx.compose.ui.res.integerResource(
             id = R.integer.feature_learning_exam_translation_min_lines
         ),
-        answerGap = dimensionResourceDp(R.dimen.feature_learning_exam_answer_gap)
+        answerGap = dimensionResourceDp(R.dimen.feature_learning_exam_answer_gap),
+        loadingMessageGap = 12.dp,
+        errorActionGap = 12.dp,
+        inlineActionGap = 12.dp,
+        zero = 0.dp
     )
 }
 
@@ -1051,6 +1063,7 @@ private data class ExamDimensions(
     val headerTitleSize: TextUnit,
     val headerIconTouch: Dp,
     val headerIconSize: Dp,
+    val headerElevation: Dp,
     val filterBlockSpacing: Dp,
     val categoryGap: Dp,
     val categoryTextSize: TextUnit,
@@ -1058,6 +1071,7 @@ private data class ExamDimensions(
     val pillHorizontalPadding: Dp,
     val pillVerticalPadding: Dp,
     val pillTextSize: TextUnit,
+    val pillCorner: Dp,
     val cardInnerPadding: Dp,
     val cardSectionGap: Dp,
     val blockPadding: Dp,
@@ -1070,11 +1084,16 @@ private data class ExamDimensions(
     val statusTextSize: TextUnit,
     val choicePadding: Dp,
     val choiceGap: Dp,
+    val choiceBorderWidth: Dp,
     val clozeGap: Dp,
     val matchingColumnGap: Dp,
     val matchingStackBreakpoint: Dp,
     val translationMinLines: Int,
-    val answerGap: Dp
+    val answerGap: Dp,
+    val loadingMessageGap: Dp,
+    val errorActionGap: Dp,
+    val inlineActionGap: Dp,
+    val zero: Dp
 )
 
 private fun buildAnswerText(item: com.chen.memorizewords.domain.practice.model.WordExamItem): String {

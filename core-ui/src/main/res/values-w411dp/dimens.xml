@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="core_ui_space_16">20dp</dimen>
+    <dimen name="core_ui_space_20">24dp</dimen>
+    <dimen name="core_ui_space_24">28dp</dimen>
+    <dimen name="page_margin">20dp</dimen>
+</resources>

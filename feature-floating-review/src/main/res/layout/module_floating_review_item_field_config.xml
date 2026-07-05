@@ -3,55 +3,55 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp"
+    android:layout_marginBottom="@dimen/core_ui_dp_10"
     android:background="@drawable/module_floating_review_bg_field_item"
     android:gravity="center_vertical"
-    android:minHeight="64dp"
+    android:minHeight="@dimen/core_ui_dp_64"
     android:orientation="horizontal"
-    android:paddingStart="14dp"
-    android:paddingTop="10dp"
-    android:paddingEnd="14dp"
-    android:paddingBottom="10dp">
+    android:paddingStart="@dimen/core_ui_dp_14"
+    android:paddingTop="@dimen/core_ui_dp_10"
+    android:paddingEnd="@dimen/core_ui_dp_14"
+    android:paddingBottom="@dimen/core_ui_dp_10">
 
     <TextView
         android:id="@+id/tvDragHandle"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="@dimen/core_ui_dp_20"
+        android:layout_height="@dimen/core_ui_dp_20"
         android:gravity="center"
         android:text="⋮⋮"
         android:textColor="#A8B3C0"
-        android:textSize="13sp" />
+        android:textSize="@dimen/core_ui_text_13" />
 
     <TextView
         android:id="@+id/tvFieldLabel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="@dimen/core_ui_dp_12"
         android:layout_weight="1"
         android:textColor="#4B5563"
-        android:textSize="15sp" />
+        android:textSize="@dimen/core_ui_text_15" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/module_floating_review_bg_stepper_capsule"
         android:gravity="center_vertical"
-        android:minHeight="30dp"
+        android:minHeight="@dimen/core_ui_dp_30"
         android:orientation="horizontal"
-        android:paddingStart="4dp"
-        android:paddingTop="3dp"
-        android:paddingEnd="4dp"
-        android:paddingBottom="3dp">
+        android:paddingStart="@dimen/core_ui_dp_4"
+        android:paddingTop="@dimen/core_ui_dp_3"
+        android:paddingEnd="@dimen/core_ui_dp_4"
+        android:paddingBottom="@dimen/core_ui_dp_3">
 
         <TextView
             android:id="@+id/btnSizeMinus"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/core_ui_dp_24"
+            android:layout_height="@dimen/core_ui_dp_24"
             android:background="@android:color/transparent"
             android:gravity="center"
             android:text="-"
             android:textColor="#5B6473"
-            android:textSize="15sp"
+            android:textSize="@dimen/core_ui_text_15"
             android:textStyle="bold" />
 
         <TextView
@@ -59,20 +59,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:minWidth="58dp"
+            android:minWidth="@dimen/core_ui_dp_58"
             android:textColor="#0F172A"
-            android:textSize="12sp"
+            android:textSize="@dimen/core_ui_text_12"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/btnSizePlus"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/core_ui_dp_24"
+            android:layout_height="@dimen/core_ui_dp_24"
             android:background="@android:color/transparent"
             android:gravity="center"
             android:text="+"
             android:textColor="#5B6473"
-            android:textSize="14sp"
+            android:textSize="@dimen/core_ui_text_14"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -80,7 +80,7 @@
         android:id="@+id/switchEnable"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="@dimen/core_ui_dp_12"
         android:minWidth="0dp"
         android:minHeight="0dp"
         android:scaleX="0.82"

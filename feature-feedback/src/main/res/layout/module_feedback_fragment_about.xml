@@ -167,10 +167,10 @@
                             android:id="@+id/tvMissionTitle"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
+                            android:layout_marginStart="@dimen/core_ui_dp_16"
                             android:text="@string/module_feedback_mission_title"
                             android:textColor="@color/module_feedback_about_text_primary"
-                            android:textSize="16sp"
+                            android:textSize="@dimen/core_ui_text_16"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="@id/missionBadge"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -181,7 +181,7 @@
                             android:id="@+id/tvMission"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="22dp"
+                            android:layout_marginTop="@dimen/core_ui_dp_22"
                             android:lineSpacingExtra="@dimen/module_feedback_about_body_line_spacing"
                             android:textColor="@color/module_feedback_about_text_secondary"
                             android:textSize="@dimen/module_feedback_about_body_size"
@@ -232,7 +232,7 @@
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="18dp"
+                                android:layout_marginStart="@dimen/core_ui_dp_18"
                                 android:layout_weight="1"
                                 android:maxLines="1"
                                 android:text="@string/module_feedback_check_update"
@@ -251,14 +251,14 @@
                             <ImageView
                                 android:layout_width="@dimen/module_feedback_about_menu_chevron_size"
                                 android:layout_height="@dimen/module_feedback_about_menu_chevron_size"
-                                android:layout_marginStart="10dp"
+                                android:layout_marginStart="@dimen/core_ui_dp_10"
                                 android:contentDescription="@null"
                                 android:src="@drawable/module_feedback_ic_about_chevron" />
                         </LinearLayout>
 
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="1dp"
+                            android:layout_height="@dimen/core_ui_dp_1"
                             android:background="@color/module_feedback_about_divider" />
 
                         <LinearLayout
@@ -282,7 +282,7 @@
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="18dp"
+                                android:layout_marginStart="@dimen/core_ui_dp_18"
                                 android:layout_weight="1"
                                 android:maxLines="1"
                                 android:text="@string/module_feedback_rate_us"
@@ -298,7 +298,7 @@
 
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="1dp"
+                            android:layout_height="@dimen/core_ui_dp_1"
                             android:background="@color/module_feedback_about_divider" />
 
                         <LinearLayout
@@ -322,7 +322,7 @@
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="18dp"
+                                android:layout_marginStart="@dimen/core_ui_dp_18"
                                 android:layout_weight="1"
                                 android:maxLines="1"
                                 android:text="@string/module_feedback_official_website"
@@ -338,7 +338,7 @@
 
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="1dp"
+                            android:layout_height="@dimen/core_ui_dp_1"
                             android:background="@color/module_feedback_about_divider" />
 
                         <LinearLayout
@@ -362,7 +362,7 @@
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="18dp"
+                                android:layout_marginStart="@dimen/core_ui_dp_18"
                                 android:layout_weight="1"
                                 android:maxLines="1"
                                 android:text="@string/module_feedback_terms"
@@ -378,7 +378,7 @@
 
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="1dp"
+                            android:layout_height="@dimen/core_ui_dp_1"
                             android:background="@color/module_feedback_about_divider" />
 
                         <LinearLayout
@@ -402,7 +402,7 @@
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="18dp"
+                                android:layout_marginStart="@dimen/core_ui_dp_18"
                                 android:layout_weight="1"
                                 android:maxLines="1"
                                 android:text="@string/module_feedback_privacy"
@@ -429,7 +429,7 @@
                     android:textSize="@dimen/module_feedback_about_footer_size"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginBottom="@dimen/core_ui_dp_15"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/cardMenu" />
             </androidx.constraintlayout.widget.ConstraintLayout>

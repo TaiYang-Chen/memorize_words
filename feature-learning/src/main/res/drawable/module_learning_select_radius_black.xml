@@ -3,7 +3,7 @@
     <!-- 按住（按压）时的状态 -->
     <item android:state_pressed="true">
         <shape>
-            <corners android:radius="32dp" />
+            <corners android:radius="@dimen/core_ui_dp_32" />
             <solid android:color="#000000" />
         </shape>
     </item>
@@ -11,7 +11,7 @@
     <!-- 默认（不按住/正常）时的状态 -->
     <item>
         <shape>
-            <corners android:radius="32dp" />
+            <corners android:radius="@dimen/core_ui_dp_32" />
             <solid android:color="#0f172a" />
         </shape>
     </item>

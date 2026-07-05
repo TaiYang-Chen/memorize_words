@@ -6,20 +6,20 @@
         android:id="@+id/optionCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="16dp"
+        app:cardCornerRadius="@dimen/core_ui_dp_16"
         app:cardElevation="0dp"
-        app:strokeWidth="1dp">
+        app:strokeWidth="@dimen/core_ui_dp_1">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:minHeight="56dp"
+            android:minHeight="@dimen/core_ui_dp_56"
             android:orientation="horizontal"
-            android:paddingStart="16dp"
-            android:paddingTop="14dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="14dp">
+            android:paddingStart="@dimen/core_ui_dp_16"
+            android:paddingTop="@dimen/core_ui_dp_14"
+            android:paddingEnd="@dimen/core_ui_dp_16"
+            android:paddingBottom="@dimen/core_ui_dp_14">
 
             <TextView
                 android:id="@+id/tvOrderTitle"
@@ -27,12 +27,12 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textColor="@color/feature_wordbook_study_plan_text_primary"
-                android:textSize="15sp" />
+                android:textSize="@dimen/core_ui_text_15" />
 
             <ImageView
                 android:id="@+id/ivSelected"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="@dimen/core_ui_dp_20"
+                android:layout_height="@dimen/core_ui_dp_20"
                 android:contentDescription="@null"
                 android:src="@drawable/module_wordbook_ic_check_circle"
                 android:visibility="gone" />

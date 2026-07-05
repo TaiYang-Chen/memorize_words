@@ -26,10 +26,10 @@
 
         <ImageView
             android:id="@+id/ivBack"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="18dp"
+            android:layout_width="@dimen/core_ui_dp_22"
+            android:layout_height="@dimen/core_ui_dp_22"
+            android:layout_marginStart="@dimen/core_ui_dp_16"
+            android:layout_marginTop="@dimen/core_ui_dp_18"
             android:onClick="@{() -> viewModel.back()}"
             android:src="@drawable/ic_arrow_back"
             app:layout_constraintStart_toStartOf="parent"

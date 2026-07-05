@@ -13,8 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
+        android:paddingStart="@dimen/core_ui_dp_16"
+        android:paddingEnd="@dimen/core_ui_dp_16">
 
         <TextView
             android:layout_width="match_parent"
@@ -24,7 +24,7 @@
             android:enabled="@{viewModel.learningButtonEnabled}"
             android:gravity="center"
             android:onClick="@{() -> viewModel.onStartLearningClick()}"
-            android:padding="16dp"
+            android:padding="@dimen/core_ui_dp_16"
             android:stateListAnimator="@animator/btn_scale_animator"
             android:text="@{viewModel.learnButtonText}"
             android:textColor="#fff"
@@ -33,19 +33,19 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="@dimen/core_ui_dp_24"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="@dimen/core_ui_dp_8"
                 android:layout_weight="1"
                 android:background="@drawable/module_home_select_border_gray"
                 android:gravity="center"
                 android:onClick="@{() -> viewModel.toLearningReviewActivity()}"
                 android:orientation="horizontal"
-                android:padding="12dp"
+                android:padding="@dimen/core_ui_dp_12"
                 android:stateListAnimator="@animator/module_learning_btn_scale_animator">
 
                 <ImageView
@@ -56,7 +56,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="@dimen/core_ui_dp_8"
                     android:text="&#x590D;&#x4E60;&#x5355;&#x8BCD;"
                     android:textColor="#0f172a"
                     android:textStyle="bold" />
@@ -66,13 +66,13 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="@dimen/core_ui_dp_8"
                 android:layout_weight="1"
                 android:background="@drawable/module_home_select_border_gray"
                 android:gravity="center"
                 android:onClick="@{() -> viewModel.toWordBookActivity()}"
                 android:orientation="horizontal"
-                android:padding="12dp"
+                android:padding="@dimen/core_ui_dp_12"
                 android:stateListAnimator="@animator/module_learning_btn_scale_animator">
 
                 <ImageView
@@ -83,7 +83,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="@dimen/core_ui_dp_8"
                     android:text="&#x4FEE;&#x6539;&#x8BA1;&#x5212;"
                     android:textColor="#0f172a"
                     android:textStyle="bold" />

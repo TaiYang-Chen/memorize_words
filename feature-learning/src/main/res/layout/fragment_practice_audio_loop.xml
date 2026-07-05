@@ -26,7 +26,7 @@
                 android:layout_height="@dimen/title_icon_touch_size"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/feature_learning_audio_loop_title"
-                android:padding="7dp"
+                android:padding="@dimen/core_ui_dp_7"
                 android:src="@drawable/ic_arrow_back"
                 app:tint="@color/feature_learning_audio_loop_text_primary" />
 
@@ -34,10 +34,10 @@
                 android:id="@+id/tv_progress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
+                android:layout_marginStart="@dimen/core_ui_dp_6"
                 android:text="0/0"
                 android:textColor="@color/feature_learning_audio_loop_text_primary"
-                android:textSize="15sp"
+                android:textSize="@dimen/core_ui_text_15"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -60,8 +60,8 @@
             android:id="@+id/layout_bottom_panel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:layout_marginEnd="18dp"
+            android:layout_marginStart="@dimen/core_ui_dp_18"
+            android:layout_marginEnd="@dimen/core_ui_dp_18"
             android:gravity="center_horizontal"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -73,84 +73,84 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/feature_learning_audio_loop_text_primary"
-                android:textSize="14sp"
+                android:textSize="@dimen/core_ui_text_14"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv_status_detail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="@dimen/core_ui_dp_6"
                 android:textColor="@color/feature_learning_audio_loop_text_secondary"
-                android:textSize="13sp" />
+                android:textSize="@dimen/core_ui_text_13" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginTop="@dimen/core_ui_dp_14"
+                android:layout_marginBottom="@dimen/core_ui_dp_16"
                 android:gravity="center"
                 android:orientation="horizontal">
 
                 <ImageButton
                     android:id="@+id/btn_playlist"
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
+                    android:layout_width="@dimen/core_ui_dp_44"
+                    android:layout_height="@dimen/core_ui_dp_44"
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/feature_learning_audio_loop_action_playlist"
-                    android:padding="8dp"
+                    android:padding="@dimen/core_ui_dp_8"
                     android:src="@drawable/feature_learning_ic_audio_loop_playlist"
                     app:tint="@color/feature_learning_audio_loop_text_primary" />
 
                 <ImageButton
                     android:id="@+id/btn_previous"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginStart="10dp"
+                    android:layout_width="@dimen/core_ui_dp_48"
+                    android:layout_height="@dimen/core_ui_dp_48"
+                    android:layout_marginStart="@dimen/core_ui_dp_10"
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/feature_learning_audio_loop_action_previous"
-                    android:padding="10dp"
+                    android:padding="@dimen/core_ui_dp_10"
                     android:src="@drawable/feature_learning_ic_audio_loop_previous"
                     app:tint="@color/feature_learning_audio_loop_text_primary" />
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_play_pause"
-                    android:layout_width="76dp"
-                    android:layout_height="76dp"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginEnd="12dp"
+                    android:layout_width="@dimen/core_ui_dp_76"
+                    android:layout_height="@dimen/core_ui_dp_76"
+                    android:layout_marginStart="@dimen/core_ui_dp_12"
+                    android:layout_marginEnd="@dimen/core_ui_dp_12"
                     app:cardBackgroundColor="@color/feature_learning_audio_loop_play_button"
-                    app:cardCornerRadius="38dp"
-                    app:cardElevation="6dp">
+                    app:cardCornerRadius="@dimen/core_ui_dp_38"
+                    app:cardElevation="@dimen/core_ui_dp_6">
 
                     <ImageView
                         android:id="@+id/iv_play_pause"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:contentDescription="@string/feature_learning_audio_loop_action_toggle"
-                        android:padding="20dp"
+                        android:padding="@dimen/core_ui_dp_20"
                         android:src="@drawable/feature_learning_ic_play"
                         app:tint="@android:color/white" />
                 </com.google.android.material.card.MaterialCardView>
 
                 <ImageButton
                     android:id="@+id/btn_next"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="@dimen/core_ui_dp_48"
+                    android:layout_height="@dimen/core_ui_dp_48"
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/feature_learning_audio_loop_action_next"
-                    android:padding="10dp"
+                    android:padding="@dimen/core_ui_dp_10"
                     android:src="@drawable/feature_learning_ic_audio_loop_next"
                     app:tint="@color/feature_learning_audio_loop_text_primary" />
 
                 <ImageButton
                     android:id="@+id/btn_settings"
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    android:layout_marginStart="10dp"
+                    android:layout_width="@dimen/core_ui_dp_44"
+                    android:layout_height="@dimen/core_ui_dp_44"
+                    android:layout_marginStart="@dimen/core_ui_dp_10"
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/feature_learning_audio_loop_action_settings"
-                    android:padding="8dp"
+                    android:padding="@dimen/core_ui_dp_8"
                     android:src="@drawable/module_learning_ic_settings"
                     app:tint="@color/feature_learning_audio_loop_text_primary" />
             </LinearLayout>
@@ -162,10 +162,10 @@
             android:layout_height="0dp"
             android:clipToPadding="false"
             android:fillViewport="true"
-            android:paddingStart="24dp"
-            android:paddingTop="12dp"
-            android:paddingEnd="24dp"
-            android:paddingBottom="12dp"
+            android:paddingStart="@dimen/core_ui_dp_24"
+            android:paddingTop="@dimen/core_ui_dp_12"
+            android:paddingEnd="@dimen/core_ui_dp_24"
+            android:paddingBottom="@dimen/core_ui_dp_12"
             app:layout_constraintBottom_toTopOf="@id/layout_bottom_panel"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -176,7 +176,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
-                android:paddingTop="36dp">
+                android:paddingTop="@dimen/core_ui_dp_36">
 
                 <TextView
                     android:id="@+id/tv_word"
@@ -184,30 +184,30 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textColor="@color/feature_learning_audio_loop_text_primary"
-                    android:textSize="40sp"
+                    android:textSize="@dimen/core_ui_text_40"
                     android:textStyle="bold"
                     android:maxLines="2"
                     android:autoSizeTextType="uniform"
-                    android:autoSizeMinTextSize="26sp"
-                    android:autoSizeMaxTextSize="40sp"
-                    android:autoSizeStepGranularity="1sp" />
+                    android:autoSizeMinTextSize="@dimen/core_ui_text_26"
+                    android:autoSizeMaxTextSize="@dimen/core_ui_text_40"
+                    android:autoSizeStepGranularity="@dimen/core_ui_text_auto_size_step" />
 
                 <LinearLayout
                     android:id="@+id/layout_audio_loop_phonetic"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="@dimen/core_ui_dp_16"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <RadioGroup
                         android:id="@+id/audio_loop_language_radio_group"
-                        android:layout_width="50dp"
-                        android:layout_height="25dp"
-                        android:layout_marginEnd="8dp"
+                        android:layout_width="@dimen/core_ui_dp_50"
+                        android:layout_height="@dimen/core_ui_dp_25"
+                        android:layout_marginEnd="@dimen/core_ui_dp_8"
                         android:background="@drawable/module_learning_toggle_background"
                         android:orientation="horizontal"
-                        android:padding="2dp">
+                        android:padding="@dimen/core_ui_dp_2">
 
                         <RadioButton
                             android:id="@+id/btn_audio_loop_us"
@@ -218,10 +218,10 @@
                             android:button="@null"
                             android:checked="true"
                             android:gravity="center"
-                            android:padding="2dp"
+                            android:padding="@dimen/core_ui_dp_2"
                             android:text="@string/feature_learning_audio_loop_pronunciation_us"
                             android:textColor="@drawable/module_learning_toggle_text_selector"
-                            android:textSize="10sp" />
+                            android:textSize="@dimen/core_ui_sp_10" />
 
                         <RadioButton
                             android:id="@+id/btn_audio_loop_uk"
@@ -231,37 +231,37 @@
                             android:background="@drawable/module_learning_toggle_item_selector"
                             android:button="@null"
                             android:gravity="center"
-                            android:padding="2dp"
+                            android:padding="@dimen/core_ui_dp_2"
                             android:text="@string/feature_learning_audio_loop_pronunciation_uk"
                             android:textColor="@drawable/module_learning_toggle_text_selector"
-                            android:textSize="10sp" />
+                            android:textSize="@dimen/core_ui_sp_10" />
                     </RadioGroup>
 
                     <TextView
                         android:id="@+id/tv_phonetic_chip"
                         android:layout_width="wrap_content"
-                        android:layout_height="25dp"
+                        android:layout_height="@dimen/core_ui_dp_25"
                         android:background="@drawable/feature_learning_bg_audio_loop_chip"
                         android:gravity="center"
                         android:includeFontPadding="false"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="16dp"
+                        android:paddingStart="@dimen/core_ui_dp_16"
+                        android:paddingEnd="@dimen/core_ui_dp_16"
                         android:textColor="@color/feature_learning_audio_loop_chip_text"
-                        android:textSize="15sp" />
+                        android:textSize="@dimen/core_ui_text_15" />
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/tv_entry_status_chip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/core_ui_dp_10"
                     android:background="@drawable/feature_learning_bg_audio_loop_status_chip"
-                    android:paddingStart="14dp"
-                    android:paddingTop="6dp"
-                    android:paddingEnd="14dp"
-                    android:paddingBottom="6dp"
+                    android:paddingStart="@dimen/core_ui_dp_14"
+                    android:paddingTop="@dimen/core_ui_dp_6"
+                    android:paddingEnd="@dimen/core_ui_dp_14"
+                    android:paddingBottom="@dimen/core_ui_dp_6"
                     android:textColor="@color/feature_learning_audio_loop_status_text"
-                    android:textSize="13sp"
+                    android:textSize="@dimen/core_ui_text_13"
                     android:textStyle="bold"
                     android:visibility="gone" />
 
@@ -269,40 +269,40 @@
                     android:id="@+id/tv_supporting"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="72dp"
+                    android:layout_marginTop="@dimen/core_ui_dp_72"
                     android:gravity="center"
                     android:textColor="@color/feature_learning_audio_loop_text_secondary"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/core_ui_text_16"
                     android:maxLines="4" />
 
                 <TextView
                     android:id="@+id/tv_supporting_translation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="@dimen/core_ui_dp_12"
                     android:gravity="center"
                     android:textColor="@color/feature_learning_audio_loop_text_secondary"
-                    android:textSize="15sp" />
+                    android:textSize="@dimen/core_ui_text_15" />
 
                 <TextView
                     android:id="@+id/tv_meaning"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="22dp"
+                    android:layout_marginTop="@dimen/core_ui_dp_22"
                     android:gravity="center"
                     android:textColor="@color/feature_learning_audio_loop_text_primary"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/core_ui_text_18"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_empty_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="48dp"
+                    android:layout_marginTop="@dimen/core_ui_dp_48"
                     android:gravity="center"
                     android:text="@string/feature_learning_audio_loop_empty_title"
                     android:textColor="@color/feature_learning_audio_loop_text_primary"
-                    android:textSize="22sp"
+                    android:textSize="@dimen/core_ui_text_22"
                     android:textStyle="bold"
                     android:visibility="gone" />
 
@@ -310,11 +310,11 @@
                     android:id="@+id/tv_empty_hint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
+                    android:layout_marginTop="@dimen/core_ui_dp_14"
                     android:gravity="center"
                     android:text="@string/feature_learning_audio_loop_empty_hint"
                     android:textColor="@color/feature_learning_audio_loop_text_secondary"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/core_ui_text_15"
                     android:visibility="gone" />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>

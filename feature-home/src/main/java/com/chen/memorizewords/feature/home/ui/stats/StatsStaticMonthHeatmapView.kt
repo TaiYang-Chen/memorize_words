@@ -8,6 +8,7 @@ import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import com.chen.memorizewords.core.ui.ext.dpToPx
 import kotlin.math.ceil
 import kotlin.math.floor
 
@@ -20,12 +21,12 @@ class StatsStaticMonthHeatmapView @JvmOverloads constructor(
     private val selectedStrokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = 0xFF071436.toInt()
         style = Paint.Style.STROKE
-        strokeWidth = dp(1.5f)
+        strokeWidth = 1.5f.dpToPx(context)
     }
     private val dayTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         textAlign = Paint.Align.CENTER
         typeface = Typeface.DEFAULT_BOLD
-        textSize = dp(9f)
+        textSize = 9f.dpToPx(context)
     }
     private val cellRect = RectF()
     private var cells: List<CalendarDayCellUi> = emptyList()
@@ -92,11 +93,11 @@ class StatsStaticMonthHeatmapView @JvmOverloads constructor(
         val columnWidth = width / COLUMN_COUNT.toFloat()
         val rowHeight = height / visibleRowCount.toFloat()
         val cellSize = minOf(
-            dp(CELL_SIZE_DP),
+            (CELL_SIZE_DP).dpToPx(context),
             columnWidth * 0.74f,
             rowHeight * 0.96f
-        ).coerceAtLeast(dp(8f))
-        val radius = dp(4f)
+        ).coerceAtLeast(8f.dpToPx(context))
+        val radius = 4f.dpToPx(context)
         val visibleCellCount = visibleRowCount * COLUMN_COUNT
 
         cells.take(visibleCellCount).forEachIndexed { dayIndex, cell ->
@@ -149,10 +150,6 @@ class StatsStaticMonthHeatmapView @JvmOverloads constructor(
             CalendarStudyStatus.CHECKED_IN,
             CalendarStudyStatus.STUDIED -> 0xFF60708A.toInt()
         }
-    }
-
-    private fun dp(value: Float): Float {
-        return value * resources.displayMetrics.density
     }
 
     companion object {

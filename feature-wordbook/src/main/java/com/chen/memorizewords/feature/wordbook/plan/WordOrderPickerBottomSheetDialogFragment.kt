@@ -6,7 +6,9 @@ import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
+import com.chen.memorizewords.core.ui.R as CoreUiR
 import com.chen.memorizewords.core.ui.bottomsheetdialogfragment.BaseBottomSheetDialogFragment
+import com.chen.memorizewords.core.ui.ext.dimenPx
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.domain.wordbook.repository.WordOrderType
 import com.chen.memorizewords.feature.wordbook.R
@@ -74,7 +76,7 @@ class WordOrderPickerBottomSheetDialogFragment :
                 ViewGroup.LayoutParams.WRAP_CONTENT
             ).apply {
                 if (index > 0) {
-                    topMargin = (12 * context.resources.displayMetrics.density).toInt()
+                    topMargin = context.dimenPx(CoreUiR.dimen.core_ui_dp_12)
                 }
             }
             databind.orderListContainer.addView(itemBinding.root, layoutParams)

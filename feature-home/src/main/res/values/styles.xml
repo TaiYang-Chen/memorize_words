@@ -2,36 +2,36 @@
 <resources>
 
     <style name="BottomNavigationTheme" parent="Widget.MaterialComponents.BottomNavigationView">
-        <!-- 设置选中/未选中状态的颜色 -->
+        <!-- 璁剧疆閫変腑/鏈€変腑鐘舵€佺殑棰滆壊 -->
         <item name="itemIconTint">@color/bottom_nav_color_state</item>
         <item name="itemTextColor">@color/bottom_nav_color_state</item>
 
-        <!-- 移除点击波浪效果 -->
+        <!-- 绉婚櫎鐐瑰嚮娉㈡氮鏁堟灉 -->
         <item name="itemBackground">@android:color/transparent</item>
 
-        <!-- 设置图标大小 -->
-        <item name="itemIconSize">24dp</item>
+        <!-- 璁剧疆鍥炬爣澶у皬 -->
+        <item name="itemIconSize">@dimen/core_ui_dp_24</item>
 
-        <!-- 设置文字样式（选中时显示） -->
+        <!-- 璁剧疆鏂囧瓧鏍峰紡锛堥€変腑鏃舵樉绀猴級 -->
         <item name="itemTextAppearanceActive">@style/BottomNavTextActive</item>
     </style>
 
     <style name="BottomNavTextActive" parent="TextAppearance.AppCompat.Caption">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">@dimen/core_ui_text_12</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <style name="BottomNavTextInactive" parent="TextAppearance.AppCompat.Caption">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">@dimen/core_ui_text_12</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <style name="FeatureHomeStatsSectionTitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:layout_marginTop">@dimen/core_ui_dp_24</item>
         <item name="android:textColor">#071436</item>
-        <item name="android:textSize">19sp</item>
+        <item name="android:textSize">@dimen/core_ui_text_19</item>
         <item name="android:textStyle">bold</item>
     </style>
 
@@ -41,23 +41,23 @@
         <item name="android:layout_weight">1</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">#71809A</item>
-        <item name="android:textSize">11sp</item>
+        <item name="android:textSize">@dimen/core_ui_text_11</item>
     </style>
 
     <style name="FeatureHomeStatsLegend">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">11sp</item>
+        <item name="android:textSize">@dimen/core_ui_text_11</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="FeatureHomePracticeSectionTitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingStart">9dp</item>
+        <item name="android:paddingStart">@dimen/core_ui_dp_9</item>
         <item name="android:background">@drawable/feature_home_bg_practice_section_marker</item>
         <item name="android:textColor">#071436</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">@dimen/core_ui_text_16</item>
         <item name="android:textStyle">bold</item>
     </style>
 </resources>

@@ -17,18 +17,18 @@
             android:id="@+id/topBar"
             android:layout_width="0dp"
             android:layout_height="@dimen/title_height"
-            android:layout_marginTop="36dp"
+            android:layout_marginTop="@dimen/core_ui_dp_36"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageButton
                 android:id="@+id/btnClose"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+                android:layout_width="@dimen/core_ui_dp_36"
+                android:layout_height="@dimen/core_ui_dp_36"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/practice_shadowing_done_action"
-                android:padding="8dp"
+                android:padding="@dimen/core_ui_dp_8"
                 android:src="@drawable/module_learning_close"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -39,14 +39,14 @@
                 android:id="@+id/tvHeaderTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
+                android:layout_marginStart="@dimen/core_ui_dp_12"
+                android:layout_marginEnd="@dimen/core_ui_dp_12"
                 android:ellipsize="end"
                 android:gravity="center"
                 android:maxLines="1"
                 android:text="@string/practice_shadowing_done_header"
                 android:textColor="#006C5B"
-                android:textSize="18sp"
+                android:textSize="@dimen/core_ui_text_18"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@id/btnClose"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -61,7 +61,7 @@
             android:layout_height="0dp"
             android:clipToPadding="false"
             android:overScrollMode="never"
-            android:paddingBottom="132dp"
+            android:paddingBottom="@dimen/core_ui_dp_132"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -71,35 +71,35 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingTop="12dp">
+                android:paddingTop="@dimen/core_ui_dp_12">
 
                 <LinearLayout
                     android:id="@+id/cardHero"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/module_learning_bg_summary_hero"
-                    android:elevation="1dp"
+                    android:elevation="@dimen/core_ui_dp_1"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
-                    android:paddingStart="20dp"
-                    android:paddingTop="22dp"
-                    android:paddingEnd="20dp"
-                    android:paddingBottom="24dp">
+                    android:paddingStart="@dimen/core_ui_dp_20"
+                    android:paddingTop="@dimen/core_ui_dp_22"
+                    android:paddingEnd="@dimen/core_ui_dp_20"
+                    android:paddingBottom="@dimen/core_ui_dp_24">
 
                     <FrameLayout
-                        android:layout_width="76dp"
-                        android:layout_height="76dp"
+                        android:layout_width="@dimen/core_ui_dp_76"
+                        android:layout_height="@dimen/core_ui_dp_76"
                         android:background="@drawable/module_learning_bg_summary_medal_outer">
 
                         <FrameLayout
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="@dimen/core_ui_dp_48"
+                            android:layout_height="@dimen/core_ui_dp_48"
                             android:layout_gravity="center"
                             android:background="@drawable/module_learning_bg_summary_medal_inner">
 
                             <ImageView
-                                android:layout_width="28dp"
-                                android:layout_height="28dp"
+                                android:layout_width="@dimen/core_ui_dp_28"
+                                android:layout_height="@dimen/core_ui_dp_28"
                                 android:layout_gravity="center"
                                 android:contentDescription="@null"
                                 android:src="@drawable/module_learning_ic_summary_medal" />
@@ -110,52 +110,52 @@
                         android:id="@+id/tvDoneTag"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="14dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_14"
                         android:background="@drawable/module_learning_bg_summary_chip"
                         android:includeFontPadding="false"
-                        android:paddingStart="14dp"
-                        android:paddingTop="6dp"
-                        android:paddingEnd="14dp"
-                        android:paddingBottom="6dp"
+                        android:paddingStart="@dimen/core_ui_dp_14"
+                        android:paddingTop="@dimen/core_ui_dp_6"
+                        android:paddingEnd="@dimen/core_ui_dp_14"
+                        android:paddingBottom="@dimen/core_ui_dp_6"
                         android:text="@string/practice_shadowing_done_tag"
                         android:textColor="#723B07"
-                        android:textSize="14sp"
+                        android:textSize="@dimen/core_ui_text_14"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tvDoneTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="14dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_14"
                         android:gravity="center"
                         android:includeFontPadding="false"
                         android:text="@string/practice_shadowing_done_title"
                         android:textColor="#07111F"
-                        android:textSize="27sp"
+                        android:textSize="@dimen/core_ui_text_27"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tvDoneSubtitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_12"
                         android:gravity="center"
-                        android:lineSpacingExtra="4dp"
+                        android:lineSpacingExtra="@dimen/core_ui_dp_4"
                         android:textColor="#2F3A35"
-                        android:textSize="14sp"
+                        android:textSize="@dimen/core_ui_text_14"
                         tools:text="这轮已经完成 20 个单词，发音节奏保持得不错。" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/cardStats"
                     android:layout_width="match_parent"
-                    android:layout_height="92dp"
-                    android:layout_marginTop="14dp"
+                    android:layout_height="@dimen/core_ui_dp_92"
+                    android:layout_marginTop="@dimen/core_ui_dp_14"
                     android:background="@drawable/module_learning_bg_summary_panel"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    android:paddingStart="14dp"
-                    android:paddingEnd="14dp">
+                    android:paddingStart="@dimen/core_ui_dp_14"
+                    android:paddingEnd="@dimen/core_ui_dp_14">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -170,24 +170,24 @@
                             android:layout_height="wrap_content"
                             android:includeFontPadding="false"
                             android:textColor="#006C5B"
-                            android:textSize="22sp"
+                            android:textSize="@dimen/core_ui_text_22"
                             android:textStyle="bold"
                             tools:text="20/20" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="@dimen/core_ui_dp_8"
                             android:includeFontPadding="false"
                             android:text="@string/practice_shadowing_done_metric_completed"
                             android:textColor="#26352F"
-                            android:textSize="13sp"
+                            android:textSize="@dimen/core_ui_text_13"
                             android:textStyle="bold" />
                     </LinearLayout>
 
                     <View
-                        android:layout_width="1dp"
-                        android:layout_height="52dp"
+                        android:layout_width="@dimen/core_ui_dp_1"
+                        android:layout_height="@dimen/core_ui_dp_52"
                         android:background="@drawable/module_learning_bg_summary_divider" />
 
                     <LinearLayout
@@ -203,24 +203,24 @@
                             android:layout_height="wrap_content"
                             android:includeFontPadding="false"
                             android:textColor="#006C5B"
-                            android:textSize="22sp"
+                            android:textSize="@dimen/core_ui_text_22"
                             android:textStyle="bold"
                             tools:text="18" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="@dimen/core_ui_dp_8"
                             android:includeFontPadding="false"
                             android:text="@string/practice_shadowing_done_metric_recordings"
                             android:textColor="#26352F"
-                            android:textSize="13sp"
+                            android:textSize="@dimen/core_ui_text_13"
                             android:textStyle="bold" />
                     </LinearLayout>
 
                     <View
-                        android:layout_width="1dp"
-                        android:layout_height="52dp"
+                        android:layout_width="@dimen/core_ui_dp_1"
+                        android:layout_height="@dimen/core_ui_dp_52"
                         android:background="@drawable/module_learning_bg_summary_divider" />
 
                     <LinearLayout
@@ -236,18 +236,18 @@
                             android:layout_height="wrap_content"
                             android:includeFontPadding="false"
                             android:textColor="#006C5B"
-                            android:textSize="22sp"
+                            android:textSize="@dimen/core_ui_text_22"
                             android:textStyle="bold"
                             tools:text="16" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="@dimen/core_ui_dp_8"
                             android:includeFontPadding="false"
                             android:text="@string/practice_shadowing_done_metric_passed"
                             android:textColor="#26352F"
-                            android:textSize="13sp"
+                            android:textSize="@dimen/core_ui_text_13"
                             android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>
@@ -256,34 +256,34 @@
                     android:id="@+id/tvDoneNote"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="@dimen/core_ui_dp_12"
                     android:background="@drawable/module_learning_bg_summary_panel"
-                    android:lineSpacingExtra="4dp"
-                    android:paddingStart="18dp"
-                    android:paddingTop="16dp"
-                    android:paddingEnd="18dp"
-                    android:paddingBottom="16dp"
+                    android:lineSpacingExtra="@dimen/core_ui_dp_4"
+                    android:paddingStart="@dimen/core_ui_dp_18"
+                    android:paddingTop="@dimen/core_ui_dp_16"
+                    android:paddingEnd="@dimen/core_ui_dp_18"
+                    android:paddingBottom="@dimen/core_ui_dp_16"
                     android:text="@string/practice_shadowing_done_note"
                     android:textColor="#26352F"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/core_ui_text_14" />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnDone"
             android:layout_width="0dp"
-            android:layout_height="52dp"
+            android:layout_height="@dimen/core_ui_dp_52"
             android:layout_marginStart="@dimen/page_margin"
             android:layout_marginEnd="@dimen/page_margin"
-            android:layout_marginBottom="28dp"
+            android:layout_marginBottom="@dimen/core_ui_dp_28"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:text="@string/practice_shadowing_done_action"
             android:textColor="@android:color/white"
-            android:textSize="16sp"
+            android:textSize="@dimen/core_ui_text_16"
             android:textStyle="bold"
             app:backgroundTint="@android:color/black"
-            app:cornerRadius="26dp"
+            app:cornerRadius="@dimen/core_ui_dp_26"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

@@ -17,7 +17,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="24dp">
+                android:padding="@dimen/core_ui_dp_24">
 
                 <ProgressBar
                     android:layout_width="wrap_content"
@@ -27,10 +27,10 @@
                     android:id="@+id/tvLoadingTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="@dimen/core_ui_dp_16"
                     android:text="@string/learning_check_in_loading_title"
                     android:textColor="#0F172A"
-                    android:textSize="22sp"
+                    android:textSize="@dimen/core_ui_text_22"
                     android:textStyle="bold"
                     tools:text="Signing in" />
 
@@ -38,10 +38,10 @@
                     android:id="@+id/tvLoadingSubtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="@dimen/core_ui_dp_8"
                     android:text="@string/learning_check_in_loading_subtitle"
                     android:textColor="#475569"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/core_ui_text_14"
                     tools:text="Please wait..." />
             </LinearLayout>
         </FrameLayout>
@@ -56,7 +56,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="@dimen/core_ui_dp_16">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -64,20 +64,20 @@
                     android:background="@drawable/module_learning_bg_done_hero"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
-                    android:padding="24dp">
+                    android:padding="@dimen/core_ui_dp_24">
 
                     <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="@dimen/core_ui_dp_40"
+                        android:layout_height="@dimen/core_ui_dp_40"
                         android:src="@drawable/module_learning_check" />
 
                     <TextView
                         android:id="@+id/tvCheckInTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_16"
                         android:textColor="#0F172A"
-                        android:textSize="22sp"
+                        android:textSize="@dimen/core_ui_text_22"
                         android:textStyle="bold"
                         tools:text="Checked in" />
 
@@ -85,23 +85,23 @@
                         android:id="@+id/tvCheckInSubtitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_8"
                         android:textColor="#475569"
-                        android:textSize="14sp"
+                        android:textSize="@dimen/core_ui_text_14"
                         tools:text="Keep going" />
 
                     <TextView
                         android:id="@+id/tvCheckInDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_12"
                         android:background="@drawable/module_learning_bg_done_chip"
-                        android:paddingStart="12dp"
-                        android:paddingTop="4dp"
-                        android:paddingEnd="12dp"
-                        android:paddingBottom="4dp"
+                        android:paddingStart="@dimen/core_ui_dp_12"
+                        android:paddingTop="@dimen/core_ui_dp_4"
+                        android:paddingEnd="@dimen/core_ui_dp_12"
+                        android:paddingBottom="@dimen/core_ui_dp_4"
                         android:textColor="#0F766E"
-                        android:textSize="12sp"
+                        android:textSize="@dimen/core_ui_text_12"
                         android:textStyle="bold"
                         tools:text="2026-03-23 checked in" />
                 </LinearLayout>
@@ -109,11 +109,11 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="@dimen/core_ui_dp_16"
                     android:background="@drawable/module_learning_bg_done_card"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    android:padding="12dp">
+                    android:padding="@dimen/core_ui_dp_12">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -121,24 +121,24 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="12dp">
+                        android:padding="@dimen/core_ui_dp_12">
 
                         <TextView
                             android:id="@+id/tvCheckInStreakValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="#0F172A"
-                            android:textSize="22sp"
+                            android:textSize="@dimen/core_ui_text_22"
                             android:textStyle="bold"
                             tools:text="7" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
+                            android:layout_marginTop="@dimen/core_ui_dp_6"
                             android:text="@string/learning_check_in_streak_label"
                             android:textColor="#64748B"
-                            android:textSize="12sp" />
+                            android:textSize="@dimen/core_ui_text_12" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -147,24 +147,24 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="12dp">
+                        android:padding="@dimen/core_ui_dp_12">
 
                         <TextView
                             android:id="@+id/tvCheckInDurationValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="#0F172A"
-                            android:textSize="22sp"
+                            android:textSize="@dimen/core_ui_text_22"
                             android:textStyle="bold"
                             tools:text="12h 30m" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
+                            android:layout_marginTop="@dimen/core_ui_dp_6"
                             android:text="@string/learning_check_in_total_duration_label"
                             android:textColor="#64748B"
-                            android:textSize="12sp" />
+                            android:textSize="@dimen/core_ui_text_12" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -173,49 +173,49 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="12dp">
+                        android:padding="@dimen/core_ui_dp_12">
 
                         <TextView
                             android:id="@+id/tvCheckInWordsValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="#0F172A"
-                            android:textSize="22sp"
+                            android:textSize="@dimen/core_ui_text_22"
                             android:textStyle="bold"
                             tools:text="268" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
+                            android:layout_marginTop="@dimen/core_ui_dp_6"
                             android:text="@string/learning_check_in_total_words_label"
                             android:textColor="#64748B"
-                            android:textSize="12sp" />
+                            android:textSize="@dimen/core_ui_text_12" />
                     </LinearLayout>
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/btnShareCheckIn"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_height="@dimen/core_ui_dp_48"
+                    android:layout_marginTop="@dimen/core_ui_dp_20"
                     android:background="@drawable/module_learning_selector_6b5b95_radius"
                     android:gravity="center"
                     android:text="@string/learning_check_in_share_button"
                     android:textColor="#FFFFFF"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/core_ui_text_14"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/btnCheckInBackHome"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_height="@dimen/core_ui_dp_48"
+                    android:layout_marginTop="@dimen/core_ui_dp_12"
                     android:background="@drawable/module_learning_selector_done_secondary"
                     android:gravity="center"
                     android:text="@string/learning_check_in_back_home"
                     android:textColor="#475569"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/core_ui_text_14"
                     android:textStyle="bold" />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>

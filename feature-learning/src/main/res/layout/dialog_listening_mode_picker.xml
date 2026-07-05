@@ -6,72 +6,72 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="10dp"
+        android:paddingStart="@dimen/core_ui_dp_10"
         android:paddingTop="0dp"
-        android:paddingEnd="10dp"
-        android:paddingBottom="10dp">
+        android:paddingEnd="@dimen/core_ui_dp_10"
+        android:paddingBottom="@dimen/core_ui_dp_10">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="10dp"
+            android:elevation="@dimen/core_ui_dp_10"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:paddingStart="16dp"
-            android:paddingTop="12dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="18dp">
+            android:paddingStart="@dimen/core_ui_dp_16"
+            android:paddingTop="@dimen/core_ui_dp_12"
+            android:paddingEnd="@dimen/core_ui_dp_16"
+            android:paddingBottom="@dimen/core_ui_dp_18">
 
             <View
-                android:layout_width="42dp"
-                android:layout_height="5dp"
+                android:layout_width="@dimen/core_ui_dp_42"
+                android:layout_height="@dimen/core_ui_dp_5"
                 android:background="@drawable/module_learning_bg_listening_mode_dialog_grabber" />
 
             <TextView
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="@dimen/core_ui_dp_14"
                 android:text="@string/practice_listening_settings_title"
                 android:textColor="#1F2937"
-                android:textSize="20sp"
+                android:textSize="@dimen/core_ui_text_20"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv_mode_section_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="@dimen/core_ui_dp_18"
                 android:text="@string/practice_listening_settings_mode_section"
                 android:textColor="#111827"
-                android:textSize="14sp"
+                android:textSize="@dimen/core_ui_text_14"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/card_meaning"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/core_ui_dp_10"
                 android:background="@drawable/module_learning_bg_listening_mode_option_normal"
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center_horizontal"
-                android:minHeight="108dp"
+                android:minHeight="@dimen/core_ui_dp_108"
                 android:orientation="vertical"
-                android:paddingStart="16dp"
-                android:paddingTop="14dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="14dp">
+                android:paddingStart="@dimen/core_ui_dp_16"
+                android:paddingTop="@dimen/core_ui_dp_14"
+                android:paddingEnd="@dimen/core_ui_dp_16"
+                android:paddingBottom="@dimen/core_ui_dp_14">
 
                 <FrameLayout
                     android:id="@+id/layout_meaning_icon"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="@dimen/core_ui_dp_40"
+                    android:layout_height="@dimen/core_ui_dp_40"
                     android:background="@drawable/module_learning_bg_listening_mode_option_icon">
 
                     <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
+                        android:layout_width="@dimen/core_ui_dp_22"
+                        android:layout_height="@dimen/core_ui_dp_22"
                         android:layout_gravity="center"
                         android:contentDescription="@null"
                         android:src="@drawable/module_learning_ic_listening_mode_meaning" />
@@ -81,47 +81,47 @@
                     android:id="@+id/tv_meaning_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="@dimen/core_ui_dp_8"
                     android:textColor="#111827"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/core_ui_text_16"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_meaning_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="@dimen/core_ui_dp_8"
                     android:gravity="center"
-                    android:lineSpacingExtra="1dp"
+                    android:lineSpacingExtra="@dimen/core_ui_dp_1"
                     android:textColor="#6B7280"
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/core_ui_text_12" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/card_spelling"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/core_ui_dp_10"
                 android:background="@drawable/module_learning_bg_listening_mode_option_normal"
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center_horizontal"
-                android:minHeight="108dp"
+                android:minHeight="@dimen/core_ui_dp_108"
                 android:orientation="vertical"
-                android:paddingStart="16dp"
-                android:paddingTop="14dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="14dp">
+                android:paddingStart="@dimen/core_ui_dp_16"
+                android:paddingTop="@dimen/core_ui_dp_14"
+                android:paddingEnd="@dimen/core_ui_dp_16"
+                android:paddingBottom="@dimen/core_ui_dp_14">
 
                 <FrameLayout
                     android:id="@+id/layout_spelling_icon"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="@dimen/core_ui_dp_40"
+                    android:layout_height="@dimen/core_ui_dp_40"
                     android:background="@drawable/module_learning_bg_listening_mode_option_icon">
 
                     <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
+                        android:layout_width="@dimen/core_ui_dp_22"
+                        android:layout_height="@dimen/core_ui_dp_22"
                         android:layout_gravity="center"
                         android:contentDescription="@null"
                         android:src="@drawable/module_learning_ic_listening_mode_spelling" />
@@ -131,84 +131,84 @@
                     android:id="@+id/tv_spelling_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="@dimen/core_ui_dp_8"
                     android:textColor="#111827"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/core_ui_text_16"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_spelling_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="@dimen/core_ui_dp_8"
                     android:gravity="center"
-                    android:lineSpacingExtra="1dp"
+                    android:lineSpacingExtra="@dimen/core_ui_dp_1"
                     android:textColor="#6B7280"
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/core_ui_text_12" />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_answer_area_position_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="@dimen/core_ui_dp_18"
                 android:text="@string/practice_listening_answer_area_position_title"
                 android:textColor="#111827"
-                android:textSize="14sp"
+                android:textSize="@dimen/core_ui_text_14"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv_answer_area_position_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="@dimen/core_ui_dp_4"
                 android:text="@string/practice_listening_answer_area_position_desc"
                 android:textColor="#6B7280"
-                android:textSize="12sp" />
+                android:textSize="@dimen/core_ui_text_12" />
 
             <LinearLayout
                 android:id="@+id/layout_answer_area_position"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/core_ui_dp_10"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/btn_answer_position_top"
                     android:layout_width="0dp"
-                    android:layout_height="42dp"
+                    android:layout_height="@dimen/core_ui_dp_42"
                     android:layout_weight="1"
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="center"
                     android:text="@string/practice_listening_answer_area_position_top"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/core_ui_text_14"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/btn_answer_position_middle"
                     android:layout_width="0dp"
-                    android:layout_height="42dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_height="@dimen/core_ui_dp_42"
+                    android:layout_marginStart="@dimen/core_ui_dp_8"
                     android:layout_weight="1"
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="center"
                     android:text="@string/practice_listening_answer_area_position_middle"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/core_ui_text_14"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/btn_answer_position_bottom"
                     android:layout_width="0dp"
-                    android:layout_height="42dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_height="@dimen/core_ui_dp_42"
+                    android:layout_marginStart="@dimen/core_ui_dp_8"
                     android:layout_weight="1"
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="center"
                     android:text="@string/practice_listening_answer_area_position_bottom"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/core_ui_text_14"
                     android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>

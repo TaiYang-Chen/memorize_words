@@ -28,6 +28,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
+import com.chen.memorizewords.core.ui.ext.dpToPx
 import coil.load
 import com.chen.memorizewords.core.navigation.FloatingWordActions
 import com.chen.memorizewords.domain.account.model.membership.MembershipFeature
@@ -421,7 +422,7 @@ class FloatingWordService : Service() {
     }
 
     private fun bindBallDrag() {
-        val threshold = dp(6).toFloat()
+        val threshold = 6.dpToPx(this).toFloat()
         ballView?.setOnTouchListener { _, event ->
             val params = ballParams ?: return@setOnTouchListener false
             val gestureDetector = ballGestureDetector
@@ -765,7 +766,7 @@ class FloatingWordService : Service() {
                 bold = false
             ).apply {
                 includeFontPadding = false
-                setLineSpacing(dp(10).toFloat(), 1f)
+                setLineSpacing(10.dpToPx(this@FloatingWordService).toFloat(), 1f)
             }
         )
     }
@@ -805,7 +806,7 @@ class FloatingWordService : Service() {
                             LinearLayout.LayoutParams.MATCH_PARENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT
                         )
-                    layoutParams.topMargin = if (container.childCount > 0) dp(8) else 0
+                    layoutParams.topMargin = if (container.childCount > 0) 8.dpToPx(this) else 0
                     it.layoutParams = layoutParams
                     container.addView(it)
                 }
@@ -833,7 +834,7 @@ class FloatingWordService : Service() {
         if (url.isNullOrBlank()) {
             return buildTextView(EMPTY_PLACEHOLDER, 12f, 0xFF64748B.toInt(), false)
         }
-        val height = dp(sizeDp.coerceAtLeast(80))
+        val height = (sizeDp.coerceAtLeast(80)).dpToPx(this)
         return ImageView(this).apply {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -1063,7 +1064,7 @@ class FloatingWordService : Service() {
                 edgeMarginPx = resources.getDimensionPixelSize(
                     R.dimen.module_floating_review_card_edge_margin
                 ),
-                clearancePx = dp(currentSettings.cardGapDp),
+                clearancePx = (currentSettings.cardGapDp).dpToPx(this),
                 tailWidthPx = resources.getDimensionPixelSize(R.dimen.module_floating_review_tail_width),
                 tailSafeInsetPx = resources.getDimensionPixelSize(
                     R.dimen.module_floating_review_tail_safe_inset
@@ -1251,8 +1252,6 @@ class FloatingWordService : Service() {
         return resources.getDimensionPixelSize(resourceId)
     }
 
-    private fun dp(value: Int): Int = (value * resources.displayMetrics.density).roundToInt()
-
     private fun ensureChannel() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
         val manager = getSystemService(NotificationManager::class.java)
@@ -1281,4 +1280,3 @@ class FloatingWordService : Service() {
             .build()
     }
 }
-

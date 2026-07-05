@@ -341,6 +341,12 @@ class PracticeViewModelTest {
         override fun getCurrentWordBookMinimalFlow(): Flow<WordBookInfo?> = flowOf(null)
         override suspend fun setCurrentWordBook(bookId: Long) = Unit
         override suspend fun deleteMyWordBook(bookId: Long): Result<Unit> = Result.success(Unit)
+        override suspend fun createMyWordBook(
+            title: String,
+            category: String,
+            description: String,
+            words: List<String>
+        ): Result<WordBookInfo> = Result.failure(UnsupportedOperationException("Not used"))
         override suspend fun getCurrentWordBook(): WordBook? = null
         override suspend fun getBookNameById(bookId: Long): String? = null
         override suspend fun getWordListSummary(

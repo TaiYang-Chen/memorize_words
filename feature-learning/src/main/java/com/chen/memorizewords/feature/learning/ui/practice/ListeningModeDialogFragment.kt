@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.chen.memorizewords.core.ui.ext.dpToPx
 import com.chen.memorizewords.domain.practice.ListeningAnswerAreaPosition
 import com.chen.memorizewords.feature.learning.R
 import com.chen.memorizewords.feature.learning.databinding.DialogListeningModePickerBinding
@@ -174,10 +175,6 @@ class ListeningModeDialogFragment : BottomSheetDialogFragment() {
         descriptionView.setTextColor(
             if (selected) Color.parseColor("#4B5563") else Color.parseColor("#6B7280")
         )
-    }
-
-    private fun dp(value: Int): Int {
-        return (value * resources.displayMetrics.density).roundToInt()
     }
 
 }

@@ -5,7 +5,9 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
+import com.chen.memorizewords.core.ui.R as CoreUiR
 import com.chen.memorizewords.core.ui.bottomsheetdialogfragment.BaseBottomSheetDialogFragment
+import com.chen.memorizewords.core.ui.ext.dimenPx
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.domain.wordbook.model.learning.LearningTestMode
 import com.chen.memorizewords.feature.wordbook.databinding.FeatureWordbookDialogStudyModePickerBinding
@@ -53,7 +55,7 @@ class StudyModePickerBottomSheetDialogFragment :
                 ViewGroup.LayoutParams.WRAP_CONTENT
             ).apply {
                 if (index > 0) {
-                    topMargin = (16 * context.resources.displayMetrics.density).toInt()
+                    topMargin = context.dimenPx(CoreUiR.dimen.core_ui_dp_16)
                 }
             }
             databind.modeListContainer.addView(itemBinding.root, layoutParams)

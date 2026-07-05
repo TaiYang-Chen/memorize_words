@@ -12,31 +12,31 @@
         android:clickable="true"
         android:focusable="true"
         android:gravity="center_vertical"
-        android:minHeight="64dp"
+        android:minHeight="@dimen/core_ui_dp_64"
         android:orientation="horizontal"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp">
+        android:paddingStart="@dimen/core_ui_dp_8"
+        android:paddingEnd="@dimen/core_ui_dp_8"
+        android:paddingTop="@dimen/core_ui_dp_10"
+        android:paddingBottom="@dimen/core_ui_dp_10">
 
         <FrameLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
+            android:layout_width="@dimen/core_ui_dp_44"
+            android:layout_height="@dimen/core_ui_dp_44"
             android:background="@drawable/module_home_bg_practice_record_icon"
             android:gravity="center">
 
             <ImageView
                 android:id="@+id/ivRecordIcon"
-                android:layout_width="22dp"
+                android:layout_width="@dimen/core_ui_dp_22"
                 android:layout_gravity="center"
-                android:layout_height="22dp"
+                android:layout_height="@dimen/core_ui_dp_22"
                 android:contentDescription="@null" />
         </FrameLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="@dimen/core_ui_dp_12"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -45,16 +45,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#0F172A"
-                android:textSize="14sp"
+                android:textSize="@dimen/core_ui_text_14"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvRecordSubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="@dimen/core_ui_dp_4"
                 android:textColor="#64748B"
-                android:textSize="12sp" />
+                android:textSize="@dimen/core_ui_text_12" />
         </LinearLayout>
     </LinearLayout>
 </layout>

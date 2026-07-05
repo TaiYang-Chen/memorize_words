@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/module_learning_bg_radius_fff"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:padding="@dimen/core_ui_dp_10">
 
         <TextView
             android:layout_width="wrap_content"
@@ -27,7 +27,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="@dimen/core_ui_dp_24"
             android:layout_weight="1"
             android:text="@{data.sourceLanguage}"
             android:textColor="#c7ceda"

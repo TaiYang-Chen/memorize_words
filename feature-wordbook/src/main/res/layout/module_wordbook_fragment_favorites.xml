@@ -21,14 +21,14 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/title_height"
             android:layout_marginTop="@dimen/title_margin"
-            android:layout_marginBottom="12dp">
+            android:layout_marginBottom="@dimen/core_ui_dp_12">
 
             <ImageView
                 android:id="@+id/btnBack"
                 android:layout_width="@dimen/title_icon_touch_size"
                 android:layout_height="@dimen/title_icon_touch_size"
                 android:layout_gravity="center_vertical|start"
-                android:padding="7dp"
+                android:padding="@dimen/core_ui_dp_7"
                 android:onClick="@{()->viewModel.back()}"
                 android:src="@drawable/ic_arrow_back" />
 
@@ -46,13 +46,13 @@
             <TextView
                 android:id="@+id/btnSelectionCancel"
                 android:layout_width="wrap_content"
-                android:layout_height="36dp"
+                android:layout_height="@dimen/core_ui_dp_36"
                 android:layout_gravity="center_vertical|start"
                 android:gravity="center"
-                android:minWidth="48dp"
+                android:minWidth="@dimen/core_ui_dp_48"
                 android:text="@string/feature_wordbook_favorites_cancel"
                 android:textColor="@color/feature_wordbook_favorites_text_secondary"
-                android:textSize="15sp"
+                android:textSize="@dimen/core_ui_text_15"
                 android:visibility="gone"
                 tools:visibility="visible" />
 
@@ -72,13 +72,13 @@
             <TextView
                 android:id="@+id/btnSelectionDelete"
                 android:layout_width="wrap_content"
-                android:layout_height="36dp"
+                android:layout_height="@dimen/core_ui_dp_36"
                 android:layout_gravity="center_vertical|end"
                 android:gravity="center"
-                android:minWidth="48dp"
+                android:minWidth="@dimen/core_ui_dp_48"
                 android:text="@string/feature_wordbook_favorites_delete"
                 android:textColor="@color/feature_wordbook_favorites_delete_background"
-                android:textSize="15sp"
+                android:textSize="@dimen/core_ui_text_15"
                 android:textStyle="bold"
                 android:visibility="gone"
                 tools:visibility="visible" />
@@ -94,7 +94,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                android:paddingBottom="24dp"
+                android:paddingBottom="@dimen/core_ui_dp_24"
                 tools:listitem="@layout/module_wordbook_fragment_favorites_item" />
 
             <TextView
@@ -105,7 +105,7 @@
                 android:gravity="center"
                 android:text="@string/feature_wordbook_favorites_empty"
                 android:textColor="@color/feature_wordbook_favorites_date_text"
-                android:textSize="15sp"
+                android:textSize="@dimen/core_ui_text_15"
                 android:visibility="gone"
                 tools:visibility="visible" />
         </FrameLayout>

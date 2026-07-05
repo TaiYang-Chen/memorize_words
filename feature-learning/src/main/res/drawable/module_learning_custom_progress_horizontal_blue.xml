@@ -4,7 +4,7 @@
     <!-- 进度条背景（未完成部分） -->
     <item android:id="@android:id/background">
         <shape>
-            <corners android:radius="6dp" />
+            <corners android:radius="@dimen/core_ui_dp_6" />
             <solid android:color="#E0E0E0" />
         </shape>
     </item>
@@ -13,7 +13,7 @@
     <item android:id="@android:id/secondaryProgress">
         <clip>
             <shape>
-                <corners android:radius="6dp" />
+                <corners android:radius="@dimen/core_ui_dp_6" />
                 <solid android:color="#BBDEFB" />
             </shape>
         </clip>
@@ -23,7 +23,7 @@
     <item android:id="@android:id/progress">
         <clip>
             <shape>
-                <corners android:radius="6dp" />
+                <corners android:radius="@dimen/core_ui_dp_6" />
                 <gradient
                     android:angle="0"
                     android:centerColor="#137fec"

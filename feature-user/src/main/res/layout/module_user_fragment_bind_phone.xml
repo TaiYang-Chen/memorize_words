@@ -43,7 +43,7 @@
         <ScrollView
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="@dimen/core_ui_dp_24"
             android:fillViewport="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -60,28 +60,28 @@
                     android:layout_height="wrap_content"
                     android:text="@string/module_user_bind_phone_sms_title"
                     android:textColor="#111111"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/core_ui_text_16"
                     android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/etPhone"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_height="@dimen/core_ui_dp_48"
+                    android:layout_marginTop="@dimen/core_ui_dp_16"
                     android:background="@drawable/module_user_login_bg_edit_text"
                     android:hint="@string/module_user_bind_phone_phone_hint"
                     android:inputType="phone"
                     android:maxLength="11"
-                    android:paddingStart="14dp"
-                    android:paddingEnd="14dp"
+                    android:paddingStart="@dimen/core_ui_dp_14"
+                    android:paddingEnd="@dimen/core_ui_dp_14"
                     android:text="@={viewModel.phone}"
-                    android:textSize="15sp" />
+                    android:textSize="@dimen/core_ui_text_15" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/clCode"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_height="@dimen/core_ui_dp_48"
+                    android:layout_marginTop="@dimen/core_ui_dp_16"
                     android:background="@drawable/module_user_login_bg_edit_text">
 
                     <EditText
@@ -91,10 +91,10 @@
                         android:background="@android:color/transparent"
                         android:hint="@string/module_user_bind_phone_sms_hint"
                         android:inputType="text"
-                        android:paddingStart="14dp"
-                        android:paddingEnd="14dp"
+                        android:paddingStart="@dimen/core_ui_dp_14"
+                        android:paddingEnd="@dimen/core_ui_dp_14"
                         android:text="@={viewModel.smsCode}"
-                        android:textSize="15sp"
+                        android:textSize="@dimen/core_ui_text_15"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/btnSendCode"
                         app:layout_constraintStart_toStartOf="parent"
@@ -102,20 +102,20 @@
 
                     <TextView
                         android:id="@+id/btnSendCode"
-                        android:layout_width="112dp"
+                        android:layout_width="@dimen/core_ui_dp_112"
                         android:layout_height="match_parent"
-                        android:layout_marginEnd="4dp"
+                        android:layout_marginEnd="@dimen/core_ui_dp_4"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:clickable="true"
                         android:enabled="@{viewModel.isSendCodeEnabled}"
                         android:focusable="true"
                         android:gravity="center"
                         android:maxLines="1"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"
+                        android:paddingStart="@dimen/core_ui_dp_8"
+                        android:paddingEnd="@dimen/core_ui_dp_8"
                         android:text="@{viewModel.sendCodeText}"
                         android:textColor="@color/module_user_send_code_text_color"
-                        android:textSize="14sp"
+                        android:textSize="@dimen/core_ui_text_14"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -124,13 +124,13 @@
                 <Button
                     android:id="@+id/btnConfirmBind"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_height="@dimen/core_ui_dp_48"
+                    android:layout_marginTop="@dimen/core_ui_dp_24"
                     android:background="@drawable/module_user_login_bg_login_btn"
                     android:backgroundTint="@null"
                     android:text="@string/module_user_bind_phone_sms_confirm"
                     android:textColor="@android:color/white"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/core_ui_text_16"
                     app:backgroundTint="@null" />
             </LinearLayout>
         </ScrollView>

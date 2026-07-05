@@ -8,6 +8,7 @@ import android.graphics.Path
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import com.chen.memorizewords.core.ui.ext.dpToPx
 import kotlin.math.hypot
 
 class HandwritingCanvasView @JvmOverloads constructor(
@@ -30,7 +31,7 @@ class HandwritingCanvasView @JvmOverloads constructor(
     }
     private val paths = mutableListOf<Path>()
     private var currentPath: Path? = null
-    private val gridSpacingPx = (24 * resources.displayMetrics.density)
+    private val gridSpacingPx = 24f.dpToPx(context)
     private var scaleFactor = 1f
     private var offsetX = 0f
     private var offsetY = 0f

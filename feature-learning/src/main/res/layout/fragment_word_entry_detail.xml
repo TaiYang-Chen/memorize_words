@@ -52,17 +52,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingBottom="40dp">
+                android:paddingBottom="@dimen/core_ui_dp_40">
 
                 <TextView
                     android:id="@+id/tvWord"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="38dp"
+                    android:layout_marginTop="@dimen/core_ui_dp_38"
                     android:gravity="center"
                     android:text="@{viewModel.currentWord.word}"
                     android:textColor="#000000"
-                    android:textSize="32sp"
+                    android:textSize="@dimen/core_ui_text_32"
                     android:textStyle="bold"
                     tools:text="resilience" />
 
@@ -70,16 +70,16 @@
                     android:id="@+id/layoutPhonetic"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp">
+                    android:layout_marginTop="@dimen/core_ui_dp_16">
 
                     <RadioGroup
                         android:id="@+id/languageRadioGroup"
-                        android:layout_width="50dp"
-                        android:layout_height="25dp"
-                        android:layout_marginEnd="8dp"
+                        android:layout_width="@dimen/core_ui_dp_50"
+                        android:layout_height="@dimen/core_ui_dp_25"
+                        android:layout_marginEnd="@dimen/core_ui_dp_8"
                         android:background="@drawable/module_learning_toggle_background"
                         android:orientation="horizontal"
-                        android:padding="2dp"
+                        android:padding="@dimen/core_ui_dp_2"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/tvPhonetic"
                         app:layout_constraintTop_toTopOf="parent">
@@ -93,10 +93,10 @@
                             android:button="@null"
                             android:checked="true"
                             android:gravity="center"
-                            android:padding="2dp"
+                            android:padding="@dimen/core_ui_dp_2"
                             android:text="美"
                             android:textColor="@drawable/module_learning_toggle_text_selector"
-                            android:textSize="10sp" />
+                            android:textSize="@dimen/core_ui_sp_10" />
 
                         <RadioButton
                             android:id="@+id/btnEnglish"
@@ -106,10 +106,10 @@
                             android:background="@drawable/module_learning_toggle_item_selector"
                             android:button="@null"
                             android:gravity="center"
-                            android:padding="2dp"
+                            android:padding="@dimen/core_ui_dp_2"
                             android:text="英"
                             android:textColor="@drawable/module_learning_toggle_text_selector"
-                            android:textSize="10sp" />
+                            android:textSize="@dimen/core_ui_sp_10" />
                     </RadioGroup>
 
                     <TextView
@@ -126,9 +126,9 @@
 
                     <ImageView
                         android:id="@+id/ivSpeaker"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginStart="8dp"
+                        android:layout_width="@dimen/core_ui_dp_24"
+                        android:layout_height="@dimen/core_ui_dp_24"
+                        android:layout_marginStart="@dimen/core_ui_dp_8"
                         android:src="@drawable/module_learning_ic_volume_up"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/tvPhonetic"
@@ -140,7 +140,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingTop="24dp">
+                    android:paddingTop="@dimen/core_ui_dp_24">
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_definitions"
@@ -151,10 +151,10 @@
                         android:id="@+id/layoutMemoryTip"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_16"
                         android:background="@drawable/module_learning_bg_radius_eefdf7"
                         android:orientation="vertical"
-                        android:padding="16dp"
+                        android:padding="@dimen/core_ui_dp_16"
                         android:visibility="@{viewModel.currentWord.memoryTip != null ? 0 : 8}">
 
                         <TextView
@@ -168,7 +168,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="@dimen/core_ui_dp_8"
                             android:text="@{viewModel.currentWord.memoryTip}"
                             android:textColor="#6b7885"
                             tools:text="root memory tip" />
@@ -178,14 +178,14 @@
                         android:id="@+id/section_examples_header"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_24"
                         android:gravity="center"
                         android:orientation="horizontal">
 
                         <View
-                            android:layout_width="4dp"
-                            android:layout_height="18dp"
-                            android:layout_marginEnd="4dp"
+                            android:layout_width="@dimen/core_ui_dp_4"
+                            android:layout_height="@dimen/core_ui_dp_18"
+                            android:layout_marginEnd="@dimen/core_ui_dp_4"
                             android:background="#10b981" />
 
                         <TextView
@@ -193,7 +193,7 @@
                             android:layout_height="wrap_content"
                             android:text="例句"
                             android:textColor="#aab8c8"
-                            android:textSize="14sp"
+                            android:textSize="@dimen/core_ui_text_14"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -201,20 +201,20 @@
                         android:id="@+id/rv_examples"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp" />
+                        android:layout_marginTop="@dimen/core_ui_dp_16" />
 
                     <LinearLayout
                         android:id="@+id/section_inflection_header"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_24"
                         android:gravity="center"
                         android:orientation="horizontal">
 
                         <View
-                            android:layout_width="4dp"
-                            android:layout_height="18dp"
-                            android:layout_marginEnd="4dp"
+                            android:layout_width="@dimen/core_ui_dp_4"
+                            android:layout_height="@dimen/core_ui_dp_18"
+                            android:layout_marginEnd="@dimen/core_ui_dp_4"
                             android:background="#fb9034" />
 
                         <TextView
@@ -222,7 +222,7 @@
                             android:layout_height="wrap_content"
                             android:text="词形变化"
                             android:textColor="#aab8c8"
-                            android:textSize="14sp"
+                            android:textSize="@dimen/core_ui_text_14"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -230,20 +230,20 @@
                         android:id="@+id/rv_inflection"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp" />
+                        android:layout_marginTop="@dimen/core_ui_dp_16" />
 
                     <LinearLayout
                         android:id="@+id/section_roots_header"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_24"
                         android:gravity="center"
                         android:orientation="horizontal">
 
                         <View
-                            android:layout_width="4dp"
-                            android:layout_height="18dp"
-                            android:layout_marginEnd="4dp"
+                            android:layout_width="@dimen/core_ui_dp_4"
+                            android:layout_height="@dimen/core_ui_dp_18"
+                            android:layout_marginEnd="@dimen/core_ui_dp_4"
                             android:background="#60a5fa" />
 
                         <TextView
@@ -251,7 +251,7 @@
                             android:layout_height="wrap_content"
                             android:text="词根词缀"
                             android:textColor="#aab8c8"
-                            android:textSize="14sp"
+                            android:textSize="@dimen/core_ui_text_14"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -259,20 +259,20 @@
                         android:id="@+id/rv_root"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp" />
+                        android:layout_marginTop="@dimen/core_ui_dp_16" />
 
                     <LinearLayout
                         android:id="@+id/section_synonyms_header"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_24"
                         android:gravity="center"
                         android:orientation="horizontal">
 
                         <View
-                            android:layout_width="4dp"
-                            android:layout_height="18dp"
-                            android:layout_marginEnd="4dp"
+                            android:layout_width="@dimen/core_ui_dp_4"
+                            android:layout_height="@dimen/core_ui_dp_18"
+                            android:layout_marginEnd="@dimen/core_ui_dp_4"
                             android:background="#be7dfc" />
 
                         <TextView
@@ -280,7 +280,7 @@
                             android:layout_height="wrap_content"
                             android:text="同反义词"
                             android:textColor="#aab8c8"
-                            android:textSize="14sp"
+                            android:textSize="@dimen/core_ui_text_14"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -288,7 +288,7 @@
                         android:id="@+id/rv_synonyms"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp" />
+                        android:layout_marginTop="@dimen/core_ui_dp_16" />
                 </LinearLayout>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>

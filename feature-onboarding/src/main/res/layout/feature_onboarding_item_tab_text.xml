@@ -8,4 +8,4 @@
     android:maxLines="1"
     android:padding="0dp"
     android:textColor="@color/feature_onboarding_tab_text_unselected"
-    android:textSize="14sp" />
+    android:textSize="@dimen/core_ui_text_14" />

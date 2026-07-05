@@ -53,26 +53,26 @@
             android:id="@+id/syncBannerContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/core_ui_dp_16"
             android:background="@drawable/module_home_bg_radius_d5fbea"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingStart="12dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="12dp"
-            android:paddingBottom="8dp"
+            android:paddingStart="@dimen/core_ui_dp_12"
+            android:paddingTop="@dimen/core_ui_dp_8"
+            android:paddingEnd="@dimen/core_ui_dp_12"
+            android:paddingBottom="@dimen/core_ui_dp_8"
             android:visibility="gone">
 
             <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
+                android:layout_width="@dimen/core_ui_dp_16"
+                android:layout_height="@dimen/core_ui_dp_16"
                 android:src="@drawable/module_home_info_9333ea" />
 
             <TextView
                 android:id="@+id/tvSyncBanner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="@dimen/core_ui_dp_8"
                 android:layout_weight="1"
                 android:ellipsize="marquee"
                 android:focusable="false"
@@ -80,48 +80,48 @@
                 android:marqueeRepeatLimit="marquee_forever"
                 android:singleLine="true"
                 android:textColor="#0f172a"
-                android:textSize="12sp"
+                android:textSize="@dimen/core_ui_text_12"
                 tools:text="当前无网络，还有 3 条数据没有更新到远程" />
         </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="35dp"
+            android:layout_marginTop="@dimen/core_ui_dp_35"
             android:background="@drawable/module_home_bg_radius_d5fbea"
             android:clickable="true"
             android:gravity="center"
             android:letterSpacing="0.3"
-            android:paddingStart="10dp"
-            android:paddingTop="4dp"
-            android:paddingEnd="10dp"
-            android:paddingBottom="4dp"
+            android:paddingStart="@dimen/core_ui_dp_10"
+            android:paddingTop="@dimen/core_ui_dp_4"
+            android:paddingEnd="@dimen/core_ui_dp_10"
+            android:paddingBottom="@dimen/core_ui_dp_4"
             android:stateListAnimator="@animator/btn_scale_animator"
             android:text="@{`已坚持学习` + viewModel.studyTotalDayCount+ `天`}"
             android:textColor="#0ba659"
-            android:textSize="10dp"
+            android:textSize="@dimen/core_ui_dp_10"
             android:textStyle="bold"
             tools:text="已坚持学习45天" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="@dimen/core_ui_dp_15"
             android:clickable="true"
             android:stateListAnimator="@animator/btn_scale_animator"
             android:text="《雅思核心词汇》"
             android:textColor="#000000"
-            android:textSize="26sp"
+            android:textSize="@dimen/core_ui_text_26"
             android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="@dimen/core_ui_dp_4"
             android:clickable="true"
             android:stateListAnimator="@animator/btn_scale_animator"
             android:text="@{`本书已坚持学习`+viewModel.wordBookStudyDayCountText+`天`}"
-            android:textSize="12sp"
+            android:textSize="@dimen/core_ui_text_12"
             tools:text="本书已坚持学习12天" />
 
         <View
@@ -133,14 +133,14 @@
             layout="@layout/include_daily_plan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="21dp"
+            android:layout_marginTop="@dimen/core_ui_dp_21"
             app:viewModel="@{viewModel}" />
 
         <include
             layout="@layout/include_study_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="@dimen/core_ui_dp_24"
             app:viewModel="@{viewModel}" />
 
     </LinearLayout>

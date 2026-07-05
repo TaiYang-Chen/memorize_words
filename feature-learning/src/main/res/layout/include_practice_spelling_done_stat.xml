@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
             android:textColor="#006C5B"
-            android:textSize="21sp"
+            android:textSize="@dimen/core_ui_text_21"
             android:textStyle="bold"
             tools:text="7" />
 
@@ -25,10 +25,10 @@
             android:id="@+id/tv_stat_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/core_ui_dp_8"
             android:includeFontPadding="false"
             android:textColor="#26352F"
-            android:textSize="12sp"
+            android:textSize="@dimen/core_ui_text_12"
             android:textStyle="bold"
             tools:text="完成" />
     </LinearLayout>

@@ -19,11 +19,11 @@
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="128dp"
+            android:layout_marginStart="@dimen/core_ui_dp_32"
+            android:layout_marginTop="@dimen/core_ui_dp_128"
             android:text="@string/module_user_nav_register_title"
             android:textColor="#111111"
-            android:textSize="24sp"
+            android:textSize="@dimen/core_ui_text_24"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -32,28 +32,28 @@
             android:id="@+id/tvRegister"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/core_ui_dp_8"
             android:onClick="@{() -> viewModel.back()}"
             android:text="@string/module_user_back_to_password_login"
             android:textColor="#2979FF"
-            android:textSize="14sp"
+            android:textSize="@dimen/core_ui_text_14"
             app:layout_constraintStart_toStartOf="@id/tvTitle"
             app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
         <EditText
             android:id="@+id/etAccount"
             android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="56dp"
-            android:layout_marginEnd="32dp"
+            android:layout_height="@dimen/core_ui_dp_48"
+            android:layout_marginStart="@dimen/core_ui_dp_32"
+            android:layout_marginTop="@dimen/core_ui_dp_56"
+            android:layout_marginEnd="@dimen/core_ui_dp_32"
             android:background="@drawable/module_user_login_bg_edit_text"
             android:hint="@string/module_user_register_account_hint"
             android:inputType="text"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
+            android:paddingStart="@dimen/core_ui_dp_16"
+            android:paddingEnd="@dimen/core_ui_dp_16"
             android:text="@={viewModel.account}"
-            android:textSize="15sp"
+            android:textSize="@dimen/core_ui_text_15"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvTitle" />
@@ -61,8 +61,8 @@
         <FrameLayout
             android:id="@+id/flPassword"
             android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="16dp"
+            android:layout_height="@dimen/core_ui_dp_48"
+            android:layout_marginTop="@dimen/core_ui_dp_16"
             android:background="@drawable/module_user_login_bg_edit_text"
             app:layout_constraintEnd_toEndOf="@id/etAccount"
             app:layout_constraintStart_toStartOf="@id/etAccount"
@@ -75,31 +75,31 @@
                 android:background="@android:color/transparent"
                 android:hint="@string/module_user_login_password_hint"
                 android:inputType="textPassword"
-                android:paddingStart="16dp"
-                android:paddingEnd="48dp"
+                android:paddingStart="@dimen/core_ui_dp_16"
+                android:paddingEnd="@dimen/core_ui_dp_48"
                 android:text="@={viewModel.password}"
-                android:textSize="15sp" />
+                android:textSize="@dimen/core_ui_text_15" />
 
             <ImageView
                 android:id="@+id/ivEye"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="@dimen/core_ui_dp_20"
+                android:layout_height="@dimen/core_ui_dp_20"
                 android:layout_gravity="center_vertical|end"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="@dimen/core_ui_dp_16"
                 android:src="@drawable/module_user_login_ic_pass_invisible" />
         </FrameLayout>
 
         <Button
             android:id="@+id/btnLogin"
             android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="32dp"
+            android:layout_height="@dimen/core_ui_dp_48"
+            android:layout_marginTop="@dimen/core_ui_dp_32"
             android:background="@drawable/module_user_login_bg_login_btn"
             android:backgroundTint="@null"
             android:onClick="@{() -> viewModel.register()}"
             android:text="@string/module_user_nav_register_title"
             android:textColor="@android:color/white"
-            android:textSize="16sp"
+            android:textSize="@dimen/core_ui_text_16"
             app:backgroundTint="@null"
             app:layout_constraintEnd_toEndOf="@id/flPassword"
             app:layout_constraintStart_toStartOf="@id/flPassword"
@@ -109,7 +109,7 @@
             android:id="@+id/llCodeRegister"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="@dimen/core_ui_dp_18"
             android:gravity="center"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="@id/btnLogin"
@@ -119,23 +119,23 @@
             <TextView
                 android:id="@+id/tvPhoneCodeRegister"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="@dimen/core_ui_dp_40"
                 android:gravity="center"
                 android:onClick="@{() -> viewModel.navigateToPhoneCodeRegister()}"
                 android:text="@string/module_user_phone_code_register"
                 android:textColor="#2979FF"
-                android:textSize="14sp" />
+                android:textSize="@dimen/core_ui_text_14" />
 
             <TextView
                 android:id="@+id/tvEmailCodeRegister"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginStart="24dp"
+                android:layout_height="@dimen/core_ui_dp_40"
+                android:layout_marginStart="@dimen/core_ui_dp_24"
                 android:gravity="center"
                 android:onClick="@{() -> viewModel.navigateToEmailCodeRegister()}"
                 android:text="@string/module_user_email_code_register"
                 android:textColor="#2979FF"
-                android:textSize="14sp" />
+                android:textSize="@dimen/core_ui_text_14" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

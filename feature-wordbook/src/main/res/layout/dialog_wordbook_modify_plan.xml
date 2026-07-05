@@ -16,10 +16,10 @@
         android:orientation="vertical">
 
         <View
-            android:layout_width="40dp"
-            android:layout_height="6dp"
+            android:layout_width="@dimen/core_ui_dp_40"
+            android:layout_height="@dimen/core_ui_dp_6"
             android:layout_gravity="center"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/core_ui_dp_8"
             android:background="@drawable/module_wordbook_bg_drag_handle" />
 
         <TextView
@@ -27,21 +27,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
-            android:paddingStart="24dp"
-            android:paddingTop="16dp"
-            android:paddingEnd="24dp"
+            android:paddingStart="@dimen/core_ui_dp_24"
+            android:paddingTop="@dimen/core_ui_dp_16"
+            android:paddingEnd="@dimen/core_ui_dp_24"
             android:text="修改计划"
             android:textColor="#000"
-            android:textSize="18sp"
+            android:textSize="@dimen/core_ui_text_18"
             android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingStart="24dp"
-            android:paddingTop="32dp"
-            android:paddingEnd="24dp">
+            android:paddingStart="@dimen/core_ui_dp_24"
+            android:paddingTop="@dimen/core_ui_dp_32"
+            android:paddingEnd="@dimen/core_ui_dp_24">
 
             <TextView
                 android:id="@+id/tvNewWord"
@@ -50,7 +50,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:text="每日新词数"
                 android:textColor="#000"
-                android:textSize="14sp"
+                android:textSize="@dimen/core_ui_text_14"
                 android:textStyle="bold" />
 
             <TextView
@@ -60,7 +60,7 @@
                 android:layout_weight="1"
                 android:gravity="end"
                 android:text="推荐 15~30"
-                android:textSize="11sp" />
+                android:textSize="@dimen/core_ui_text_11" />
         </LinearLayout>
 
         <LinearLayout
@@ -68,41 +68,41 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
-            android:paddingStart="24dp"
-            android:paddingTop="16dp"
-            android:paddingEnd="24dp">
+            android:paddingStart="@dimen/core_ui_dp_24"
+            android:paddingTop="@dimen/core_ui_dp_16"
+            android:paddingEnd="@dimen/core_ui_dp_24">
 
             <ImageView
                 android:id="@+id/btnMinus"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/core_ui_dp_40"
+                android:layout_height="@dimen/core_ui_dp_40"
                 android:background="@drawable/module_wordbook_bg_multi_normal"
                 android:onClick="@{() -> vm.decrementDailyNewCount()}"
-                android:padding="13dp"
+                android:padding="@dimen/core_ui_dp_13"
                 android:src="@drawable/module_wordbook_ic_minus" />
 
             <EditText
                 android:id="@+id/tvCount"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginHorizontal="12dp"
+                android:layout_height="@dimen/core_ui_dp_40"
+                android:layout_marginHorizontal="@dimen/core_ui_dp_12"
                 android:layout_weight="1"
                 android:background="@drawable/module_wordbook_bg_count_box"
                 android:gravity="center"
                 android:inputType="number"
                 android:maxLength="3"
                 android:text="@={vm.dailyNewCount}"
-                android:textSize="18sp"
+                android:textSize="@dimen/core_ui_text_18"
                 android:textStyle="bold"
                 tools:text="15" />
 
             <ImageView
                 android:id="@+id/btnPlus"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/core_ui_dp_40"
+                android:layout_height="@dimen/core_ui_dp_40"
                 android:background="@drawable/module_wordbook_bg_multi_normal"
                 android:onClick="@{() -> vm.incrementDailyNewCount()}"
-                android:padding="13dp"
+                android:padding="@dimen/core_ui_dp_13"
                 android:src="@drawable/module_wordbook_ic_add" />
         </LinearLayout>
 
@@ -110,9 +110,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingStart="24dp"
-            android:paddingTop="32dp"
-            android:paddingEnd="24dp">
+            android:paddingStart="@dimen/core_ui_dp_24"
+            android:paddingTop="@dimen/core_ui_dp_32"
+            android:paddingEnd="@dimen/core_ui_dp_24">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -120,7 +120,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:text="每日复习数"
                 android:textColor="#000"
-                android:textSize="14sp"
+                android:textSize="@dimen/core_ui_text_14"
                 android:textStyle="bold" />
 
             <TextView
@@ -129,7 +129,7 @@
                 android:layout_weight="1"
                 android:gravity="end"
                 android:text="推荐 30~60"
-                android:textSize="11sp" />
+                android:textSize="@dimen/core_ui_text_11" />
         </LinearLayout>
 
         <LinearLayout
@@ -137,55 +137,55 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
-            android:paddingStart="24dp"
-            android:paddingTop="16dp"
-            android:paddingEnd="24dp">
+            android:paddingStart="@dimen/core_ui_dp_24"
+            android:paddingTop="@dimen/core_ui_dp_16"
+            android:paddingEnd="@dimen/core_ui_dp_24">
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/core_ui_dp_40"
+                android:layout_height="@dimen/core_ui_dp_40"
                 android:background="@drawable/module_wordbook_bg_multi_normal"
                 android:onClick="@{() -> vm.decrementDailyReviewCount()}"
-                android:padding="13dp"
+                android:padding="@dimen/core_ui_dp_13"
                 android:src="@drawable/module_wordbook_ic_minus" />
 
             <EditText
                 android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginHorizontal="12dp"
+                android:layout_height="@dimen/core_ui_dp_40"
+                android:layout_marginHorizontal="@dimen/core_ui_dp_12"
                 android:layout_weight="1"
                 android:background="@drawable/module_wordbook_bg_count_box"
                 android:gravity="center"
                 android:inputType="number"
                 android:maxLength="3"
                 android:text="@={vm.dailyReviewCount}"
-                android:textSize="18sp"
+                android:textSize="@dimen/core_ui_text_18"
                 android:textStyle="bold"
                 tools:text="15" />
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/core_ui_dp_40"
+                android:layout_height="@dimen/core_ui_dp_40"
                 android:background="@drawable/module_wordbook_bg_multi_normal"
                 android:onClick="@{() -> vm.incrementDailyReviewCount()}"
-                android:padding="13dp"
+                android:padding="@dimen/core_ui_dp_13"
                 android:src="@drawable/module_wordbook_ic_add" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/btnConfirm"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="32dp"
+            android:layout_height="@dimen/core_ui_dp_48"
+            android:layout_marginStart="@dimen/core_ui_dp_24"
+            android:layout_marginTop="@dimen/core_ui_dp_32"
+            android:layout_marginEnd="@dimen/core_ui_dp_24"
+            android:layout_marginBottom="@dimen/core_ui_dp_32"
             android:background="@drawable/module_wordbook_bg_confirm"
             android:gravity="center"
             android:onClick="@{() -> vm.confirmModify()}"
             android:text="确认"
             android:textColor="#FFFFFF"
-            android:textSize="16sp"
+            android:textSize="@dimen/core_ui_text_16"
             android:textStyle="bold" />
 
     </LinearLayout>

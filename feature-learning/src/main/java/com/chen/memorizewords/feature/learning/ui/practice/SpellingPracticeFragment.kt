@@ -23,6 +23,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.chen.memorizewords.core.ui.ext.dpToPx
 import com.chen.memorizewords.core.ui.fragment.BaseVmDbFragment
 import com.chen.memorizewords.domain.word.query.WordDetail
 import com.chen.memorizewords.domain.word.query.WordReadFacade
@@ -371,8 +372,8 @@ class SpellingPracticeFragment :
             this.text = text
             textSize = 15f
             setTextColor(Color.parseColor("#334155"))
-            setLineSpacing(dp(2).toFloat(), 1f)
-            setPadding(0, dp(4), 0, dp(8))
+            setLineSpacing(2.dpToPx(requireContext()).toFloat(), 1f)
+            setPadding(0, 4.dpToPx(requireContext()), 0, 8.dpToPx(requireContext()))
         }
     }
 
@@ -393,25 +394,25 @@ class SpellingPracticeFragment :
         }
         val compactSlots = slots.size >= 10
         val margin = when {
-            slots.size >= 13 -> dp(1)
-            compactSlots -> dp(2)
-            else -> dp(4)
+            slots.size >= 13 -> 1.dpToPx(requireContext())
+            compactSlots -> 2.dpToPx(requireContext())
+            else -> 4.dpToPx(requireContext())
         }
         val availableWidth = (container.width.takeIf { it > 0 } ?: resources.displayMetrics.widthPixels) -
             container.paddingStart -
             container.paddingEnd
         val slotWidth = ((availableWidth - margin * 2 * slots.size) / slots.size)
-            .coerceIn(if (compactSlots) dp(12) else dp(22), if (compactSlots) dp(22) else dp(34))
-        val slotHeight = if (compactSlots) dp(30) else dp(38)
+            .coerceIn(if (compactSlots) 12.dpToPx(requireContext()) else 22.dpToPx(requireContext()), if (compactSlots) 22.dpToPx(requireContext()) else 34.dpToPx(requireContext()))
+        val slotHeight = if (compactSlots) 30.dpToPx(requireContext()) else 38.dpToPx(requireContext())
         if (slotViews.size != slots.size) {
             container.removeAllViews()
             slotViews.clear()
             repeat(slots.size) {
                 val textView = TextView(requireContext()).apply {
                     textSize = when {
-                        slotWidth < dp(16) -> 12f
+                        slotWidth < 16.dpToPx(requireContext()) -> 12f
                         compactSlots -> 14f
-                        slotWidth < dp(26) -> 15f
+                        slotWidth < 26.dpToPx(requireContext()) -> 15f
                         else -> 18f
                     }
                     gravity = Gravity.CENTER
@@ -435,9 +436,9 @@ class SpellingPracticeFragment :
                 setMargins(margin, 0, margin, 0)
             }
             view.textSize = when {
-                slotWidth < dp(16) -> 12f
+                slotWidth < 16.dpToPx(requireContext()) -> 12f
                 compactSlots -> 14f
-                slotWidth < dp(26) -> 15f
+                slotWidth < 26.dpToPx(requireContext()) -> 15f
                 else -> 18f
             }
             view.text = slot.letter
@@ -524,7 +525,7 @@ class SpellingPracticeFragment :
             typeface = android.graphics.Typeface.DEFAULT
             gravity = Gravity.CENTER
             includeFontPadding = false
-            setPadding(0, 0, 0, dp(1))
+            setPadding(0, 0, 0, 1.dpToPx(requireContext()))
             contentDescription = getString(R.string.practice_spelling_delete)
         }
     }
@@ -542,7 +543,7 @@ class SpellingPracticeFragment :
             minWidth = 0
             minHeight = 0
             setTextColor(Color.parseColor("#0F172A"))
-            cornerRadius = dp(10)
+            cornerRadius = 10.dpToPx(requireContext())
             strokeWidth = 0
             background = ContextCompat.getDrawable(
                 requireContext(),
@@ -560,14 +561,14 @@ class SpellingPracticeFragment :
 
     private fun createKeyLayoutParams(): LinearLayout.LayoutParams {
         val columnCount = resolveLetterColumnCount(0)
-        val horizontalPadding = dp(36)
-        val cellMargin = dp(4)
+        val horizontalPadding = 36.dpToPx(requireContext())
+        val cellMargin = 4.dpToPx(requireContext())
         val availableWidth = resources.displayMetrics.widthPixels - horizontalPadding
         val width = ((availableWidth - cellMargin * 2 * columnCount) / columnCount)
-            .coerceAtLeast(dp(42))
-        return LinearLayout.LayoutParams(width, dp(45)).apply {
+            .coerceAtLeast(42.dpToPx(requireContext()))
+        return LinearLayout.LayoutParams(width, 45.dpToPx(requireContext())).apply {
             this.width = width
-            setMargins(cellMargin, dp(4), cellMargin, dp(4))
+            setMargins(cellMargin, 4.dpToPx(requireContext()), cellMargin, 4.dpToPx(requireContext()))
         }
     }
 
@@ -618,10 +619,10 @@ class SpellingPracticeFragment :
                     slotViews.getOrNull(index) ?: return@forEachIndexed,
                     View.TRANSLATION_X,
                     0f,
-                    -dp(6).toFloat(),
-                    dp(6).toFloat(),
-                    -dp(4).toFloat(),
-                    dp(4).toFloat(),
+                    (-6).dpToPx(requireContext()).toFloat(),
+                    6.dpToPx(requireContext()).toFloat(),
+                    (-4).dpToPx(requireContext()).toFloat(),
+                    4.dpToPx(requireContext()).toFloat(),
                     0f
                 ).apply {
                     duration = 260L
@@ -643,7 +644,7 @@ class SpellingPracticeFragment :
 
             MotionEvent.ACTION_MOVE -> {
                 val delta = drawerStartY - event.rawY
-                if (kotlin.math.abs(delta) > dp(4)) {
+                if (kotlin.math.abs(delta) > 4.dpToPx(requireContext())) {
                     drawerWasDragged = true
                 }
                 val targetHeight = (drawerStartHeight + delta).toInt()
@@ -692,7 +693,7 @@ class SpellingPracticeFragment :
     }
 
     private fun updateHandwritingDrawerUi() {
-        isHandwritingExpanded = databind.handwritingDrawer.height > collapsedDrawerHeight() + dp(12)
+        isHandwritingExpanded = databind.handwritingDrawer.height > collapsedDrawerHeight() + 12.dpToPx(requireContext())
         databind.tvHandwritingToggle.text = getString(
             if (isHandwritingExpanded) {
                 R.string.practice_spelling_handwriting_collapse
@@ -709,20 +710,16 @@ class SpellingPracticeFragment :
         }
     }
 
-    private fun collapsedDrawerHeight(): Int = dp(40)
+    private fun collapsedDrawerHeight(): Int = 40.dpToPx(requireContext())
 
     private fun defaultExpandedDrawerHeight(): Int {
-        return dp(190).coerceAtMost(maxDrawerHeight())
+        return 190.dpToPx(requireContext()).coerceAtMost(maxDrawerHeight())
     }
 
     private fun maxDrawerHeight(): Int {
         val rootHeight = databind.root.height.takeIf { it > 0 }
             ?: resources.displayMetrics.heightPixels
-        return (rootHeight * 0.45f).toInt().coerceAtLeast(dp(96))
-    }
-
-    private fun dp(value: Int): Int {
-        return (value * resources.displayMetrics.density).toInt()
+        return (rootHeight * 0.45f).toInt().coerceAtLeast(96.dpToPx(requireContext()))
     }
 }
 

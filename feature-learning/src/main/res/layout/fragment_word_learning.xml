@@ -46,7 +46,7 @@
                 android:id="@+id/linearLayout4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="@dimen/core_ui_dp_16"
                 android:gravity="center"
                 android:onClick="@{() -> viewModel.onFavoriteClicked()}"
                 android:orientation="vertical"
@@ -55,22 +55,22 @@
                 app:layout_constraintTop_toTopOf="@+id/linearLayout2">
 
                 <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="@dimen/core_ui_dp_16"
+                    android:layout_height="@dimen/core_ui_dp_16"
                     android:src="@{viewModel.uiState.isFavorite ? @drawable/module_learning_favorite_en_24dp_444f5f : @drawable/module_learning_favorite_24dp_444f5f}" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="收藏"
-                    android:textSize="10sp" />
+                    android:textSize="@dimen/core_ui_sp_10" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linearLayout2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="@dimen/core_ui_dp_16"
                 android:gravity="center"
                 android:onClick="@{() -> viewModel.onSetWordAsMastered()}"
                 android:orientation="vertical"
@@ -79,22 +79,22 @@
                 app:layout_constraintTop_toTopOf="@+id/linearLayout3">
 
                 <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="@dimen/core_ui_dp_16"
+                    android:layout_height="@dimen/core_ui_dp_16"
                     android:src="@drawable/module_learning_check_circle_24dp_444f5f" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="已掌握"
-                    android:textSize="10sp" />
+                    android:textSize="@dimen/core_ui_sp_10" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linearLayout3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="@dimen/core_ui_dp_16"
                 android:gravity="center"
                 android:onClick="@{() -> viewModel.onExamPracticeClicked()}"
                 android:orientation="vertical"
@@ -103,15 +103,15 @@
                 app:layout_constraintTop_toTopOf="@+id/iv_back">
 
                 <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="@dimen/core_ui_dp_16"
+                    android:layout_height="@dimen/core_ui_dp_16"
                     android:src="@drawable/module_learning_assignment_24dp_444f5f" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="真题"
-                    android:textSize="10sp" />
+                    android:textSize="@dimen/core_ui_sp_10" />
             </LinearLayout>
 
             <LinearLayout
@@ -126,15 +126,15 @@
                 app:layout_constraintTop_toTopOf="@+id/iv_back">
 
                 <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="@dimen/core_ui_dp_16"
+                    android:layout_height="@dimen/core_ui_dp_16"
                     android:src="@drawable/module_learning_share_24dp_444f5f" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="分享"
-                    android:textSize="10sp" />
+                    android:textSize="@dimen/core_ui_sp_10" />
             </LinearLayout>
 
             <TextView
@@ -142,7 +142,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="@dimen/core_ui_dp_16"
                 android:text="@{viewModel.uiState.learnedWordsCount + `/`+ viewModel.uiState.totalWordsCount}"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_back"
                 app:layout_constraintStart_toEndOf="@+id/iv_back"
@@ -191,8 +191,8 @@
         <TextView
             android:id="@+id/compose_btn"
             android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:layout_margin="16dp"
+            android:layout_height="@dimen/core_ui_dp_54"
+            android:layout_margin="@dimen/core_ui_dp_16"
             android:gravity="center"
             android:textColor="#fff"
             android:stateListAnimator="@animator/module_learning_btn_scale_animator"

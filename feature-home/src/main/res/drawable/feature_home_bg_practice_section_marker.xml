@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:width="2dp"
+        android:width="@dimen/core_ui_dp_2"
         android:gravity="start|center_vertical">
         <shape>
-            <corners android:radius="1dp" />
+            <corners android:radius="@dimen/core_ui_dp_1" />
             <size
-                android:width="2dp"
-                android:height="13dp" />
+                android:width="@dimen/core_ui_dp_2"
+                android:height="@dimen/core_ui_dp_13" />
             <solid android:color="#1688F2" />
         </shape>
     </item>

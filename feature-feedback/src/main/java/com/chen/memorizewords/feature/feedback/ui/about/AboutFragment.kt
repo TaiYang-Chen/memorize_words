@@ -19,6 +19,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.chen.memorizewords.core.ui.R as CoreUiR
+import com.chen.memorizewords.core.ui.ext.dimenPx
+import com.chen.memorizewords.core.ui.ext.dimenPxFloat
+import com.chen.memorizewords.core.ui.ext.setTextSizeFromDimen
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.core.ui.vm.UiEvent
 import com.chen.memorizewords.domain.sync.appupdate.AppUpdateInfo
@@ -189,7 +193,12 @@ class AboutFragment : BaseFragment<AboutViewModel, ModuleFeedbackFragmentAboutBi
             .setTitle(R.string.feature_feedback_update_checking_title)
             .setView(ProgressBar(requireContext()).apply {
                 isIndeterminate = true
-                setPadding(48, 24, 48, 24)
+                setPadding(
+                    dimen(CoreUiR.dimen.core_ui_dp_48),
+                    dimen(CoreUiR.dimen.core_ui_dp_24),
+                    dimen(CoreUiR.dimen.core_ui_dp_48),
+                    dimen(CoreUiR.dimen.core_ui_dp_24)
+                )
             })
             .setNegativeButton(R.string.feature_feedback_update_action_cancel) { dialog, _ ->
                 dialog.dismiss()
@@ -341,7 +350,12 @@ class AboutFragment : BaseFragment<AboutViewModel, ModuleFeedbackFragmentAboutBi
             .setView(info?.let { createUpdateContent(it, progress = null, error = message) }
                 ?: TextView(requireContext()).apply {
                     text = message
-                    setPadding(48, 24, 48, 24)
+                    setPadding(
+                        dimen(CoreUiR.dimen.core_ui_dp_48),
+                        dimen(CoreUiR.dimen.core_ui_dp_24),
+                        dimen(CoreUiR.dimen.core_ui_dp_48),
+                        dimen(CoreUiR.dimen.core_ui_dp_24)
+                    )
                 })
             .setPositiveButton(R.string.feature_feedback_update_action_retry) { _, _ ->
                 if (info == null) {
@@ -369,7 +383,12 @@ class AboutFragment : BaseFragment<AboutViewModel, ModuleFeedbackFragmentAboutBi
         val context = requireContext()
         val content = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(48, 20, 48, 12)
+            setPadding(
+                dimen(CoreUiR.dimen.core_ui_dp_48),
+                dimen(CoreUiR.dimen.core_ui_dp_20),
+                dimen(CoreUiR.dimen.core_ui_dp_48),
+                dimen(CoreUiR.dimen.core_ui_dp_12)
+            )
         }
         content.addView(textLine(getString(R.string.feature_feedback_update_version_span, info.versionSpan), bold = true))
         content.addView(textLine(getString(R.string.feature_feedback_update_publish_time, info.publishedAt ?: "--")))
@@ -390,7 +409,7 @@ class AboutFragment : BaseFragment<AboutViewModel, ModuleFeedbackFragmentAboutBi
             val progressBar = ProgressBar(context, null, android.R.attr.progressBarStyleHorizontal).apply {
                 max = 100
                 this.progress = progress
-                setPadding(0, 18, 0, 0)
+                setPadding(0, dimen(CoreUiR.dimen.core_ui_dp_18), 0, 0)
             }
             val progressText = textLine(getString(R.string.feature_feedback_update_progress, progress))
             downloadingProgressBar = progressBar
@@ -418,7 +437,9 @@ class AboutFragment : BaseFragment<AboutViewModel, ModuleFeedbackFragmentAboutBi
     private fun textLine(text: String, bold: Boolean = false, isError: Boolean = false): TextView {
         return TextView(requireContext()).apply {
             this.text = text
-            textSize = if (bold) 15f else 14f
+            setTextSizeFromDimen(
+                if (bold) CoreUiR.dimen.core_ui_text_15 else CoreUiR.dimen.core_ui_text_14
+            )
             setTextColor(
                 when {
                     isError -> 0xFFDC2626.toInt()
@@ -427,9 +448,17 @@ class AboutFragment : BaseFragment<AboutViewModel, ModuleFeedbackFragmentAboutBi
                 }
             )
             if (bold) setTypeface(typeface, android.graphics.Typeface.BOLD)
-            setPadding(0, 8, 0, 0)
-            setLineSpacing(4f, 1f)
+            setPadding(0, dimen(CoreUiR.dimen.core_ui_dp_8), 0, 0)
+            setLineSpacing(dimenFloat(CoreUiR.dimen.core_ui_dp_4), 1f)
         }
+    }
+
+    private fun dimen(id: Int): Int {
+        return requireContext().dimenPx(id)
+    }
+
+    private fun dimenFloat(id: Int): Float {
+        return requireContext().dimenPxFloat(id)
     }
 
     private fun canInstallPackages(): Boolean {

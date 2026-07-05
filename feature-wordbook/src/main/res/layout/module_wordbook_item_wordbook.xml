@@ -62,8 +62,8 @@
                 android:background="@drawable/feature_wordbook_bg_my_book_status"
                 android:gravity="center"
                 android:includeFontPadding="false"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
+                android:paddingTop="@dimen/core_ui_dp_4"
+                android:paddingBottom="@dimen/core_ui_dp_4"
                 android:paddingStart="@dimen/feature_wordbook_my_book_status_padding_horizontal"
                 android:paddingEnd="@dimen/feature_wordbook_my_book_status_padding_horizontal"
                 android:text="正在学习"
@@ -84,8 +84,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:includeFontPadding="false"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
+                android:paddingTop="@dimen/core_ui_dp_4"
+                android:paddingBottom="@dimen/core_ui_dp_4"
                 android:paddingStart="@dimen/feature_wordbook_my_book_status_padding_horizontal"
                 android:paddingEnd="@dimen/feature_wordbook_my_book_status_padding_horizontal"
                 android:text="删除"
@@ -109,7 +109,7 @@
                 app:layout_constraintEnd_toStartOf="@id/tvStatus"
                 app:layout_constraintStart_toEndOf="@id/coverContainer"
                 app:layout_constraintTop_toTopOf="@id/coverContainer"
-                app:layout_goneMarginEnd="8dp"
+                app:layout_goneMarginEnd="@dimen/core_ui_dp_8"
                 tools:text="IELTS Core Words" />
 
             <TextView

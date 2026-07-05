@@ -119,7 +119,7 @@ class WordLearningTestFragment : Fragment() {
                 text = uiState.prompt,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(LearningTestDimensions.promptPadding)
             )
 
             if (uiState.promptHint.isNotBlank()) {
@@ -127,7 +127,7 @@ class WordLearningTestFragment : Fragment() {
                     text = uiState.promptHint,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
+                        .padding(horizontal = LearningTestDimensions.promptPadding),
                     style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium)
                 )
             }
@@ -135,12 +135,12 @@ class WordLearningTestFragment : Fragment() {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                    .padding(horizontal = LearningTestDimensions.optionListHorizontalPadding),
+                verticalArrangement = Arrangement.spacedBy(LearningTestDimensions.optionSpacing)
             ) {
                 uiState.options.forEachIndexed { index, option ->
                     OptionItem(
-                        modifier = Modifier.height(50.dp),
+                        modifier = Modifier.height(LearningTestDimensions.optionHeight),
                         option = option,
                         isSelected = (selectedIndex == index) || (hasAnswered && option.isCorrect),
                         onClick = { onOptionSelected(index) }
@@ -164,12 +164,12 @@ class WordLearningTestFragment : Fragment() {
                 text = "\u9898\u76EE\u52A0\u8F7D\u4E2D...",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(LearningTestDimensions.promptPadding)
             )
 
             Text(
                 text = "\u8BF7\u7A0D\u5019",
-                modifier = Modifier.padding(top = 8.dp),
+                modifier = Modifier.padding(top = LearningTestDimensions.loadingHintTopPadding),
                 style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
                 color = Color(0xFF666666)
             )
@@ -249,31 +249,39 @@ class WordLearningTestFragment : Fragment() {
                 .fillMaxWidth()
                 .offset { IntOffset(shakeOffset.value.roundToInt(), 0) }
                 .border(
-                    width = if (isSelected) 2.dp else 0.dp,
+                    width = if (isSelected) {
+                        LearningTestDimensions.selectedBorderWidth
+                    } else {
+                        LearningTestDimensions.unselectedBorderWidth
+                    },
                     color = borderColor,
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(LearningTestDimensions.optionCorner)
                 ),
-            shape = RoundedCornerShape(12.dp),
+            shape = RoundedCornerShape(LearningTestDimensions.optionCorner),
             color = backgroundColor,
-            tonalElevation = if (isSelected) 4.dp else 2.dp
+            tonalElevation = if (isSelected) {
+                LearningTestDimensions.selectedElevation
+            } else {
+                LearningTestDimensions.unselectedElevation
+            }
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
-                    .padding(horizontal = 20.dp),
+                    .padding(horizontal = LearningTestDimensions.optionHorizontalPadding),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(LearningTestDimensions.optionContentSpacing)
                 ) {
                     Text(
                         text = option.partOfSpeech,
                         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                         color = textColor,
-                        modifier = Modifier.width(40.dp)
+                        modifier = Modifier.width(LearningTestDimensions.partOfSpeechWidth)
                     )
 
                     Text(
@@ -290,14 +298,31 @@ class WordLearningTestFragment : Fragment() {
                         painter = painterResource(id = if (option.isCorrect) R.drawable.module_learning_check else R.drawable.module_learning_clear),
                         contentDescription = null,
                         tint = textColor,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(LearningTestDimensions.resultIconSize)
                     )
                 } else {
-                    Spacer(modifier = Modifier.size(24.dp))
+                    Spacer(modifier = Modifier.size(LearningTestDimensions.resultIconSize))
                 }
             }
         }
     }
+}
+
+private object LearningTestDimensions {
+    val promptPadding = 16.dp
+    val optionListHorizontalPadding = 8.dp
+    val optionSpacing = 12.dp
+    val optionHeight = 50.dp
+    val loadingHintTopPadding = 8.dp
+    val selectedBorderWidth = 2.dp
+    val unselectedBorderWidth = 0.dp
+    val optionCorner = 12.dp
+    val selectedElevation = 4.dp
+    val unselectedElevation = 2.dp
+    val optionHorizontalPadding = 20.dp
+    val optionContentSpacing = 12.dp
+    val partOfSpeechWidth = 40.dp
+    val resultIconSize = 24.dp
 }
 
 data class OptionData(

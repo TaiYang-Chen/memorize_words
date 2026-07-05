@@ -8,22 +8,22 @@
         android:orientation="vertical">
 
         <View
-            android:layout_width="40dp"
-            android:layout_height="6dp"
+            android:layout_width="@dimen/core_ui_dp_40"
+            android:layout_height="@dimen/core_ui_dp_6"
             android:layout_gravity="center"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/core_ui_dp_8"
             android:background="@drawable/module_wordbook_bg_drag_handle" />
 
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="24dp"
-            android:paddingTop="16dp"
-            android:paddingEnd="24dp"
+            android:paddingStart="@dimen/core_ui_dp_24"
+            android:paddingTop="@dimen/core_ui_dp_16"
+            android:paddingEnd="@dimen/core_ui_dp_24"
             android:text="@string/module_wordbook_study_mode_sheet_title"
             android:textColor="#1f2d38"
-            android:textSize="18sp"
+            android:textSize="@dimen/core_ui_text_18"
             android:textStyle="bold" />
 
         <androidx.core.widget.NestedScrollView
@@ -31,11 +31,11 @@
             android:layout_height="wrap_content"
             android:clipToPadding="false"
             android:fillViewport="true"
-            android:maxHeight="560dp"
-            android:paddingStart="16dp"
-            android:paddingTop="16dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="24dp">
+            android:maxHeight="@dimen/feature_wordbook_picker_max_height"
+            android:paddingStart="@dimen/core_ui_dp_16"
+            android:paddingTop="@dimen/core_ui_dp_16"
+            android:paddingEnd="@dimen/core_ui_dp_16"
+            android:paddingBottom="@dimen/core_ui_dp_24">
 
             <LinearLayout
                 android:id="@+id/modeListContainer"

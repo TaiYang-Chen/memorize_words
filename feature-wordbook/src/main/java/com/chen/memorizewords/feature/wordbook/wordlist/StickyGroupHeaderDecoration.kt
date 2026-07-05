@@ -9,6 +9,8 @@ import android.graphics.Shader
 import android.graphics.Typeface
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.chen.memorizewords.core.ui.R as CoreUiR
+import com.chen.memorizewords.core.ui.ext.dimenPxFloat
 import com.chen.memorizewords.domain.word.model.WordListRow
 import com.chen.memorizewords.feature.wordbook.R
 import kotlin.math.min
@@ -18,12 +20,9 @@ class StickyGroupHeaderDecoration(
     private val adapter: WordPagingAdapter
 ) : RecyclerView.ItemDecoration() {
 
-    private val density = context.resources.displayMetrics.density
-    private val scaledDensity = context.resources.displayMetrics.scaledDensity
-
-    private val headerHeight = 36f * density
-    private val shadowHeight = 8f * density
-    private val textMarginStart = 12f * density
+    private val headerHeight = context.dimenPxFloat(CoreUiR.dimen.core_ui_dp_36)
+    private val shadowHeight = context.dimenPxFloat(CoreUiR.dimen.core_ui_dp_8)
+    private val textMarginStart = context.dimenPxFloat(CoreUiR.dimen.core_ui_dp_12)
 
     /** Header 背景 */
     private val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -32,7 +31,7 @@ class StickyGroupHeaderDecoration(
 
     /** Header 文本 */
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        textSize = 16f * scaledDensity
+        textSize = context.dimenPxFloat(CoreUiR.dimen.core_ui_text_16)
         color = 0xFF666666.toInt()
         typeface = Typeface.DEFAULT_BOLD
     }

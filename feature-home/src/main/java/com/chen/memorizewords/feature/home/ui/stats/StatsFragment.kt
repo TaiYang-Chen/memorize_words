@@ -14,6 +14,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.chen.memorizewords.core.ui.R as CoreUiR
+import com.chen.memorizewords.core.ui.ext.dimenPx
+import com.chen.memorizewords.core.ui.ext.setTextSizeFromDimen
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.feature.home.R
 import com.chen.memorizewords.feature.home.databinding.ModuleHomeFragmentStatsBinding
@@ -131,8 +134,8 @@ class StatsFragment : BaseFragment<StatsViewModel, ModuleHomeFragmentStatsBindin
             orientation = LinearLayout.HORIZONTAL
 
             addView(View(context).apply {
-                layoutParams = LinearLayout.LayoutParams(dp(6), dp(6)).apply {
-                    marginEnd = dp(7)
+                layoutParams = LinearLayout.LayoutParams(dimen(CoreUiR.dimen.core_ui_dp_6), dimen(CoreUiR.dimen.core_ui_dp_6)).apply {
+                    marginEnd = dimen(CoreUiR.dimen.core_ui_dp_7)
                 }
                 background = ovalDrawable(item.color)
             })
@@ -140,7 +143,7 @@ class StatsFragment : BaseFragment<StatsViewModel, ModuleHomeFragmentStatsBindin
                 layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
                 text = item.label
                 setTextColor(0xFF39465F.toInt())
-                textSize = 10f
+                setTextSizeFromDimen(CoreUiR.dimen.core_ui_sp_10)
                 typeface = Typeface.DEFAULT_BOLD
                 includeFontPadding = false
                 maxLines = 1
@@ -149,7 +152,7 @@ class StatsFragment : BaseFragment<StatsViewModel, ModuleHomeFragmentStatsBindin
                 layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 text = "${item.percent.coerceAtLeast(0)}%"
                 setTextColor(0xFF071436.toInt())
-                textSize = 11f
+                setTextSizeFromDimen(CoreUiR.dimen.core_ui_sp_11)
                 typeface = Typeface.DEFAULT_BOLD
                 includeFontPadding = false
             })
@@ -170,8 +173,8 @@ class StatsFragment : BaseFragment<StatsViewModel, ModuleHomeFragmentStatsBindin
             orientation = LinearLayout.HORIZONTAL
 
             addView(ImageView(context).apply {
-                layoutParams = LinearLayout.LayoutParams(dp(34), dp(34)).apply {
-                    marginEnd = dp(8)
+                layoutParams = LinearLayout.LayoutParams(dimen(CoreUiR.dimen.core_ui_dp_34), dimen(CoreUiR.dimen.core_ui_dp_34)).apply {
+                    marginEnd = dimen(CoreUiR.dimen.core_ui_dp_8)
                 }
                 setImageResource(if (achievement.achieved) achievement.iconResId else R.drawable.feature_home_ic_achievement_locked)
                 alpha = if (achievement.achieved) 1f else 0.9f
@@ -185,17 +188,17 @@ class StatsFragment : BaseFragment<StatsViewModel, ModuleHomeFragmentStatsBindin
                     layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                     text = achievement.title
                     setTextColor(0xFF071436.toInt())
-                    textSize = 10f
+                    setTextSizeFromDimen(CoreUiR.dimen.core_ui_sp_10)
                     typeface = Typeface.DEFAULT_BOLD
                     maxLines = 1
                 })
                 addView(TextView(context).apply {
                     layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
-                        topMargin = dp(2)
+                        topMargin = dimen(CoreUiR.dimen.core_ui_dp_2)
                     }
                     text = achievement.subtitle
                     setTextColor(0xFF8190A4.toInt())
-                    textSize = 8f
+                    setTextSizeFromDimen(CoreUiR.dimen.core_ui_sp_8)
                     maxLines = 1
                 })
             })
@@ -265,19 +268,19 @@ class StatsFragment : BaseFragment<StatsViewModel, ModuleHomeFragmentStatsBindin
             orientation = LinearLayout.HORIZONTAL
 
             addView(ImageView(context).apply {
-                layoutParams = LinearLayout.LayoutParams(dp(24), dp(24)).apply {
-                    marginEnd = dp(9)
+                layoutParams = LinearLayout.LayoutParams(dimen(CoreUiR.dimen.core_ui_dp_24), dimen(CoreUiR.dimen.core_ui_dp_24)).apply {
+                    marginEnd = dimen(CoreUiR.dimen.core_ui_dp_9)
                 }
                 background = requireContext().getDrawable(row.iconBackgroundResId)
                 setImageResource(row.iconResId)
-                setPadding(dp(5), dp(5), dp(5), dp(5))
+                setPadding(dimen(CoreUiR.dimen.core_ui_dp_5), dimen(CoreUiR.dimen.core_ui_dp_5), dimen(CoreUiR.dimen.core_ui_dp_5), dimen(CoreUiR.dimen.core_ui_dp_5))
                 contentDescription = null
             })
             addView(TextView(context).apply {
                 layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
                 text = row.label
                 setTextColor(0xFF60708A.toInt())
-                textSize = 10f
+                setTextSizeFromDimen(CoreUiR.dimen.core_ui_sp_10)
                 typeface = Typeface.DEFAULT_BOLD
                 maxLines = 1
             })
@@ -285,7 +288,7 @@ class StatsFragment : BaseFragment<StatsViewModel, ModuleHomeFragmentStatsBindin
                 layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 text = row.value
                 setTextColor(0xFF071436.toInt())
-                textSize = 16f
+                setTextSizeFromDimen(CoreUiR.dimen.core_ui_text_title)
                 typeface = Typeface.DEFAULT_BOLD
                 includeFontPadding = false
                 maxLines = 1
@@ -293,11 +296,11 @@ class StatsFragment : BaseFragment<StatsViewModel, ModuleHomeFragmentStatsBindin
             if (row.unit.isNotBlank()) {
                 addView(TextView(context).apply {
                     layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
-                        marginStart = dp(3)
+                        marginStart = dimen(CoreUiR.dimen.core_ui_dp_3)
                     }
                     text = row.unit
                     setTextColor(0xFF4F5E75.toInt())
-                    textSize = 9f
+                    setTextSizeFromDimen(CoreUiR.dimen.core_ui_sp_9)
                     typeface = Typeface.DEFAULT_BOLD
                     maxLines = 1
                 })
@@ -311,9 +314,8 @@ class StatsFragment : BaseFragment<StatsViewModel, ModuleHomeFragmentStatsBindin
             setColor(color)
         }
     }
-
-    private fun dp(value: Int): Int {
-        return (value * resources.displayMetrics.density).toInt()
+    private fun dimen(id: Int): Int {
+        return requireContext().dimenPx(id)
     }
 
     private companion object {

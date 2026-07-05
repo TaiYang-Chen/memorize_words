@@ -18,12 +18,12 @@
             android:id="@+id/tv_word"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="38dp"
+            android:layout_marginTop="@dimen/core_ui_dp_38"
             android:gravity="center"
             android:visibility="@{viewModel.uiState.showWordSurface ? 0 : 8}"
             android:text="@{viewModel.uiState.currentWord.word}"
             android:textColor="#000000"
-            android:textSize="32sp"
+            android:textSize="@dimen/core_ui_text_32"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -35,7 +35,7 @@
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/core_ui_dp_16"
             android:visibility="@{viewModel.uiState.showWordSurface ? 0 : 8}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,13 +56,13 @@
 
             <RadioGroup
                 android:id="@+id/languageRadioGroup"
-                android:layout_width="50dp"
-                android:layout_height="25dp"
-                android:layout_marginEnd="8dp"
+                android:layout_width="@dimen/core_ui_dp_50"
+                android:layout_height="@dimen/core_ui_dp_25"
+                android:layout_marginEnd="@dimen/core_ui_dp_8"
                 android:layout_gravity="center_vertical"
                 android:background="@drawable/module_learning_toggle_background"
                 android:orientation="horizontal"
-                android:padding="2dp">
+                android:padding="@dimen/core_ui_dp_2">
 
                 <RadioButton
                     android:id="@+id/btnChinese"
@@ -73,10 +73,10 @@
                     android:button="@null"
                     android:checked="true"
                     android:gravity="center"
-                    android:padding="2dp"
+                    android:padding="@dimen/core_ui_dp_2"
                     android:text="美"
                     android:textColor="@drawable/module_learning_toggle_text_selector"
-                    android:textSize="10sp" />
+                    android:textSize="@dimen/core_ui_sp_10" />
 
                 <RadioButton
                     android:id="@+id/btnEnglish"
@@ -86,10 +86,10 @@
                     android:background="@drawable/module_learning_toggle_item_selector"
                     android:button="@null"
                     android:gravity="center"
-                    android:padding="2dp"
+                    android:padding="@dimen/core_ui_dp_2"
                     android:text="英"
                     android:textColor="@drawable/module_learning_toggle_text_selector"
-                    android:textSize="10sp" />
+                    android:textSize="@dimen/core_ui_sp_10" />
 
             </RadioGroup>
             <!-- 音标 -->
@@ -106,9 +106,9 @@
             <!-- 扬声器图标 -->
             <ImageView
                 android:id="@+id/iv_speaker"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="8dp"
+                android:layout_width="@dimen/core_ui_dp_24"
+                android:layout_height="@dimen/core_ui_dp_24"
+                android:layout_marginStart="@dimen/core_ui_dp_8"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/module_learning_ic_volume_up" />
 

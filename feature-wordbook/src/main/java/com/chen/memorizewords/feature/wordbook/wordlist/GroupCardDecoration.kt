@@ -10,6 +10,9 @@ import android.graphics.RectF
 import android.graphics.Typeface
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.chen.memorizewords.core.ui.R as CoreUiR
+import com.chen.memorizewords.core.ui.ext.dimenPxFloat
+import com.chen.memorizewords.core.ui.ext.dpToPx
 import com.chen.memorizewords.domain.word.model.WordListRow
 
 class GroupCardDecoration(
@@ -17,16 +20,15 @@ class GroupCardDecoration(
     private val adapter: WordPagingAdapter
 ) : RecyclerView.ItemDecoration() {
 
-    private val density = context.resources.displayMetrics.density
-
-    private val cardRadius = 12f * density
-    private val cardMarginH = 0f * density
-    private val cardMarginV = 0f * density
-    private val cardPaddingTop = 0f * density   // 给字母让位置
+    private val appContext = context
+    private val cardRadius = context.dimenPxFloat(CoreUiR.dimen.core_ui_dp_12)
+    private val cardMarginH = 0f
+    private val cardMarginV = 0f
+    private val cardPaddingTop = 0f   // 给字母让位置
 
     private val dividerPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = 0xFFE0E0E0.toInt()
-        strokeWidth = 0.5f * density
+        strokeWidth = 0.5f.dpToPx(context)
     }
 
     private val cardPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -34,7 +36,7 @@ class GroupCardDecoration(
     }
 
     private val labelPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        textSize = 16f * context.resources.displayMetrics.scaledDensity
+        textSize = context.dimenPxFloat(CoreUiR.dimen.core_ui_text_16)
         color = 0xFF666666.toInt()
         typeface = Typeface.DEFAULT_BOLD
     }
@@ -65,7 +67,7 @@ class GroupCardDecoration(
 
         if (isFirstInGroup(pos)) {
             // 组与组之间的真实间距
-            outRect.top = (40 * density).toInt()
+            outRect.top = appContext.dimenPxFloat(CoreUiR.dimen.core_ui_dp_40).toInt()
         }
     }
 
@@ -120,8 +122,8 @@ class GroupCardDecoration(
             if (isFirst) {
                 c.drawText(
                     item.groupChar.toString(),
-                    left + 8f * density,
-                    top - 16f * density,
+                    left + appContext.dimenPxFloat(CoreUiR.dimen.core_ui_dp_8),
+                    top - appContext.dimenPxFloat(CoreUiR.dimen.core_ui_dp_16),
                     labelPaint
                 )
             }

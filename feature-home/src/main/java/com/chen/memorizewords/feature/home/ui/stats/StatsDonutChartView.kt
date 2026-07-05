@@ -6,6 +6,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
+import com.chen.memorizewords.core.ui.ext.dpToPx
 
 class StatsDonutChartView @JvmOverloads constructor(
     context: Context,
@@ -29,10 +30,10 @@ class StatsDonutChartView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        val stroke = dp(15f)
+        val stroke = 15f.dpToPx(context)
         segmentPaint.strokeWidth = stroke
         trackPaint.strokeWidth = stroke
-        val padding = stroke / 2f + dp(3f)
+        val padding = stroke / 2f + 3f.dpToPx(context)
         val size = (width.coerceAtMost(height)).toFloat() - padding * 2f
         val left = (width - size) / 2f
         val top = (height - size) / 2f
@@ -53,9 +54,5 @@ class StatsDonutChartView @JvmOverloads constructor(
             canvas.drawArc(oval, start, sweep, false, segmentPaint)
             start += sweep
         }
-    }
-
-    private fun dp(value: Float): Float {
-        return value * resources.displayMetrics.density
     }
 }

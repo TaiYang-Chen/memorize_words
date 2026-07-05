@@ -34,7 +34,7 @@ fun WordSynonymAntonymCard(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(20.dp),
+            .padding(WordSynonymAntonymCardDimensions.containerPadding),
         horizontalAlignment = Alignment.Start
     ) {
         if (visibleSynonyms.isNotEmpty()) {
@@ -46,7 +46,7 @@ fun WordSynonymAntonymCard(
         }
 
         if (visibleSynonyms.isNotEmpty() && visibleAntonyms.isNotEmpty()) {
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(WordSynonymAntonymCardDimensions.sectionSpacing))
         }
 
         if (visibleAntonyms.isNotEmpty()) {
@@ -68,15 +68,15 @@ private fun SynonymAntonymSection(
     Column {
         Text(
             text = title,
-            fontSize = 16.sp,
+            fontSize = WordSynonymAntonymCardDimensions.titleTextSize,
             fontWeight = FontWeight.Bold,
             color = Color.Black,
-            modifier = Modifier.padding(bottom = 12.dp)
+            modifier = Modifier.padding(bottom = WordSynonymAntonymCardDimensions.titleBottomPadding)
         )
 
         FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(WordSynonymAntonymCardDimensions.tagSpacing),
+            verticalArrangement = Arrangement.spacedBy(WordSynonymAntonymCardDimensions.tagSpacing),
             modifier = Modifier.fillMaxWidth()
         ) {
             words.forEach { word ->
@@ -97,17 +97,32 @@ private fun WordTag(
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(WordSynonymAntonymCardDimensions.tagCorner))
             .background(tagColor)
-            .padding(horizontal = 12.dp, vertical = 8.dp)
+            .padding(
+                horizontal = WordSynonymAntonymCardDimensions.tagHorizontalPadding,
+                vertical = WordSynonymAntonymCardDimensions.tagVerticalPadding
+            )
     ) {
         Text(
             text = word,
-            fontSize = 14.sp,
+            fontSize = WordSynonymAntonymCardDimensions.tagTextSize,
             fontWeight = FontWeight.Normal,
             color = Color.Black
         )
     }
+}
+
+private object WordSynonymAntonymCardDimensions {
+    val containerPadding = 20.dp
+    val sectionSpacing = 24.dp
+    val titleBottomPadding = 12.dp
+    val tagSpacing = 8.dp
+    val tagCorner = 8.dp
+    val tagHorizontalPadding = 12.dp
+    val tagVerticalPadding = 8.dp
+    val titleTextSize = 16.sp
+    val tagTextSize = 14.sp
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)

@@ -20,9 +20,9 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingStart="20dp"
-            android:paddingTop="18dp"
-            android:paddingEnd="12dp">
+            android:paddingStart="@dimen/core_ui_dp_20"
+            android:paddingTop="@dimen/core_ui_dp_18"
+            android:paddingEnd="@dimen/core_ui_dp_12">
 
             <TextView
                 android:id="@+id/module_floating_review_tv_word"
@@ -34,19 +34,19 @@
                 android:includeFontPadding="false"
                 android:maxLines="1"
                 android:textColor="#111827"
-                android:textSize="22sp"
+                android:textSize="@dimen/core_ui_text_22"
                 android:textStyle="bold" />
 
             <ImageButton
                 android:id="@+id/module_floating_review_btn_close"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+                android:layout_width="@dimen/core_ui_dp_36"
+                android:layout_height="@dimen/core_ui_dp_36"
                 android:background="@android:color/transparent"
                 android:clickable="true"
                 android:contentDescription="@string/module_floating_review_close"
                 android:focusable="true"
                 android:gravity="center"
-                android:padding="5dp"
+                android:padding="@dimen/core_ui_dp_5"
                 android:scaleType="center"
                 android:src="@drawable/module_floating_review_ic_close" />
         </LinearLayout>
@@ -55,11 +55,11 @@
             android:id="@+id/module_floating_review_phonetic_row"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="@dimen/core_ui_dp_14"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingStart="20dp"
-            android:paddingEnd="18dp">
+            android:paddingStart="@dimen/core_ui_dp_20"
+            android:paddingEnd="@dimen/core_ui_dp_18">
 
             <LinearLayout
                 android:id="@+id/module_floating_review_phonetic_uk_group"
@@ -75,26 +75,26 @@
                     android:includeFontPadding="false"
                     android:text="@string/module_floating_review_phonetic_uk_label"
                     android:textColor="#4F46E5"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/core_ui_text_15"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/module_floating_review_tv_phonetic_uk"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
+                    android:layout_marginStart="@dimen/core_ui_dp_4"
                     android:ellipsize="end"
                     android:includeFontPadding="false"
                     android:maxLines="1"
                     android:textColor="#6B7280"
-                    android:textSize="15sp" />
+                    android:textSize="@dimen/core_ui_text_15" />
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="6dp"
+                    android:layout_width="@dimen/core_ui_dp_20"
+                    android:layout_height="@dimen/core_ui_dp_20"
+                    android:layout_marginStart="@dimen/core_ui_dp_6"
                     android:contentDescription="@string/module_floating_review_pronunciation_icon"
-                    android:padding="2dp"
+                    android:padding="@dimen/core_ui_dp_2"
                     android:src="@drawable/module_floating_review_ic_volume_up" />
             </LinearLayout>
 
@@ -102,7 +102,7 @@
                 android:id="@+id/module_floating_review_phonetic_us_group"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="@dimen/core_ui_dp_10"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
@@ -113,26 +113,26 @@
                     android:includeFontPadding="false"
                     android:text="@string/module_floating_review_phonetic_us_label"
                     android:textColor="#4F46E5"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/core_ui_text_15"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/module_floating_review_tv_phonetic_us"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
+                    android:layout_marginStart="@dimen/core_ui_dp_4"
                     android:ellipsize="end"
                     android:includeFontPadding="false"
                     android:maxLines="1"
                     android:textColor="#6B7280"
-                    android:textSize="15sp" />
+                    android:textSize="@dimen/core_ui_text_15" />
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="6dp"
+                    android:layout_width="@dimen/core_ui_dp_20"
+                    android:layout_height="@dimen/core_ui_dp_20"
+                    android:layout_marginStart="@dimen/core_ui_dp_6"
                     android:contentDescription="@string/module_floating_review_pronunciation_icon"
-                    android:padding="2dp"
+                    android:padding="@dimen/core_ui_dp_2"
                     android:src="@drawable/module_floating_review_ic_volume_up" />
             </LinearLayout>
         </LinearLayout>
@@ -140,34 +140,34 @@
         <View
             android:id="@+id/module_floating_review_phonetic_divider"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="22dp"
-            android:layout_marginEnd="20dp"
+            android:layout_height="@dimen/core_ui_dp_1"
+            android:layout_marginStart="@dimen/core_ui_dp_20"
+            android:layout_marginTop="@dimen/core_ui_dp_22"
+            android:layout_marginEnd="@dimen/core_ui_dp_20"
             android:background="#EEF0F5" />
 
         <LinearLayout
             android:id="@+id/module_floating_review_floating_fields_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="@dimen/core_ui_dp_24"
             android:orientation="vertical"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp" />
+            android:paddingStart="@dimen/core_ui_dp_20"
+            android:paddingEnd="@dimen/core_ui_dp_20" />
 
         <View
             android:id="@+id/module_floating_review_bottom_divider"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="20dp"
+            android:layout_height="@dimen/core_ui_dp_1"
+            android:layout_marginStart="@dimen/core_ui_dp_20"
+            android:layout_marginTop="@dimen/core_ui_dp_24"
+            android:layout_marginEnd="@dimen/core_ui_dp_20"
             android:background="#EEF0F5" />
 
         <LinearLayout
             android:id="@+id/module_floating_review_action_row"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
+            android:layout_height="@dimen/core_ui_dp_52"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -178,13 +178,13 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/module_floating_review_favorite"
-                android:padding="8dp"
+                android:padding="@dimen/core_ui_dp_8"
                 android:scaleType="center"
                 android:src="@drawable/module_floating_review_ic_star" />
 
             <View
-                android:layout_width="1dp"
-                android:layout_height="18dp"
+                android:layout_width="@dimen/core_ui_dp_1"
+                android:layout_height="@dimen/core_ui_dp_18"
                 android:background="#E5E7EB" />
 
             <ImageButton
@@ -194,13 +194,13 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/module_floating_review_refresh"
-                android:padding="7dp"
+                android:padding="@dimen/core_ui_dp_7"
                 android:scaleType="center"
                 android:src="@drawable/module_floating_review_ic_refresh" />
 
             <View
-                android:layout_width="1dp"
-                android:layout_height="18dp"
+                android:layout_width="@dimen/core_ui_dp_1"
+                android:layout_height="@dimen/core_ui_dp_18"
                 android:background="#E5E7EB" />
 
             <ImageButton
@@ -210,7 +210,7 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/module_floating_review_copy"
-                android:padding="8dp"
+                android:padding="@dimen/core_ui_dp_8"
                 android:scaleType="center"
                 android:src="@drawable/module_floating_review_ic_copy" />
         </LinearLayout>

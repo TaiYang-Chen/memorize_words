@@ -5,104 +5,104 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="@dimen/core_ui_dp_12"
         app:cardBackgroundColor="#FFFFFF"
-        app:cardCornerRadius="16dp"
+        app:cardCornerRadius="@dimen/core_ui_dp_16"
         app:cardElevation="0dp"
         app:strokeColor="#E2E8F0"
-        app:strokeWidth="1dp">
+        app:strokeWidth="@dimen/core_ui_dp_1">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="@dimen/core_ui_dp_16">
 
             <TextView
                 android:id="@+id/tvPendingItemTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#0F172A"
-                android:textSize="16sp"
+                android:textSize="@dimen/core_ui_text_16"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvPendingItemMeta"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="@dimen/core_ui_dp_6"
                 android:textColor="#475569"
-                android:textSize="13sp" />
+                android:textSize="@dimen/core_ui_text_13" />
 
             <TextView
                 android:id="@+id/tvPendingItemBizKey"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/core_ui_dp_8"
                 android:textColor="#334155"
-                android:textSize="13sp" />
+                android:textSize="@dimen/core_ui_text_13" />
 
             <TextView
                 android:id="@+id/tvPendingItemUpdatedAt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="@dimen/core_ui_dp_4"
                 android:textColor="#334155"
-                android:textSize="13sp" />
+                android:textSize="@dimen/core_ui_text_13" />
 
             <TextView
                 android:id="@+id/tvPendingItemRetry"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="@dimen/core_ui_dp_4"
                 android:textColor="#92400E"
-                android:textSize="13sp"
+                android:textSize="@dimen/core_ui_text_13"
                 android:visibility="gone" />
 
             <TextView
                 android:id="@+id/tvPendingItemFailure"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="@dimen/core_ui_dp_4"
                 android:textColor="#92400E"
-                android:textSize="13sp"
+                android:textSize="@dimen/core_ui_text_13"
                 android:visibility="gone" />
 
             <TextView
                 android:id="@+id/tvPendingItemError"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="@dimen/core_ui_dp_4"
                 android:textColor="#B91C1C"
-                android:textSize="13sp"
+                android:textSize="@dimen/core_ui_text_13"
                 android:visibility="gone" />
 
             <TextView
                 android:id="@+id/tvPendingItemNextRetry"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="@dimen/core_ui_dp_4"
                 android:textColor="#92400E"
-                android:textSize="13sp"
+                android:textSize="@dimen/core_ui_text_13"
                 android:visibility="gone" />
 
             <TextView
                 android:id="@+id/tvPendingItemExpandHint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="@dimen/core_ui_dp_12"
                 android:textColor="#2563EB"
-                android:textSize="13sp"
+                android:textSize="@dimen/core_ui_text_13"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/detailContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="@dimen/core_ui_dp_12"
                 android:background="#F8FAFC"
                 android:orientation="vertical"
-                android:padding="12dp"
+                android:padding="@dimen/core_ui_dp_12"
                 android:visibility="gone">
 
                 <TextView
@@ -110,45 +110,45 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="#B45309"
-                    android:textSize="13sp"
+                    android:textSize="@dimen/core_ui_text_13"
                     android:visibility="gone" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="@dimen/core_ui_dp_8"
                     android:text="@string/feature_home_pending_sync_detail_fields"
                     android:textColor="#0F172A"
-                    android:textSize="13sp"
+                    android:textSize="@dimen/core_ui_text_13"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tvPendingItemDetailFields"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
+                    android:layout_marginTop="@dimen/core_ui_dp_6"
                     android:textColor="#334155"
-                    android:textSize="13sp"
+                    android:textSize="@dimen/core_ui_text_13"
                     android:visibility="gone" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="@dimen/core_ui_dp_12"
                     android:text="@string/feature_home_pending_sync_raw_payload"
                     android:textColor="#0F172A"
-                    android:textSize="13sp"
+                    android:textSize="@dimen/core_ui_text_13"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tvPendingItemRawPayload"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
+                    android:layout_marginTop="@dimen/core_ui_dp_6"
                     android:fontFamily="monospace"
                     android:textColor="#334155"
                     android:textIsSelectable="true"
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/core_ui_text_12" />
             </LinearLayout>
 
         </LinearLayout>

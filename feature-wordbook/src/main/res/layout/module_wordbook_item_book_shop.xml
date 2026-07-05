@@ -15,12 +15,12 @@
             app:cardBackgroundColor="@android:color/white"
             app:cardCornerRadius="@dimen/feature_wordbook_my_book_card_corner_radius"
             app:cardUseCompatPadding="false"
-            app:strokeWidth="1dp">
+            app:strokeWidth="@dimen/core_ui_dp_1">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp">
+                android:padding="@dimen/core_ui_dp_8">
 
                 <FrameLayout
                     android:id="@+id/coverContainer"
@@ -75,7 +75,7 @@
                     android:layout_marginTop="@dimen/feature_wordbook_shop_description_margin_top"
                     android:layout_marginEnd="@dimen/feature_wordbook_shop_description_end_spacing"
                     android:ellipsize="end"
-                    android:lineSpacingExtra="2dp"
+                    android:lineSpacingExtra="@dimen/core_ui_dp_2"
                     android:maxLines="2"
                     android:textColor="@color/feature_wordbook_shop_card_description"
                     android:textSize="@dimen/feature_wordbook_shop_description_text_size"
@@ -128,13 +128,13 @@
                     android:insetBottom="0dp"
                     android:minWidth="@dimen/feature_wordbook_shop_action_min_width"
                     android:minHeight="@dimen/feature_wordbook_shop_action_min_height"
-                    android:paddingStart="12dp"
-                    android:paddingEnd="12dp"
+                    android:paddingStart="@dimen/core_ui_dp_12"
+                    android:paddingEnd="@dimen/core_ui_dp_12"
                     android:text="@string/module_wordbook_download"
                     android:textAllCaps="false"
-                    android:textSize="10sp"
+                    android:textSize="@dimen/core_ui_sp_10"
                     app:backgroundTint="@null"
-                    app:cornerRadius="16dp"
+                    app:cornerRadius="@dimen/core_ui_dp_16"
                     app:layout_constraintBottom_toBottomOf="@id/coverContainer"
                     app:layout_constraintEnd_toEndOf="parent"
                     tools:text="下载" />

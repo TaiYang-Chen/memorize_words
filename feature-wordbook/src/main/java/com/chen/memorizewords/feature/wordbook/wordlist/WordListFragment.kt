@@ -16,6 +16,9 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chen.memorizewords.core.navigation.LearningEntry
+import com.chen.memorizewords.core.ui.R as CoreUiR
+import com.chen.memorizewords.core.ui.ext.dimenPx
+import com.chen.memorizewords.core.ui.ext.setTextSizeFromDimen
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.core.ui.vm.UiEffect
 import com.chen.memorizewords.domain.word.model.enums.WordFilter
@@ -208,15 +211,15 @@ class WordListFragment : BaseFragment<WordListViewModel, FragmentWordListBinding
         val dialog = BottomSheetDialog(requireContext())
         val container = LinearLayout(requireContext()).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dp(20), dp(12), dp(20), dp(24))
+            setPadding(dimen(CoreUiR.dimen.core_ui_dp_20), dimen(CoreUiR.dimen.core_ui_dp_12), dimen(CoreUiR.dimen.core_ui_dp_20), dimen(CoreUiR.dimen.core_ui_dp_24))
         }
         container.addView(
             TextView(requireContext()).apply {
                 text = "排序方式"
-                textSize = 18f
+                setTextSizeFromDimen(CoreUiR.dimen.core_ui_text_18)
                 setTextColor(ContextCompat.getColor(requireContext(), R.color.feature_wordbook_word_text_primary))
                 typeface = android.graphics.Typeface.DEFAULT_BOLD
-                setPadding(0, dp(8), 0, dp(8))
+                setPadding(0, dimen(CoreUiR.dimen.core_ui_dp_8), 0, dimen(CoreUiR.dimen.core_ui_dp_8))
             }
         )
         WordSortType.entries.forEach { sortType ->
@@ -233,8 +236,8 @@ class WordListFragment : BaseFragment<WordListViewModel, FragmentWordListBinding
         return TextView(requireContext()).apply {
             text = if (selected) "${sortType.displayName()}  ✓" else sortType.displayName()
             gravity = Gravity.CENTER_VERTICAL
-            minHeight = dp(48)
-            textSize = 15f
+            minHeight = dimen(CoreUiR.dimen.core_ui_dp_48)
+            setTextSizeFromDimen(CoreUiR.dimen.core_ui_text_15)
             setTextColor(
                 ContextCompat.getColor(
                     requireContext(),
@@ -255,9 +258,8 @@ class WordListFragment : BaseFragment<WordListViewModel, FragmentWordListBinding
             databind.chipFavorite to WordFilter.FAVORITE
         )
     }
-
-    private fun dp(value: Int): Int {
-        return (value * resources.displayMetrics.density).toInt()
+    private fun dimen(id: Int): Int {
+        return requireContext().dimenPx(id)
     }
 }
 

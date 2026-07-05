@@ -6,6 +6,7 @@ import android.view.MotionEvent
 import android.view.ViewConfiguration
 import android.view.animation.DecelerateInterpolator
 import androidx.core.widget.NestedScrollView
+import com.chen.memorizewords.core.ui.ext.dpToPx
 import kotlin.math.abs
 
 class ElasticNestedScrollView @JvmOverloads constructor(
@@ -22,7 +23,7 @@ class ElasticNestedScrollView @JvmOverloads constructor(
     }
 
     private val touchSlop = ViewConfiguration.get(context).scaledTouchSlop
-    private val maxTranslation = MAX_TRANSLATION_DP * resources.displayMetrics.density
+    private val maxTranslation = MAX_TRANSLATION_DP.dpToPx(context)
     private val returnInterpolator = DecelerateInterpolator()
 
     private var activePointerId = INVALID_POINTER_ID

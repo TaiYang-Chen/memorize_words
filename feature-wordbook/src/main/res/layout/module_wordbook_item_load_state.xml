@@ -8,19 +8,19 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
-        android:padding="16dp">
+        android:padding="@dimen/core_ui_dp_16">
 
         <ProgressBar
             android:id="@+id/progressBar"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/core_ui_dp_24"
+            android:layout_height="@dimen/core_ui_dp_24"
             android:visibility="gone" />
 
         <TextView
             android:id="@+id/tvError"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="@dimen/core_ui_dp_12"
             android:text="加载失败"
             android:visibility="gone" />
 
@@ -28,7 +28,7 @@
             android:id="@+id/btnRetry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="@dimen/core_ui_dp_12"
             android:text="重试"
             android:visibility="gone" />
 

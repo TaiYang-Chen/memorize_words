@@ -23,16 +23,16 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dp">
+            android:layout_marginTop="@dimen/core_ui_dp_3">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:padding="8dp"
+                android:padding="@dimen/core_ui_dp_8"
                 android:text="返回"
                 android:textColor="#000"
-                android:textSize="16sp"
+                android:textSize="@dimen/core_ui_text_16"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -42,11 +42,11 @@
                 android:id="@+id/cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="1dp"
+                android:layout_marginBottom="@dimen/core_ui_dp_1"
                 android:gravity="center"
                 android:text="@string/profile"
                 android:textColor="#000"
-                android:textSize="16sp"
+                android:textSize="@dimen/core_ui_text_16"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -58,10 +58,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:padding="8dp"
+                android:padding="@dimen/core_ui_dp_8"
                 android:text="确定"
                 android:textColor="#000"
-                android:textSize="16sp"
+                android:textSize="@dimen/core_ui_text_16"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -72,10 +72,10 @@
         <com.aigestudio.wheelpicker.WheelPicker
             android:id="@+id/wheelPicker"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:padding="16dp"
+            android:layout_height="@dimen/core_ui_dp_150"
+            android:padding="@dimen/core_ui_dp_16"
             app:wheel_curved="true"
-            app:wheel_item_text_size="24sp"
+            app:wheel_item_text_size="@dimen/core_ui_text_24"
             app:wheel_selected_item_text_color="#000"
             app:wheel_visible_item_count="2" />
 

@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import androidx.core.content.ContextCompat
+import com.chen.memorizewords.core.ui.ext.dpToPx
 import com.chen.memorizewords.feature.learning.R
 import kotlin.math.max
 import kotlin.math.min
@@ -245,7 +246,7 @@ class ShadowingWaveformView @JvmOverloads constructor(
     }
 
     private fun dpToPx(dp: Float): Float {
-        return dp * resources.displayMetrics.density
+        return dp.dpToPx(context)
     }
 
     companion object {

@@ -3,7 +3,7 @@
     <item android:id="@android:id/background">
         <shape>
             <solid android:color="#E9EEF5" />
-            <corners android:radius="4dp" />
+            <corners android:radius="@dimen/core_ui_dp_4" />
         </shape>
     </item>
     <item android:id="@android:id/progress">
@@ -13,7 +13,7 @@
                     android:angle="0"
                     android:startColor="#21D699"
                     android:endColor="#8BE7A8" />
-                <corners android:radius="4dp" />
+                <corners android:radius="@dimen/core_ui_dp_4" />
             </shape>
         </clip>
     </item>

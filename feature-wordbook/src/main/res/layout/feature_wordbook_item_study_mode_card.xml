@@ -8,31 +8,31 @@
         android:layout_height="wrap_content"
         android:clipChildren="false"
         android:clipToPadding="false"
-        android:paddingStart="20dp"
-        android:paddingTop="20dp"
-        android:paddingEnd="20dp"
-        android:paddingBottom="20dp">
+        android:paddingStart="@dimen/core_ui_dp_20"
+        android:paddingTop="@dimen/core_ui_dp_20"
+        android:paddingEnd="@dimen/core_ui_dp_20"
+        android:paddingBottom="@dimen/core_ui_dp_20">
 
         <View
             android:id="@+id/vCornerDecor"
-            android:layout_width="108dp"
-            android:layout_height="108dp"
+            android:layout_width="@dimen/core_ui_dp_108"
+            android:layout_height="@dimen/core_ui_dp_108"
             android:background="@drawable/module_wordbook_bg_study_mode_corner"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <FrameLayout
             android:id="@+id/iconContainer"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_marginTop="8dp"
+            android:layout_width="@dimen/core_ui_dp_56"
+            android:layout_height="@dimen/core_ui_dp_56"
+            android:layout_marginTop="@dimen/core_ui_dp_8"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/ivModeIcon"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="@dimen/core_ui_dp_24"
+                android:layout_height="@dimen/core_ui_dp_24"
                 android:layout_gravity="center"
                 android:contentDescription="@null" />
         </FrameLayout>
@@ -41,7 +41,7 @@
             android:id="@+id/tvModeTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="@dimen/core_ui_dp_20"
             android:textColor="#2c3943"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -52,8 +52,8 @@
             android:id="@+id/tvModeDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:lineSpacingExtra="2dp"
+            android:layout_marginTop="@dimen/core_ui_dp_10"
+            android:lineSpacingExtra="@dimen/core_ui_dp_2"
             android:textColor="@color/module_wordbook_study_mode_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -63,15 +63,15 @@
             android:id="@+id/tvModeBadge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/core_ui_dp_16"
             android:background="@drawable/module_wordbook_bg_study_mode_badge"
-            android:paddingStart="10dp"
-            android:paddingTop="5dp"
-            android:paddingEnd="10dp"
-            android:paddingBottom="5dp"
+            android:paddingStart="@dimen/core_ui_dp_10"
+            android:paddingTop="@dimen/core_ui_dp_5"
+            android:paddingEnd="@dimen/core_ui_dp_10"
+            android:paddingBottom="@dimen/core_ui_dp_5"
             android:text="@string/module_wordbook_study_mode_current_default"
             android:textColor="@color/module_wordbook_study_mode_badge_text"
-            android:textSize="10sp"
+            android:textSize="@dimen/core_ui_sp_10"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvModeDescription" />

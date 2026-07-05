@@ -18,6 +18,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.chen.memorizewords.core.ui.ext.dpToPx
 import com.chen.memorizewords.core.ui.fragment.BaseVmDbFragment
 import com.chen.memorizewords.core.ui.vm.UiEffect
 import com.chen.memorizewords.feature.learning.PracticeActivity
@@ -292,7 +293,7 @@ class ShadowingPracticeFragment :
                         R.drawable.feature_learning_bg_shadowing_history
                     }
                 )
-                setPadding(dp(14), dp(10), dp(14), dp(10))
+                setPadding(14.dpToPx(requireContext()), 10.dpToPx(requireContext()), 14.dpToPx(requireContext()), 10.dpToPx(requireContext()))
                 setOnClickListener {
                     databind.waveformView.stopLiveWave()
                     viewModel.selectAttempt(item.attemptId)
@@ -302,7 +303,7 @@ class ShadowingPracticeFragment :
                 alpha = if (item.isEvaluating) 0.72f else 1f
             }
             val params = LinearLayoutLayoutParamsFactory.wrapContent()
-            params.marginEnd = if (index == history.lastIndex) 0 else dp(10)
+            params.marginEnd = if (index == history.lastIndex) 0 else 10.dpToPx(requireContext())
             databind.layoutHistoryContainer.addView(chip, params)
         }
     }
@@ -791,7 +792,7 @@ class ShadowingPracticeFragment :
         databind.cardRecord.setCardBackgroundColor(
             ContextCompat.getColor(requireContext(), recordStyle.backgroundColorResId)
         )
-        databind.cardRecord.cardElevation = dp(recordStyle.elevationDp).toFloat()
+        databind.cardRecord.cardElevation = (recordStyle.elevationDp).dpToPx(requireContext()).toFloat()
     }
 
     private fun refreshPermissionState() {
@@ -910,13 +911,9 @@ class ShadowingPracticeFragment :
         val displayWidth = if (viewWidth > 0) {
             viewWidth - databind.waveformView.paddingLeft - databind.waveformView.paddingRight
         } else {
-            resources.displayMetrics.widthPixels - dp(48)
+            resources.displayMetrics.widthPixels - 48.dpToPx(requireContext())
         }
         return displayWidth.coerceAtLeast(160)
-    }
-
-    private fun dp(value: Int): Int {
-        return (value * resources.displayMetrics.density).toInt()
     }
 
     private fun showToast(message: String) {

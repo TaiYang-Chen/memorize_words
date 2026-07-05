@@ -39,13 +39,13 @@
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/module_floating_review_back"
                     android:onClick="@{()->viewModel.back()}"
-                    android:padding="7dp"
+                    android:padding="@dimen/core_ui_dp_7"
                     android:src="@drawable/module_floating_review_ic_arrow_back" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
+                    android:layout_marginStart="@dimen/core_ui_dp_6"
                     android:text="@string/module_floating_review_settings_title"
                     android:textColor="#111827"
                     android:textSize="@dimen/title_text_size"
@@ -55,20 +55,20 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="@dimen/core_ui_dp_14"
                 android:text="@string/module_floating_review_settings_subtitle"
                 android:textColor="#4B5563"
-                android:textSize="13sp" />
+                android:textSize="@dimen/core_ui_text_13" />
         </LinearLayout>
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/scrollContent"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/core_ui_dp_16"
             android:clipToPadding="false"
             android:fillViewport="true"
-            android:paddingBottom="20dp"
+            android:paddingBottom="@dimen/core_ui_dp_20"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -84,12 +84,12 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/module_floating_review_bg_settings_card"
                     android:gravity="center_vertical"
-                    android:minHeight="64dp"
+                    android:minHeight="@dimen/core_ui_dp_64"
                     android:orientation="horizontal"
                     android:paddingStart="@dimen/module_floating_review_inner_card_padding"
-                    android:paddingTop="14dp"
+                    android:paddingTop="@dimen/core_ui_dp_14"
                     android:paddingEnd="@dimen/module_floating_review_inner_card_padding"
-                    android:paddingBottom="14dp">
+                    android:paddingBottom="@dimen/core_ui_dp_14">
 
                     <TextView
                         android:layout_width="0dp"
@@ -97,7 +97,7 @@
                         android:layout_weight="1"
                         android:text="@string/module_floating_review_auto_start"
                         android:textColor="#1F2937"
-                        android:textSize="15sp" />
+                        android:textSize="@dimen/core_ui_text_15" />
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
                         android:id="@+id/switchFloatingAutoStart"
@@ -124,13 +124,13 @@
                         android:layout_height="wrap_content"
                         android:text="@string/module_floating_review_appearance_title"
                         android:textColor="#111827"
-                        android:textSize="17sp"
+                        android:textSize="@dimen/core_ui_text_17"
                         android:textStyle="bold" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_16"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -140,14 +140,14 @@
                             android:layout_weight="1"
                             android:text="@string/module_floating_review_ball_size_title"
                             android:textColor="#4B5563"
-                            android:textSize="13sp" />
+                            android:textSize="@dimen/core_ui_text_13" />
 
                         <TextView
                             android:id="@+id/tvBallSizeValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="#4B5563"
-                            android:textSize="14sp"
+                            android:textSize="@dimen/core_ui_text_14"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -155,7 +155,7 @@
                         android:id="@+id/seekBallSize"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_4"
                         android:max="199"
                         android:progress="59"
                         android:progressBackgroundTint="#D6DEE8"
@@ -165,7 +165,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_12"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -175,14 +175,14 @@
                             android:layout_weight="1"
                             android:text="@string/module_floating_review_ball_opacity_title"
                             android:textColor="#4B5563"
-                            android:textSize="13sp" />
+                            android:textSize="@dimen/core_ui_text_13" />
 
                         <TextView
                             android:id="@+id/tvBallOpacityValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="#4B5563"
-                            android:textSize="14sp"
+                            android:textSize="@dimen/core_ui_text_14"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -190,7 +190,7 @@
                         android:id="@+id/seekBallOpacity"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_4"
                         android:max="100"
                         android:progress="100"
                         android:progressBackgroundTint="#D6DEE8"
@@ -200,7 +200,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_12"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -210,14 +210,14 @@
                             android:layout_weight="1"
                             android:text="@string/module_floating_review_card_opacity_title"
                             android:textColor="#4B5563"
-                            android:textSize="13sp" />
+                            android:textSize="@dimen/core_ui_text_13" />
 
                         <TextView
                             android:id="@+id/tvCardOpacityValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="#4B5563"
-                            android:textSize="14sp"
+                            android:textSize="@dimen/core_ui_text_14"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -225,7 +225,7 @@
                         android:id="@+id/seekCardOpacity"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_4"
                         android:max="100"
                         android:progress="100"
                         android:progressBackgroundTint="#D6DEE8"
@@ -235,7 +235,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_12"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -245,14 +245,14 @@
                             android:layout_weight="1"
                             android:text="@string/module_floating_review_card_gap_title"
                             android:textColor="#4B5563"
-                            android:textSize="13sp" />
+                            android:textSize="@dimen/core_ui_text_13" />
 
                         <TextView
                             android:id="@+id/tvCardGapValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="#4B5563"
-                            android:textSize="14sp"
+                            android:textSize="@dimen/core_ui_text_14"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -260,7 +260,7 @@
                         android:id="@+id/seekCardGap"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_4"
                         android:max="72"
                         android:progress="32"
                         android:progressBackgroundTint="#D6DEE8"
@@ -281,7 +281,7 @@
                         android:layout_weight="1"
                         android:text="@string/module_floating_review_source_title"
                         android:textColor="#111827"
-                        android:textSize="17sp"
+                        android:textSize="@dimen/core_ui_text_17"
                         android:textStyle="bold" />
 
                     <LinearLayout
@@ -294,37 +294,37 @@
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnPickWords"
                             android:layout_width="wrap_content"
-                            android:layout_height="34dp"
+                            android:layout_height="@dimen/core_ui_dp_34"
                             android:insetTop="0dp"
                             android:insetBottom="0dp"
                             android:minWidth="0dp"
-                            android:paddingStart="12dp"
-                            android:paddingEnd="12dp"
+                            android:paddingStart="@dimen/core_ui_dp_12"
+                            android:paddingEnd="@dimen/core_ui_dp_12"
                             android:text="@string/module_floating_review_pick_words"
                             android:textColor="#0A5FD3"
-                            android:textSize="13sp"
+                            android:textSize="@dimen/core_ui_text_13"
                             app:backgroundTint="@android:color/transparent"
-                            app:cornerRadius="17dp"
+                            app:cornerRadius="@dimen/core_ui_dp_17"
                             app:strokeColor="#BFD4F5"
-                            app:strokeWidth="1dp" />
+                            app:strokeWidth="@dimen/core_ui_dp_1" />
 
                         <TextView
                             android:id="@+id/tvSelectedCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
+                            android:layout_marginStart="@dimen/core_ui_dp_8"
                             android:textColor="#64748B"
-                            android:textSize="12sp" />
+                            android:textSize="@dimen/core_ui_text_12" />
                     </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/core_ui_dp_10"
                     android:background="@drawable/module_floating_review_bg_settings_card"
                     android:orientation="vertical"
-                    android:padding="8dp">
+                    android:padding="@dimen/core_ui_dp_8">
 
                     <LinearLayout
                         android:id="@+id/layoutSourceCurrent"
@@ -335,10 +335,10 @@
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
                         android:gravity="center_vertical"
-                        android:minHeight="50dp"
+                        android:minHeight="@dimen/core_ui_dp_50"
                         android:orientation="horizontal"
-                        android:paddingStart="12dp"
-                        android:paddingEnd="12dp">
+                        android:paddingStart="@dimen/core_ui_dp_12"
+                        android:paddingEnd="@dimen/core_ui_dp_12">
 
                         <RadioButton
                             android:id="@+id/rbSourceCurrent"
@@ -352,26 +352,26 @@
                             android:id="@+id/tvSourceCurrent"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
+                            android:layout_marginStart="@dimen/core_ui_dp_10"
                             android:text="@string/module_floating_review_source_current"
                             android:textColor="#1F2937"
-                            android:textSize="15sp" />
+                            android:textSize="@dimen/core_ui_text_15" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/layoutSourceSelf"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_6"
                         android:background="@drawable/module_floating_review_bg_settings_row_idle"
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
                         android:gravity="center_vertical"
-                        android:minHeight="50dp"
+                        android:minHeight="@dimen/core_ui_dp_50"
                         android:orientation="horizontal"
-                        android:paddingStart="12dp"
-                        android:paddingEnd="12dp">
+                        android:paddingStart="@dimen/core_ui_dp_12"
+                        android:paddingEnd="@dimen/core_ui_dp_12">
 
                         <RadioButton
                             android:id="@+id/rbSourceSelf"
@@ -385,10 +385,10 @@
                             android:id="@+id/tvSourceSelf"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
+                            android:layout_marginStart="@dimen/core_ui_dp_10"
                             android:text="@string/module_floating_review_source_self"
                             android:textColor="#1F2937"
-                            android:textSize="15sp" />
+                            android:textSize="@dimen/core_ui_text_15" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -398,17 +398,17 @@
                     android:layout_marginTop="@dimen/module_floating_review_section_spacing"
                     android:text="@string/module_floating_review_order_title"
                     android:textColor="#111827"
-                    android:textSize="17sp"
+                    android:textSize="@dimen/core_ui_text_17"
                     android:textStyle="bold" />
 
                 <LinearLayout
                     android:id="@+id/layoutOrderCard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/core_ui_dp_10"
                     android:background="@drawable/module_floating_review_bg_settings_card"
                     android:orientation="vertical"
-                    android:padding="8dp">
+                    android:padding="@dimen/core_ui_dp_8">
 
                     <LinearLayout
                         android:id="@+id/layoutOrderRandom"
@@ -419,10 +419,10 @@
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
                         android:gravity="center_vertical"
-                        android:minHeight="50dp"
+                        android:minHeight="@dimen/core_ui_dp_50"
                         android:orientation="horizontal"
-                        android:paddingStart="12dp"
-                        android:paddingEnd="12dp">
+                        android:paddingStart="@dimen/core_ui_dp_12"
+                        android:paddingEnd="@dimen/core_ui_dp_12">
 
                         <TextView
                             android:id="@+id/tvOrderRandom"
@@ -431,7 +431,7 @@
                             android:layout_weight="1"
                             android:text="@string/module_floating_review_order_random"
                             android:textColor="#1F2937"
-                            android:textSize="15sp" />
+                            android:textSize="@dimen/core_ui_text_15" />
 
                         <TextView
                             android:id="@+id/ivOrderRandomCheck"
@@ -439,7 +439,7 @@
                             android:layout_height="wrap_content"
                             android:text="✓"
                             android:textColor="#0A5FD3"
-                            android:textSize="16sp"
+                            android:textSize="@dimen/core_ui_text_16"
                             android:visibility="gone" />
                     </LinearLayout>
 
@@ -447,16 +447,16 @@
                         android:id="@+id/layoutOrderMemory"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_6"
                         android:background="@drawable/module_floating_review_bg_settings_row_idle"
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
                         android:gravity="center_vertical"
-                        android:minHeight="50dp"
+                        android:minHeight="@dimen/core_ui_dp_50"
                         android:orientation="horizontal"
-                        android:paddingStart="12dp"
-                        android:paddingEnd="12dp">
+                        android:paddingStart="@dimen/core_ui_dp_12"
+                        android:paddingEnd="@dimen/core_ui_dp_12">
 
                         <TextView
                             android:id="@+id/tvOrderMemory"
@@ -465,7 +465,7 @@
                             android:layout_weight="1"
                             android:text="@string/module_floating_review_order_memory"
                             android:textColor="#1F2937"
-                            android:textSize="15sp" />
+                            android:textSize="@dimen/core_ui_text_15" />
 
                         <TextView
                             android:id="@+id/ivOrderMemoryCheck"
@@ -473,7 +473,7 @@
                             android:layout_height="wrap_content"
                             android:text="✓"
                             android:textColor="#0A5FD3"
-                            android:textSize="16sp"
+                            android:textSize="@dimen/core_ui_text_16"
                             android:visibility="gone" />
                     </LinearLayout>
 
@@ -481,16 +481,16 @@
                         android:id="@+id/layoutOrderAlphaAsc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_6"
                         android:background="@drawable/module_floating_review_bg_settings_row_idle"
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
                         android:gravity="center_vertical"
-                        android:minHeight="50dp"
+                        android:minHeight="@dimen/core_ui_dp_50"
                         android:orientation="horizontal"
-                        android:paddingStart="12dp"
-                        android:paddingEnd="12dp">
+                        android:paddingStart="@dimen/core_ui_dp_12"
+                        android:paddingEnd="@dimen/core_ui_dp_12">
 
                         <TextView
                             android:id="@+id/tvOrderAlphaAsc"
@@ -499,7 +499,7 @@
                             android:layout_weight="1"
                             android:text="@string/module_floating_review_order_alpha_asc"
                             android:textColor="#1F2937"
-                            android:textSize="15sp" />
+                            android:textSize="@dimen/core_ui_text_15" />
 
                         <TextView
                             android:id="@+id/ivOrderAlphaAscCheck"
@@ -507,7 +507,7 @@
                             android:layout_height="wrap_content"
                             android:text="✓"
                             android:textColor="#0A5FD3"
-                            android:textSize="16sp"
+                            android:textSize="@dimen/core_ui_text_16"
                             android:visibility="gone" />
                     </LinearLayout>
 
@@ -515,16 +515,16 @@
                         android:id="@+id/layoutOrderAlphaDesc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_6"
                         android:background="@drawable/module_floating_review_bg_settings_row_idle"
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
                         android:gravity="center_vertical"
-                        android:minHeight="50dp"
+                        android:minHeight="@dimen/core_ui_dp_50"
                         android:orientation="horizontal"
-                        android:paddingStart="12dp"
-                        android:paddingEnd="12dp">
+                        android:paddingStart="@dimen/core_ui_dp_12"
+                        android:paddingEnd="@dimen/core_ui_dp_12">
 
                         <TextView
                             android:id="@+id/tvOrderAlphaDesc"
@@ -533,7 +533,7 @@
                             android:layout_weight="1"
                             android:text="@string/module_floating_review_order_alpha_desc"
                             android:textColor="#1F2937"
-                            android:textSize="15sp" />
+                            android:textSize="@dimen/core_ui_text_15" />
 
                         <TextView
                             android:id="@+id/ivOrderAlphaDescCheck"
@@ -541,7 +541,7 @@
                             android:layout_height="wrap_content"
                             android:text="✓"
                             android:textColor="#0A5FD3"
-                            android:textSize="16sp"
+                            android:textSize="@dimen/core_ui_text_16"
                             android:visibility="gone" />
                     </LinearLayout>
 
@@ -549,16 +549,16 @@
                         android:id="@+id/layoutOrderLengthAsc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_6"
                         android:background="@drawable/module_floating_review_bg_settings_row_idle"
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
                         android:gravity="center_vertical"
-                        android:minHeight="50dp"
+                        android:minHeight="@dimen/core_ui_dp_50"
                         android:orientation="horizontal"
-                        android:paddingStart="12dp"
-                        android:paddingEnd="12dp">
+                        android:paddingStart="@dimen/core_ui_dp_12"
+                        android:paddingEnd="@dimen/core_ui_dp_12">
 
                         <TextView
                             android:id="@+id/tvOrderLengthAsc"
@@ -567,7 +567,7 @@
                             android:layout_weight="1"
                             android:text="@string/module_floating_review_order_length_asc"
                             android:textColor="#1F2937"
-                            android:textSize="15sp" />
+                            android:textSize="@dimen/core_ui_text_15" />
 
                         <TextView
                             android:id="@+id/ivOrderLengthAscCheck"
@@ -575,7 +575,7 @@
                             android:layout_height="wrap_content"
                             android:text="✓"
                             android:textColor="#0A5FD3"
-                            android:textSize="16sp"
+                            android:textSize="@dimen/core_ui_text_16"
                             android:visibility="gone" />
                     </LinearLayout>
 
@@ -583,16 +583,16 @@
                         android:id="@+id/layoutOrderLengthDesc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_6"
                         android:background="@drawable/module_floating_review_bg_settings_row_idle"
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
                         android:gravity="center_vertical"
-                        android:minHeight="50dp"
+                        android:minHeight="@dimen/core_ui_dp_50"
                         android:orientation="horizontal"
-                        android:paddingStart="12dp"
-                        android:paddingEnd="12dp">
+                        android:paddingStart="@dimen/core_ui_dp_12"
+                        android:paddingEnd="@dimen/core_ui_dp_12">
 
                         <TextView
                             android:id="@+id/tvOrderLengthDesc"
@@ -601,7 +601,7 @@
                             android:layout_weight="1"
                             android:text="@string/module_floating_review_order_length_desc"
                             android:textColor="#1F2937"
-                            android:textSize="15sp" />
+                            android:textSize="@dimen/core_ui_text_15" />
 
                         <TextView
                             android:id="@+id/ivOrderLengthDescCheck"
@@ -609,7 +609,7 @@
                             android:layout_height="wrap_content"
                             android:text="✓"
                             android:textColor="#0A5FD3"
-                            android:textSize="16sp"
+                            android:textSize="@dimen/core_ui_text_16"
                             android:visibility="gone" />
                     </LinearLayout>
                 </LinearLayout>
@@ -620,17 +620,17 @@
                     android:layout_marginTop="@dimen/module_floating_review_section_spacing"
                     android:text="@string/module_floating_review_fields_title"
                     android:textColor="#111827"
-                    android:textSize="17sp"
+                    android:textSize="@dimen/core_ui_text_17"
                     android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvFieldConfigs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/core_ui_dp_10"
                     android:clipToPadding="false"
                     android:nestedScrollingEnabled="false"
-                    android:paddingBottom="10dp" />
+                    android:paddingBottom="@dimen/core_ui_dp_10" />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>

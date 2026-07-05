@@ -5,7 +5,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@drawable/feature_learning_bg_audio_loop_settings_card</item>
         <item name="android:orientation">vertical</item>
-        <item name="android:padding">16dp</item>
+        <item name="android:padding">@dimen/core_ui_dp_16</item>
     </style>
 
     <style name="FeatureLearningAudioLoopSettingsSectionHeader">
@@ -16,15 +16,15 @@
     </style>
 
     <style name="FeatureLearningAudioLoopSettingsAccent">
-        <item name="android:layout_width">4dp</item>
-        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_width">@dimen/core_ui_dp_4</item>
+        <item name="android:layout_height">@dimen/core_ui_dp_24</item>
         <item name="android:background">@drawable/feature_learning_bg_audio_loop_settings_accent</item>
     </style>
 
     <style name="FeatureLearningAudioLoopSettingsSectionTextGroup">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginStart">12dp</item>
+        <item name="android:layout_marginStart">@dimen/core_ui_dp_12</item>
         <item name="android:layout_weight">1</item>
         <item name="android:orientation">vertical</item>
     </style>
@@ -33,42 +33,42 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/feature_learning_audio_loop_text_primary</item>
-        <item name="android:textSize">17sp</item>
+        <item name="android:textSize">@dimen/core_ui_text_17</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="FeatureLearningAudioLoopSettingsSectionDesc">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:layout_marginTop">@dimen/core_ui_dp_2</item>
         <item name="android:textColor">@color/feature_learning_audio_loop_text_secondary</item>
-        <item name="android:textSize">13sp</item>
+        <item name="android:textSize">@dimen/core_ui_text_13</item>
     </style>
 
     <style name="FeatureLearningAudioLoopSettingsList">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">14dp</item>
+        <item name="android:layout_marginTop">@dimen/core_ui_dp_14</item>
         <item name="android:background">@drawable/feature_learning_bg_audio_loop_settings_list</item>
         <item name="android:orientation">vertical</item>
     </style>
 
     <style name="FeatureLearningAudioLoopSettingsModeRow">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">72dp</item>
+        <item name="android:layout_height">@dimen/core_ui_dp_72</item>
         <item name="android:background">?attr/selectableItemBackground</item>
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:orientation">horizontal</item>
-        <item name="android:paddingStart">12dp</item>
-        <item name="android:paddingEnd">8dp</item>
+        <item name="android:paddingStart">@dimen/core_ui_dp_12</item>
+        <item name="android:paddingEnd">@dimen/core_ui_dp_8</item>
     </style>
 
     <style name="FeatureLearningAudioLoopSettingsModeTextGroup">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginStart">12dp</item>
+        <item name="android:layout_marginStart">@dimen/core_ui_dp_12</item>
         <item name="android:layout_weight">1</item>
         <item name="android:orientation">vertical</item>
     </style>
@@ -77,23 +77,23 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/feature_learning_audio_loop_text_primary</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">@dimen/core_ui_text_15</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="FeatureLearningAudioLoopSettingsModeDesc">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:layout_marginTop">@dimen/core_ui_dp_2</item>
         <item name="android:textColor">@color/feature_learning_audio_loop_text_secondary</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">@dimen/core_ui_text_12</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
     </style>
 
     <style name="FeatureLearningAudioLoopSettingsRadio">
-        <item name="android:layout_width">48dp</item>
-        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_width">@dimen/core_ui_dp_48</item>
+        <item name="android:layout_height">@dimen/core_ui_dp_48</item>
         <item name="android:clickable">false</item>
         <item name="android:focusable">false</item>
         <item name="buttonTint">@color/feature_learning_audio_loop_settings_radio_tint</item>
@@ -101,80 +101,80 @@
 
     <style name="FeatureLearningAudioLoopSettingsRow">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">56dp</item>
+        <item name="android:layout_height">@dimen/core_ui_dp_56</item>
         <item name="android:background">?attr/selectableItemBackground</item>
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:orientation">horizontal</item>
-        <item name="android:paddingStart">12dp</item>
-        <item name="android:paddingEnd">12dp</item>
+        <item name="android:paddingStart">@dimen/core_ui_dp_12</item>
+        <item name="android:paddingEnd">@dimen/core_ui_dp_12</item>
     </style>
 
     <style name="FeatureLearningAudioLoopSettingsRowIcon">
-        <item name="android:layout_width">38dp</item>
-        <item name="android:layout_height">38dp</item>
+        <item name="android:layout_width">@dimen/core_ui_dp_38</item>
+        <item name="android:layout_height">@dimen/core_ui_dp_38</item>
         <item name="android:background">@drawable/feature_learning_bg_audio_loop_settings_icon</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/feature_learning_audio_loop_text_primary</item>
-        <item name="android:textSize">13sp</item>
+        <item name="android:textSize">@dimen/core_ui_text_13</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="FeatureLearningAudioLoopSettingsRowTitle">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginStart">12dp</item>
+        <item name="android:layout_marginStart">@dimen/core_ui_dp_12</item>
         <item name="android:layout_weight">1</item>
         <item name="android:textColor">@color/feature_learning_audio_loop_text_primary</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">@dimen/core_ui_text_15</item>
         <item name="android:textStyle">bold</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
     </style>
 
     <style name="FeatureLearningAudioLoopSettingsRowValue">
-        <item name="android:layout_width">82dp</item>
+        <item name="android:layout_width">@dimen/core_ui_dp_82</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">end</item>
         <item name="android:textColor">@color/feature_learning_audio_loop_text_secondary</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">@dimen/core_ui_text_14</item>
         <item name="android:textStyle">bold</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
     </style>
 
     <style name="FeatureLearningAudioLoopSettingsRowArrow">
-        <item name="android:layout_width">20dp</item>
-        <item name="android:layout_height">20dp</item>
-        <item name="android:layout_marginStart">6dp</item>
+        <item name="android:layout_width">@dimen/core_ui_dp_20</item>
+        <item name="android:layout_height">@dimen/core_ui_dp_20</item>
+        <item name="android:layout_marginStart">@dimen/core_ui_dp_6</item>
         <item name="android:src">@drawable/feature_learning_ic_audio_loop_chevron_right</item>
         <item name="android:contentDescription">@null</item>
     </style>
 
     <style name="FeatureLearningAudioLoopSettingsDivider">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1dp</item>
-        <item name="android:layout_marginStart">62dp</item>
+        <item name="android:layout_height">@dimen/core_ui_dp_1</item>
+        <item name="android:layout_marginStart">@dimen/core_ui_dp_62</item>
         <item name="android:background">@color/feature_learning_audio_loop_divider</item>
     </style>
 
     <style name="FeatureLearningAudioLoopSettingsSwitchRow">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">64dp</item>
+        <item name="android:layout_height">@dimen/core_ui_dp_64</item>
         <item name="android:background">?attr/selectableItemBackground</item>
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:orientation">horizontal</item>
-        <item name="android:paddingStart">12dp</item>
-        <item name="android:paddingEnd">10dp</item>
+        <item name="android:paddingStart">@dimen/core_ui_dp_12</item>
+        <item name="android:paddingEnd">@dimen/core_ui_dp_10</item>
     </style>
 
     <style name="FeatureLearningAudioLoopSettingsSwitchTextGroup">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginStart">12dp</item>
+        <item name="android:layout_marginStart">@dimen/core_ui_dp_12</item>
         <item name="android:layout_weight">1</item>
         <item name="android:orientation">vertical</item>
     </style>
@@ -183,16 +183,16 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/feature_learning_audio_loop_text_primary</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">@dimen/core_ui_text_15</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="FeatureLearningAudioLoopSettingsSwitchDesc">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:layout_marginTop">@dimen/core_ui_dp_2</item>
         <item name="android:textColor">@color/feature_learning_audio_loop_text_secondary</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">@dimen/core_ui_text_12</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
     </style>
@@ -200,8 +200,8 @@
     <style name="FeatureLearningAudioLoopSettingsSwitch">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:minWidth">52dp</item>
-        <item name="android:minHeight">32dp</item>
+        <item name="android:minWidth">@dimen/core_ui_dp_52</item>
+        <item name="android:minHeight">@dimen/core_ui_dp_32</item>
         <item name="android:padding">0dp</item>
         <item name="thumbTint">@color/feature_learning_audio_loop_settings_switch_thumb</item>
         <item name="trackTint">@color/feature_learning_audio_loop_settings_switch_track</item>

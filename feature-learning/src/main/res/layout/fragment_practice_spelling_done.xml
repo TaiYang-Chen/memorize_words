@@ -29,7 +29,7 @@
                 android:layout_gravity="center_vertical|start"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/practice_spelling_done_exit"
-                android:padding="7dp"
+                android:padding="@dimen/core_ui_dp_7"
                 android:src="@drawable/module_learning_close"
                 app:tint="#0F172A" />
 
@@ -51,7 +51,7 @@
             android:layout_height="0dp"
             android:clipToPadding="false"
             android:overScrollMode="never"
-            android:paddingBottom="140dp"
+            android:paddingBottom="@dimen/core_ui_dp_140"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -61,20 +61,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingTop="12dp">
+                android:paddingTop="@dimen/core_ui_dp_12">
 
                 <LinearLayout
                     android:id="@+id/card_hero"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/module_learning_bg_summary_hero"
-                    android:elevation="1dp"
+                    android:elevation="@dimen/core_ui_dp_1"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
-                    android:paddingStart="20dp"
-                    android:paddingTop="22dp"
-                    android:paddingEnd="20dp"
-                    android:paddingBottom="24dp">
+                    android:paddingStart="@dimen/core_ui_dp_20"
+                    android:paddingTop="@dimen/core_ui_dp_22"
+                    android:paddingEnd="@dimen/core_ui_dp_20"
+                    android:paddingBottom="@dimen/core_ui_dp_24">
 
                     <TextView
                         android:id="@+id/tv_done_tag"
@@ -82,24 +82,24 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/module_learning_bg_summary_chip"
                         android:includeFontPadding="false"
-                        android:paddingStart="14dp"
-                        android:paddingTop="6dp"
-                        android:paddingEnd="14dp"
-                        android:paddingBottom="6dp"
+                        android:paddingStart="@dimen/core_ui_dp_14"
+                        android:paddingTop="@dimen/core_ui_dp_6"
+                        android:paddingEnd="@dimen/core_ui_dp_14"
+                        android:paddingBottom="@dimen/core_ui_dp_6"
                         android:text="@string/practice_spelling_done_tag"
                         android:textColor="#723B07"
-                        android:textSize="14sp"
+                        android:textSize="@dimen/core_ui_text_14"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tv_accuracy"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_12"
                         android:gravity="center"
                         android:includeFontPadding="false"
                         android:textColor="#006C5B"
-                        android:textSize="48sp"
+                        android:textSize="@dimen/core_ui_text_48"
                         android:textStyle="bold"
                         tools:text="86%" />
 
@@ -107,44 +107,44 @@
                         android:id="@+id/tv_done_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_8"
                         android:gravity="center"
                         android:includeFontPadding="false"
                         android:text="@string/practice_spelling_done_title"
                         android:textColor="#07111F"
-                        android:textSize="25sp"
+                        android:textSize="@dimen/core_ui_text_25"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tv_done_subtitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_10"
                         android:gravity="center"
-                        android:lineSpacingExtra="4dp"
+                        android:lineSpacingExtra="@dimen/core_ui_dp_4"
                         android:textColor="#2F3A35"
-                        android:textSize="14sp"
+                        android:textSize="@dimen/core_ui_text_14"
                         tools:text="完成 7 个单词，错词 1 个。" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/card_stats"
                     android:layout_width="match_parent"
-                    android:layout_height="92dp"
-                    android:layout_marginTop="14dp"
+                    android:layout_height="@dimen/core_ui_dp_92"
+                    android:layout_marginTop="@dimen/core_ui_dp_14"
                     android:background="@drawable/module_learning_bg_summary_panel"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    android:paddingStart="12dp"
-                    android:paddingEnd="12dp">
+                    android:paddingStart="@dimen/core_ui_dp_12"
+                    android:paddingEnd="@dimen/core_ui_dp_12">
 
                     <include
                         android:id="@+id/stat_completed"
                         layout="@layout/include_practice_spelling_done_stat" />
 
                     <View
-                        android:layout_width="1dp"
-                        android:layout_height="52dp"
+                        android:layout_width="@dimen/core_ui_dp_1"
+                        android:layout_height="@dimen/core_ui_dp_52"
                         android:background="@drawable/module_learning_bg_summary_divider" />
 
                     <include
@@ -152,8 +152,8 @@
                         layout="@layout/include_practice_spelling_done_stat" />
 
                     <View
-                        android:layout_width="1dp"
-                        android:layout_height="52dp"
+                        android:layout_width="@dimen/core_ui_dp_1"
+                        android:layout_height="@dimen/core_ui_dp_52"
                         android:background="@drawable/module_learning_bg_summary_divider" />
 
                     <include
@@ -161,8 +161,8 @@
                         layout="@layout/include_practice_spelling_done_stat" />
 
                     <View
-                        android:layout_width="1dp"
-                        android:layout_height="52dp"
+                        android:layout_width="@dimen/core_ui_dp_1"
+                        android:layout_height="@dimen/core_ui_dp_52"
                         android:background="@drawable/module_learning_bg_summary_divider" />
 
                     <include
@@ -174,33 +174,33 @@
                     android:id="@+id/tv_review_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="@dimen/core_ui_dp_18"
                     android:includeFontPadding="false"
                     android:text="@string/practice_spelling_done_review_title"
                     android:textColor="#07111F"
-                    android:textSize="19sp"
+                    android:textSize="@dimen/core_ui_text_19"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_review_empty"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="@dimen/core_ui_dp_12"
                     android:background="@drawable/module_learning_bg_summary_panel"
-                    android:lineSpacingExtra="4dp"
-                    android:paddingStart="18dp"
-                    android:paddingTop="16dp"
-                    android:paddingEnd="18dp"
-                    android:paddingBottom="16dp"
+                    android:lineSpacingExtra="@dimen/core_ui_dp_4"
+                    android:paddingStart="@dimen/core_ui_dp_18"
+                    android:paddingTop="@dimen/core_ui_dp_16"
+                    android:paddingEnd="@dimen/core_ui_dp_18"
+                    android:paddingBottom="@dimen/core_ui_dp_16"
                     android:text="@string/practice_spelling_done_review_empty"
                     android:textColor="#26352F"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/core_ui_text_14" />
 
                 <LinearLayout
                     android:id="@+id/layout_wrong_words"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="@dimen/core_ui_dp_12"
                     android:orientation="vertical" />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
@@ -209,8 +209,8 @@
             android:id="@+id/action_panel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:elevation="8dp"
+            android:layout_marginBottom="@dimen/core_ui_dp_20"
+            android:elevation="@dimen/core_ui_dp_8"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -219,33 +219,33 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_primary"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="@dimen/core_ui_dp_52"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
-                android:textSize="16sp"
+                android:textSize="@dimen/core_ui_text_16"
                 android:textStyle="bold"
                 app:backgroundTint="@android:color/black"
-                app:cornerRadius="26dp" />
+                app:cornerRadius="@dimen/core_ui_dp_26" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_exit"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="10dp"
+                android:layout_height="@dimen/core_ui_dp_50"
+                android:layout_marginTop="@dimen/core_ui_dp_10"
                 android:backgroundTint="@android:color/white"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
                 android:text="@string/practice_spelling_done_exit"
                 android:textAllCaps="false"
                 android:textColor="#334155"
-                android:textSize="16sp"
+                android:textSize="@dimen/core_ui_text_16"
                 android:textStyle="bold"
-                app:cornerRadius="25dp"
+                app:cornerRadius="@dimen/core_ui_dp_25"
                 app:strokeColor="#D8DEE8"
-                app:strokeWidth="1dp" />
+                app:strokeWidth="@dimen/core_ui_dp_1" />
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -277,7 +277,7 @@
                     android:layout_gravity="center_vertical|start"
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/practice_spelling_done_detail_back"
-                    android:padding="7dp"
+                    android:padding="@dimen/core_ui_dp_7"
                     android:src="@drawable/ic_arrow_back"
                     app:tint="#0F172A" />
 
@@ -298,7 +298,7 @@
                 android:layout_height="0dp"
                 android:clipToPadding="false"
                 android:overScrollMode="never"
-                android:paddingBottom="24dp"
+                android:paddingBottom="@dimen/core_ui_dp_24"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -308,9 +308,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingStart="18dp"
-                    android:paddingTop="18dp"
-                    android:paddingEnd="18dp">
+                    android:paddingStart="@dimen/core_ui_dp_18"
+                    android:paddingTop="@dimen/core_ui_dp_18"
+                    android:paddingEnd="@dimen/core_ui_dp_18">
 
                     <TextView
                         android:id="@+id/tv_detail_word"
@@ -318,33 +318,33 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:textColor="#0F172A"
-                        android:textSize="32sp"
+                        android:textSize="@dimen/core_ui_text_32"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tv_detail_phonetic"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_10"
                         android:gravity="center"
                         android:textColor="#64748B"
-                        android:textSize="14sp" />
+                        android:textSize="@dimen/core_ui_text_14" />
 
                     <TextView
                         android:id="@+id/tv_detail_loading"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="28dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_28"
                         android:gravity="center"
                         android:text="@string/practice_spelling_detail_loading"
                         android:textColor="#94A3B8"
-                        android:textSize="14sp" />
+                        android:textSize="@dimen/core_ui_text_14" />
 
                     <LinearLayout
                         android:id="@+id/layout_detail_content"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_24"
                         android:orientation="vertical"
                         android:visibility="gone">
 
@@ -353,31 +353,31 @@
                             android:layout_height="wrap_content"
                             android:text="@string/learning_share_definitions_title"
                             android:textColor="#0F172A"
-                            android:textSize="15sp"
+                            android:textSize="@dimen/core_ui_text_15"
                             android:textStyle="bold" />
 
                         <LinearLayout
                             android:id="@+id/layout_detail_definitions"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="@dimen/core_ui_dp_10"
                             android:orientation="vertical" />
 
                         <TextView
                             android:id="@+id/tv_detail_examples_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="24dp"
+                            android:layout_marginTop="@dimen/core_ui_dp_24"
                             android:text="@string/learning_share_examples_title"
                             android:textColor="#0F172A"
-                            android:textSize="15sp"
+                            android:textSize="@dimen/core_ui_text_15"
                             android:textStyle="bold" />
 
                         <LinearLayout
                             android:id="@+id/layout_detail_examples"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="@dimen/core_ui_dp_10"
                             android:orientation="vertical" />
                     </LinearLayout>
                 </LinearLayout>

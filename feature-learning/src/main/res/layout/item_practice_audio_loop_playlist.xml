@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="76dp"
-    android:layout_marginBottom="8dp"
+    android:layout_height="@dimen/core_ui_dp_76"
+    android:layout_marginBottom="@dimen/core_ui_dp_8"
     android:background="@drawable/feature_learning_bg_audio_loop_playlist_item"
     android:clickable="true"
     android:focusable="true"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingStart="12dp"
-    android:paddingEnd="12dp">
+    android:paddingStart="@dimen/core_ui_dp_12"
+    android:paddingEnd="@dimen/core_ui_dp_12">
 
     <TextView
         android:id="@+id/tv_playlist_index"
-        android:layout_width="34dp"
-        android:layout_height="34dp"
+        android:layout_width="@dimen/core_ui_dp_34"
+        android:layout_height="@dimen/core_ui_dp_34"
         android:background="@drawable/feature_learning_bg_audio_loop_chip"
         android:gravity="center"
         android:textColor="@color/feature_learning_audio_loop_text_secondary"
-        android:textSize="13sp"
+        android:textSize="@dimen/core_ui_text_13"
         android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="@dimen/core_ui_dp_12"
         android:layout_weight="1"
         android:orientation="vertical">
 
@@ -41,42 +41,42 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textColor="@color/feature_learning_audio_loop_text_primary"
-                android:textSize="17sp"
+                android:textSize="@dimen/core_ui_text_17"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv_playlist_phonetic"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="@dimen/core_ui_dp_8"
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textColor="@color/feature_learning_audio_loop_text_secondary"
-                android:textSize="13sp" />
+                android:textSize="@dimen/core_ui_text_13" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/tv_playlist_meaning"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="@dimen/core_ui_dp_4"
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/feature_learning_audio_loop_text_secondary"
-            android:textSize="13sp" />
+            android:textSize="@dimen/core_ui_text_13" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/tv_playlist_status"
-        android:layout_width="72dp"
-        android:layout_height="32dp"
-        android:layout_marginStart="10dp"
+        android:layout_width="@dimen/core_ui_dp_72"
+        android:layout_height="@dimen/core_ui_dp_32"
+        android:layout_marginStart="@dimen/core_ui_dp_10"
         android:background="@drawable/feature_learning_bg_audio_loop_status_chip"
         android:gravity="center"
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="@color/feature_learning_audio_loop_status_text"
-        android:textSize="12sp"
+        android:textSize="@dimen/core_ui_text_12"
         android:textStyle="bold" />
 </LinearLayout>

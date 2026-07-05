@@ -2,12 +2,12 @@ package com.chen.memorizewords.feature.wordbook.plan
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.util.TypedValue
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.ImageViewCompat
+import com.chen.memorizewords.core.ui.ext.dpToPx
 import com.chen.memorizewords.feature.wordbook.R
 import com.chen.memorizewords.feature.wordbook.databinding.FeatureWordbookItemStudyModeCardBinding
 
@@ -102,12 +102,12 @@ private fun applyCardSpec(
     spec: StudyModeCardSpec,
     context: Context
 ) {
-    binding.root.minimumHeight = spec.minHeightDp.dp(context)
+    binding.root.minimumHeight = spec.minHeightDp.dpToPx(context)
     binding.root.setPadding(
-        spec.horizontalPaddingDp.dp(context),
-        spec.verticalPaddingDp.dp(context),
-        spec.horizontalPaddingDp.dp(context),
-        spec.verticalPaddingDp.dp(context)
+        spec.horizontalPaddingDp.dpToPx(context),
+        spec.verticalPaddingDp.dpToPx(context),
+        spec.horizontalPaddingDp.dpToPx(context),
+        spec.verticalPaddingDp.dpToPx(context)
     )
     binding.vCornerDecor.updateSize(spec.cornerDecorSizeDp, context)
     binding.iconContainer.updateSize(spec.iconContainerSizeDp, context)
@@ -119,19 +119,13 @@ private fun applyCardSpec(
 
 private fun android.view.View.updateSize(sizeDp: Int, context: Context) {
     layoutParams = layoutParams.apply {
-        width = sizeDp.dp(context)
-        height = sizeDp.dp(context)
+        width = sizeDp.dpToPx(context)
+        height = sizeDp.dpToPx(context)
     }
 }
 
 private fun android.view.View.updateTopMargin(topMarginDp: Int, context: Context) {
     val params = layoutParams as? ViewGroup.MarginLayoutParams ?: return
-    params.topMargin = topMarginDp.dp(context)
+    params.topMargin = topMarginDp.dpToPx(context)
     layoutParams = params
 }
-
-private fun Int.dp(context: Context): Int = TypedValue.applyDimension(
-    TypedValue.COMPLEX_UNIT_DIP,
-    toFloat(),
-    context.resources.displayMetrics
-).toInt()

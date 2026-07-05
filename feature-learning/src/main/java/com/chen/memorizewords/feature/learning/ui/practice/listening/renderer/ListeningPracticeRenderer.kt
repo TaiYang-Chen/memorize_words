@@ -26,6 +26,7 @@ import androidx.core.view.updatePadding
 import androidx.gridlayout.widget.GridLayout
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.chen.memorizewords.core.ui.ext.dpToPx
 import com.chen.memorizewords.domain.practice.ListeningAnswerAreaPosition
 import com.chen.memorizewords.domain.practice.ListeningPronunciationPreference
 import com.chen.memorizewords.feature.learning.LinearSpacingItemDecoration
@@ -97,17 +98,17 @@ internal class ListeningPracticeRenderer(
         binding.rvStudyDefinitions.adapter = studyDefinitionsAdapter
         binding.rvStudyDefinitions.layoutManager = LinearLayoutManager(context)
         binding.rvStudyDefinitions.isNestedScrollingEnabled = false
-        binding.rvStudyDefinitions.addItemDecoration(LinearSpacingItemDecoration(dp(8)))
+        binding.rvStudyDefinitions.addItemDecoration(LinearSpacingItemDecoration(8.dpToPx(context)))
 
         binding.rvStudyExamples.adapter = studyExamplesAdapter
         binding.rvStudyExamples.layoutManager = LinearLayoutManager(context)
         binding.rvStudyExamples.isNestedScrollingEnabled = false
-        binding.rvStudyExamples.addItemDecoration(LinearSpacingItemDecoration(dp(16)))
+        binding.rvStudyExamples.addItemDecoration(LinearSpacingItemDecoration(16.dpToPx(context)))
 
         binding.rvStudyRoot.adapter = studyRootsAdapter
         binding.rvStudyRoot.layoutManager = LinearLayoutManager(context)
         binding.rvStudyRoot.isNestedScrollingEnabled = false
-        binding.rvStudyRoot.addItemDecoration(LinearSpacingItemDecoration(dp(16)))
+        binding.rvStudyRoot.addItemDecoration(LinearSpacingItemDecoration(16.dpToPx(context)))
 
         binding.rvStudySynonyms.adapter = studySynonymsAdapter
         binding.rvStudySynonyms.layoutManager = FlexboxLayoutManager(context).apply {
@@ -289,7 +290,7 @@ internal class ListeningPracticeRenderer(
                 AppCompatResources.getDrawable(context, R.drawable.module_learning_check)
             binding.btnPrimaryAction.iconTint = ColorStateList.valueOf(Color.WHITE)
             binding.btnPrimaryAction.iconGravity = MaterialButton.ICON_GRAVITY_TEXT_END
-            binding.btnPrimaryAction.iconPadding = dp(8)
+            binding.btnPrimaryAction.iconPadding = 8.dpToPx(context)
         } else {
             binding.btnPrimaryAction.icon = null
             binding.btnPrimaryAction.iconTint = null
@@ -331,8 +332,8 @@ internal class ListeningPracticeRenderer(
 
     private fun renderAnswerAreaPosition(state: ListeningPracticeViewModel.ListeningUiState) {
         val topMargin = when (state.answerAreaPosition) {
-            ListeningAnswerAreaPosition.TOP -> dp(8)
-            ListeningAnswerAreaPosition.MIDDLE -> dp(56)
+            ListeningAnswerAreaPosition.TOP -> 8.dpToPx(context)
+            ListeningAnswerAreaPosition.MIDDLE -> 56.dpToPx(context)
             ListeningAnswerAreaPosition.BOTTOM -> resolveBottomAnswerAreaMargin(state)
         }
         val params = binding.layoutAnswerArea.layoutParams as? LinearLayout.LayoutParams
@@ -351,14 +352,14 @@ internal class ListeningPracticeRenderer(
     private fun resolveBottomAnswerAreaMargin(
         state: ListeningPracticeViewModel.ListeningUiState
     ): Int {
-        if (!state.showSpellingQuestion) return dp(168)
+        if (!state.showSpellingQuestion) return 168.dpToPx(context)
         val letterItemCount = state.spellingLetterPool.size + 1
         val columnCount = resolveSpellingGridColumnCount(letterItemCount)
         val rowCount = ((letterItemCount + columnCount - 1) / columnCount).coerceAtLeast(1)
         return when {
-            rowCount >= 4 -> dp(96)
-            rowCount == 3 -> dp(132)
-            else -> dp(148)
+            rowCount >= 4 -> 96.dpToPx(context)
+            rowCount == 3 -> 132.dpToPx(context)
+            else -> 148.dpToPx(context)
         }
     }
 
@@ -408,7 +409,7 @@ internal class ListeningPracticeRenderer(
         button.isEnabled = isEnabled
         button.iconGravity = MaterialButton.ICON_GRAVITY_END
         button.iconPadding = 0
-        button.iconSize = dp(24)
+        button.iconSize = 24.dpToPx(context)
         when (feedback) {
             ListeningMeaningOptionFeedback.CORRECT ->
                 applyMeaningOptionStyle(
@@ -477,10 +478,10 @@ internal class ListeningPracticeRenderer(
     ) {
         button.backgroundTintList = ColorStateList.valueOf(Color.parseColor(backgroundColor))
         button.strokeColor = ColorStateList.valueOf(Color.parseColor(strokeColor))
-        button.strokeWidth = dp(strokeWidthDp)
+        button.strokeWidth = (strokeWidthDp).dpToPx(context)
         button.text = text
         button.setTextColor(Color.parseColor(textColor))
-        button.setPaddingRelative(dp(20), 0, if (iconRes == null) dp(20) else dp(54), 0)
+        button.setPaddingRelative(20.dpToPx(context), 0, if (iconRes == null) 20.dpToPx(context) else 54.dpToPx(context), 0)
         button.icon = iconRes?.let { AppCompatResources.getDrawable(button.context, it) }
         button.iconTint = iconTint?.let { ColorStateList.valueOf(Color.parseColor(it)) }
     }
@@ -511,10 +512,10 @@ internal class ListeningPracticeRenderer(
             addView(
                 TextView(context).apply {
                     layoutParams = LinearLayout.LayoutParams(
-                        dp(18),
+                        18.dpToPx(context),
                         ViewGroup.LayoutParams.WRAP_CONTENT
                     )
-                    minHeight = dp(24)
+                    minHeight = 24.dpToPx(context)
                     gravity = Gravity.CENTER
                     textSize = 16f
                     setTypeface(typeface, Typeface.NORMAL)
@@ -522,8 +523,8 @@ internal class ListeningPracticeRenderer(
             )
             addView(
                 View(context).apply {
-                    layoutParams = LinearLayout.LayoutParams(dp(18), dp(1)).apply {
-                        topMargin = dp(6)
+                    layoutParams = LinearLayout.LayoutParams(18.dpToPx(context), 1.dpToPx(context)).apply {
+                        topMargin = 6.dpToPx(context)
                     }
                 }
             )
@@ -536,11 +537,11 @@ internal class ListeningPracticeRenderer(
         isLast: Boolean
     ) {
         slotView.layoutParams =
-            FlexboxLayout.LayoutParams(dp(20), ViewGroup.LayoutParams.WRAP_CONTENT).apply {
-                topMargin = dp(2)
-                bottomMargin = dp(4)
+            FlexboxLayout.LayoutParams(20.dpToPx(context), ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                topMargin = 2.dpToPx(context)
+                bottomMargin = 4.dpToPx(context)
                 if (!isLast) {
-                    marginEnd = dp(6)
+                    marginEnd = 6.dpToPx(context)
                 }
             }
         val isWrong = slot.feedback == ListeningSpellingSlotFeedback.WRONG
@@ -593,10 +594,10 @@ internal class ListeningPracticeRenderer(
     }
 
     private fun resolveSpellingGridColumnCount(itemCount: Int): Int {
-        val availableWidth = (binding.scrollContent.width - dp(32)).coerceAtLeast(0)
+        val availableWidth = (binding.scrollContent.width - 32.dpToPx(context)).coerceAtLeast(0)
         return when {
-            itemCount >= 16 && availableWidth >= dp(300) -> 6
-            availableWidth < dp(300) -> 4
+            itemCount >= 16 && availableWidth >= 300.dpToPx(context) -> 6
+            availableWidth < 300.dpToPx(context) -> 4
             else -> 5
         }
     }
@@ -607,8 +608,8 @@ internal class ListeningPracticeRenderer(
     ): GridLayout.LayoutParams {
         val row = index / columnCount
         val column = index % columnCount
-        val buttonSize = if (columnCount >= 6) dp(40) else dp(44)
-        val buttonMargin = if (columnCount >= 6) dp(5) else dp(6)
+        val buttonSize = if (columnCount >= 6) 40.dpToPx(context) else 44.dpToPx(context)
+        val buttonMargin = if (columnCount >= 6) 5.dpToPx(context) else 6.dpToPx(context)
         return GridLayout.LayoutParams(
             GridLayout.spec(row, GridLayout.CENTER),
             GridLayout.spec(column, GridLayout.CENTER)
@@ -622,7 +623,7 @@ internal class ListeningPracticeRenderer(
 
     private fun buildSpellingLetterButton(): MaterialButton {
         return MaterialButton(context).apply {
-            layoutParams = ViewGroup.LayoutParams(dp(44), dp(44))
+            layoutParams = ViewGroup.LayoutParams(44.dpToPx(context), 44.dpToPx(context))
             insetTop = 0
             insetBottom = 0
             icon = null
@@ -633,9 +634,9 @@ internal class ListeningPracticeRenderer(
             isAllCaps = false
             gravity = Gravity.CENTER
             textAlignment = View.TEXT_ALIGNMENT_CENTER
-            cornerRadius = dp(22)
-            elevation = dp(1).toFloat()
-            strokeWidth = dp(1)
+            cornerRadius = 22.dpToPx(context)
+            elevation = 1.dpToPx(context).toFloat()
+            strokeWidth = 1.dpToPx(context)
         }
     }
 
@@ -655,7 +656,7 @@ internal class ListeningPracticeRenderer(
 
     private fun buildSpellingDeleteButton(): MaterialButton {
         return MaterialButton(context).apply {
-            layoutParams = ViewGroup.LayoutParams(dp(44), dp(44))
+            layoutParams = ViewGroup.LayoutParams(44.dpToPx(context), 44.dpToPx(context))
             insetTop = 0
             insetBottom = 0
             minWidth = 0
@@ -663,9 +664,9 @@ internal class ListeningPracticeRenderer(
             setPadding(0, 0, 0, 0)
             gravity = Gravity.CENTER
             textAlignment = View.TEXT_ALIGNMENT_CENTER
-            cornerRadius = dp(22)
-            elevation = dp(1).toFloat()
-            strokeWidth = dp(1)
+            cornerRadius = 22.dpToPx(context)
+            elevation = 1.dpToPx(context).toFloat()
+            strokeWidth = 1.dpToPx(context)
             icon = AppCompatResources.getDrawable(context, R.drawable.module_learning_clear)
             contentDescription = context.getString(R.string.practice_listening_spelling_delete)
             iconGravity = MaterialButton.ICON_GRAVITY_TEXT_START
@@ -747,7 +748,7 @@ internal class ListeningPracticeRenderer(
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
             gravity = Gravity.CENTER
-            setPadding(dp(16), dp(20), dp(16), dp(20))
+            setPadding(16.dpToPx(context), 20.dpToPx(context), 16.dpToPx(context), 20.dpToPx(context))
             text = context.getString(emptyTextRes)
             textSize = 12f
             setTextColor(Color.parseColor("#8C96A8"))
@@ -768,12 +769,12 @@ internal class ListeningPracticeRenderer(
                 ViewGroup.LayoutParams.WRAP_CONTENT
             ).apply {
                 if (index > 0) {
-                    topMargin = dp(10)
+                    topMargin = 10.dpToPx(context)
                 }
             }
-            radius = dp(18).toFloat()
+            radius = 18.dpToPx(context).toFloat()
             cardElevation = 0f
-            strokeWidth = dp(1)
+            strokeWidth = 1.dpToPx(context)
             strokeColor = Color.parseColor("#EEF2F6")
             setCardBackgroundColor(Color.WHITE)
             preventCornerOverlap = true
@@ -783,7 +784,7 @@ internal class ListeningPracticeRenderer(
                 LinearLayout(context).apply {
                     orientation = LinearLayout.HORIZONTAL
                     gravity = Gravity.CENTER_VERTICAL
-                    setPadding(dp(16), dp(15), dp(14), dp(15))
+                    setPadding(16.dpToPx(context), 15.dpToPx(context), 14.dpToPx(context), 15.dpToPx(context))
 
                     addView(
                         LinearLayout(context).apply {
@@ -809,7 +810,7 @@ internal class ListeningPracticeRenderer(
                                         ViewGroup.LayoutParams.MATCH_PARENT,
                                         ViewGroup.LayoutParams.WRAP_CONTENT
                                     ).apply {
-                                        topMargin = dp(6)
+                                        topMargin = 6.dpToPx(context)
                                     }
                                     text = row.meaningText
                                     textSize = 12f
@@ -821,12 +822,12 @@ internal class ListeningPracticeRenderer(
 
                     addView(
                         MaterialCardView(context).apply {
-                            layoutParams = LinearLayout.LayoutParams(dp(40), dp(40)).apply {
-                                marginStart = dp(12)
+                            layoutParams = LinearLayout.LayoutParams(40.dpToPx(context), 40.dpToPx(context)).apply {
+                                marginStart = 12.dpToPx(context)
                             }
-                            radius = dp(20).toFloat()
+                            radius = 20.dpToPx(context).toFloat()
                             cardElevation = 0f
-                            strokeWidth = dp(1)
+                            strokeWidth = 1.dpToPx(context)
                             strokeColor = Color.parseColor("#E6EBF2")
                             setCardBackgroundColor(Color.parseColor("#F8FAFC"))
                             isClickable = true
@@ -845,7 +846,7 @@ internal class ListeningPracticeRenderer(
                                         context,
                                         android.R.drawable.list_selector_background
                                     )
-                                    setPadding(dp(10), dp(10), dp(10), dp(10))
+                                    setPadding(10.dpToPx(context), 10.dpToPx(context), 10.dpToPx(context), 10.dpToPx(context))
                                     setImageDrawable(
                                         AppCompatResources.getDrawable(
                                             context,
@@ -904,9 +905,9 @@ internal class ListeningPracticeRenderer(
         button.animate().cancel()
         button.clearAnimation()
         button.translationX = 0f
-        val largeOffset = dp(16).toFloat()
-        val mediumOffset = dp(12).toFloat()
-        val smallOffset = dp(8).toFloat()
+        val largeOffset = 16.dpToPx(context).toFloat()
+        val mediumOffset = 12.dpToPx(context).toFloat()
+        val smallOffset = 8.dpToPx(context).toFloat()
         ObjectAnimator.ofFloat(
             button,
             View.TRANSLATION_X,
@@ -938,9 +939,9 @@ internal class ListeningPracticeRenderer(
         slotView.animate().cancel()
         slotView.clearAnimation()
         slotView.translationX = 0f
-        val largeOffset = dp(12).toFloat()
-        val mediumOffset = dp(8).toFloat()
-        val smallOffset = dp(5).toFloat()
+        val largeOffset = 12.dpToPx(context).toFloat()
+        val mediumOffset = 8.dpToPx(context).toFloat()
+        val smallOffset = 5.dpToPx(context).toFloat()
         ObjectAnimator.ofFloat(
             slotView,
             View.TRANSLATION_X,
@@ -971,18 +972,14 @@ internal class ListeningPracticeRenderer(
     private fun updateScrollContentBottomPadding() {
         binding.scrollContent.updatePadding(
             bottom = baseScrollBottomPadding +
-                if (binding.layoutBottomActions.isVisible) dp(12) else 0
+                if (binding.layoutBottomActions.isVisible) 12.dpToPx(context) else 0
         )
-    }
-
-    private fun dp(value: Int): Int {
-        return (value * binding.root.resources.displayMetrics.density).toInt()
     }
 
     private val context get() = binding.root.context
 
     private inner class MeaningPartOfSpeechSpan : ReplacementSpan() {
-        private val columnWidth = dp(52)
+        private val columnWidth = 52.dpToPx(context)
 
         override fun getSize(
             paint: Paint,

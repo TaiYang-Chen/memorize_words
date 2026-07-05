@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="feature_home_stats_hero_mascot_overlap">-13dp</dimen>
+    <dimen name="feature_home_practice_summary_illustration_overlap">-8dp</dimen>
+</resources>

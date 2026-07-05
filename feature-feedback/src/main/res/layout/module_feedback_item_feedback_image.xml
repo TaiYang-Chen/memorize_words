@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="96dp"
-    android:layout_height="96dp"
-    android:layout_margin="6dp">
+    android:layout_width="@dimen/core_ui_dp_96"
+    android:layout_height="@dimen/core_ui_dp_96"
+    android:layout_margin="@dimen/core_ui_dp_6">
 
     <ImageView
         android:id="@+id/iv_item_image_thumb"
@@ -13,11 +13,11 @@
 
     <ImageButton
         android:id="@+id/btn_item_image_delete"
-        android:layout_width="26dp"
-        android:layout_height="26dp"
+        android:layout_width="@dimen/core_ui_dp_26"
+        android:layout_height="@dimen/core_ui_dp_26"
         android:layout_gravity="end|top"
         android:background="@android:color/transparent"
         android:contentDescription="@string/module_feedback_delete_image"
-        android:padding="2dp"
+        android:padding="@dimen/core_ui_dp_2"
         android:src="@drawable/module_feedback_ic_close_circle" />
 </FrameLayout>

@@ -7,6 +7,8 @@ import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import com.chen.memorizewords.core.ui.R as CoreUiR
+import com.chen.memorizewords.core.ui.ext.dimenPxFloat
 
 class FastIndexView @JvmOverloads constructor(
     context: Context,
@@ -16,13 +18,13 @@ class FastIndexView @JvmOverloads constructor(
     private val letters = ('A'..'Z').toList()
 
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        textSize = 12f * resources.displayMetrics.scaledDensity
+        textSize = context.dimenPxFloat(CoreUiR.dimen.core_ui_text_caption)
         color = 0xFF999999.toInt()
         textAlign = Paint.Align.CENTER
     }
 
     private val highlightPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        textSize = 12f * resources.displayMetrics.scaledDensity
+        textSize = context.dimenPxFloat(CoreUiR.dimen.core_ui_text_caption)
         color = 0xFF333333.toInt()
         typeface = Typeface.DEFAULT_BOLD
         textAlign = Paint.Align.CENTER

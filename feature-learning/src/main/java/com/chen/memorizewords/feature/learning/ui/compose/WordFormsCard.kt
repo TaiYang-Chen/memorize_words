@@ -35,8 +35,8 @@ fun WordFormsCard(list: List<WordForm>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(20.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+            .padding(WordFormsCardDimensions.containerPadding),
+        verticalArrangement = Arrangement.spacedBy(WordFormsCardDimensions.itemSpacing)
     ) {
         list.forEachIndexed { index, wordForm ->
             // 循环使用颜色，如果单词形式超过3个，从头开始
@@ -59,12 +59,12 @@ fun WordFormItem(
 ) {
     Card(
         modifier = modifier,
-        shape = RoundedCornerShape(12.dp)
+        shape = RoundedCornerShape(WordFormsCardDimensions.cardCorner)
     ) {
         Row(
             modifier = Modifier
                 .background(cardColor)
-                .padding(16.dp)
+                .padding(WordFormsCardDimensions.itemPadding)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
@@ -72,18 +72,18 @@ fun WordFormItem(
             // 左侧：词性标签
             Text(
                 text = wordForm.formType.displayName,
-                fontSize = 14.sp,
+                fontSize = WordFormsCardDimensions.labelTextSize,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF333333),
-                modifier = Modifier.width(40.dp)
+                modifier = Modifier.width(WordFormsCardDimensions.labelWidth)
             )
 
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(WordFormsCardDimensions.labelSpacing))
 
             // 中间：单词
             Text(
                 text = wordForm.formType.displayName,
-                fontSize = 16.sp,
+                fontSize = WordFormsCardDimensions.wordTextSize,
                 fontWeight = FontWeight.Medium,
                 color = Color.Black,
                 modifier = Modifier.weight(1f)
@@ -92,7 +92,7 @@ fun WordFormItem(
             // 右侧：中文释义
             Text(
                 text = wordForm.formText,
-                fontSize = 14.sp,
+                fontSize = WordFormsCardDimensions.descriptionTextSize,
                 color = Color(0xFF666666),
                 modifier = Modifier.weight(1f)
             )
@@ -140,4 +140,16 @@ fun WordFormsCardExample() {
 
     // 2. 将模拟数据传入 WordFormsCard 组件
     WordFormsCard(list = sampleWordForms)
+}
+
+private object WordFormsCardDimensions {
+    val containerPadding = 20.dp
+    val itemSpacing = 12.dp
+    val cardCorner = 12.dp
+    val itemPadding = 16.dp
+    val labelWidth = 40.dp
+    val labelSpacing = 8.dp
+    val labelTextSize = 14.sp
+    val wordTextSize = 16.sp
+    val descriptionTextSize = 14.sp
 }

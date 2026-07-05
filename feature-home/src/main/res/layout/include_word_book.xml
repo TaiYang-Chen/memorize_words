@@ -14,7 +14,7 @@
         app:cardBackgroundColor="#F8F8F8"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="24dp">
+        app:cardCornerRadius="@dimen/core_ui_dp_24">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -26,9 +26,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingStart="8dp"
-                android:paddingTop="8dp"
-                android:paddingEnd="8dp">
+                android:paddingStart="@dimen/core_ui_dp_8"
+                android:paddingTop="@dimen/core_ui_dp_8"
+                android:paddingEnd="@dimen/core_ui_dp_8">
 
                 <TextView
                     android:text="@{viewModel.wordBookTitleText}"
@@ -37,7 +37,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textColor="#000"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/core_ui_text_18"
                     android:textStyle="bold" />
 
                 <TextView
@@ -54,16 +54,16 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingStart="8dp"
-                android:paddingTop="4dp"
-                android:paddingEnd="8dp"
+                android:paddingStart="@dimen/core_ui_dp_8"
+                android:paddingTop="@dimen/core_ui_dp_4"
+                android:paddingEnd="@dimen/core_ui_dp_8"
                 android:text="当前词书"
-                android:textSize="11sp" />
+                android:textSize="@dimen/core_ui_text_11" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="22dp"
+                android:layout_marginTop="@dimen/core_ui_dp_22"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -76,18 +76,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawableStart="@drawable/module_home_bg_circle_4ade80"
-                        android:paddingStart="8dp"
+                        android:paddingStart="@dimen/core_ui_dp_8"
                         android:text="总共已学"
-                        android:textSize="11sp" />
+                        android:textSize="@dimen/core_ui_text_11" />
 
                     <TextView
                         tools:text="14"
                         android:text="@{viewModel.wordBookLearningWordsText}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingStart="8dp"
+                        android:paddingStart="@dimen/core_ui_dp_8"
                         android:textColor="#000"
-                        android:textSize="24sp"
+                        android:textSize="@dimen/core_ui_text_24"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -101,18 +101,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawableStart="@drawable/module_home_bg_circle_60a5fa"
-                        android:paddingStart="8dp"
+                        android:paddingStart="@dimen/core_ui_dp_8"
                         android:text="总共词数"
-                        android:textSize="11sp" />
+                        android:textSize="@dimen/core_ui_text_11" />
 
                     <TextView
                         tools:text="1000"
                         android:text="@{viewModel.wordBookTotalWordsText}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingStart="4dp"
+                        android:paddingStart="@dimen/core_ui_dp_4"
                         android:textColor="#000"
-                        android:textSize="24sp"
+                        android:textSize="@dimen/core_ui_text_24"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -127,7 +127,7 @@
                         android:layout_height="wrap_content"
                         android:drawableStart="@drawable/module_home_bg_circle_fb9034"
                         android:text="剩余单词"
-                        android:textSize="11sp" />
+                        android:textSize="@dimen/core_ui_text_11" />
 
                     <TextView
                         tools:text="986"
@@ -135,7 +135,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#000"
-                        android:textSize="24sp"
+                        android:textSize="@dimen/core_ui_text_24"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -145,8 +145,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
-                android:layout_marginBottom="9dp"
+                android:layout_marginTop="@dimen/core_ui_dp_25"
+                android:layout_marginBottom="@dimen/core_ui_dp_9"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -159,18 +159,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawableStart="@drawable/module_home_bg_circle_4ade80"
-                        android:paddingStart="8dp"
+                        android:paddingStart="@dimen/core_ui_dp_8"
                         android:text="剩余天数"
-                        android:textSize="11sp" />
+                        android:textSize="@dimen/core_ui_text_11" />
 
                     <TextView
                         tools:text="66"
                         android:text="@{viewModel.wordBookRemainDaysText}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingStart="8dp"
+                        android:paddingStart="@dimen/core_ui_dp_8"
                         android:textColor="#000"
-                        android:textSize="24sp"
+                        android:textSize="@dimen/core_ui_text_24"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -184,18 +184,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawableStart="@drawable/module_home_bg_circle_60a5fa"
-                        android:paddingStart="8dp"
+                        android:paddingStart="@dimen/core_ui_dp_8"
                         android:text="已学天数"
-                        android:textSize="11sp" />
+                        android:textSize="@dimen/core_ui_text_11" />
 
                     <TextView
                         tools:text="2"
                         android:text="@{viewModel.wordBookStudyDayCountText}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingStart="4dp"
+                        android:paddingStart="@dimen/core_ui_dp_4"
                         android:textColor="#000"
-                        android:textSize="24sp"
+                        android:textSize="@dimen/core_ui_text_24"
                         android:textStyle="bold" />
                 </LinearLayout>
 

@@ -7,9 +7,9 @@
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="24dp"
-        android:padding="24dp"
-        app:cardCornerRadius="14dp"
+        android:layout_margin="@dimen/core_ui_dp_24"
+        android:padding="@dimen/core_ui_dp_24"
+        app:cardCornerRadius="@dimen/core_ui_dp_14"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
         <LinearLayout
@@ -17,24 +17,24 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingStart="28dp"
-            android:paddingTop="24dp"
-            android:paddingEnd="28dp"
-            android:paddingBottom="24dp">
+            android:paddingStart="@dimen/core_ui_dp_28"
+            android:paddingTop="@dimen/core_ui_dp_24"
+            android:paddingEnd="@dimen/core_ui_dp_28"
+            android:paddingBottom="@dimen/core_ui_dp_24">
 
             <ProgressBar
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="@dimen/core_ui_dp_32"
+                android:layout_height="@dimen/core_ui_dp_32"
                 android:indeterminate="true" />
 
             <TextView
                 android:id="@+id/tvMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="@dimen/core_ui_dp_14"
                 android:text="@string/base_loading_default_message"
                 android:textColor="#333333"
-                android:textSize="14sp" />
+                android:textSize="@dimen/core_ui_text_14" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </LinearLayout>

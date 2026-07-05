@@ -6,21 +6,21 @@
     android:orientation="vertical">
 
     <ImageView
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="@dimen/core_ui_dp_32"
+        android:layout_height="@dimen/core_ui_dp_32"
         android:contentDescription="@null"
         android:src="@drawable/feature_home_ic_achievement_streak" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="@dimen/core_ui_dp_6"
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="1"
         android:text="@string/feature_home_profile_achievement_streak"
         android:textColor="#000000"
-        android:textSize="8sp" />
+        android:textSize="@dimen/core_ui_sp_8" />
 
     <TextView
         android:layout_width="match_parent"
@@ -28,5 +28,5 @@
         android:gravity="center"
         android:text="2026.06.16"
         android:textColor="#708096"
-        android:textSize="8sp" />
+        android:textSize="@dimen/core_ui_sp_8" />
 </LinearLayout>

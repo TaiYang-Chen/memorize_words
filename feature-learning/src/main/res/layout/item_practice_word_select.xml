@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="72dp"
+    android:layout_height="@dimen/core_ui_dp_72"
     android:background="@android:color/white"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp">
+    android:paddingStart="@dimen/core_ui_dp_16"
+    android:paddingEnd="@dimen/core_ui_dp_16">
 
     <CheckBox
         android:id="@+id/checkbox"
@@ -20,7 +20,7 @@
         android:id="@+id/text_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="14dp"
+        android:layout_marginStart="@dimen/core_ui_dp_14"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,14 +31,14 @@
             android:id="@+id/tv_word"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:autoSizeMaxTextSize="20sp"
-            android:autoSizeMinTextSize="16sp"
-            android:autoSizeStepGranularity="1sp"
+            android:autoSizeMaxTextSize="@dimen/core_ui_text_20"
+            android:autoSizeMinTextSize="@dimen/core_ui_text_16"
+            android:autoSizeStepGranularity="@dimen/core_ui_text_auto_size_step"
             android:autoSizeTextType="uniform"
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="#1F2937"
-            android:textSize="20sp"
+            android:textSize="@dimen/core_ui_text_20"
             android:textStyle="bold"
             tools:text="Eloquent" />
 
@@ -46,18 +46,18 @@
             android:id="@+id/tv_phonetic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="@dimen/core_ui_dp_3"
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="#9CA3AF"
-            android:textSize="12sp"
+            android:textSize="@dimen/core_ui_text_12"
             android:textStyle="bold"
             tools:text="adj. 雄辩的，有口才的" />
     </LinearLayout>
 
     <View
         android:layout_width="0dp"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/core_ui_dp_1"
         android:background="#F3F4F6"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

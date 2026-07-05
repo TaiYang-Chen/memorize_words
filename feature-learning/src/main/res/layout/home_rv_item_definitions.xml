@@ -15,25 +15,25 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="40dp"
+            android:layout_width="@dimen/core_ui_dp_40"
             android:layout_height="wrap_content"
             android:background="@drawable/module_learning_bg_radius_dbeafe"
             android:gravity="center"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
+            android:paddingTop="@dimen/core_ui_dp_2"
+            android:paddingBottom="@dimen/core_ui_dp_2"
             android:text="@{data.partOfSpeech.abbr}"
             android:textColor="#2d43dd"
-            android:textSize="11sp"
+            android:textSize="@dimen/core_ui_text_11"
             tools:text="interj." />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="@dimen/core_ui_dp_16"
             android:text="@{data.meaningChinese}"
             android:textColor="#000"
-            android:textSize="16sp"
+            android:textSize="@dimen/core_ui_text_16"
             tools:text="弹力恢复力韧性适应力" />
     </LinearLayout>
 </layout>

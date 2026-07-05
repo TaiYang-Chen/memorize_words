@@ -12,6 +12,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.chen.memorizewords.core.ui.ext.dpToPx
 import com.chen.memorizewords.domain.word.query.WordDetail
 import com.chen.memorizewords.domain.word.query.WordReadFacade
 import com.chen.memorizewords.feature.learning.PracticeActivity
@@ -128,12 +129,12 @@ class SpellingPracticeDoneFragment : Fragment() {
             background = requireContext().getDrawable(R.drawable.module_learning_bg_summary_panel)
             isClickable = true
             isFocusable = true
-            setPadding(dp(16), dp(14), dp(16), dp(14))
+            setPadding(16.dpToPx(requireContext()), 14.dpToPx(requireContext()), 16.dpToPx(requireContext()), 14.dpToPx(requireContext()))
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply {
-                setMargins(0, 0, 0, dp(10))
+                setMargins(0, 0, 0, 10.dpToPx(requireContext()))
             }
             addView(TextView(requireContext()).apply {
                 text = row.word
@@ -149,7 +150,7 @@ class SpellingPracticeDoneFragment : Fragment() {
                 )
                 setTextColor(Color.parseColor("#64748B"))
                 textSize = 13f
-                setPadding(0, dp(8), 0, 0)
+                setPadding(0, 8.dpToPx(requireContext()), 0, 0)
             })
             setOnClickListener { showDetail(row.wordId, row.word) }
         }
@@ -240,8 +241,8 @@ class SpellingPracticeDoneFragment : Fragment() {
             this.text = text
             textSize = 15f
             setTextColor(Color.parseColor("#334155"))
-            setLineSpacing(dp(2).toFloat(), 1f)
-            setPadding(0, dp(4), 0, dp(8))
+            setLineSpacing(2.dpToPx(requireContext()).toFloat(), 1f)
+            setPadding(0, 4.dpToPx(requireContext()), 0, 8.dpToPx(requireContext()))
         }
     }
 
@@ -273,10 +274,6 @@ class SpellingPracticeDoneFragment : Fragment() {
     }
 
     private fun Int?.orZero(): Int = this ?: 0
-
-    private fun dp(value: Int): Int {
-        return (value * resources.displayMetrics.density).toInt()
-    }
 
     companion object {
         const val TAG = "spelling_practice_done"

@@ -1,5 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="core_ui_space_0">0dp</dimen>
+    <dimen name="core_ui_space_2">2dp</dimen>
+    <dimen name="core_ui_space_4">4dp</dimen>
+    <dimen name="core_ui_space_6">6dp</dimen>
+    <dimen name="core_ui_space_8">8dp</dimen>
+    <dimen name="core_ui_space_10">10dp</dimen>
+    <dimen name="core_ui_space_12">12dp</dimen>
+    <dimen name="core_ui_space_14">14dp</dimen>
+    <dimen name="core_ui_space_16">16dp</dimen>
+    <dimen name="core_ui_space_18">18dp</dimen>
+    <dimen name="core_ui_space_20">20dp</dimen>
+    <dimen name="core_ui_space_24">24dp</dimen>
+    <dimen name="core_ui_space_28">28dp</dimen>
+    <dimen name="core_ui_space_32">32dp</dimen>
+    <dimen name="core_ui_space_36">36dp</dimen>
+    <dimen name="core_ui_space_40">40dp</dimen>
+    <dimen name="core_ui_space_48">48dp</dimen>
+
+    <dimen name="core_ui_touch_min">48dp</dimen>
+    <dimen name="core_ui_touch_compact">40dp</dimen>
+    <dimen name="core_ui_icon_12">12dp</dimen>
+    <dimen name="core_ui_icon_16">16dp</dimen>
+    <dimen name="core_ui_icon_18">18dp</dimen>
+    <dimen name="core_ui_icon_20">20dp</dimen>
+    <dimen name="core_ui_icon_24">24dp</dimen>
+    <dimen name="core_ui_icon_32">32dp</dimen>
+
+    <dimen name="core_ui_corner_4">4dp</dimen>
+    <dimen name="core_ui_corner_6">6dp</dimen>
+    <dimen name="core_ui_corner_8">8dp</dimen>
+    <dimen name="core_ui_corner_10">10dp</dimen>
+    <dimen name="core_ui_corner_12">12dp</dimen>
+    <dimen name="core_ui_corner_14">14dp</dimen>
+    <dimen name="core_ui_corner_16">16dp</dimen>
+    <dimen name="core_ui_corner_18">18dp</dimen>
+    <dimen name="core_ui_corner_20">20dp</dimen>
+    <dimen name="core_ui_corner_24">24dp</dimen>
+    <dimen name="core_ui_corner_pill">999dp</dimen>
+
+    <dimen name="core_ui_stroke_hairline">1dp</dimen>
+    <dimen name="core_ui_stroke_selected">2dp</dimen>
+
+    <dimen name="core_ui_text_min_readable">11sp</dimen>
+    <dimen name="core_ui_text_caption">12sp</dimen>
+    <dimen name="core_ui_text_body_small">13sp</dimen>
+    <dimen name="core_ui_text_body">14sp</dimen>
+    <dimen name="core_ui_text_body_large">15sp</dimen>
+    <dimen name="core_ui_text_title">16sp</dimen>
+    <dimen name="core_ui_text_title_large">18sp</dimen>
+    <dimen name="core_ui_text_display_small">20sp</dimen>
+    <dimen name="core_ui_text_display">24sp</dimen>
+    <dimen name="core_ui_text_auto_size_step">1sp</dimen>
+
     <dimen name="title_height">42dp</dimen>
     <dimen name="page_margin">16dp</dimen>
     <dimen name="title_margin">36dp</dimen>

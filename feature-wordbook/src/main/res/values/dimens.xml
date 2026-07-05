@@ -113,4 +113,7 @@
     <dimen name="feature_wordbook_favorites_date_badge_height">28dp</dimen>
     <dimen name="feature_wordbook_favorites_date_badge_padding_horizontal">12dp</dimen>
     <dimen name="feature_wordbook_favorites_date_text_size">13sp</dimen>
+
+    <dimen name="feature_wordbook_picker_max_height">560dp</dimen>
+    <dimen name="feature_wordbook_clockwise_direction_width">73.1dp</dimen>
 </resources>

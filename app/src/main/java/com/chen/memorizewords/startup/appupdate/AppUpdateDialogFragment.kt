@@ -14,6 +14,10 @@ import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import com.chen.memorizewords.R
+import com.chen.memorizewords.core.ui.R as CoreUiR
+import com.chen.memorizewords.core.ui.ext.dimenPx
+import com.chen.memorizewords.core.ui.ext.dimenPxFloat
+import com.chen.memorizewords.core.ui.ext.setTextSizeFromDimen
 import java.util.Locale
 
 class AppUpdateDialogFragment : DialogFragment(R.layout.app_dialog_update) {
@@ -147,21 +151,23 @@ class AppUpdateDialogFragment : DialogFragment(R.layout.app_dialog_update) {
 
     private fun createNoteView(index: Int, text: String): TextView {
         return TextView(requireContext()).apply {
-            textSize = 14f
+            setTextSizeFromDimen(CoreUiR.dimen.core_ui_text_14)
             setTextColor(Color.parseColor("#334155"))
             this.text = "$index. $text"
-            setPadding(0, 8, 0, 0)
-            setLineSpacing(3f, 1f)
+            setPadding(0, dimen(CoreUiR.dimen.core_ui_dp_8), 0, 0)
+            setLineSpacing(dimenFloat(CoreUiR.dimen.core_ui_dp_3), 1f)
         }
     }
 
     private fun createMetaView(text: String, bold: Boolean = false): TextView {
         return TextView(requireContext()).apply {
-            textSize = if (bold) 15f else 13f
+            setTextSizeFromDimen(
+                if (bold) CoreUiR.dimen.core_ui_text_15 else CoreUiR.dimen.core_ui_text_13
+            )
             setTextColor(Color.parseColor(if (bold) "#0f172a" else "#475569"))
             this.text = text
-            setPadding(0, 6, 0, 0)
-            setLineSpacing(3f, 1f)
+            setPadding(0, dimen(CoreUiR.dimen.core_ui_dp_6), 0, 0)
+            setLineSpacing(dimenFloat(CoreUiR.dimen.core_ui_dp_3), 1f)
             if (bold) setTypeface(typeface, Typeface.BOLD)
         }
     }
@@ -175,6 +181,14 @@ class AppUpdateDialogFragment : DialogFragment(R.layout.app_dialog_update) {
         } else {
             "${value / 1024} KB"
         }
+    }
+
+    private fun dimen(id: Int): Int {
+        return requireContext().dimenPx(id)
+    }
+
+    private fun dimenFloat(id: Int): Float {
+        return requireContext().dimenPxFloat(id)
     }
 
     companion object {

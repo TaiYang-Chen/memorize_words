@@ -12,10 +12,10 @@
             android:id="@+id/selectionErrorGroup"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="@dimen/core_ui_dp_12"
             android:background="@color/feature_onboarding_select_error_background"
             android:orientation="vertical"
-            android:padding="16dp"
+            android:padding="@dimen/core_ui_dp_16"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -26,12 +26,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/feature_onboarding_select_error_text"
-                android:textSize="14sp" />
+                android:textSize="@dimen/core_ui_text_14" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="@dimen/core_ui_dp_12"
                 android:orientation="horizontal">
 
                 <Button
@@ -47,7 +47,7 @@
                     android:id="@+id/btnDismissSelectionError"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
+                    android:layout_marginStart="@dimen/core_ui_dp_12"
                     android:layout_weight="1"
                     android:backgroundTint="@color/feature_onboarding_goal_control_track"
                     android:text="@string/feature_onboarding_dismiss"
@@ -59,8 +59,8 @@
             android:id="@+id/nextStepContainer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="12dp"
+            android:layout_marginTop="@dimen/core_ui_dp_16"
+            android:layout_marginBottom="@dimen/core_ui_dp_12"
             app:layout_constraintBottom_toTopOf="@id/selectionErrorGroup"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -71,7 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:enabled="false"
-                android:minHeight="52dp"
+                android:minHeight="@dimen/core_ui_dp_52"
                 android:backgroundTint="@color/feature_onboarding_next_step_button_background_tint"
                 android:text="@string/feature_onboarding_next_step"
                 android:textColor="@android:color/white"
@@ -121,21 +121,21 @@
                     <LinearLayout
                         android:id="@+id/searchLayout"
                         android:layout_width="0dp"
-                        android:layout_height="44dp"
+                        android:layout_height="@dimen/core_ui_dp_44"
                         android:background="@drawable/feature_onboarding_bg_search"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:layout_marginEnd="@dimen/feature_onboarding_search_cancel_spacing"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="16dp"
+                        android:paddingStart="@dimen/core_ui_dp_16"
+                        android:paddingEnd="@dimen/core_ui_dp_16"
                         app:layout_constraintEnd_toStartOf="@id/btnCancel"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_goneMarginEnd="0dp">
 
                         <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            android:layout_width="@dimen/core_ui_dp_20"
+                            android:layout_height="@dimen/core_ui_dp_20"
                             android:contentDescription="@null"
                             android:src="@drawable/feature_onboarding_ic_search"
                             app:tint="@color/feature_onboarding_select_search_icon" />
@@ -144,7 +144,7 @@
                             android:id="@+id/etSearch"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
+                            android:layout_marginStart="@dimen/core_ui_dp_10"
                             android:layout_weight="1"
                             android:background="@null"
                             android:gravity="center_vertical"
@@ -155,7 +155,7 @@
                             android:padding="0dp"
                             android:textColor="@color/feature_onboarding_select_search_text"
                             android:textColorHint="@color/feature_onboarding_select_search_hint"
-                            android:textSize="14sp" />
+                            android:textSize="@dimen/core_ui_text_14" />
                     </LinearLayout>
 
                     <TextView
@@ -165,7 +165,7 @@
                         android:gravity="center"
                         android:text="@string/feature_onboarding_cancel"
                         android:textColor="@color/feature_onboarding_select_search_text"
-                        android:textSize="16sp"
+                        android:textSize="@dimen/core_ui_text_16"
                         android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="@id/searchLayout"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -175,16 +175,16 @@
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="36dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_height="@dimen/core_ui_dp_36"
+                    android:layout_marginTop="@dimen/core_ui_dp_12"
                     android:background="@android:color/transparent"
-                    android:minHeight="36dp"
+                    android:minHeight="@dimen/core_ui_dp_36"
                     app:tabContentStart="0dp"
                     app:tabGravity="start"
                     app:tabIndicatorAnimationMode="linear"
                     app:tabIndicator="@drawable/feature_onboarding_tab_indicator_rounded"
                     app:tabIndicatorFullWidth="false"
-                    app:tabIndicatorHeight="3dp"
+                    app:tabIndicatorHeight="@dimen/core_ui_dp_3"
                     app:tabMinWidth="0dp"
                     app:tabMode="scrollable"
                     app:tabPaddingBottom="0dp"
@@ -208,8 +208,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:clipToPadding="false"
-                        android:paddingTop="12dp"
-                        android:paddingBottom="12dp" />
+                        android:paddingTop="@dimen/core_ui_dp_12"
+                        android:paddingBottom="@dimen/core_ui_dp_12" />
                 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
                 <LinearLayout
@@ -218,7 +218,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="24dp"
+                    android:padding="@dimen/core_ui_dp_24"
                     android:visibility="gone">
 
                     <TextView
@@ -226,13 +226,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/feature_onboarding_select_state_text"
-                        android:textSize="14sp" />
+                        android:textSize="@dimen/core_ui_text_14" />
 
                     <Button
                         android:id="@+id/btnRetryList"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginTop="@dimen/core_ui_dp_12"
                         android:backgroundTint="@color/feature_onboarding_action_blue"
                         android:text="@string/feature_onboarding_retry"
                         android:textColor="@android:color/white"
@@ -248,8 +248,8 @@
 
                 <ProgressBar
                     android:id="@+id/selectionProgress"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="@dimen/core_ui_dp_40"
+                    android:layout_height="@dimen/core_ui_dp_40"
                     android:layout_gravity="center"
                     android:visibility="gone" />
             </FrameLayout>

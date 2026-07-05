@@ -32,21 +32,21 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp">
+        android:paddingStart="@dimen/core_ui_dp_8"
+        android:paddingEnd="@dimen/core_ui_dp_8">
 
         <FrameLayout
             android:id="@+id/layoutModeIcon"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="@dimen/core_ui_dp_32"
+            android:layout_height="@dimen/core_ui_dp_32"
             android:background="@{featureHomeModeIconBg}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
+                android:layout_width="@dimen/core_ui_dp_16"
+                android:layout_height="@dimen/core_ui_dp_16"
                 android:layout_gravity="center"
                 android:src="@{featureHomeModeIcon}" />
         </FrameLayout>
@@ -55,13 +55,13 @@
             android:id="@+id/tvModeTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="4dp"
+            android:layout_marginStart="@dimen/core_ui_dp_8"
+            android:layout_marginEnd="@dimen/core_ui_dp_4"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@{featureHomeModeTitle}"
             android:textColor="#071436"
-            android:textSize="14sp"
+            android:textSize="@dimen/core_ui_text_14"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/tvModeSubtitle"
             app:layout_constraintEnd_toStartOf="@id/layoutModeArrow"
@@ -73,14 +73,14 @@
             android:id="@+id/tvModeSubtitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="7dp"
-            android:layout_marginEnd="4dp"
+            android:layout_marginStart="@dimen/core_ui_dp_8"
+            android:layout_marginTop="@dimen/core_ui_dp_7"
+            android:layout_marginEnd="@dimen/core_ui_dp_4"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@{featureHomeModeSubtitle}"
             android:textColor="#45648D"
-            android:textSize="11sp"
+            android:textSize="@dimen/core_ui_text_11"
             app:layout_constraintBottom_toBottomOf="@id/layoutModeIcon"
             app:layout_constraintEnd_toStartOf="@id/layoutModeArrow"
             app:layout_constraintStart_toEndOf="@id/layoutModeIcon"
@@ -88,16 +88,16 @@
 
         <FrameLayout
             android:id="@+id/layoutModeArrow"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/core_ui_dp_24"
+            android:layout_height="@dimen/core_ui_dp_24"
             android:background="@{featureHomeModeArrowBg}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:layout_width="12dp"
-                android:layout_height="12dp"
+                android:layout_width="@dimen/core_ui_dp_12"
+                android:layout_height="@dimen/core_ui_dp_12"
                 android:layout_gravity="center"
                 android:src="@{featureHomeModeArrowIcon}" />
         </FrameLayout>

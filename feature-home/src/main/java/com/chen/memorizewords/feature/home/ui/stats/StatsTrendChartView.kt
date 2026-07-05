@@ -6,6 +6,7 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
 import android.view.View
+import com.chen.memorizewords.core.ui.ext.dpToPx
 import kotlin.math.max
 
 class StatsTrendChartView @JvmOverloads constructor(
@@ -16,11 +17,11 @@ class StatsTrendChartView @JvmOverloads constructor(
     private var points: List<StatsTrendPointUi> = emptyList()
     private val gridPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = 0x80EAF0F7.toInt()
-        strokeWidth = dp(1f)
+        strokeWidth = 1f.dpToPx(context)
     }
     private val durationPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = 0xFF2F95FF.toInt()
-        strokeWidth = dp(1.8f)
+        strokeWidth = 1.8f.dpToPx(context)
         style = Paint.Style.STROKE
         strokeCap = Paint.Cap.ROUND
         strokeJoin = Paint.Join.ROUND
@@ -37,7 +38,7 @@ class StatsTrendChartView @JvmOverloads constructor(
     }
     private val labelPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = 0xFF72819A.toInt()
-        textSize = dp(11f)
+        textSize = 11f.dpToPx(context)
         textAlign = Paint.Align.CENTER
     }
 
@@ -53,11 +54,11 @@ class StatsTrendChartView @JvmOverloads constructor(
                 StatsTrendPointUi(it, 0f, 0)
             }
         }
-        val left = dp(4f)
-        val right = width - dp(4f)
-        val top = dp(8f)
-        val bottom = height - dp(20f)
-        val chartHeight = (bottom - top).coerceAtLeast(dp(1f))
+        val left = 4f.dpToPx(context)
+        val right = width - 4f.dpToPx(context)
+        val top = 8f.dpToPx(context)
+        val bottom = height - 20f.dpToPx(context)
+        val chartHeight = (bottom - top).coerceAtLeast(1f.dpToPx(context))
         repeat(4) { index ->
             val y = top + chartHeight * index / 3f
             canvas.drawLine(left, y, right, y, gridPaint)
@@ -83,23 +84,19 @@ class StatsTrendChartView @JvmOverloads constructor(
                 fillPath.lineTo(x, durationY)
             }
             dotPaint.color = durationPaint.color
-            canvas.drawCircle(x, durationY, dp(2.6f), dotPaint)
+            canvas.drawCircle(x, durationY, 2.6f.dpToPx(context), dotPaint)
             dotPaint.color = 0xFFFFFFFF.toInt()
-            canvas.drawCircle(x, durationY, dp(1.2f), dotPaint)
+            canvas.drawCircle(x, durationY, 1.2f.dpToPx(context), dotPaint)
             dotPaint.color = wordPaint.color
-            canvas.drawCircle(x, wordY, dp(2.6f), dotPaint)
+            canvas.drawCircle(x, wordY, 2.6f.dpToPx(context), dotPaint)
             dotPaint.color = 0xFFFFFFFF.toInt()
-            canvas.drawCircle(x, wordY, dp(1.2f), dotPaint)
-            canvas.drawText(point.dayLabel, x, height - dp(5f), labelPaint)
+            canvas.drawCircle(x, wordY, 1.2f.dpToPx(context), dotPaint)
+            canvas.drawText(point.dayLabel, x, height - 5f.dpToPx(context), labelPaint)
         }
         fillPath.lineTo(right, bottom)
         fillPath.close()
         canvas.drawPath(fillPath, fillPaint)
         canvas.drawPath(durationPath, durationPaint)
         canvas.drawPath(wordPath, wordPaint)
-    }
-
-    private fun dp(value: Float): Float {
-        return value * resources.displayMetrics.density
     }
 }

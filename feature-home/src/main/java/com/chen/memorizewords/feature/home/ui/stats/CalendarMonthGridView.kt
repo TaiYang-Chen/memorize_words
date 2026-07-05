@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.chen.memorizewords.core.ui.ext.dpToPx
 import com.chen.memorizewords.feature.home.R
 
 class CalendarMonthGridView @JvmOverloads constructor(
@@ -14,7 +15,7 @@ class CalendarMonthGridView @JvmOverloads constructor(
 ) : LinearLayout(context, attrs) {
 
     private val cellHolders = mutableListOf<DayCellHolder>()
-    private val spacingPx = dp(3)
+    private val spacingPx = 3.dpToPx(context)
 
     init {
         orientation = VERTICAL
@@ -127,10 +128,6 @@ class CalendarMonthGridView @JvmOverloads constructor(
         } else {
             holder.root.setOnClickListener(null)
         }
-    }
-
-    private fun dp(value: Int): Int {
-        return (value * resources.displayMetrics.density).toInt()
     }
 
     private data class DayCellHolder(

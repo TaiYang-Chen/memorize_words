@@ -20,6 +20,7 @@ import androidx.transition.ChangeBounds
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
+import com.chen.memorizewords.core.ui.ext.dpToPx
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.feature.onboarding.databinding.FragmentOnboardingSelectWordBookBinding
 import com.google.android.material.appbar.AppBarLayout
@@ -55,7 +56,7 @@ class OnboardingSelectWordBookFragment :
 
     private val searchModeInterpolator = PathInterpolator(0f, 0f, 0.2f, 1f)
     private val cancelButtonOffsetPx by lazy(LazyThreadSafetyMode.NONE) {
-        8f * resources.displayMetrics.density
+        8f.dpToPx(requireContext())
     }
     private val normalSearchTopMarginPx by lazy(LazyThreadSafetyMode.NONE) {
         resources.getDimensionPixelSize(R.dimen.feature_onboarding_body_margin_top)

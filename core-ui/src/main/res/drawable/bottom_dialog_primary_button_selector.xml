@@ -6,12 +6,12 @@
                 android:angle="0"
                 android:endColor="@color/core_ui_bottom_dialog_button_pressed_end"
                 android:startColor="@color/core_ui_bottom_dialog_button_pressed_start" />
-            <corners android:radius="24dp" />
+            <corners android:radius="@dimen/core_ui_dp_24" />
             <padding
-                android:bottom="1dp"
-                android:left="1dp"
-                android:right="1dp"
-                android:top="1dp" />
+                android:bottom="@dimen/core_ui_dp_1"
+                android:left="@dimen/core_ui_dp_1"
+                android:right="@dimen/core_ui_dp_1"
+                android:top="@dimen/core_ui_dp_1" />
         </shape>
     </item>
 
@@ -21,12 +21,12 @@
                 android:angle="0"
                 android:endColor="@color/core_ui_bottom_dialog_button_end"
                 android:startColor="@color/core_ui_bottom_dialog_button_start" />
-            <corners android:radius="24dp" />
+            <corners android:radius="@dimen/core_ui_dp_24" />
             <padding
-                android:bottom="2dp"
-                android:left="2dp"
-                android:right="2dp"
-                android:top="2dp" />
+                android:bottom="@dimen/core_ui_dp_2"
+                android:left="@dimen/core_ui_dp_2"
+                android:right="@dimen/core_ui_dp_2"
+                android:top="@dimen/core_ui_dp_2" />
         </shape>
     </item>
 </selector>
