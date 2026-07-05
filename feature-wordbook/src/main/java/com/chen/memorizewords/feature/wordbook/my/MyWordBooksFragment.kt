@@ -92,6 +92,10 @@ class MyWordBooksFragment :
             MyWordBooksViewModel.Route.ToShop -> {
                 navController.navigate(R.id.action_myWordBooks_to_shop)
             }
+
+            MyWordBooksViewModel.Route.ToCreate -> {
+                navController.navigate(R.id.action_myWordBooks_to_create)
+            }
         }
     }
 

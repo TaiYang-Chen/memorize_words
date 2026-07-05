@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.chen.memorizewords.feature.wordbook.create.CreateWordBookViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        android:paddingStart="@dimen/feature_wordbook_create_page_padding"
+        android:paddingEnd="@dimen/feature_wordbook_create_page_padding">
+
+        <FrameLayout
+            android:id="@+id/header"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/title_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="@dimen/feature_wordbook_create_header_action_size"
+                android:layout_height="@dimen/feature_wordbook_create_header_action_size"
+                android:layout_gravity="center_vertical|start"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/module_wordbook_cancel"
+                android:onClick="@{()->viewModel.back()}"
+                android:padding="12dp"
+                android:src="@drawable/ic_arrow_back" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/feature_wordbook_create_header_action_size"
+                android:layout_marginEnd="@dimen/feature_wordbook_create_header_action_size"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@string/feature_wordbook_create_title"
+                android:textColor="#111111"
+                android:textSize="@dimen/title_text_size"
+                android:textStyle="bold" />
+        </FrameLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollContent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:fillViewport="true"
+            android:overScrollMode="never"
+            android:paddingTop="16dp"
+            android:paddingBottom="18dp"
+            app:layout_constraintBottom_toTopOf="@id/btnSubmit"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/header">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/feature_wordbook_bg_create_panel"
+                    android:orientation="vertical"
+                    android:padding="@dimen/feature_wordbook_create_panel_padding">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/feature_wordbook_create_name_label"
+                        android:textColor="#222222"
+                        android:textSize="@dimen/feature_wordbook_create_label_text_size"
+                        android:textStyle="bold" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/editTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/feature_wordbook_create_field_height"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/feature_wordbook_bg_create_field"
+                        android:hint="@string/feature_wordbook_create_name_hint"
+                        android:inputType="textCapSentences"
+                        android:maxLength="50"
+                        android:maxLines="1"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp"
+                        android:textColor="#111111"
+                        android:textColorHint="#969FA8"
+                        android:textSize="@dimen/feature_wordbook_create_input_text_size" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/feature_wordbook_create_section_spacing"
+                        android:text="@string/feature_wordbook_create_category_label"
+                        android:textColor="#222222"
+                        android:textSize="@dimen/feature_wordbook_create_label_text_size"
+                        android:textStyle="bold" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/editCategory"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/feature_wordbook_create_field_height"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/feature_wordbook_bg_create_field"
+                        android:hint="@string/feature_wordbook_create_category_hint"
+                        android:inputType="text"
+                        android:maxLength="20"
+                        android:maxLines="1"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp"
+                        android:textColor="#111111"
+                        android:textColorHint="#969FA8"
+                        android:textSize="@dimen/feature_wordbook_create_input_text_size" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/feature_wordbook_create_section_spacing"
+                        android:text="@string/feature_wordbook_create_description_label"
+                        android:textColor="#222222"
+                        android:textSize="@dimen/feature_wordbook_create_label_text_size"
+                        android:textStyle="bold" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/editDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="84dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/feature_wordbook_bg_create_field"
+                        android:gravity="top|start"
+                        android:hint="@string/feature_wordbook_create_description_hint"
+                        android:inputType="textMultiLine|textCapSentences"
+                        android:maxLength="200"
+                        android:maxLines="4"
+                        android:padding="14dp"
+                        android:textColor="#111111"
+                        android:textColorHint="#969FA8"
+                        android:textSize="@dimen/feature_wordbook_create_input_text_size" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/feature_wordbook_create_section_spacing"
+                    android:background="@drawable/feature_wordbook_bg_create_panel"
+                    android:orientation="vertical"
+                    android:padding="@dimen/feature_wordbook_create_panel_padding">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/feature_wordbook_create_words_label"
+                        android:textColor="#222222"
+                        android:textSize="@dimen/feature_wordbook_create_label_text_size"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textStats"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:textColor="#6B7280"
+                        android:textSize="@dimen/feature_wordbook_create_helper_text_size"
+                        tools:text="有效 3 个 · 重复 0 行 · 空行 1 行" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/editWords"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="@dimen/feature_wordbook_create_words_min_height"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/feature_wordbook_bg_create_field"
+                        android:gravity="top|start"
+                        android:hint="@string/feature_wordbook_create_words_hint"
+                        android:inputType="textMultiLine|textNoSuggestions"
+                        android:padding="14dp"
+                        android:scrollbars="vertical"
+                        android:textColor="#111111"
+                        android:textColorHint="#969FA8"
+                        android:textSize="@dimen/feature_wordbook_create_input_text_size" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:gravity="end"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/btnNormalize"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:background="@drawable/feature_wordbook_bg_create_secondary_button"
+                            android:gravity="center"
+                            android:minWidth="92dp"
+                            android:onClick="@{()->viewModel.normalizeWordsText()}"
+                            android:paddingStart="14dp"
+                            android:paddingEnd="14dp"
+                            android:text="@string/feature_wordbook_create_normalize"
+                            android:textColor="#222222"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/btnClear"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:layout_marginStart="10dp"
+                            android:background="@drawable/feature_wordbook_bg_create_secondary_button"
+                            android:gravity="center"
+                            android:minWidth="64dp"
+                            android:onClick="@{()->viewModel.clearWords()}"
+                            android:paddingStart="14dp"
+                            android:paddingEnd="14dp"
+                            android:text="@string/feature_wordbook_create_clear"
+                            android:textColor="#222222"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textColor="#D14343"
+                    android:textSize="@dimen/feature_wordbook_create_helper_text_size"
+                    android:visibility="gone"
+                    tools:text="请至少输入 1 个单词"
+                    tools:visibility="visible" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSubmit"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/feature_wordbook_create_submit_height"
+            android:layout_marginBottom="@dimen/feature_wordbook_create_submit_margin_bottom"
+            android:background="@drawable/feature_wordbook_bg_my_books_add_button"
+            android:backgroundTint="@null"
+            android:gravity="center"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:onClick="@{()->viewModel.submit()}"
+            android:text="@string/feature_wordbook_create_submit"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/feature_wordbook_my_books_primary_action_text_size"
+            android:textStyle="bold"
+            app:backgroundTint="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

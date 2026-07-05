@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.domain.wordbook.model.shop.DownloadState
 import com.chen.memorizewords.feature.wordbook.R
+import com.chen.memorizewords.feature.wordbook.custom.LinearSpacingItemDecoration
 import com.chen.memorizewords.feature.wordbook.databinding.ModuleWordbookFragmentBookShopBinding
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
@@ -119,6 +120,11 @@ class BookShopFragment :
 
     private fun setupRecyclerView() {
         databind.rvBooks.layoutManager = LinearLayoutManager(requireContext())
+        databind.rvBooks.addItemDecoration(
+            LinearSpacingItemDecoration(
+                resources.getDimensionPixelSize(R.dimen.feature_wordbook_shop_card_spacing)
+            )
+        )
         databind.rvBooks.adapter = adapter.withLoadStateFooter(
             footer = BookShopLoadStateAdapter { adapter.retry() }
         )

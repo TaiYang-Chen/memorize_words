@@ -12,6 +12,8 @@ import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.words.Book
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.words.WordListRowProjection
 import com.chen.memorizewords.data.wordbook.local.room.model.words.word.WordDao
 import com.chen.memorizewords.data.wordbook.local.room.model.words.word.toDomain
+import com.chen.memorizewords.data.wordbook.remote.datasync.RemoteUserSyncDataSource
+import com.chen.memorizewords.data.wordbook.repository.wordbook.WordBookContentDownloader
 import com.chen.memorizewords.domain.sync.OutboxTopic
 import com.chen.memorizewords.domain.sync.SyncOperation
 import com.chen.memorizewords.domain.sync.SyncOutboxWriter
@@ -51,6 +53,8 @@ class WordBookRepositoryImpl @Inject constructor(
     private val currentWordBookSelectionDao: CurrentWordBookSelectionDao,
     private val favoritesRepository: FavoritesRepository,
     private val myWordBookRemoteRemover: MyWordBookRemoteRemover,
+    private val remoteUserSyncDataSource: RemoteUserSyncDataSource,
+    private val wordBookContentDownloader: WordBookContentDownloader,
     private val wordBookWorkCanceller: WordBookWorkCanceller,
     private val SyncOutboxWriter: SyncOutboxWriter,
     private val gson: Gson
@@ -131,6 +135,45 @@ class WordBookRepositoryImpl @Inject constructor(
                     )
                 }
                 wordBookWorkCanceller.cancel(bookId)
+            }
+        }
+    }
+
+    override suspend fun createMyWordBook(
+        title: String,
+        category: String,
+        description: String,
+        words: List<String>
+    ): Result<WordBookInfo> {
+        return withContext(Dispatchers.IO) {
+            runCatching {
+                val dto = remoteUserSyncDataSource.createMyWordBook(
+                    title = title,
+                    category = category,
+                    description = description,
+                    words = words
+                ).getOrThrow()
+                val entity = dto.toEntity()
+                wordBookDao.insertWordBook(entity)
+                runCatching {
+                    wordBookContentDownloader.downloadContent(
+                        bookId = entity.id,
+                        expectedTotal = entity.totalWords,
+                        targetVersion = entity.contentVersion,
+                        forceRefresh = true
+                    )
+                }
+                WordBookInfo(
+                    bookId = entity.id,
+                    title = entity.title,
+                    category = entity.category,
+                    imgUrl = entity.imgUrl,
+                    description = entity.description,
+                    totalWords = entity.totalWords,
+                    isSelected = false,
+                    studyDayCount = 0,
+                    createdByUserId = entity.createdByUserId
+                )
             }
         }
     }

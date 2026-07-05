@@ -37,6 +37,14 @@ data class AddMyWordBookRequest(
 )
 
 @JsonClass(generateAdapter = false)
+data class CreateMyWordBookRequest(
+    val title: String,
+    val category: String,
+    val description: String,
+    val words: List<String>
+)
+
+@JsonClass(generateAdapter = false)
 data class FavoriteSyncRequest(
     val wordId: Long,
     val word: String,
@@ -228,6 +236,7 @@ interface UserDataSyncApiService {
         const val PATH_STUDY_PLAN = "me/study-plan"
         const val PATH_ONBOARDING = "me/onboarding"
         const val PATH_MY_WORD_BOOKS = "me/wordbooks"
+        const val PATH_CREATE_MY_WORD_BOOK = "me/wordbooks/create"
         const val PATH_MY_WORD_BOOK_ITEM = "me/wordbooks/{bookId}"
         const val PATH_WORD_STATES = "me/wordbooks/{bookId}/word-states"
         const val PATH_WORD_STATE_ITEM = "me/wordbooks/{bookId}/word-states/{wordId}"
@@ -272,6 +281,9 @@ interface UserDataSyncApiService {
 
     @POST(PATH_MY_WORD_BOOKS)
     fun addMyWordBook(@Body request: AddMyWordBookRequest): Call<ApiResponse<Unit>>
+
+    @POST(PATH_CREATE_MY_WORD_BOOK)
+    fun createMyWordBook(@Body request: CreateMyWordBookRequest): Call<ApiResponse<WordBookDto>>
 
     @DELETE(PATH_MY_WORD_BOOK_ITEM)
     fun removeMyWordBook(@Path("bookId") bookId: Long): Call<ApiResponse<Unit>>

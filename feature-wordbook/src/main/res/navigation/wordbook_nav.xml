@@ -18,9 +18,17 @@
         <action
             android:id="@+id/action_myWordBooks_to_shop"
             app:destination="@id/shopFragment" />
+        <action
+            android:id="@+id/action_myWordBooks_to_create"
+            app:destination="@id/createWordBookFragment" />
     </fragment>
 
     <!-- 词书商城 -->
+    <fragment
+        android:id="@+id/createWordBookFragment"
+        android:name="com.chen.memorizewords.feature.wordbook.create.CreateWordBookFragment"
+        android:label="@string/feature_wordbook_create_title" />
+
     <fragment
         android:id="@+id/shopFragment"
         android:name="com.chen.memorizewords.feature.wordbook.shop.BookShopFragment"

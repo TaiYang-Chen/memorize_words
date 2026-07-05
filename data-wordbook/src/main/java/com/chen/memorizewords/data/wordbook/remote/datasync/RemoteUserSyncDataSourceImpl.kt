@@ -95,6 +95,22 @@ class RemoteUserSyncDataSourceImpl @Inject constructor(
         return remoteResultAdapter.toResult { request.getMyWordBooks() }
     }
 
+    override suspend fun createMyWordBook(
+        title: String,
+        category: String,
+        description: String,
+        words: List<String>
+    ): Result<WordBookDto> {
+        return remoteResultAdapter.toResult {
+            request.createMyWordBook(
+                title = title,
+                category = category,
+                description = description,
+                words = words
+            )
+        }
+    }
+
     override suspend fun addMyWordBook(bookId: Long): Result<Unit> {
         return remoteResultAdapter.toResult { request.addMyWordBook(bookId) }
     }

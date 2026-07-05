@@ -47,4 +47,24 @@
     <string name="feature_wordbook_favorites_deleted">已删除收藏</string>
     <string name="feature_wordbook_favorites_selected_deleted">已删除 %1$d 个收藏</string>
     <string name="feature_wordbook_favorites_delete_failed">删除失败，请稍后重试</string>
+    <string name="feature_wordbook_create_title">&#21019;&#24314;&#35789;&#27719;&#20070;</string>
+    <string name="feature_wordbook_create_name_label">&#35789;&#20070;&#21517;&#31216;</string>
+    <string name="feature_wordbook_create_name_hint">&#35831;&#36755;&#20837;&#35789;&#20070;&#21517;&#31216;</string>
+    <string name="feature_wordbook_create_category_label">&#20998;&#31867;</string>
+    <string name="feature_wordbook_create_category_hint">&#33258;&#23450;&#20041;</string>
+    <string name="feature_wordbook_create_description_label">&#31616;&#20171;</string>
+    <string name="feature_wordbook_create_description_hint">&#21487;&#36873;&#65292;&#29992;&#20110;&#21306;&#20998;&#36825;&#26412;&#35789;&#20070;</string>
+    <string name="feature_wordbook_create_words_label">&#21333;&#35789;</string>
+    <string name="feature_wordbook_create_words_hint">&#27599;&#34892;&#19968;&#20010;&#21333;&#35789;</string>
+    <string name="feature_wordbook_create_words_stats">&#26377;&#25928; %1$d &#20010; &#183; &#37325;&#22797; %2$d &#34892; &#183; &#31354;&#34892; %3$d &#34892;</string>
+    <string name="feature_wordbook_create_normalize">&#25972;&#29702;&#21435;&#37325;</string>
+    <string name="feature_wordbook_create_clear">&#28165;&#31354;</string>
+    <string name="feature_wordbook_create_submit">&#21019;&#24314;</string>
+    <string name="feature_wordbook_create_submitting">&#21019;&#24314;&#20013;...</string>
+    <string name="feature_wordbook_create_success">&#21019;&#24314;&#25104;&#21151;</string>
+    <string name="feature_wordbook_create_error_title_required">&#35831;&#36755;&#20837;&#35789;&#20070;&#21517;&#31216;</string>
+    <string name="feature_wordbook_create_error_words_required">&#35831;&#33267;&#23569;&#36755;&#20837; 1 &#20010;&#21333;&#35789;</string>
+    <string name="feature_wordbook_create_error_word_too_long">&#21333;&#20010;&#21333;&#35789;&#19981;&#33021;&#36229;&#36807; 80 &#20010;&#23383;&#31526;</string>
+    <string name="feature_wordbook_create_error_words_too_many">&#26368;&#22810;&#19968;&#27425;&#21019;&#24314; 1000 &#20010;&#21333;&#35789;</string>
+    <string name="feature_wordbook_create_failed">&#21019;&#24314;&#22833;&#36133;&#65292;&#35831;&#31245;&#21518;&#37325;&#35797;</string>
 </resources>

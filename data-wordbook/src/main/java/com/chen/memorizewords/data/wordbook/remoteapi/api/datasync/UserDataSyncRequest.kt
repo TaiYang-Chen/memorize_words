@@ -48,6 +48,22 @@ class UserDataSyncRequest @Inject constructor(
             .await<ApiResponse<Unit>, Unit>()
     }
 
+    suspend fun createMyWordBook(
+        title: String,
+        category: String,
+        description: String,
+        words: List<String>
+    ): NetworkResult<WordBookDto> = requestExecutor.executeAuthenticated {
+        apiService.createMyWordBook(
+            CreateMyWordBookRequest(
+                title = title,
+                category = category,
+                description = description,
+                words = words
+            )
+        ).await<ApiResponse<WordBookDto>, WordBookDto>()
+    }
+
     suspend fun removeMyWordBook(bookId: Long): NetworkResult<Unit> = requestExecutor.executeAuthenticated {
         apiService.removeMyWordBook(bookId)
             .await<ApiResponse<Unit>, Unit>()

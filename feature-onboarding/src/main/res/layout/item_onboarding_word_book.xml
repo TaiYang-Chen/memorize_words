@@ -10,7 +10,7 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardCanvas"
-            android:layout_width="@dimen/feature_onboarding_book_card_design_width"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/feature_onboarding_book_card_design_height"
             android:clickable="true"
             android:focusable="true"

@@ -35,11 +35,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/feature_wordbook_create_header_action_size"
+                android:layout_marginEnd="@dimen/feature_wordbook_create_header_action_size"
+                android:ellipsize="end"
                 android:gravity="center"
+                android:maxLines="1"
                 android:text="@string/module_wordbook_nav_my_books_title"
                 android:textColor="#000000"
                 android:textSize="@dimen/title_text_size"
                 android:textStyle="bold" />
+
+            <FrameLayout
+                android:layout_width="@dimen/feature_wordbook_create_header_action_size"
+                android:layout_height="@dimen/feature_wordbook_create_header_action_size"
+                android:layout_gravity="center_vertical|end"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/feature_wordbook_create_title"
+                android:onClick="@{()->viewModel.onCreateWordBookClick()}">
+
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/module_wordbook_ic_add" />
+            </FrameLayout>
         </FrameLayout>
 
         <RadioGroup

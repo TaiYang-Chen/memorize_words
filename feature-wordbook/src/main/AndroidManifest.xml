@@ -11,6 +11,8 @@
         android:required="false" />
 
     <application>
-        <activity android:name="com.chen.memorizewords.feature.wordbook.WordBookActivity" />
+        <activity
+            android:name="com.chen.memorizewords.feature.wordbook.WordBookActivity"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 </manifest>

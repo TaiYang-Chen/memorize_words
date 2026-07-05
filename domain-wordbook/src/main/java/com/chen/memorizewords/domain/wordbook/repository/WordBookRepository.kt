@@ -13,6 +13,12 @@ interface WordBookRepository {
     fun getCurrentWordBookMinimalFlow(): Flow<WordBookInfo?>
     suspend fun setCurrentWordBook(bookId: Long)
     suspend fun deleteMyWordBook(bookId: Long): Result<Unit>
+    suspend fun createMyWordBook(
+        title: String,
+        category: String,
+        description: String,
+        words: List<String>
+    ): Result<WordBookInfo>
     suspend fun getCurrentWordBook(): WordBook?
 
     suspend fun getBookNameById(bookId: Long): String?

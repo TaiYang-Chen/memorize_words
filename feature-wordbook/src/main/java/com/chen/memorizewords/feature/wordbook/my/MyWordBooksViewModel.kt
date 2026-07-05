@@ -30,6 +30,7 @@ class MyWordBooksViewModel @Inject constructor(
     sealed interface Route {
         data object ToMyWordBooks : Route
         data object ToShop : Route
+        data object ToCreate : Route
     }
 
     private val filter = MutableStateFlow("All")
@@ -70,6 +71,10 @@ class MyWordBooksViewModel @Inject constructor(
 
     fun onPickShopFragment() {
         navigateRoute(Route.ToShop)
+    }
+
+    fun onCreateWordBookClick() {
+        navigateRoute(Route.ToCreate)
     }
 
     fun setFilter(value: String) {
