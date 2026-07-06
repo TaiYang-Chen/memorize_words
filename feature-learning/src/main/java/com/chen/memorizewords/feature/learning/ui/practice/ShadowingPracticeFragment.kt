@@ -146,9 +146,6 @@ class ShadowingPracticeFragment :
         }
         databind.btnNextWord.setOnClickListener { handleNextAction() }
         databind.cardWavePlayOverlay.setOnClickListener { handleWaveOverlayPlay() }
-        databind.tvQuotaAction.setOnClickListener {
-            showToast(getString(R.string.practice_shadowing_unlock_soon))
-        }
         databind.waveformView.onSeekRequested = { fraction ->
             seekPlayback(fraction)
         }
@@ -202,7 +199,6 @@ class ShadowingPracticeFragment :
         databind.tvWaveSubtitle.text = state.statusSubtitle
         databind.tvFeedbackTitle.text = state.feedbackTitle
         databind.tvFeedbackMessage.text = state.feedbackMessage
-        databind.layoutQuotaBanner.isVisible = false
 
         val latestAttempt = state.latestAttempt
         databind.tvRecognized.isVisible = latestAttempt?.recognizedText?.isNotBlank() == true

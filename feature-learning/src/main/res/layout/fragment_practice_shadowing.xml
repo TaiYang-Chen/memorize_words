@@ -70,44 +70,6 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <LinearLayout
-                android:id="@+id/layout_quota_banner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/feature_learning_bg_shadowing_banner"
-                android:gravity="center_vertical"
-                android:minHeight="@dimen/core_ui_dp_38"
-                android:orientation="horizontal"
-                android:paddingStart="@dimen/core_ui_dp_12"
-                android:paddingTop="@dimen/core_ui_dp_5"
-                android:paddingEnd="@dimen/core_ui_dp_5"
-                android:paddingBottom="@dimen/core_ui_dp_5"
-                android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/tv_quota_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/practice_shadowing_quota_text"
-                    android:textColor="@color/feature_learning_shadowing_text_primary"
-                    android:textSize="@dimen/core_ui_text_13" />
-
-                <TextView
-                    android:id="@+id/tv_quota_action"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/core_ui_dp_8"
-                    android:background="@drawable/feature_learning_bg_shadowing_banner_action"
-                    android:paddingStart="@dimen/core_ui_dp_10"
-                    android:paddingTop="@dimen/core_ui_dp_5"
-                    android:paddingEnd="@dimen/core_ui_dp_10"
-                    android:paddingBottom="@dimen/core_ui_dp_5"
-                    android:text="@string/practice_shadowing_quota_action"
-                    android:textColor="@color/feature_learning_shadowing_banner_action_text"
-                    android:textSize="@dimen/core_ui_text_13"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <LinearLayout
                 android:id="@+id/layout_actions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

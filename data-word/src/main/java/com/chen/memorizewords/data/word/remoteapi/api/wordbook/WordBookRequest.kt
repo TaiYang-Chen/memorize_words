@@ -2,13 +2,7 @@
 
 import com.chen.memorizewords.core.network.http.NetworkRequestExecutor
 import com.chen.memorizewords.data.word.remoteapi.dto.wordbook.WordBookDto
-import com.chen.memorizewords.data.word.remoteapi.dto.wordbook.WordDefinitionDto
 import com.chen.memorizewords.data.word.remoteapi.dto.wordbook.WordDto
-import com.chen.memorizewords.data.word.remoteapi.dto.wordbook.WordExampleDto
-import com.chen.memorizewords.data.word.remoteapi.dto.wordbook.WordFormDto
-import com.chen.memorizewords.data.word.remoteapi.dto.wordbook.WordMemoryDto
-import com.chen.memorizewords.data.word.remoteapi.dto.wordbook.WordPronunciationDto
-import com.chen.memorizewords.data.word.remoteapi.dto.wordbook.WordRelationsDto
 import com.chen.memorizewords.core.network.http.ApiResponse
 import com.chen.memorizewords.core.network.http.PageData
 import com.chen.memorizewords.core.network.http.NetworkResult
@@ -24,9 +18,6 @@ class WordBookRequest @Inject constructor(
 ) {
 
     suspend fun getWordBooks(): NetworkResult<List<WordBookDto>> {
-        if (USE_FAKE_DATA) {
-            return NetworkResult.Success(fakeWordBooks())
-        }
         return requestExecutor.executeAuthenticated {
             wordBookApiService.getWordBooks()
                 .await<ApiResponse<List<WordBookDto>>, List<WordBookDto>>()
@@ -41,14 +32,6 @@ class WordBookRequest @Inject constructor(
         val validationError = validateWordBookWordsParams(bookId, page, count)
         if (validationError != null) {
             return NetworkResult.Failure.GenericError(validationError)
-        }
-
-        if (USE_FAKE_DATA) {
-            val all = fakeWordsForBook(bookId)
-            val fromIndex = (page * count).coerceAtLeast(0)
-            val toIndex = (fromIndex + count).coerceAtMost(all.size)
-            val items = if (fromIndex >= all.size) emptyList() else all.subList(fromIndex, toIndex)
-            return NetworkResult.Success(PageData(items, page, count, all.size.toLong()))
         }
 
         return requestExecutor.executeAuthenticated {
@@ -73,79 +56,6 @@ class WordBookRequest @Inject constructor(
             page < 0 -> "page must be >= 0"
             count <= 0 -> "count must be > 0"
             else -> null
-        }
-    }
-
-    private companion object {
-        const val USE_FAKE_DATA = false
-        private const val FAKE_BOOK_COUNT = 20
-        private const val FAKE_WORDS_PER_BOOK = 10
-
-        private val categories = listOf("college", "high_school", "middle_school", "cet4", "cet6")
-
-        private fun fakeWordBooks(): List<WordBookDto> {
-            return (1..FAKE_BOOK_COUNT).map { index ->
-                WordBookDto(
-                    id = index.toLong(),
-                    title = "wordbook$index",
-                    category = categories[(index - 1) % categories.size],
-                    imgUrl = "",
-                    description = "mock wordbook $index",
-                    totalWords = FAKE_WORDS_PER_BOOK,
-                    learnedWords = 0,
-                    updatedAt = 0L,
-                    isNew = index % 3 == 0,
-                    isHot = index % 4 == 0,
-                    isSelected = false,
-                    isPublic = true,
-                    createdByUserId = null
-                )
-            }
-        }
-
-        private fun fakeWordsForBook(bookId: Long): List<WordDto> {
-            if (bookId !in 1L..FAKE_BOOK_COUNT.toLong()) return emptyList()
-            val base = (bookId - 1) * FAKE_WORDS_PER_BOOK
-            return (1..FAKE_WORDS_PER_BOOK).map { idx ->
-                val wordId = base + idx
-                val wordText = "word$wordId"
-                val definition = WordDefinitionDto(
-                    id = wordId,
-                    pos = "n",
-                    meaning = "mock definition $wordId"
-                )
-                val example = WordExampleDto(
-                    id = wordId,
-                    definitionId = wordId,
-                    sentence = "This is $wordText.",
-                    translation = "This is $wordText.",
-                    difficulty = 3
-                )
-                val form = WordFormDto(
-                    id = wordId,
-                    targetWordId = null,
-                    type = "PLURAL",
-                    text = "${wordText}s"
-                )
-
-                WordDto(
-                    id = wordId,
-                    term = wordText,
-                    normalized = wordText,
-                    pronunciation = WordPronunciationDto(us = "/word$wordId/", uk = "/word$wordId/"),
-                    definitions = listOf(definition),
-                    examples = listOf(example),
-                    forms = listOf(form),
-                    relations = WordRelationsDto(
-                        synonyms = listOf("syn$wordId"),
-                        antonyms = listOf("ant$wordId"),
-                        tags = listOf("mock"),
-                        associations = listOf("assoc$wordId")
-                    ),
-                    roots = emptyList(),
-                    memory = WordMemoryDto(hint = "tip $wordId", notes = "note $wordId")
-                )
-            }
         }
     }
 }

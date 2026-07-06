@@ -3358,28 +3358,6 @@
 
     <issue
         id="ResourceName"
-        message="Resource named &apos;`practice_shadowing_quota_text`&apos; does not start with the project&apos;s resource prefix &apos;`feature_learning_`&apos;; rename to &apos;`feature_learning_practice_shadowing_quota_text`&apos; ?"
-        errorLine1="    &lt;string name=&quot;practice_shadowing_quota_text&quot;>今日跟读单词数已用完&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings_shadowing.xml"
-            line="60"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`practice_shadowing_quota_action`&apos; does not start with the project&apos;s resource prefix &apos;`feature_learning_`&apos;; rename to &apos;`feature_learning_practice_shadowing_quota_action`&apos; ?"
-        errorLine1="    &lt;string name=&quot;practice_shadowing_quota_action&quot;>立即解锁&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings_shadowing.xml"
-            line="61"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
         message="Resource named &apos;`practice_shadowing_open_settings`&apos; does not start with the project&apos;s resource prefix &apos;`feature_learning_`&apos;; rename to &apos;`feature_learning_practice_shadowing_open_settings`&apos; ?"
         errorLine1="    &lt;string name=&quot;practice_shadowing_open_settings&quot;>请到系统设置中开启麦克风权限&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
@@ -3430,17 +3408,6 @@
         <location
             file="src/main/res/values/strings_shadowing.xml"
             line="66"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`practice_shadowing_unlock_soon`&apos; does not start with the project&apos;s resource prefix &apos;`feature_learning_`&apos;; rename to &apos;`feature_learning_practice_shadowing_unlock_soon`&apos; ?"
-        errorLine1="    &lt;string name=&quot;practice_shadowing_unlock_soon&quot;>解锁能力稍后接入&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings_shadowing.xml"
-            line="67"
             column="13"/>
     </issue>
 

@@ -69,13 +69,10 @@
     <string name="practice_shadowing_reference_audio">单词原声</string>
     <string name="practice_shadowing_my_audio">我的发音</string>
     <string name="practice_shadowing_evaluate_action">发音评测</string>
-    <string name="practice_shadowing_quota_text">今日跟读单词数已用完</string>
-    <string name="practice_shadowing_quota_action">立即解锁</string>
     <string name="practice_shadowing_open_settings">请到系统设置中开启麦克风权限</string>
     <string name="practice_shadowing_permission_blocked">麦克风权限未开启</string>
     <string name="practice_shadowing_recorder_failed">录音启动失败，请稍后重试</string>
     <string name="practice_shadowing_recording_missing">录音文件生成失败</string>
     <string name="practice_shadowing_wait_for_feedback">正在评分，请稍候</string>
-    <string name="practice_shadowing_unlock_soon">解锁能力稍后接入</string>
     <string name="practice_shadowing_waveform_content">跟读音频波形</string>
 </resources>
