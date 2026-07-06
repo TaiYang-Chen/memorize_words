@@ -61,6 +61,7 @@ class WordEntryDetailFragment :
     private val formAdapter = FormAdapter()
     private var mediaPlayer: MediaPlayer? = null
     private var pronunciationType: PronunciationType = PronunciationType.US
+    private var lastAutoPlayedWordId: Long? = null
 
     override fun initView(savedInstanceState: Bundle?) {
         databind.viewModel = viewModel
@@ -117,6 +118,7 @@ class WordEntryDetailFragment :
             launch {
                 viewModel.currentWord.collect { word ->
                     renderPhonetic(word)
+                    scheduleAutoPlayWord(word)
                     val hasRelations = synonymsAdapter.submitRelations(
                         word?.synonyms.orEmpty(),
                         word?.antonyms.orEmpty()
@@ -192,6 +194,7 @@ class WordEntryDetailFragment :
 
     override fun onDestroyView() {
         releaseMediaPlayer()
+        lastAutoPlayedWordId = null
         super.onDestroyView()
     }
 
@@ -210,6 +213,19 @@ class WordEntryDetailFragment :
             PronunciationType.UK -> "en-GB"
         }
         speakWord(word, locale)
+    }
+
+    private fun scheduleAutoPlayWord(word: Word?) {
+        if (word == null || word.word.isBlank()) return
+        if (lastAutoPlayedWordId == word.id) return
+        lastAutoPlayedWordId = word.id
+        databind.root.post {
+            if (view == null) return@post
+            val currentWord = viewModel.currentWord.value
+            if (currentWord?.id == word.id && currentWord.word.isNotBlank()) {
+                speakCurrentWord()
+            }
+        }
     }
 
     private fun speakWord(word: String, locale: String) {

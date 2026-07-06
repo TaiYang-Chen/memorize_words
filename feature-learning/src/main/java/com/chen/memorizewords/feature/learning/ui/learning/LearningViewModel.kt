@@ -503,6 +503,25 @@ internal fun orderWordsByIds(ids: List<Long>, words: List<Word>): List<Word> {
     return ids.mapNotNull(wordsById::get)
 }
 
+internal data class LearningAutoPlayWordKey(
+    val learningState: LearningViewModel.LearningState,
+    val wordId: Long,
+    val questionToken: Int
+)
+
+internal fun resolveLearningAutoPlayWordKey(
+    state: LearningViewModel.LearningUiState
+): LearningAutoPlayWordKey? {
+    val word = state.currentWord ?: return null
+    if (!state.showWordSurface) return null
+    if (word.word.isBlank()) return null
+    return LearningAutoPlayWordKey(
+        learningState = state.learningState,
+        wordId = word.id,
+        questionToken = state.questionToken
+    )
+}
+
 internal class LearningCompletionPersistenceGate {
     private val lock = Any()
     private val pendingJobs = mutableSetOf<Job>()

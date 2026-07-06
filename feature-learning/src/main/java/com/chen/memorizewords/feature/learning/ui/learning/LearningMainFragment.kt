@@ -40,13 +40,12 @@ class LearningMainFragment :
     }
 
     private data class RenderKey(val state: LearningViewModel.LearningState)
-    private data class AutoPlayWordKey(val wordId: Long, val questionToken: Int)
 
     @Inject
     lateinit var synthesizeSpeech: SynthesizeSpeechUseCase
 
     private var lastRenderKey: RenderKey? = null
-    private var lastAutoPlayedWordKey: AutoPlayWordKey? = null
+    private var lastAutoPlayedWordKey: LearningAutoPlayWordKey? = null
     private var mediaPlayer: MediaPlayer? = null
     private val updateBottomPaddingRunnable = Runnable {
         updateLearningScrollBottomPadding()
@@ -259,25 +258,15 @@ class LearningMainFragment :
     }
 
     private fun scheduleAutoPlayCurrentWord(state: LearningViewModel.LearningUiState) {
-        val key = state.autoPlayWordKey() ?: return
+        val key = resolveLearningAutoPlayWordKey(state) ?: return
         if (key == lastAutoPlayedWordKey) return
         lastAutoPlayedWordKey = key
         databind.root.post {
             if (view == null) return@post
-            if (viewModel.uiState.value.autoPlayWordKey() == key) {
+            if (resolveLearningAutoPlayWordKey(viewModel.uiState.value) == key) {
                 speakCurrentWord()
             }
         }
-    }
-
-    private fun LearningViewModel.LearningUiState.autoPlayWordKey(): AutoPlayWordKey? {
-        val word = currentWord ?: return null
-        if (!showWordSurface) return null
-        if (word.word.isBlank()) return null
-        return AutoPlayWordKey(
-            wordId = word.id,
-            questionToken = questionToken
-        )
     }
 
     private fun speakCurrentWord() {
