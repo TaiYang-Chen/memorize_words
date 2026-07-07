@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "f3c7393dfee57ea45afe3fb2c2601a11",
+    "identityHash": "45955e858f2547571307324436be9961",
     "entities": [
       {
         "tableName": "word_book",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `category` TEXT NOT NULL, `image` TEXT NOT NULL, `description` TEXT NOT NULL, `total_words` INTEGER NOT NULL, `content_version` INTEGER NOT NULL, `is_new` INTEGER NOT NULL, `is_hot` INTEGER NOT NULL, `is_public` INTEGER NOT NULL, `created_by_user_id` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `category` TEXT NOT NULL, `image` TEXT NOT NULL, `description` TEXT NOT NULL, `total_words` INTEGER NOT NULL, `content_version` INTEGER NOT NULL, `content_package_url` TEXT, `content_package_sha256` TEXT, `content_package_size_bytes` INTEGER, `content_package_content_type` TEXT, `content_package_schema_version` INTEGER, `content_package_version` INTEGER, `is_new` INTEGER NOT NULL, `is_hot` INTEGER NOT NULL, `is_public` INTEGER NOT NULL, `created_by_user_id` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -49,6 +49,36 @@
             "columnName": "content_version",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "contentPackageUrl",
+            "columnName": "content_package_url",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "contentPackageSha256",
+            "columnName": "content_package_sha256",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "contentPackageSizeBytes",
+            "columnName": "content_package_size_bytes",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "contentPackageContentType",
+            "columnName": "content_package_content_type",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "contentPackageSchemaVersion",
+            "columnName": "content_package_schema_version",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "contentPackageVersion",
+            "columnName": "content_package_version",
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "isNew",
@@ -128,6 +158,70 @@
             ]
           }
         ]
+      },
+      {
+        "tableName": "word_book_content_state",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`book_id` INTEGER NOT NULL, `target_version` INTEGER NOT NULL, `local_version` INTEGER NOT NULL, `status` TEXT NOT NULL, `downloaded_words` INTEGER NOT NULL, `total_words` INTEGER NOT NULL, `package_sha256` TEXT, `last_error` TEXT, `updated_at` INTEGER NOT NULL, PRIMARY KEY(`book_id`))",
+        "fields": [
+          {
+            "fieldPath": "bookId",
+            "columnName": "book_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "targetVersion",
+            "columnName": "target_version",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localVersion",
+            "columnName": "local_version",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "downloadedWords",
+            "columnName": "downloaded_words",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "totalWords",
+            "columnName": "total_words",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "packageSha256",
+            "columnName": "package_sha256",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "lastError",
+            "columnName": "last_error",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updated_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "book_id"
+          ]
+        }
       },
       {
         "tableName": "word_book_sync_state",
@@ -259,6 +353,16 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_word_book_words_word_id` ON `${TABLE_NAME}` (`word_id`)"
+          },
+          {
+            "name": "index_word_book_words_word_book_id_word_id",
+            "unique": false,
+            "columnNames": [
+              "word_book_id",
+              "word_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_book_words_word_book_id_word_id` ON `${TABLE_NAME}` (`word_book_id`, `word_id`)"
           }
         ],
         "foreignKeys": [
@@ -459,6 +563,19 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_word_learning_state_book_id_next_review_time` ON `${TABLE_NAME}` (`book_id`, `next_review_time`)"
+          },
+          {
+            "name": "index_word_learning_state_book_id_user_status_next_review_time_last_learn_time_word_id",
+            "unique": false,
+            "columnNames": [
+              "book_id",
+              "user_status",
+              "next_review_time",
+              "last_learn_time",
+              "word_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_learning_state_book_id_user_status_next_review_time_last_learn_time_word_id` ON `${TABLE_NAME}` (`book_id`, `user_status`, `next_review_time`, `last_learn_time`, `word_id`)"
           }
         ],
         "foreignKeys": [
@@ -709,7 +826,7 @@
       },
       {
         "tableName": "word_forms",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `word_id` INTEGER NOT NULL, `form_word_id` INTEGER, `form_type` TEXT NOT NULL, `form_text` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`word_id`) REFERENCES `words`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`form_word_id`) REFERENCES `words`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `word_id` INTEGER NOT NULL, `form_word_id` INTEGER, `form_type` TEXT NOT NULL, `form_text` TEXT NOT NULL, `form_definition` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`word_id`) REFERENCES `words`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`form_word_id`) REFERENCES `words`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
         "fields": [
           {
             "fieldPath": "id",
@@ -739,6 +856,11 @@
             "columnName": "form_text",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "formDefinition",
+            "columnName": "form_definition",
+            "affinity": "TEXT"
           }
         ],
         "primaryKey": {
@@ -1521,7 +1643,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f3c7393dfee57ea45afe3fb2c2601a11')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '45955e858f2547571307324436be9961')"
     ]
   }
 }

@@ -7,6 +7,7 @@ data class WordBook(
     val description: String,
     val totalWords: Int,
     val contentVersion: Long = 0L,
+    val contentPackage: WordBookContentPackage? = null,
     val isNew: Boolean = false,
     val isHot: Boolean = false,
     val isSelected: Boolean = false,

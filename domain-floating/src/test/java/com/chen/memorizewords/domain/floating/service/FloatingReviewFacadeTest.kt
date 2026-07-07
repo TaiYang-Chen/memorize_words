@@ -116,6 +116,12 @@ class FloatingReviewFacadeTest {
         override fun getCurrentWordBookMinimalFlow(): Flow<WordBookInfo?> = emptyFlow()
         override suspend fun setCurrentWordBook(bookId: Long) = Unit
         override suspend fun deleteMyWordBook(bookId: Long): Result<Unit> = error("Not needed")
+        override suspend fun createMyWordBook(
+            title: String,
+            category: String,
+            description: String,
+            words: List<String>
+        ): Result<WordBookInfo> = error("Not needed")
         override suspend fun getCurrentWordBook(): WordBook = WordBook(
             id = 10L,
             title = "Book",

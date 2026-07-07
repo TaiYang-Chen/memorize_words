@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "7a8c1e852d24d3e9938a727f33a81edc",
+    "identityHash": "6b8df2c2861fe964c0a62e0efbc1701b",
     "entities": [
       {
         "tableName": "sync_outbox",
@@ -139,6 +139,17 @@
             "createSql": "CREATE INDEX IF NOT EXISTS `index_sync_outbox_state_lease_expires_at_updated_at` ON `${TABLE_NAME}` (`state`, `lease_expires_at`, `updated_at`)"
           },
           {
+            "name": "index_sync_outbox_state_updated_at_id",
+            "unique": false,
+            "columnNames": [
+              "state",
+              "updated_at",
+              "id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_sync_outbox_state_updated_at_id` ON `${TABLE_NAME}` (`state`, `updated_at`, `id`)"
+          },
+          {
             "name": "index_sync_outbox_lease_token",
             "unique": false,
             "columnNames": [
@@ -161,7 +172,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7a8c1e852d24d3e9938a727f33a81edc')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6b8df2c2861fe964c0a62e0efbc1701b')"
     ]
   }
 }

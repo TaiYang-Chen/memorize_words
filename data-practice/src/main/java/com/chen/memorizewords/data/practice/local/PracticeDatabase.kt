@@ -23,7 +23,7 @@ import com.chen.memorizewords.data.practice.local.room.model.practice.session.Pr
         PracticeSessionRecordEntity::class,
         PracticeSessionWordEntity::class
     ],
-    version = 2,
+    version = 1,
     exportSchema = true
 )
 @TypeConverters(PracticeRoomConverters::class)

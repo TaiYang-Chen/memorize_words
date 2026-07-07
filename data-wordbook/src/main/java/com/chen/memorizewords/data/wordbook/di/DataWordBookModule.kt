@@ -25,6 +25,8 @@ import com.chen.memorizewords.data.wordbook.repository.WorkManagerWordBookWorkCa
 import com.chen.memorizewords.data.wordbook.repository.bootstrap.WordBookSnapshotLocalStateStore
 import com.chen.memorizewords.data.wordbook.repository.WordBookUpdateRepositoryImpl
 import com.chen.memorizewords.data.wordbook.repository.onboarding.OnboardingRepositoryImpl
+import com.chen.memorizewords.data.wordbook.repository.wordbook.HttpWordBookContentPackageImporter
+import com.chen.memorizewords.data.wordbook.repository.wordbook.WordBookContentPackageImporter
 import com.chen.memorizewords.data.wordbook.repository.wordbook.WordBookContentReadinessAdapter
 import com.chen.memorizewords.data.wordbook.repository.wordbook.update.WordBookUpdateCoordinatorImpl
 import com.chen.memorizewords.data.wordbook.sync.WordBookUserSyncOutboxHandler
@@ -99,6 +101,11 @@ abstract class DataWordBookModule {
     ): WordBookContentReadinessPort
 
     @Binds
+    abstract fun bindWordBookContentPackageImporter(
+        impl: HttpWordBookContentPackageImporter
+    ): WordBookContentPackageImporter
+
+    @Binds
     abstract fun bindOnboardingRepository(impl: OnboardingRepositoryImpl): OnboardingRepository
 
     @Binds
@@ -152,6 +159,10 @@ object DataWordBookDatabaseModule {
         database.currentWordBookSelectionDao()
 
     @Provides
+    fun provideWordBookContentStateDao(database: WordBookDatabase) =
+        database.wordBookContentStateDao()
+
+    @Provides
     fun provideWordBookSyncStateDao(database: WordBookDatabase) = database.wordBookSyncStateDao()
 
     @Provides
@@ -201,4 +212,5 @@ object DataWordBookDatabaseModule {
     fun provideUserDataSyncApiService(retrofit: Retrofit): UserDataSyncApiService {
         return retrofit.create(UserDataSyncApiService::class.java)
     }
+
 }

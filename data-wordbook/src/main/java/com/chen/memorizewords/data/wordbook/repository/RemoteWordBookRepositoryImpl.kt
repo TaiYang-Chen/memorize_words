@@ -14,6 +14,7 @@ import com.chen.memorizewords.data.wordbook.repository.download.WordBookDownload
 import com.chen.memorizewords.data.wordbook.repository.download.WordBookDownloadWorker
 import com.chen.memorizewords.core.common.paging.PageSlice
 import com.chen.memorizewords.domain.wordbook.model.WordBook
+import com.chen.memorizewords.domain.wordbook.model.WordBookContentPackage
 import com.chen.memorizewords.domain.wordbook.model.shop.DownloadCommandResult
 import com.chen.memorizewords.domain.wordbook.model.shop.DownloadState
 import com.chen.memorizewords.domain.wordbook.model.shop.ShopBooksQuery
@@ -273,6 +274,16 @@ internal fun WordBookDto.toShopDomain(): WordBook {
         description = description,
         totalWords = totalWords,
         contentVersion = contentVersion,
+        contentPackage = contentPackage?.let { dto ->
+            WordBookContentPackage(
+                url = dto.url,
+                sha256 = dto.sha256,
+                sizeBytes = dto.sizeBytes,
+                contentType = dto.contentType,
+                schemaVersion = dto.schemaVersion,
+                contentVersion = dto.contentVersion
+            )
+        },
         isNew = isNew,
         isHot = isHot,
         isSelected = isSelected,

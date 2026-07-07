@@ -23,6 +23,7 @@ import com.chen.memorizewords.domain.study.repository.StudySnapshotLocalStatePor
 import com.chen.memorizewords.domain.sync.ServerBootstrapContributor
 import com.chen.memorizewords.domain.wordbook.model.study.progress.wordbook.WordBookProgress
 import com.chen.memorizewords.domain.wordbook.model.WordBook
+import com.chen.memorizewords.domain.wordbook.model.WordBookContentPackage
 import com.chen.memorizewords.domain.wordbook.repository.CurrentWordBookLocalStatePort
 import com.chen.memorizewords.domain.wordbook.repository.StudyPlanLocalStatePort
 import com.chen.memorizewords.domain.wordbook.repository.WordBookContentReadinessPort
@@ -32,6 +33,7 @@ import com.chen.memorizewords.domain.wordbook.repository.onboarding.OnboardingRe
 import com.chen.memorizewords.domain.wordbook.repository.shop.RemoteWordBookRepository
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.CancellationException
 
 @Singleton
 class PrimaryServerBootstrapContributor @Inject constructor(
@@ -120,9 +122,6 @@ class PrimaryServerBootstrapContributor @Inject constructor(
         val prioritizedRemoteBooks = prioritizeSelectedBook(remoteBooks, selectedBookId)
         val selectedRemoteBook = prioritizedRemoteBooks.firstOrNull { it.id == selectedBookId }
 
-        selectedRemoteBook?.let { dto ->
-            ensureBookContentReady(dto)
-        }
         val restoredSelectedBookId = bootstrapStep("restoreCurrentWordBookSelection") {
             restoreCurrentWordBookSelection(
                 selectedBookId = selectedBookId,
@@ -130,8 +129,16 @@ class PrimaryServerBootstrapContributor @Inject constructor(
             )
         }
 
-        bootstrapStep("overwriteCurrentWordBook") {
-            currentWordBookLocalStatePort.overwriteFromRemote(restoredSelectedBookId)
+        if (selectedRemoteBook != null) {
+            val dto = selectedRemoteBook
+            bootstrapStep("upsertCurrentWordBookSelection(bookId=${dto.id})") {
+                currentWordBookLocalStatePort.upsertBookAndSelectionFromRemote(dto.toDomain())
+            }
+            ensureBookContentReady(dto)
+        } else {
+            bootstrapStep("overwriteCurrentWordBook") {
+                currentWordBookLocalStatePort.overwriteFromRemote(restoredSelectedBookId)
+            }
         }
 
         restoredSelectedBookId?.let { bookId ->
@@ -278,6 +285,8 @@ class PrimaryServerBootstrapContributor @Inject constructor(
     ): T {
         return try {
             block()
+        } catch (cancellation: CancellationException) {
+            throw cancellation
         } catch (throwable: Throwable) {
             Log.e(TAG, "Post-login bootstrap step failed: $name", throwable)
             errorLogger.logFailure(
@@ -300,6 +309,9 @@ class PrimaryServerBootstrapContributor @Inject constructor(
 
         val selectedBook = remoteWordBookRepository.getShopBookById(safeSelectedBookId)
             ?: return null
+        bootstrapStep("upsertCurrentWordBookSelection(bookId=$safeSelectedBookId)") {
+            currentWordBookLocalStatePort.upsertBookAndSelectionFromRemote(selectedBook)
+        }
         bootstrapStep("ensureBookContentReady(bookId=$safeSelectedBookId)") {
             wordBookContentReadinessPort.ensureContentReady(
                 book = selectedBook,
@@ -360,6 +372,16 @@ private fun com.chen.memorizewords.data.sync.remoteapi.dto.wordbook.WordBookDto.
         description = description,
         totalWords = totalWords,
         contentVersion = contentVersion,
+        contentPackage = contentPackage?.let { dto ->
+            WordBookContentPackage(
+                url = dto.url,
+                sha256 = dto.sha256,
+                sizeBytes = dto.sizeBytes,
+                contentType = dto.contentType,
+                schemaVersion = dto.schemaVersion,
+                contentVersion = dto.contentVersion
+            )
+        },
         isNew = isNew,
         isHot = isHot,
         isSelected = isSelected,

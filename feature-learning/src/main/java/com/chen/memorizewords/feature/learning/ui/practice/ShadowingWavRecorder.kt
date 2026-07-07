@@ -1,8 +1,10 @@
 package com.chen.memorizewords.feature.learning.ui.practice
 
+import android.Manifest
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
+import androidx.annotation.RequiresPermission
 import java.io.File
 import java.io.RandomAccessFile
 import kotlin.math.abs
@@ -24,6 +26,7 @@ internal class ShadowingWavRecorder(
     private var startedAtMs: Long = 0L
     @Volatile private var recording: Boolean = false
 
+    @RequiresPermission(Manifest.permission.RECORD_AUDIO)
     fun start(
         file: File,
         onAmplitude: (Int) -> Unit,
@@ -32,13 +35,17 @@ internal class ShadowingWavRecorder(
         stopCurrent()
         val minBuffer = AudioRecord.getMinBufferSize(sampleRate, channelConfig, audioFormat)
         val bufferSize = max(minBuffer, sampleRate / 5 * BYTES_PER_SAMPLE)
-        val recorder = AudioRecord(
-            MediaRecorder.AudioSource.MIC,
-            sampleRate,
-            channelConfig,
-            audioFormat,
-            bufferSize
-        )
+        val recorder = try {
+            AudioRecord(
+                MediaRecorder.AudioSource.MIC,
+                sampleRate,
+                channelConfig,
+                audioFormat,
+                bufferSize
+            )
+        } catch (error: SecurityException) {
+            throw IllegalStateException("Audio recording permission is unavailable.", error)
+        }
         if (recorder.state != AudioRecord.STATE_INITIALIZED) {
             recorder.release()
             error("AudioRecord initialization failed.")
@@ -51,6 +58,7 @@ internal class ShadowingWavRecorder(
             runCatching {
                 writeWav(recorder, file, bufferSize, onAmplitude)
             }.onFailure { error ->
+                clearFailedRecording(recorder, file)
                 onError(error)
             }
         }, "shadowing-wav-recorder").also { thread ->
@@ -85,6 +93,20 @@ internal class ShadowingWavRecorder(
         startedAtMs = 0L
     }
 
+    private fun clearFailedRecording(recorder: AudioRecord, file: File) {
+        recording = false
+        if (audioRecord === recorder) {
+            audioRecord = null
+        }
+        if (Thread.currentThread() === recordingThread) {
+            recordingThread = null
+        }
+        outputFile = null
+        startedAtMs = 0L
+        runCatching { recorder.release() }
+        runCatching { file.delete() }
+    }
+
     private fun writeWav(
         recorder: AudioRecord,
         file: File,
@@ -96,7 +118,11 @@ internal class ShadowingWavRecorder(
         RandomAccessFile(file, "rw").use { output ->
             output.setLength(0L)
             writeHeader(output, 0L)
-            recorder.startRecording()
+            try {
+                recorder.startRecording()
+            } catch (error: SecurityException) {
+                throw IllegalStateException("Audio recording permission is unavailable.", error)
+            }
             while (recording) {
                 val read = recorder.read(buffer, 0, buffer.size)
                 if (read <= 0) continue

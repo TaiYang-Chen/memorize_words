@@ -9,22 +9,22 @@ import com.chen.memorizewords.domain.study.model.progress.word.WordLearningState
 import com.chen.memorizewords.domain.study.repository.StudySnapshotLocalStatePort
 import com.chen.memorizewords.domain.sync.model.LearningPrerequisitesSnapshot
 import com.chen.memorizewords.domain.wordbook.model.WordBook
-import com.chen.memorizewords.domain.wordbook.model.shop.DownloadState
+import com.chen.memorizewords.domain.wordbook.model.WordBookContentPackage
 import com.chen.memorizewords.domain.wordbook.model.study.progress.wordbook.WordBookProgress
 import com.chen.memorizewords.domain.wordbook.repository.CurrentWordBookLocalStatePort
 import com.chen.memorizewords.domain.wordbook.repository.StudyPlanLocalStatePort
+import com.chen.memorizewords.domain.wordbook.repository.WordBookContentReadinessPort
 import com.chen.memorizewords.domain.wordbook.repository.WordBookLearningStateSnapshot
 import com.chen.memorizewords.domain.wordbook.repository.WordBookSnapshotLocalStatePort
 import com.chen.memorizewords.domain.wordbook.repository.shop.RemoteWordBookRepository
 import javax.inject.Inject
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.withTimeout
 
 class LearningPrerequisitesRestorer @Inject constructor(
     private val remoteUserSyncDataSource: RemoteUserSyncDataSource,
     private val studyPlanLocalStatePort: StudyPlanLocalStatePort,
     private val currentWordBookLocalStatePort: CurrentWordBookLocalStatePort,
     private val remoteWordBookRepository: RemoteWordBookRepository,
+    private val wordBookContentReadinessPort: WordBookContentReadinessPort,
     private val studySnapshotLocalStatePort: StudySnapshotLocalStatePort,
     private val wordBookSnapshotLocalStatePort: WordBookSnapshotLocalStatePort
 ) {
@@ -38,13 +38,12 @@ class LearningPrerequisitesRestorer @Inject constructor(
         val selectedBookId = resolveSelectedBookId(remoteBooks)
         val selectedBook = resolveSelectedBook(selectedBookId, remoteBooks)
             ?: error("Selected word book is missing")
+        currentWordBookLocalStatePort.upsertBookAndSelectionFromRemote(selectedBook)
 
-        remoteWordBookRepository.downloadBook(
+        wordBookContentReadinessPort.ensureContentReady(
             book = selectedBook,
-            forceRefresh = false,
-            runInForeground = false
+            forceRefresh = false
         )
-        waitUntilDownloaded(selectedBookId)
 
         val states = loadPagedSnapshot { page, count ->
             remoteUserSyncDataSource.getWordStates(
@@ -68,7 +67,6 @@ class LearningPrerequisitesRestorer @Inject constructor(
             .map { it.toDomain() }
         wordBookSnapshotLocalStatePort.upsertProgressFromRemote(currentProgress)
 
-        currentWordBookLocalStatePort.overwriteFromRemote(selectedBookId)
         LearningPrerequisitesSnapshot(
             selectedBookId = selectedBookId,
             studyPlan = studyPlan
@@ -88,19 +86,6 @@ class LearningPrerequisitesRestorer @Inject constructor(
     ): WordBook? {
         return remoteBooks.firstOrNull { it.id == selectedBookId }?.toDomain()
             ?: remoteWordBookRepository.getShopBookById(selectedBookId)
-    }
-
-    private suspend fun waitUntilDownloaded(bookId: Long) {
-        withTimeout(DOWNLOAD_TIMEOUT_MS) {
-            remoteWordBookRepository.observeDownloadStates()
-                .first { states ->
-                    when (val state = states[bookId]) {
-                        is DownloadState.Downloaded -> true
-                        is DownloadState.Failed -> error(state.message)
-                        else -> false
-                    }
-                }
-        }
     }
 
     private suspend fun <T> loadPagedSnapshot(
@@ -133,6 +118,16 @@ private fun WordBookDto.toDomain(): WordBook {
         description = description,
         totalWords = totalWords,
         contentVersion = contentVersion,
+        contentPackage = contentPackage?.let { dto ->
+            WordBookContentPackage(
+                url = dto.url,
+                sha256 = dto.sha256,
+                sizeBytes = dto.sizeBytes,
+                contentType = dto.contentType,
+                schemaVersion = dto.schemaVersion,
+                contentVersion = dto.contentVersion
+            )
+        },
         isNew = isNew,
         isHot = isHot,
         isSelected = isSelected,
@@ -186,5 +181,3 @@ private fun WordBookProgressDto.toDomain(): WordBookProgress {
 }
 
 private const val DEFAULT_PAGE_SIZE = 100
-
-private const val DOWNLOAD_TIMEOUT_MS = 120_000L

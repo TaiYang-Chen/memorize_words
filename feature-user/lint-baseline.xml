@@ -3,6 +3,17 @@
 
     <issue
         id="ResourceName"
+        message="Resource named &apos;`module_user_auth_primary`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_auth_primary`&apos; ?"
+        errorLine1="    &lt;color name=&quot;module_user_auth_primary&quot;>#2979FF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="3"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
         message="Resource named &apos;`module_user_activity_auth`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_activity_auth`&apos; ?"
         errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
         errorLine2=" ~~~~~~">
@@ -47,6 +58,17 @@
 
     <issue
         id="ResourceName"
+        message="Resource named &apos;`module_user_fragment_bind_email`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_fragment_bind_email`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_bind_email.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
         message="Resource named &apos;`module_user_fragment_bind_phone`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_fragment_bind_phone`&apos; ?"
         errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
         errorLine2=" ~~~~~~">
@@ -80,11 +102,55 @@
 
     <issue
         id="ResourceName"
+        message="Resource named &apos;`module_user_fragment_email_code_login`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_fragment_email_code_login`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_email_code_login.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_fragment_email_code_register`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_fragment_email_code_register`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_email_code_register.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
         message="Resource named &apos;`module_user_fragment_login`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_fragment_login`&apos; ?"
         errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
         errorLine2=" ~~~~~~">
         <location
             file="src/main/res/layout/module_user_fragment_login.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_fragment_phone_code_login`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_fragment_phone_code_login`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_phone_code_login.xml"
+            line="2"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_fragment_phone_code_register`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_fragment_phone_code_register`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_phone_code_register.xml"
             line="2"
             column="2"/>
     </issue>
@@ -191,11 +257,22 @@
     <issue
         id="ResourceName"
         message="Resource named &apos;`module_user_login_ic_pass_invisible`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_login_ic_pass_invisible`&apos; ?"
-        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:height=&quot;32dp&quot; android:viewportHeight=&quot;1024&quot; android:viewportWidth=&quot;1024&quot; android:width=&quot;32dp&quot;>"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:height=&quot;@dimen/core_ui_dp_32&quot; android:viewportHeight=&quot;1024&quot; android:viewportWidth=&quot;1024&quot; android:width=&quot;@dimen/core_ui_dp_32&quot;>"
         errorLine2=" ~~~~~~">
         <location
             file="src/main/res/drawable/module_user_login_ic_pass_invisible.xml"
             line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_send_code_text_color`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_send_code_text_color`&apos; ?"
+        errorLine1="&lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2=" ~~~~~~~~">
+        <location
+            file="src/main/res/color/module_user_send_code_text_color.xml"
+            line="2"
             column="2"/>
     </issue>
 
@@ -246,7 +323,7 @@
     <issue
         id="ResourceName"
         message="Resource named &apos;`module_user_login_account_hint`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_login_account_hint`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_user_login_account_hint&quot;>请输入手机号&lt;/string>"
+        errorLine1="    &lt;string name=&quot;module_user_login_account_hint&quot;>请输入账户/邮箱/手机号&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
@@ -278,12 +355,155 @@
 
     <issue
         id="ResourceName"
-        message="Resource named &apos;`module_user_login_by_sms`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_login_by_sms`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_user_login_by_sms&quot;>验证码登录&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        message="Resource named &apos;`module_user_login_loading`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_login_loading`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_login_loading&quot;>登录中...&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
             line="10"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_phone_code_login`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_phone_code_login`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_phone_code_login&quot;>手机验证码登录&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="11"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_email_code_login`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_email_code_login`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_email_code_login&quot;>邮箱验证码登录&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="12"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_phone_code_login_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_phone_code_login_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_phone_code_login_title&quot;>手机验证码登录&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="13"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_email_code_login_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_email_code_login_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_email_code_login_title&quot;>邮箱验证码登录&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="14"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_phone_code_register`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_phone_code_register`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_phone_code_register&quot;>手机验证码注册&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="15"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_email_code_register`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_email_code_register`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_email_code_register&quot;>邮箱验证码注册&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="16"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_phone_code_register_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_phone_code_register_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_phone_code_register_title&quot;>手机验证码注册&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="17"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_email_code_register_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_email_code_register_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_email_code_register_title&quot;>邮箱验证码注册&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="18"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_register_account_hint`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_register_account_hint`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_register_account_hint&quot;>账号：4-20位英文或数字，且必须包含字母&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="19"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_register_account_required`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_register_account_required`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_register_account_required&quot;>请输入账户&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="20"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_register_account_invalid`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_register_account_invalid`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_register_account_invalid&quot;>账号只能包含英文和数字，且必须包含字母&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="21"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_register_loading`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_register_loading`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_register_loading&quot;>注册中...&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="22"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_register_success`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_register_success`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_register_success&quot;>注册成功&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="23"
             column="13"/>
     </issue>
 
@@ -294,7 +514,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="13"
+            line="24"
             column="13"/>
     </issue>
 
@@ -305,7 +525,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="14"
+            line="25"
             column="13"/>
     </issue>
 
@@ -316,7 +536,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="24"
+            line="27"
             column="13"/>
     </issue>
 
@@ -327,7 +547,18 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="25"
+            line="28"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_send_code_sending`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_send_code_sending`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_send_code_sending&quot;>发送中...&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="29"
             column="13"/>
     </issue>
 
@@ -338,7 +569,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="26"
+            line="30"
             column="13"/>
     </issue>
 
@@ -349,7 +580,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="27"
+            line="31"
             column="13"/>
     </issue>
 
@@ -360,7 +591,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="29"
+            line="33"
             column="13"/>
     </issue>
 
@@ -371,7 +602,40 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="30"
+            line="34"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_login_sync_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_login_sync_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_login_sync_failed&quot;>登录成功但数据同步失败，请重试&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="35"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_login_identifier_required`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_login_identifier_required`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_login_identifier_required&quot;>请输入账户/邮箱/手机号&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="36"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_login_identifier_invalid`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_login_identifier_invalid`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_login_identifier_invalid&quot;>请输入正确的账户/邮箱/手机号&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="37"
             column="13"/>
     </issue>
 
@@ -382,7 +646,18 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="31"
+            line="38"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_login_email_required`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_login_email_required`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_login_email_required&quot;>请输入邮箱&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="39"
             column="13"/>
     </issue>
 
@@ -393,7 +668,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="32"
+            line="40"
             column="13"/>
     </issue>
 
@@ -404,7 +679,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="33"
+            line="41"
             column="13"/>
     </issue>
 
@@ -415,7 +690,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="34"
+            line="42"
             column="13"/>
     </issue>
 
@@ -426,7 +701,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="35"
+            line="43"
             column="13"/>
     </issue>
 
@@ -437,7 +712,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="36"
+            line="44"
             column="13"/>
     </issue>
 
@@ -448,7 +723,18 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="42"
+            line="45"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_bind_phone_sms_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_phone_sms_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_bind_phone_sms_title&quot;>验证码绑定&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="46"
             column="13"/>
     </issue>
 
@@ -459,7 +745,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="43"
+            line="47"
             column="13"/>
     </issue>
 
@@ -470,7 +756,18 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="44"
+            line="48"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_bind_phone_sms_confirm`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_phone_sms_confirm`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_bind_phone_sms_confirm&quot;>确认绑定&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="49"
             column="13"/>
     </issue>
 
@@ -481,7 +778,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="46"
+            line="50"
             column="13"/>
     </issue>
 
@@ -492,7 +789,194 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="47"
+            line="51"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_bind_phone_verified`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_phone_verified`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_bind_phone_verified&quot;>已验证&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="52"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_bind_phone_loading`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_phone_loading`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_bind_phone_loading&quot;>正在绑定手机号...&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="53"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_bind_phone_success`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_phone_success`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_bind_phone_success&quot;>手机号绑定成功&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="54"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_bind_phone_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_phone_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_bind_phone_failed&quot;>手机号绑定失败&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="55"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_bind_phone_auth_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_phone_auth_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_bind_phone_auth_failed&quot;>验证码验证失败&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="56"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_bind_phone_already_bound`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_phone_already_bound`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_bind_phone_already_bound&quot;>该手机号已绑定当前账号&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="57"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_bind_email_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_email_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_bind_email_title&quot;>绑定邮箱&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="59"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_change_email_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_change_email_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_change_email_title&quot;>换绑邮箱&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="60"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_bind_email_hint`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_email_hint`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_bind_email_hint&quot;>邮箱&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="61"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_bind_email_code_hint`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_email_code_hint`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_bind_email_code_hint&quot;>验证码&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="62"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_bind_email_confirm`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_email_confirm`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_bind_email_confirm&quot;>确认绑定&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="63"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_change_email_confirm`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_change_email_confirm`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_change_email_confirm&quot;>确认换绑&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="64"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_bind_email_invalid`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_email_invalid`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_bind_email_invalid&quot;>请输入正确的邮箱&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="65"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_bind_email_code_invalid`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_email_code_invalid`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_bind_email_code_invalid&quot;>请输入正确的验证码&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="66"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_bind_email_success`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_email_success`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_bind_email_success&quot;>邮箱绑定成功&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="67"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_bind_email_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_email_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_bind_email_failed&quot;>邮箱绑定失败&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="68"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_bind_email_loading`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_bind_email_loading`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_bind_email_loading&quot;>绑定中...&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="69"
             column="13"/>
     </issue>
 
@@ -503,7 +987,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="52"
+            line="71"
             column="13"/>
     </issue>
 
@@ -514,7 +998,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="53"
+            line="72"
             column="13"/>
     </issue>
 
@@ -525,7 +1009,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="54"
+            line="73"
             column="13"/>
     </issue>
 
@@ -536,7 +1020,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="55"
+            line="74"
             column="13"/>
     </issue>
 
@@ -547,7 +1031,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="56"
+            line="75"
             column="13"/>
     </issue>
 
@@ -558,7 +1042,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="57"
+            line="76"
             column="13"/>
     </issue>
 
@@ -569,7 +1053,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="58"
+            line="77"
             column="13"/>
     </issue>
 
@@ -580,7 +1064,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="59"
+            line="78"
             column="13"/>
     </issue>
 
@@ -591,7 +1075,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="60"
+            line="79"
             column="13"/>
     </issue>
 
@@ -602,7 +1086,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="61"
+            line="80"
             column="13"/>
     </issue>
 
@@ -613,7 +1097,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="62"
+            line="81"
             column="13"/>
     </issue>
 
@@ -624,7 +1108,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="63"
+            line="82"
             column="13"/>
     </issue>
 
@@ -635,7 +1119,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="65"
+            line="83"
             column="13"/>
     </issue>
 
@@ -646,7 +1130,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="67"
+            line="85"
             column="13"/>
     </issue>
 
@@ -657,7 +1141,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="68"
+            line="86"
             column="13"/>
     </issue>
 
@@ -668,7 +1152,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="69"
+            line="87"
             column="13"/>
     </issue>
 
@@ -679,7 +1163,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="70"
+            line="88"
             column="13"/>
     </issue>
 
@@ -690,7 +1174,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="71"
+            line="89"
             column="13"/>
     </issue>
 
@@ -701,7 +1185,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="72"
+            line="90"
             column="13"/>
     </issue>
 
@@ -712,7 +1196,62 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="73"
+            line="91"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_account_deletion_pending_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_account_deletion_pending_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_account_deletion_pending_title&quot;>账号处于注销冷静期&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="92"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_account_deletion_pending_message`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_account_deletion_pending_message`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_account_deletion_pending_message&quot;>继续登录将取消注销申请并恢复账号。&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="93"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_account_deletion_pending_confirm`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_account_deletion_pending_confirm`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_account_deletion_pending_confirm&quot;>继续登录&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="94"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_account_deletion_pending_cancel`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_account_deletion_pending_cancel`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_account_deletion_pending_cancel&quot;>暂不登录&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="95"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_account_deletion_restore_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_account_deletion_restore_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_account_deletion_restore_failed&quot;>恢复账号失败，请重新登录&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="96"
             column="13"/>
     </issue>
 
@@ -723,7 +1262,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="75"
+            line="98"
             column="13"/>
     </issue>
 
@@ -734,7 +1273,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="76"
+            line="99"
             column="13"/>
     </issue>
 
@@ -745,7 +1284,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="77"
+            line="100"
             column="13"/>
     </issue>
 
@@ -756,7 +1295,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="79"
+            line="101"
             column="13"/>
     </issue>
 
@@ -767,7 +1306,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="80"
+            line="102"
             column="13"/>
     </issue>
 
@@ -778,7 +1317,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="82"
+            line="103"
             column="13"/>
     </issue>
 
@@ -789,7 +1328,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="83"
+            line="104"
             column="13"/>
     </issue>
 
@@ -800,7 +1339,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="84"
+            line="105"
             column="13"/>
     </issue>
 
@@ -811,7 +1350,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="85"
+            line="106"
             column="13"/>
     </issue>
 
@@ -822,7 +1361,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="86"
+            line="107"
             column="13"/>
     </issue>
 
@@ -833,7 +1372,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="87"
+            line="108"
             column="13"/>
     </issue>
 
@@ -844,7 +1383,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="88"
+            line="109"
             column="13"/>
     </issue>
 
@@ -855,7 +1394,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="89"
+            line="110"
             column="13"/>
     </issue>
 
@@ -866,7 +1405,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="90"
+            line="111"
             column="13"/>
     </issue>
 
@@ -877,7 +1416,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="91"
+            line="112"
             column="13"/>
     </issue>
 
@@ -888,7 +1427,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="93"
+            line="114"
             column="13"/>
     </issue>
 
@@ -899,7 +1438,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="94"
+            line="115"
             column="13"/>
     </issue>
 
@@ -910,7 +1449,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="95"
+            line="116"
             column="13"/>
     </issue>
 
@@ -921,7 +1460,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="96"
+            line="117"
             column="13"/>
     </issue>
 
@@ -932,7 +1471,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="97"
+            line="118"
             column="13"/>
     </issue>
 
@@ -943,7 +1482,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="98"
+            line="119"
             column="13"/>
     </issue>
 
@@ -954,7 +1493,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="99"
+            line="120"
             column="13"/>
     </issue>
 
@@ -965,7 +1504,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="100"
+            line="121"
             column="13"/>
     </issue>
 
@@ -976,7 +1515,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="101"
+            line="122"
             column="13"/>
     </issue>
 
@@ -987,7 +1526,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="102"
+            line="123"
             column="13"/>
     </issue>
 
@@ -998,7 +1537,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="103"
+            line="124"
             column="13"/>
     </issue>
 
@@ -1009,7 +1548,51 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="104"
+            line="125"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_nav_phone_code_login_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_nav_phone_code_login_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_nav_phone_code_login_title&quot;>手机验证码登录&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="126"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_nav_email_code_login_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_nav_email_code_login_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_nav_email_code_login_title&quot;>邮箱验证码登录&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="127"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_nav_phone_code_register_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_nav_phone_code_register_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_nav_phone_code_register_title&quot;>手机验证码注册&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="128"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_nav_email_code_register_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_nav_email_code_register_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_nav_email_code_register_title&quot;>邮箱验证码注册&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="129"
             column="13"/>
     </issue>
 
@@ -1020,7 +1603,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="108"
+            line="130"
             column="13"/>
     </issue>
 
@@ -1031,7 +1614,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="109"
+            line="131"
             column="13"/>
     </issue>
 
@@ -1042,7 +1625,18 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="110"
+            line="132"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_user_nav_bind_email_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_nav_bind_email_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;module_user_nav_bind_email_title&quot;>绑定邮箱&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="133"
             column="13"/>
     </issue>
 
@@ -1053,7 +1647,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="111"
+            line="134"
             column="13"/>
     </issue>
 
@@ -1064,7 +1658,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="112"
+            line="135"
             column="13"/>
     </issue>
 
@@ -1080,14 +1674,69 @@
     </issue>
 
     <issue
-        id="DataBindingWithoutKapt"
-        message="If you plan to use data binding in a Kotlin project, you should apply the kotlin-kapt plugin."
-        errorLine1="        dataBinding = true"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~">
+        id="DiscouragedApi"
+        message="Fixed screen orientations will be ignored in most cases, starting from Android 16. Android is moving toward a model where apps are expected to adapt to various orientations, display sizes, and aspect ratios."
+        errorLine1="            android:screenOrientation=&quot;behind&quot; />"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="build.gradle.kts"
+            file="src/main/AndroidManifest.xml"
+            line="14"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Fixed screen orientations will be ignored in most cases, starting from Android 16. Android is moving toward a model where apps are expected to adapt to various orientations, display sizes, and aspect ratios."
+        errorLine1="            android:screenOrientation=&quot;behind&quot; />"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="19"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Fixed screen orientations will be ignored in most cases, starting from Android 16. Android is moving toward a model where apps are expected to adapt to various orientations, display sizes, and aspect ratios."
+        errorLine1="            android:screenOrientation=&quot;behind&quot; />"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="24"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Fixed screen orientations will be ignored in most cases, starting from Android 16. Android is moving toward a model where apps are expected to adapt to various orientations, display sizes, and aspect ratios."
+        errorLine1="            android:screenOrientation=&quot;behind&quot; />"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="29"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Fixed screen orientations will be ignored in most cases, starting from Android 16. Android is moving toward a model where apps are expected to adapt to various orientations, display sizes, and aspect ratios."
+        errorLine1="            android:screenOrientation=&quot;behind&quot; />"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="35"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Fixed screen orientations will be ignored in most cases, starting from Android 16. Android is moving toward a model where apps are expected to adapt to various orientations, display sizes, and aspect ratios."
+        errorLine1="            android:screenOrientation=&quot;behind&quot; />"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
             line="41"
-            column="9"/>
+            column="13"/>
     </issue>
 
     <issue
@@ -1097,7 +1746,7 @@
         errorLine2="                         ~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/module_user_fragment_profile.xml"
-            line="412"
+            line="448"
             column="26"/>
     </issue>
 
@@ -1108,7 +1757,18 @@
         errorLine2="                         ~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/module_user_fragment_profile.xml"
-            line="435"
+            line="471"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="UseCompoundDrawables"
+        message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
+        errorLine1="                        &lt;LinearLayout"
+        errorLine2="                         ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_profile.xml"
+            line="494"
             column="26"/>
     </issue>
 
@@ -1119,8 +1779,74 @@
         errorLine2="                     ~~~~~~~~~~~">
         <location
             file="src/main/res/layout/module_user_fragment_profile.xml"
-            line="85"
+            line="87"
             column="22"/>
+    </issue>
+
+    <issue
+        id="TypographyDashes"
+        message="Replace &quot;-&quot; with an &quot;en dash&quot; character (–, &amp;#8211;) ?"
+        errorLine1="    &lt;string name=&quot;module_user_register_account_hint&quot;>账号：4-20位英文或数字，且必须包含字母&lt;/string>"
+        errorLine2="                                                     ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="19"
+            column="54"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;module_user_login_loading&quot;>登录中...&lt;/string>"
+        errorLine2="                                             ~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="10"
+            column="46"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;module_user_register_loading&quot;>注册中...&lt;/string>"
+        errorLine2="                                                ~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="22"
+            column="49"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;module_user_send_code_sending&quot;>发送中...&lt;/string>"
+        errorLine2="                                                 ~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="29"
+            column="50"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;module_user_bind_phone_loading&quot;>正在绑定手机号...&lt;/string>"
+        errorLine2="                                                  ~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="53"
+            column="51"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;module_user_bind_email_loading&quot;>绑定中...&lt;/string>"
+        errorLine2="                                                  ~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="69"
+            column="51"/>
     </issue>
 
     <issue
@@ -1130,8 +1856,56 @@
         errorLine2="                                                       ~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="71"
+            line="89"
             column="56"/>
+    </issue>
+
+    <issue
+        id="TextFields"
+        message="The view name (`@+id/etEmailCode`) suggests this is an e-mail address, but it does not include &apos;`textEmail`&apos; in the `inputType`"
+        errorLine1="                android:inputType=&quot;number&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_bind_email.xml"
+            line="74"
+            column="17"/>
+        <location
+            file="src/main/res/layout/module_user_fragment_bind_email.xml"
+            line="69"
+            column="17"
+            message="id defined here"/>
+    </issue>
+
+    <issue
+        id="TextFields"
+        message="The view name (`@+id/etEmailCode`) suggests this is an e-mail address, but it does not include &apos;`textEmail`&apos; in the `inputType`"
+        errorLine1="                android:inputType=&quot;number&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_email_code_login.xml"
+            line="74"
+            column="17"/>
+        <location
+            file="src/main/res/layout/module_user_fragment_email_code_login.xml"
+            line="69"
+            column="17"
+            message="id defined here"/>
+    </issue>
+
+    <issue
+        id="TextFields"
+        message="The view name (`@+id/etEmailCode`) suggests this is an e-mail address, but it does not include &apos;`textEmail`&apos; in the `inputType`"
+        errorLine1="                android:inputType=&quot;number&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_user_fragment_email_code_register.xml"
+            line="74"
+            column="17"/>
+        <location
+            file="src/main/res/layout/module_user_fragment_email_code_register.xml"
+            line="69"
+            column="17"
+            message="id defined here"/>
     </issue>
 
     <issue
@@ -1154,6 +1928,17 @@
             file="src/main/java/com/chen/memorizewords/feature/user/ui/profile/avatar/AvatarImageProcessor.kt"
             line="67"
             column="16"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view `ElasticNestedScrollView` overrides `onTouchEvent` but not `performClick`"
+        errorLine1="    override fun onTouchEvent(ev: MotionEvent): Boolean {"
+        errorLine2="                 ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/user/ui/profile/ElasticNestedScrollView.kt"
+            line="67"
+            column="18"/>
     </issue>
 
     <issue
@@ -1196,7 +1981,7 @@
         errorLine2="             ~~~~~~~~~">
         <location
             file="src/main/res/layout/module_user_fragment_register.xml"
-            line="88"
+            line="83"
             column="14"/>
     </issue>
 
@@ -1267,68 +2052,13 @@
     </issue>
 
     <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;注册&quot;, should use `@string` resource"
-        errorLine1="            android:text=&quot;注册&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_user_fragment_register.xml"
-            line="26"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;已有账号？ 去登录&quot;, should use `@string` resource"
-        errorLine1="            android:text=&quot;已有账号？ 去登录&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_user_fragment_register.xml"
-            line="40"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;请输入手机号&quot;, should use `@string` resource"
-        errorLine1="            android:hint=&quot;请输入手机号&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_user_fragment_register.xml"
-            line="55"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;请输入密码&quot;, should use `@string` resource"
-        errorLine1="                android:hint=&quot;请输入密码&quot;"
-        errorLine2="                ~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_user_fragment_register.xml"
-            line="81"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;注册&quot;, should use `@string` resource"
-        errorLine1="            android:text=&quot;注册&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_user_fragment_register.xml"
-            line="105"
-            column="13"/>
-    </issue>
-
-    <issue
         id="RelativeOverlap"
         message="`@id/tvTitle` can overlap `@id/ivMore` if @string/feature_user_profile_title grows due to localized text expansion"
         errorLine1="            &lt;TextView"
         errorLine2="             ~~~~~~~~">
         <location
             file="src/main/res/layout/module_user_fragment_profile.xml"
-            line="40"
+            line="42"
             column="14"/>
     </issue>
 

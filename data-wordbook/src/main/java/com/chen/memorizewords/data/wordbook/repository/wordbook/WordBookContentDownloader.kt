@@ -2,17 +2,20 @@ package com.chen.memorizewords.data.wordbook.repository.wordbook
 
 import androidx.room.withTransaction
 import com.chen.memorizewords.data.wordbook.local.WordBookDatabase
+import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.contentstate.WordBookContentStateDao
+import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.contentstate.WordBookContentStateEntity
+import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.contentstate.WordBookContentStatus
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.wordbook.toEntity
+import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.wordbook.toDomain
 import com.chen.memorizewords.data.wordbook.local.room.wordbook.WordBookSyncStateStore
-import com.chen.memorizewords.data.wordbook.remote.wordbook.RemoteWordBookDataSource
 import com.chen.memorizewords.domain.wordbook.model.WordBook
 import javax.inject.Inject
-import kotlin.math.min
+import kotlinx.coroutines.CancellationException
 
 class WordBookContentDownloader @Inject constructor(
     private val database: WordBookDatabase,
-    private val remoteWordBookDataSource: RemoteWordBookDataSource,
-    private val contentLocalStore: WordBookContentLocalStore,
+    private val packageImporter: WordBookContentPackageImporter,
+    private val contentStateDao: WordBookContentStateDao,
     private val syncStateStore: WordBookSyncStateStore
 ) {
     suspend fun ensureContentReady(
@@ -40,70 +43,159 @@ class WordBookContentDownloader @Inject constructor(
         progress: suspend (WordBookContentDownloadProgress) -> Unit = {}
     ): WordBookContentDownloadResult {
         require(bookId > 0L) { "bookId must be positive" }
+        val localBook = database.wordBookDao().getWordBookById(bookId)?.toDomain()
+        val target = targetVersion.coerceAtLeast(localBook?.contentVersion ?: 0L)
+        var currentCount = database.wordBookItemDao().getWordCountByWordBookId(bookId)
+        val existingState = contentStateDao.get(bookId)
+        if (
+            !forceRefresh &&
+            existingState?.status == WordBookContentStatus.READY &&
+            existingState.localVersion == target &&
+            expectedTotal > 0 &&
+            currentCount >= expectedTotal
+        ) {
+            return WordBookContentDownloadResult(
+                bookId = bookId,
+                downloadedWords = currentCount,
+                totalWords = expectedTotal
+            )
+        }
 
         if (forceRefresh) {
             database.withTransaction {
                 database.wordBookItemDao().deleteByBookId(bookId)
                 database.wordLearningStateDao().deleteLearningWordByBookId(bookId)
             }
+            currentCount = 0
         }
 
-        var downloadedCount = database.wordBookItemDao().getWordCountByWordBookId(bookId)
-        var total = expectedTotal
-        var pageSize = resolvePageSize(total)
-        progress(
-            WordBookContentDownloadProgress(
-                bookId = bookId,
-                downloadedWords = downloadedCount,
-                totalWords = total
-            )
+        markState(
+            bookId = bookId,
+            targetVersion = target,
+            localVersion = existingState?.localVersion ?: 0L,
+            status = WordBookContentStatus.DOWNLOADING,
+            downloadedWords = currentCount,
+            totalWords = expectedTotal,
+            packageSha256 = localBook?.contentPackage?.sha256,
+            lastError = null
         )
 
-        if (total <= 0 || downloadedCount < total) {
-            var page = downloadedCount / pageSize
-            while (true) {
-                val pageData = remoteWordBookDataSource
-                    .getBookWords(bookId = bookId, page = page, count = pageSize)
-                    .getOrThrow()
+        try {
+            return importPackage(
+                book = localBook ?: throw WordBookPackageValidationException("word book metadata missing"),
+                targetVersion = target,
+                forceRefresh = forceRefresh,
+                progress = progress
+            )
+        } catch (cancellation: CancellationException) {
+            throw cancellation
+        } catch (throwable: Exception) {
+            markState(
+                bookId = bookId,
+                targetVersion = target,
+                localVersion = existingState?.localVersion ?: 0L,
+                status = WordBookContentStatus.FAILED,
+                downloadedWords = database.wordBookItemDao().getWordCountByWordBookId(bookId),
+                totalWords = expectedTotal,
+                packageSha256 = localBook?.contentPackage?.sha256,
+                lastError = throwable.message
+            )
+            throw throwable
+        }
+    }
 
-                if (total <= 0) {
-                    total = if (pageData.total > 0) pageData.total.toInt() else expectedTotal
-                    pageSize = resolvePageSize(total)
+    private suspend fun importPackage(
+        book: WordBook,
+        targetVersion: Long,
+        forceRefresh: Boolean,
+        progress: suspend (WordBookContentDownloadProgress) -> Unit
+    ): WordBookContentDownloadResult {
+        val contentPackage = book.contentPackage
+            ?: throw WordBookPackageValidationException("content package missing")
+        if (contentPackage.url.isBlank()) {
+            throw WordBookPackageValidationException("content package url missing")
+        }
+        if (contentPackage.sha256.isBlank()) {
+            throw WordBookPackageValidationException("content package sha256 missing")
+        }
+        if (targetVersion > 0L && contentPackage.contentVersion != targetVersion) {
+            throw WordBookPackageValidationException(
+                "content package version mismatch: expected=$targetVersion, actual=${contentPackage.contentVersion}"
+            )
+        }
+        val result = packageImporter.importPackage(
+            book = book,
+            contentPackage = contentPackage,
+            beforeImport = {
+                database.withTransaction {
+                    if (forceRefresh || targetVersion > 0L) {
+                        database.wordBookItemDao().deleteByBookId(book.id)
+                        database.wordLearningStateDao().deleteLearningWordByBookId(book.id)
+                    }
                 }
-
-                if (pageData.items.isEmpty()) break
-
-                contentLocalStore.persistPage(bookId, pageData.items)
-                downloadedCount = database.wordBookItemDao().getWordCountByWordBookId(bookId)
-                progress(
-                    WordBookContentDownloadProgress(
-                        bookId = bookId,
-                        downloadedWords = downloadedCount,
-                        totalWords = total
-                    )
-                )
-
-                if (total > 0 && downloadedCount >= total) break
-                page++
             }
+        ) { downloaded, total ->
+            markState(
+                bookId = book.id,
+                targetVersion = targetVersion,
+                localVersion = 0L,
+                status = WordBookContentStatus.DOWNLOADING,
+                downloadedWords = downloaded,
+                totalWords = total,
+                packageSha256 = contentPackage.sha256,
+                lastError = null
+            )
+            progress(
+                WordBookContentDownloadProgress(
+                    bookId = book.id,
+                    downloadedWords = downloaded,
+                    totalWords = total
+                )
+            )
         }
-
         if (targetVersion > 0L) {
-            syncStateStore.setLocalVersion(bookId, targetVersion)
+            syncStateStore.setLocalVersion(book.id, targetVersion)
         }
-
+        markState(
+            bookId = book.id,
+            targetVersion = targetVersion,
+            localVersion = targetVersion,
+            status = WordBookContentStatus.READY,
+            downloadedWords = result.importedWords,
+            totalWords = result.totalWords,
+            packageSha256 = contentPackage.sha256,
+            lastError = null
+        )
         return WordBookContentDownloadResult(
-            bookId = bookId,
-            downloadedWords = downloadedCount,
-            totalWords = total
+            bookId = book.id,
+            downloadedWords = result.importedWords,
+            totalWords = result.totalWords
         )
     }
 
-    private fun resolvePageSize(totalHint: Int): Int {
-        if (totalHint > 0) {
-            return min(DEFAULT_PAGE_SIZE, totalHint)
-        }
-        return DEFAULT_PAGE_SIZE
+    private suspend fun markState(
+        bookId: Long,
+        targetVersion: Long,
+        localVersion: Long,
+        status: String,
+        downloadedWords: Int,
+        totalWords: Int,
+        packageSha256: String?,
+        lastError: String?
+    ) {
+        contentStateDao.upsert(
+            WordBookContentStateEntity(
+                bookId = bookId,
+                targetVersion = targetVersion,
+                localVersion = localVersion,
+                status = status,
+                downloadedWords = downloadedWords,
+                totalWords = totalWords,
+                packageSha256 = packageSha256,
+                lastError = lastError,
+                updatedAt = System.currentTimeMillis()
+            )
+        )
     }
 }
 
@@ -127,5 +219,3 @@ internal fun toProgress(downloadedCount: Int, total: Int): Int {
     if (total <= 0) return 0
     return ((downloadedCount * 100) / total).coerceIn(0, 100)
 }
-
-private const val DEFAULT_PAGE_SIZE = 50

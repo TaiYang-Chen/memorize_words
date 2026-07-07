@@ -9,6 +9,8 @@ import com.chen.memorizewords.data.wordbook.local.room.model.study.progress.word
 import com.chen.memorizewords.data.wordbook.local.room.model.study.progress.wordbook.WordBookProgressEntity
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.current.CurrentWordBookSelectionDao
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.current.CurrentWordBookSelectionEntity
+import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.contentstate.WordBookContentStateDao
+import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.contentstate.WordBookContentStateEntity
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.syncstate.WordBookSyncStateDao
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.syncstate.WordBookSyncStateEntity
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.wordbook.WordBookDao
@@ -44,6 +46,7 @@ import com.chen.memorizewords.data.wordbook.local.room.model.words.word.WordEnti
     entities = [
         WordBookEntity::class,
         CurrentWordBookSelectionEntity::class,
+        WordBookContentStateEntity::class,
         WordBookSyncStateEntity::class,
         WordBookItemEntity::class,
         WordBookProgressEntity::class,
@@ -64,13 +67,14 @@ import com.chen.memorizewords.data.wordbook.local.room.model.words.word.WordEnti
         RootExampleEntity::class,
         RootWordEntity::class
     ],
-    version = 3,
+    version = 1,
     exportSchema = true
 )
 @TypeConverters(WordBookRoomConverters::class)
 abstract class WordBookDatabase : RoomDatabase() {
     abstract fun wordBookDao(): WordBookDao
     abstract fun currentWordBookSelectionDao(): CurrentWordBookSelectionDao
+    abstract fun wordBookContentStateDao(): WordBookContentStateDao
     abstract fun wordBookSyncStateDao(): WordBookSyncStateDao
     abstract fun wordBookItemDao(): BookWordItemDao
     abstract fun wordBookProgressDao(): WordBookProgressDao

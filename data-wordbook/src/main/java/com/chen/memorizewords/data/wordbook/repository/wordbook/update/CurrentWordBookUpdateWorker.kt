@@ -19,14 +19,19 @@ import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.chen.memorizewords.data.wordbook.local.WordBookDatabase
+import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.contentstate.WordBookContentStateDao
+import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.contentstate.WordBookContentStateEntity
+import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.contentstate.WordBookContentStatus
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.wordbook.WordBookDao
-import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.wordbook.WordBookEntity
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.wordbook.toEntity
+import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.wordbook.toDomain
 import com.chen.memorizewords.data.wordbook.local.room.wordbook.WordBookSyncStateStore
 import com.chen.memorizewords.data.wordbook.remote.datasync.RemoteUserSyncDataSource
-import com.chen.memorizewords.data.wordbook.remote.wordbook.RemoteWordBookDataSource
 import com.chen.memorizewords.data.wordbook.repository.WordLearningStateMirror
 import com.chen.memorizewords.data.wordbook.repository.wordbook.persistWordBookPage
+import com.chen.memorizewords.data.wordbook.repository.wordbook.WordBookContentPackageImporter
+import com.chen.memorizewords.data.wordbook.repository.wordbook.WordBookPackageImportResult
+import com.chen.memorizewords.data.wordbook.repository.wordbook.WordBookPackageValidationException
 import com.chen.memorizewords.domain.study.model.progress.word.WordLearningState
 import com.chen.memorizewords.domain.wordbook.model.WordBookUpdateApplyMode
 import com.chen.memorizewords.domain.wordbook.model.WordBookUpdateExecutionMode
@@ -37,6 +42,7 @@ import dagger.hilt.components.SingletonComponent
 import java.io.IOException
 import kotlin.math.max
 import kotlin.math.min
+import kotlinx.coroutines.CancellationException
 
 class CurrentWordBookUpdateWorker(
     appContext: Context,
@@ -61,11 +67,12 @@ class CurrentWordBookUpdateWorker(
             CurrentWordBookUpdateWorkerEntryPoint::class.java
         )
         val remoteUserSyncDataSource = entryPoint.remoteUserSyncDataSource()
-        val remoteWordBookDataSource = entryPoint.remoteWordBookDataSource()
         val appDatabase = entryPoint.appDatabase()
         val wordBookDao = entryPoint.wordBookDao()
         val syncStateStore = entryPoint.wordBookSyncStateStore()
         val wordLearningStateMirror = entryPoint.wordLearningStateMirror()
+        val packageImporter = entryPoint.wordBookContentPackageImporter()
+        val contentStateDao = entryPoint.wordBookContentStateDao()
 
         val bookName = wordBookDao.getWordBookById(bookId)?.title.orEmpty()
         val notificationId = buildNotificationId(bookId)
@@ -98,11 +105,12 @@ class CurrentWordBookUpdateWorker(
                 WordBookUpdateApplyMode.FULL -> applyFullRefresh(
                     bookId = bookId,
                     targetVersion = targetVersion,
-                    totalHint = wordBookDao.getWordBookById(bookId)?.totalWords ?: 0,
                     pageSize = manifest.pageSize,
                     appDatabase = appDatabase,
-                    remoteWordBookDataSource = remoteWordBookDataSource,
                     remoteUserSyncDataSource = remoteUserSyncDataSource,
+                    wordBookDao = wordBookDao,
+                    packageImporter = packageImporter,
+                    contentStateDao = contentStateDao,
                     wordLearningStateMirror = wordLearningStateMirror
                 )
             }
@@ -127,6 +135,8 @@ class CurrentWordBookUpdateWorker(
             )
         } catch (_: IOException) {
             Result.retry()
+        } catch (cancellation: CancellationException) {
+            throw cancellation
         } catch (t: Throwable) {
             syncStateStore.markFailed(bookId, t.message ?: "Update failed")
             notifyFailed(notificationId, bookName, t.message ?: "Update failed")
@@ -184,49 +194,136 @@ class CurrentWordBookUpdateWorker(
     private suspend fun applyFullRefresh(
         bookId: Long,
         targetVersion: Long,
-        totalHint: Int,
         pageSize: Int,
         appDatabase: WordBookDatabase,
-        remoteWordBookDataSource: RemoteWordBookDataSource,
         remoteUserSyncDataSource: RemoteUserSyncDataSource,
+        wordBookDao: WordBookDao,
+        packageImporter: WordBookContentPackageImporter,
+        contentStateDao: WordBookContentStateDao,
         wordLearningStateMirror: WordLearningStateMirror
     ) {
         val bookWordItemDao = appDatabase.wordBookItemDao()
         val wordLearningStateDao = appDatabase.wordLearningStateDao()
-        appDatabase.withTransaction {
-            bookWordItemDao.deleteByBookId(bookId)
-            wordLearningStateDao.deleteLearningWordByBookId(bookId)
-        }
-
-        var total = totalHint
         val safePageSize = pageSize.coerceAtLeast(DEFAULT_PAGE_SIZE)
-        var page = 0
-        var downloadedCount = 0
-        while (true) {
-            val pageData = remoteWordBookDataSource.getBookWords(bookId, page, safePageSize).getOrThrow()
-            if (total <= 0 && pageData.total > 0) {
-                total = pageData.total.toInt()
-            }
-            val items = pageData.items
-            if (items.isEmpty()) break
+        var failureTotalWords = 0
+        var failurePackageSha256: String? = null
 
-            appDatabase.persistWordBookPage(bookId, items)
-            downloadedCount = bookWordItemDao.getWordCountByWordBookId(bookId)
-            publishProgress(bookId, targetVersion, downloadedCount, max(total, downloadedCount))
-
-            if (total > 0 && downloadedCount >= total) {
-                break
+        val importContext = try {
+            val latestBook = remoteUserSyncDataSource.getMyWordBooks()
+                .getOrThrow()
+                .firstOrNull { it.id == bookId }
+                ?.toEntity()
+                ?: wordBookDao.getWordBookById(bookId)
+                ?: throw WordBookPackageValidationException("word book metadata missing")
+            if (latestBook.contentVersion != targetVersion) {
+                throw WordBookPackageValidationException(
+                    "word book version mismatch: expected=$targetVersion, actual=${latestBook.contentVersion}"
+                )
             }
-            page++
+            wordBookDao.insertWordBook(latestBook)
+            val book = latestBook.toDomain()
+            val contentPackage = book.contentPackage
+                ?: throw WordBookPackageValidationException("content package missing")
+            failureTotalWords = book.totalWords
+            failurePackageSha256 = contentPackage.sha256
+
+            markContentState(
+                contentStateDao = contentStateDao,
+                bookId = bookId,
+                targetVersion = targetVersion,
+                localVersion = 0L,
+                status = WordBookContentStatus.DOWNLOADING,
+                downloadedWords = 0,
+                totalWords = book.totalWords,
+                packageSha256 = contentPackage.sha256,
+                lastError = null
+            )
+
+            val importResult = packageImporter.importPackage(
+                book = book,
+                contentPackage = contentPackage,
+                beforeImport = {
+                    appDatabase.withTransaction {
+                        bookWordItemDao.deleteByBookId(bookId)
+                        wordLearningStateDao.deleteLearningWordByBookId(bookId)
+                    }
+                }
+            ) { downloaded, total ->
+                markContentState(
+                    contentStateDao = contentStateDao,
+                    bookId = bookId,
+                    targetVersion = targetVersion,
+                    localVersion = 0L,
+                    status = WordBookContentStatus.DOWNLOADING,
+                    downloadedWords = downloaded,
+                    totalWords = total,
+                    packageSha256 = contentPackage.sha256,
+                    lastError = null
+                )
+                publishProgress(bookId, targetVersion, downloaded, max(total, downloaded))
+            }
+            FullRefreshImportContext(contentPackage.sha256, importResult)
+        } catch (cancellation: CancellationException) {
+            throw cancellation
+        } catch (throwable: Throwable) {
+            markContentState(
+                contentStateDao = contentStateDao,
+                bookId = bookId,
+                targetVersion = targetVersion,
+                localVersion = 0L,
+                status = WordBookContentStatus.FAILED,
+                downloadedWords = bookWordItemDao.getWordCountByWordBookId(bookId),
+                totalWords = failureTotalWords,
+                packageSha256 = failurePackageSha256,
+                lastError = throwable.message
+            )
+            throw throwable
         }
 
+        markContentState(
+            contentStateDao = contentStateDao,
+            bookId = bookId,
+            targetVersion = targetVersion,
+            localVersion = targetVersion,
+            status = WordBookContentStatus.READY,
+            downloadedWords = importContext.importResult.importedWords,
+            totalWords = importContext.importResult.totalWords,
+            packageSha256 = importContext.packageSha256,
+            lastError = null
+        )
         syncWordStates(
             bookId = bookId,
-            pageSize = resolveStatePageSize(total),
+            pageSize = resolveStatePageSize(importContext.importResult.totalWords.coerceAtLeast(safePageSize)),
             remoteUserSyncDataSource = remoteUserSyncDataSource,
             wordLearningStateMirror = wordLearningStateMirror
         )
         publishProgress(bookId, targetVersion, 100, 100)
+    }
+
+    private suspend fun markContentState(
+        contentStateDao: WordBookContentStateDao,
+        bookId: Long,
+        targetVersion: Long,
+        localVersion: Long,
+        status: String,
+        downloadedWords: Int,
+        totalWords: Int,
+        packageSha256: String?,
+        lastError: String?
+    ) {
+        contentStateDao.upsert(
+            WordBookContentStateEntity(
+                bookId = bookId,
+                targetVersion = targetVersion,
+                localVersion = localVersion,
+                status = status,
+                downloadedWords = downloadedWords,
+                totalWords = totalWords,
+                packageSha256 = packageSha256,
+                lastError = lastError,
+                updatedAt = System.currentTimeMillis()
+            )
+        )
     }
 
     private suspend fun syncWordStates(
@@ -422,12 +519,18 @@ class CurrentWordBookUpdateWorker(
 @EntryPoint
 @InstallIn(SingletonComponent::class)
 interface CurrentWordBookUpdateWorkerEntryPoint {
-    fun remoteWordBookDataSource(): RemoteWordBookDataSource
     fun remoteUserSyncDataSource(): RemoteUserSyncDataSource
     fun appDatabase(): WordBookDatabase
     fun wordBookDao(): WordBookDao
     fun wordBookSyncStateStore(): WordBookSyncStateStore
     fun wordLearningStateMirror(): WordLearningStateMirror
+    fun wordBookContentPackageImporter(): WordBookContentPackageImporter
+    fun wordBookContentStateDao(): WordBookContentStateDao
 }
+
+private data class FullRefreshImportContext(
+    val packageSha256: String,
+    val importResult: WordBookPackageImportResult
+)
 
 private const val DEFAULT_PAGE_SIZE = 50

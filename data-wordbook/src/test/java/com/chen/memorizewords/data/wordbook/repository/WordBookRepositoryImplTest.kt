@@ -16,6 +16,7 @@ import com.chen.memorizewords.data.wordbook.local.room.model.study.progress.word
 import com.chen.memorizewords.data.wordbook.local.room.model.study.progress.wordbook.WordBookProgressDao
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.current.CurrentWordBookSelectionDao
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.current.CurrentWordBookSelectionEntity
+import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.contentstate.WordBookContentStateDao
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.wordbook.WordBookDao
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.wordbook.WordBookEntity
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.words.BookWordItemDao
@@ -333,6 +334,8 @@ class WordBookRepositoryImplTest {
 
         override fun currentWordBookSelectionDao(): CurrentWordBookSelectionDao = throwingProxy()
 
+        override fun wordBookContentStateDao(): WordBookContentStateDao = throwingProxy()
+
         override fun wordBookSyncStateDao(): WordBookSyncStateDao = throwingProxy()
 
         override fun wordBookItemDao(): BookWordItemDao = throwingProxy()
@@ -418,8 +421,8 @@ class WordBookRepositoryImplTest {
             val database = ThrowingWordBookDatabase()
             return WordBookContentDownloader(
                 database = database,
-                remoteWordBookDataSource = throwingProxy<RemoteWordBookDataSource>(),
-                contentLocalStore = WordBookContentLocalStore(database),
+                packageImporter = throwingProxy(),
+                contentStateDao = throwingProxy(),
                 syncStateStore = WordBookSyncStateStore(throwingProxy())
             )
         }

@@ -23,6 +23,7 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.moshi.kotlin)
+    implementation(libs.okhttp)
     implementation(libs.retrofit)
     implementation(libs.tencent.mmkv.static)
     ksp(libs.androidx.room.compiler)

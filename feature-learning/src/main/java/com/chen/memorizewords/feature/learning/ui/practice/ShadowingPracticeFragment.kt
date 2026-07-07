@@ -1,6 +1,7 @@
 package com.chen.memorizewords.feature.learning.ui.practice
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -467,7 +468,17 @@ class ShadowingPracticeFragment :
         }
     }
 
+    @SuppressLint("MissingPermission")
     private fun startRecording() {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.RECORD_AUDIO
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            showToast(getString(R.string.practice_permission_denied))
+            viewModel.onRecordingFailed(getString(R.string.practice_permission_denied))
+            return
+        }
         cancelAutoPlayback()
         releasePlayer(resetProgress = true)
         val outputFile = File(

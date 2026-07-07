@@ -11,9 +11,10 @@ android {
     }
 
     defaultConfig {
-        val apiBaseUrl = providers.gradleProperty("memorize.apiBaseUrl")
-            .orElse("http://192.168.2.6:8080/api/")
-            .get()
+        val explicitApiBaseUrl = providers.gradleProperty("memorize.apiBaseUrl")
+            .orElse(providers.environmentVariable("MEMORIZE_API_BASE_URL"))
+            .orNull
+        val apiBaseUrl = explicitApiBaseUrl ?: "https://192.168.2.6:8080/api/"
         val enableNetworkBodyLogging = providers.gradleProperty("memorize.enableNetworkBodyLogging")
             .orElse("false")
             .get()
@@ -32,6 +33,7 @@ android {
                 "../data-practice/src/main/java",
                 "../data-study/src/main/java",
                 "../data-sync/src/main/java",
+                "../data-word/src/main/java",
                 "../data-wordbook/src/main/java"
             )
         }
@@ -43,6 +45,7 @@ android {
                 "../data-practice/src/test/java",
                 "../data-study/src/test/java",
                 "../data-sync/src/test/java",
+                "../data-word/src/test/java",
                 "../data-wordbook/src/test/java"
             )
         }
@@ -54,6 +57,7 @@ android {
                 "../data-practice/src/androidTest/java",
                 "../data-study/src/androidTest/java",
                 "../data-sync/src/androidTest/java",
+                "../data-word/src/androidTest/java",
                 "../data-wordbook/src/androidTest/java"
             )
         }
@@ -88,6 +92,28 @@ dependencies {
 
     ksp(libs.androidx.room.compiler)
     ksp(libs.hilt.compiler)
+}
+
+gradle.taskGraph.whenReady {
+    val releaseRequested = allTasks.any { task ->
+        task.name.equals("assembleRelease", ignoreCase = true) ||
+            task.name.equals("bundleRelease", ignoreCase = true) ||
+            task.name.equals("packageRelease", ignoreCase = true)
+    }
+    if (releaseRequested) {
+        val apiBaseUrl = providers.gradleProperty("memorize.apiBaseUrl")
+            .orElse(providers.environmentVariable("MEMORIZE_API_BASE_URL"))
+            .orNull
+        require(!apiBaseUrl.isNullOrBlank()) {
+            "Release builds must set -Pmemorize.apiBaseUrl or MEMORIZE_API_BASE_URL."
+        }
+        require(apiBaseUrl.startsWith("https://", ignoreCase = true)) {
+            "Release network baseUrl must use HTTPS."
+        }
+        require(apiBaseUrl.endsWith("/")) {
+            "Release network baseUrl must end with '/'."
+        }
+    }
 }
 
 fun String.toBuildConfigString(): String {

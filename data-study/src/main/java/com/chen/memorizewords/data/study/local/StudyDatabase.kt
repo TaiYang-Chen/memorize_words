@@ -28,7 +28,7 @@ import com.chen.memorizewords.data.study.local.room.model.study.progress.wordboo
         WordBookProgressEntity::class,
         StudyPendingOutboxEntity::class
     ],
-    version = 3,
+    version = 1,
     exportSchema = true
 )
 @TypeConverters(StudyRoomConverters::class)

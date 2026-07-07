@@ -488,7 +488,7 @@
     <issue
         id="ResourceName"
         message="Resource named &apos;`module_home_chevron_right_8364cc`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_chevron_right_8364cc`&apos; ?"
-        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:height=&quot;16dp&quot; android:viewportHeight=&quot;24&quot; android:viewportWidth=&quot;24&quot; android:width=&quot;16dp&quot;>"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:height=&quot;@dimen/core_ui_dp_16&quot; android:viewportHeight=&quot;24&quot; android:viewportWidth=&quot;24&quot; android:width=&quot;@dimen/core_ui_dp_16&quot;>"
         errorLine2=" ~~~~~~">
         <location
             file="src/main/res/drawable/module_home_chevron_right_8364cc.xml"
@@ -609,7 +609,7 @@
     <issue
         id="ResourceName"
         message="Resource named &apos;`module_home_ic_home`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_ic_home`&apos; ?"
-        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:height=&quot;24dp&quot; android:viewportHeight=&quot;1024&quot; android:viewportWidth=&quot;1024&quot; android:width=&quot;24dp&quot;>"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:height=&quot;@dimen/core_ui_dp_24&quot; android:viewportHeight=&quot;1024&quot; android:viewportWidth=&quot;1024&quot; android:width=&quot;@dimen/core_ui_dp_24&quot;>"
         errorLine2=" ~~~~~~">
         <location
             file="src/main/res/drawable/module_home_ic_home.xml"
@@ -658,6 +658,17 @@
         <location
             file="src/main/res/drawable/module_home_info_9333ea.xml"
             line="1"
+            column="2"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`module_home_item_practice_mode_static`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_item_practice_mode_static`&apos; ?"
+        errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2=" ~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_item_practice_mode_static.xml"
+            line="2"
             column="2"/>
     </issue>
 
@@ -888,7 +899,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="10"
+            line="11"
             column="13"/>
     </issue>
 
@@ -899,7 +910,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="11"
+            line="12"
             column="13"/>
     </issue>
 
@@ -910,7 +921,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="12"
+            line="13"
             column="13"/>
     </issue>
 
@@ -921,7 +932,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="13"
+            line="14"
             column="13"/>
     </issue>
 
@@ -932,7 +943,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="14"
+            line="15"
             column="13"/>
     </issue>
 
@@ -943,7 +954,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="15"
+            line="16"
             column="13"/>
     </issue>
 
@@ -954,7 +965,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="16"
+            line="17"
             column="13"/>
     </issue>
 
@@ -965,7 +976,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="17"
+            line="18"
             column="13"/>
     </issue>
 
@@ -976,7 +987,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="18"
+            line="19"
             column="13"/>
     </issue>
 
@@ -987,7 +998,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="19"
+            line="20"
             column="13"/>
     </issue>
 
@@ -998,7 +1009,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="20"
+            line="21"
             column="13"/>
     </issue>
 
@@ -1009,7 +1020,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="21"
+            line="22"
             column="13"/>
     </issue>
 
@@ -1020,7 +1031,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="22"
+            line="23"
             column="13"/>
     </issue>
 
@@ -1031,7 +1042,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="23"
+            line="24"
             column="13"/>
     </issue>
 
@@ -1042,7 +1053,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="24"
+            line="25"
             column="13"/>
     </issue>
 
@@ -1053,7 +1064,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="25"
+            line="26"
             column="13"/>
     </issue>
 
@@ -1064,7 +1075,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="26"
+            line="27"
             column="13"/>
     </issue>
 
@@ -1075,7 +1086,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="27"
+            line="28"
             column="13"/>
     </issue>
 
@@ -1086,7 +1097,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="28"
+            line="29"
             column="13"/>
     </issue>
 
@@ -1097,7 +1108,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="29"
+            line="30"
             column="13"/>
     </issue>
 
@@ -1108,7 +1119,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="30"
+            line="31"
             column="13"/>
     </issue>
 
@@ -1119,7 +1130,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="31"
+            line="32"
             column="13"/>
     </issue>
 
@@ -1130,7 +1141,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="32"
+            line="33"
             column="13"/>
     </issue>
 
@@ -1141,7 +1152,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="33"
+            line="34"
             column="13"/>
     </issue>
 
@@ -1152,7 +1163,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="34"
+            line="35"
             column="13"/>
     </issue>
 
@@ -1163,7 +1174,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="36"
+            line="50"
             column="13"/>
     </issue>
 
@@ -1174,7 +1185,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="37"
+            line="51"
             column="13"/>
     </issue>
 
@@ -1185,7 +1196,29 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="38"
+            line="52"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_learning_prepare_loading`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_learning_prepare_loading`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_learning_prepare_loading&quot;>正在准备学习...&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="53"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_learning_prepare_failed`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_learning_prepare_failed`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_learning_prepare_failed&quot;>学习数据同步失败，请稍后重试&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="54"
             column="13"/>
     </issue>
 
@@ -1196,7 +1229,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="39"
+            line="55"
             column="13"/>
     </issue>
 
@@ -1207,7 +1240,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="40"
+            line="56"
             column="13"/>
     </issue>
 
@@ -1218,7 +1251,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="41"
+            line="57"
             column="13"/>
     </issue>
 
@@ -1229,7 +1262,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="42"
+            line="58"
             column="13"/>
     </issue>
 
@@ -1240,7 +1273,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="43"
+            line="59"
             column="13"/>
     </issue>
 
@@ -1251,7 +1284,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="44"
+            line="60"
             column="13"/>
     </issue>
 
@@ -1262,7 +1295,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="45"
+            line="61"
             column="13"/>
     </issue>
 
@@ -1273,7 +1306,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="46"
+            line="62"
             column="13"/>
     </issue>
 
@@ -1284,7 +1317,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="47"
+            line="63"
             column="13"/>
     </issue>
 
@@ -1295,7 +1328,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="48"
+            line="64"
             column="13"/>
     </issue>
 
@@ -1306,7 +1339,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="49"
+            line="65"
             column="13"/>
     </issue>
 
@@ -1317,7 +1350,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="50"
+            line="66"
             column="13"/>
     </issue>
 
@@ -1328,7 +1361,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="51"
+            line="67"
             column="13"/>
     </issue>
 
@@ -1339,7 +1372,51 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="52"
+            line="68"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_logout_confirm_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_logout_confirm_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_logout_confirm_title&quot;>确认退出登录&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="69"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_logout_confirm_message`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_logout_confirm_message`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_logout_confirm_message&quot;>退出后需要重新登录，是否继续？&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="70"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_logout_confirm_action`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_logout_confirm_action`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_logout_confirm_action&quot;>退出登录&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="71"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_logout_cancel_action`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_logout_cancel_action`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_logout_cancel_action&quot;>取消&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="72"
             column="13"/>
     </issue>
 
@@ -1350,7 +1427,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="53"
+            line="73"
             column="13"/>
     </issue>
 
@@ -1361,7 +1438,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="54"
+            line="74"
             column="13"/>
     </issue>
 
@@ -1372,7 +1449,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="55"
+            line="75"
             column="13"/>
     </issue>
 
@@ -1383,7 +1460,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="56"
+            line="76"
             column="13"/>
     </issue>
 
@@ -1394,7 +1471,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="57"
+            line="77"
             column="13"/>
     </issue>
 
@@ -1405,7 +1482,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="58"
+            line="78"
             column="13"/>
     </issue>
 
@@ -1416,7 +1493,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="59"
+            line="79"
             column="13"/>
     </issue>
 
@@ -1427,7 +1504,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="60"
+            line="80"
             column="13"/>
     </issue>
 
@@ -1438,7 +1515,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="61"
+            line="81"
             column="13"/>
     </issue>
 
@@ -1449,7 +1526,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="62"
+            line="82"
             column="13"/>
     </issue>
 
@@ -1460,7 +1537,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="63"
+            line="83"
             column="13"/>
     </issue>
 
@@ -1471,7 +1548,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="64"
+            line="84"
             column="13"/>
     </issue>
 
@@ -1482,7 +1559,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="65"
+            line="85"
             column="13"/>
     </issue>
 
@@ -1493,7 +1570,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="66"
+            line="86"
             column="13"/>
     </issue>
 
@@ -1504,7 +1581,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="67"
+            line="87"
             column="13"/>
     </issue>
 
@@ -1515,7 +1592,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="68"
+            line="93"
             column="13"/>
     </issue>
 
@@ -1526,7 +1603,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="69"
+            line="94"
             column="13"/>
     </issue>
 
@@ -1537,7 +1614,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="70"
+            line="95"
             column="13"/>
     </issue>
 
@@ -1548,7 +1625,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="71"
+            line="96"
             column="13"/>
     </issue>
 
@@ -1559,7 +1636,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="72"
+            line="97"
             column="13"/>
     </issue>
 
@@ -1570,7 +1647,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="73"
+            line="98"
             column="13"/>
     </issue>
 
@@ -2093,6 +2170,193 @@
 
     <issue
         id="ResourceName"
+        message="Resource named &apos;`home_day_detail_close`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_close`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_close&quot;>关闭&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_day_detail_redesign.xml"
+            line="3"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_date_ymd`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_date_ymd`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_date_ymd&quot;>%1$d年%2$d月%3$d日&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_day_detail_redesign.xml"
+            line="4"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_plan_all_done_short`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_plan_all_done_short`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_plan_all_done_short&quot;>全部计划已完成&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_day_detail_redesign.xml"
+            line="5"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_plan_new_done_short`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_plan_new_done_short`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_plan_new_done_short&quot;>新学计划已完成&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_day_detail_redesign.xml"
+            line="6"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_plan_review_done_short`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_plan_review_done_short`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_plan_review_done_short&quot;>复习计划已完成&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_day_detail_redesign.xml"
+            line="7"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_plan_not_completed_short`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_plan_not_completed_short`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_plan_not_completed_short&quot;>当天计划未完成&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_day_detail_redesign.xml"
+            line="8"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_auto_checkin_success`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_auto_checkin_success`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_auto_checkin_success&quot;>自动打卡成功&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_day_detail_redesign.xml"
+            line="9"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_keep_learning`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_keep_learning`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_keep_learning&quot;>继续保持学习节奏&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_day_detail_redesign.xml"
+            line="10"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_empty_short`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_empty_short`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_empty_short&quot;>当天暂无学习记录&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_day_detail_redesign.xml"
+            line="11"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_makeup_card_button_with_count`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_makeup_card_button_with_count`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_makeup_card_button_with_count&quot;>补签卡(余%1$d张)&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_day_detail_redesign.xml"
+            line="12"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_metric_new_words`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_metric_new_words`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_metric_new_words&quot;>新学词数&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_day_detail_redesign.xml"
+            line="13"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_metric_review_words`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_metric_review_words`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_metric_review_words&quot;>复习词数&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_day_detail_redesign.xml"
+            line="14"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_metric_duration`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_metric_duration`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_metric_duration&quot;>学习时长&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_day_detail_redesign.xml"
+            line="15"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_new_words_with_count`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_new_words_with_count`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_new_words_with_count&quot;>新学词条 (%1$d)&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_day_detail_redesign.xml"
+            line="16"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_review_words_with_count`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_review_words_with_count`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_review_words_with_count&quot;>复习词条 (%1$d)&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_day_detail_redesign.xml"
+            line="17"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_view_all_new_words`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_view_all_new_words`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_view_all_new_words&quot;>查看全部 %1$d 个新词&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_day_detail_redesign.xml"
+            line="18"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_day_detail_view_all_review_words`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_view_all_review_words`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_day_detail_view_all_review_words&quot;>查看全部 %1$d 个复习词&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings_stats_day_detail_redesign.xml"
+            line="19"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
         message="Resource named &apos;`BottomNavigationTheme`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`FeatureHomeBottomNavigationTheme`&apos; ?"
         errorLine1="    &lt;style name=&quot;BottomNavigationTheme&quot; parent=&quot;Widget.MaterialComponents.BottomNavigationView&quot;>"
         errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
@@ -2127,45 +2391,105 @@
     <issue
         id="UnusedAttribute"
         message="Attribute `clipToOutline` is only used in API level 31 and higher (current min is 25)"
-        errorLine1="                android:clipToOutline=&quot;true&quot;"
-        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        errorLine1="                        android:clipToOutline=&quot;true&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="77"
-            column="17"/>
+            line="149"
+            column="25"/>
     </issue>
 
     <issue
-        id="NewerVersionAvailable"
-        message="A newer version of org.jetbrains.kotlinx:kotlinx-coroutines-test than 1.8.1 is available: 1.10.2"
-        errorLine1="    testImplementation(&quot;org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1&quot;)"
-        errorLine2="                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        id="UnusedAttribute"
+        message="Attribute `clipToOutline` is only used in API level 31 and higher (current min is 25)"
+        errorLine1="                        android:clipToOutline=&quot;true&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="build.gradle.kts"
-            line="63"
-            column="24"/>
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="298"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        message="Attribute `clipToOutline` is only used in API level 31 and higher (current min is 25)"
+        errorLine1="                        android:clipToOutline=&quot;true&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="380"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        message="Attribute `clipToOutline` is only used in API level 31 and higher (current min is 25)"
+        errorLine1="                        android:clipToOutline=&quot;true&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="470"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        message="Attribute `clipToOutline` is only used in API level 31 and higher (current min is 25)"
+        errorLine1="                        android:clipToOutline=&quot;true&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="552"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        message="Attribute `clipToOutline` is only used in API level 31 and higher (current min is 25)"
+        errorLine1="                    android:clipToOutline=&quot;true&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="697"
+            column="21"/>
     </issue>
 
     <issue
         id="SpUsage"
-        message="Should use &quot;`sp`&quot; instead of &quot;`dp`&quot; for text sizes"
-        errorLine1="            android:textSize=&quot;10dp&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
-            line="105"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="SpUsage"
-        message="Should use &quot;`sp`&quot; instead of &quot;`dp`&quot; for text sizes"
-        errorLine1="            android:textSize=&quot;10dp&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        message="Should use &quot;`sp`&quot; instead of &quot;`dp`&quot; for text sizes (`@dimen/core_ui_dp_10` is defined as `10dp` in `values/dimens_generated_tokens.xml`"
+        errorLine1="            android:textSize=&quot;@dimen/core_ui_dp_10&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/module_home_fragment_home.xml"
             line="102"
             column="13"/>
+        <location
+            file="${:core-ui*debug*MAIN*sourceProvider*0*resDir*0}/values/dimens_generated_tokens.xml"
+            line="17"
+            column="5"
+            message="This dp dimension is used as a text size"/>
+    </issue>
+
+    <issue
+        id="UseCompatLoadingForDrawables"
+        message="Use `AppCompatResources.getDrawable()`"
+        errorLine1="                background = requireContext().getDrawable(row.iconBackgroundResId)"
+        errorLine2="                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/home/ui/stats/StatsFragment.kt"
+            line="274"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="UseCompatLoadingForDrawables"
+        message="Use `AppCompatResources.getDrawable()`"
+        errorLine1="                background = requireContext().getDrawable(row.iconBackgroundResId)"
+        errorLine2="                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/home/ui/stats/StatsFragment.kt"
+            line="274"
+            column="30"/>
     </issue>
 
     <issue
@@ -2235,6 +2559,105 @@
     </issue>
 
     <issue
+        id="DrawAllocation"
+        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
+        errorLine1="        val oval = RectF(left, top, left + size, top + size)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/home/ui/stats/StatsDonutChartView.kt"
+            line="40"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="DrawAllocation"
+        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
+        errorLine1="                StatsTimeDistributionUi(&quot;&quot;, 25, 0xFFFFC533.toInt()),"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/home/ui/stats/StatsDonutChartView.kt"
+            line="44"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="DrawAllocation"
+        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
+        errorLine1="                StatsTimeDistributionUi(&quot;&quot;, 25, 0xFF70D96B.toInt()),"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/home/ui/stats/StatsDonutChartView.kt"
+            line="45"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="DrawAllocation"
+        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
+        errorLine1="                StatsTimeDistributionUi(&quot;&quot;, 25, 0xFF3BA5F5.toInt()),"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/home/ui/stats/StatsDonutChartView.kt"
+            line="46"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="DrawAllocation"
+        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
+        errorLine1="                StatsTimeDistributionUi(&quot;&quot;, 25, 0xFF8B5CF6.toInt())"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/home/ui/stats/StatsDonutChartView.kt"
+            line="47"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="DrawAllocation"
+        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
+        errorLine1="                StatsTrendPointUi(it, 0f, 0)"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/home/ui/stats/StatsTrendChartView.kt"
+            line="54"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="DrawAllocation"
+        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
+        errorLine1="        val durationPath = Path()"
+        errorLine2="                           ~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/home/ui/stats/StatsTrendChartView.kt"
+            line="69"
+            column="28"/>
+    </issue>
+
+    <issue
+        id="DrawAllocation"
+        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
+        errorLine1="        val wordPath = Path()"
+        errorLine2="                       ~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/home/ui/stats/StatsTrendChartView.kt"
+            line="70"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="DrawAllocation"
+        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
+        errorLine1="        val fillPath = Path()"
+        errorLine2="                       ~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/home/ui/stats/StatsTrendChartView.kt"
+            line="71"
+            column="24"/>
+    </issue>
+
+    <issue
         id="NotifyDataSetChanged"
         message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
         errorLine1="        notifyDataSetChanged()"
@@ -2252,52 +2675,118 @@
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/com/chen/memorizewords/feature/home/ui/stats/DayWordRecordAdapter.kt"
-            line="17"
+            line="20"
             column="9"/>
     </issue>
 
     <issue
         id="UseCompoundDrawables"
         message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
-        errorLine1="                &lt;LinearLayout"
-        errorLine2="                 ~~~~~~~~~~~~">
+        errorLine1="                            &lt;LinearLayout"
+        errorLine2="                             ~~~~~~~~~~~~">
         <location
-            file="src/main/res/layout/module_home_fragment_practice.xml"
-            line="164"
-            column="18"/>
+            file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
+            line="470"
+            column="30"/>
     </issue>
 
     <issue
         id="UseCompoundDrawables"
         message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
-        errorLine1="                &lt;LinearLayout"
-        errorLine2="                 ~~~~~~~~~~~~">
+        errorLine1="                            &lt;LinearLayout"
+        errorLine2="                             ~~~~~~~~~~~~">
         <location
-            file="src/main/res/layout/module_home_fragment_practice.xml"
-            line="196"
-            column="18"/>
+            file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
+            line="524"
+            column="30"/>
     </issue>
 
     <issue
         id="UseCompoundDrawables"
         message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
-        errorLine1="                &lt;LinearLayout"
-        errorLine2="                 ~~~~~~~~~~~~">
+        errorLine1="                        &lt;LinearLayout"
+        errorLine2="                         ~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/module_home_fragment_practice.xml"
-            line="229"
-            column="18"/>
+            line="152"
+            column="26"/>
     </issue>
 
     <issue
         id="UseCompoundDrawables"
         message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
-        errorLine1="                &lt;LinearLayout"
-        errorLine2="                 ~~~~~~~~~~~~">
+        errorLine1="                        &lt;LinearLayout"
+        errorLine2="                         ~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/module_home_fragment_practice.xml"
-            line="261"
-            column="18"/>
+            line="343"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="UseCompoundDrawables"
+        message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
+        errorLine1="                        &lt;LinearLayout"
+        errorLine2="                         ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_practice.xml"
+            line="408"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="UseCompoundDrawables"
+        message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
+        errorLine1="                        &lt;LinearLayout"
+        errorLine2="                         ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="83"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="UseCompoundDrawables"
+        message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
+        errorLine1="                            &lt;LinearLayout"
+        errorLine2="                             ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="974"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="DisableBaselineAlignment"
+        message="Set `android:baselineAligned=&quot;false&quot;` on this element for better performance"
+        errorLine1="                    &lt;LinearLayout"
+        errorLine2="                     ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
+            line="272"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="DisableBaselineAlignment"
+        message="Set `android:baselineAligned=&quot;false&quot;` on this element for better performance"
+        errorLine1="                        &lt;LinearLayout"
+        errorLine2="                         ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
+            line="278"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="DisableBaselineAlignment"
+        message="Set `android:baselineAligned=&quot;false&quot;` on this element for better performance"
+        errorLine1="                        &lt;LinearLayout"
+        errorLine2="                         ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
+            line="341"
+            column="26"/>
     </issue>
 
     <issue
@@ -2307,7 +2796,7 @@
         errorLine2="         ~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/include_study_button.xml"
-            line="32"
+            line="33"
             column="10"/>
     </issue>
 
@@ -2347,23 +2836,78 @@
     <issue
         id="DisableBaselineAlignment"
         message="Set `android:baselineAligned=&quot;false&quot;` on this element for better performance"
-        errorLine1="            &lt;LinearLayout"
-        errorLine2="             ~~~~~~~~~~~~">
+        errorLine1="                    &lt;LinearLayout"
+        errorLine2="                     ~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/module_home_fragment_practice.xml"
-            line="158"
-            column="14"/>
+            line="231"
+            column="22"/>
     </issue>
 
     <issue
-        id="InefficientWeight"
-        message="Use a `layout_height` of `0dp` instead of `wrap_content` for better performance"
-        errorLine1="            android:layout_height=&quot;wrap_content&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        id="DisableBaselineAlignment"
+        message="Set `android:baselineAligned=&quot;false&quot;` on this element for better performance"
+        errorLine1="                    &lt;LinearLayout"
+        errorLine2="                     ~~~~~~~~~~~~">
         <location
-            file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
-            line="132"
-            column="13"/>
+            file="src/main/res/layout/module_home_fragment_practice.xml"
+            line="275"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="DisableBaselineAlignment"
+        message="Set `android:baselineAligned=&quot;false&quot;` on this element for better performance"
+        errorLine1="                &lt;LinearLayout"
+        errorLine2="                 ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_practice.xml"
+            line="326"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="DisableBaselineAlignment"
+        message="Set `android:baselineAligned=&quot;false&quot;` on this element for better performance"
+        errorLine1="                    &lt;LinearLayout"
+        errorLine2="                     ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="292"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="DisableBaselineAlignment"
+        message="Set `android:baselineAligned=&quot;false&quot;` on this element for better performance"
+        errorLine1="                    &lt;LinearLayout"
+        errorLine2="                     ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="374"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="DisableBaselineAlignment"
+        message="Set `android:baselineAligned=&quot;false&quot;` on this element for better performance"
+        errorLine1="                    &lt;LinearLayout"
+        errorLine2="                     ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="464"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="DisableBaselineAlignment"
+        message="Set `android:baselineAligned=&quot;false&quot;` on this element for better performance"
+        errorLine1="                    &lt;LinearLayout"
+        errorLine2="                     ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="546"
+            column="22"/>
     </issue>
 
     <issue
@@ -2378,6 +2922,171 @@
     </issue>
 
     <issue
+        id="NestedWeights"
+        message="Nested weights are bad for performance"
+        errorLine1="                                android:layout_weight=&quot;1&quot;"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
+            line="309"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="NestedWeights"
+        message="Nested weights are bad for performance"
+        errorLine1="                                android:layout_weight=&quot;1&quot;"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
+            line="373"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="NestedWeights"
+        message="Nested weights are bad for performance"
+        errorLine1="                android:layout_weight=&quot;1&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_profile_item_menu_about.xml"
+            line="36"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="NestedWeights"
+        message="Nested weights are bad for performance"
+        errorLine1="                            android:layout_weight=&quot;1&quot;"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="229"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="NestedWeights"
+        message="Nested weights are bad for performance"
+        errorLine1="                            android:layout_weight=&quot;1&quot;"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="298"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="NestedWeights"
+        message="Nested weights are bad for performance"
+        errorLine1="                            android:layout_weight=&quot;1&quot;"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="366"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="NestedWeights"
+        message="Nested weights are bad for performance"
+        errorLine1="                            android:layout_weight=&quot;1&quot;"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="322"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="NestedWeights"
+        message="Nested weights are bad for performance"
+        errorLine1="                            android:layout_weight=&quot;1&quot;"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="404"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="NestedWeights"
+        message="Nested weights are bad for performance"
+        errorLine1="                            android:layout_weight=&quot;1&quot;"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="494"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="NestedWeights"
+        message="Nested weights are bad for performance"
+        errorLine1="                            android:layout_weight=&quot;1&quot;"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="576"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="NestedWeights"
+        message="Nested weights are bad for performance"
+        errorLine1="                            android:layout_weight=&quot;1&quot; />"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="893"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="NestedWeights"
+        message="Nested weights are bad for performance"
+        errorLine1="                            android:layout_weight=&quot;1&quot;"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="922"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="NestedWeights"
+        message="Nested weights are bad for performance"
+        errorLine1="                                android:layout_weight=&quot;1&quot;"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="936"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="NestedWeights"
+        message="Nested weights are bad for performance"
+        errorLine1="                            android:layout_weight=&quot;1&quot;"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="1002"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="NestedWeights"
+        message="Nested weights are bad for performance"
+        errorLine1="                            android:layout_weight=&quot;1&quot;"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="1032"
+            column="29"/>
+    </issue>
+
+    <issue
         id="UselessLeaf"
         message="This `LinearLayout` view is unnecessary (no children, no `background`, no `id`, no `style`)"
         errorLine1="                &lt;LinearLayout"
@@ -2389,190 +3098,61 @@
     </issue>
 
     <issue
-        id="SmallSp"
-        message="Avoid using sizes smaller than `11sp`: `10sp`"
-        errorLine1="                    android:textSize=&quot;10sp&quot; />"
-        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~">
+        id="TooManyViews"
+        message="`feature_home_module_home_fragment_home.xml` has more than 80 views, bad for performance"
+        errorLine1="                            &lt;TextView"
+        errorLine2="                             ~~~~~~~~">
         <location
-            file="src/main/res/layout/include_daily_plan.xml"
-            line="153"
-            column="21"/>
+            file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
+            line="744"
+            column="30"/>
     </issue>
 
     <issue
-        id="SmallSp"
-        message="Avoid using sizes smaller than `11sp`: `10sp`"
-        errorLine1="                    android:textSize=&quot;10sp&quot; />"
-        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/include_daily_plan.xml"
-            line="183"
-            column="21"/>
-    </issue>
-
-    <issue
-        id="SmallSp"
-        message="Avoid using sizes smaller than `11sp`: `10sp`"
-        errorLine1="                    android:textSize=&quot;10sp&quot; />"
-        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/include_daily_plan.xml"
-            line="213"
-            column="21"/>
-    </issue>
-
-    <issue
-        id="SmallSp"
-        message="Avoid using sizes smaller than `11sp`: `10sp`"
-        errorLine1="                    android:textSize=&quot;10sp&quot; />"
-        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/include_daily_plan.xml"
-            line="244"
-            column="21"/>
-    </issue>
-
-    <issue
-        id="SmallSp"
-        message="Avoid using sizes smaller than `11sp`: `10sp`"
-        errorLine1="                    android:textSize=&quot;10sp&quot; />"
-        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/include_daily_plan.xml"
-            line="274"
-            column="21"/>
-    </issue>
-
-    <issue
-        id="SmallSp"
-        message="Avoid using sizes smaller than `11sp`: `10sp`"
-        errorLine1="                    android:textSize=&quot;10sp&quot; />"
-        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/include_daily_plan.xml"
-            line="305"
-            column="21"/>
-    </issue>
-
-    <issue
-        id="SmallSp"
-        message="Avoid using sizes smaller than `11sp`: `10sp`"
-        errorLine1="        android:textSize=&quot;10sp&quot; />"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/item_week_bar.xml"
-            line="14"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="SmallSp"
-        message="Avoid using sizes smaller than `11sp`: `10sp`"
-        errorLine1="        android:textSize=&quot;10sp&quot; />"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/item_week_bar.xml"
-            line="35"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="SmallSp"
-        message="Avoid using sizes smaller than `11sp`: `10sp`"
-        errorLine1="                    android:textSize=&quot;10sp&quot; />"
-        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~">
+        id="TooManyViews"
+        message="`module_home_fragment_profile.xml` has more than 80 views, bad for performance"
+        errorLine1="                    &lt;LinearLayout"
+        errorLine2="                     ~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="142"
-            column="21"/>
+            line="715"
+            column="22"/>
     </issue>
 
     <issue
-        id="SmallSp"
-        message="Avoid using sizes smaller than `11sp`: `10sp`"
-        errorLine1="                    android:textSize=&quot;10sp&quot; />"
-        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="175"
-            column="21"/>
-    </issue>
-
-    <issue
-        id="SmallSp"
-        message="Avoid using sizes smaller than `11sp`: `10sp`"
-        errorLine1="                    android:textSize=&quot;10sp&quot; />"
-        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="208"
-            column="21"/>
-    </issue>
-
-    <issue
-        id="SmallSp"
-        message="Avoid using sizes smaller than `11sp`: `8sp`"
-        errorLine1="                android:textSize=&quot;8sp&quot;"
-        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="238"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="SmallSp"
-        message="Avoid using sizes smaller than `11sp`: `10sp`"
-        errorLine1="                            android:textSize=&quot;10sp&quot; />"
-        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~">
+        id="TooManyViews"
+        message="`module_home_fragment_stats.xml` has more than 80 views, bad for performance"
+        errorLine1="                    &lt;LinearLayout"
+        errorLine2="                     ~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/module_home_fragment_stats.xml"
-            line="311"
-            column="29"/>
+            line="705"
+            column="22"/>
     </issue>
 
     <issue
-        id="SmallSp"
-        message="Avoid using sizes smaller than `11sp`: `10sp`"
-        errorLine1="                            android:textSize=&quot;10sp&quot; />"
-        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~">
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;home_learning_prepare_loading&quot;>正在准备学习...&lt;/string>"
+        errorLine2="                                                 ~~~~~~~~~">
         <location
-            file="src/main/res/layout/module_home_fragment_stats.xml"
-            line="325"
-            column="29"/>
+            file="src/main/res/values/strings.xml"
+            line="53"
+            column="50"/>
     </issue>
 
     <issue
-        id="SmallSp"
-        message="Avoid using sizes smaller than `11sp`: `10sp`"
-        errorLine1="                            android:textSize=&quot;10sp&quot; />"
-        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~">
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/feature_home_profile_mascot.png` in densityless folder">
         <location
-            file="src/main/res/layout/module_home_fragment_stats.xml"
-            line="339"
-            column="29"/>
+            file="src/main/res/drawable/feature_home_profile_mascot.png"/>
     </issue>
 
     <issue
-        id="SmallSp"
-        message="Avoid using sizes smaller than `11sp`: `10sp`"
-        errorLine1="                            android:textSize=&quot;10sp&quot; />"
-        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~">
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/feature_home_stats_hero_mascot.png` in densityless folder">
         <location
-            file="src/main/res/layout/module_home_fragment_stats.xml"
-            line="353"
-            column="29"/>
-    </issue>
-
-    <issue
-        id="SmallSp"
-        message="Avoid using sizes smaller than `11sp`: `10sp`"
-        errorLine1="                            android:textSize=&quot;10sp&quot; />"
-        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_stats.xml"
-            line="367"
-            column="29"/>
+            file="src/main/res/drawable/feature_home_stats_hero_mascot.png"/>
     </issue>
 
     <issue
@@ -2588,68 +3168,112 @@
 
     <issue
         id="UseKtx"
+        message="Use the KTX function `createBitmap` instead?"
+        errorLine1="        return Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888).apply {"
+        errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/home/ui/profile/PersonalQrActivity.kt"
+            line="149"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
         message="Use the KTX extension function `String.toUri` instead?"
         errorLine1="                    Uri.parse(&quot;package:${requireContext().packageName}&quot;)"
         errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/com/chen/memorizewords/feature/home/ui/practice/PracticeFragment.kt"
-            line="214"
+            line="199"
             column="21"/>
     </issue>
 
     <issue
-        id="UseTomlInstead"
-        message="Use version catalog instead"
-        errorLine1="    testImplementation(&quot;junit:junit:4.13.2&quot;)"
-        errorLine2="                       ~~~~~~~~~~~~~~~~~~~~">
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="        &lt;ImageView"
+        errorLine2="         ~~~~~~~~~">
         <location
-            file="build.gradle.kts"
+            file="src/main/res/layout/feature_home_activity_personal_qr.xml"
             line="62"
-            column="24"/>
-    </issue>
-
-    <issue
-        id="UseTomlInstead"
-        message="Use version catalog instead"
-        errorLine1="    testImplementation(&quot;org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1&quot;)"
-        errorLine2="                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="build.gradle.kts"
-            line="63"
-            column="24"/>
+            column="10"/>
     </issue>
 
     <issue
         id="ContentDescription"
         message="Missing `contentDescription` attribute on image"
-        errorLine1="            &lt;ImageView"
-        errorLine2="             ~~~~~~~~~">
+        errorLine1="                    &lt;ImageView"
+        errorLine2="                     ~~~~~~~~~">
         <location
             file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
-            line="31"
-            column="14"/>
+            line="73"
+            column="22"/>
     </issue>
 
     <issue
         id="ContentDescription"
         message="Missing `contentDescription` attribute on image"
-        errorLine1="            &lt;ImageView"
-        errorLine2="             ~~~~~~~~~">
+        errorLine1="                    &lt;ImageView"
+        errorLine2="                     ~~~~~~~~~">
         <location
             file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
-            line="46"
-            column="14"/>
+            line="108"
+            column="22"/>
     </issue>
 
     <issue
         id="ContentDescription"
         message="Missing `contentDescription` attribute on image"
-        errorLine1="            &lt;ImageView"
-        errorLine2="             ~~~~~~~~~">
+        errorLine1="                                &lt;ImageView"
+        errorLine2="                                 ~~~~~~~~~">
         <location
             file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
-            line="69"
-            column="14"/>
+            line="244"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                                &lt;ImageView"
+        errorLine2="                                 ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
+            line="298"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                                &lt;ImageView"
+        errorLine2="                                 ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
+            line="361"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                                &lt;ImageView"
+        errorLine2="                                 ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
+            line="485"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                                &lt;ImageView"
+        errorLine2="                                 ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
+            line="539"
+            column="34"/>
     </issue>
 
     <issue
@@ -2659,7 +3283,7 @@
         errorLine2="                 ~~~~~~~~~">
         <location
             file="src/main/res/layout/include_study_button.xml"
-            line="50"
+            line="51"
             column="18"/>
     </issue>
 
@@ -2670,8 +3294,52 @@
         errorLine2="                 ~~~~~~~~~">
         <location
             file="src/main/res/layout/include_study_button.xml"
-            line="77"
+            line="78"
             column="18"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                    &lt;ImageView"
+        errorLine2="                     ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_dialog_stats_day_detail.xml"
+            line="90"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                        &lt;ImageView"
+        errorLine2="                         ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_dialog_stats_day_detail.xml"
+            line="178"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                        &lt;ImageView"
+        errorLine2="                         ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_dialog_stats_day_detail.xml"
+            line="214"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                        &lt;ImageView"
+        errorLine2="                         ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_dialog_stats_day_detail.xml"
+            line="250"
+            column="26"/>
     </issue>
 
     <issue
@@ -2710,23 +3378,12 @@
     <issue
         id="ContentDescription"
         message="Missing `contentDescription` attribute on image"
-        errorLine1="                    &lt;ImageView"
-        errorLine2="                     ~~~~~~~~~">
+        errorLine1="                            &lt;ImageView"
+        errorLine2="                             ~~~~~~~~~">
         <location
             file="src/main/res/layout/module_home_fragment_practice.xml"
-            line="176"
-            column="22"/>
-    </issue>
-
-    <issue
-        id="ContentDescription"
-        message="Missing `contentDescription` attribute on image"
-        errorLine1="                    &lt;ImageView"
-        errorLine2="                     ~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_practice.xml"
-            line="209"
-            column="22"/>
+            line="158"
+            column="30"/>
     </issue>
 
     <issue
@@ -2736,118 +3393,41 @@
         errorLine2="                     ~~~~~~~~~">
         <location
             file="src/main/res/layout/module_home_fragment_practice.xml"
-            line="241"
+            line="210"
             column="22"/>
     </issue>
 
     <issue
         id="ContentDescription"
         message="Missing `contentDescription` attribute on image"
-        errorLine1="                    &lt;ImageView"
-        errorLine2="                     ~~~~~~~~~">
+        errorLine1="                            &lt;ImageView"
+        errorLine2="                             ~~~~~~~~~">
         <location
             file="src/main/res/layout/module_home_fragment_practice.xml"
-            line="273"
-            column="22"/>
+            line="349"
+            column="30"/>
     </issue>
 
     <issue
         id="ContentDescription"
         message="Missing `contentDescription` attribute on image"
-        errorLine1="            &lt;ImageView"
-        errorLine2="             ~~~~~~~~~">
+        errorLine1="                            &lt;ImageView"
+        errorLine2="                             ~~~~~~~~~">
         <location
-            file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="42"
-            column="14"/>
+            file="src/main/res/layout/module_home_fragment_practice.xml"
+            line="414"
+            column="30"/>
     </issue>
 
     <issue
         id="ContentDescription"
         message="Missing `contentDescription` attribute on image"
-        errorLine1="            &lt;ImageView"
-        errorLine2="             ~~~~~~~~~">
+        errorLine1="                            &lt;ImageView"
+        errorLine2="                             ~~~~~~~~~">
         <location
-            file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="52"
-            column="14"/>
-    </issue>
-
-    <issue
-        id="ContentDescription"
-        message="Missing `contentDescription` attribute on image"
-        errorLine1="            &lt;ImageView"
-        errorLine2="             ~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="72"
-            column="14"/>
-    </issue>
-
-    <issue
-        id="ContentDescription"
-        message="Missing `contentDescription` attribute on image"
-        errorLine1="                &lt;ImageView"
-        errorLine2="                 ~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="286"
-            column="18"/>
-    </issue>
-
-    <issue
-        id="ContentDescription"
-        message="Missing `contentDescription` attribute on image"
-        errorLine1="                &lt;ImageView"
-        errorLine2="                 ~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="304"
-            column="18"/>
-    </issue>
-
-    <issue
-        id="ContentDescription"
-        message="Missing `contentDescription` attribute on image"
-        errorLine1="                &lt;ImageView"
-        errorLine2="                 ~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="328"
-            column="18"/>
-    </issue>
-
-    <issue
-        id="ContentDescription"
-        message="Missing `contentDescription` attribute on image"
-        errorLine1="                &lt;ImageView"
-        errorLine2="                 ~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="346"
-            column="18"/>
-    </issue>
-
-    <issue
-        id="ContentDescription"
-        message="Missing `contentDescription` attribute on image"
-        errorLine1="                &lt;ImageView"
-        errorLine2="                 ~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="370"
-            column="18"/>
-    </issue>
-
-    <issue
-        id="ContentDescription"
-        message="Missing `contentDescription` attribute on image"
-        errorLine1="                &lt;ImageView"
-        errorLine2="                 ~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="389"
-            column="18"/>
+            file="src/main/res/layout/module_home_fragment_practice.xml"
+            line="480"
+            column="30"/>
     </issue>
 
     <issue
@@ -2856,20 +3436,42 @@
         errorLine1="                        &lt;ImageView"
         errorLine2="                         ~~~~~~~~~">
         <location
-            file="src/main/res/layout/module_home_fragment_stats.xml"
-            line="189"
+            file="src/main/res/layout/module_home_fragment_practice.xml"
+            line="511"
             column="26"/>
     </issue>
 
     <issue
         id="ContentDescription"
         message="Missing `contentDescription` attribute on image"
-        errorLine1="                        &lt;ImageView"
-        errorLine2="                         ~~~~~~~~~">
+        errorLine1="                    &lt;ImageView"
+        errorLine2="                     ~~~~~~~~~">
         <location
-            file="src/main/res/layout/module_home_fragment_stats.xml"
-            line="207"
-            column="26"/>
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="144"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageView"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_item_practice_mode_static.xml"
+            line="47"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageView"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_item_practice_mode_static.xml"
+            line="98"
+            column="14"/>
     </issue>
 
     <issue
@@ -2878,31 +3480,75 @@
         errorLine1="            android:clickable=&quot;true&quot;"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
-            line="95"
+            file="src/main/res/layout/feature_home_profile_item_menu_about.xml"
+            line="19"
             column="13"/>
     </issue>
 
     <issue
         id="KeyboardInaccessibleWidget"
         message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
-        errorLine1="            android:clickable=&quot;true&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        errorLine1="        android:clickable=&quot;true&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
-            line="113"
-            column="13"/>
+            file="src/main/res/layout/feature_home_profile_item_menu_books.xml"
+            line="13"
+            column="9"/>
     </issue>
 
     <issue
         id="KeyboardInaccessibleWidget"
         message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
-        errorLine1="            android:clickable=&quot;true&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        errorLine1="        android:clickable=&quot;true&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
-            line="124"
-            column="13"/>
+            file="src/main/res/layout/feature_home_profile_item_menu_favorites.xml"
+            line="13"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="        android:clickable=&quot;true&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_profile_item_menu_feedback.xml"
+            line="13"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="        android:clickable=&quot;true&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_profile_item_menu_member.xml"
+            line="13"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="        android:clickable=&quot;true&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_profile_item_menu_report.xml"
+            line="13"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="        android:clickable=&quot;true&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_profile_item_menu_settings.xml"
+            line="13"
+            column="9"/>
     </issue>
 
     <issue
@@ -2955,108 +3601,75 @@
         errorLine1="                    android:clickable=&quot;true&quot;"
         errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/res/layout/module_home_fragment_practice.xml"
-            line="169"
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="417"
             column="21"/>
     </issue>
 
     <issue
         id="KeyboardInaccessibleWidget"
         message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
-        errorLine1="                    android:clickable=&quot;true&quot;"
-        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_practice.xml"
-            line="201"
-            column="21"/>
-    </issue>
-
-    <issue
-        id="KeyboardInaccessibleWidget"
-        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
-        errorLine1="                    android:clickable=&quot;true&quot;"
-        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_practice.xml"
-            line="234"
-            column="21"/>
-    </issue>
-
-    <issue
-        id="KeyboardInaccessibleWidget"
-        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
-        errorLine1="                    android:clickable=&quot;true&quot;"
-        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_practice.xml"
-            line="266"
-            column="21"/>
-    </issue>
-
-    <issue
-        id="KeyboardInaccessibleWidget"
-        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
-        errorLine1="            android:clickable=&quot;true&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        errorLine1="                            android:clickable=&quot;true&quot;"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="214"
-            column="13"/>
+            line="554"
+            column="29"/>
     </issue>
 
     <issue
         id="KeyboardInaccessibleWidget"
         message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
-        errorLine1="                android:clickable=&quot;true&quot;"
-        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~">
+        errorLine1="                        android:clickable=&quot;true&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="247"
-            column="17"/>
+            line="594"
+            column="25"/>
     </issue>
 
     <issue
         id="KeyboardInaccessibleWidget"
         message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
-        errorLine1="                android:clickable=&quot;true&quot;"
-        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~">
+        errorLine1="                        android:clickable=&quot;true&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="279"
-            column="17"/>
+            line="636"
+            column="25"/>
     </issue>
 
     <issue
         id="KeyboardInaccessibleWidget"
         message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
-        errorLine1="                android:clickable=&quot;true&quot;"
-        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~">
+        errorLine1="                        android:clickable=&quot;true&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="322"
-            column="17"/>
+            line="675"
+            column="25"/>
     </issue>
 
     <issue
         id="KeyboardInaccessibleWidget"
         message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
-        errorLine1="                android:clickable=&quot;true&quot;"
-        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~">
+        errorLine1="                        android:clickable=&quot;true&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="364"
-            column="17"/>
+            line="720"
+            column="25"/>
     </issue>
 
     <issue
         id="KeyboardInaccessibleWidget"
         message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
-        errorLine1="                android:clickable=&quot;true&quot;"
-        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~">
+        errorLine1="                        android:clickable=&quot;true&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="407"
-            column="17"/>
+            line="759"
+            column="25"/>
     </issue>
 
     <issue
@@ -3084,12 +3697,56 @@
     <issue
         id="SetTextI18n"
         message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
-        errorLine1="                        databind.tvDescription.text = &quot;你已与词相伴 $it 余日，语言在你身上，缓慢生长。&quot;"
-        errorLine2="                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        errorLine1="            &quot;- ${getString(R.string.feature_home_profile_member_benefit_books)}&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/home/ui/profile/ProMembershipActivity.kt"
+            line="27"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="            &quot;- ${getString(R.string.feature_home_profile_member_benefit_stats)}&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/home/ui/profile/ProMembershipActivity.kt"
+            line="29"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="            &quot;- ${getString(R.string.feature_home_profile_member_benefit_practice)}&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/home/ui/profile/ProMembershipActivity.kt"
+            line="31"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="            &quot;- ${getString(R.string.feature_home_profile_member_benefit_sync)}&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/chen/memorizewords/feature/home/ui/profile/ProMembershipActivity.kt"
+            line="33"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="                text = &quot;${item.percent.coerceAtLeast(0)}%&quot;"
+        errorLine2="                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/com/chen/memorizewords/feature/home/ui/stats/StatsFragment.kt"
-            line="104"
-            column="55"/>
+            line="153"
+            column="24"/>
     </issue>
 
     <issue
@@ -3171,13 +3828,90 @@
 
     <issue
         id="HardcodedText"
-        message="Hardcoded string &quot;《雅思核心词汇》&quot;, should use `@string` resource"
-        errorLine1="            android:text=&quot;《雅思核心词汇》&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        message="Hardcoded string &quot;2026.06.16&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;2026.06.16&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/res/layout/feature_home_module_home_fragment_home.xml"
-            line="115"
-            column="13"/>
+            file="src/main/res/layout/feature_home_profile_item_achievement.xml"
+            line="29"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;2026.06.14&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;2026.06.14&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_profile_item_achievement_book.xml"
+            line="29"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;2026.06.13&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;2026.06.13&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_profile_item_achievement_clock.xml"
+            line="29"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;2026.06.13&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;2026.06.13&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_profile_item_achievement_star.xml"
+            line="29"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;星期二&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;星期二&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_profile_item_report_day.xml"
+            line="19"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;2 天&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;2 天&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_profile_item_report_streak.xml"
+            line="19"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;15 小时&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;15 小时&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_profile_item_report_time.xml"
+            line="19"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;16 个&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;16 个&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/feature_home_profile_item_report_words.xml"
+            line="19"
+            column="9"/>
     </issue>
 
     <issue
@@ -3275,7 +4009,7 @@
         errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/include_study_button.xml"
-            line="59"
+            line="60"
             column="21"/>
     </issue>
 
@@ -3286,7 +4020,7 @@
         errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/include_study_button.xml"
-            line="86"
+            line="87"
             column="21"/>
     </issue>
 
@@ -3380,189 +4114,13 @@
 
     <issue
         id="HardcodedText"
-        message="Hardcoded string &quot;自由练习&quot;, should use `@string` resource"
-        errorLine1="                android:text=&quot;自由练习&quot;"
-        errorLine2="                ~~~~~~~~~~~~~~~~~~~">
+        message="Hardcoded string &quot;VIP&quot;, should use `@string` resource"
+        errorLine1="                                android:text=&quot;VIP&quot;"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/module_home_fragment_practice.xml"
-            line="30"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;听力&quot;, should use `@string` resource"
-        errorLine1="                        android:text=&quot;听力&quot;"
-        errorLine2="                        ~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_practice.xml"
-            line="189"
-            column="25"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;跟读&quot;, should use `@string` resource"
-        errorLine1="                        android:text=&quot;跟读&quot;"
-        errorLine2="                        ~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_practice.xml"
-            line="222"
-            column="25"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;拼写&quot;, should use `@string` resource"
-        errorLine1="                        android:text=&quot;拼写&quot;"
-        errorLine2="                        ~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_practice.xml"
-            line="254"
-            column="25"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;随身听&quot;, should use `@string` resource"
-        errorLine1="                        android:text=&quot;随身听&quot;"
-        errorLine2="                        ~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_practice.xml"
-            line="286"
-            column="25"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;连续打卡&quot;, should use `@string` resource"
-        errorLine1="                    android:text=&quot;连续打卡&quot;"
-        errorLine2="                    ~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="140"
-            column="21"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;学习天数&quot;, should use `@string` resource"
-        errorLine1="                    android:text=&quot;学习天数&quot;"
-        errorLine2="                    ~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="173"
-            column="21"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;已背单词&quot;, should use `@string` resource"
-        errorLine1="                    android:text=&quot;已背单词&quot;"
-        errorLine2="                    ~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="206"
-            column="21"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;升级Pro会员&quot;, should use `@string` resource"
-        errorLine1="                android:text=&quot;升级Pro会员&quot;"
-        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="225"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;解锁所有高级词书和统计功能&quot;, should use `@string` resource"
-        errorLine1="                android:text=&quot;解锁所有高级词书和统计功能&quot;"
-        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="236"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;立即开通&quot;, should use `@string` resource"
-        errorLine1="                android:text=&quot;立即开通&quot;"
-        errorLine2="                ~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="252"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;常用功能&quot;, should use `@string` resource"
-        errorLine1="            android:text=&quot;常用功能&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="266"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;我的收藏&quot;, should use `@string` resource"
-        errorLine1="                    android:text=&quot;我的收藏&quot;"
-        errorLine2="                    ~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="300"
-            column="21"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;意见反馈&quot;, should use `@string` resource"
-        errorLine1="                    android:text=&quot;意见反馈&quot;"
-        errorLine2="                    ~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="342"
-            column="21"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;关于我们&quot;, should use `@string` resource"
-        errorLine1="                    android:text=&quot;关于我们&quot;"
-        errorLine2="                    ~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="385"
-            column="21"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;退出登录&quot;, should use `@string` resource"
-        errorLine1="                android:text=&quot;退出登录&quot;"
-        errorLine2="                ~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_profile.xml"
-            line="413"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;124&quot;, should use `@string` resource"
-        errorLine1="                        android:text=&quot;124&quot;"
-        errorLine2="                        ~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_stats.xml"
-            line="50"
-            column="25"/>
+            line="548"
+            column="33"/>
     </issue>
 
     <issue
@@ -3571,81 +4129,499 @@
         errorLine1="                        android:text=&quot;天&quot;"
         errorLine2="                        ~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/res/layout/module_home_fragment_stats.xml"
-            line="64"
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="127"
             column="25"/>
     </issue>
 
     <issue
         id="HardcodedText"
-        message="Hardcoded string &quot;累计时长&quot;, should use `@string` resource"
-        errorLine1="                        android:text=&quot;累计时长&quot;"
-        errorLine2="                        ~~~~~~~~~~~~~~~~~~~">
+        message="Hardcoded string &quot;天&quot;, should use `@string` resource"
+        errorLine1="                                    android:text=&quot;天&quot;"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/res/layout/module_home_fragment_stats.xml"
-            line="87"
-            column="25"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;312&quot;, should use `@string` resource"
-        errorLine1="                        android:text=&quot;312&quot;"
-        errorLine2="                        ~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_stats.xml"
-            line="99"
-            column="25"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;小时&quot;, should use `@string` resource"
-        errorLine1="                        android:text=&quot;小时&quot;"
-        errorLine2="                        ~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_stats.xml"
-            line="111"
-            column="25"/>
-    </issue>
-
-    <issue
-        id="HardcodedText"
-        message="Hardcoded string &quot;掌握单词&quot;, should use `@string` resource"
-        errorLine1="                        android:text=&quot;掌握单词&quot;"
-        errorLine2="                        ~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_home_fragment_stats.xml"
-            line="122"
-            column="25"/>
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="250"
+            column="37"/>
     </issue>
 
     <issue
         id="HardcodedText"
         message="Hardcoded string &quot;词&quot;, should use `@string` resource"
-        errorLine1="                        android:text=&quot;词&quot;"
+        errorLine1="                                    android:text=&quot;词&quot;"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="319"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;小时&quot;, should use `@string` resource"
+        errorLine1="                                    android:text=&quot;小时&quot;"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="387"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;♛&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;♛&quot;"
         errorLine2="                        ~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/res/layout/module_home_fragment_stats.xml"
-            line="133"
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="430"
             column="25"/>
     </issue>
 
     <issue
         id="HardcodedText"
-        message="Hardcoded string &quot;4,892&quot;, should use `@string` resource"
-        errorLine1="                        android:text=&quot;4,892&quot;"
-        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~">
+        message="Hardcoded string &quot;0&quot;, should use `@string` resource"
+        errorLine1="                                    android:text=&quot;0&quot;"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/module_home_fragment_stats.xml"
-            line="145"
+            line="220"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot; / 100 XP&quot;, should use `@string` resource"
+        errorLine1="                                    android:text=&quot; / 100 XP&quot;"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="228"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;数据概览&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;数据概览&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="280"
             column="25"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;0&quot;, should use `@string` resource"
+        errorLine1="                                    android:text=&quot;0&quot;"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="336"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;词&quot;, should use `@string` resource"
+        errorLine1="                                    android:text=&quot;词&quot;"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="346"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;掌握词汇&quot;, should use `@string` resource"
+        errorLine1="                                android:text=&quot;掌握词汇&quot;"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="357"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;今日 +0&quot;, should use `@string` resource"
+        errorLine1="                                android:text=&quot;今日 +0&quot;"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="367"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;0&quot;, should use `@string` resource"
+        errorLine1="                                    android:text=&quot;0&quot;"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="418"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;天&quot;, should use `@string` resource"
+        errorLine1="                                    android:text=&quot;天&quot;"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="428"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;连续学习&quot;, should use `@string` resource"
+        errorLine1="                                android:text=&quot;连续学习&quot;"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="439"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;最长连续 0 天&quot;, should use `@string` resource"
+        errorLine1="                                android:text=&quot;最长连续 0 天&quot;"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="449"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;0&quot;, should use `@string` resource"
+        errorLine1="                                    android:text=&quot;0&quot;"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="508"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;小时&quot;, should use `@string` resource"
+        errorLine1="                                    android:text=&quot;小时&quot;"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="518"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;累计学习时长&quot;, should use `@string` resource"
+        errorLine1="                                android:text=&quot;累计学习时长&quot;"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="529"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;今日 +0h&quot;, should use `@string` resource"
+        errorLine1="                                android:text=&quot;今日 +0h&quot;"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="539"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;0.0&quot;, should use `@string` resource"
+        errorLine1="                                    android:text=&quot;0.0&quot;"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="590"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;%&quot;, should use `@string` resource"
+        errorLine1="                                    android:text=&quot;%&quot;"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="600"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;学习正确率&quot;, should use `@string` resource"
+        errorLine1="                                android:text=&quot;学习正确率&quot;"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="611"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;稳定记录中&quot;, should use `@string` resource"
+        errorLine1="                                android:text=&quot;稳定记录中&quot;"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="621"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;学习日历&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;学习日历&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="646"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;2026年6月&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;2026年6月&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="664"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;日&quot;, should use `@string` resource"
+        errorLine1="                            android:text=&quot;日&quot; />"
+        errorLine2="                            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="712"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;一&quot;, should use `@string` resource"
+        errorLine1="                            android:text=&quot;一&quot; />"
+        errorLine2="                            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="716"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;二&quot;, should use `@string` resource"
+        errorLine1="                            android:text=&quot;二&quot; />"
+        errorLine2="                            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="720"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;三&quot;, should use `@string` resource"
+        errorLine1="                            android:text=&quot;三&quot; />"
+        errorLine2="                            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="724"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;四&quot;, should use `@string` resource"
+        errorLine1="                            android:text=&quot;四&quot; />"
+        errorLine2="                            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="728"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;五&quot;, should use `@string` resource"
+        errorLine1="                            android:text=&quot;五&quot; />"
+        errorLine2="                            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="732"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;六&quot;, should use `@string` resource"
+        errorLine1="                            android:text=&quot;六&quot; />"
+        errorLine2="                            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="736"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;未学习&quot;, should use `@string` resource"
+        errorLine1="                            android:text=&quot;未学习&quot;"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="761"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;学习&quot;, should use `@string` resource"
+        errorLine1="                            android:text=&quot;学习&quot;"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="774"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;完成任务&quot;, should use `@string` resource"
+        errorLine1="                            android:text=&quot;完成任务&quot;"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="787"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;超额完成&quot;, should use `@string` resource"
+        errorLine1="                            android:text=&quot;超额完成&quot;"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="800"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;本周学习趋势&quot;, should use `@string` resource"
+        errorLine1="                                android:text=&quot;本周学习趋势&quot;"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="835"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;本周&quot;, should use `@string` resource"
+        errorLine1="                                android:text=&quot;本周&quot;"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="845"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;学习时长（小时）&quot;, should use `@string` resource"
+        errorLine1="                                android:text=&quot;学习时长（小时）&quot;"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="867"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;新词数量（个）&quot;, should use `@string` resource"
+        errorLine1="                                android:text=&quot;新词数量（个）&quot;"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="882"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;学习时长分布&quot;, should use `@string` resource"
+        errorLine1="                            android:text=&quot;学习时长分布&quot;"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="913"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;学习成就&quot;, should use `@string` resource"
+        errorLine1="                                android:text=&quot;学习成就&quot;"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="969"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;全部成就&quot;, should use `@string` resource"
+        errorLine1="                                    android:text=&quot;全部成就&quot;"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="983"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;学习报告&quot;, should use `@string` resource"
+        errorLine1="                            android:text=&quot;学习报告&quot;"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_stats.xml"
+            line="1022"
+            column="29"/>
     </issue>
 
     <issue
         id="RtlSymmetry"
         message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
-        errorLine1="                        android:paddingStart=&quot;8dp&quot;"
+        errorLine1="                        android:paddingStart=&quot;@dimen/core_ui_dp_8&quot;"
         errorLine2="                        ~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/include_word_book.xml"
@@ -3656,7 +4632,7 @@
     <issue
         id="RtlSymmetry"
         message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
-        errorLine1="                        android:paddingStart=&quot;8dp&quot;"
+        errorLine1="                        android:paddingStart=&quot;@dimen/core_ui_dp_8&quot;"
         errorLine2="                        ~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/include_word_book.xml"
@@ -3667,7 +4643,7 @@
     <issue
         id="RtlSymmetry"
         message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
-        errorLine1="                        android:paddingStart=&quot;8dp&quot;"
+        errorLine1="                        android:paddingStart=&quot;@dimen/core_ui_dp_8&quot;"
         errorLine2="                        ~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/include_word_book.xml"
@@ -3678,7 +4654,7 @@
     <issue
         id="RtlSymmetry"
         message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
-        errorLine1="                        android:paddingStart=&quot;4dp&quot;"
+        errorLine1="                        android:paddingStart=&quot;@dimen/core_ui_dp_4&quot;"
         errorLine2="                        ~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/include_word_book.xml"
@@ -3689,7 +4665,7 @@
     <issue
         id="RtlSymmetry"
         message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
-        errorLine1="                        android:paddingStart=&quot;8dp&quot;"
+        errorLine1="                        android:paddingStart=&quot;@dimen/core_ui_dp_8&quot;"
         errorLine2="                        ~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/include_word_book.xml"
@@ -3700,7 +4676,7 @@
     <issue
         id="RtlSymmetry"
         message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
-        errorLine1="                        android:paddingStart=&quot;8dp&quot;"
+        errorLine1="                        android:paddingStart=&quot;@dimen/core_ui_dp_8&quot;"
         errorLine2="                        ~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/include_word_book.xml"
@@ -3711,7 +4687,7 @@
     <issue
         id="RtlSymmetry"
         message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
-        errorLine1="                        android:paddingStart=&quot;8dp&quot;"
+        errorLine1="                        android:paddingStart=&quot;@dimen/core_ui_dp_8&quot;"
         errorLine2="                        ~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/include_word_book.xml"
@@ -3722,11 +4698,22 @@
     <issue
         id="RtlSymmetry"
         message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
-        errorLine1="                        android:paddingStart=&quot;4dp&quot;"
+        errorLine1="                        android:paddingStart=&quot;@dimen/core_ui_dp_4&quot;"
         errorLine2="                        ~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/include_word_book.xml"
             line="196"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="RtlSymmetry"
+        message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
+        errorLine1="                        android:paddingStart=&quot;@dimen/core_ui_dp_10&quot;>"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/module_home_fragment_profile.xml"
+            line="352"
             column="25"/>
     </issue>
 

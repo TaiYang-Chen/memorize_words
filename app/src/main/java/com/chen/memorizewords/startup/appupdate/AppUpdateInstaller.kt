@@ -9,7 +9,6 @@ import android.os.Environment
 import android.provider.Settings
 import androidx.core.content.FileProvider
 import com.chen.memorizewords.BuildConfig
-import com.chen.memorizewords.data.sync.remoteapi.GlobalConfig
 import com.chen.memorizewords.domain.sync.appupdate.AppUpdateInfo
 import com.chen.memorizewords.domain.wordbook.model.download.DownloadCompletionAction
 import com.chen.memorizewords.domain.wordbook.model.download.DownloadRequest
@@ -38,7 +37,7 @@ class AppUpdateInstaller @Inject constructor(
         downloadRepository.start(
             DownloadRequest(
                 taskId = taskId,
-                url = resolveDownloadUrl(info.downloadUrl),
+                url = info.downloadUrl,
                 fileName = fileName,
                 mimeType = APK_MIME_TYPE,
                 displayTitle = "Memorize Words ${info.latestVersion.versionName}",
@@ -101,13 +100,6 @@ class AppUpdateInstaller @Inject constructor(
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         activity.startActivity(intent)
-    }
-
-    private fun resolveDownloadUrl(url: String): String {
-        if (url.startsWith("http://", ignoreCase = true) || url.startsWith("https://", ignoreCase = true)) {
-            return url
-        }
-        return java.net.URL(java.net.URL(GlobalConfig.baseUrl), url).toString()
     }
 
     private suspend fun sha256(file: File): String = withContext(Dispatchers.IO) {

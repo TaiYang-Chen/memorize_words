@@ -17,6 +17,7 @@ import com.chen.memorizewords.domain.sync.model.LoginBootstrapDailyStudyDuration
 import com.chen.memorizewords.domain.sync.model.LoginBootstrapStudyRecord
 import com.chen.memorizewords.domain.sync.model.LoginBootstrapTodayStats
 import com.chen.memorizewords.domain.wordbook.model.WordBook
+import com.chen.memorizewords.domain.wordbook.model.WordBookContentPackage
 import com.chen.memorizewords.domain.wordbook.model.learning.LearningTestMode
 import com.chen.memorizewords.domain.wordbook.model.study.StudyPlan
 import com.chen.memorizewords.domain.wordbook.model.study.progress.wordbook.WordBookProgress
@@ -76,6 +77,16 @@ private fun WordBookDto.toDomain(contentVersionOverride: Long?): WordBook {
         description = description,
         totalWords = totalWords,
         contentVersion = contentVersionOverride ?: contentVersion,
+        contentPackage = contentPackage?.let { dto ->
+            WordBookContentPackage(
+                url = dto.url,
+                sha256 = dto.sha256,
+                sizeBytes = dto.sizeBytes,
+                contentType = dto.contentType,
+                schemaVersion = dto.schemaVersion,
+                contentVersion = dto.contentVersion
+            )
+        },
         isNew = isNew,
         isHot = isHot,
         isSelected = isSelected,

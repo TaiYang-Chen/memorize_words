@@ -49,7 +49,7 @@ import com.chen.memorizewords.data.word.local.room.model.words.word.WordEntity
         RootVariantEntity::class,
         RootWordEntity::class
     ],
-    version = 2,
+    version = 1,
     exportSchema = true
 )
 @TypeConverters(WordRoomConverters::class)

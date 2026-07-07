@@ -71,12 +71,23 @@ data class WordBookDto(
     val totalWords: Int,
     val learnedWords: Int = 0,
     val contentVersion: Long = 0L,
+    val contentPackage: WordBookContentPackageDto? = null,
     val updatedAt: Long = 0L,
     val isNew: Boolean = false,
     val isHot: Boolean = false,
     val isSelected: Boolean = false,
     val isPublic: Boolean = true,
     val createdByUserId: String? = null
+)
+
+@JsonClass(generateAdapter = false)
+data class WordBookContentPackageDto(
+    val url: String = "",
+    val sha256: String = "",
+    val sizeBytes: Long = 0L,
+    val contentType: String = "",
+    val schemaVersion: Int = 0,
+    val contentVersion: Long = 0L
 )
 
 @JsonClass(generateAdapter = false)
