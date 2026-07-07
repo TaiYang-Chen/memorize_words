@@ -2,12 +2,13 @@ package com.chen.memorizewords.feature.learning.ui.fragment
 
 import android.media.MediaPlayer
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chen.memorizewords.core.ui.ext.dpToPx
@@ -114,58 +115,60 @@ class WordEntryDetailFragment :
     }
 
     override fun createObserver() {
-        lifecycleScope.launch {
-            launch {
-                viewModel.currentWord.collect { word ->
-                    renderPhonetic(word)
-                    scheduleAutoPlayWord(word)
-                    val hasRelations = synonymsAdapter.submitRelations(
-                        word?.synonyms.orEmpty(),
-                        word?.antonyms.orEmpty()
-                    )
-                    setOptionalSectionVisible(
-                        databind.sectionSynonymsHeader,
-                        databind.rvSynonyms,
-                        hasRelations
-                    )
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.currentWord.collect { word ->
+                        renderPhonetic(word)
+                        scheduleAutoPlayWord(word)
+                        val hasRelations = synonymsAdapter.submitRelations(
+                            word?.synonyms.orEmpty(),
+                            word?.antonyms.orEmpty()
+                        )
+                        setOptionalSectionVisible(
+                            databind.sectionSynonymsHeader,
+                            databind.rvSynonyms,
+                            hasRelations
+                        )
+                    }
                 }
-            }
-            launch {
-                viewModel.definitions.collect { definitions ->
-                    definitionsAdapter.submitGroupedDefinitions(definitions)
+                launch {
+                    viewModel.definitions.collect { definitions ->
+                        definitionsAdapter.submitGroupedDefinitions(definitions)
+                    }
                 }
-            }
-            launch {
-                viewModel.wordExamples.collect { examples ->
-                    val visibleExamples = examples.visibleWordExamples()
-                    examplesAdapter.submitList(visibleExamples)
-                    setOptionalSectionVisible(
-                        databind.sectionExamplesHeader,
-                        databind.rvExamples,
-                        visibleExamples.isNotEmpty()
-                    )
+                launch {
+                    viewModel.wordExamples.collect { examples ->
+                        val visibleExamples = examples.visibleWordExamples()
+                        examplesAdapter.submitList(visibleExamples)
+                        setOptionalSectionVisible(
+                            databind.sectionExamplesHeader,
+                            databind.rvExamples,
+                            visibleExamples.isNotEmpty()
+                        )
+                    }
                 }
-            }
-            launch {
-                viewModel.wordRoots.collect { roots ->
-                    val visibleRoots = roots.visibleWordRoots()
-                    rootsAdapter.submitList(visibleRoots)
-                    setOptionalSectionVisible(
-                        databind.sectionRootsHeader,
-                        databind.rvRoot,
-                        visibleRoots.isNotEmpty()
-                    )
+                launch {
+                    viewModel.wordRoots.collect { roots ->
+                        val visibleRoots = roots.visibleWordRoots()
+                        rootsAdapter.submitList(visibleRoots)
+                        setOptionalSectionVisible(
+                            databind.sectionRootsHeader,
+                            databind.rvRoot,
+                            visibleRoots.isNotEmpty()
+                        )
+                    }
                 }
-            }
-            launch {
-                viewModel.wordForm.collect { forms ->
-                    val visibleForms = forms.visibleWordForms()
-                    formAdapter.submitList(visibleForms)
-                    setOptionalSectionVisible(
-                        databind.sectionInflectionHeader,
-                        databind.rvInflection,
-                        visibleForms.isNotEmpty()
-                    )
+                launch {
+                    viewModel.wordForm.collect { forms ->
+                        val visibleForms = forms.visibleWordForms()
+                        formAdapter.submitList(visibleForms)
+                        setOptionalSectionVisible(
+                            databind.sectionInflectionHeader,
+                            databind.rvInflection,
+                            visibleForms.isNotEmpty()
+                        )
+                    }
                 }
             }
         }
@@ -176,8 +179,6 @@ class WordEntryDetailFragment :
         setOptionalSectionVisible(databind.sectionInflectionHeader, databind.rvInflection, false)
         setOptionalSectionVisible(databind.sectionRootsHeader, databind.rvRoot, false)
         setOptionalSectionVisible(databind.sectionSynonymsHeader, databind.rvSynonyms, false)
-
-        Log.d("TAG", "hideOptionalSections: ${databind.rvSynonyms}")
     }
 
     private fun setOptionalSectionVisible(header: View, list: View, visible: Boolean) {

@@ -1,5 +1,19 @@
+import java.util.Properties
+
 plugins {
     id("memorize.android-application")
+}
+
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.isFile) {
+        file.inputStream().use { stream -> load(stream) }
+    }
+}
+
+fun releaseProperty(name: String): String? {
+    return (localProperties.getProperty(name) ?: System.getenv(name))
+        ?.takeIf { it.isNotBlank() }
 }
 
 android {
@@ -18,8 +32,33 @@ android {
         buildConfigField("String", "QQ_APP_ID", "\"$qqAppId\"")
     }
 
+    signingConfigs {
+        create("release") {
+            val storeFilePath = releaseProperty("RELEASE_STORE_FILE")
+            val storePasswordValue = releaseProperty("RELEASE_STORE_PASSWORD")
+            val keyAliasValue = releaseProperty("RELEASE_KEY_ALIAS")
+            val keyPasswordValue = releaseProperty("RELEASE_KEY_PASSWORD")
+
+            if (
+                storeFilePath != null &&
+                storePasswordValue != null &&
+                keyAliasValue != null &&
+                keyPasswordValue != null
+            ) {
+                storeFile = rootProject.file(storeFilePath)
+                storePassword = storePasswordValue
+                keyAlias = keyAliasValue
+                keyPassword = keyPasswordValue
+            }
+        }
+    }
+
     buildTypes {
         release {
+            val releaseSigning = signingConfigs.getByName("release")
+            if (releaseSigning.storeFile != null) {
+                signingConfig = releaseSigning
+            }
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(

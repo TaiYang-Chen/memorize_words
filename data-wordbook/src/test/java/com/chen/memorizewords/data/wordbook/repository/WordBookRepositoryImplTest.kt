@@ -1,5 +1,17 @@
 package com.chen.memorizewords.data.wordbook.repository
 
+import androidx.room.DatabaseConfiguration
+import androidx.room.InvalidationTracker
+import com.chen.memorizewords.core.common.paging.PageSlice
+import com.chen.memorizewords.data.wordbook.local.WordBookDatabase
+import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.syncstate.WordBookSyncStateDao
+import com.chen.memorizewords.data.wordbook.remote.datasync.RemoteUserSyncDataSource
+import com.chen.memorizewords.data.wordbook.remote.wordbook.RemoteWordBookDataSource
+import com.chen.memorizewords.data.wordbook.repository.wordbook.WordBookContentLocalStore
+import com.chen.memorizewords.data.wordbook.repository.wordbook.WordBookContentDownloader
+import com.chen.memorizewords.data.wordbook.local.room.wordbook.WordBookSyncStateStore
+import com.chen.memorizewords.domain.study.model.favorites.WordFavorites
+import com.chen.memorizewords.domain.study.repository.word.FavoritesRepository
 import com.chen.memorizewords.data.wordbook.local.room.model.study.progress.word.WordLearningStateDao
 import com.chen.memorizewords.data.wordbook.local.room.model.study.progress.wordbook.WordBookProgressDao
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.current.CurrentWordBookSelectionDao
@@ -7,6 +19,14 @@ import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.current.Cu
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.wordbook.WordBookDao
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.wordbook.WordBookEntity
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.words.BookWordItemDao
+import com.chen.memorizewords.data.wordbook.local.room.model.words.definition.WordDefinitionDao
+import com.chen.memorizewords.data.wordbook.local.room.model.words.example.WordExampleDao
+import com.chen.memorizewords.data.wordbook.local.room.model.words.form.WordFormDao
+import com.chen.memorizewords.data.wordbook.local.room.model.words.meta.WordUserMetaDao
+import com.chen.memorizewords.data.wordbook.local.room.model.words.relation.WordRelationDao
+import com.chen.memorizewords.data.wordbook.local.room.model.words.root.root.RootTagDao
+import com.chen.memorizewords.data.wordbook.local.room.model.words.root.root.WordRootDao
+import com.chen.memorizewords.data.wordbook.local.room.model.words.root.rootword.RootWordDao
 import com.chen.memorizewords.data.wordbook.local.room.model.words.word.WordDao
 import com.chen.memorizewords.domain.sync.OutboxCommand
 import com.chen.memorizewords.domain.sync.OutboxTopic
@@ -17,6 +37,7 @@ import com.chen.memorizewords.domain.wordbook.repository.WordOrderType
 import com.google.gson.Gson
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Proxy
+import androidx.sqlite.db.SupportSQLiteOpenHelper
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -172,7 +193,10 @@ class WordBookRepositoryImplTest {
     ) {
         val wordBookDao = FakeWordBookDao(books)
         val currentSelectionDao = FakeCurrentWordBookSelectionDao(selectedBookId)
+        val favoritesRepository = FakeFavoritesRepository()
         val remoteRemover = FakeMyWordBookRemoteRemover()
+        val remoteUserSyncDataSource: RemoteUserSyncDataSource = throwingProxy()
+        val wordBookContentDownloader = throwingWordBookContentDownloader()
         val workCanceller = FakeWordBookWorkCanceller()
         val syncOutboxWriter = FakeSyncOutboxWriter()
 
@@ -184,7 +208,10 @@ class WordBookRepositoryImplTest {
             wordDao = throwingProxy(),
             wordBookDao = wordBookDao.proxy,
             currentWordBookSelectionDao = currentSelectionDao.proxy,
+            favoritesRepository = favoritesRepository,
             myWordBookRemoteRemover = remoteRemover,
+            remoteUserSyncDataSource = remoteUserSyncDataSource,
+            wordBookContentDownloader = wordBookContentDownloader,
             wordBookWorkCanceller = workCanceller,
             SyncOutboxWriter = syncOutboxWriter,
             gson = Gson()
@@ -282,6 +309,61 @@ class WordBookRepositoryImplTest {
         }
     }
 
+    private class FakeFavoritesRepository : FavoritesRepository {
+        override suspend fun addFavorite(favorites: WordFavorites) = Unit
+
+        override suspend fun removeFavorite(wordId: Long) = Unit
+
+        override suspend fun isFavorite(wordId: Long): Boolean = false
+
+        override suspend fun getAllFavoriteWordIds(): List<Long> = emptyList()
+
+        override suspend fun getFavoritesPage(
+            pageIndex: Int,
+            pageSize: Int
+        ): PageSlice<WordFavorites> = PageSlice(emptyList(), hasNext = false)
+    }
+
+    private class ThrowingWordBookDatabase : WordBookDatabase() {
+        override fun createOpenHelper(config: DatabaseConfiguration): SupportSQLiteOpenHelper = throwingProxy()
+
+        override fun createInvalidationTracker(): InvalidationTracker = InvalidationTracker(this, "unused")
+
+        override fun wordBookDao(): WordBookDao = throwingProxy()
+
+        override fun currentWordBookSelectionDao(): CurrentWordBookSelectionDao = throwingProxy()
+
+        override fun wordBookSyncStateDao(): WordBookSyncStateDao = throwingProxy()
+
+        override fun wordBookItemDao(): BookWordItemDao = throwingProxy()
+
+        override fun wordBookProgressDao(): WordBookProgressDao = throwingProxy()
+
+        override fun wordLearningStateDao(): WordLearningStateDao = throwingProxy()
+
+        override fun wordDao(): WordDao = throwingProxy()
+
+        override fun wordDefinitionDao(): WordDefinitionDao = throwingProxy()
+
+        override fun wordExampleDao(): WordExampleDao = throwingProxy()
+
+        override fun wordFormDao(): WordFormDao = throwingProxy()
+
+        override fun wordUserMetaDao(): WordUserMetaDao = throwingProxy()
+
+        override fun wordRelationDao(): WordRelationDao = throwingProxy()
+
+        override fun wordRootDao(): WordRootDao = throwingProxy()
+
+        override fun rootTagDao(): RootTagDao = throwingProxy()
+
+        override fun rootWordDao(): RootWordDao = throwingProxy()
+
+        override fun clearAllTables() {
+            unexpected("clearAllTables")
+        }
+    }
+
     private class FakeMyWordBookRemoteRemover : MyWordBookRemoteRemover {
         val removedBookIds = mutableListOf<Long>()
 
@@ -330,6 +412,16 @@ class WordBookRepositoryImplTest {
         @Suppress("UNCHECKED_CAST")
         inline fun <reified T : Any> throwingProxy(): T = proxy { methodName, _ ->
             unexpected(methodName)
+        }
+
+        fun throwingWordBookContentDownloader(): WordBookContentDownloader {
+            val database = ThrowingWordBookDatabase()
+            return WordBookContentDownloader(
+                database = database,
+                remoteWordBookDataSource = throwingProxy<RemoteWordBookDataSource>(),
+                contentLocalStore = WordBookContentLocalStore(database),
+                syncStateStore = WordBookSyncStateStore(throwingProxy())
+            )
         }
 
         inline fun <reified T : Any> proxy(
