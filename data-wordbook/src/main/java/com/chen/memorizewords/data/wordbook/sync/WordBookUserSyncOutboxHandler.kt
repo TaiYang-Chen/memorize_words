@@ -11,14 +11,10 @@ import com.chen.memorizewords.domain.sync.OnboardingStateSyncPayload
 import com.chen.memorizewords.domain.sync.OutboxRecord
 import com.chen.memorizewords.domain.sync.OutboxTopic
 import com.chen.memorizewords.domain.sync.StudyPlanSyncPayload
-import com.chen.memorizewords.domain.sync.StudyRecordSyncPayload
 import com.chen.memorizewords.domain.sync.SyncOperation
 import com.chen.memorizewords.domain.sync.SyncOutboxHandler
 import com.chen.memorizewords.domain.sync.WordBookDeleteSyncPayload
-import com.chen.memorizewords.domain.sync.WordBookProgressSyncPayload
 import com.chen.memorizewords.domain.sync.WordBookSelectionSyncPayload
-import com.chen.memorizewords.domain.sync.WordStateDeleteByBookSyncPayload
-import com.chen.memorizewords.domain.sync.WordStateUpsertSyncPayload
 import com.chen.memorizewords.domain.wordbook.model.learning.LearningTestMode
 import com.chen.memorizewords.domain.wordbook.model.onboarding.OnboardingPhase
 import com.chen.memorizewords.domain.wordbook.model.onboarding.OnboardingSnapshot
@@ -36,13 +32,9 @@ class WordBookUserSyncOutboxHandler @Inject constructor(
 ) : SyncOutboxHandler {
 
     override val topics: Set<String> = setOf(
-        OutboxTopic.STUDY_RECORD,
         OutboxTopic.DAILY_STUDY_DURATION,
         OutboxTopic.FAVORITE,
-        OutboxTopic.WORD_BOOK_PROGRESS,
         OutboxTopic.WORD_BOOK_DELETE,
-        OutboxTopic.WORD_STATE_UPSERT,
-        OutboxTopic.WORD_STATE_DELETE_BY_BOOK,
         OutboxTopic.WORD_BOOK_SELECTION,
         OutboxTopic.STUDY_PLAN,
         OutboxTopic.ONBOARDING_STATE,
@@ -51,17 +43,6 @@ class WordBookUserSyncOutboxHandler @Inject constructor(
 
     override suspend fun handle(record: OutboxRecord) {
         when (record.aggregate) {
-            OutboxTopic.STUDY_RECORD -> {
-                val payload = gson.fromJson(record.payload, StudyRecordSyncPayload::class.java)
-                remoteUserSyncDataSource.appendStudyRecord(
-                    date = payload.date,
-                    wordId = payload.wordId,
-                    word = payload.word,
-                    definition = payload.definition,
-                    isNewWord = payload.isNewWord
-                ).getOrThrow()
-            }
-
             OutboxTopic.DAILY_STUDY_DURATION -> {
                 val payload = gson.fromJson(record.payload, DailyStudyDurationSyncPayload::class.java)
                 remoteUserSyncDataSource.upsertDailyStudyDuration(
@@ -94,21 +75,6 @@ class WordBookUserSyncOutboxHandler @Inject constructor(
                 }
             }
 
-            OutboxTopic.WORD_BOOK_PROGRESS -> {
-                val payload = gson.fromJson(record.payload, WordBookProgressSyncPayload::class.java)
-                remoteUserSyncDataSource.upsertWordBookProgress(
-                    bookId = payload.bookId,
-                    bookName = payload.bookName,
-                    learnedCount = payload.learnedCount,
-                    masteredCount = payload.masteredCount,
-                    totalCount = payload.totalCount,
-                    correctCount = payload.correctCount,
-                    wrongCount = payload.wrongCount,
-                    studyDayCount = payload.studyDayCount,
-                    lastStudyDate = payload.lastStudyDate
-                ).getOrThrow()
-            }
-
             OutboxTopic.WORD_BOOK_DELETE -> {
                 val payload = gson.fromJson(record.payload, WordBookDeleteSyncPayload::class.java)
                 val result = remoteUserSyncDataSource.removeMyWordBook(payload.bookId)
@@ -116,27 +82,6 @@ class WordBookUserSyncOutboxHandler @Inject constructor(
                     return
                 }
                 result.getOrThrow()
-            }
-
-            OutboxTopic.WORD_STATE_UPSERT -> {
-                val payload = gson.fromJson(record.payload, WordStateUpsertSyncPayload::class.java)
-                remoteUserSyncDataSource.upsertWordState(
-                    bookId = payload.bookId,
-                    wordId = payload.wordId,
-                    totalLearnCount = payload.totalLearnCount,
-                    lastLearnTime = payload.lastLearnTime,
-                    nextReviewTime = payload.nextReviewTime,
-                    masteryLevel = payload.masteryLevel,
-                    userStatus = payload.userStatus,
-                    repetition = payload.repetition,
-                    interval = payload.interval,
-                    efactor = payload.efactor
-                ).getOrThrow()
-            }
-
-            OutboxTopic.WORD_STATE_DELETE_BY_BOOK -> {
-                val payload = gson.fromJson(record.payload, WordStateDeleteByBookSyncPayload::class.java)
-                remoteUserSyncDataSource.deleteWordStatesByBookId(payload.bookId).getOrThrow()
             }
 
             OutboxTopic.WORD_BOOK_SELECTION -> {

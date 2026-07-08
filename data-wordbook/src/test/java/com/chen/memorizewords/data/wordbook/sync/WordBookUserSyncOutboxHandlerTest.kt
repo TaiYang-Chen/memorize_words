@@ -17,7 +17,6 @@ import com.chen.memorizewords.data.wordbook.remoteapi.api.datasync.WordBookUpdat
 import com.chen.memorizewords.data.wordbook.remoteapi.api.datasync.WordBookUpdateCandidateDto
 import com.chen.memorizewords.data.wordbook.remoteapi.api.datasync.WordBookUpdateManifestDto
 import com.chen.memorizewords.data.wordbook.remoteapi.dto.wordbook.WordBookDto
-import com.chen.memorizewords.data.wordbook.remoteapi.dto.wordbook.WordDto
 import com.chen.memorizewords.data.wordbook.remoteapi.dto.wordstate.WordStateDto
 import com.chen.memorizewords.domain.study.model.favorites.WordFavorites
 import com.chen.memorizewords.domain.sync.OutboxRecord
@@ -116,44 +115,15 @@ class WordBookUserSyncOutboxHandlerTest {
         override suspend fun addFavorite(favorite: WordFavorites): Result<Unit> = unexpected()
         override suspend fun getFavorites(page: Int, count: Int): Result<PageData<FavoriteDto>> = unexpected()
         override suspend fun removeFavorite(wordId: Long): Result<Unit> = unexpected()
-        override suspend fun upsertWordState(
-            bookId: Long,
-            wordId: Long,
-            totalLearnCount: Int,
-            lastLearnTime: Long,
-            nextReviewTime: Long,
-            masteryLevel: Int,
-            userStatus: Int,
-            repetition: Int,
-            interval: Long,
-            efactor: Double
-        ): Result<Unit> = unexpected()
-
-        override suspend fun deleteWordStatesByBookId(bookId: Long): Result<Unit> = unexpected()
-        override suspend fun upsertWordBookProgress(
-            bookId: Long,
-            bookName: String,
-            learnedCount: Int,
-            masteredCount: Int,
-            totalCount: Int,
-            correctCount: Int,
-            wrongCount: Int,
-            studyDayCount: Int,
-            lastStudyDate: String
-        ): Result<Unit> = unexpected()
-
         override suspend fun getWordBookProgressList(): Result<List<WordBookProgressDto>> = unexpected()
         override suspend fun getCurrentWordBookUpdateCandidate(trigger: String): Result<WordBookUpdateCandidateDto?> = unexpected()
         override suspend fun reportCurrentWordBookUpdateAction(request: WordBookUpdateActionRequest): Result<Unit> = unexpected()
         override suspend fun getCurrentWordBookUpdateManifest(version: Long): Result<WordBookUpdateManifestDto> = unexpected()
-        override suspend fun getCurrentWordBookUpdateWords(version: Long, page: Int, count: Int): Result<PageData<WordDto>> = unexpected()
         override suspend fun completeCurrentWordBookUpdate(version: Long): Result<Unit> = unexpected()
         override suspend fun getPendingWordBookUpdate(bookId: Long): Result<PendingWordBookUpdateDto?> = unexpected()
         override suspend fun ignoreWordBookUpdate(bookId: Long, version: Long): Result<Unit> = unexpected()
         override suspend fun getWordBookUpdateManifest(bookId: Long, version: Long): Result<WordBookUpdateManifestDto> = unexpected()
-        override suspend fun getWordBookUpdateWords(bookId: Long, version: Long, page: Int, count: Int): Result<PageData<WordDto>> = unexpected()
         override suspend fun completeWordBookUpdate(bookId: Long, version: Long): Result<Unit> = unexpected()
-        override suspend fun appendStudyRecord(date: String, wordId: Long, word: String, definition: String, isNewWord: Boolean): Result<Unit> = unexpected()
         override suspend fun getStudyRecords(page: Int, count: Int): Result<PageData<StudyRecordDto>> = unexpected()
         override suspend fun getDailyStudyDurations(page: Int, count: Int): Result<PageData<DailyStudyDurationDto>> = unexpected()
         override suspend fun upsertDailyStudyDuration(

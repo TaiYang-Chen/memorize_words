@@ -7,6 +7,7 @@ import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.domain.study.orchestrator.learning.LearningSessionFacade
 import com.chen.memorizewords.domain.word.query.WordReadFacade
 import com.chen.memorizewords.domain.wordbook.usecase.GetCurrentWordBookUseCase
+import com.chen.memorizewords.domain.wordbook.usecase.GetCurrentWordBookSelectionIdUseCase
 import com.chen.memorizewords.domain.wordbook.usecase.GetStudyPlanUseCase
 import com.chen.memorizewords.domain.word.model.WordListRow
 import com.chen.memorizewords.domain.word.model.enums.PartOfSpeech
@@ -27,6 +28,7 @@ class LearningDoneViewModel @Inject constructor(
     private val wordReadFacade: WordReadFacade,
     private val learningSessionFacade: LearningSessionFacade,
     private val getCurrentWordBookUseCase: GetCurrentWordBookUseCase,
+    private val getCurrentWordBookSelectionIdUseCase: GetCurrentWordBookSelectionIdUseCase,
     private val getStudyPlanUseCase: GetStudyPlanUseCase,
     private val resourceProvider: ResourceProvider
 ) : BaseViewModel() {
@@ -127,8 +129,10 @@ class LearningDoneViewModel @Inject constructor(
 
     fun onContinueLearning() {
         viewModelScope.launch {
-            val wordBook = withContext(Dispatchers.IO) { getCurrentWordBookUseCase() }
-            if (wordBook == null) {
+            val bookId = withContext(Dispatchers.IO) {
+                getCurrentWordBookSelectionIdUseCase() ?: getCurrentWordBookUseCase()?.id
+            }
+            if (bookId == null || bookId <= 0L) {
                 showToast(resourceProvider.getString(R.string.learning_done_no_book))
                 return@launch
             }
@@ -139,14 +143,14 @@ class LearningDoneViewModel @Inject constructor(
             val nextSessionRequest = withContext(Dispatchers.IO) {
                 when (request.sessionType) {
                     LearningSessionType.NEW -> learningSessionFacade.createNewSessionRequest(
-                        bookId = wordBook.id,
+                        bookId = bookId,
                         count = request.sessionWordCount,
                         orderType = plan.wordOrderType,
                         excludeIds = excludeIds
                     )
 
                     LearningSessionType.REVIEW -> learningSessionFacade.createReviewSessionRequest(
-                        bookId = wordBook.id,
+                        bookId = bookId,
                         count = request.sessionWordCount,
                         orderType = plan.wordOrderType,
                         excludeIds = excludeIds

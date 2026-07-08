@@ -7,5 +7,6 @@ data class WordBookProgressSummary(
     val correctCount: Int,
     val wrongCount: Int,
     val studyDayCount: Int,
-    val lastStudyDate: String?
+    val lastStudyDate: String?,
+    val revision: Long
 )

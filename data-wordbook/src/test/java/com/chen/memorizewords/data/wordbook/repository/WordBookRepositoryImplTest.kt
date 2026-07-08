@@ -4,6 +4,9 @@ import androidx.room.DatabaseConfiguration
 import androidx.room.InvalidationTracker
 import com.chen.memorizewords.core.common.paging.PageSlice
 import com.chen.memorizewords.data.wordbook.local.WordBookDatabase
+import com.chen.memorizewords.data.wordbook.local.room.model.learning.event.LearningEventDao
+import com.chen.memorizewords.data.wordbook.local.room.model.learning.outbox.LearningOutboxDao
+import com.chen.memorizewords.data.wordbook.local.room.model.learning.record.WordStudyRecordDao
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.syncstate.WordBookSyncStateDao
 import com.chen.memorizewords.data.wordbook.remote.datasync.RemoteUserSyncDataSource
 import com.chen.memorizewords.data.wordbook.remote.wordbook.RemoteWordBookDataSource
@@ -203,12 +206,11 @@ class WordBookRepositoryImplTest {
 
         val repository = WordBookRepositoryImpl(
             transactionRunner = FakeWordBookTransactionRunner(),
-            wordLearningStateDao = throwingProxy(),
-            wordBookProgressDao = throwingProxy(),
             bookWordsDao = bookWordsDao,
             wordDao = throwingProxy(),
             wordBookDao = wordBookDao.proxy,
             currentWordBookSelectionDao = currentSelectionDao.proxy,
+            wordBookContentStateDao = throwingProxy(),
             favoritesRepository = favoritesRepository,
             myWordBookRemoteRemover = remoteRemover,
             remoteUserSyncDataSource = remoteUserSyncDataSource,
@@ -343,6 +345,12 @@ class WordBookRepositoryImplTest {
         override fun wordBookProgressDao(): WordBookProgressDao = throwingProxy()
 
         override fun wordLearningStateDao(): WordLearningStateDao = throwingProxy()
+
+        override fun learningEventDao(): LearningEventDao = throwingProxy()
+
+        override fun learningOutboxDao(): LearningOutboxDao = throwingProxy()
+
+        override fun wordStudyRecordDao(): WordStudyRecordDao = throwingProxy()
 
         override fun wordDao(): WordDao = throwingProxy()
 

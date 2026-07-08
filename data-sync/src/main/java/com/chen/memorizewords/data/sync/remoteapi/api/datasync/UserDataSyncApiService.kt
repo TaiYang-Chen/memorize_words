@@ -55,30 +55,6 @@ data class FavoriteDto(
 )
 
 @JsonClass(generateAdapter = false)
-data class WordStateSyncRequest(
-    val totalLearnCount: Int,
-    val lastLearnTime: Long,
-    val nextReviewTime: Long,
-    val masteryLevel: Int,
-    val userStatus: Int,
-    val repetition: Int,
-    val interval: Long,
-    val efactor: Double
-)
-
-@JsonClass(generateAdapter = false)
-data class WordBookProgressSyncRequest(
-    val bookName: String,
-    val learnedCount: Int,
-    val masteredCount: Int,
-    val totalCount: Int,
-    val correctCount: Int,
-    val wrongCount: Int,
-    val studyDayCount: Int,
-    val lastStudyDate: String
-)
-
-@JsonClass(generateAdapter = false)
 data class WordBookProgressDto(
     val bookId: Long,
     val bookName: String,
@@ -88,7 +64,8 @@ data class WordBookProgressDto(
     val correctCount: Int,
     val wrongCount: Int,
     val studyDayCount: Int,
-    val lastStudyDate: String
+    val lastStudyDate: String,
+    val revision: Long = 0L
 )
 
 @JsonClass(generateAdapter = false)
@@ -153,15 +130,6 @@ data class WordBookUpdateActionRequest(
     val executionMode: String? = null,
     val deferredUntil: Long? = null,
     val failureReason: String? = null
-)
-
-@JsonClass(generateAdapter = false)
-data class StudyRecordSyncRequest(
-    val date: String,
-    val wordId: Long,
-    val word: String,
-    val definition: String,
-    val isNewWord: Boolean
 )
 
 @JsonClass(generateAdapter = false)
@@ -248,18 +216,14 @@ interface UserDataSyncApiService {
         const val PATH_ONBOARDING = "me/onboarding"
         const val PATH_MY_WORD_BOOKS = "me/wordbooks"
         const val PATH_WORD_STATES = "me/wordbooks/{bookId}/word-states"
-        const val PATH_WORD_STATE_ITEM = "me/wordbooks/{bookId}/word-states/{wordId}"
-        const val PATH_WORD_BOOK_PROGRESS = "me/wordbooks/{bookId}/progress"
         const val PATH_WORD_BOOK_PROGRESS_LIST = "me/wordbooks/progress"
         const val PATH_WORD_BOOK_PENDING_UPDATE = "me/wordbooks/{bookId}/updates/pending"
         const val PATH_WORD_BOOK_UPDATE_IGNORE = "me/wordbooks/{bookId}/updates/{version}/ignore"
         const val PATH_WORD_BOOK_UPDATE_MANIFEST = "me/wordbooks/{bookId}/updates/{version}/manifest"
-        const val PATH_WORD_BOOK_UPDATE_WORDS = "me/wordbooks/{bookId}/updates/{version}/words"
         const val PATH_WORD_BOOK_UPDATE_COMPLETE = "me/wordbooks/{bookId}/updates/{version}/complete"
         const val PATH_CURRENT_WORD_BOOK_UPDATE_CANDIDATE = "me/wordbooks/current/update-candidate"
         const val PATH_CURRENT_WORD_BOOK_UPDATE_ACTIONS = "me/wordbooks/current/update-actions"
         const val PATH_CURRENT_WORD_BOOK_UPDATE_MANIFEST = "me/wordbooks/current/updates/{version}/manifest"
-        const val PATH_CURRENT_WORD_BOOK_UPDATE_WORDS = "me/wordbooks/current/updates/{version}/words"
         const val PATH_CURRENT_WORD_BOOK_UPDATE_COMPLETE = "me/wordbooks/current/updates/{version}/complete"
         const val PATH_STUDY_RECORDS = "me/study-records"
         const val PATH_STUDY_DURATION = "me/study-duration"
@@ -312,22 +276,6 @@ interface UserDataSyncApiService {
     @DELETE(PATH_FAVORITE_ITEM)
     fun removeFavorite(@Path("wordId") wordId: Long): Call<ApiResponse<Unit>>
 
-    @PUT(PATH_WORD_STATE_ITEM)
-    fun upsertWordState(
-        @Path("bookId") bookId: Long,
-        @Path("wordId") wordId: Long,
-        @Body request: WordStateSyncRequest
-    ): Call<ApiResponse<Unit>>
-
-    @DELETE(PATH_WORD_STATES)
-    fun deleteWordStatesByBookId(@Path("bookId") bookId: Long): Call<ApiResponse<Unit>>
-
-    @PUT(PATH_WORD_BOOK_PROGRESS)
-    fun upsertWordBookProgress(
-        @Path("bookId") bookId: Long,
-        @Body request: WordBookProgressSyncRequest
-    ): Call<ApiResponse<Unit>>
-
     @GET(PATH_WORD_BOOK_PROGRESS_LIST)
     fun getWordBookProgressList(): Call<ApiResponse<List<WordBookProgressDto>>>
 
@@ -347,14 +295,6 @@ interface UserDataSyncApiService {
         @Path("bookId") bookId: Long,
         @Path("version") version: Long
     ): Call<ApiResponse<WordBookUpdateManifestDto>>
-
-    @GET(PATH_WORD_BOOK_UPDATE_WORDS)
-    fun getWordBookUpdateWords(
-        @Path("bookId") bookId: Long,
-        @Path("version") version: Long,
-        @Query("page") page: Int,
-        @Query("count") count: Int
-    ): Call<ApiResponse<PageData<com.chen.memorizewords.data.sync.remoteapi.dto.wordbook.WordDto>>>
 
     @POST(PATH_WORD_BOOK_UPDATE_COMPLETE)
     fun completeWordBookUpdate(
@@ -377,20 +317,10 @@ interface UserDataSyncApiService {
         @Path("version") version: Long
     ): Call<ApiResponse<WordBookUpdateManifestDto>>
 
-    @GET(PATH_CURRENT_WORD_BOOK_UPDATE_WORDS)
-    fun getCurrentWordBookUpdateWords(
-        @Path("version") version: Long,
-        @Query("page") page: Int,
-        @Query("count") count: Int
-    ): Call<ApiResponse<PageData<com.chen.memorizewords.data.sync.remoteapi.dto.wordbook.WordDto>>>
-
     @POST(PATH_CURRENT_WORD_BOOK_UPDATE_COMPLETE)
     fun completeCurrentWordBookUpdate(
         @Path("version") version: Long
     ): Call<ApiResponse<Unit>>
-
-    @POST(PATH_STUDY_RECORDS)
-    fun appendStudyRecord(@Body request: StudyRecordSyncRequest): Call<ApiResponse<Unit>>
 
     @GET(PATH_STUDY_RECORDS)
     fun getStudyRecords(

@@ -22,7 +22,6 @@ import com.chen.memorizewords.data.wordbook.remoteapi.api.datasync.WordBookUpdat
 import com.chen.memorizewords.data.wordbook.remoteapi.api.datasync.WordBookUpdateManifestDto
 import com.chen.memorizewords.data.wordbook.remoteapi.api.datasync.WordBookProgressDto
 import com.chen.memorizewords.data.wordbook.remoteapi.dto.wordbook.WordBookDto
-import com.chen.memorizewords.data.wordbook.remoteapi.dto.wordbook.WordDto
 import com.chen.memorizewords.data.wordbook.remoteapi.dto.wordstate.WordStateDto
 import com.chen.memorizewords.core.network.http.PageData
 import javax.inject.Inject
@@ -149,64 +148,6 @@ class RemoteUserSyncDataSourceImpl @Inject constructor(
         return remoteResultAdapter.toResult { request.removeFavorite(wordId) }
     }
 
-    override suspend fun upsertWordState(
-        bookId: Long,
-        wordId: Long,
-        totalLearnCount: Int,
-        lastLearnTime: Long,
-        nextReviewTime: Long,
-        masteryLevel: Int,
-        userStatus: Int,
-        repetition: Int,
-        interval: Long,
-        efactor: Double
-    ): Result<Unit> {
-        return remoteResultAdapter.toResult {
-            request.upsertWordState(
-                bookId = bookId,
-                wordId = wordId,
-                totalLearnCount = totalLearnCount,
-                lastLearnTime = lastLearnTime,
-                nextReviewTime = nextReviewTime,
-                masteryLevel = masteryLevel,
-                userStatus = userStatus,
-                repetition = repetition,
-                interval = interval,
-                efactor = efactor
-            )
-        }
-    }
-
-    override suspend fun deleteWordStatesByBookId(bookId: Long): Result<Unit> {
-        return remoteResultAdapter.toResult { request.deleteWordStatesByBookId(bookId) }
-    }
-
-    override suspend fun upsertWordBookProgress(
-        bookId: Long,
-        bookName: String,
-        learnedCount: Int,
-        masteredCount: Int,
-        totalCount: Int,
-        correctCount: Int,
-        wrongCount: Int,
-        studyDayCount: Int,
-        lastStudyDate: String
-    ): Result<Unit> {
-        return remoteResultAdapter.toResult {
-            request.upsertWordBookProgress(
-                bookId = bookId,
-                bookName = bookName,
-                learnedCount = learnedCount,
-                masteredCount = masteredCount,
-                totalCount = totalCount,
-                correctCount = correctCount,
-                wrongCount = wrongCount,
-                studyDayCount = studyDayCount,
-                lastStudyDate = lastStudyDate
-            )
-        }
-    }
-
     override suspend fun getWordBookProgressList(): Result<List<WordBookProgressDto>> {
         return remoteResultAdapter.toResult { request.getWordBookProgressList() }
     }
@@ -231,16 +172,6 @@ class RemoteUserSyncDataSourceImpl @Inject constructor(
         return remoteResultAdapter.toResult { request.getCurrentWordBookUpdateManifest(version) }
     }
 
-    override suspend fun getCurrentWordBookUpdateWords(
-        version: Long,
-        page: Int,
-        count: Int
-    ): Result<PageData<WordDto>> {
-        return remoteResultAdapter.toResult {
-            request.getCurrentWordBookUpdateWords(version, page, count)
-        }
-    }
-
     override suspend fun completeCurrentWordBookUpdate(version: Long): Result<Unit> {
         return remoteResultAdapter.toResult { request.completeCurrentWordBookUpdate(version) }
     }
@@ -260,37 +191,8 @@ class RemoteUserSyncDataSourceImpl @Inject constructor(
         return remoteResultAdapter.toResult { request.getWordBookUpdateManifest(bookId, version) }
     }
 
-    override suspend fun getWordBookUpdateWords(
-        bookId: Long,
-        version: Long,
-        page: Int,
-        count: Int
-    ): Result<PageData<WordDto>> {
-        return remoteResultAdapter.toResult {
-            request.getWordBookUpdateWords(bookId, version, page, count)
-        }
-    }
-
     override suspend fun completeWordBookUpdate(bookId: Long, version: Long): Result<Unit> {
         return remoteResultAdapter.toResult { request.completeWordBookUpdate(bookId, version) }
-    }
-
-    override suspend fun appendStudyRecord(
-        date: String,
-        wordId: Long,
-        word: String,
-        definition: String,
-        isNewWord: Boolean
-    ): Result<Unit> {
-        return remoteResultAdapter.toResult {
-            request.appendStudyRecord(
-                date = date,
-                wordId = wordId,
-                word = word,
-                definition = definition,
-                isNewWord = isNewWord
-            )
-        }
     }
 
     override suspend fun getStudyRecords(

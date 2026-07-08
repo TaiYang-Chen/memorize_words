@@ -35,6 +35,7 @@ class StudyPlanSettingFragment :
     override fun initView(savedInstanceState: Bundle?) {
         databind.lifecycleOwner = viewLifecycleOwner
         databind.viewmodel = viewModel
+        databind.wordBookCardState = viewModel.wordBookCardState.value
         parentFragmentManager.setFragmentResultListener(
             REQUEST_KEY_STUDY_MODE,
             viewLifecycleOwner
@@ -70,6 +71,11 @@ class StudyPlanSettingFragment :
     override fun createObserver() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.wordBookCardState.collect { state ->
+                        databind.wordBookCardState = state
+                    }
+                }
                 launch {
                     viewModel.currentStudyModeCardState.collect { uiModel ->
                         databind.tvStudyModeValue.setText(uiModel.titleRes)

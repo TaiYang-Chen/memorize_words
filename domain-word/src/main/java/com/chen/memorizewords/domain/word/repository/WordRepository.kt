@@ -29,17 +29,6 @@ interface WordRepository { // 只负责单词数据
         limit: Int
     ): List<WordDefinitions>
 
-    suspend fun updateWordStatus(
-        bookId: Long,
-        word: Word,
-        quality: Int
-    ): Boolean
-
-    suspend fun setWordAsMastered(
-        bookId: Long,
-        word: Word
-    )
-
     suspend fun getWordByWordString(word: String): Word?
     suspend fun lookupWordQuick(normalizedWord: String, rawWord: String): WordQuickLookupResult
 }

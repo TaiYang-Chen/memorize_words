@@ -38,6 +38,8 @@ import com.chen.memorizewords.domain.word.model.word.WordQuickLookupResult
 import com.chen.memorizewords.domain.word.model.word.WordRoot
 import com.chen.memorizewords.domain.word.repository.WordRepository
 import com.chen.memorizewords.domain.wordbook.model.WordBook
+import com.chen.memorizewords.domain.wordbook.model.WordBookContentState
+import com.chen.memorizewords.domain.wordbook.model.WordBookContentStatus
 import com.chen.memorizewords.domain.wordbook.model.WordBookInfo
 import com.chen.memorizewords.domain.wordbook.model.WordListQuery
 import com.chen.memorizewords.domain.wordbook.repository.WordBookRepository
@@ -318,7 +320,6 @@ class PracticeViewModelTest {
         override suspend fun getLearningStatesByIds(wordBookId: Long, ids: List<Long>): Map<Long, WordLearningState> = emptyMap()
         override suspend fun getLearningStatesByBookId(bookId: Long): List<WordLearningState> = emptyList()
         override suspend fun getLearnedWordIdsByBook(bookId: Long): List<Long> = emptyList()
-        override suspend fun deleteLearningWordByBookId(bookId: Long) = Unit
     }
 
     private class FakeWordRepository : WordRepository {
@@ -330,15 +331,18 @@ class PracticeViewModelTest {
         override suspend fun getWordDefinitions(wordId: Long): List<WordDefinitions> = emptyList()
         override suspend fun getRandomDefinition(wordId: Long): WordDefinitions = error("Not used")
         override suspend fun getRandomDefinitionsByPos(wordId: Long, limit: Int): List<WordDefinitions> = emptyList()
-        override suspend fun updateWordStatus(bookId: Long, word: Word, quality: Int): Boolean = true
-        override suspend fun setWordAsMastered(bookId: Long, word: Word) = Unit
         override suspend fun getWordByWordString(word: String): Word? = null
         override suspend fun lookupWordQuick(normalizedWord: String, rawWord: String): WordQuickLookupResult = error("Not used")
     }
 
     private class FakeWordBookRepository : WordBookRepository {
+        private val currentBookId = 1L
+
         override fun getMyWordBooksMinimalFlow(): Flow<List<WordBookInfo>> = flowOf(emptyList())
+        override fun observeCurrentWordBookSelectionId(): Flow<Long?> = flowOf(currentBookId)
         override fun getCurrentWordBookMinimalFlow(): Flow<WordBookInfo?> = flowOf(null)
+        override fun observeWordBookContentState(bookId: Long): Flow<WordBookContentState?> =
+            flowOf(contentState(bookId))
         override suspend fun setCurrentWordBook(bookId: Long) = Unit
         override suspend fun deleteMyWordBook(bookId: Long): Result<Unit> = Result.success(Unit)
         override suspend fun createMyWordBook(
@@ -347,7 +351,10 @@ class PracticeViewModelTest {
             description: String,
             words: List<String>
         ): Result<WordBookInfo> = Result.failure(UnsupportedOperationException("Not used"))
+        override suspend fun getCurrentWordBookSelectionId(): Long? = currentBookId
         override suspend fun getCurrentWordBook(): WordBook? = null
+        override suspend fun getWordBookContentState(bookId: Long): WordBookContentState? =
+            contentState(bookId)
         override suspend fun getBookNameById(bookId: Long): String? = null
         override suspend fun getWordListSummary(
             wordBookId: Long,
@@ -364,7 +371,15 @@ class PracticeViewModelTest {
             excludeIds: Set<Long>
         ): List<Long> = emptyList()
 
-        override suspend fun updateBookStudyDay(bookId: Long, today: String) = Unit
-        override suspend fun recordAnswerResult(bookId: Long, isCorrect: Boolean, today: String) = Unit
+        private fun contentState(bookId: Long): WordBookContentState =
+            WordBookContentState(
+                bookId = bookId,
+                targetVersion = 1L,
+                localVersion = 1L,
+                status = WordBookContentStatus.READY,
+                downloadedWords = 0,
+                totalWords = 0,
+                lastError = null
+            )
     }
 }

@@ -50,7 +50,11 @@ class MultiProgressView @JvmOverloads constructor(
         canvas.drawRoundRect(fullRect, radius, radius, paint)
 
         // 2. 第一个进度
-        val p1Width = width * progress1 / max.toFloat()
+        val safeMax = max.coerceAtLeast(1)
+        val first = progress1.coerceIn(0, safeMax)
+        val second = progress2.coerceIn(0, safeMax - first)
+
+        val p1Width = width * first / safeMax.toFloat()
         if (p1Width > 0) {
             paint.color = progress1Color
             canvas.drawRoundRect(
@@ -60,11 +64,11 @@ class MultiProgressView @JvmOverloads constructor(
         }
 
         // 3. 第二个进度（叠加）
-        val p2Width = width * progress2 / max.toFloat()
+        val p2Width = width * second / safeMax.toFloat()
         if (p2Width > 0) {
             paint.color = progress2Color
             canvas.drawRoundRect(
-                RectF(0f, 0f, p2Width, height.toFloat()),
+                RectF(p1Width, 0f, p1Width + p2Width, height.toFloat()),
                 radius, radius, paint
             )
         }
@@ -77,7 +81,7 @@ class MultiProgressView @JvmOverloads constructor(
     }
 
     fun setMax(value: Int) {
-        max = value
+        max = value.coerceAtLeast(1)
         invalidate()
     }
 

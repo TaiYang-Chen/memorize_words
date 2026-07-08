@@ -1,10 +1,10 @@
 ﻿package com.chen.memorizewords.data.wordbook.repository
 
-import com.chen.memorizewords.data.wordbook.local.room.model.study.progress.word.WordLearningStateDao
-import com.chen.memorizewords.data.wordbook.local.room.model.study.progress.wordbook.WordBookProgressDao
-import com.chen.memorizewords.data.wordbook.local.room.model.study.progress.wordbook.WordBookProgressEntity
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.current.CurrentWordBookSelectionDao
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.current.CurrentWordBookSelectionEntity
+import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.contentstate.WordBookContentStateDao
+import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.contentstate.WordBookContentStateEntity
+import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.contentstate.WordBookContentStatus
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.wordbook.WordBookDao
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.wordbook.toDomain
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.wordbook.toEntity
@@ -18,10 +18,11 @@ import com.chen.memorizewords.domain.sync.OutboxTopic
 import com.chen.memorizewords.domain.sync.SyncOperation
 import com.chen.memorizewords.domain.sync.SyncOutboxWriter
 import com.chen.memorizewords.domain.sync.WordBookDeleteSyncPayload
-import com.chen.memorizewords.domain.sync.WordBookProgressSyncPayload
 import com.chen.memorizewords.domain.sync.WordBookSelectionSyncPayload
 import com.chen.memorizewords.core.common.paging.PageSlice
 import com.chen.memorizewords.domain.wordbook.model.WordBook
+import com.chen.memorizewords.domain.wordbook.model.WordBookContentState
+import com.chen.memorizewords.domain.wordbook.model.WordBookContentStatus as DomainWordBookContentStatus
 import com.chen.memorizewords.domain.wordbook.model.WordBookInfo
 import com.chen.memorizewords.domain.wordbook.model.WordListQuery
 import com.chen.memorizewords.domain.wordbook.model.WordListSummary
@@ -45,12 +46,11 @@ import kotlinx.coroutines.withContext
 
 class WordBookRepositoryImpl @Inject constructor(
     private val transactionRunner: WordBookTransactionRunner,
-    private val wordLearningStateDao: WordLearningStateDao,
-    private val wordBookProgressDao: WordBookProgressDao,
     private val bookWordsDao: BookWordItemDao,
     private val wordDao: WordDao,
     private val wordBookDao: WordBookDao,
     private val currentWordBookSelectionDao: CurrentWordBookSelectionDao,
+    private val wordBookContentStateDao: WordBookContentStateDao,
     private val favoritesRepository: FavoritesRepository,
     private val myWordBookRemoteRemover: MyWordBookRemoteRemover,
     private val remoteUserSyncDataSource: RemoteUserSyncDataSource,
@@ -80,6 +80,12 @@ class WordBookRepositoryImpl @Inject constructor(
                 )
             }
         }.distinctUntilChanged()
+    }
+
+    override fun observeCurrentWordBookSelectionId(): Flow<Long?> {
+        return currentWordBookSelectionDao.observeById()
+            .map { selection -> selection?.bookId }
+            .distinctUntilChanged()
     }
 
     override fun getCurrentWordBookMinimalFlow(): Flow<WordBookInfo?> {
@@ -117,6 +123,12 @@ class WordBookRepositoryImpl @Inject constructor(
                 )
             }
         }
+    }
+
+    override fun observeWordBookContentState(bookId: Long): Flow<WordBookContentState?> {
+        return wordBookContentStateDao.observe(bookId)
+            .map { entity -> entity?.toDomain() }
+            .distinctUntilChanged()
     }
 
     override suspend fun deleteMyWordBook(bookId: Long): Result<Unit> {
@@ -178,10 +190,18 @@ class WordBookRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getCurrentWordBookSelectionId(): Long? {
+        return currentWordBookSelectionDao.getById()?.bookId
+    }
+
     override suspend fun getCurrentWordBook(): WordBook? {
         val selection = currentWordBookSelectionDao.getById() ?: return null
         val book = wordBookDao.getWordBookById(selection.bookId) ?: return null
         return book.toDomain(isSelected = true)
+    }
+
+    override suspend fun getWordBookContentState(bookId: Long): WordBookContentState? {
+        return wordBookContentStateDao.get(bookId)?.toDomain()
     }
 
     override suspend fun getBookNameById(bookId: Long): String? {
@@ -297,52 +317,6 @@ class WordBookRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateBookStudyDay(bookId: Long, today: String) {
-        withContext(Dispatchers.IO) {
-            val book = wordBookDao.getWordBookById(bookId) ?: return@withContext
-            val progress = wordBookProgressDao.getProgress(bookId)
-            if (progress == null) {
-                wordBookProgressDao.upsert(
-                    WordBookProgressEntity(
-                        wordBookId = bookId,
-                        correctCount = 0,
-                        wrongCount = 0,
-                        studyDayCount = 1,
-                        lastStudyDate = today
-                    )
-                )
-                enqueueWordBookProgressOutbox(bookId, book.title, book.totalWords)
-                return@withContext
-            }
-
-            if (progress.lastStudyDate == today) return@withContext
-
-            wordBookProgressDao.upsert(
-                progress.copy(
-                    studyDayCount = progress.studyDayCount + 1,
-                    lastStudyDate = today
-                )
-            )
-            enqueueWordBookProgressOutbox(bookId, book.title, book.totalWords)
-        }
-    }
-
-    override suspend fun recordAnswerResult(bookId: Long, isCorrect: Boolean, today: String) {
-        withContext(Dispatchers.IO) {
-            if (bookId <= 0L) return@withContext
-            val book = wordBookDao.getWordBookById(bookId) ?: return@withContext
-            transactionRunner.runInTransaction {
-                wordBookProgressDao.ensureProgressRow(bookId = bookId)
-                wordBookProgressDao.incrementAnswerStats(
-                    bookId = bookId,
-                    isCorrect = if (isCorrect) 1 else 0,
-                    today = today
-                )
-            }
-            enqueueWordBookProgressOutbox(bookId, book.title, book.totalWords)
-        }
-    }
-
     override suspend fun upsertBookAndSelectionFromRemote(book: WordBook?) {
         withContext(Dispatchers.IO) {
             if (book == null || book.id <= 0L) {
@@ -356,16 +330,24 @@ class WordBookRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun overwriteFromRemote(bookId: Long?) {
+    override suspend fun upsertBooksAndSelectionFromRemote(books: List<WordBook>) {
         withContext(Dispatchers.IO) {
-            when {
-                bookId == null || bookId <= 0L -> currentWordBookSelectionDao.deleteAll()
-                wordBookDao.exists(bookId) -> {
-                    currentWordBookSelectionDao.upsert(CurrentWordBookSelectionEntity(bookId = bookId))
+            val validBooks = books.filter { it.id > 0L }
+            val selectedBook = validBooks.firstOrNull { it.isSelected }
+            transactionRunner.runInTransaction {
+                if (validBooks.isNotEmpty()) {
+                    wordBookDao.insertWordBooks(validBooks.map { it.toEntity() })
                 }
-
-                else -> currentWordBookSelectionDao.deleteAll()
+                if (selectedBook != null) {
+                    currentWordBookSelectionDao.upsert(CurrentWordBookSelectionEntity(bookId = selectedBook.id))
+                }
             }
+        }
+    }
+
+    override suspend fun clearSelectionFromRemote() {
+        withContext(Dispatchers.IO) {
+            currentWordBookSelectionDao.deleteAll()
         }
     }
 
@@ -408,36 +390,6 @@ class WordBookRepositoryImpl @Inject constructor(
         )
     }
 
-    private suspend fun enqueueWordBookProgressOutbox(
-        bookId: Long,
-        bookName: String,
-        totalWords: Int
-    ) {
-        val progress = wordBookProgressDao.getProgress(bookId) ?: return
-        val learnedCount = wordLearningStateDao.getLearnedCountByBookId(bookId)
-        val masteredCount = wordLearningStateDao.getMasteredCountByBookId(bookId)
-        transactionRunner.runInTransaction {
-            SyncOutboxWriter.enqueueLatest(
-                bizType = OutboxTopic.WORD_BOOK_PROGRESS,
-                bizKey = "word_book_progress:$bookId",
-                operation = SyncOperation.UPSERT,
-                payload = gson.toJson(
-                    WordBookProgressSyncPayload(
-                        bookId = bookId,
-                        bookName = bookName,
-                        learnedCount = learnedCount,
-                        masteredCount = masteredCount,
-                        totalCount = totalWords,
-                        correctCount = progress.correctCount,
-                        wrongCount = progress.wrongCount,
-                        studyDayCount = progress.studyDayCount,
-                        lastStudyDate = progress.lastStudyDate.orEmpty()
-                    )
-                )
-            )
-        }
-    }
-
     private suspend fun safeFavoriteIds(): List<Long> {
         return favoritesRepository.getAllFavoriteWordIds().ifEmpty { listOf(NO_FAVORITE_WORD_ID) }
     }
@@ -469,6 +421,23 @@ class WordBookRepositoryImpl @Inject constructor(
             learned -> WordLearningStatus.LEARNED
             else -> WordLearningStatus.TO_LEARN
         }
+    }
+
+    private fun WordBookContentStateEntity.toDomain(): WordBookContentState {
+        return WordBookContentState(
+            bookId = bookId,
+            targetVersion = targetVersion,
+            localVersion = localVersion,
+            status = when (status) {
+                WordBookContentStatus.DOWNLOADING -> DomainWordBookContentStatus.DOWNLOADING
+                WordBookContentStatus.READY -> DomainWordBookContentStatus.READY
+                WordBookContentStatus.FAILED -> DomainWordBookContentStatus.FAILED
+                else -> DomainWordBookContentStatus.MISSING
+            },
+            downloadedWords = downloadedWords,
+            totalWords = totalWords,
+            lastError = lastError
+        )
     }
 
     private companion object {

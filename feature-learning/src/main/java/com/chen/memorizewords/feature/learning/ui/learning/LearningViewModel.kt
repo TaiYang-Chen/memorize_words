@@ -9,8 +9,8 @@ import com.chen.memorizewords.domain.study.orchestrator.learning.LearningSession
 import com.chen.memorizewords.domain.study.service.StudyStatsFacade
 import com.chen.memorizewords.domain.study.model.record.TodayCheckInEntryState
 import com.chen.memorizewords.domain.wordbook.usecase.GetCurrentWordBookUseCase
+import com.chen.memorizewords.domain.wordbook.usecase.GetCurrentWordBookSelectionIdUseCase
 import com.chen.memorizewords.domain.wordbook.model.learning.LearningTestMode
-import com.chen.memorizewords.domain.wordbook.model.WordBook
 import com.chen.memorizewords.domain.word.model.word.PronunciationType
 import com.chen.memorizewords.domain.word.model.word.Word
 import com.chen.memorizewords.domain.study.usecase.word.MarkWordAsLearnedUseCase
@@ -42,6 +42,7 @@ class LearningViewModel @Inject constructor(
     private val isFavorite: IsFavoriteUseCase,
     private val wordReadFacade: WordReadFacade,
     private val getCurrentWordBookUseCase: GetCurrentWordBookUseCase,
+    private val getCurrentWordBookSelectionIdUseCase: GetCurrentWordBookSelectionIdUseCase,
     private val studyStatsFacade: StudyStatsFacade,
     private val markWordAsLearned: MarkWordAsLearnedUseCase,
     private val resourceProvider: ResourceProvider,
@@ -127,7 +128,7 @@ class LearningViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(LearningUiState())
     val uiState: StateFlow<LearningUiState> = _uiState.asStateFlow()
 
-    var wordBook: WordBook? = null
+    private var currentBookId: Long? = null
     var words: List<Word> = emptyList()
 
     private var prefillLearnedCount: Int = 0
@@ -144,7 +145,8 @@ class LearningViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            wordBook = getCurrentWordBookUseCase()
+            currentBookId = getCurrentWordBookSelectionIdUseCase()
+                ?: getCurrentWordBookUseCase()?.id
         }
     }
 
@@ -229,9 +231,11 @@ class LearningViewModel @Inject constructor(
         result.newlyCompletedWord?.let { completedWord ->
             persistCompletedWord(completedWord, markAsMastered = false)
         }
-        wordBook?.let { book ->
+        val answeredWord = result.snapshot.currentWord
+        if (answeredWord != null) {
             viewModelScope.launch {
-                recordWordAnswerResult(book.id, isCorrect)
+                val bookId = resolveCurrentBookId() ?: return@launch
+                recordWordAnswerResult(bookId, answeredWord, isCorrect)
             }
         }
     }
@@ -483,18 +487,26 @@ class LearningViewModel @Inject constructor(
         word: Word,
         markAsMastered: Boolean
     ) {
-        val book = wordBook ?: return
         completionPersistenceGate.launch(viewModelScope) {
+            val bookId = resolveCurrentBookId() ?: return@launch
             if (markAsMastered) {
                 setWordAsMastered(
-                    book.id,
+                    bookId,
                     word,
                     isNewWord = resolveLearningRecordIsNewWord(sessionType)
                 )
             } else {
-                markWordAsLearned(book.id, word, LEARN_QUALITY_CORRECT)
+                markWordAsLearned(bookId, word, LEARN_QUALITY_CORRECT)
             }
         }
+    }
+
+    private suspend fun resolveCurrentBookId(): Long? {
+        currentBookId?.takeIf { it > 0L }?.let { return it }
+        val resolved = getCurrentWordBookSelectionIdUseCase()
+            ?: getCurrentWordBookUseCase()?.id
+        currentBookId = resolved
+        return resolved?.takeIf { it > 0L }
     }
 }
 

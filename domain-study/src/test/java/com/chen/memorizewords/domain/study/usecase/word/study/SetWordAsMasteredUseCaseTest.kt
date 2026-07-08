@@ -1,5 +1,8 @@
 package com.chen.memorizewords.domain.study.usecase.word.study
 
+import com.chen.memorizewords.domain.study.model.learning.LearningEventAction
+import com.chen.memorizewords.domain.study.model.learning.RecordLearningEventCommand
+import com.chen.memorizewords.domain.study.model.learning.RecordLearningEventResult
 import com.chen.memorizewords.domain.study.model.record.CalendarDayStats
 import com.chen.memorizewords.domain.study.model.record.CheckInRecord
 import com.chen.memorizewords.domain.study.model.record.DailyDurationStats
@@ -8,90 +11,71 @@ import com.chen.memorizewords.domain.study.model.record.DailyStudyWordRecord
 import com.chen.memorizewords.domain.study.model.record.DailyWordStats
 import com.chen.memorizewords.domain.study.model.record.DayCheckInDetail
 import com.chen.memorizewords.domain.study.model.record.TodayCheckInEntryState
+import com.chen.memorizewords.domain.study.repository.learning.LearningCommandPort
 import com.chen.memorizewords.domain.study.repository.record.LearningRecordRepository
-import com.chen.memorizewords.domain.word.model.enums.PartOfSpeech
+import com.chen.memorizewords.domain.study.usecase.learning.RecordLearningEventUseCase
+import com.chen.memorizewords.domain.sync.model.LearningPrerequisitesSnapshot
+import com.chen.memorizewords.domain.sync.model.PostLoginBootstrapState
+import com.chen.memorizewords.domain.sync.model.SyncBannerState
+import com.chen.memorizewords.domain.sync.model.SyncPendingRecord
+import com.chen.memorizewords.domain.sync.repository.SyncRepository
+import com.chen.memorizewords.domain.sync.usecase.TriggerSyncDrainUseCase
 import com.chen.memorizewords.domain.word.model.word.Word
-import com.chen.memorizewords.domain.word.model.word.WordDefinitions
-import com.chen.memorizewords.domain.word.model.word.WordExample
-import com.chen.memorizewords.domain.word.model.word.WordForm
-import com.chen.memorizewords.domain.word.model.word.WordQuickLookupResult
-import com.chen.memorizewords.domain.word.model.word.WordRoot
-import com.chen.memorizewords.domain.word.repository.WordRepository
-import com.chen.memorizewords.domain.wordbook.model.WordBook
-import com.chen.memorizewords.domain.wordbook.model.WordBookInfo
-import com.chen.memorizewords.domain.wordbook.model.WordListQuery
-import com.chen.memorizewords.domain.wordbook.repository.WordBookRepository
-import com.chen.memorizewords.domain.wordbook.repository.WordOrderType
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 
 class SetWordAsMasteredUseCaseTest {
 
     @Test
-    fun `records mastered review word as review`() = runBlocking {
+    fun `records mastered review word as learning event`() = runBlocking {
         val word = testWord()
+        val learningCommandPort = FakeLearningCommandPort()
         val learningRecordRepository = FakeLearningRecordRepository()
-        val wordBookRepository = FakeWordBookRepository()
+        val syncRepository = FakeSyncRepository()
         val useCase = SetWordAsMasteredUseCase(
-            wordRepository = FakeWordRepository(
-                definitions = listOf(
-                    WordDefinitions(
-                        id = 1L,
-                        wordId = word.id,
-                        partOfSpeech = PartOfSpeech.NOUN,
-                        meaningChinese = "test meaning"
-                    )
-                )
+            recordLearningEvent = RecordLearningEventUseCase(
+                learningCommandPort = learningCommandPort,
+                triggerSyncDrain = TriggerSyncDrainUseCase(syncRepository)
             ),
-            learningRecordRepository = learningRecordRepository,
-            wordBookRepository = wordBookRepository,
             getCurrentBusinessDateUseCase = GetCurrentBusinessDateUseCase(learningRecordRepository)
         )
 
         useCase(bookId = 10L, word = word, isNewWord = false)
 
-        assertEquals(word, learningRecordRepository.recordedWord)
-        assertEquals("NOUN test meaning", learningRecordRepository.recordedDefinition)
-        assertFalse(learningRecordRepository.recordedIsNewWord!!)
-        assertEquals(10L, wordBookRepository.updatedBookId)
-        assertEquals("2026-06-23", wordBookRepository.updatedDate)
+        val command = learningCommandPort.recordedCommand!!
+        assertEquals(10L, command.bookId)
+        assertEquals(word, command.word)
+        assertEquals(LearningEventAction.MASTERED, command.action)
+        assertEquals(5, command.quality)
+        assertFalse(command.isNewWordOverride!!)
+        assertEquals("2026-06-23", command.businessDate)
+        assertEquals("""{"isNewWord":false}""", command.payloadJson)
+        assertTrue(syncRepository.triggered)
     }
 
-    private class FakeWordRepository(
-        private val definitions: List<WordDefinitions>
-    ) : WordRepository {
-        override suspend fun getWordsByIds(ids: List<Long>): List<Word> = emptyList()
-        override suspend fun getWordById(wordId: Long): Word? = null
-        override suspend fun getWordForms(wordId: Long): List<WordForm> = emptyList()
-        override suspend fun getRootWordByWordId(wordId: Long): List<WordRoot> = emptyList()
-        override suspend fun getWordExamples(wordId: Long): List<WordExample> = emptyList()
-        override suspend fun getWordDefinitions(wordId: Long): List<WordDefinitions> = definitions
-        override suspend fun getRandomDefinition(wordId: Long): WordDefinitions = definitions.first()
-        override suspend fun getRandomDefinitionsByPos(wordId: Long, limit: Int): List<WordDefinitions> = definitions
-        override suspend fun updateWordStatus(bookId: Long, word: Word, quality: Int): Boolean = true
-        override suspend fun setWordAsMastered(bookId: Long, word: Word) = Unit
-        override suspend fun getWordByWordString(word: String): Word? = null
-        override suspend fun lookupWordQuick(normalizedWord: String, rawWord: String): WordQuickLookupResult {
-            error("Not needed")
+    private class FakeLearningCommandPort : LearningCommandPort {
+        var recordedCommand: RecordLearningEventCommand? = null
+
+        override suspend fun record(command: RecordLearningEventCommand): RecordLearningEventResult {
+            recordedCommand = command
+            return RecordLearningEventResult(
+                clientEventId = "event-1",
+                wordId = command.word.id,
+                bookId = command.bookId,
+                stateRevision = 1L,
+                progressRevision = 1L
+            )
         }
     }
 
     private class FakeLearningRecordRepository : LearningRecordRepository {
-        var recordedWord: Word? = null
-        var recordedDefinition: String? = null
-        var recordedIsNewWord: Boolean? = null
-
         override fun getCurrentBusinessDate(): String = "2026-06-23"
-
-        override suspend fun addLearningRecord(word: Word, definition: String, isNewWord: Boolean) {
-            recordedWord = word
-            recordedDefinition = definition
-            recordedIsNewWord = isNewWord
-        }
 
         override suspend fun addStudyDuration(durationMs: Long) = Unit
         override fun getStudyTotalDayCount(): Flow<Int> = emptyFlow()
@@ -111,41 +95,35 @@ class SetWordAsMasteredUseCaseTest {
         override suspend fun autoCheckInTodayIfEligible(): Result<CheckInRecord?> = error("Not needed")
     }
 
-    private class FakeWordBookRepository : WordBookRepository {
-        var updatedBookId: Long? = null
-        var updatedDate: String? = null
+    private class FakeSyncRepository : SyncRepository {
+        var triggered = false
 
-        override fun getMyWordBooksMinimalFlow(): Flow<List<WordBookInfo>> = emptyFlow()
-        override fun getCurrentWordBookMinimalFlow(): Flow<WordBookInfo?> = emptyFlow()
-        override suspend fun setCurrentWordBook(bookId: Long) = Unit
-        override suspend fun deleteMyWordBook(bookId: Long): Result<Unit> = error("Not needed")
-        override suspend fun createMyWordBook(
-            title: String,
-            category: String,
-            description: String,
-            words: List<String>
-        ): Result<WordBookInfo> = error("Not needed")
-        override suspend fun getCurrentWordBook(): WordBook? = null
-        override suspend fun getBookNameById(bookId: Long): String? = null
-        override suspend fun getWordListSummary(
-            wordBookId: Long,
-            now: Long
-        ): com.chen.memorizewords.domain.wordbook.model.WordListSummary = com.chen.memorizewords.domain.wordbook.model.WordListSummary()
-        override suspend fun getWordRowsPage(query: WordListQuery) = error("Not needed")
-        override suspend fun getWordRowIds(query: WordListQuery, limit: Int): List<Long> = emptyList()
-        override suspend fun getWordIdsPage(wordBookId: Long, pageIndex: Int, pageSize: Int): List<Long> = emptyList()
-        override suspend fun getAllUnlearnedWordsForBook(bookId: Long): List<Word> = emptyList()
-        override suspend fun getUnlearnedWordIdsForBook(
-            bookId: Long,
-            count: Int,
-            orderType: WordOrderType,
-            excludeIds: Set<Long>
-        ): List<Long> = emptyList()
-        override suspend fun updateBookStudyDay(bookId: Long, today: String) {
-            updatedBookId = bookId
-            updatedDate = today
+        override fun observePostLoginBootstrapState(): Flow<PostLoginBootstrapState> =
+            flowOf(PostLoginBootstrapState.Idle)
+
+        override fun getCurrentPostLoginBootstrapState(): PostLoginBootstrapState =
+            PostLoginBootstrapState.Idle
+
+        override fun startPostLoginBootstrap() = Unit
+
+        override suspend fun syncAfterLogin(): Result<Unit> = Result.success(Unit)
+
+        override suspend fun restoreLearningPrerequisites(): Result<LearningPrerequisitesSnapshot> =
+            Result.failure(UnsupportedOperationException("Not needed"))
+
+        override suspend fun discardLocalPendingSyncOnLogin() = Unit
+
+        override fun observePendingSyncCount(): Flow<Int> = flowOf(0)
+
+        override fun observePendingSyncRecords(): Flow<List<SyncPendingRecord>> = flowOf(emptyList())
+
+        override fun observeSyncBannerState(): Flow<SyncBannerState> = flowOf(SyncBannerState.Hidden)
+
+        override fun triggerDrain() {
+            triggered = true
         }
-        override suspend fun recordAnswerResult(bookId: Long, isCorrect: Boolean, today: String) = Unit
+
+        override fun scheduleBootstrapSync() = Unit
     }
 }
 

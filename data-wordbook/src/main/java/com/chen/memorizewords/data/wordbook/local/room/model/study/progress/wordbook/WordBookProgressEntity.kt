@@ -32,12 +32,16 @@ data class WordBookProgressEntity(
     val studyDayCount: Int = 0,
 
     @ColumnInfo(name = "last_study_date")
-    val lastStudyDate: String? = null
+    val lastStudyDate: String? = null,
+
+    @ColumnInfo(name = "revision")
+    val revision: Long = 0L
 ) {
     init {
         require(correctCount >= 0) { "correctCount must be non-negative" }
         require(wrongCount >= 0) { "wrongCount must be non-negative" }
         require(studyDayCount >= 0) { "studyDayCount must be non-negative" }
         require(lastStudyDate?.isNotBlank() != false) { "lastStudyDate cannot be blank" }
+        require(revision >= 0L) { "revision must be non-negative" }
     }
 }

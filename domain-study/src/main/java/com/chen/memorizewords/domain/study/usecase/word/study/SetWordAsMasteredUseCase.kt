@@ -1,14 +1,12 @@
 package com.chen.memorizewords.domain.study.usecase.word.study
+import com.chen.memorizewords.domain.study.model.learning.LearningEventAction
+import com.chen.memorizewords.domain.study.model.learning.RecordLearningEventCommand
+import com.chen.memorizewords.domain.study.usecase.learning.RecordLearningEventUseCase
 import com.chen.memorizewords.domain.word.model.word.Word
-import com.chen.memorizewords.domain.wordbook.repository.WordBookRepository
-import com.chen.memorizewords.domain.study.repository.record.LearningRecordRepository
-import com.chen.memorizewords.domain.word.repository.WordRepository
 import javax.inject.Inject
 
 class SetWordAsMasteredUseCase @Inject constructor(
-    private val wordRepository: WordRepository,
-    private val learningRecordRepository: LearningRecordRepository,
-    private val wordBookRepository: WordBookRepository,
+    private val recordLearningEvent: RecordLearningEventUseCase,
     private val getCurrentBusinessDateUseCase: GetCurrentBusinessDateUseCase
 ) {
     suspend operator fun invoke(
@@ -16,17 +14,16 @@ class SetWordAsMasteredUseCase @Inject constructor(
         word: Word,
         isNewWord: Boolean = true
     ) {
-        wordRepository.setWordAsMastered(bookId, word)
-        val definitions = wordRepository.getWordDefinitions(word.id)
-        val definition = definitions.joinToString("; ") {
-            "${it.partOfSpeech} ${it.meaningChinese}"
-        }
-        learningRecordRepository.addLearningRecord(
-            word,
-            definition,
-            isNewWord
+        recordLearningEvent(
+            RecordLearningEventCommand(
+                bookId = bookId,
+                word = word,
+                action = LearningEventAction.MASTERED,
+                quality = 5,
+                isNewWordOverride = isNewWord,
+                businessDate = getCurrentBusinessDateUseCase(),
+                payloadJson = """{"isNewWord":$isNewWord}"""
+            )
         )
-        val today = getCurrentBusinessDateUseCase()
-        wordBookRepository.updateBookStudyDay(bookId, today)
     }
 }

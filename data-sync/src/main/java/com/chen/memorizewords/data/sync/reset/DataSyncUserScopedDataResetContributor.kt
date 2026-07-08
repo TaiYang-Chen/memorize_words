@@ -41,8 +41,6 @@ class DataSyncUserScopedDataResetContributor @Inject constructor(
             SyncWorkConstants.TAG_SYNC_OUTBOX_DRAIN,
             SyncWorkConstants.TAG_POST_LOGIN_BOOTSTRAP,
             SyncWorkConstants.TAG_ADD_MY_WORD_BOOK,
-            SyncWorkConstants.TAG_WORD_STATE_SYNC,
-            SyncWorkConstants.TAG_WORD_BOOK_PROGRESS_SYNC,
             SyncWorkConstants.TAG_STUDY_PLAN_SYNC,
             SyncWorkConstants.TAG_FAVORITE_SYNC,
             TAG_WORD_BOOK_DOWNLOAD,

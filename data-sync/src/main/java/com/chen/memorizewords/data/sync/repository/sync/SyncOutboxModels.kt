@@ -1,15 +1,11 @@
 package com.chen.memorizewords.data.sync.repository.sync
 
 object SyncOutboxBizType {
-    const val STUDY_RECORD = "STUDY_RECORD"
     const val DAILY_STUDY_DURATION = "DAILY_STUDY_DURATION"
     const val PRACTICE_DURATION = "PRACTICE_DURATION"
     const val PRACTICE_SESSION = "PRACTICE_SESSION"
     const val FAVORITE = "FAVORITE"
-    const val WORD_BOOK_PROGRESS = "WORD_BOOK_PROGRESS"
     const val WORD_BOOK_DELETE = "WORD_BOOK_DELETE"
-    const val WORD_STATE_UPSERT = "WORD_STATE_UPSERT"
-    const val WORD_STATE_DELETE_BY_BOOK = "WORD_STATE_DELETE_BY_BOOK"
     const val WORD_BOOK_SELECTION = "WORD_BOOK_SELECTION"
     const val STUDY_PLAN = "STUDY_PLAN"
     const val ONBOARDING_STATE = "ONBOARDING_STATE"
@@ -40,14 +36,6 @@ enum class SyncOutboxFailureKind {
     CONFLICT,
     UNKNOWN
 }
-
-data class StudyRecordSyncPayload(
-    val date: String,
-    val wordId: Long,
-    val word: String,
-    val definition: String,
-    val isNewWord: Boolean
-)
 
 data class DailyStudyDurationSyncPayload(
     val date: String,
@@ -87,40 +75,11 @@ data class FavoriteSyncPayload(
     val addedAt: Long? = null
 )
 
-data class WordBookProgressSyncPayload(
-    val bookId: Long,
-    val bookName: String,
-    val learnedCount: Int,
-    val masteredCount: Int,
-    val totalCount: Int,
-    val correctCount: Int,
-    val wrongCount: Int,
-    val studyDayCount: Int,
-    val lastStudyDate: String
-)
-
 data class WordBookDeleteSyncPayload(
     val bookId: Long
 )
 
 data class WordBookSelectionSyncPayload(
-    val bookId: Long
-)
-
-data class WordStateUpsertSyncPayload(
-    val bookId: Long,
-    val wordId: Long,
-    val totalLearnCount: Int,
-    val lastLearnTime: Long,
-    val nextReviewTime: Long,
-    val masteryLevel: Int,
-    val userStatus: Int,
-    val repetition: Int,
-    val interval: Long,
-    val efactor: Double
-)
-
-data class WordStateDeleteByBookSyncPayload(
     val bookId: Long
 )
 

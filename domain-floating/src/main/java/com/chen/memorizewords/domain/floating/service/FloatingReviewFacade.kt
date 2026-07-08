@@ -41,13 +41,15 @@ class FloatingReviewFacade @Inject constructor(
     suspend fun loadWords(settings: FloatingWordSettings): List<Word> {
         return when (settings.sourceType) {
             FloatingWordSourceType.CURRENT_BOOK -> {
-                val currentBook = wordBookRepository.getCurrentWordBook() ?: return emptyList()
-                val learnedIds = wordLearningRepository.getLearnedWordIdsByBook(currentBook.id)
+                val currentBookId = wordBookRepository.getCurrentWordBookSelectionId()
+                    ?.takeIf { it > 0L }
+                    ?: return emptyList()
+                val learnedIds = wordLearningRepository.getLearnedWordIdsByBook(currentBookId)
                 buildOrderedWords(
                     wordIds = learnedIds,
                     orderType = settings.orderType,
                     bookId = if (settings.orderType == FloatingWordOrderType.MEMORY_CURVE) {
-                        currentBook.id
+                        currentBookId
                     } else {
                         null
                     }
@@ -58,7 +60,7 @@ class FloatingReviewFacade @Inject constructor(
                 buildOrderedWords(
                     wordIds = settings.selectedWordIds,
                     orderType = settings.orderType,
-                    bookId = wordBookRepository.getCurrentWordBook()?.id
+                    bookId = wordBookRepository.getCurrentWordBookSelectionId()?.takeIf { it > 0L }
                 )
             }
         }

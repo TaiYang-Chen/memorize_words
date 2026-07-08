@@ -5,8 +5,7 @@ import com.chen.memorizewords.data.sync.remote.datasync.RemoteUserSyncDataSource
 import com.chen.memorizewords.data.sync.remoteapi.api.datasync.WordBookProgressDto
 import com.chen.memorizewords.data.sync.remoteapi.dto.wordbook.WordBookDto
 import com.chen.memorizewords.data.sync.remoteapi.dto.wordstate.WordStateDto
-import com.chen.memorizewords.domain.study.model.progress.word.WordLearningState
-import com.chen.memorizewords.domain.study.repository.StudySnapshotLocalStatePort
+import com.chen.memorizewords.domain.study.repository.learning.LearningSyncStatePort
 import com.chen.memorizewords.domain.sync.model.LearningPrerequisitesSnapshot
 import com.chen.memorizewords.domain.wordbook.model.WordBook
 import com.chen.memorizewords.domain.wordbook.model.WordBookContentPackage
@@ -16,17 +15,15 @@ import com.chen.memorizewords.domain.wordbook.repository.StudyPlanLocalStatePort
 import com.chen.memorizewords.domain.wordbook.repository.WordBookContentReadinessPort
 import com.chen.memorizewords.domain.wordbook.repository.WordBookLearningStateSnapshot
 import com.chen.memorizewords.domain.wordbook.repository.WordBookSnapshotLocalStatePort
-import com.chen.memorizewords.domain.wordbook.repository.shop.RemoteWordBookRepository
 import javax.inject.Inject
 
 class LearningPrerequisitesRestorer @Inject constructor(
     private val remoteUserSyncDataSource: RemoteUserSyncDataSource,
     private val studyPlanLocalStatePort: StudyPlanLocalStatePort,
     private val currentWordBookLocalStatePort: CurrentWordBookLocalStatePort,
-    private val remoteWordBookRepository: RemoteWordBookRepository,
     private val wordBookContentReadinessPort: WordBookContentReadinessPort,
-    private val studySnapshotLocalStatePort: StudySnapshotLocalStatePort,
-    private val wordBookSnapshotLocalStatePort: WordBookSnapshotLocalStatePort
+    private val wordBookSnapshotLocalStatePort: WordBookSnapshotLocalStatePort,
+    private val learningSyncStatePort: LearningSyncStatePort
 ) {
 
     suspend fun restore(): Result<LearningPrerequisitesSnapshot> = runCatching {
@@ -45,27 +42,25 @@ class LearningPrerequisitesRestorer @Inject constructor(
             forceRefresh = false
         )
 
-        val states = loadPagedSnapshot { page, count ->
-            remoteUserSyncDataSource.getWordStates(
+        if (!learningSyncStatePort.hasPendingLearningEvents()) {
+            val states = loadPagedSnapshot { page, count ->
+                remoteUserSyncDataSource.getWordStates(
+                    bookId = selectedBookId,
+                    page = page,
+                    count = count
+                )
+            }
+            wordBookSnapshotLocalStatePort.overwriteLearningStatesForBookFromRemote(
                 bookId = selectedBookId,
-                page = page,
-                count = count
+                states = states.map { it.toSnapshot(selectedBookId) }
             )
-        }
-        studySnapshotLocalStatePort.overwriteLearningStatesForBookFromRemote(
-            bookId = selectedBookId,
-            states = states.map { it.toDomain(selectedBookId) }
-        )
-        wordBookSnapshotLocalStatePort.overwriteLearningStatesForBookFromRemote(
-            bookId = selectedBookId,
-            states = states.map { it.toSnapshot(selectedBookId) }
-        )
 
-        val currentProgress = remoteUserSyncDataSource.getWordBookProgressList()
-            .getOrThrow()
-            .filter { it.bookId == selectedBookId }
-            .map { it.toDomain() }
-        wordBookSnapshotLocalStatePort.upsertProgressFromRemote(currentProgress)
+            val currentProgress = remoteUserSyncDataSource.getWordBookProgressList()
+                .getOrThrow()
+                .filter { it.bookId == selectedBookId }
+                .map { it.toDomain() }
+            wordBookSnapshotLocalStatePort.upsertProgressFromRemote(currentProgress)
+        }
 
         LearningPrerequisitesSnapshot(
             selectedBookId = selectedBookId,
@@ -75,9 +70,9 @@ class LearningPrerequisitesRestorer @Inject constructor(
 
     private suspend fun resolveSelectedBookId(remoteBooks: List<WordBookDto>): Long {
         val selectedId = remoteBooks.firstOrNull { it.isSelected }?.id
-            ?: remoteUserSyncDataSource.getOnboardingState().getOrThrow()?.selectedWordBookId
+            ?: currentWordBookLocalStatePort.getCurrentWordBookSelectionId()
         return selectedId?.takeIf { it > 0L }
-            ?: error("Remote selected word book is missing")
+            ?: error("Current selected word book is missing")
     }
 
     private suspend fun resolveSelectedBook(
@@ -85,7 +80,6 @@ class LearningPrerequisitesRestorer @Inject constructor(
         remoteBooks: List<WordBookDto>
     ): WordBook? {
         return remoteBooks.firstOrNull { it.id == selectedBookId }?.toDomain()
-            ?: remoteWordBookRepository.getShopBookById(selectedBookId)
     }
 
     private suspend fun <T> loadPagedSnapshot(
@@ -136,21 +130,6 @@ private fun WordBookDto.toDomain(): WordBook {
     )
 }
 
-private fun WordStateDto.toDomain(fallbackBookId: Long): WordLearningState {
-    return WordLearningState(
-        wordId = wordId,
-        bookId = if (bookId > 0L) bookId else fallbackBookId,
-        totalLearnCount = totalLearnCount,
-        lastLearnTime = lastLearnTime,
-        nextReviewTime = nextReviewTime,
-        masteryLevel = masteryLevel,
-        userStatus = userStatus,
-        repetition = repetition,
-        interval = interval,
-        efactor = efactor
-    )
-}
-
 private fun WordStateDto.toSnapshot(fallbackBookId: Long): WordBookLearningStateSnapshot {
     return WordBookLearningStateSnapshot(
         wordId = wordId,
@@ -176,7 +155,8 @@ private fun WordBookProgressDto.toDomain(): WordBookProgress {
         correctCount = correctCount,
         wrongCount = wrongCount,
         studyDayCount = studyDayCount,
-        lastStudyDate = lastStudyDate
+        lastStudyDate = lastStudyDate,
+        revision = revision
     )
 }
 

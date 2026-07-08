@@ -30,5 +30,7 @@ data class WordLearningState(
     val repetition: Int = 0,
     
     /** SM-2 专用：易记因子 */
-    val efactor: Double = 2.5
+    val efactor: Double = 2.5,
+    val stateRevision: Long = 0L,
+    val lastEventId: String? = null
 )

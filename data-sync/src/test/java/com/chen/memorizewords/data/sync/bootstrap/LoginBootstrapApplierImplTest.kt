@@ -6,7 +6,6 @@ import com.chen.memorizewords.core.common.calendar.CheckInConfigDataSource
 import com.chen.memorizewords.domain.account.model.user.User
 import com.chen.memorizewords.domain.account.repository.LocalAccountRepository
 import com.chen.memorizewords.domain.study.model.favorites.WordFavorites
-import com.chen.memorizewords.domain.study.model.progress.word.WordLearningState
 import com.chen.memorizewords.domain.study.model.record.CheckInRecord
 import com.chen.memorizewords.domain.study.model.record.DailyStudyRecords
 import com.chen.memorizewords.domain.study.repository.StudyDailyDurationSnapshot
@@ -244,9 +243,13 @@ class LoginBootstrapApplierImplTest {
     }
 
     private class FakeCurrentWordBookLocalStatePort : CurrentWordBookLocalStatePort {
+        override suspend fun getCurrentWordBookSelectionId(): Long? = null
+
         override suspend fun upsertBookAndSelectionFromRemote(book: WordBook?) = Unit
 
-        override suspend fun overwriteFromRemote(bookId: Long?) = Unit
+        override suspend fun upsertBooksAndSelectionFromRemote(books: List<WordBook>) = Unit
+
+        override suspend fun clearSelectionFromRemote() = Unit
 
         override suspend fun clearLocalState() = Unit
     }
@@ -264,11 +267,6 @@ class LoginBootstrapApplierImplTest {
 
     private class FakeStudySnapshotLocalStatePort : StudySnapshotLocalStatePort {
         override suspend fun overwriteFavoritesFromRemote(favorites: List<WordFavorites>) = Unit
-
-        override suspend fun overwriteLearningStatesForBookFromRemote(
-            bookId: Long,
-            states: List<WordLearningState>
-        ) = Unit
 
         override suspend fun overwriteStudyRecordsFromRemote(records: List<DailyStudyRecords>) = Unit
 

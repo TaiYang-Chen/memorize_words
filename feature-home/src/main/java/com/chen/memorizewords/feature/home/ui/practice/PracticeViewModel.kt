@@ -256,6 +256,12 @@ class PracticeViewModel @Inject constructor(
                 PracticeAvailability.NO_BOOK -> {
                     showToast(resourceProvider.getString(R.string.home_practice_no_book))
                 }
+                PracticeAvailability.CONTENT_NOT_READY -> {
+                    showToast("词书内容准备中")
+                }
+                PracticeAvailability.CONTENT_FAILED -> {
+                    showToast("词书下载失败，请重试")
+                }
                 PracticeAvailability.NO_WORDS -> {
                     showToast(resourceProvider.getString(R.string.home_practice_no_words))
                 }

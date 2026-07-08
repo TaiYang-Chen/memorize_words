@@ -1,9 +1,8 @@
 ﻿package com.chen.memorizewords.data.wordbook.local.room.model.wordbook.wordbook
 
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -27,10 +26,10 @@ interface WordBookDao {
     @Query("SELECT * FROM word_book WHERE id = :id")
     suspend fun getWordBookById(id: Long): WordBookEntity?
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Upsert
     suspend fun insertWordBook(wordBook: WordBookEntity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Upsert
     suspend fun insertWordBooks(wordBooks: List<WordBookEntity>)
 
     @Query("SELECT name FROM word_book WHERE id = :bookId")

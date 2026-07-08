@@ -14,6 +14,12 @@ class LearningSyncRequest @Inject constructor(
     private val apiService: LearningSyncApiService,
     private val requestExecutor: NetworkRequestExecutor
 ) {
+    suspend fun recordLearningEvent(request: LearningEventRequest): NetworkResult<LearningEventResultDto> =
+        requestExecutor.executeAuthenticated {
+            apiService.recordLearningEvent(request)
+                .await<ApiResponse<LearningEventResultDto>, LearningEventResultDto>()
+        }
+
     suspend fun getPracticeSettings(): NetworkResult<PracticeSettingsDto?> = requestExecutor.executeAuthenticated {
         apiService.getPracticeSettings()
             .awaitNullable<ApiResponse<PracticeSettingsDto?>, PracticeSettingsDto>()

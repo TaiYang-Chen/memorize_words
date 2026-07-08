@@ -7,6 +7,4 @@ interface WordLearningRepository {
     suspend fun getLearningStatesByBookId(bookId: Long): List<WordLearningState>
 
     suspend fun getLearnedWordIdsByBook(bookId: Long): List<Long>
-
-    suspend fun deleteLearningWordByBookId(bookId: Long)
 }

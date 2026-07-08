@@ -11,9 +11,9 @@ import com.chen.memorizewords.data.study.local.room.model.study.daily.DailyDurat
 import com.chen.memorizewords.data.study.local.room.model.study.daily.DailyStudyDurationDao
 import com.chen.memorizewords.data.study.local.room.model.study.daily.DailyStudyDurationEntity
 import com.chen.memorizewords.data.study.local.room.model.study.daily.DailyStudySummaryProjection
-import com.chen.memorizewords.data.study.local.room.model.study.daily.DailyStudyWordRecordProjection
-import com.chen.memorizewords.data.study.local.room.model.study.daily.DailyWordStatsProjection
-import com.chen.memorizewords.data.study.local.room.model.study.daily.WordStudyRecordsDao
+import com.chen.memorizewords.data.wordbook.local.room.model.learning.record.LearningDailyStudyWordRecordProjection
+import com.chen.memorizewords.data.wordbook.local.room.model.learning.record.LearningDailyWordStatsProjection
+import com.chen.memorizewords.data.wordbook.local.room.model.learning.record.WordStudyRecordDao
 import com.chen.memorizewords.data.study.repository.local.StudyRecordLocalStore
 import com.chen.memorizewords.domain.sync.CheckInRecordSyncPayload
 import com.chen.memorizewords.domain.sync.OutboxCommand
@@ -31,7 +31,6 @@ import com.chen.memorizewords.domain.study.model.record.DailyStudyWordRecord
 import com.chen.memorizewords.domain.study.model.record.DailyWordStats
 import com.chen.memorizewords.domain.study.model.record.MakeUpCheckInException
 import com.chen.memorizewords.domain.study.model.record.TodayCheckInEntryState
-import com.chen.memorizewords.domain.word.model.word.Word
 import com.chen.memorizewords.domain.study.repository.record.LearningRecordRepository
 import com.google.gson.Gson
 import javax.inject.Inject
@@ -45,7 +44,7 @@ import kotlinx.coroutines.flow.map
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class LearningRecordRepositoryImpl @Inject constructor(
-    private val wordStudyRecordsDao: WordStudyRecordsDao,
+    private val wordStudyRecordsDao: WordStudyRecordDao,
     private val dailyStudyDurationDao: DailyStudyDurationDao,
     private val checkInRecordDao: CheckInRecordDao,
     private val checkInConfigDataSource: CheckInConfigDataSource,
@@ -58,15 +57,6 @@ class LearningRecordRepositoryImpl @Inject constructor(
 
     override fun getCurrentBusinessDate(): String {
         return checkInBusinessCalendar.currentBusinessDate()
-    }
-
-    override suspend fun addLearningRecord(
-        word: Word,
-        definition: String,
-        isNewWord: Boolean
-    ) {
-        studyRecordLocalStore.addLearningRecord(word, definition, isNewWord)
-        flushPendingStudyOutbox()
     }
 
     override suspend fun addStudyDuration(durationMs: Long) {
@@ -137,8 +127,27 @@ class LearningRecordRepositoryImpl @Inject constructor(
     }
 
     override fun getCalendarDayStats(startDate: String, endDate: String): Flow<List<CalendarDayStats>> {
-        return dailyStudyDurationDao.getCalendarDayStats(startDate, endDate)
-            .map { list -> list.map { it.toDomain() } }
+        return combine(
+            wordStudyRecordsDao.observeStudyDatesBetween(startDate, endDate),
+            dailyStudyDurationDao.getCalendarDayStats(startDate, endDate)
+        ) { studyDates, calendarRows ->
+            val studyDateSet = studyDates.toSet()
+            val calendarByDate = calendarRows.associateBy { it.date }
+            (studyDateSet + calendarByDate.keys)
+                .sorted()
+                .map { date ->
+                    calendarByDate[date]
+                        ?.toDomain()
+                        ?.copy(hasStudy = date in studyDateSet || calendarByDate[date]?.hasStudy == true)
+                        ?: CalendarDayStats(
+                            date = date,
+                            hasStudy = true,
+                            hasCheckIn = false,
+                            isNewPlanCompleted = false,
+                            isReviewPlanCompleted = false
+                        )
+                }
+        }
     }
 
     override fun getDailyStudyWordRecords(date: String): Flow<List<DailyStudyWordRecord>> {
@@ -284,7 +293,7 @@ internal fun isAutoCheckInEligibleForDuration(duration: DailyStudyDurationEntity
     return duration?.let { it.isNewPlanCompleted || it.isReviewPlanCompleted } == true
 }
 
-private fun DailyWordStatsProjection.toDomain(): DailyWordStats {
+private fun LearningDailyWordStatsProjection.toDomain(): DailyWordStats {
     return DailyWordStats(
         date = date,
         newCount = newCount,
@@ -309,7 +318,7 @@ private fun CalendarDayStatsProjection.toDomain(): CalendarDayStats {
     )
 }
 
-private fun DailyStudyWordRecordProjection.toDomain(): DailyStudyWordRecord {
+private fun LearningDailyStudyWordRecordProjection.toDomain(): DailyStudyWordRecord {
     return DailyStudyWordRecord(
         wordId = wordId,
         word = word,

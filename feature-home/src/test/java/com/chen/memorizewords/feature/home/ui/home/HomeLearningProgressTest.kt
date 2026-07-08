@@ -117,7 +117,7 @@ class HomeLearningProgressTest {
         )
 
         assertEquals("6", formatWordBookNumberText(info.masteredWords))
-        assertEquals("80", formatWordBookNumberText(info.remainWords))
+        assertEquals("74", formatWordBookNumberText(info.remainWords))
         assertEquals("8 天", formatWordBookRemainDaysText(info, StudyPlan(dailyNewCount = 10)))
         assertEquals("75.0%", formatWordBookAccuracyRateText(info.accuracyRate))
     }
@@ -199,7 +199,7 @@ class HomeLearningProgressTest {
         assertEquals("待完成", ui.todayReviewStatusText)
         assertEquals("15分钟", ui.estimatedStudyMinutesText)
         assertEquals("2 天", ui.continuousDaysText)
-        assertEquals("6 天", ui.expectedCompletionText)
+        assertEquals("5 天", ui.expectedCompletionText)
     }
     @Test
     fun `startup snapshot fills current book while local progress is empty`() {

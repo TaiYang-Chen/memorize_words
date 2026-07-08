@@ -75,7 +75,13 @@ data class WordLearningStateEntity(
 
     /** SM-2 专用：易记因子 */
     @ColumnInfo(name = "efactor")
-    val efactor: Double
+    val efactor: Double,
+
+    @ColumnInfo(name = "state_revision")
+    val stateRevision: Long = 0L,
+
+    @ColumnInfo(name = "last_event_id")
+    val lastEventId: String? = null
 ) {
     init {
         require(totalLearnCount >= 0) { "totalLearnCount must be non-negative" }
@@ -86,5 +92,6 @@ data class WordLearningStateEntity(
         require(interval >= 0L) { "interval must be non-negative" }
         require(repetition >= 0) { "repetition must be non-negative" }
         require(efactor >= 0.0) { "efactor must be non-negative" }
+        require(stateRevision >= 0L) { "stateRevision must be non-negative" }
     }
 }

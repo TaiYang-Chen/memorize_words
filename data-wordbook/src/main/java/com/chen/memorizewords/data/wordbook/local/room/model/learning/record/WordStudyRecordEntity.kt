@@ -1,4 +1,4 @@
-package com.chen.memorizewords.data.study.local.room.model.study.daily
+package com.chen.memorizewords.data.wordbook.local.room.model.learning.record
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -14,18 +14,22 @@ import androidx.room.PrimaryKey
         Index("word_id")
     ]
 )
-data class WordStudyRecordsEntity(
+data class WordStudyRecordEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
 
     @ColumnInfo(name = "date")
-    val date: String,  // 日期，格式如 "2026-01-07"
+    val date: String,
+
     @ColumnInfo(name = "word")
-    val word: String,  // 单词
+    val word: String,
+
     @ColumnInfo(name = "word_id")
-    val wordId: Long,  // 单词
+    val wordId: Long,
+
     @ColumnInfo(name = "definition")
-    val definition: String,  // 单词释义
+    val definition: String,
+
     @ColumnInfo(name = "is_new_word")
-    val isNewWord: Boolean,  // 类别：是否新学，不是就是复习
+    val isNewWord: Boolean
 )

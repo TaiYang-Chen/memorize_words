@@ -15,7 +15,7 @@ class SyncOutboxStoreTest {
         val entities = buildQueuedOutboxEntities(
             commands = listOf(
                 SyncOutboxWriteCommand(
-                    bizType = SyncOutboxBizType.STUDY_RECORD,
+                    bizType = SyncOutboxBizType.DAILY_STUDY_DURATION,
                     bizKey = "study_record:1",
                     operation = SyncOutboxOperation.UPSERT,
                     payload = "new",
@@ -40,7 +40,7 @@ private object SyncOutboxEntityFactory {
     ): com.chen.memorizewords.data.sync.local.room.model.sync.SyncOutboxEntity {
         return com.chen.memorizewords.data.sync.local.room.model.sync.SyncOutboxEntity(
             id = id,
-            bizType = SyncOutboxBizType.STUDY_RECORD,
+            bizType = SyncOutboxBizType.DAILY_STUDY_DURATION,
             bizKey = bizKey,
             operation = SyncOutboxOperation.UPSERT,
             payload = payload,

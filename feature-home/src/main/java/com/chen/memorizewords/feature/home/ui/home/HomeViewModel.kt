@@ -17,10 +17,13 @@ import com.chen.memorizewords.domain.sync.model.SyncBannerState
 import com.chen.memorizewords.domain.sync.repository.HomeStartupSnapshotRepository
 import com.chen.memorizewords.domain.sync.service.SyncFacade
 import com.chen.memorizewords.domain.word.model.word.Word
+import com.chen.memorizewords.domain.wordbook.model.WordBookContentStatus
 import com.chen.memorizewords.domain.wordbook.model.WordBookInfo
 import com.chen.memorizewords.domain.wordbook.model.study.StudyPlan
 import com.chen.memorizewords.domain.wordbook.usecase.GetCurrentWordBookInfoFlowUseCase
 import com.chen.memorizewords.domain.wordbook.usecase.GetStudyPlanFlowUseCase
+import com.chen.memorizewords.domain.wordbook.usecase.ObserveCurrentWordBookSelectionIdUseCase
+import com.chen.memorizewords.domain.wordbook.usecase.ObserveWordBookContentStateUseCase
 import com.chen.memorizewords.feature.home.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.Locale
@@ -33,6 +36,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -46,6 +51,8 @@ private const val FRESH_STARTUP_SNAPSHOT_MS = 15 * 60 * 1000L
 class HomeViewModel @Inject constructor(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     getCurrentWordBookInfoFlowUseCase: GetCurrentWordBookInfoFlowUseCase,
+    observeCurrentWordBookSelectionIdUseCase: ObserveCurrentWordBookSelectionIdUseCase,
+    observeWordBookContentStateUseCase: ObserveWordBookContentStateUseCase,
     getStudyPlanFlowUseCase: GetStudyPlanFlowUseCase,
     private val learningSessionFacade: LearningSessionFacade,
     private val studyStatsFacade: StudyStatsFacade,
@@ -86,6 +93,21 @@ class HomeViewModel @Inject constructor(
 
     private var pendingBoostBookId: Long? = null
     private var pendingBoostPlan: StudyPlan? = null
+
+    private val currentSelectionId: StateFlow<Long?> =
+        observeCurrentWordBookSelectionIdUseCase()
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    private val currentContentState =
+        currentSelectionId
+            .flatMapLatest { bookId ->
+                if (bookId == null || bookId <= 0L) {
+                    flowOf(null)
+                } else {
+                    observeWordBookContentStateUseCase(bookId)
+                }
+            }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     private val currentBusinessDate: StateFlow<String> =
         flow {
@@ -383,6 +405,10 @@ class HomeViewModel @Inject constructor(
         if (isPreparingLearning.value) {
             return
         }
+        currentWordBookBlockedMessage()?.let { message ->
+            showToast(message)
+            return
+        }
         val bookInfo = wordBookInfo.value
         if (bookInfo == null) {
             restoreLearningPrerequisitesAndStart()
@@ -440,6 +466,10 @@ class HomeViewModel @Inject constructor(
         val plan = pendingBoostPlan ?: studyPlan.value
         pendingBoostBookId = null
         pendingBoostPlan = null
+        currentWordBookBlockedMessage()?.let { message ->
+            showToast(message)
+            return
+        }
         if (bookId == null) {
             showToast(resourceProvider.getString(R.string.home_practice_no_book))
             return
@@ -448,6 +478,10 @@ class HomeViewModel @Inject constructor(
     }
 
     fun toLearningNewActivity() {
+        currentWordBookBlockedMessage()?.let { message ->
+            showToast(message)
+            return
+        }
         val bookInfo = wordBookInfo.value
         if (bookInfo == null) {
             showToast(resourceProvider.getString(R.string.home_practice_no_book))
@@ -457,6 +491,10 @@ class HomeViewModel @Inject constructor(
     }
 
     fun toLearningReviewActivity() {
+        currentWordBookBlockedMessage()?.let { message ->
+            showToast(message)
+            return
+        }
         val bookInfo = wordBookInfo.value
         if (bookInfo == null) {
             showToast(resourceProvider.getString(R.string.home_practice_no_book))
@@ -490,6 +528,10 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun navigateToNewLearning(count: Int) {
+        currentWordBookBlockedMessage()?.let { message ->
+            showToast(message)
+            return
+        }
         val bookInfo = wordBookInfo.value
         if (bookInfo == null) {
             showToast(resourceProvider.getString(R.string.home_practice_no_book))
@@ -516,6 +558,21 @@ class HomeViewModel @Inject constructor(
                 return@launch
             }
             navigateRoute(route)
+        }
+    }
+
+    private fun currentWordBookBlockedMessage(): String? {
+        val selectedBookId = currentSelectionId.value ?: wordBookInfo.value?.bookId
+        if (selectedBookId == null || selectedBookId <= 0L) {
+            return resourceProvider.getString(R.string.home_practice_no_book)
+        }
+        if (wordBookInfo.value == null) {
+            return "\u8bcd\u4e66\u4fe1\u606f\u540c\u6b65\u4e2d"
+        }
+        return when (currentContentState.value?.status) {
+            WordBookContentStatus.READY -> null
+            WordBookContentStatus.FAILED -> "\u8bcd\u4e66\u4e0b\u8f7d\u5931\u8d25\uff0c\u8bf7\u91cd\u8bd5"
+            else -> "\u8bcd\u4e66\u5185\u5bb9\u51c6\u5907\u4e2d"
         }
     }
 }

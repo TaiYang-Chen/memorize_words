@@ -3,6 +3,7 @@ package com.chen.memorizewords.startup
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
+import com.chen.memorizewords.domain.account.auth.AuthStateProvider
 import com.chen.memorizewords.domain.sync.service.SyncFacade
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -11,6 +12,7 @@ import kotlinx.coroutines.launch
 
 @Singleton
 class ForegroundSyncStartupTask @Inject constructor(
+    private val authStateProvider: AuthStateProvider,
     private val syncFacade: SyncFacade
 ) : ApplicationStartupTask {
     override val name: String = TASK_NAME
@@ -28,7 +30,10 @@ class ForegroundSyncStartupTask @Inject constructor(
                 if (!foregroundTracker.onActivityResumed()) return
                 appScope.launch {
                     tracer.measureSuspend(stageName = "sync_first_foreground") {
-                        syncFacade.triggerDrain()
+                        if (authStateProvider.isAuthenticated()) {
+                            syncFacade.scheduleBootstrapSync()
+                            syncFacade.triggerDrain()
+                        }
                     }
                 }
             }

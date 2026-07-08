@@ -8,7 +8,7 @@ import com.chen.memorizewords.domain.wordbook.model.WordBookUpdateCandidate
 import com.chen.memorizewords.domain.wordbook.model.WordBookUpdatePrompt
 import com.chen.memorizewords.domain.wordbook.service.WordBookUpdateCoordinator
 import com.chen.memorizewords.domain.account.usecase.user.IsLoggedInUseCase
-import com.chen.memorizewords.domain.wordbook.usecase.GetCurrentWordBookUseCase
+import com.chen.memorizewords.domain.wordbook.usecase.GetCurrentWordBookSelectionIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val isLoggedInUseCase: IsLoggedInUseCase,
-    private val getCurrentWordBookUseCase: GetCurrentWordBookUseCase,
+    private val getCurrentWordBookSelectionIdUseCase: GetCurrentWordBookSelectionIdUseCase,
     private val updateCoordinator: WordBookUpdateCoordinator,
     private val resourceProvider: ResourceProvider
 ) : BaseViewModel() {
@@ -60,7 +60,7 @@ class HomeViewModel @Inject constructor(
             val isLoggedIn = isLoggedInUseCase()
             _loginState.value = isLoggedIn
             if (isLoggedIn) {
-                _wordbookState.value = getCurrentWordBookUseCase() != null
+                _wordbookState.value = getCurrentWordBookSelectionIdUseCase() != null
             } else {
                 _wordbookState.value = null
             }

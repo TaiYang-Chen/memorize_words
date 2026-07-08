@@ -18,6 +18,7 @@ import com.chen.memorizewords.domain.word.model.word.WordQuickLookupResult
 import com.chen.memorizewords.domain.word.model.word.WordRoot
 import com.chen.memorizewords.domain.word.repository.WordRepository
 import com.chen.memorizewords.domain.wordbook.model.WordBook
+import com.chen.memorizewords.domain.wordbook.model.WordBookContentState
 import com.chen.memorizewords.domain.wordbook.model.WordBookInfo
 import com.chen.memorizewords.domain.wordbook.model.WordListQuery
 import com.chen.memorizewords.domain.wordbook.repository.WordBookRepository
@@ -87,7 +88,6 @@ class FloatingReviewFacadeTest {
 
         override suspend fun getLearnedWordIdsByBook(bookId: Long): List<Long> = reviewableIds
 
-        override suspend fun deleteLearningWordByBookId(bookId: Long) = Unit
     }
 
     private class FakeWordRepository(
@@ -103,8 +103,6 @@ class FloatingReviewFacadeTest {
         override suspend fun getWordDefinitions(wordId: Long): List<WordDefinitions> = emptyList()
         override suspend fun getRandomDefinition(wordId: Long): WordDefinitions = error("Not needed")
         override suspend fun getRandomDefinitionsByPos(wordId: Long, limit: Int): List<WordDefinitions> = emptyList()
-        override suspend fun updateWordStatus(bookId: Long, word: Word, quality: Int): Boolean = error("Not needed")
-        override suspend fun setWordAsMastered(bookId: Long, word: Word) = error("Not needed")
         override suspend fun getWordByWordString(word: String): Word? = null
         override suspend fun lookupWordQuick(normalizedWord: String, rawWord: String): WordQuickLookupResult {
             error("Not needed")
@@ -113,7 +111,9 @@ class FloatingReviewFacadeTest {
 
     private class FakeWordBookRepository : WordBookRepository {
         override fun getMyWordBooksMinimalFlow(): Flow<List<WordBookInfo>> = emptyFlow()
+        override fun observeCurrentWordBookSelectionId(): Flow<Long?> = emptyFlow()
         override fun getCurrentWordBookMinimalFlow(): Flow<WordBookInfo?> = emptyFlow()
+        override fun observeWordBookContentState(bookId: Long): Flow<WordBookContentState?> = emptyFlow()
         override suspend fun setCurrentWordBook(bookId: Long) = Unit
         override suspend fun deleteMyWordBook(bookId: Long): Result<Unit> = error("Not needed")
         override suspend fun createMyWordBook(
@@ -122,6 +122,7 @@ class FloatingReviewFacadeTest {
             description: String,
             words: List<String>
         ): Result<WordBookInfo> = error("Not needed")
+        override suspend fun getCurrentWordBookSelectionId(): Long? = 10L
         override suspend fun getCurrentWordBook(): WordBook = WordBook(
             id = 10L,
             title = "Book",
@@ -135,6 +136,7 @@ class FloatingReviewFacadeTest {
         )
 
         override suspend fun getBookNameById(bookId: Long): String? = null
+        override suspend fun getWordBookContentState(bookId: Long): WordBookContentState? = null
         override suspend fun getWordListSummary(
             wordBookId: Long,
             now: Long
@@ -149,8 +151,6 @@ class FloatingReviewFacadeTest {
             orderType: WordOrderType,
             excludeIds: Set<Long>
         ): List<Long> = emptyList()
-        override suspend fun updateBookStudyDay(bookId: Long, today: String) = Unit
-        override suspend fun recordAnswerResult(bookId: Long, isCorrect: Boolean, today: String) = Unit
     }
 }
 

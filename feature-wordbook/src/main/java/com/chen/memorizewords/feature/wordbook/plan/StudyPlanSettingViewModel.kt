@@ -3,29 +3,36 @@ package com.chen.memorizewords.feature.wordbook.plan
 import androidx.lifecycle.viewModelScope
 import androidx.annotation.StringRes
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
+import com.chen.memorizewords.domain.wordbook.model.WordBookContentStatus
 import com.chen.memorizewords.domain.wordbook.model.learning.LearningTestMode
 import com.chen.memorizewords.domain.wordbook.model.study.StudyPlan
-import com.chen.memorizewords.domain.wordbook.model.WordBookInfo
 import com.chen.memorizewords.domain.wordbook.repository.WordOrderType
 import com.chen.memorizewords.domain.wordbook.usecase.GetCurrentWordBookInfoFlowUseCase
 import com.chen.memorizewords.domain.wordbook.usecase.GetStudyPlanFlowUseCase
-import com.chen.memorizewords.domain.study.usecase.wordbook.ResetBookWordsUseCase
+import com.chen.memorizewords.domain.wordbook.usecase.ObserveCurrentWordBookSelectionIdUseCase
+import com.chen.memorizewords.domain.wordbook.usecase.ObserveWordBookContentStateUseCase
 import com.chen.memorizewords.domain.wordbook.usecase.SaveStudyPlanUseCase
 import com.chen.memorizewords.feature.wordbook.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 @HiltViewModel
+@OptIn(ExperimentalCoroutinesApi::class)
 class StudyPlanSettingViewModel @Inject constructor(
     getCurrentWordBookInfoFlowUseCase: GetCurrentWordBookInfoFlowUseCase,
+    observeCurrentWordBookSelectionIdUseCase: ObserveCurrentWordBookSelectionIdUseCase,
+    observeWordBookContentStateUseCase: ObserveWordBookContentStateUseCase,
     getStudyPlanFlowUseCase: GetStudyPlanFlowUseCase,
-    private val saveStudyPlanUseCase: SaveStudyPlanUseCase,
-    private val resetBookWordsUseCase: ResetBookWordsUseCase
+    private val saveStudyPlanUseCase: SaveStudyPlanUseCase
 ) : BaseViewModel() {
 
     companion object {
@@ -80,14 +87,72 @@ class StudyPlanSettingViewModel @Inject constructor(
         ) : Route
     }
 
-    val wordBookCardState: StateFlow<WordBookInfo> =
-        getCurrentWordBookInfoFlowUseCase()
-            .map { wordBook -> wordBook ?: WordBookInfo() }
+    private val currentSelectionId =
+        observeCurrentWordBookSelectionIdUseCase()
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = WordBookInfo()
+                started = SharingStarted.Eagerly,
+                initialValue = null
             )
+
+    val wordBookCardState: StateFlow<StudyPlanWordBookCardState> =
+        combine(
+            currentSelectionId,
+            getCurrentWordBookInfoFlowUseCase(),
+            currentSelectionId.flatMapLatest { bookId ->
+                if (bookId == null || bookId <= 0L) {
+                    flowOf(null)
+                } else {
+                    observeWordBookContentStateUseCase(bookId)
+                }
+            }
+        ) { selectedBookId, wordBook, contentState ->
+            when {
+                selectedBookId == null || selectedBookId <= 0L -> StudyPlanWordBookCardState.noSelection()
+                wordBook == null -> StudyPlanWordBookCardState.syncing(selectedBookId)
+                contentState?.status == WordBookContentStatus.READY -> {
+                    StudyPlanWordBookCardState.fromWordBook(
+                        bookId = selectedBookId,
+                        title = wordBook.title,
+                        category = wordBook.category,
+                        imgUrl = wordBook.imgUrl,
+                        totalWords = wordBook.totalWords,
+                        learningWords = wordBook.learningWords,
+                        masteredWords = wordBook.masteredWords,
+                        statusText = "\u6b63\u5728\u5b66\u4e60",
+                        canOpenWordList = true
+                    )
+                }
+                contentState?.status == WordBookContentStatus.FAILED -> {
+                    StudyPlanWordBookCardState.fromWordBook(
+                        bookId = selectedBookId,
+                        title = wordBook.title,
+                        category = wordBook.category,
+                        imgUrl = wordBook.imgUrl,
+                        totalWords = wordBook.totalWords,
+                        learningWords = wordBook.learningWords,
+                        masteredWords = wordBook.masteredWords,
+                        statusText = "\u4e0b\u8f7d\u5931\u8d25"
+                    )
+                }
+                else -> {
+                    StudyPlanWordBookCardState.fromWordBook(
+                        bookId = selectedBookId,
+                        title = wordBook.title,
+                        category = wordBook.category,
+                        imgUrl = wordBook.imgUrl,
+                        totalWords = wordBook.totalWords,
+                        learningWords = wordBook.learningWords,
+                        masteredWords = wordBook.masteredWords,
+                        statusText = "\u5185\u5bb9\u51c6\u5907\u4e2d"
+                    )
+                }
+            }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = StudyPlanWordBookCardState.noSelection()
+        )
 
     val planCountCardState: StateFlow<StudyPlan> =
         getStudyPlanFlowUseCase()
@@ -117,7 +182,12 @@ class StudyPlanSettingViewModel @Inject constructor(
             )
 
     fun onPickWordList() {
-        navigateRoute(Route.ToWordList(wordBookCardState.value.bookId))
+        val state = wordBookCardState.value
+        if (!state.canOpenWordList || state.bookId <= 0L) {
+            showToast(state.statusText)
+            return
+        }
+        navigateRoute(Route.ToWordList(state.bookId))
     }
 
     fun onPickMyWordBook() {
@@ -161,17 +231,76 @@ class StudyPlanSettingViewModel @Inject constructor(
     }
 
     fun resetBookWord() {
-        showConfirmDialog(
-            action = ACTION_RESET_BOOK_WORDS,
-            title = "确认重置进度吗?",
-            message = "重置后，当前单词学习进度将被完全清空，所有已掌握单词将恢复为未学状态。此操作无法撤销。"
-        )
+        showToast("重置进度需要通过学习事件执行，当前版本暂未开放")
     }
 
     fun onResetBookWordConfirmed() {
-        viewModelScope.launch {
-            resetBookWordsUseCase(wordBookCardState.value.bookId)
-        }
+        resetBookWord()
+    }
+}
+
+data class StudyPlanWordBookCardState(
+    val bookId: Long,
+    val title: String,
+    val category: String,
+    val imgUrl: String,
+    val totalWords: Int,
+    val learningWords: Int,
+    val masteredWords: Int,
+    val statusText: String,
+    val canOpenWordList: Boolean
+) {
+    val remainWords: Int get() = (totalWords - learningWords - masteredWords).coerceAtLeast(0)
+
+    companion object {
+        fun noSelection(): StudyPlanWordBookCardState =
+            StudyPlanWordBookCardState(
+                bookId = 0L,
+                title = "\u5f53\u524d\u672a\u9009\u62e9\u8bcd\u4e66",
+                category = "",
+                imgUrl = "",
+                totalWords = 0,
+                learningWords = 0,
+                masteredWords = 0,
+                statusText = "\u672a\u9009\u62e9",
+                canOpenWordList = false
+            )
+
+        fun syncing(bookId: Long): StudyPlanWordBookCardState =
+            StudyPlanWordBookCardState(
+                bookId = bookId,
+                title = "\u8bcd\u4e66\u4fe1\u606f\u540c\u6b65\u4e2d",
+                category = "",
+                imgUrl = "",
+                totalWords = 0,
+                learningWords = 0,
+                masteredWords = 0,
+                statusText = "\u540c\u6b65\u4e2d",
+                canOpenWordList = false
+            )
+
+        fun fromWordBook(
+            bookId: Long,
+            title: String,
+            category: String,
+            imgUrl: String,
+            totalWords: Int,
+            learningWords: Int,
+            masteredWords: Int,
+            statusText: String,
+            canOpenWordList: Boolean = false
+        ): StudyPlanWordBookCardState =
+            StudyPlanWordBookCardState(
+                bookId = bookId,
+                title = title,
+                category = category,
+                imgUrl = imgUrl,
+                totalWords = totalWords,
+                learningWords = learningWords,
+                masteredWords = masteredWords,
+                statusText = statusText,
+                canOpenWordList = canOpenWordList
+            )
     }
 }
 

@@ -12,6 +12,18 @@ interface BookWordItemDao {
     @Query("SELECT word_id FROM word_book_words WHERE word_book_id = :bookId")
     suspend fun getWordIdsForBook(bookId: Long): List<Long>
 
+    @Query(
+        """
+        SELECT EXISTS(
+            SELECT 1
+            FROM word_book_words
+            WHERE word_book_id = :bookId
+              AND word_id = :wordId
+        )
+        """
+    )
+    suspend fun existsWordInBook(bookId: Long, wordId: Long): Boolean
+
     @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insert(wordBookWords: WordBookItemEntity)
 

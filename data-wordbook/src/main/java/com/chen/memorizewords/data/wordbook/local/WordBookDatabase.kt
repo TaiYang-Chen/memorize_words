@@ -7,6 +7,12 @@ import com.chen.memorizewords.data.wordbook.local.room.model.study.progress.word
 import com.chen.memorizewords.data.wordbook.local.room.model.study.progress.word.WordLearningStateEntity
 import com.chen.memorizewords.data.wordbook.local.room.model.study.progress.wordbook.WordBookProgressDao
 import com.chen.memorizewords.data.wordbook.local.room.model.study.progress.wordbook.WordBookProgressEntity
+import com.chen.memorizewords.data.wordbook.local.room.model.learning.event.LearningEventDao
+import com.chen.memorizewords.data.wordbook.local.room.model.learning.event.LearningEventEntity
+import com.chen.memorizewords.data.wordbook.local.room.model.learning.outbox.LearningOutboxDao
+import com.chen.memorizewords.data.wordbook.local.room.model.learning.outbox.LearningOutboxEntity
+import com.chen.memorizewords.data.wordbook.local.room.model.learning.record.WordStudyRecordDao
+import com.chen.memorizewords.data.wordbook.local.room.model.learning.record.WordStudyRecordEntity
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.current.CurrentWordBookSelectionDao
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.current.CurrentWordBookSelectionEntity
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.contentstate.WordBookContentStateDao
@@ -51,6 +57,9 @@ import com.chen.memorizewords.data.wordbook.local.room.model.words.word.WordEnti
         WordBookItemEntity::class,
         WordBookProgressEntity::class,
         WordLearningStateEntity::class,
+        LearningEventEntity::class,
+        LearningOutboxEntity::class,
+        WordStudyRecordEntity::class,
         WordEntity::class,
         WordDefinitionEntity::class,
         WordExampleEntity::class,
@@ -79,6 +88,9 @@ abstract class WordBookDatabase : RoomDatabase() {
     abstract fun wordBookItemDao(): BookWordItemDao
     abstract fun wordBookProgressDao(): WordBookProgressDao
     abstract fun wordLearningStateDao(): WordLearningStateDao
+    abstract fun learningEventDao(): LearningEventDao
+    abstract fun learningOutboxDao(): LearningOutboxDao
+    abstract fun wordStudyRecordDao(): WordStudyRecordDao
     abstract fun wordDao(): WordDao
     abstract fun wordDefinitionDao(): WordDefinitionDao
     abstract fun wordExampleDao(): WordExampleDao

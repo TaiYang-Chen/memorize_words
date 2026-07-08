@@ -101,7 +101,8 @@ data class WordBookProgressDto(
     val wrongCount: Int,
     val studyDayCount: Int,
     val lastStudyDate: String? = null,
-    val updatedAt: Long = 0L
+    val updatedAt: Long = 0L,
+    val revision: Long = 0L
 )
 
 @JsonClass(generateAdapter = false)

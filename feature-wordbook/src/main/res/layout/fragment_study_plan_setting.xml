@@ -9,6 +9,10 @@
             name="viewmodel"
             type="com.chen.memorizewords.feature.wordbook.plan.StudyPlanSettingViewModel" />
 
+        <variable
+            name="wordBookCardState"
+            type="com.chen.memorizewords.feature.wordbook.plan.StudyPlanWordBookCardState" />
+
     </data>
 
     <androidx.core.widget.NestedScrollView
@@ -51,11 +55,13 @@
             </FrameLayout>
 
             <include
+                android:id="@+id/includeStudyPlanBook"
                 layout="@layout/include_study_plan_setting_book"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/core_ui_dp_2"
-                app:viewmodel="@{viewmodel}" />
+                app:viewmodel="@{viewmodel}"
+                app:wordBookCardState="@{wordBookCardState}" />
 
 
             <TextView

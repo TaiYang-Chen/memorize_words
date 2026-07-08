@@ -10,12 +10,12 @@ import kotlin.test.assertTrue
 class DataBootstrapCoordinatorTest {
 
     @Test
-    fun `normal bootstrap keeps network constraint`() {
+    fun `normal bootstrap replaces stale work without WorkManager network constraint`() {
         val request = buildDataBootstrapRequest()
 
-        assertEquals(NetworkType.CONNECTED, request.workSpec.constraints.requiredNetworkType)
+        assertEquals(NetworkType.NOT_REQUIRED, request.workSpec.constraints.requiredNetworkType)
         assertTrue(SyncWorkConstants.TAG_DATA_BOOTSTRAP in request.tags)
-        assertEquals(ExistingWorkPolicy.KEEP, DATA_BOOTSTRAP_POLICY)
+        assertEquals(ExistingWorkPolicy.REPLACE, DATA_BOOTSTRAP_POLICY)
     }
 
     @Test

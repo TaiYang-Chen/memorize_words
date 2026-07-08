@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "45955e858f2547571307324436be9961",
+    "identityHash": "54fda3220a020d6aa5647cb4c4c183f3",
     "entities": [
       {
         "tableName": "word_book",
@@ -392,7 +392,7 @@
       },
       {
         "tableName": "word_book_progress",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`book_id` INTEGER NOT NULL, `correct_count` INTEGER NOT NULL, `wrong_count` INTEGER NOT NULL, `study_day_count` INTEGER NOT NULL, `last_study_date` TEXT, PRIMARY KEY(`book_id`), FOREIGN KEY(`book_id`) REFERENCES `word_book`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`book_id` INTEGER NOT NULL, `correct_count` INTEGER NOT NULL, `wrong_count` INTEGER NOT NULL, `study_day_count` INTEGER NOT NULL, `last_study_date` TEXT, `revision` INTEGER NOT NULL, PRIMARY KEY(`book_id`), FOREIGN KEY(`book_id`) REFERENCES `word_book`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "wordBookId",
@@ -422,6 +422,12 @@
             "fieldPath": "lastStudyDate",
             "columnName": "last_study_date",
             "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "revision",
+            "columnName": "revision",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -446,7 +452,7 @@
       },
       {
         "tableName": "word_learning_state",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`word_id` INTEGER NOT NULL, `book_id` INTEGER NOT NULL, `total_learn_count` INTEGER NOT NULL, `last_learn_time` INTEGER NOT NULL, `next_review_time` INTEGER NOT NULL, `mastery_level` INTEGER NOT NULL, `user_status` INTEGER NOT NULL, `interval` INTEGER NOT NULL, `repetition` INTEGER NOT NULL, `efactor` REAL NOT NULL, PRIMARY KEY(`word_id`, `book_id`), FOREIGN KEY(`word_id`) REFERENCES `words`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`book_id`) REFERENCES `word_book`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`word_id` INTEGER NOT NULL, `book_id` INTEGER NOT NULL, `total_learn_count` INTEGER NOT NULL, `last_learn_time` INTEGER NOT NULL, `next_review_time` INTEGER NOT NULL, `mastery_level` INTEGER NOT NULL, `user_status` INTEGER NOT NULL, `interval` INTEGER NOT NULL, `repetition` INTEGER NOT NULL, `efactor` REAL NOT NULL, `state_revision` INTEGER NOT NULL, `last_event_id` TEXT, PRIMARY KEY(`word_id`, `book_id`), FOREIGN KEY(`word_id`) REFERENCES `words`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`book_id`) REFERENCES `word_book`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "wordId",
@@ -507,6 +513,17 @@
             "columnName": "efactor",
             "affinity": "REAL",
             "notNull": true
+          },
+          {
+            "fieldPath": "stateRevision",
+            "columnName": "state_revision",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastEventId",
+            "columnName": "last_event_id",
+            "affinity": "TEXT"
           }
         ],
         "primaryKey": {
@@ -600,6 +617,357 @@
             "referencedColumns": [
               "id"
             ]
+          }
+        ]
+      },
+      {
+        "tableName": "learning_event",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`client_event_id` TEXT NOT NULL, `device_id` TEXT, `client_sequence` INTEGER NOT NULL, `book_id` INTEGER NOT NULL, `word_id` INTEGER NOT NULL, `action` TEXT NOT NULL, `quality` INTEGER, `correct` INTEGER, `business_date` TEXT NOT NULL, `occurred_at` INTEGER NOT NULL, `base_state_revision` INTEGER NOT NULL, `server_state_revision` INTEGER, `before_state_json` TEXT, `after_state_json` TEXT, `payload_json` TEXT, `schema_version` INTEGER NOT NULL, `created_at` INTEGER NOT NULL, `synced_at` INTEGER, PRIMARY KEY(`client_event_id`))",
+        "fields": [
+          {
+            "fieldPath": "clientEventId",
+            "columnName": "client_event_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "deviceId",
+            "columnName": "device_id",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "clientSequence",
+            "columnName": "client_sequence",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bookId",
+            "columnName": "book_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wordId",
+            "columnName": "word_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "action",
+            "columnName": "action",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "quality",
+            "columnName": "quality",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "correct",
+            "columnName": "correct",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "businessDate",
+            "columnName": "business_date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "occurredAt",
+            "columnName": "occurred_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "baseStateRevision",
+            "columnName": "base_state_revision",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "serverStateRevision",
+            "columnName": "server_state_revision",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "beforeStateJson",
+            "columnName": "before_state_json",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "afterStateJson",
+            "columnName": "after_state_json",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "payloadJson",
+            "columnName": "payload_json",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "schemaVersion",
+            "columnName": "schema_version",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "created_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "syncedAt",
+            "columnName": "synced_at",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "client_event_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_learning_event_book_id_word_id",
+            "unique": false,
+            "columnNames": [
+              "book_id",
+              "word_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_learning_event_book_id_word_id` ON `${TABLE_NAME}` (`book_id`, `word_id`)"
+          },
+          {
+            "name": "index_learning_event_book_id_business_date",
+            "unique": false,
+            "columnNames": [
+              "book_id",
+              "business_date"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_learning_event_book_id_business_date` ON `${TABLE_NAME}` (`book_id`, `business_date`)"
+          },
+          {
+            "name": "index_learning_event_created_at",
+            "unique": false,
+            "columnNames": [
+              "created_at"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_learning_event_created_at` ON `${TABLE_NAME}` (`created_at`)"
+          }
+        ]
+      },
+      {
+        "tableName": "learning_outbox",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`client_event_id` TEXT NOT NULL, `book_id` INTEGER NOT NULL, `word_id` INTEGER NOT NULL, `payload` TEXT NOT NULL, `status` TEXT NOT NULL, `attempt_count` INTEGER NOT NULL, `last_error` TEXT, `last_attempt_at` INTEGER, `next_retry_at` INTEGER NOT NULL, `lease_token` TEXT, `lease_until_at` INTEGER, `created_at` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, PRIMARY KEY(`client_event_id`))",
+        "fields": [
+          {
+            "fieldPath": "clientEventId",
+            "columnName": "client_event_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bookId",
+            "columnName": "book_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wordId",
+            "columnName": "word_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "payload",
+            "columnName": "payload",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "attemptCount",
+            "columnName": "attempt_count",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastError",
+            "columnName": "last_error",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "lastAttemptAt",
+            "columnName": "last_attempt_at",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "nextRetryAt",
+            "columnName": "next_retry_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "leaseToken",
+            "columnName": "lease_token",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "leaseUntilAt",
+            "columnName": "lease_until_at",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "created_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updated_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "client_event_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_learning_outbox_status_next_retry_at_updated_at",
+            "unique": false,
+            "columnNames": [
+              "status",
+              "next_retry_at",
+              "updated_at"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_learning_outbox_status_next_retry_at_updated_at` ON `${TABLE_NAME}` (`status`, `next_retry_at`, `updated_at`)"
+          },
+          {
+            "name": "index_learning_outbox_lease_until_at",
+            "unique": false,
+            "columnNames": [
+              "lease_until_at"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_learning_outbox_lease_until_at` ON `${TABLE_NAME}` (`lease_until_at`)"
+          },
+          {
+            "name": "index_learning_outbox_book_id_word_id",
+            "unique": false,
+            "columnNames": [
+              "book_id",
+              "word_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_learning_outbox_book_id_word_id` ON `${TABLE_NAME}` (`book_id`, `word_id`)"
+          }
+        ]
+      },
+      {
+        "tableName": "word_study_records",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `date` TEXT NOT NULL, `word` TEXT NOT NULL, `word_id` INTEGER NOT NULL, `definition` TEXT NOT NULL, `is_new_word` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "word",
+            "columnName": "word",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wordId",
+            "columnName": "word_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "definition",
+            "columnName": "definition",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isNewWord",
+            "columnName": "is_new_word",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_word_study_records_date_word_id_is_new_word",
+            "unique": true,
+            "columnNames": [
+              "date",
+              "word_id",
+              "is_new_word"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_word_study_records_date_word_id_is_new_word` ON `${TABLE_NAME}` (`date`, `word_id`, `is_new_word`)"
+          },
+          {
+            "name": "index_word_study_records_date_is_new_word",
+            "unique": false,
+            "columnNames": [
+              "date",
+              "is_new_word"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_study_records_date_is_new_word` ON `${TABLE_NAME}` (`date`, `is_new_word`)"
+          },
+          {
+            "name": "index_word_study_records_date_id",
+            "unique": false,
+            "columnNames": [
+              "date",
+              "id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_study_records_date_id` ON `${TABLE_NAME}` (`date`, `id`)"
+          },
+          {
+            "name": "index_word_study_records_word_id",
+            "unique": false,
+            "columnNames": [
+              "word_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_word_study_records_word_id` ON `${TABLE_NAME}` (`word_id`)"
           }
         ]
       },
@@ -1643,7 +2011,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '45955e858f2547571307324436be9961')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '54fda3220a020d6aa5647cb4c4c183f3')"
     ]
   }
 }

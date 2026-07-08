@@ -78,7 +78,6 @@ class GetReviewWordsUseCaseTest {
 
         override suspend fun getLearnedWordIdsByBook(bookId: Long): List<Long> = reviewableIds
 
-        override suspend fun deleteLearningWordByBookId(bookId: Long) = Unit
     }
 
     private class FakeWordRepository(
@@ -94,8 +93,6 @@ class GetReviewWordsUseCaseTest {
         override suspend fun getWordDefinitions(wordId: Long): List<WordDefinitions> = emptyList()
         override suspend fun getRandomDefinition(wordId: Long): WordDefinitions = error("Not needed")
         override suspend fun getRandomDefinitionsByPos(wordId: Long, limit: Int): List<WordDefinitions> = emptyList()
-        override suspend fun updateWordStatus(bookId: Long, word: Word, quality: Int): Boolean = error("Not needed")
-        override suspend fun setWordAsMastered(bookId: Long, word: Word) = error("Not needed")
         override suspend fun getWordByWordString(word: String): Word? = null
         override suspend fun lookupWordQuick(normalizedWord: String, rawWord: String): WordQuickLookupResult {
             error("Not needed")

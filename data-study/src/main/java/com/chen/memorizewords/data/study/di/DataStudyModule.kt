@@ -7,13 +7,10 @@ import com.chen.memorizewords.data.study.local.StudyDatabase
 import com.chen.memorizewords.data.study.local.mmkv.plan.StudyPlanDataSource
 import com.chen.memorizewords.data.study.local.mmkv.plan.StudyPlanDataSourceImpl
 import com.chen.memorizewords.data.study.repository.bootstrap.StudySnapshotLocalStateStore
-import com.chen.memorizewords.data.study.repository.WordLearningRepositoryImpl
 import com.chen.memorizewords.data.study.repository.record.LearningRecordRepositoryImpl
 import com.chen.memorizewords.data.study.repository.study.FavoritesRepositoryImpl
 import com.chen.memorizewords.data.study.repository.study.StudyPlanRepositoryImpl
 import com.chen.memorizewords.domain.study.repository.StudySnapshotLocalStatePort
-import com.chen.memorizewords.domain.study.repository.WordLearningRepository
-import com.chen.memorizewords.domain.study.repository.WordLearningStateStore
 import com.chen.memorizewords.domain.study.repository.record.LearningRecordRepository
 import com.chen.memorizewords.domain.study.repository.word.FavoritesRepository
 import com.chen.memorizewords.domain.wordbook.repository.StudyPlanLocalStatePort
@@ -30,12 +27,6 @@ import com.tencent.mmkv.MMKV
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class DataStudyModule {
-    @Binds
-    abstract fun bindWordLearningRepository(impl: WordLearningRepositoryImpl): WordLearningRepository
-
-    @Binds
-    abstract fun bindWordLearningStateStore(impl: WordLearningRepositoryImpl): WordLearningStateStore
-
     @Binds
     abstract fun bindStudyPlanRepository(impl: StudyPlanRepositoryImpl): StudyPlanRepository
 
@@ -70,22 +61,13 @@ object DataStudyDatabaseModule {
     }
 
     @Provides
-    fun provideWordLearningStateDao(database: StudyDatabase) = database.wordLearningStateDao()
-
-    @Provides
     fun provideWordFavoritesDao(database: StudyDatabase) = database.wordFavoritesDao()
-
-    @Provides
-    fun provideWordStudyRecordsDao(database: StudyDatabase) = database.wordStudyRecordsDao()
 
     @Provides
     fun provideDailyStudyDurationDao(database: StudyDatabase) = database.dailyStudyDurationDao()
 
     @Provides
     fun provideCheckInRecordDao(database: StudyDatabase) = database.checkInRecordDao()
-
-    @Provides
-    fun provideWordBookProgressDao(database: StudyDatabase) = database.wordBookProgressDao()
 
     @Provides
     fun provideStudyPendingOutboxDao(database: StudyDatabase) = database.studyPendingOutboxDao()

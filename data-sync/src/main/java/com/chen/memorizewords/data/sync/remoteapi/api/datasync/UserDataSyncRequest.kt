@@ -2,7 +2,6 @@ package com.chen.memorizewords.data.sync.remoteapi.api.datasync
 
 import com.chen.memorizewords.core.network.http.NetworkRequestExecutor
 import com.chen.memorizewords.data.sync.remoteapi.dto.wordbook.WordBookDto
-import com.chen.memorizewords.data.sync.remoteapi.dto.wordbook.WordDto
 import com.chen.memorizewords.data.sync.remoteapi.dto.wordstate.WordStateDto
 import com.chen.memorizewords.core.network.http.ApiResponse
 import com.chen.memorizewords.core.network.http.PageData
@@ -88,65 +87,6 @@ class UserDataSyncRequest @Inject constructor(
             .await<ApiResponse<Unit>, Unit>()
     }
 
-    suspend fun upsertWordState(
-        bookId: Long,
-        wordId: Long,
-        totalLearnCount: Int,
-        lastLearnTime: Long,
-        nextReviewTime: Long,
-        masteryLevel: Int,
-        userStatus: Int,
-        repetition: Int,
-        interval: Long,
-        efactor: Double
-    ): NetworkResult<Unit> = requestExecutor.executeAuthenticated {
-        apiService.upsertWordState(
-            bookId = bookId,
-            wordId = wordId,
-            request = WordStateSyncRequest(
-                totalLearnCount = totalLearnCount,
-                lastLearnTime = lastLearnTime,
-                nextReviewTime = nextReviewTime,
-                masteryLevel = masteryLevel,
-                userStatus = userStatus,
-                repetition = repetition,
-                interval = interval,
-                efactor = efactor
-            )
-        ).await<ApiResponse<Unit>, Unit>()
-    }
-
-    suspend fun deleteWordStatesByBookId(bookId: Long): NetworkResult<Unit> = requestExecutor.executeAuthenticated {
-        apiService.deleteWordStatesByBookId(bookId)
-            .await<ApiResponse<Unit>, Unit>()
-    }
-
-    suspend fun upsertWordBookProgress(
-        bookId: Long,
-        bookName: String,
-        learnedCount: Int,
-        masteredCount: Int,
-        totalCount: Int,
-        correctCount: Int,
-        wrongCount: Int,
-        studyDayCount: Int,
-        lastStudyDate: String
-    ): NetworkResult<Unit> = requestExecutor.executeAuthenticated {
-        apiService.upsertWordBookProgress(
-            bookId = bookId,
-            request = WordBookProgressSyncRequest(
-                bookName = bookName,
-                learnedCount = learnedCount,
-                masteredCount = masteredCount,
-                totalCount = totalCount,
-                correctCount = correctCount,
-                wrongCount = wrongCount,
-                studyDayCount = studyDayCount,
-                lastStudyDate = lastStudyDate
-            )
-        ).await<ApiResponse<Unit>, Unit>()
-    }
-
     suspend fun getWordBookProgressList(): NetworkResult<List<WordBookProgressDto>> =
         requestExecutor.executeAuthenticated {
             apiService.getWordBookProgressList()
@@ -171,16 +111,6 @@ class UserDataSyncRequest @Inject constructor(
     ): NetworkResult<WordBookUpdateManifestDto> = requestExecutor.executeAuthenticated {
         apiService.getWordBookUpdateManifest(bookId, version)
             .await<ApiResponse<WordBookUpdateManifestDto>, WordBookUpdateManifestDto>()
-    }
-
-    suspend fun getWordBookUpdateWords(
-        bookId: Long,
-        version: Long,
-        page: Int,
-        count: Int
-    ): NetworkResult<PageData<WordDto>> = requestExecutor.executeAuthenticated {
-        apiService.getWordBookUpdateWords(bookId, version, page, count)
-            .await<ApiResponse<PageData<WordDto>>, PageData<WordDto>>()
     }
 
     suspend fun completeWordBookUpdate(bookId: Long, version: Long): NetworkResult<Unit> =
@@ -210,38 +140,11 @@ class UserDataSyncRequest @Inject constructor(
             .await<ApiResponse<WordBookUpdateManifestDto>, WordBookUpdateManifestDto>()
     }
 
-    suspend fun getCurrentWordBookUpdateWords(
-        version: Long,
-        page: Int,
-        count: Int
-    ): NetworkResult<PageData<WordDto>> = requestExecutor.executeAuthenticated {
-        apiService.getCurrentWordBookUpdateWords(version, page, count)
-            .await<ApiResponse<PageData<WordDto>>, PageData<WordDto>>()
-    }
-
     suspend fun completeCurrentWordBookUpdate(version: Long): NetworkResult<Unit> =
         requestExecutor.executeAuthenticated {
             apiService.completeCurrentWordBookUpdate(version)
                 .await<ApiResponse<Unit>, Unit>()
         }
-
-    suspend fun appendStudyRecord(
-        date: String,
-        wordId: Long,
-        word: String,
-        definition: String,
-        isNewWord: Boolean
-    ): NetworkResult<Unit> = requestExecutor.executeAuthenticated {
-        apiService.appendStudyRecord(
-            StudyRecordSyncRequest(
-                date = date,
-                wordId = wordId,
-                word = word,
-                definition = definition,
-                isNewWord = isNewWord
-            )
-        ).await<ApiResponse<Unit>, Unit>()
-    }
 
     suspend fun getStudyRecords(
         page: Int,

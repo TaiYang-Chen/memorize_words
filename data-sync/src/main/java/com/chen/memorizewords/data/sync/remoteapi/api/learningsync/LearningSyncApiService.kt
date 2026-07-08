@@ -52,6 +52,65 @@ data class PracticeSettingsDto(
 )
 
 @JsonClass(generateAdapter = false)
+data class LearningEventRequest(
+    val clientEventId: String,
+    val deviceId: String?,
+    val clientSequence: Long?,
+    val bookId: Long,
+    val wordId: Long,
+    val action: String,
+    val quality: Int?,
+    val correct: Boolean?,
+    val businessDate: String,
+    val occurredAt: Long,
+    val baseStateRevision: Long?,
+    val payloadJson: String?,
+    val schemaVersion: Int = 1
+)
+
+@JsonClass(generateAdapter = false)
+data class LearningEventResultDto(
+    val eventId: Long?,
+    val clientEventId: String,
+    val duplicate: Boolean = false,
+    val conflict: Boolean = false,
+    val message: String? = null,
+    val wordState: LearningWordStateDto? = null,
+    val learningProgress: LearningProgressDto? = null,
+    val wordBookProgress: LearningProgressDto? = null
+)
+
+@JsonClass(generateAdapter = false)
+data class LearningWordStateDto(
+    val wordId: Long,
+    val bookId: Long,
+    val totalLearnCount: Int,
+    val lastLearnTime: Long,
+    val nextReviewTime: Long,
+    val masteryLevel: Int,
+    val userStatus: Int,
+    val repetition: Int,
+    val interval: Long,
+    val efactor: Double,
+    val stateRevision: Long = 0L
+)
+
+@JsonClass(generateAdapter = false)
+data class LearningProgressDto(
+    val bookId: Long,
+    val bookName: String,
+    val learnedCount: Int,
+    val masteredCount: Int,
+    val totalCount: Int,
+    val correctCount: Int,
+    val wrongCount: Int,
+    val studyDayCount: Int,
+    val lastStudyDate: String? = null,
+    val updatedAt: Long = 0L,
+    val revision: Long = 0L
+)
+
+@JsonClass(generateAdapter = false)
 data class PracticeDurationSyncRequest(
     val totalDurationMs: Long,
     val updatedAt: Long
@@ -174,12 +233,16 @@ data class FloatingDisplayRecordDto(
 
 interface LearningSyncApiService {
     companion object {
+        const val PATH_LEARNING_EVENTS = "me/learning-events"
         const val PATH_PRACTICE_SETTINGS = "me/practice/settings"
         const val PATH_PRACTICE_DURATION_ITEM = "me/practice/durations/{date}"
         const val PATH_PRACTICE_SESSIONS = "me/practice/sessions"
         const val PATH_FLOATING_SETTINGS = "me/floating/settings"
         const val PATH_FLOATING_DISPLAY_RECORD_ITEM = "me/floating/display-records/{date}"
     }
+
+    @POST(PATH_LEARNING_EVENTS)
+    fun recordLearningEvent(@Body request: LearningEventRequest): Call<ApiResponse<LearningEventResultDto>>
 
     @PUT(PATH_PRACTICE_SETTINGS)
     fun updatePracticeSettings(@Body request: PracticeSettingsSyncRequest): Call<ApiResponse<Unit>>

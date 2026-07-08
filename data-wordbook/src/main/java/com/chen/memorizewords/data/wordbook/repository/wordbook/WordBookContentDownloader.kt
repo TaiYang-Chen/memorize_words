@@ -64,7 +64,6 @@ class WordBookContentDownloader @Inject constructor(
         if (forceRefresh) {
             database.withTransaction {
                 database.wordBookItemDao().deleteByBookId(bookId)
-                database.wordLearningStateDao().deleteLearningWordByBookId(bookId)
             }
             currentCount = 0
         }
@@ -130,7 +129,6 @@ class WordBookContentDownloader @Inject constructor(
                 database.withTransaction {
                     if (forceRefresh || targetVersion > 0L) {
                         database.wordBookItemDao().deleteByBookId(book.id)
-                        database.wordLearningStateDao().deleteLearningWordByBookId(book.id)
                     }
                 }
             }

@@ -33,13 +33,15 @@ interface WordBookProgressDao {
             correct_count,
             wrong_count,
             study_day_count,
-            last_study_date
+            last_study_date,
+            revision
         ) VALUES (
             :bookId,
             0,
             0,
             0,
-            NULL
+            NULL,
+            0
         )
         """
     )
@@ -58,7 +60,8 @@ interface WordBookProgressDao {
             last_study_date = CASE
                 WHEN last_study_date = :today THEN last_study_date
                 ELSE :today
-            END
+            END,
+            revision = revision + 1
         WHERE book_id = :bookId
         """
     )
@@ -88,7 +91,8 @@ interface WordBookProgressDao {
             COALESCE(p.correct_count, 0) AS correctCount,
             COALESCE(p.wrong_count, 0) AS wrongCount,
             COALESCE(p.study_day_count, 0) AS studyDayCount,
-            p.last_study_date AS lastStudyDate
+            p.last_study_date AS lastStudyDate,
+            COALESCE(p.revision, 0) AS revision
         FROM word_book b
         LEFT JOIN word_book_progress p ON p.book_id = b.id
         WHERE b.id = :bookId
@@ -113,7 +117,8 @@ interface WordBookProgressDao {
             COALESCE(p.correct_count, 0) AS correctCount,
             COALESCE(p.wrong_count, 0) AS wrongCount,
             COALESCE(p.study_day_count, 0) AS studyDayCount,
-            p.last_study_date AS lastStudyDate
+            p.last_study_date AS lastStudyDate,
+            COALESCE(p.revision, 0) AS revision
         FROM word_book b
         LEFT JOIN word_book_progress p ON p.book_id = b.id
         WHERE b.id IN (:bookIds)

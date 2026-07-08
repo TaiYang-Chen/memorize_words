@@ -7,16 +7,10 @@ import com.chen.memorizewords.domain.study.model.record.DailyStudyWordRecord
 import com.chen.memorizewords.domain.study.model.record.DailyDurationStats
 import com.chen.memorizewords.domain.study.model.record.DailyWordStats
 import com.chen.memorizewords.domain.study.model.record.TodayCheckInEntryState
-import com.chen.memorizewords.domain.word.model.word.Word
 import kotlinx.coroutines.flow.Flow
 
 interface LearningRecordRepository {
     fun getCurrentBusinessDate(): String
-    suspend fun addLearningRecord(
-        word: Word,
-        definition: String,
-        isNewWord: Boolean
-    )
 
     suspend fun addStudyDuration(durationMs: Long)
 

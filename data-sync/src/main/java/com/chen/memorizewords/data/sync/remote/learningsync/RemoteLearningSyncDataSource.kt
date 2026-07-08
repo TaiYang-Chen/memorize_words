@@ -5,11 +5,15 @@ import com.chen.memorizewords.domain.floating.model.FloatingWordSettings
 import com.chen.memorizewords.domain.practice.PracticeSessionRecord
 import com.chen.memorizewords.domain.practice.PracticeSettings
 import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.FloatingDisplayRecordDto
+import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.LearningEventRequest
+import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.LearningEventResultDto
 import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.PracticeDurationDto
 import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.PracticeSessionDto
 import com.chen.memorizewords.core.network.http.PageData
 
 interface RemoteLearningSyncDataSource {
+    suspend fun recordLearningEvent(request: LearningEventRequest): Result<LearningEventResultDto>
+
     suspend fun getPracticeSettings(): Result<PracticeSettings?>
 
     suspend fun updatePracticeSettings(settings: PracticeSettings): Result<Unit>

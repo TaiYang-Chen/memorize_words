@@ -1,6 +1,7 @@
 package com.chen.memorizewords.data.wordbook.repository.wordbook
 
 import android.content.Context
+import com.chen.memorizewords.core.network.CoreNetworkHeaders
 import com.chen.memorizewords.data.wordbook.remoteapi.dto.wordbook.WordDto
 import com.chen.memorizewords.domain.wordbook.model.WordBook
 import com.chen.memorizewords.domain.wordbook.model.WordBookContentPackage
@@ -72,7 +73,12 @@ class HttpWordBookContentPackageImporter @Inject constructor(
     }
 
     private fun downloadPackage(url: String, destination: File): Long {
-        val request = Request.Builder().url(url).get().build()
+        val request = Request.Builder()
+            .url(url)
+            .header(CoreNetworkHeaders.SKIP_AUTHORIZATION, "true")
+            .header("Accept", "application/zip, application/octet-stream;q=0.9, */*;q=0.8")
+            .get()
+            .build()
         okHttpClient.newCall(request).execute().use { response ->
             if (!response.isSuccessful) {
                 throw IOException("Package download failed: http ${response.code}")

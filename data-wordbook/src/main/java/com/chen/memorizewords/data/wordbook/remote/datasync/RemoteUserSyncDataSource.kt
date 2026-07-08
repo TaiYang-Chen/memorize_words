@@ -15,7 +15,6 @@ import com.chen.memorizewords.data.wordbook.remoteapi.api.datasync.WordBookUpdat
 import com.chen.memorizewords.data.wordbook.remoteapi.api.datasync.WordBookProgressDto
 import com.chen.memorizewords.domain.wordbook.model.study.StudyPlan
 import com.chen.memorizewords.data.wordbook.remoteapi.dto.wordbook.WordBookDto
-import com.chen.memorizewords.data.wordbook.remoteapi.dto.wordbook.WordDto
 import com.chen.memorizewords.data.wordbook.remoteapi.dto.wordstate.WordStateDto
 import com.chen.memorizewords.core.network.http.PageData
 
@@ -37,60 +36,15 @@ interface RemoteUserSyncDataSource {
     suspend fun addFavorite(favorite: WordFavorites): Result<Unit>
     suspend fun getFavorites(page: Int, count: Int): Result<PageData<FavoriteDto>>
     suspend fun removeFavorite(wordId: Long): Result<Unit>
-    suspend fun upsertWordState(
-        bookId: Long,
-        wordId: Long,
-        totalLearnCount: Int,
-        lastLearnTime: Long,
-        nextReviewTime: Long,
-        masteryLevel: Int,
-        userStatus: Int,
-        repetition: Int,
-        interval: Long,
-        efactor: Double
-    ): Result<Unit>
-
-    suspend fun deleteWordStatesByBookId(bookId: Long): Result<Unit>
-    suspend fun upsertWordBookProgress(
-        bookId: Long,
-        bookName: String,
-        learnedCount: Int,
-        masteredCount: Int,
-        totalCount: Int,
-        correctCount: Int,
-        wrongCount: Int,
-        studyDayCount: Int,
-        lastStudyDate: String
-    ): Result<Unit>
-
     suspend fun getWordBookProgressList(): Result<List<WordBookProgressDto>>
     suspend fun getCurrentWordBookUpdateCandidate(trigger: String): Result<WordBookUpdateCandidateDto?>
     suspend fun reportCurrentWordBookUpdateAction(request: WordBookUpdateActionRequest): Result<Unit>
     suspend fun getCurrentWordBookUpdateManifest(version: Long): Result<WordBookUpdateManifestDto>
-    suspend fun getCurrentWordBookUpdateWords(
-        version: Long,
-        page: Int,
-        count: Int
-    ): Result<PageData<WordDto>>
     suspend fun completeCurrentWordBookUpdate(version: Long): Result<Unit>
     suspend fun getPendingWordBookUpdate(bookId: Long): Result<PendingWordBookUpdateDto?>
     suspend fun ignoreWordBookUpdate(bookId: Long, version: Long): Result<Unit>
     suspend fun getWordBookUpdateManifest(bookId: Long, version: Long): Result<WordBookUpdateManifestDto>
-    suspend fun getWordBookUpdateWords(
-        bookId: Long,
-        version: Long,
-        page: Int,
-        count: Int
-    ): Result<PageData<WordDto>>
     suspend fun completeWordBookUpdate(bookId: Long, version: Long): Result<Unit>
-
-    suspend fun appendStudyRecord(
-        date: String,
-        wordId: Long,
-        word: String,
-        definition: String,
-        isNewWord: Boolean
-    ): Result<Unit>
 
     suspend fun getStudyRecords(page: Int, count: Int): Result<PageData<StudyRecordDto>>
 

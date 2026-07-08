@@ -1,5 +1,6 @@
 package com.chen.memorizewords.domain.practice
 import com.chen.memorizewords.domain.word.model.word.Word
+import com.chen.memorizewords.domain.wordbook.model.WordBookContentStatus
 import com.chen.memorizewords.domain.wordbook.repository.WordBookRepository
 import com.chen.memorizewords.domain.wordbook.repository.WordOrderType
 import com.chen.memorizewords.domain.word.repository.WordRepository
@@ -9,7 +10,6 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class DefaultPracticeWordProvider @Inject constructor(
-    private val practiceSettingsRepository: PracticeSettingsRepository,
     private val wordBookRepository: WordBookRepository,
     private val wordRepository: WordRepository,
     private val getReviewWords: GetReviewWordsUseCase
@@ -43,6 +43,11 @@ class DefaultPracticeWordProvider @Inject constructor(
     override suspend fun getPracticeAvailability(): PracticeAvailability {
         return withContext(Dispatchers.IO) {
             val bookId = resolveBookId() ?: return@withContext PracticeAvailability.NO_BOOK
+            when (wordBookRepository.getWordBookContentState(bookId)?.status) {
+                WordBookContentStatus.READY -> Unit
+                WordBookContentStatus.FAILED -> return@withContext PracticeAvailability.CONTENT_FAILED
+                else -> return@withContext PracticeAvailability.CONTENT_NOT_READY
+            }
             val words = getReviewWords(
                 bookId = bookId,
                 count = 1,
@@ -53,9 +58,9 @@ class DefaultPracticeWordProvider @Inject constructor(
     }
 
     override suspend fun resolveBookId(): Long? {
-        val settingsBookId = practiceSettingsRepository.getSettings().selectedBookId
-        if (settingsBookId > 0L) return settingsBookId
-        return withContext(Dispatchers.IO) { wordBookRepository.getCurrentWordBook()?.id }
+        return withContext(Dispatchers.IO) {
+            wordBookRepository.getCurrentWordBookSelectionId()?.takeIf { it > 0L }
+        }
     }
 
     override suspend fun loadReviewWordsForPicker(): List<Word> {

@@ -49,8 +49,8 @@ class MyWordBookAdapter :
             val resources = context.resources
             val subtitle = item.description.trim().ifEmpty { item.category.trim() }
             val safeMax = item.totalWords.coerceAtLeast(1)
-            val safeProgress = item.learningWords.coerceIn(0, safeMax)
-            val safeMastered = item.masteredWords.coerceIn(0, safeProgress)
+            val safeMastered = item.masteredWords.coerceIn(0, safeMax)
+            val safeLearning = item.learningWords.coerceIn(0, safeMax - safeMastered)
             val isCompleted = item.totalWords > 0 && item.masteredWords >= item.totalWords && !item.isSelected
 
             binding.apply {
@@ -60,7 +60,7 @@ class MyWordBookAdapter :
                 tvSubtitle.isVisible = subtitle.isNotEmpty()
                 tvProgressLabel.text = context.getString(
                     R.string.feature_wordbook_my_book_progress_label,
-                    item.learningWords,
+                    item.startedWords,
                     item.totalWords
                 )
                 tvMasteredLabel.text = context.getString(
@@ -103,8 +103,8 @@ class MyWordBookAdapter :
                 rootCard.cardElevation = 0f
 
                 progressStudy.setMax(safeMax)
-                progressStudy.setProgress1(safeProgress)
-                progressStudy.setProgress2(safeMastered)
+                progressStudy.setProgress1(safeMastered)
+                progressStudy.setProgress2(safeLearning)
 
                 WordBookCoverImageLoader.load(ivCover, ivCoverFallback, item.imgUrl)
                 rootCard.setOnClickListener { listener?.invoke(item) }

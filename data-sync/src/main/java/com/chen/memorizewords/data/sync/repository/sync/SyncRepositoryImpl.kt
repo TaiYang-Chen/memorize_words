@@ -4,6 +4,8 @@ import com.chen.memorizewords.data.sync.bootstrap.DataBootstrapCoordinator
 import com.chen.memorizewords.data.sync.bootstrap.PostLoginBootstrapErrorLogger
 import com.chen.memorizewords.data.sync.local.room.model.sync.SyncOutboxDao
 import com.chen.memorizewords.data.sync.local.room.model.sync.SyncOutboxEntity
+import com.chen.memorizewords.data.wordbook.local.room.model.learning.outbox.LearningOutboxDao
+import com.chen.memorizewords.data.wordbook.local.room.model.learning.outbox.LearningOutboxEntity
 import com.chen.memorizewords.domain.account.auth.AuthStateProvider
 import com.chen.memorizewords.domain.sync.model.LearningPrerequisitesSnapshot
 import com.chen.memorizewords.domain.sync.model.PostLoginBootstrapState
@@ -27,6 +29,7 @@ import kotlinx.coroutines.launch
 class SyncRepositoryImpl @Inject constructor(
     private val dataBootstrapCoordinator: DataBootstrapCoordinator,
     private val syncOutboxDao: SyncOutboxDao,
+    private val learningOutboxDao: LearningOutboxDao,
     private val networkMonitor: NetworkMonitor,
     private val syncOutboxWorkScheduler: SyncOutboxWorkScheduler,
     private val authStateProvider: AuthStateProvider,
@@ -37,15 +40,46 @@ class SyncRepositoryImpl @Inject constructor(
 ) : SyncRepository {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
-    private val pendingCountFlow = syncOutboxDao.observePendingCount()
+    private val learningPendingCountFlow = learningOutboxDao.observeCountByStatuses(
+        listOf(
+            LearningOutboxEntity.STATUS_PENDING,
+            LearningOutboxEntity.STATUS_SYNCING,
+            LearningOutboxEntity.STATUS_BLOCKED
+        )
+    )
         .distinctUntilChanged()
         .stateIn(scope, SharingStarted.Eagerly, 0)
 
-    private val retryableCountFlow = syncOutboxDao.observeRetryableCount()
+    private val learningRetryableCountFlow = learningOutboxDao.observeCountByStatus(
+        LearningOutboxEntity.STATUS_PENDING
+    )
         .distinctUntilChanged()
         .stateIn(scope, SharingStarted.Eagerly, 0)
 
-    private val blockedCountFlow = syncOutboxDao.observeBlockedCount()
+    private val learningBlockedCountFlow = learningOutboxDao.observeCountByStatus(
+        LearningOutboxEntity.STATUS_BLOCKED
+    )
+        .distinctUntilChanged()
+        .stateIn(scope, SharingStarted.Eagerly, 0)
+
+    private val pendingCountFlow = combine(
+        syncOutboxDao.observePendingCount(),
+        learningPendingCountFlow
+    ) { globalCount, learningCount -> globalCount + learningCount }
+        .distinctUntilChanged()
+        .stateIn(scope, SharingStarted.Eagerly, 0)
+
+    private val retryableCountFlow = combine(
+        syncOutboxDao.observeRetryableCount(),
+        learningRetryableCountFlow
+    ) { globalCount, learningCount -> globalCount + learningCount }
+        .distinctUntilChanged()
+        .stateIn(scope, SharingStarted.Eagerly, 0)
+
+    private val blockedCountFlow = combine(
+        syncOutboxDao.observeBlockedCount(),
+        learningBlockedCountFlow
+    ) { globalCount, learningCount -> globalCount + learningCount }
         .distinctUntilChanged()
         .stateIn(scope, SharingStarted.Eagerly, 0)
 

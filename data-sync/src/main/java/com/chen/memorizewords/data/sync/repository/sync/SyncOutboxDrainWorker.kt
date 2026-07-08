@@ -25,8 +25,19 @@ class SyncOutboxDrainWorker(
         }
 
         while (true) {
-            when (entryPoint.syncOutboxProcessor().drainBatch()) {
-                SyncOutboxProcessor.DrainResult.Empty -> return Result.success()
+            val learningResult = entryPoint.learningOutboxProcessor().drainBatch()
+            when (learningResult) {
+                SyncOutboxProcessor.DrainResult.Empty -> Unit
+                SyncOutboxProcessor.DrainResult.Drained -> Unit
+                SyncOutboxProcessor.DrainResult.RetryNeeded -> return Result.retry()
+            }
+            val globalResult = entryPoint.syncOutboxProcessor().drainBatch()
+            when (globalResult) {
+                SyncOutboxProcessor.DrainResult.Empty -> {
+                    if (learningResult == SyncOutboxProcessor.DrainResult.Empty) {
+                        return Result.success()
+                    }
+                }
                 SyncOutboxProcessor.DrainResult.Drained -> Unit
                 SyncOutboxProcessor.DrainResult.RetryNeeded -> return Result.retry()
             }
@@ -37,6 +48,7 @@ class SyncOutboxDrainWorker(
 @EntryPoint
 @InstallIn(SingletonComponent::class)
 interface SyncOutboxDrainWorkerEntryPoint {
+    fun learningOutboxProcessor(): LearningOutboxProcessor
     fun syncOutboxProcessor(): SyncOutboxProcessor
     fun authStateProvider(): AuthStateProvider
 }

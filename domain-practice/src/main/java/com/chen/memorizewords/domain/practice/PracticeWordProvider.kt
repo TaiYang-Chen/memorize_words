@@ -4,6 +4,8 @@ import com.chen.memorizewords.domain.word.model.word.Word
 enum class PracticeAvailability {
     AVAILABLE,
     NO_BOOK,
+    CONTENT_NOT_READY,
+    CONTENT_FAILED,
     NO_WORDS
 }
 

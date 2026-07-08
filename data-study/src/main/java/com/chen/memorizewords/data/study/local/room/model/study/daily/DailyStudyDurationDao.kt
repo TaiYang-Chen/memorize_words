@@ -90,17 +90,6 @@ interface DailyStudyDurationDao {
 
     @Query(
         """
-        SELECT COUNT(*) FROM (
-            SELECT date FROM word_study_records
-            UNION
-            SELECT date FROM daily_study_duration WHERE total_duration_ms > 0
-        )
-        """
-    )
-    fun getStudyTotalStudyDaysForStats(): Flow<Int>
-
-    @Query(
-        """
         SELECT date
         FROM daily_study_duration
         WHERE is_new_plan_completed = 1
@@ -126,7 +115,7 @@ interface DailyStudyDurationDao {
         SELECT
             days.date AS date,
             CASE
-                WHEN COALESCE(records.record_count, 0) > 0 OR COALESCE(duration.total_duration_ms, 0) > 0 THEN 1
+                WHEN COALESCE(duration.total_duration_ms, 0) > 0 THEN 1
                 ELSE 0
             END AS hasStudy,
             CASE
@@ -136,18 +125,10 @@ interface DailyStudyDurationDao {
             COALESCE(duration.is_new_plan_completed, 0) AS isNewPlanCompleted,
             COALESCE(duration.is_review_plan_completed, 0) AS isReviewPlanCompleted
         FROM (
-            SELECT date FROM word_study_records WHERE date BETWEEN :startDate AND :endDate
-            UNION
             SELECT date FROM daily_study_duration WHERE date BETWEEN :startDate AND :endDate
             UNION
             SELECT date FROM check_in_record WHERE date BETWEEN :startDate AND :endDate
         ) AS days
-        LEFT JOIN (
-            SELECT date, COUNT(*) AS record_count
-            FROM word_study_records
-            WHERE date BETWEEN :startDate AND :endDate
-            GROUP BY date
-        ) AS records ON records.date = days.date
         LEFT JOIN (
             SELECT date, COUNT(*) AS record_count
             FROM check_in_record

@@ -1,9 +1,7 @@
 package com.chen.memorizewords.data.sync.bootstrap
 
 import android.content.Context
-import androidx.work.Constraints
 import androidx.work.ExistingWorkPolicy
-import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.chen.memorizewords.data.sync.repository.sync.SyncWorkConstants
@@ -53,12 +51,11 @@ class DataBootstrapCoordinator @Inject constructor(
 
 }
 
-internal val DATA_BOOTSTRAP_POLICY = ExistingWorkPolicy.KEEP
+internal val DATA_BOOTSTRAP_POLICY = ExistingWorkPolicy.REPLACE
 internal val POST_LOGIN_BOOTSTRAP_POLICY = ExistingWorkPolicy.REPLACE
 
 internal fun buildDataBootstrapRequest() =
     OneTimeWorkRequestBuilder<DataBootstrapWorker>()
-        .setConstraints(networkConstraints())
         .addTag(SyncWorkConstants.TAG_DATA_BOOTSTRAP)
         .build()
 
@@ -66,9 +63,3 @@ internal fun buildPostLoginBootstrapRequest() =
     OneTimeWorkRequestBuilder<PostLoginBootstrapWorker>()
         .addTag(SyncWorkConstants.TAG_POST_LOGIN_BOOTSTRAP)
         .build()
-
-private fun networkConstraints(): Constraints {
-    return Constraints.Builder()
-        .setRequiredNetworkType(NetworkType.CONNECTED)
-        .build()
-}

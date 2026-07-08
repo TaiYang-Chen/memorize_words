@@ -21,6 +21,8 @@ import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.FloatingDockS
 import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.FloatingFieldConfigDto
 import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.FloatingSettingsDto
 import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.FloatingSettingsSyncRequest
+import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.LearningEventRequest
+import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.LearningEventResultDto
 import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.LearningSyncRequest
 import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.PracticeDurationDto
 import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.PracticeDurationSyncRequest
@@ -37,6 +39,10 @@ class RemoteLearningSyncDataSourceImpl @Inject constructor(
     private val request: LearningSyncRequest,
     private val remoteResultAdapter: RemoteResultAdapter
 ) : RemoteLearningSyncDataSource {
+
+    override suspend fun recordLearningEvent(request: LearningEventRequest): Result<LearningEventResultDto> {
+        return remoteResultAdapter.toResult { this.request.recordLearningEvent(request) }
+    }
 
     override suspend fun getPracticeSettings(): Result<PracticeSettings?> {
         return remoteResultAdapter.toResult { request.getPracticeSettings() }

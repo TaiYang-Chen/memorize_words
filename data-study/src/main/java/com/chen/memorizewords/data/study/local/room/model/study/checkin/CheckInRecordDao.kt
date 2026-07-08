@@ -24,6 +24,9 @@ interface CheckInRecordDao {
     @Query("SELECT * FROM check_in_record ORDER BY date DESC")
     fun observeAllByDateDesc(): Flow<List<CheckInRecordEntity>>
 
+    @Query("SELECT * FROM check_in_record WHERE date BETWEEN :startDate AND :endDate")
+    fun observeBetween(startDate: String, endDate: String): Flow<List<CheckInRecordEntity>>
+
     @Query("SELECT COUNT(*) FROM check_in_record")
     suspend fun getTotalCount(): Int
 

@@ -16,7 +16,9 @@ fun WordLearningStateEntity.toDomain(): WordLearningState {
         userStatus = userStatus,
         interval = interval,
         repetition = repetition,
-        efactor = efactor
+        efactor = efactor,
+        stateRevision = stateRevision,
+        lastEventId = lastEventId
     )
 }
 
@@ -34,7 +36,8 @@ fun WordLearningState.toEntity(): WordLearningStateEntity {
         userStatus = userStatus,
         interval = interval,
         repetition = repetition,
-        efactor = efactor
+        efactor = efactor,
+        stateRevision = stateRevision,
+        lastEventId = lastEventId
     )
 }
-    

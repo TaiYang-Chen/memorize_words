@@ -42,7 +42,7 @@ class StudyOutboxFlushTest {
 
     private fun command(key: String): OutboxCommand {
         return OutboxCommand(
-            topic = OutboxTopic.STUDY_RECORD,
+            topic = OutboxTopic.DAILY_STUDY_DURATION,
             key = key,
             operation = SyncOperation.UPSERT,
             payload = "{}",

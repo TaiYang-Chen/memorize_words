@@ -38,4 +38,8 @@ class SyncFacade @Inject constructor(
     fun triggerDrain() {
         syncRepository.triggerDrain()
     }
+
+    fun scheduleBootstrapSync() {
+        syncRepository.scheduleBootstrapSync()
+    }
 }

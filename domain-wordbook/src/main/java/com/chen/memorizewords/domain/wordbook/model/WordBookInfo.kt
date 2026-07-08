@@ -13,6 +13,7 @@ data class WordBookInfo(
     val isSelected: Boolean = false,
     val createdByUserId: String? = null
 ) {
-    val remainWords = totalWords - learningWords
+    val startedWords = learningWords + masteredWords
+    val remainWords = (totalWords - startedWords).coerceAtLeast(0)
     fun remainDays(count: Int) = remainWords / count
 }

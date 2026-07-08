@@ -26,5 +26,7 @@ data class WordBookProgress(
     val studyDayCount: Int = 0,
 
     /** 最近一次学习日期 yyyy-MM-dd */
-    val lastStudyDate: String = ""
+    val lastStudyDate: String = "",
+
+    val revision: Long = 0L
 )

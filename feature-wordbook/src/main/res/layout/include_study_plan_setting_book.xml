@@ -8,6 +8,10 @@
         <variable
             name="viewmodel"
             type="com.chen.memorizewords.feature.wordbook.plan.StudyPlanSettingViewModel" />
+
+        <variable
+            name="wordBookCardState"
+            type="com.chen.memorizewords.feature.wordbook.plan.StudyPlanWordBookCardState" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -28,7 +32,7 @@
                 android:layout_height="0dp"
                 android:layout_marginBottom="@dimen/core_ui_dp_16"
                 android:src="@drawable/module_wordbook_ic_book"
-                app:imageUrl="@{viewmodel.wordBookCardState.imgUrl}"
+                app:imageUrl="@{wordBookCardState.imgUrl}"
                 app:layout_constraintBottom_toTopOf="@+id/linearLayout6"
                 app:layout_constraintEnd_toStartOf="@+id/textView3"
                 app:layout_constraintStart_toStartOf="parent"
@@ -39,7 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/core_ui_dp_16"
-                android:text="@{viewmodel.wordBookCardState.title}"
+                android:text="@{wordBookCardState.title}"
                 android:textColor="@color/feature_wordbook_study_plan_text_primary"
                 android:textSize="@dimen/core_ui_text_18"
                 app:layout_constraintStart_toEndOf="@+id/linearLayout"
@@ -51,7 +55,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/core_ui_dp_8"
-                android:text="@{viewmodel.wordBookCardState.totalWords+`词`}"
+                android:text="@{wordBookCardState.totalWords+`词`}"
                 android:textColor="@color/feature_wordbook_study_plan_text_secondary"
                 android:textSize="@dimen/core_ui_text_11"
                 android:textStyle="bold"
@@ -82,7 +86,7 @@
                     android:paddingTop="@dimen/core_ui_dp_3"
                     android:paddingEnd="@dimen/core_ui_dp_8"
                     android:paddingBottom="@dimen/core_ui_dp_3"
-                    android:text="考纲词汇"
+                    android:text="@{wordBookCardState.category}"
                     android:textColor="@color/feature_wordbook_study_plan_badge_warning_text"
                     android:textSize="@dimen/core_ui_text_11"
                     app:layout_constraintStart_toEndOf="@+id/linearLayout"
@@ -109,7 +113,7 @@
                     android:paddingTop="@dimen/core_ui_dp_3"
                     android:paddingEnd="@dimen/core_ui_dp_8"
                     android:paddingBottom="@dimen/core_ui_dp_3"
-                    android:text="正在学习"
+                    android:text="@{wordBookCardState.statusText}"
                     android:textColor="@color/feature_wordbook_study_plan_badge_success_text"
                     android:textSize="@dimen/core_ui_text_11"
                     app:layout_constraintStart_toEndOf="@+id/linearLayout"
@@ -146,7 +150,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif"
-                            android:text="@{String.valueOf(viewmodel.wordBookCardState.masteredWords)}"
+                            android:text="@{String.valueOf(wordBookCardState.masteredWords)}"
                             android:textColor="@color/feature_wordbook_study_plan_text_primary"
                             android:textSize="@dimen/core_ui_text_16"
                             android:textStyle="bold"
@@ -184,7 +188,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif"
-                            android:text="@{String.valueOf(viewmodel.wordBookCardState.learningWords)}"
+                            android:text="@{String.valueOf(wordBookCardState.learningWords)}"
                             android:textColor="@color/feature_wordbook_study_plan_text_primary"
                             android:textSize="@dimen/core_ui_text_16"
                             android:textStyle="bold"
@@ -222,7 +226,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif"
-                            android:text="@{String.valueOf(viewmodel.wordBookCardState.remainWords)}"
+                            android:text="@{String.valueOf(wordBookCardState.remainWords)}"
                             android:textColor="@color/feature_wordbook_study_plan_text_primary"
                             android:textSize="@dimen/core_ui_text_16"
                             android:textStyle="bold"
@@ -251,10 +255,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         app:bgColor="@color/feature_wordbook_study_plan_progress_track"
-                        app:max="@{viewmodel.wordBookCardState.totalWords}"
-                        app:progress1="@{viewmodel.wordBookCardState.masteredWords}"
+                        app:max="@{wordBookCardState.totalWords}"
+                        app:progress1="@{wordBookCardState.masteredWords}"
                         app:progress1Color="@color/feature_wordbook_study_plan_progress_mastered"
-                        app:progress2="@{viewmodel.wordBookCardState.learningWords}"
+                        app:progress2="@{wordBookCardState.learningWords}"
                         app:progress2Color="@color/feature_wordbook_study_plan_progress_learning" />
 
 
@@ -340,6 +344,7 @@
                     android:layout_marginHorizontal="@dimen/core_ui_dp_4"
                     android:layout_weight="2"
                     android:background="@drawable/module_wordbook_selector_ff8000_radius"
+                    android:enabled="@{wordBookCardState.canOpenWordList}"
                     android:gravity="center"
                     android:onClick="@{()->viewmodel.onPickWordList()}"
                     android:orientation="horizontal">

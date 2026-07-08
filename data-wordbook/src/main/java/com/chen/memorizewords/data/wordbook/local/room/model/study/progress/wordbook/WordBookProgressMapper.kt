@@ -12,6 +12,7 @@ fun WordBookProgressSummary.toDomain(): WordBookProgress {
         correctCount = correctCount,
         wrongCount = wrongCount,
         studyDayCount = studyDayCount,
-        lastStudyDate = lastStudyDate.orEmpty()
+        lastStudyDate = lastStudyDate.orEmpty(),
+        revision = revision
     )
 }

@@ -18,11 +18,12 @@ import androidx.work.Data
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import com.chen.memorizewords.data.wordbook.remote.datasync.RemoteUserSyncDataSource
-import com.chen.memorizewords.data.wordbook.repository.WordLearningStateMirror
+import com.chen.memorizewords.data.wordbook.repository.WordLearningStateSnapshotStore
 import com.chen.memorizewords.data.wordbook.repository.wordbook.WordBookContentDownloader
 import com.chen.memorizewords.data.wordbook.repository.wordbook.toProgress
 import com.chen.memorizewords.data.wordbook.remoteapi.dto.wordstate.WordStateDto
 import com.chen.memorizewords.domain.study.model.progress.word.WordLearningState
+import com.chen.memorizewords.domain.study.repository.learning.LearningSyncStatePort
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -61,7 +62,8 @@ class WordBookDownloadWorker(
         )
         val contentDownloader = entryPoint.wordBookContentDownloader()
         val remoteUserSyncDataSource = entryPoint.remoteUserSyncDataSource()
-        val wordLearningStateMirror = entryPoint.wordLearningStateMirror()
+        val wordLearningStateSnapshotStore = entryPoint.wordLearningStateSnapshotStore()
+        val learningSyncStatePort = entryPoint.learningSyncStatePort()
 
         val notificationId = buildNotificationId(bookId)
         ensureNotificationChannel()
@@ -108,7 +110,8 @@ class WordBookDownloadWorker(
                 bookId = bookId,
                 pageSize = DEFAULT_PAGE_SIZE,
                 remoteUserSyncDataSource = remoteUserSyncDataSource,
-                wordLearningStateMirror = wordLearningStateMirror
+                wordLearningStateSnapshotStore = wordLearningStateSnapshotStore,
+                learningSyncStatePort = learningSyncStatePort
             )
 
             if (reportMyBook) {
@@ -160,8 +163,13 @@ class WordBookDownloadWorker(
         bookId: Long,
         pageSize: Int,
         remoteUserSyncDataSource: RemoteUserSyncDataSource,
-        wordLearningStateMirror: WordLearningStateMirror
+        wordLearningStateSnapshotStore: WordLearningStateSnapshotStore,
+        learningSyncStatePort: LearningSyncStatePort
     ) {
+        if (learningSyncStatePort.hasPendingLearningEvents()) {
+            Log.i(TAG, "Skip remote word state snapshot because local learning events are pending")
+            return
+        }
         val states = mutableListOf<WordLearningState>()
         var page = 0
         var loaded = 0
@@ -183,7 +191,7 @@ class WordBookDownloadWorker(
             page++
         }
 
-        wordLearningStateMirror.overwriteLearningStatesForBookFromRemote(bookId, states)
+        wordLearningStateSnapshotStore.overwriteLearningStatesForBookFromRemote(bookId, states)
     }
 
     private fun WordStateDto.toDomainState(fallbackBookId: Long): WordLearningState {
@@ -313,7 +321,8 @@ class WordBookDownloadWorker(
 interface WordBookDownloadWorkerEntryPoint {
     fun wordBookContentDownloader(): WordBookContentDownloader
     fun remoteUserSyncDataSource(): RemoteUserSyncDataSource
-    fun wordLearningStateMirror(): WordLearningStateMirror
+    fun wordLearningStateSnapshotStore(): WordLearningStateSnapshotStore
+    fun learningSyncStatePort(): LearningSyncStatePort
 }
 
 private const val DEFAULT_PAGE_SIZE = 50

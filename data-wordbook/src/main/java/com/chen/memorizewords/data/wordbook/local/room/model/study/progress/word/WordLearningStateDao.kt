@@ -109,7 +109,8 @@ interface WordLearningStateDao {
             user_status = :userStatus,
             repetition = :repetition,
             interval = :interval,
-            efactor = :efactor
+            efactor = :efactor,
+            state_revision = state_revision + 1
         WHERE word_id = :wordId AND book_id = :bookId
     """
     )

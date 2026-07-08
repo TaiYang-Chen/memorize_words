@@ -29,12 +29,6 @@ import com.chen.memorizewords.data.wordbook.local.room.model.words.word.toUserMe
 import com.chen.memorizewords.data.wordbook.remote.wordbook.RemoteWordBookDataSource
 import com.chen.memorizewords.data.wordbook.repository.wordbook.sanitizeWordExamples
 import com.chen.memorizewords.data.wordbook.repository.wordbook.sanitizeWordForms
-import com.chen.memorizewords.domain.study.model.progress.word.WordLearningState
-import com.chen.memorizewords.domain.study.model.progress.word.calculateSm2Review
-import com.chen.memorizewords.domain.sync.OutboxTopic
-import com.chen.memorizewords.domain.sync.SyncOperation
-import com.chen.memorizewords.domain.sync.SyncOutboxWriter
-import com.chen.memorizewords.domain.sync.WordStateUpsertSyncPayload
 import com.chen.memorizewords.domain.word.model.word.Word
 import com.chen.memorizewords.domain.word.model.word.WordDefinitions
 import com.chen.memorizewords.domain.word.model.word.WordExample
@@ -42,11 +36,9 @@ import com.chen.memorizewords.domain.word.model.word.WordForm
 import com.chen.memorizewords.domain.word.model.word.WordQuickLookupResult
 import com.chen.memorizewords.domain.word.model.word.WordRoot
 import com.chen.memorizewords.domain.word.repository.WordRepository
-import com.google.gson.Gson
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.util.concurrent.TimeUnit
 
 class WordRepositoryImpl @Inject constructor(
     private val remoteWordBookDataSource: RemoteWordBookDataSource,
@@ -58,11 +50,8 @@ class WordRepositoryImpl @Inject constructor(
     private val wordExampleDao: WordExampleDao,
     private val wordRelationDao: WordRelationDao,
     private val wordUserMetaDao: WordUserMetaDao,
-    private val wordLearningStateMirror: WordLearningStateMirror,
     private val wordDao: WordDao,
-    private val transactionRunner: WordBookTransactionRunner,
-    private val syncOutboxWriter: SyncOutboxWriter,
-    private val gson: Gson
+    private val transactionRunner: WordBookTransactionRunner
 ) : WordRepository {
 
     override suspend fun getWordsByIds(ids: List<Long>): List<Word> {
@@ -101,39 +90,6 @@ class WordRepositoryImpl @Inject constructor(
         limit: Int
     ): List<WordDefinitions> {
         return wordDefinitionDao.getRandomDistractorsByPos(wordId, limit).map { it.toDomain() }
-    }
-
-    override suspend fun updateWordStatus(
-        bookId: Long,
-        word: Word,
-        quality: Int
-    ): Boolean {
-        val previousState = wordLearningStateMirror.getState(word.id, bookId)
-        val nextState = buildNextLearningState(
-            existingState = previousState,
-            bookId = bookId,
-            wordId = word.id,
-            quality = quality,
-            userStatus = 0
-        )
-        wordLearningStateMirror.upsertState(nextState)
-        enqueueWordStateUpsertSync(nextState)
-        return previousState == null
-    }
-
-    override suspend fun setWordAsMastered(
-        bookId: Long,
-        word: Word
-    ) {
-        val nextState = buildNextLearningState(
-            existingState = wordLearningStateMirror.getState(word.id, bookId),
-            bookId = bookId,
-            wordId = word.id,
-            quality = 5,
-            userStatus = 1
-        )
-        wordLearningStateMirror.upsertState(nextState)
-        enqueueWordStateUpsertSync(nextState)
     }
 
     override suspend fun getWordByWordString(word: String): Word? {
@@ -251,34 +207,6 @@ class WordRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun buildNextLearningState(
-        existingState: WordLearningState?,
-        bookId: Long,
-        wordId: Long,
-        quality: Int,
-        userStatus: Int
-    ): WordLearningState {
-        val result = calculateSm2Review(
-            prevInterval = existingState?.interval ?: 1L,
-            prevEF = existingState?.efactor ?: 2.5,
-            prevRepetition = existingState?.repetition ?: 0,
-            quality = quality
-        )
-        val now = System.currentTimeMillis()
-        return WordLearningState(
-            wordId = wordId,
-            bookId = bookId,
-            totalLearnCount = (existingState?.totalLearnCount ?: 0) + 1,
-            lastLearnTime = now,
-            nextReviewTime = now + TimeUnit.DAYS.toMillis(result.interval),
-            masteryLevel = result.mastery,
-            userStatus = userStatus,
-            repetition = result.repetition,
-            interval = result.interval,
-            efactor = result.ef
-        )
-    }
-
     private suspend fun resolveLocalWord(rawWord: String, normalizedWord: String): Word? {
         wordDao.getWordWithRelationsByWordString(rawWord)?.toDomain()?.let { return it }
         wordDao.getWordWithRelationsByNormalizedWord(normalizedWord)?.toDomain()?.let { return it }
@@ -317,25 +245,4 @@ class WordRepositoryImpl @Inject constructor(
         }
     }
 
-    private suspend fun enqueueWordStateUpsertSync(state: WordLearningState) {
-        syncOutboxWriter.enqueueLatest(
-            bizType = OutboxTopic.WORD_STATE_UPSERT,
-            bizKey = "word_state:${state.bookId}:${state.wordId}",
-            operation = SyncOperation.UPSERT,
-            payload = gson.toJson(
-                WordStateUpsertSyncPayload(
-                    bookId = state.bookId,
-                    wordId = state.wordId,
-                    totalLearnCount = state.totalLearnCount,
-                    lastLearnTime = state.lastLearnTime,
-                    nextReviewTime = state.nextReviewTime,
-                    masteryLevel = state.masteryLevel,
-                    userStatus = state.userStatus,
-                    repetition = state.repetition,
-                    interval = state.interval,
-                    efactor = state.efactor
-                )
-            )
-        )
-    }
 }

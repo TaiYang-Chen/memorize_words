@@ -171,8 +171,8 @@
                 app:layout_constraintBottom_toBottomOf="@id/coverContainer"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/coverContainer"
-                app:progress1Color="@color/feature_wordbook_my_book_progress_learning_fill"
-                app:progress2Color="@color/feature_wordbook_my_book_progress_fill" />
+                app:progress1Color="@color/feature_wordbook_my_book_progress_fill"
+                app:progress2Color="@color/feature_wordbook_my_book_progress_learning_fill" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

@@ -7,25 +7,16 @@ import com.chen.memorizewords.data.study.local.room.model.study.checkin.CheckInR
 import com.chen.memorizewords.data.study.local.room.model.study.checkin.CheckInRecordEntity
 import com.chen.memorizewords.data.study.local.room.model.study.daily.DailyStudyDurationDao
 import com.chen.memorizewords.data.study.local.room.model.study.daily.DailyStudyDurationEntity
-import com.chen.memorizewords.data.study.local.room.model.study.daily.WordStudyRecordsDao
-import com.chen.memorizewords.data.study.local.room.model.study.daily.WordStudyRecordsEntity
 import com.chen.memorizewords.data.study.local.room.model.study.favorites.WordFavoriteEntity
 import com.chen.memorizewords.data.study.local.room.model.study.favorites.WordFavoritesDao
 import com.chen.memorizewords.data.study.local.room.model.study.outbox.StudyPendingOutboxDao
 import com.chen.memorizewords.data.study.local.room.model.study.outbox.StudyPendingOutboxEntity
-import com.chen.memorizewords.data.study.local.room.model.study.progress.word.WordLearningStateDao
-import com.chen.memorizewords.data.study.local.room.model.study.progress.word.WordLearningStateEntity
-import com.chen.memorizewords.data.study.local.room.model.study.progress.wordbook.WordBookProgressDao
-import com.chen.memorizewords.data.study.local.room.model.study.progress.wordbook.WordBookProgressEntity
 
 @Database(
     entities = [
         CheckInRecordEntity::class,
         DailyStudyDurationEntity::class,
-        WordStudyRecordsEntity::class,
         WordFavoriteEntity::class,
-        WordLearningStateEntity::class,
-        WordBookProgressEntity::class,
         StudyPendingOutboxEntity::class
     ],
     version = 1,
@@ -35,9 +26,6 @@ import com.chen.memorizewords.data.study.local.room.model.study.progress.wordboo
 abstract class StudyDatabase : RoomDatabase() {
     abstract fun checkInRecordDao(): CheckInRecordDao
     abstract fun dailyStudyDurationDao(): DailyStudyDurationDao
-    abstract fun wordStudyRecordsDao(): WordStudyRecordsDao
     abstract fun wordFavoritesDao(): WordFavoritesDao
-    abstract fun wordLearningStateDao(): WordLearningStateDao
-    abstract fun wordBookProgressDao(): WordBookProgressDao
     abstract fun studyPendingOutboxDao(): StudyPendingOutboxDao
 }
