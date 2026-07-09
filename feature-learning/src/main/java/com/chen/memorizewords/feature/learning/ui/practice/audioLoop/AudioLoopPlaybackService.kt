@@ -486,7 +486,7 @@ class AudioLoopPlaybackService : Service() {
                     entryType = queue.entryType,
                     entryCount = queue.entries.size,
                     durationMs = duration,
-                    createdAt = queue.createdAt,
+                    createdAtMs = queue.createdAtMs,
                     wordIds = queue.entries.map { it.id },
                     questionCount = queue.entries.size,
                     completedCount = completedIds.size,

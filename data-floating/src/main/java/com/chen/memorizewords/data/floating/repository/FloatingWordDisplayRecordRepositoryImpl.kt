@@ -33,12 +33,12 @@ class FloatingWordDisplayRecordRepositoryImpl @Inject constructor(
                 FloatingWordDisplayRecordEntity(
                     date = date,
                     displayCount = 1,
-                    updatedAt = System.currentTimeMillis()
+                    updatedAtMs = System.currentTimeMillis()
                 )
             } else {
                 current.record.copy(
                     displayCount = current.record.displayCount + 1,
-                    updatedAt = System.currentTimeMillis()
+                    updatedAtMs = System.currentTimeMillis()
                 )
             }
             val updatedWordIds = currentWordIds + wordId
@@ -57,7 +57,7 @@ class FloatingWordDisplayRecordRepositoryImpl @Inject constructor(
                         date = updated.date,
                         displayCount = updated.displayCount,
                         wordIds = updatedWordIds,
-                        updatedAt = updated.updatedAt
+                        updatedAtMs = updated.updatedAtMs
                     )
                 )
             )
@@ -75,7 +75,7 @@ internal fun FloatingWordDisplayRecordWithWords.toDomain(): FloatingWordDisplayR
         date = record.date,
         displayCount = record.displayCount,
         wordIds = words.sortedBy { it.sequence }.map { it.wordId },
-        updatedAt = record.updatedAt
+        updatedAtMs = record.updatedAtMs
     )
 }
 

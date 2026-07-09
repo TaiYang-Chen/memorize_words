@@ -13,8 +13,8 @@ data class DailyStudyDurationEntity(
     @ColumnInfo(name = "total_duration_ms")
     val totalDurationMs: Long,
 
-    @ColumnInfo(name = "updated_at")
-    val updatedAt: Long,
+    @ColumnInfo(name = "updated_at_ms")
+    val updatedAtMs: Long,
 
     @ColumnInfo(name = "is_new_plan_completed")
     val isNewPlanCompleted: Boolean = false,
@@ -24,6 +24,6 @@ data class DailyStudyDurationEntity(
 ) {
     init {
         require(totalDurationMs >= 0L) { "totalDurationMs must be non-negative" }
-        require(updatedAt >= 0L) { "updatedAt must be non-negative" }
+        require(updatedAtMs >= 0L) { "updatedAtMs must be non-negative" }
     }
 }

@@ -12,12 +12,12 @@ import com.chen.memorizewords.data.sync.repository.sync.SyncOutboxState
     tableName = "sync_outbox",
     indices = [
         Index(value = ["biz_key"], unique = true),
-        Index(value = ["biz_type", "updated_at"]),
-        Index(value = ["state", "next_retry_at", "updated_at"]),
-        Index(value = ["state", "lease_expires_at", "updated_at"]),
-        Index(value = ["state", "updated_at", "id"]),
+        Index(value = ["biz_type", "updated_at_ms"]),
+        Index(value = ["state", "next_retry_at_ms", "updated_at_ms"]),
+        Index(value = ["state", "lease_expires_at_ms", "updated_at_ms"]),
+        Index(value = ["state", "updated_at_ms", "id"]),
         Index(value = ["lease_token"]),
-        Index(value = ["updated_at"])
+        Index(value = ["updated_at_ms"])
     ]
 )
 data class SyncOutboxEntity(
@@ -39,14 +39,14 @@ data class SyncOutboxEntity(
     val lastError: String?,
     @ColumnInfo(name = "failure_kind")
     val failureKind: SyncOutboxFailureKind?,
-    @ColumnInfo(name = "last_attempt_at")
+    @ColumnInfo(name = "last_attempt_at_ms")
     val lastAttemptAt: Long,
-    @ColumnInfo(name = "next_retry_at")
+    @ColumnInfo(name = "next_retry_at_ms")
     val nextRetryAt: Long,
     @ColumnInfo(name = "lease_token")
     val leaseToken: String?,
-    @ColumnInfo(name = "lease_expires_at")
+    @ColumnInfo(name = "lease_expires_at_ms")
     val leaseExpiresAt: Long,
-    @ColumnInfo(name = "updated_at")
-    val updatedAt: Long
+    @ColumnInfo(name = "updated_at_ms")
+    val updatedAtMs: Long
 )

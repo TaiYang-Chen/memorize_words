@@ -1262,7 +1262,7 @@ class ListeningPracticeViewModel @Inject constructor(
                         ListeningPracticeMode.SPELLING -> PracticeKind.LISTENING_SPELLING
                     },
                     report = report,
-                    completedAtMillis = System.currentTimeMillis()
+                    completedAtMs = System.currentTimeMillis()
                 )
             )
         }

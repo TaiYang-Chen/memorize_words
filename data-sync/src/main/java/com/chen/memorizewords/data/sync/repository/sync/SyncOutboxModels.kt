@@ -40,7 +40,7 @@ enum class SyncOutboxFailureKind {
 data class DailyStudyDurationSyncPayload(
     val date: String,
     val totalDurationMs: Long,
-    val updatedAt: Long,
+    val updatedAtMs: Long,
     val isNewPlanCompleted: Boolean,
     val isReviewPlanCompleted: Boolean
 )
@@ -48,7 +48,7 @@ data class DailyStudyDurationSyncPayload(
 data class PracticeDurationSyncPayload(
     val date: String,
     val totalDurationMs: Long,
-    val updatedAt: Long
+    val updatedAtMs: Long
 )
 
 data class PracticeSessionSyncPayload(
@@ -58,7 +58,7 @@ data class PracticeSessionSyncPayload(
     val entryType: String,
     val entryCount: Int,
     val durationMs: Long,
-    val createdAt: Long,
+    val createdAtMs: Long,
     val wordIds: List<Long>,
     val questionCount: Int = 0,
     val completedCount: Int = 0,
@@ -94,8 +94,8 @@ data class OnboardingStateSyncPayload(
     val phase: String,
     val selectedWordBookId: Long?,
     val revision: Long,
-    val updatedAt: Long,
-    val completedAt: Long?
+    val updatedAtMs: Long,
+    val completedAtMs: Long?
 )
 
 data class PracticeSettingsSyncPayload(
@@ -139,12 +139,12 @@ data class FloatingDisplayRecordSyncPayload(
     val date: String,
     val displayCount: Int,
     val wordIds: List<Long>,
-    val updatedAt: Long
+    val updatedAtMs: Long
 )
 
 data class CheckInRecordSyncPayload(
     val date: String,
     val type: String,
-    val signedAt: Long,
-    val updatedAt: Long
+    val signedAtMs: Long,
+    val updatedAtMs: Long
 )

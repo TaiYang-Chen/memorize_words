@@ -3,5 +3,5 @@ data class FloatingWordDisplayRecord(
     val date: String,
     val displayCount: Int,
     val wordIds: List<Long>,
-    val updatedAt: Long
+    val updatedAtMs: Long
 )

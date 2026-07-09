@@ -1,17 +1,17 @@
-ï»¿package com.chen.memorizewords.data.wordbook.local.room.model.study.progress.word
+package com.chen.memorizewords.data.wordbook.local.room.model.study.progress.word
 
 import com.chen.memorizewords.domain.study.model.progress.word.WordLearningState
 
 /**
- * å°†å®ä½“ç±»è½¬æ¢ä¸ºé¢†åŸŸæ¨¡å‹ã€‚
+ * ½«ÊµÌåÀà×ª»»ÎªÁìÓòÄ£ĞÍ¡£
  */
 fun WordLearningStateEntity.toDomain(): WordLearningState {
     return WordLearningState(
         wordId = wordId,
         bookId = bookId,
         totalLearnCount = totalLearnCount,
-        lastLearnTime = lastLearnTime,
-        nextReviewTime = nextReviewTime,
+        lastLearnedAtMs = lastLearnedAtMs,
+        nextReviewAtMs = nextReviewAtMs,
         masteryLevel = masteryLevel,
         userStatus = userStatus,
         interval = interval,
@@ -23,15 +23,15 @@ fun WordLearningStateEntity.toDomain(): WordLearningState {
 }
 
 /**
- * å°†é¢†åŸŸæ¨¡å‹è½¬æ¢ä¸ºå®ä½“ã€‚
+ * ½«ÁìÓòÄ£ĞÍ×ª»»ÎªÊµÌå¡£
  */
 fun WordLearningState.toEntity(): WordLearningStateEntity {
     return WordLearningStateEntity(
         wordId = wordId,
         bookId = bookId,
         totalLearnCount = totalLearnCount,
-        lastLearnTime = lastLearnTime,
-        nextReviewTime = nextReviewTime,
+        lastLearnedAtMs = lastLearnedAtMs,
+        nextReviewAtMs = nextReviewAtMs,
         masteryLevel = masteryLevel,
         userStatus = userStatus,
         interval = interval,

@@ -23,7 +23,7 @@ interface RemoteLearningSyncDataSource {
     suspend fun upsertPracticeDuration(
         date: String,
         totalDurationMs: Long,
-        updatedAt: Long
+        updatedAtMs: Long
     ): Result<Unit>
 
     suspend fun appendPracticeSession(record: PracticeSessionRecord): Result<Unit>

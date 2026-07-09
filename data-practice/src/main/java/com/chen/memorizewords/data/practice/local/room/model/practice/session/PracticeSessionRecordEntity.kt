@@ -11,7 +11,7 @@ import com.chen.memorizewords.domain.practice.PracticeMode
     tableName = "practice_session_record",
     indices = [
         Index("date"),
-        Index("created_at")
+        Index("created_at_ms")
     ]
 )
 data class PracticeSessionRecordEntity(
@@ -25,8 +25,8 @@ data class PracticeSessionRecordEntity(
     val entryCount: Int,
     @ColumnInfo(name = "duration_ms")
     val durationMs: Long,
-    @ColumnInfo(name = "created_at")
-    val createdAt: Long,
+    @ColumnInfo(name = "created_at_ms")
+    val createdAtMs: Long,
     @ColumnInfo(name = "question_count")
     val questionCount: Int = 0,
     @ColumnInfo(name = "completed_count")

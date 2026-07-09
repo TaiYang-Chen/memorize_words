@@ -96,7 +96,7 @@ class FloatingReviewFacade @Inject constructor(
 
         val orderedIds = if (orderType == FloatingWordOrderType.MEMORY_CURVE && bookId != null) {
             val states = wordLearningRepository.getLearningStatesByIds(bookId, wordIds)
-            wordIds.sortedBy { states[it]?.nextReviewTime ?: Long.MAX_VALUE }
+            wordIds.sortedBy { states[it]?.nextReviewAtMs ?: Long.MAX_VALUE }
         } else {
             wordIds
         }

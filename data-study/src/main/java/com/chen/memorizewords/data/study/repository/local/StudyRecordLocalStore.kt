@@ -29,11 +29,11 @@ class StudyRecordLocalStore @Inject constructor(
         if (durationMs <= 0L) return LocalWriteResult()
         val date = checkInBusinessCalendar.currentBusinessDate()
         val commands = studyDatabase.withTransaction {
-            val updatedAt = System.currentTimeMillis()
+            val updatedAtMs = System.currentTimeMillis()
             dailyStudyDurationDao.addDuration(
                 date = date,
                 durationMs = durationMs,
-                updatedAt = updatedAt
+                updatedAtMs = updatedAtMs
             )
             dailyStudyDurationDao.getByDate(date)
                 ?.let { listOf(it.toOutboxCommand(gson)) }
@@ -88,7 +88,7 @@ internal fun DailyStudyDurationEntity.toOutboxCommand(gson: Gson): OutboxCommand
             DailyStudyDurationSyncPayload(
                 date = date,
                 totalDurationMs = totalDurationMs,
-                updatedAt = updatedAt,
+                updatedAtMs = updatedAtMs,
                 isNewPlanCompleted = isNewPlanCompleted,
                 isReviewPlanCompleted = isReviewPlanCompleted
             )
@@ -108,8 +108,8 @@ internal fun CheckInRecordEntity.toSyncPayload(): CheckInRecordSyncPayload {
     return CheckInRecordSyncPayload(
         date = date,
         type = type.name,
-        signedAt = signedAt,
-        updatedAt = updatedAt
+        signedAtMs = signedAtMs,
+        updatedAtMs = updatedAtMs
     )
 }
 
@@ -119,7 +119,7 @@ private fun OutboxCommand.toPendingOutboxEntity(): StudyPendingOutboxEntity {
         bizKey = key,
         operation = operation.name,
         payload = payload,
-        updatedAt = updatedAtEpochMillis
+        updatedAtMs = updatedAtEpochMillis
     )
 }
 
@@ -129,7 +129,7 @@ private fun StudyPendingOutboxEntity.toOutboxCommand(): OutboxCommand {
         key = bizKey,
         operation = SyncOperation.valueOf(operation),
         payload = payload,
-        updatedAtEpochMillis = updatedAt
+        updatedAtEpochMillis = updatedAtMs
     )
 }
 

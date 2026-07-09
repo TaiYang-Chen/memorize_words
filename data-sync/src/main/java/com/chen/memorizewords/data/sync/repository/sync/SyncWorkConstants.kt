@@ -48,7 +48,7 @@ object SyncWorkConstants {
     const val TAG_DAILY_STUDY_DURATION_SYNC = "daily_study_duration_sync"
     private const val WORK_DAILY_STUDY_DURATION_SYNC_PREFIX = "work_daily_study_duration_sync_"
     const val KEY_TOTAL_DURATION_MS = "total_duration_ms"
-    const val KEY_UPDATED_AT = "updated_at"
+    const val KEY_updated_at_ms = "updated_at_ms"
     const val KEY_IS_NEW_PLAN_COMPLETED = "is_new_plan_completed"
     const val KEY_IS_REVIEW_PLAN_COMPLETED = "is_review_plan_completed"
 

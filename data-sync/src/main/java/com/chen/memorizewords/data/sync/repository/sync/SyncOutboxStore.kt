@@ -19,7 +19,7 @@ class SyncOutboxStore @Inject constructor(
         bizKey: String,
         operation: SyncOutboxOperation,
         payload: String,
-        updatedAt: Long = System.currentTimeMillis()
+        updatedAtMs: Long = System.currentTimeMillis()
     ) {
         syncDatabase.withTransaction {
             val existing = syncOutboxDao.getByBizKey(bizKey)
@@ -30,7 +30,7 @@ class SyncOutboxStore @Inject constructor(
                     bizKey = bizKey,
                     operation = operation,
                     payload = payload,
-                    updatedAt = updatedAt
+                    updatedAtMs = updatedAtMs
                 )
             )
         }
@@ -62,7 +62,7 @@ class SyncOutboxStore @Inject constructor(
                 leaseToken = leaseToken,
                 leaseExpiresAt = now + leaseDurationMs,
                 attemptedAt = now,
-                updatedAt = now
+                updatedAtMs = now
             )
             if (claimedCount <= 0) {
                 return@withTransaction emptyList()
@@ -85,7 +85,7 @@ data class SyncOutboxWriteCommand(
     val bizKey: String,
     val operation: SyncOutboxOperation,
     val payload: String,
-    val updatedAt: Long
+    val updatedAtMs: Long
 )
 
 interface SyncOutboxRetryWaitResumer {
@@ -100,7 +100,7 @@ internal fun buildQueuedOutboxEntity(
     bizKey: String,
     operation: SyncOutboxOperation,
     payload: String,
-    updatedAt: Long
+    updatedAtMs: Long
 ): SyncOutboxEntity {
     return SyncOutboxEntity(
         id = existing?.id ?: 0L,
@@ -113,10 +113,10 @@ internal fun buildQueuedOutboxEntity(
         lastError = null,
         failureKind = null,
         lastAttemptAt = 0L,
-        nextRetryAt = updatedAt,
+        nextRetryAt = updatedAtMs,
         leaseToken = null,
         leaseExpiresAt = 0L,
-        updatedAt = updatedAt
+        updatedAtMs = updatedAtMs
     )
 }
 
@@ -131,7 +131,7 @@ internal fun buildQueuedOutboxEntities(
             bizKey = command.bizKey,
             operation = command.operation,
             payload = command.payload,
-            updatedAt = command.updatedAt
+            updatedAtMs = command.updatedAtMs
         )
     }
 }

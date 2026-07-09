@@ -657,7 +657,7 @@ class ShadowingPracticeViewModel @Inject constructor(
                     },
                     kind = PracticeKind.SHADOWING,
                     report = report,
-                    completedAtMillis = System.currentTimeMillis()
+                    completedAtMs = System.currentTimeMillis()
                 )
             )
         }

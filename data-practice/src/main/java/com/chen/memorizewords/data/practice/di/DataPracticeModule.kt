@@ -13,7 +13,6 @@ import com.chen.memorizewords.data.practice.repository.PracticeRecordRepositoryI
 import com.chen.memorizewords.data.practice.repository.PracticeSessionRecordRepositoryImpl
 import com.chen.memorizewords.data.practice.repository.PracticeSettingsRepositoryImpl
 import com.chen.memorizewords.data.practice.local.PracticeDatabase
-import com.chen.memorizewords.data.practice.local.PracticeDatabaseMigrations
 import com.chen.memorizewords.data.practice.remote.practice.RemoteExamPracticeDataSource
 import com.chen.memorizewords.data.practice.remote.practice.RemoteExamPracticeDataSourceImpl
 import com.chen.memorizewords.data.practice.remoteapi.api.practice.ExamPracticeApiService
@@ -95,8 +94,7 @@ object DataPracticeDatabaseModule {
     @Singleton
     fun providePracticeDatabase(@ApplicationContext context: Context): PracticeDatabase {
         return DestructiveRoomDatabaseFactory(
-            databaseName = NewArchitectureDatabase.contextName("practice"),
-            migrations = arrayOf(PracticeDatabaseMigrations.MIGRATION_1_2)
+            databaseName = NewArchitectureDatabase.contextName("practice")
         ).build(context, PracticeDatabase::class.java)
     }
 

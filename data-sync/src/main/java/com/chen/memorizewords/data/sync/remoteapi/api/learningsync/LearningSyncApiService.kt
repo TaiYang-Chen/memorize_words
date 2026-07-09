@@ -62,7 +62,7 @@ data class LearningEventRequest(
     val quality: Int?,
     val correct: Boolean?,
     val businessDate: String,
-    val occurredAt: Long,
+    val occurredAtMs: Long,
     val baseStateRevision: Long?,
     val payloadJson: String?,
     val schemaVersion: Int = 1
@@ -85,8 +85,8 @@ data class LearningWordStateDto(
     val wordId: Long,
     val bookId: Long,
     val totalLearnCount: Int,
-    val lastLearnTime: Long,
-    val nextReviewTime: Long,
+    val lastLearnedAtMs: Long,
+    val nextReviewAtMs: Long,
     val masteryLevel: Int,
     val userStatus: Int,
     val repetition: Int,
@@ -106,21 +106,21 @@ data class LearningProgressDto(
     val wrongCount: Int,
     val studyDayCount: Int,
     val lastStudyDate: String? = null,
-    val updatedAt: Long = 0L,
+    val updatedAtMs: Long = 0L,
     val revision: Long = 0L
 )
 
 @JsonClass(generateAdapter = false)
 data class PracticeDurationSyncRequest(
     val totalDurationMs: Long,
-    val updatedAt: Long
+    val updatedAtMs: Long
 )
 
 @JsonClass(generateAdapter = false)
 data class PracticeDurationDto(
     val date: String,
     val totalDurationMs: Long,
-    val updatedAt: Long
+    val updatedAtMs: Long
 )
 
 @JsonClass(generateAdapter = false)
@@ -130,7 +130,7 @@ data class PracticeSessionSyncRequest(
     val entryType: String,
     val entryCount: Int,
     val durationMs: Long,
-    val createdAt: Long,
+    val createdAtMs: Long,
     val wordIds: List<Long>,
     val questionCount: Int = 0,
     val completedCount: Int = 0,
@@ -146,7 +146,7 @@ data class PracticeSessionDto(
     val entryType: String,
     val entryCount: Int,
     val durationMs: Long,
-    val createdAt: Long,
+    val createdAtMs: Long,
     val wordIds: List<Long>,
     val questionCount: Int = 0,
     val completedCount: Int = 0,
@@ -220,7 +220,7 @@ data class FloatingSettingsDto(
 data class FloatingDisplayRecordSyncRequest(
     val displayCount: Int,
     val wordIds: List<Long>,
-    val updatedAt: Long
+    val updatedAtMs: Long
 )
 
 @JsonClass(generateAdapter = false)
@@ -228,7 +228,7 @@ data class FloatingDisplayRecordDto(
     val date: String,
     val displayCount: Int,
     val wordIds: List<Long>,
-    val updatedAt: Long
+    val updatedAtMs: Long
 )
 
 interface LearningSyncApiService {

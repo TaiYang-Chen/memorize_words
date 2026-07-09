@@ -23,7 +23,8 @@ class PracticeRecordRepositoryImpl @Inject constructor(
     private val practiceDatabase: PracticeDatabase,
     private val dailyPracticeDurationDao: DailyPracticeDurationDao,
     private val checkInBusinessCalendar: CheckInBusinessCalendar,
-    private val SyncOutboxWriter: SyncOutboxWriter,    private val gson: Gson
+    private val syncOutboxWriter: SyncOutboxWriter,
+    private val gson: Gson
 ) : PracticeRecordRepository {
 
     override suspend fun addPracticeDuration(durationMs: Long) {
@@ -33,10 +34,10 @@ class PracticeRecordRepositoryImpl @Inject constructor(
             dailyPracticeDurationDao.addDuration(
                 date = today,
                 durationMs = durationMs,
-                updatedAt = System.currentTimeMillis()
+                updatedAtMs = System.currentTimeMillis()
             )
             dailyPracticeDurationDao.getByDate(today)?.let { duration ->
-                SyncOutboxWriter.enqueueLatest(
+                syncOutboxWriter.enqueueLatest(
                     bizType = OutboxTopic.PRACTICE_DURATION,
                     bizKey = "practice_duration:${duration.date}",
                     operation = SyncOperation.UPSERT,
@@ -44,7 +45,7 @@ class PracticeRecordRepositoryImpl @Inject constructor(
                         PracticeDurationSyncPayload(
                             date = duration.date,
                             totalDurationMs = duration.totalDurationMs,
-                            updatedAt = duration.updatedAt
+                            updatedAtMs = duration.updatedAtMs
                         )
                     )
                 )

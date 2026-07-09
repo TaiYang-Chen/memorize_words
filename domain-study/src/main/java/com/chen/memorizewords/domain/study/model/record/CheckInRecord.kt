@@ -7,8 +7,8 @@ enum class CheckInType {
 data class CheckInRecord(
     val date: String,
     val type: CheckInType,
-    val signedAt: Long,
-    val updatedAt: Long
+    val signedAtMs: Long,
+    val updatedAtMs: Long
 )
 
 data class TodayCheckInEntryState(

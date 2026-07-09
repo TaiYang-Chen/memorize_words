@@ -61,7 +61,7 @@ class ExamPracticeRepositoryImpl @Inject constructor(
                 completedCount = submission.completedCount,
                 correctCount = submission.correctCount,
                 submitCount = submission.submitCount,
-                createdAt = submission.createdAt,
+                createdAtMs = submission.createdAtMs,
                 items = submission.items.map { it.toDto() }
             )
         )
@@ -195,7 +195,7 @@ private fun ExamItemStateDto.toEntity(): ExamPracticeItemStateEntity {
         attemptCount = attemptCount,
         correctCount = correctCount,
         lastResult = lastResult?.let(::parseLastResult),
-        lastAnsweredAt = lastAnsweredAt
+        lastAnsweredAtMs = lastAnsweredAtMs
     )
 }
 
@@ -207,7 +207,7 @@ private fun ExamPracticeItemStateEntity.toDomain(): ExamItemState {
         attemptCount = attemptCount,
         correctCount = correctCount,
         lastResult = lastResult,
-        lastAnsweredAt = lastAnsweredAt
+        lastAnsweredAtMs = lastAnsweredAtMs
     )
 }
 

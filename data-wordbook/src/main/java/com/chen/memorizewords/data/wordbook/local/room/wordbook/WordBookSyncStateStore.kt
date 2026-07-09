@@ -1,4 +1,4 @@
-﻿package com.chen.memorizewords.data.wordbook.local.room.wordbook
+package com.chen.memorizewords.data.wordbook.local.room.wordbook
 
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.syncstate.WordBookSyncStateDao
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.syncstate.WordBookSyncStateEntity
@@ -61,10 +61,10 @@ class WordBookSyncStateStore @Inject constructor(
         upsert(bookId) { it.copy(lastPromptedVersion = version.takeIf { value -> value > 0L }) }
     }
 
-    fun getDeferredUntil(bookId: Long): Long = getState(bookId)?.deferredUntil ?: 0L
+    fun getdeferredUntilMs(bookId: Long): Long = getState(bookId)?.deferredUntilMs ?: 0L
 
-    fun setDeferredUntil(bookId: Long, timestamp: Long) = synchronized(lock) {
-        upsert(bookId) { it.copy(deferredUntil = timestamp.takeIf { value -> value > 0L }) }
+    fun setdeferredUntilMs(bookId: Long, timestamp: Long) = synchronized(lock) {
+        upsert(bookId) { it.copy(deferredUntilMs = timestamp.takeIf { value -> value > 0L }) }
     }
 
     fun setLastPrompt(
@@ -94,7 +94,7 @@ class WordBookSyncStateStore @Inject constructor(
                 remoteVersion = maxOf(it.remoteVersion, normalizedVersion),
                 pendingTargetVersion = null,
                 ignoredVersion = if (it.ignoredVersion == normalizedVersion) null else it.ignoredVersion,
-                deferredUntil = null,
+                deferredUntilMs = null,
                 lastCompletedAt = timestamp.takeIf { value -> value > 0L },
                 lastFailureReason = null
             )

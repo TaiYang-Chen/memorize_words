@@ -42,7 +42,7 @@ data class AudioLoopServiceQueue(
     val entries: List<AudioLoopServiceEntry>,
     val settings: PracticeSettings,
     val entryType: PracticeEntryType,
-    val createdAt: Long = System.currentTimeMillis()
+    val createdAtMs: Long = System.currentTimeMillis()
 )
 
 data class AudioLoopServiceState(

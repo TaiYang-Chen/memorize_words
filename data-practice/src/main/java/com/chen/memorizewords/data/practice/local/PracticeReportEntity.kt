@@ -1,6 +1,7 @@
 package com.chen.memorizewords.data.practice.local
 
 import androidx.room.Entity
+import androidx.room.ColumnInfo
 import androidx.room.PrimaryKey
 import com.chen.memorizewords.domain.practice.PracticeKind
 import com.chen.memorizewords.domain.practice.PracticeReport
@@ -17,7 +18,8 @@ data class PracticeReportEntity(
     val skippedCount: Int,
     val revealedCount: Int,
     val accuracyPercent: Int,
-    val completedAtMillis: Long
+    @ColumnInfo(name = "completed_at_ms")
+    val completedAtMs: Long
 )
 
 internal fun PracticeSessionReportRecord.toEntity(): PracticeReportEntity {
@@ -31,7 +33,7 @@ internal fun PracticeSessionReportRecord.toEntity(): PracticeReportEntity {
         skippedCount = report.skippedCount,
         revealedCount = report.revealedCount,
         accuracyPercent = report.accuracyPercent,
-        completedAtMillis = completedAtMillis
+        completedAtMs = completedAtMs
     )
 }
 
@@ -49,6 +51,6 @@ internal fun PracticeReportEntity.toDomain(): PracticeSessionReportRecord? {
             revealedCount = revealedCount,
             accuracyPercent = accuracyPercent
         ),
-        completedAtMillis = completedAtMillis
+        completedAtMs = completedAtMs
     )
 }

@@ -48,7 +48,7 @@ interface RemoteUserSyncDataSource {
     suspend fun upsertDailyStudyDuration(
         date: String,
         totalDurationMs: Long,
-        updatedAt: Long,
+        updatedAtMs: Long,
         isNewPlanCompleted: Boolean,
         isReviewPlanCompleted: Boolean
     ): Result<Unit>
@@ -67,8 +67,8 @@ interface RemoteUserSyncDataSource {
     suspend fun upsertCheckInRecord(
         date: String,
         type: String,
-        signedAt: Long,
-        updatedAt: Long
+        signedAtMs: Long,
+        updatedAtMs: Long
     ): Result<Unit>
 
     suspend fun getMembershipStatus(): Result<MembershipStatusDto>

@@ -76,7 +76,7 @@ class AppUpdateRepositoryImpl @Inject constructor(
                 downloadUrl = resolveDownloadUrl(downloadUrl),
                 fileSha256 = fileSha256,
                 fileSizeBytes = fileSizeBytes,
-                publishedAt = publishedAt,
+                publishedAtMs = publishedAtMs,
                 riskTips = riskTips?.filter { it.isNotBlank() }.orEmpty(),
                 releaseLogUrl = releaseLogUrl?.takeIf { it.isNotBlank() }?.let(::resolveDownloadUrl)
             )

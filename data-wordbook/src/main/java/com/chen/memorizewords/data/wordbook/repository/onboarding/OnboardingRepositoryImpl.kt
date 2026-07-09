@@ -1,4 +1,4 @@
-﻿package com.chen.memorizewords.data.wordbook.repository.onboarding
+package com.chen.memorizewords.data.wordbook.repository.onboarding
 
 import com.chen.memorizewords.data.wordbook.local.mmkv.onboarding.OnboardingSnapshotDataSource
 import com.chen.memorizewords.domain.sync.OnboardingStateSyncPayload
@@ -91,7 +91,7 @@ class OnboardingRepositoryImpl @Inject constructor(
                 phase = OnboardingPhase.COMPLETED,
                 selectedWordBookId = selectedWordBookId,
                 revision = current.revision + 1L,
-                updatedAt = now,
+                updatedAtMs = now,
                 completedAt = current.completedAt ?: now
             )
             onboardingSnapshotDataSource.saveSnapshot(userId, next)
@@ -117,11 +117,11 @@ class OnboardingRepositoryImpl @Inject constructor(
                     phase = snapshot.phase.name,
                     selectedWordBookId = snapshot.selectedWordBookId,
                     revision = snapshot.revision,
-                    updatedAt = snapshot.updatedAt,
-                    completedAt = snapshot.completedAt
+                    updatedAtMs = snapshot.updatedAtMs,
+                    completedAtMs = snapshot.completedAt
                 )
             ),
-            updatedAt = snapshot.updatedAt
+            updatedAtMs = snapshot.updatedAtMs
         )
     }
 
@@ -155,7 +155,7 @@ private fun resolvePreferredSnapshot(
     if (incoming.revision < existing.revision) {
         return normalizeSnapshot(existing, existing)
     }
-    return if (incoming.updatedAt >= existing.updatedAt) {
+    return if (incoming.updatedAtMs >= existing.updatedAtMs) {
         normalizeSnapshot(incoming, existing)
     } else {
         normalizeSnapshot(existing, existing)
@@ -166,18 +166,18 @@ private fun normalizeSnapshot(
     snapshot: OnboardingSnapshot,
     existing: OnboardingSnapshot?
 ): OnboardingSnapshot {
-    val normalizedUpdatedAt = snapshot.updatedAt.takeIf { it > 0L } ?: System.currentTimeMillis()
+    val normalizedUpdatedAt = snapshot.updatedAtMs.takeIf { it > 0L } ?: System.currentTimeMillis()
     return when (snapshot.phase) {
         OnboardingPhase.NEEDS_WORD_BOOK -> snapshot.copy(
             selectedWordBookId = null,
-            updatedAt = normalizedUpdatedAt,
+            updatedAtMs = normalizedUpdatedAt,
             completedAt = null
         )
 
         OnboardingPhase.NEEDS_STUDY_PLAN -> snapshot.copy(
             phase = OnboardingPhase.NEEDS_WORD_BOOK,
             selectedWordBookId = null,
-            updatedAt = normalizedUpdatedAt,
+            updatedAtMs = normalizedUpdatedAt,
             completedAt = null
         )
 
@@ -186,7 +186,7 @@ private fun normalizeSnapshot(
                 ?: existing?.completedAt
                 ?: normalizedUpdatedAt
             snapshot.copy(
-                updatedAt = normalizedUpdatedAt,
+                updatedAtMs = normalizedUpdatedAt,
                 completedAt = completedAt
             )
         }

@@ -1,4 +1,4 @@
-﻿package com.chen.memorizewords.data.wordbook.repository
+package com.chen.memorizewords.data.wordbook.repository
 
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.current.CurrentWordBookSelectionDao
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.current.CurrentWordBookSelectionEntity
@@ -406,8 +406,8 @@ class WordBookRepositoryImpl @Inject constructor(
             isFavorite = wordId in favoriteIds,
             learningStatus = status,
             totalLearnCount = totalLearnCount,
-            lastLearnTime = lastLearnTime,
-            nextReviewTime = nextReviewTime
+            lastLearnedAtMs = lastLearnedAtMs,
+            nextReviewAtMs = nextReviewAtMs
         )
     }
 
@@ -415,7 +415,7 @@ class WordBookRepositoryImpl @Inject constructor(
         val mastered = masteryLevel >= MASTERED_LEVEL || userStatus == USER_STATUS_MASTERED
         if (mastered) return WordLearningStatus.MASTERED
         val learned = totalLearnCount > 0 || masteryLevel > 0
-        val reviewDue = learned && nextReviewTime > 0 && nextReviewTime <= now
+        val reviewDue = learned && nextReviewAtMs > 0 && nextReviewAtMs <= now
         return when {
             reviewDue -> WordLearningStatus.REVIEW_DUE
             learned -> WordLearningStatus.LEARNED

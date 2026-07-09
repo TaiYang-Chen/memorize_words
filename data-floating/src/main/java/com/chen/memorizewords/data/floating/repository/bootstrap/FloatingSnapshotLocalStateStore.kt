@@ -23,7 +23,7 @@ class FloatingSnapshotLocalStateStore @Inject constructor(
                         FloatingWordDisplayRecordEntity(
                             date = record.date,
                             displayCount = record.displayCount,
-                            updatedAt = record.updatedAt
+                            updatedAtMs = record.updatedAtMs
                         )
                     }
                 )

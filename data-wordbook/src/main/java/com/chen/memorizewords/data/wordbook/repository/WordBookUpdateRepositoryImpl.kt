@@ -1,4 +1,4 @@
-﻿package com.chen.memorizewords.data.wordbook.repository
+package com.chen.memorizewords.data.wordbook.repository
 
 import android.content.Context
 import androidx.work.BackoffPolicy
@@ -67,7 +67,7 @@ class WordBookUpdateRepositoryImpl @Inject constructor(
         trigger: WordBookUpdateTrigger?,
         executionMode: WordBookUpdateExecutionMode?,
         message: String?,
-        deferredUntil: Long?
+        deferredUntilMs: Long?
     ): Result<Unit> {
         val request = WordBookUpdateActionRequest(
             action = action.name,
@@ -75,14 +75,14 @@ class WordBookUpdateRepositoryImpl @Inject constructor(
             targetVersion = candidate?.targetVersion,
             trigger = trigger?.name?.lowercase(),
             executionMode = executionMode?.name,
-            deferredUntil = deferredUntil,
+            deferredUntilMs = deferredUntilMs,
             failureReason = message
         )
         return remoteUserSyncDataSource.reportCurrentWordBookUpdateAction(request)
     }
 
-    override suspend fun saveDeferredUntil(bookId: Long, deferredUntil: Long) {
-        syncStateStore.setDeferredUntil(bookId, deferredUntil)
+    override suspend fun savedeferredUntilMs(bookId: Long, deferredUntilMs: Long) {
+        syncStateStore.setdeferredUntilMs(bookId, deferredUntilMs)
     }
 
     override suspend fun ignoreVersion(bookId: Long, targetVersion: Long): Result<Unit> {
@@ -228,7 +228,7 @@ private fun com.chen.memorizewords.data.wordbook.remoteapi.api.datasync.WordBook
         bookName = bookName,
         currentVersion = currentVersion,
         targetVersion = targetVersion,
-        publishedAt = publishedAt,
+        publishedAtMs = publishedAtMs,
         summary = WordBookUpdateSummary(
             addedCount = summary.addedCount,
             modifiedCount = summary.modifiedCount,
@@ -252,7 +252,7 @@ private fun com.chen.memorizewords.data.wordbook.remoteapi.api.datasync.PendingW
         bookName = bookName,
         currentVersion = currentVersion,
         targetVersion = targetVersion,
-        publishedAt = publishedAt,
+        publishedAtMs = publishedAtMs,
         summary = WordBookUpdateSummary(
             addedCount = summary.addedCount,
             modifiedCount = summary.modifiedCount,

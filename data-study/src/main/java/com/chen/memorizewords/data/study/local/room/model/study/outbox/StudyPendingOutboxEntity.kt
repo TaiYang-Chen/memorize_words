@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
     tableName = "study_pending_outbox",
     indices = [
         Index(value = ["biz_key"], unique = true),
-        Index(value = ["updated_at", "id"])
+        Index(value = ["updated_at_ms", "id"])
     ]
 )
 data class StudyPendingOutboxEntity(
@@ -23,6 +23,6 @@ data class StudyPendingOutboxEntity(
     val operation: String,
     @ColumnInfo(name = "payload")
     val payload: String,
-    @ColumnInfo(name = "updated_at")
-    val updatedAt: Long
+    @ColumnInfo(name = "updated_at_ms")
+    val updatedAtMs: Long
 )

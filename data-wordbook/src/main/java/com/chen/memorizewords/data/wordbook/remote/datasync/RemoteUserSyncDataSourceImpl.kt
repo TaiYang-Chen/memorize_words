@@ -1,4 +1,4 @@
-﻿package com.chen.memorizewords.data.wordbook.remote.datasync
+package com.chen.memorizewords.data.wordbook.remote.datasync
 
 import com.chen.memorizewords.domain.wordbook.model.onboarding.OnboardingPhase
 import com.chen.memorizewords.domain.wordbook.model.onboarding.OnboardingSnapshot
@@ -40,8 +40,8 @@ class RemoteUserSyncDataSourceImpl @Inject constructor(
                             .getOrDefault(OnboardingPhase.NEEDS_WORD_BOOK),
                         selectedWordBookId = it.selectedWordBookId,
                         revision = it.revision,
-                        updatedAt = it.updatedAt,
-                        completedAt = it.completedAt
+                        updatedAtMs = it.updatedAtMs,
+                        completedAt = it.completedAtMs
                     )
                 }
             }
@@ -54,8 +54,8 @@ class RemoteUserSyncDataSourceImpl @Inject constructor(
                     phase = snapshot.phase.name,
                     selectedWordBookId = snapshot.selectedWordBookId,
                     revision = snapshot.revision,
-                    updatedAt = snapshot.updatedAt,
-                    completedAt = snapshot.completedAt
+                    updatedAtMs = snapshot.updatedAtMs,
+                    completedAtMs = snapshot.completedAt
                 )
             )
         }
@@ -212,7 +212,7 @@ class RemoteUserSyncDataSourceImpl @Inject constructor(
     override suspend fun upsertDailyStudyDuration(
         date: String,
         totalDurationMs: Long,
-        updatedAt: Long,
+        updatedAtMs: Long,
         isNewPlanCompleted: Boolean,
         isReviewPlanCompleted: Boolean
     ): Result<Unit> {
@@ -220,7 +220,7 @@ class RemoteUserSyncDataSourceImpl @Inject constructor(
             request.upsertDailyStudyDuration(
                 date = date,
                 totalDurationMs = totalDurationMs,
-                updatedAt = updatedAt,
+                updatedAtMs = updatedAtMs,
                 isNewPlanCompleted = isNewPlanCompleted,
                 isReviewPlanCompleted = isReviewPlanCompleted
             )
@@ -261,15 +261,15 @@ class RemoteUserSyncDataSourceImpl @Inject constructor(
     override suspend fun upsertCheckInRecord(
         date: String,
         type: String,
-        signedAt: Long,
-        updatedAt: Long
+        signedAtMs: Long,
+        updatedAtMs: Long
     ): Result<Unit> {
         return remoteResultAdapter.toResult {
             request.upsertCheckInRecord(
                 date = date,
                 type = type,
-                signedAt = signedAt,
-                updatedAt = updatedAt
+                signedAtMs = signedAtMs,
+                updatedAtMs = updatedAtMs
             )
         }
     }

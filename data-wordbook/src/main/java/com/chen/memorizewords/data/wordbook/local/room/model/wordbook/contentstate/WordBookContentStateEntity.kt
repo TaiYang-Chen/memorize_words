@@ -23,8 +23,8 @@ data class WordBookContentStateEntity(
     val packageSha256: String?,
     @ColumnInfo(name = "last_error")
     val lastError: String?,
-    @ColumnInfo(name = "updated_at")
-    val updatedAt: Long
+    @ColumnInfo(name = "updated_at_ms")
+    val updatedAtMs: Long
 )
 
 object WordBookContentStatus {

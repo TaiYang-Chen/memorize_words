@@ -129,7 +129,7 @@ class WordBookUserSyncOutboxHandlerTest {
         override suspend fun upsertDailyStudyDuration(
             date: String,
             totalDurationMs: Long,
-            updatedAt: Long,
+            updatedAtMs: Long,
             isNewPlanCompleted: Boolean,
             isReviewPlanCompleted: Boolean
         ): Result<Unit> = unexpected()
@@ -139,7 +139,7 @@ class WordBookUserSyncOutboxHandlerTest {
         override suspend fun updateCheckInConfig(dayBoundaryOffsetMinutes: Int, timezoneId: String): Result<Unit> = unexpected()
         override suspend fun getCheckInStatus(): Result<CheckInStatusDto?> = unexpected()
         override suspend fun getCheckInRecords(page: Int, count: Int): Result<PageData<CheckInRecordDto>> = unexpected()
-        override suspend fun upsertCheckInRecord(date: String, type: String, signedAt: Long, updatedAt: Long): Result<Unit> = unexpected()
+        override suspend fun upsertCheckInRecord(date: String, type: String, signedAtMs: Long, updatedAtMs: Long): Result<Unit> = unexpected()
 
         private fun unexpected(): Nothing {
             throw AssertionError("Unexpected remote call")

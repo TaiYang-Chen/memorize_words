@@ -16,10 +16,10 @@ interface WordBookUpdateRepository {
         trigger: WordBookUpdateTrigger? = null,
         executionMode: WordBookUpdateExecutionMode? = null,
         message: String? = null,
-        deferredUntil: Long? = null
+        deferredUntilMs: Long? = null
     ): Result<Unit>
 
-    suspend fun saveDeferredUntil(bookId: Long, deferredUntil: Long)
+    suspend fun savedeferredUntilMs(bookId: Long, deferredUntilMs: Long)
     suspend fun ignoreVersion(bookId: Long, targetVersion: Long): Result<Unit>
     suspend fun enqueueUpdate(
         bookId: Long,

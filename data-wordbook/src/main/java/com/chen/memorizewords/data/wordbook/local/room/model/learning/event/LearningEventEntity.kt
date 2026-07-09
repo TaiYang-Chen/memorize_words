@@ -10,7 +10,7 @@ import androidx.room.PrimaryKey
     indices = [
         Index(value = ["book_id", "word_id"]),
         Index(value = ["book_id", "business_date"]),
-        Index(value = ["created_at"])
+        Index(value = ["created_at_ms"])
     ]
 )
 data class LearningEventEntity(
@@ -42,7 +42,7 @@ data class LearningEventEntity(
     @ColumnInfo(name = "business_date")
     val businessDate: String,
 
-    @ColumnInfo(name = "occurred_at")
+    @ColumnInfo(name = "occurred_at_ms")
     val occurredAt: Long,
 
     @ColumnInfo(name = "base_state_revision")
@@ -63,9 +63,9 @@ data class LearningEventEntity(
     @ColumnInfo(name = "schema_version")
     val schemaVersion: Int = 1,
 
-    @ColumnInfo(name = "created_at")
-    val createdAt: Long = System.currentTimeMillis(),
+    @ColumnInfo(name = "created_at_ms")
+    val createdAtMs: Long = System.currentTimeMillis(),
 
-    @ColumnInfo(name = "synced_at")
+    @ColumnInfo(name = "synced_at_ms")
     val syncedAt: Long? = null
 )

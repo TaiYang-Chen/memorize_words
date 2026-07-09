@@ -40,7 +40,7 @@ data class LoginBootstrapStudyRecord(
 data class LoginBootstrapDailyStudyDuration(
     val date: String,
     val totalDurationMs: Long,
-    val updatedAt: Long,
+    val updatedAtMs: Long,
     val isNewPlanCompleted: Boolean,
     val isReviewPlanCompleted: Boolean
 )

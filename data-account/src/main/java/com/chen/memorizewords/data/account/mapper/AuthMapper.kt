@@ -135,7 +135,7 @@ private fun DailyStudyDurationDto.toDomain(): LoginBootstrapDailyStudyDuration {
     return LoginBootstrapDailyStudyDuration(
         date = date,
         totalDurationMs = totalDurationMs,
-        updatedAt = updatedAt,
+        updatedAtMs = updatedAtMs,
         isNewPlanCompleted = isNewPlanCompleted,
         isReviewPlanCompleted = isReviewPlanCompleted
     )

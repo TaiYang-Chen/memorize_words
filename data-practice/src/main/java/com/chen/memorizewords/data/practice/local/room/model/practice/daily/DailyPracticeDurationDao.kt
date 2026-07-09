@@ -20,16 +20,16 @@ interface DailyPracticeDurationDao {
         INSERT OR REPLACE INTO daily_practice_duration(
             date,
             total_duration_ms,
-            updated_at
+            updated_at_ms
         )
         VALUES (
             :date,
             COALESCE((SELECT total_duration_ms FROM daily_practice_duration WHERE date = :date), 0) + :durationMs,
-            :updatedAt
+            :updatedAtMs
         )
         """
     )
-    suspend fun addDuration(date: String, durationMs: Long, updatedAt: Long)
+    suspend fun addDuration(date: String, durationMs: Long, updatedAtMs: Long)
 
     @Query(
         """

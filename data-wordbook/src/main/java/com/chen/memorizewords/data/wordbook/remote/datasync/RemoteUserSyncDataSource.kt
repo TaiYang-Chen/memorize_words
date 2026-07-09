@@ -1,4 +1,4 @@
-﻿package com.chen.memorizewords.data.wordbook.remote.datasync
+package com.chen.memorizewords.data.wordbook.remote.datasync
 
 import com.chen.memorizewords.domain.wordbook.model.onboarding.OnboardingSnapshot
 import com.chen.memorizewords.domain.study.model.favorites.WordFavorites
@@ -53,7 +53,7 @@ interface RemoteUserSyncDataSource {
     suspend fun upsertDailyStudyDuration(
         date: String,
         totalDurationMs: Long,
-        updatedAt: Long,
+        updatedAtMs: Long,
         isNewPlanCompleted: Boolean,
         isReviewPlanCompleted: Boolean
     ): Result<Unit>
@@ -72,7 +72,7 @@ interface RemoteUserSyncDataSource {
     suspend fun upsertCheckInRecord(
         date: String,
         type: String,
-        signedAt: Long,
-        updatedAt: Long
+        signedAtMs: Long,
+        updatedAtMs: Long
     ): Result<Unit>
 }

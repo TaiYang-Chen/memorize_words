@@ -6,7 +6,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
-import kotlin.test.assertTrue
 
 class MembershipStatusCacheTest {
 
@@ -24,7 +23,7 @@ class MembershipStatusCacheTest {
             level = "PRO",
             active = true,
             validUntilDate = "2026-06-24",
-            validUntilAt = VALID_UNTIL_FUTURE,
+            validUntilAtMs = VALID_UNTIL_FUTURE,
             remainingDays = 1,
             totalGrantedDays = 3,
             todayCheckedIn = true
@@ -53,7 +52,7 @@ class MembershipStatusCacheTest {
                 level = "PRO",
                 active = true,
                 validUntilDate = "2026-06-23",
-                validUntilAt = VALID_UNTIL_PAST,
+                validUntilAtMs = VALID_UNTIL_PAST,
                 remainingDays = 1,
                 totalGrantedDays = 3,
                 todayCheckedIn = true
@@ -75,7 +74,7 @@ class MembershipStatusCacheTest {
                 level = "PRO",
                 active = true,
                 validUntilDate = "2026-06-24",
-                validUntilAt = VALID_UNTIL_FUTURE,
+                validUntilAtMs = VALID_UNTIL_FUTURE,
                 remainingDays = 9,
                 totalGrantedDays = 3,
                 todayCheckedIn = true
@@ -89,13 +88,13 @@ class MembershipStatusCacheTest {
     }
 
     @Test
-    fun `read normalizes invalid cached active date without timestamp`() {
+    fun `read normalizes cached active status without timestamp`() {
         cache.write(
             1,
             MembershipStatus(
                 level = "PRO",
                 active = true,
-                validUntilDate = "2026-02-31",
+                validUntilDate = "2026-06-24",
                 remainingDays = 1,
                 totalGrantedDays = 3,
                 todayCheckedIn = true
@@ -109,34 +108,13 @@ class MembershipStatusCacheTest {
     }
 
     @Test
-    fun `read falls back legacy valid until date to end of local day`() {
-        cache.write(
-            1,
-            MembershipStatus(
-                level = "PRO",
-                active = true,
-                validUntilDate = "2026-06-24",
-                remainingDays = 9,
-                totalGrantedDays = 3,
-                todayCheckedIn = true
-            )
-        )
-
-        val status = cache.read(1, currentTimeMillis = NOW)
-
-        assertEquals(true, status?.active)
-        assertTrue((status?.validUntilAt ?: 0L) > NOW)
-        assertEquals(1, status?.remainingDays)
-    }
-
-    @Test
     fun `read expires cached status at exact valid until minute`() {
         cache.write(
             1,
             MembershipStatus(
                 level = "PRO",
                 active = true,
-                validUntilAt = NOW,
+                validUntilAtMs = NOW,
                 remainingDays = 1,
                 totalGrantedDays = 3,
                 todayCheckedIn = true

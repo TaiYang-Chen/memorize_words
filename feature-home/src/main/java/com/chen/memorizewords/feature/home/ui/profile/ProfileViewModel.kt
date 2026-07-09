@@ -181,7 +181,7 @@ class ProfileViewModel @Inject constructor(
     val membershipSubtitleText: StateFlow<String> =
         membershipStatus
             .map { status ->
-                val validUntilText = formatMembershipValidUntilMinute(status?.validUntilAt)
+                val validUntilText = formatMembershipValidUntilMinute(status?.validUntilAtMs)
                 if (status?.active == true && !validUntilText.isNullOrBlank()) {
                     resourceProvider.getString(
                         R.string.feature_home_profile_member_valid_until,
@@ -414,7 +414,7 @@ internal fun previousBusinessDate(date: String): String {
     }
 }
 
-internal fun formatMembershipValidUntilMinute(validUntilAt: Long?): String? {
-    validUntilAt ?: return null
-    return SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date(validUntilAt))
+internal fun formatMembershipValidUntilMinute(validUntilAtMs: Long?): String? {
+    validUntilAtMs ?: return null
+    return SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date(validUntilAtMs))
 }

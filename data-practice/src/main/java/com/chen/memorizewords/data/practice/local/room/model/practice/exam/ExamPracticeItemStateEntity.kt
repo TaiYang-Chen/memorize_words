@@ -31,12 +31,12 @@ data class ExamPracticeItemStateEntity(
     val correctCount: Int = 0,
     @ColumnInfo(name = "last_result")
     val lastResult: ExamItemLastResult? = null,
-    @ColumnInfo(name = "last_answered_at")
-    val lastAnsweredAt: Long? = null
+    @ColumnInfo(name = "last_answered_at_ms")
+    val lastAnsweredAtMs: Long? = null
 ) {
     init {
         require(attemptCount >= 0) { "attemptCount must be non-negative" }
         require(correctCount >= 0) { "correctCount must be non-negative" }
-        require(lastAnsweredAt == null || lastAnsweredAt >= 0L) { "lastAnsweredAt must be non-negative" }
+        require(lastAnsweredAtMs == null || lastAnsweredAtMs >= 0L) { "lastAnsweredAtMs must be non-negative" }
     }
 }

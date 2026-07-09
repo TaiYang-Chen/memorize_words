@@ -14,14 +14,14 @@ data class CheckInRecordEntity(
     @ColumnInfo(name = "type")
     val type: CheckInType,
 
-    @ColumnInfo(name = "signed_at")
-    val signedAt: Long,
+    @ColumnInfo(name = "signed_at_ms")
+    val signedAtMs: Long,
 
-    @ColumnInfo(name = "updated_at")
-    val updatedAt: Long
+    @ColumnInfo(name = "updated_at_ms")
+    val updatedAtMs: Long
 ) {
     init {
-        require(signedAt >= 0L) { "signedAt must be non-negative" }
-        require(updatedAt >= 0L) { "updatedAt must be non-negative" }
+        require(signedAtMs >= 0L) { "signedAtMs must be non-negative" }
+        require(updatedAtMs >= 0L) { "updatedAtMs must be non-negative" }
     }
 }

@@ -10,7 +10,7 @@ private const val PRACTICE_RECORD_TIME_PATTERN = "HH:mm"
 
 internal fun resolvePracticeRecordWeekLabel(
     recordDate: String,
-    createdAt: Long,
+    createdAtMs: Long,
     locale: Locale = Locale.getDefault()
 ): String {
     val calendar = Calendar.getInstance()
@@ -20,16 +20,16 @@ internal fun resolvePracticeRecordWeekLabel(
     if (parsedDate != null) {
         calendar.time = parsedDate
     } else {
-        calendar.timeInMillis = createdAt
+        calendar.timeInMillis = createdAtMs
     }
     return resolvePracticeWeekLabel(calendar.get(Calendar.DAY_OF_WEEK), locale)
 }
 
 internal fun formatPracticeRecordClockText(
-    createdAt: Long,
+    createdAtMs: Long,
     locale: Locale = Locale.getDefault()
 ): String {
-    return SimpleDateFormat(PRACTICE_RECORD_TIME_PATTERN, locale).format(Date(createdAt))
+    return SimpleDateFormat(PRACTICE_RECORD_TIME_PATTERN, locale).format(Date(createdAtMs))
 }
 
 internal fun resolvePracticeWeekLabel(

@@ -191,7 +191,7 @@ class WordBookContentDownloader @Inject constructor(
                 totalWords = totalWords,
                 packageSha256 = packageSha256,
                 lastError = lastError,
-                updatedAt = System.currentTimeMillis()
+                updatedAtMs = System.currentTimeMillis()
             )
         )
     }

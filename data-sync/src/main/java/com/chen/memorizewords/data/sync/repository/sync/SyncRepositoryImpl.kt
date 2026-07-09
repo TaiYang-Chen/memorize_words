@@ -174,7 +174,7 @@ internal fun mapSyncPendingRecords(
     return entities
         .sortedWith(
             compareBy<SyncOutboxEntity> { syncOutboxStatePriority(it.state.name) }
-                .thenByDescending { it.updatedAt }
+                .thenByDescending { it.updatedAtMs }
                 .thenByDescending { it.id }
         )
         .map { entity ->
@@ -190,7 +190,7 @@ internal fun mapSyncPendingRecords(
                 failureKind = entity.failureKind?.name,
                 lastAttemptAt = entity.lastAttemptAt,
                 nextRetryAt = entity.nextRetryAt,
-                updatedAt = entity.updatedAt
+                updatedAtMs = entity.updatedAtMs
             )
         }
 }

@@ -14,9 +14,9 @@ interface LearningEventDao {
     @Query("SELECT COALESCE(MAX(client_sequence), 0) FROM learning_event")
     suspend fun getMaxClientSequence(): Long
 
-    @Query("UPDATE learning_event SET server_state_revision = :serverRevision, synced_at = :syncedAt WHERE client_event_id = :clientEventId")
+    @Query("UPDATE learning_event SET server_state_revision = :serverRevision, synced_at_ms = :syncedAt WHERE client_event_id = :clientEventId")
     suspend fun markSynced(clientEventId: String, serverRevision: Long, syncedAt: Long)
 
-    @Query("SELECT COUNT(*) FROM learning_event WHERE synced_at IS NULL")
+    @Query("SELECT COUNT(*) FROM learning_event WHERE synced_at_ms IS NULL")
     suspend fun countPending(): Int
 }

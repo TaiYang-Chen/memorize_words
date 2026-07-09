@@ -48,7 +48,7 @@ class WordBookUserSyncOutboxHandler @Inject constructor(
                 remoteUserSyncDataSource.upsertDailyStudyDuration(
                     date = payload.date,
                     totalDurationMs = payload.totalDurationMs,
-                    updatedAt = payload.updatedAt,
+                    updatedAtMs = payload.updatedAtMs,
                     isNewPlanCompleted = payload.isNewPlanCompleted,
                     isReviewPlanCompleted = payload.isReviewPlanCompleted
                 ).getOrThrow()
@@ -111,8 +111,8 @@ class WordBookUserSyncOutboxHandler @Inject constructor(
                             .getOrDefault(OnboardingPhase.NEEDS_WORD_BOOK),
                         selectedWordBookId = payload.selectedWordBookId,
                         revision = payload.revision,
-                        updatedAt = payload.updatedAt,
-                        completedAt = payload.completedAt
+                        updatedAtMs = payload.updatedAtMs,
+                        completedAt = payload.completedAtMs
                     )
                 ).getOrThrow()
             }
@@ -122,8 +122,8 @@ class WordBookUserSyncOutboxHandler @Inject constructor(
                 remoteUserSyncDataSource.upsertCheckInRecord(
                     date = payload.date,
                     type = payload.type,
-                    signedAt = payload.signedAt,
-                    updatedAt = payload.updatedAt
+                    signedAtMs = payload.signedAtMs,
+                    updatedAtMs = payload.updatedAtMs
                 ).getOrThrow()
             }
         }

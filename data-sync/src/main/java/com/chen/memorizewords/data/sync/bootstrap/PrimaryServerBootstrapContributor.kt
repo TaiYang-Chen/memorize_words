@@ -376,8 +376,8 @@ private fun com.chen.memorizewords.data.sync.remoteapi.dto.wordstate.WordStateDt
         wordId = wordId,
         bookId = if (bookId > 0L) bookId else fallbackBookId,
         totalLearnCount = totalLearnCount,
-        lastLearnTime = lastLearnTime,
-        nextReviewTime = nextReviewTime,
+        lastLearnedAtMs = lastLearnedAtMs,
+        nextReviewAtMs = nextReviewAtMs,
         masteryLevel = masteryLevel,
         userStatus = userStatus,
         repetition = repetition,
@@ -393,8 +393,8 @@ private fun com.chen.memorizewords.data.sync.remoteapi.dto.wordstate.WordStateDt
         wordId = wordId,
         bookId = if (bookId > 0L) bookId else fallbackBookId,
         totalLearnCount = totalLearnCount,
-        lastLearnTime = lastLearnTime,
-        nextReviewTime = nextReviewTime,
+        lastLearnedAtMs = lastLearnedAtMs,
+        nextReviewAtMs = nextReviewAtMs,
         masteryLevel = masteryLevel,
         userStatus = userStatus,
         repetition = repetition,
@@ -445,7 +445,7 @@ private fun com.chen.memorizewords.data.sync.remoteapi.api.datasync.DailyStudyDu
     return StudyDailyDurationSnapshot(
         date = date,
         totalDurationMs = totalDurationMs,
-        updatedAt = updatedAt,
+        updatedAtMs = updatedAtMs,
         isNewPlanCompleted = isNewPlanCompleted,
         isReviewPlanCompleted = isReviewPlanCompleted
     )
@@ -456,8 +456,8 @@ private fun com.chen.memorizewords.data.sync.remoteapi.api.datasync.CheckInRecor
     return CheckInRecord(
         date = date,
         type = runCatching { CheckInType.valueOf(type) }.getOrDefault(CheckInType.AUTO),
-        signedAt = signedAt,
-        updatedAt = updatedAt
+        signedAtMs = signedAtMs,
+        updatedAtMs = updatedAtMs
     )
 }
 
@@ -466,7 +466,7 @@ private fun com.chen.memorizewords.data.sync.remoteapi.api.learningsync.Practice
     return PracticeDailyDurationSnapshot(
         date = date,
         totalDurationMs = totalDurationMs,
-        updatedAt = updatedAt
+        updatedAtMs = updatedAtMs
     )
 }
 
@@ -483,7 +483,7 @@ private fun com.chen.memorizewords.data.sync.remoteapi.api.learningsync.Practice
         }.getOrDefault(com.chen.memorizewords.domain.practice.PracticeEntryType.SELF),
         entryCount = entryCount,
         durationMs = durationMs,
-        createdAt = createdAt,
+        createdAtMs = createdAtMs,
         wordIds = wordIds,
         questionCount = questionCount,
         completedCount = completedCount,
@@ -498,7 +498,7 @@ private fun com.chen.memorizewords.data.sync.remoteapi.api.learningsync.Floating
         date = date,
         displayCount = displayCount,
         wordIds = wordIds,
-        updatedAt = updatedAt
+        updatedAtMs = updatedAtMs
     )
 }
 

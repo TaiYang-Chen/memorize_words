@@ -1,4 +1,4 @@
-﻿package com.chen.memorizewords.data.study.repository.record
+package com.chen.memorizewords.data.study.repository.record
 
 import com.chen.memorizewords.core.common.calendar.CheckInBusinessCalendar
 import com.chen.memorizewords.core.common.calendar.CheckInConfig
@@ -225,8 +225,8 @@ class LearningRecordRepositoryImpl @Inject constructor(
         val entity = CheckInRecordEntity(
             date = date,
             type = CheckInType.MAKEUP,
-            signedAt = now,
-            updatedAt = now
+            signedAtMs = now,
+            updatedAtMs = now
         )
         studyRecordLocalStore.upsertCheckInRecord(entity)
         flushPendingStudyOutbox()
@@ -248,8 +248,8 @@ class LearningRecordRepositoryImpl @Inject constructor(
         val entity = CheckInRecordEntity(
             date = today,
             type = CheckInType.AUTO,
-            signedAt = now,
-            updatedAt = now
+            signedAtMs = now,
+            updatedAtMs = now
         )
         studyRecordLocalStore.upsertCheckInRecord(entity)
         flushPendingStudyOutbox()
@@ -340,8 +340,8 @@ private fun CheckInRecordEntity.toDomain(): CheckInRecord {
     return CheckInRecord(
         date = date,
         type = type,
-        signedAt = signedAt,
-        updatedAt = updatedAt
+        signedAtMs = signedAtMs,
+        updatedAtMs = updatedAtMs
     )
 }
 

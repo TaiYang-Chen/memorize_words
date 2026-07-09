@@ -13,8 +13,8 @@ data class WordListRow(
     val isFavorite: Boolean = false,
     val learningStatus: WordLearningStatus = WordLearningStatus.TO_LEARN,
     val totalLearnCount: Int = 0,
-    val lastLearnTime: Long = 0L,
-    val nextReviewTime: Long = 0L
+    val lastLearnedAtMs: Long = 0L,
+    val nextReviewAtMs: Long = 0L
 ) {
     val groupChar: Char
         get() = word.firstOrNull()?.uppercaseChar() ?: '#'

@@ -79,7 +79,7 @@ class FloatingReviewFacadeTest {
                 WordLearningState(
                     wordId = id,
                     bookId = wordBookId,
-                    nextReviewTime = id
+                    nextReviewAtMs = id
                 )
             }
         }

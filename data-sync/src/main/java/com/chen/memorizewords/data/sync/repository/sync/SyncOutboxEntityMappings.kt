@@ -14,6 +14,6 @@ internal fun SyncOutboxEntity.toDomainRecord(): OutboxRecord {
             SyncOutboxOperation.DELETE -> SyncOperation.DELETE
         },
         payload = payload,
-        createdAtEpochMillis = updatedAt
+        createdAtEpochMillis = updatedAtMs
     )
 }

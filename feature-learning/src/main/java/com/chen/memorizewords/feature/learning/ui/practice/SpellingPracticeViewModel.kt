@@ -505,7 +505,7 @@ class SpellingPracticeViewModel @Inject constructor(
                     },
                     kind = PracticeKind.LISTENING_SPELLING,
                     report = report,
-                    completedAtMillis = System.currentTimeMillis()
+                    completedAtMs = System.currentTimeMillis()
                 )
             )
         }

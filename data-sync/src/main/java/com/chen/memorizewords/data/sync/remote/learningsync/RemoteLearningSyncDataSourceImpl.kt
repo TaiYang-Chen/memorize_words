@@ -1,4 +1,4 @@
-﻿package com.chen.memorizewords.data.sync.remote.learningsync
+package com.chen.memorizewords.data.sync.remote.learningsync
 
 import com.chen.memorizewords.core.network.remote.RemoteResultAdapter
 import com.chen.memorizewords.domain.floating.model.FloatingDockConfig
@@ -84,14 +84,14 @@ class RemoteLearningSyncDataSourceImpl @Inject constructor(
     override suspend fun upsertPracticeDuration(
         date: String,
         totalDurationMs: Long,
-        updatedAt: Long
+        updatedAtMs: Long
     ): Result<Unit> {
         return remoteResultAdapter.toResult {
             request.upsertPracticeDuration(
                 date,
                 PracticeDurationSyncRequest(
                     totalDurationMs = totalDurationMs,
-                    updatedAt = updatedAt
+                    updatedAtMs = updatedAtMs
                 )
             )
         }
@@ -106,7 +106,7 @@ class RemoteLearningSyncDataSourceImpl @Inject constructor(
                     entryType = record.entryType.name,
                     entryCount = record.entryCount,
                     durationMs = record.durationMs,
-                    createdAt = record.createdAt,
+                    createdAtMs = record.createdAtMs,
                     wordIds = record.wordIds,
                     questionCount = record.questionCount,
                     completedCount = record.completedCount,
@@ -174,7 +174,7 @@ class RemoteLearningSyncDataSourceImpl @Inject constructor(
                 FloatingDisplayRecordSyncRequest(
                     displayCount = record.displayCount,
                     wordIds = record.wordIds,
-                    updatedAt = record.updatedAt
+                    updatedAtMs = record.updatedAtMs
                 )
             )
         }

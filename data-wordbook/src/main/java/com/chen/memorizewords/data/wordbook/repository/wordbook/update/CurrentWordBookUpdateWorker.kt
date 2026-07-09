@@ -1,4 +1,4 @@
-﻿package com.chen.memorizewords.data.wordbook.repository.wordbook.update
+package com.chen.memorizewords.data.wordbook.repository.wordbook.update
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -258,7 +258,7 @@ class CurrentWordBookUpdateWorker(
                 totalWords = totalWords,
                 packageSha256 = packageSha256,
                 lastError = lastError,
-                updatedAt = System.currentTimeMillis()
+                updatedAtMs = System.currentTimeMillis()
             )
         )
     }
@@ -300,8 +300,8 @@ class CurrentWordBookUpdateWorker(
             wordId = wordId,
             bookId = if (bookId > 0L) bookId else fallbackBookId,
             totalLearnCount = totalLearnCount,
-            lastLearnTime = lastLearnTime,
-            nextReviewTime = nextReviewTime,
+            lastLearnedAtMs = lastLearnedAtMs,
+            nextReviewAtMs = nextReviewAtMs,
             masteryLevel = masteryLevel,
             userStatus = userStatus,
             repetition = repetition,

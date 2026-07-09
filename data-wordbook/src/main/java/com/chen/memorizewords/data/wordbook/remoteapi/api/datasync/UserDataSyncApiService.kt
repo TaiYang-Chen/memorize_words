@@ -1,4 +1,4 @@
-﻿package com.chen.memorizewords.data.wordbook.remoteapi.api.datasync
+package com.chen.memorizewords.data.wordbook.remoteapi.api.datasync
 
 import com.chen.memorizewords.data.wordbook.remoteapi.dto.wordbook.WordBookDto
 import com.chen.memorizewords.data.wordbook.remoteapi.dto.wordstate.WordStateDto
@@ -27,8 +27,8 @@ data class OnboardingStateDto(
     val phase: String,
     val selectedWordBookId: Long?,
     val revision: Long,
-    val updatedAt: Long,
-    val completedAt: Long?
+    val updatedAtMs: Long,
+    val completedAtMs: Long?
 )
 
 @JsonClass(generateAdapter = false)
@@ -73,6 +73,7 @@ data class WordBookProgressDto(
     val wrongCount: Int,
     val studyDayCount: Int,
     val lastStudyDate: String,
+    val updatedAtMs: Long = 0L,
     val revision: Long = 0L
 )
 
@@ -90,7 +91,7 @@ data class PendingWordBookUpdateDto(
     val bookName: String,
     val currentVersion: Long,
     val targetVersion: Long,
-    val publishedAt: Long,
+    val publishedAtMs: Long,
     val summary: WordBookUpdateSummaryDto,
     val applyMode: String,
     val changeSummaryText: String = "",
@@ -117,7 +118,7 @@ data class WordBookUpdateCandidateDto(
     val bookName: String,
     val currentVersion: Long,
     val targetVersion: Long,
-    val publishedAt: Long,
+    val publishedAtMs: Long,
     val summary: WordBookUpdateSummaryDto,
     val applyMode: String,
     val importance: String = "NORMAL",
@@ -136,7 +137,7 @@ data class WordBookUpdateActionRequest(
     val targetVersion: Long? = null,
     val trigger: String? = null,
     val executionMode: String? = null,
-    val deferredUntil: Long? = null,
+    val deferredUntilMs: Long? = null,
     val failureReason: String? = null
 )
 
@@ -152,7 +153,7 @@ data class StudyRecordDto(
 @JsonClass(generateAdapter = false)
 data class DailyStudyDurationSyncRequest(
     val totalDurationMs: Long,
-    val updatedAt: Long,
+    val updatedAtMs: Long,
     val isNewPlanCompleted: Boolean,
     val isReviewPlanCompleted: Boolean
 )
@@ -161,7 +162,7 @@ data class DailyStudyDurationSyncRequest(
 data class DailyStudyDurationDto(
     val date: String,
     val totalDurationMs: Long,
-    val updatedAt: Long,
+    val updatedAtMs: Long,
     val isNewPlanCompleted: Boolean,
     val isReviewPlanCompleted: Boolean
 )
@@ -187,16 +188,16 @@ data class CheckInStatusDto(
 @JsonClass(generateAdapter = false)
 data class CheckInRecordSyncRequest(
     val type: String,
-    val signedAt: Long,
-    val updatedAt: Long
+    val signedAtMs: Long,
+    val updatedAtMs: Long
 )
 
 @JsonClass(generateAdapter = false)
 data class CheckInRecordDto(
     val date: String,
     val type: String,
-    val signedAt: Long,
-    val updatedAt: Long
+    val signedAtMs: Long,
+    val updatedAtMs: Long
 )
 
 interface UserDataSyncApiService {

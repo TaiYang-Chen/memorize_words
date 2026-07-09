@@ -19,7 +19,7 @@ class SyncOutboxStoreTest {
                     bizKey = "study_record:1",
                     operation = SyncOutboxOperation.UPSERT,
                     payload = "new",
-                    updatedAt = 100L
+                    updatedAtMs = 100L
                 )
             ),
             existingByBizKey = mapOf(existing.bizKey to existing)
@@ -52,7 +52,7 @@ private object SyncOutboxEntityFactory {
             nextRetryAt = 20L,
             leaseToken = "lease",
             leaseExpiresAt = 30L,
-            updatedAt = 40L
+            updatedAtMs = 40L
         )
     }
 }

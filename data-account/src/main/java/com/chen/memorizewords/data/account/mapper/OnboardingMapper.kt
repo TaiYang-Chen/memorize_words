@@ -10,8 +10,7 @@ fun OnboardingStateDto.toDomain(): OnboardingSnapshot {
             .getOrDefault(OnboardingPhase.NEEDS_WORD_BOOK),
         selectedWordBookId = selectedWordBookId,
         revision = revision,
-        updatedAt = updatedAt,
-        completedAt = completedAt
+        updatedAtMs = updatedAtMs,
+        completedAt = completedAtMs
     )
 }
-

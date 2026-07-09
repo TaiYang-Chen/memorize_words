@@ -31,7 +31,7 @@ class AppUpdateDialogFragment : DialogFragment(R.layout.app_dialog_update) {
         val versionSpan: String,
         val forceUpdate: Boolean,
         val releaseNotes: List<String>,
-        val publishedAt: String?,
+        val publishedAtMs: Long?,
         val fileSizeBytes: Long?,
         val riskTips: List<String>
     )
@@ -42,7 +42,7 @@ class AppUpdateDialogFragment : DialogFragment(R.layout.app_dialog_update) {
             versionSpan = requireArguments().getString(ARG_VERSION_SPAN).orEmpty(),
             forceUpdate = requireArguments().getBoolean(ARG_FORCE_UPDATE),
             releaseNotes = requireArguments().getStringArrayList(ARG_RELEASE_NOTES).orEmpty(),
-            publishedAt = requireArguments().getString(ARG_PUBLISHED_AT),
+            publishedAtMs = requireArguments().getLong(ARG_PUBLISHED_AT).takeIf { it > 0L },
             fileSizeBytes = requireArguments().getLong(ARG_FILE_SIZE_BYTES).takeIf { it > 0L },
             riskTips = requireArguments().getStringArrayList(ARG_RISK_TIPS).orEmpty()
         )
@@ -127,7 +127,7 @@ class AppUpdateDialogFragment : DialogFragment(R.layout.app_dialog_update) {
     private fun renderMeta(view: View, info: DialogInfo) {
         val metaContainer = view.findViewById<LinearLayout>(R.id.llUpdateMeta)
         metaContainer.removeAllViews()
-        metaContainer.addView(createMetaView("\u53d1\u5e03\u65f6\u95f4\uff1a${info.publishedAt ?: "--"}"))
+        metaContainer.addView(createMetaView("\u53d1\u5e03\u65f6\u95f4\uff1a${info.publishedAtMs?.toString() ?: "--"}"))
         metaContainer.addView(createMetaView("\u5305\u5927\u5c0f\uff1a${formatBytes(info.fileSizeBytes)}"))
         metaContainer.addView(createMetaView("\u5b89\u5168\u6821\u9a8c\uff1a\u4e0b\u8f7d\u5b8c\u6210\u540e\u4f1a\u6821\u9a8c\u5b89\u88c5\u5305\u5b8c\u6574\u6027"))
     }
@@ -208,7 +208,7 @@ class AppUpdateDialogFragment : DialogFragment(R.layout.app_dialog_update) {
                     ARG_VERSION_SPAN to info.versionSpan,
                     ARG_FORCE_UPDATE to info.forceUpdate,
                     ARG_RELEASE_NOTES to ArrayList(info.releaseNotes),
-                    ARG_PUBLISHED_AT to info.publishedAt,
+                    ARG_PUBLISHED_AT to (info.publishedAtMs ?: 0L),
                     ARG_FILE_SIZE_BYTES to (info.fileSizeBytes ?: 0L),
                     ARG_RISK_TIPS to ArrayList(info.riskTips)
                 )

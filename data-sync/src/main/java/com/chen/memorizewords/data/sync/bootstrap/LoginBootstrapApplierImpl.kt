@@ -128,7 +128,7 @@ private fun LoginBootstrapDailyStudyDuration.toSnapshot(): StudyDailyDurationSna
     return StudyDailyDurationSnapshot(
         date = date,
         totalDurationMs = totalDurationMs,
-        updatedAt = updatedAt,
+        updatedAtMs = updatedAtMs,
         isNewPlanCompleted = isNewPlanCompleted,
         isReviewPlanCompleted = isReviewPlanCompleted
     )

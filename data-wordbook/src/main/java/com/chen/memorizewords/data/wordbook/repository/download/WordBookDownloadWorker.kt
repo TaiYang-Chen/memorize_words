@@ -1,4 +1,4 @@
-﻿package com.chen.memorizewords.data.wordbook.repository.download
+package com.chen.memorizewords.data.wordbook.repository.download
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -199,8 +199,8 @@ class WordBookDownloadWorker(
             wordId = wordId,
             bookId = if (bookId > 0L) bookId else fallbackBookId,
             totalLearnCount = totalLearnCount,
-            lastLearnTime = lastLearnTime,
-            nextReviewTime = nextReviewTime,
+            lastLearnedAtMs = lastLearnedAtMs,
+            nextReviewAtMs = nextReviewAtMs,
             masteryLevel = masteryLevel,
             userStatus = userStatus,
             repetition = repetition,

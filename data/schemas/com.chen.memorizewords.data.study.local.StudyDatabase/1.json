@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "af4a09394b05b2916bc7119bc9230fda",
+    "identityHash": "281721bd65839c55c3193e624d47f900",
     "entities": [
       {
         "tableName": "check_in_record",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`date` TEXT NOT NULL, `type` TEXT NOT NULL, `signed_at` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, PRIMARY KEY(`date`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`date` TEXT NOT NULL, `type` TEXT NOT NULL, `signed_at_ms` INTEGER NOT NULL, `updated_at_ms` INTEGER NOT NULL, PRIMARY KEY(`date`))",
         "fields": [
           {
             "fieldPath": "date",
@@ -21,14 +21,14 @@
             "notNull": true
           },
           {
-            "fieldPath": "signedAt",
-            "columnName": "signed_at",
+            "fieldPath": "signedAtMs",
+            "columnName": "signed_at_ms",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
             "fieldPath": "updatedAt",
-            "columnName": "updated_at",
+            "columnName": "updated_at_ms",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -42,7 +42,7 @@
       },
       {
         "tableName": "daily_study_duration",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`date` TEXT NOT NULL, `total_duration_ms` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, `is_new_plan_completed` INTEGER NOT NULL, `is_review_plan_completed` INTEGER NOT NULL, PRIMARY KEY(`date`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`date` TEXT NOT NULL, `total_duration_ms` INTEGER NOT NULL, `updated_at_ms` INTEGER NOT NULL, `is_new_plan_completed` INTEGER NOT NULL, `is_review_plan_completed` INTEGER NOT NULL, PRIMARY KEY(`date`))",
         "fields": [
           {
             "fieldPath": "date",
@@ -58,7 +58,7 @@
           },
           {
             "fieldPath": "updatedAt",
-            "columnName": "updated_at",
+            "columnName": "updated_at_ms",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -142,7 +142,7 @@
       },
       {
         "tableName": "study_pending_outbox",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `topic` TEXT NOT NULL, `biz_key` TEXT NOT NULL, `operation` TEXT NOT NULL, `payload` TEXT NOT NULL, `updated_at` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `topic` TEXT NOT NULL, `biz_key` TEXT NOT NULL, `operation` TEXT NOT NULL, `payload` TEXT NOT NULL, `updated_at_ms` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -176,7 +176,7 @@
           },
           {
             "fieldPath": "updatedAt",
-            "columnName": "updated_at",
+            "columnName": "updated_at_ms",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -198,21 +198,21 @@
             "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_study_pending_outbox_biz_key` ON `${TABLE_NAME}` (`biz_key`)"
           },
           {
-            "name": "index_study_pending_outbox_updated_at_id",
+            "name": "index_study_pending_outbox_updated_at_ms_id",
             "unique": false,
             "columnNames": [
-              "updated_at",
+              "updated_at_ms",
               "id"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_study_pending_outbox_updated_at_id` ON `${TABLE_NAME}` (`updated_at`, `id`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_study_pending_outbox_updated_at_ms_id` ON `${TABLE_NAME}` (`updated_at_ms`, `id`)"
           }
         ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'af4a09394b05b2916bc7119bc9230fda')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '281721bd65839c55c3193e624d47f900')"
     ]
   }
 }

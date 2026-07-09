@@ -17,7 +17,7 @@ interface LearningOutboxDao {
         SELECT *
         FROM learning_outbox
         WHERE status = :status
-        ORDER BY updated_at ASC
+        ORDER BY updated_at_ms ASC
         LIMIT :limit
         """
     )
@@ -28,8 +28,8 @@ interface LearningOutboxDao {
         SELECT *
         FROM learning_outbox
         WHERE status = :pendingStatus
-          AND next_retry_at <= :now
-        ORDER BY updated_at ASC
+          AND next_retry_at_ms <= :now
+        ORDER BY updated_at_ms ASC
         LIMIT :limit
         """
     )
@@ -44,12 +44,12 @@ interface LearningOutboxDao {
         UPDATE learning_outbox
         SET status = :syncingStatus,
             lease_token = :leaseToken,
-            lease_until_at = :leaseUntilAt,
-            last_attempt_at = :now,
-            updated_at = :now
+            lease_until_at_ms = :leaseUntilAt,
+            last_attempt_at_ms = :now,
+            updated_at_ms = :now
         WHERE client_event_id = :clientEventId
           AND status = :pendingStatus
-          AND next_retry_at <= :now
+          AND next_retry_at_ms <= :now
         """
     )
     suspend fun markSyncing(
@@ -65,14 +65,14 @@ interface LearningOutboxDao {
         """
         UPDATE learning_outbox
         SET status = :status,
-            updated_at = :updatedAt,
+            updated_at_ms = :updatedAtMs,
             last_error = NULL,
             lease_token = NULL,
-            lease_until_at = NULL
+            lease_until_at_ms = NULL
         WHERE client_event_id = :clientEventId
         """
     )
-    suspend fun markStatus(clientEventId: String, status: String, updatedAt: Long)
+    suspend fun markStatus(clientEventId: String, status: String, updatedAtMs: Long)
 
     @Query(
         """
@@ -80,10 +80,10 @@ interface LearningOutboxDao {
         SET status = :pendingStatus,
             attempt_count = attempt_count + 1,
             last_error = :error,
-            next_retry_at = :nextRetryAt,
+            next_retry_at_ms = :nextRetryAt,
             lease_token = NULL,
-            lease_until_at = NULL,
-            updated_at = :updatedAt
+            lease_until_at_ms = NULL,
+            updated_at_ms = :updatedAtMs
         WHERE client_event_id = :clientEventId
           AND lease_token = :leaseToken
         """
@@ -93,7 +93,7 @@ interface LearningOutboxDao {
         leaseToken: String,
         error: String,
         nextRetryAt: Long,
-        updatedAt: Long,
+        updatedAtMs: Long,
         pendingStatus: String = LearningOutboxEntity.STATUS_PENDING
     )
 
@@ -104,8 +104,8 @@ interface LearningOutboxDao {
             attempt_count = attempt_count + 1,
             last_error = :error,
             lease_token = NULL,
-            lease_until_at = NULL,
-            updated_at = :updatedAt
+            lease_until_at_ms = NULL,
+            updated_at_ms = :updatedAtMs
         WHERE client_event_id = :clientEventId
           AND lease_token = :leaseToken
         """
@@ -114,7 +114,7 @@ interface LearningOutboxDao {
         clientEventId: String,
         leaseToken: String,
         error: String,
-        updatedAt: Long,
+        updatedAtMs: Long,
         blockedStatus: String = LearningOutboxEntity.STATUS_BLOCKED
     )
 
@@ -123,10 +123,10 @@ interface LearningOutboxDao {
         UPDATE learning_outbox
         SET status = :pendingStatus,
             lease_token = NULL,
-            lease_until_at = NULL,
-            updated_at = :now
+            lease_until_at_ms = NULL,
+            updated_at_ms = :now
         WHERE status = :syncingStatus
-          AND lease_until_at <= :now
+          AND lease_until_at_ms <= :now
         """
     )
     suspend fun releaseExpiredLeases(

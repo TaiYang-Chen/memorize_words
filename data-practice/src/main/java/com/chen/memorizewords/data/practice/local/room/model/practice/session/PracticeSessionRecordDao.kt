@@ -28,7 +28,7 @@ interface PracticeSessionRecordDao {
         SELECT *
         FROM practice_session_record
         WHERE date BETWEEN :startDate AND :endDate
-        ORDER BY created_at DESC
+        ORDER BY created_at_ms DESC
         """
     )
     fun getRecentSessions(startDate: String, endDate: String): Flow<List<PracticeSessionRecordWithWords>>

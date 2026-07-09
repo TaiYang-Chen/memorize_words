@@ -23,34 +23,34 @@ interface DailyStudyDurationDao {
         INSERT OR REPLACE INTO daily_study_duration(
             date,
             total_duration_ms,
-            updated_at,
+            updated_at_ms,
             is_new_plan_completed,
             is_review_plan_completed
         )
         VALUES (
             :date,
             COALESCE((SELECT total_duration_ms FROM daily_study_duration WHERE date = :date), 0) + :durationMs,
-            :updatedAt,
+            :updatedAtMs,
             COALESCE((SELECT is_new_plan_completed FROM daily_study_duration WHERE date = :date), 0),
             COALESCE((SELECT is_review_plan_completed FROM daily_study_duration WHERE date = :date), 0)
         )
         """
     )
-    suspend fun addDuration(date: String, durationMs: Long, updatedAt: Long)
+    suspend fun addDuration(date: String, durationMs: Long, updatedAtMs: Long)
 
     @Query(
         """
         INSERT OR REPLACE INTO daily_study_duration(
             date,
             total_duration_ms,
-            updated_at,
+            updated_at_ms,
             is_new_plan_completed,
             is_review_plan_completed
         )
         VALUES (
             :date,
             COALESCE((SELECT total_duration_ms FROM daily_study_duration WHERE date = :date), 0),
-            :updatedAt,
+            :updatedAtMs,
             CASE
                 WHEN COALESCE((SELECT is_new_plan_completed FROM daily_study_duration WHERE date = :date), 0) = 1 OR :isNewCompleted = 1
                     THEN 1
@@ -68,7 +68,7 @@ interface DailyStudyDurationDao {
         date: String,
         isNewCompleted: Int,
         isReviewCompleted: Int,
-        updatedAt: Long
+        updatedAtMs: Long
     )
 
     @Query(

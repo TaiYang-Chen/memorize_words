@@ -62,7 +62,7 @@ class LearningOutboxProcessor @Inject constructor(
                         leaseToken = leaseToken,
                         error = failure.persistedMessage,
                         nextRetryAt = attemptTime + syncOutboxBackoffDelayMillis(entity.attemptCount + 1),
-                        updatedAt = attemptTime
+                        updatedAtMs = attemptTime
                     )
                     shouldRetry = true
                 } else {
@@ -70,7 +70,7 @@ class LearningOutboxProcessor @Inject constructor(
                         clientEventId = entity.clientEventId,
                         leaseToken = leaseToken,
                         error = failure.persistedMessage,
-                        updatedAt = attemptTime
+                        updatedAtMs = attemptTime
                     )
                 }
             }
@@ -94,7 +94,7 @@ class LearningOutboxProcessor @Inject constructor(
             quality = quality,
             correct = correct,
             businessDate = businessDate,
-            occurredAt = occurredAt,
+            occurredAtMs = occurredAt,
             baseStateRevision = baseStateRevision,
             payloadJson = payloadJson,
             schemaVersion = schemaVersion
@@ -117,8 +117,8 @@ class LearningOutboxProcessor @Inject constructor(
             wordId = wordId,
             bookId = bookId,
             totalLearnCount = totalLearnCount,
-            lastLearnTime = lastLearnTime,
-            nextReviewTime = nextReviewTime,
+            lastLearnedAtMs = lastLearnedAtMs,
+            nextReviewAtMs = nextReviewAtMs,
             masteryLevel = masteryLevel,
             userStatus = userStatus,
             repetition = repetition,

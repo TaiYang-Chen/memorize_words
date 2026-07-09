@@ -4,7 +4,7 @@ data class WordBookUpdateCandidate(
     val bookName: String,
     val currentVersion: Long,
     val targetVersion: Long,
-    val publishedAt: Long,
+    val publishedAtMs: Long,
     val summary: WordBookUpdateSummary,
     val applyMode: WordBookUpdateApplyMode,
     val importance: WordBookUpdateImportance = WordBookUpdateImportance.NORMAL,

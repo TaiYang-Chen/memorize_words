@@ -55,7 +55,7 @@ data class PracticeSessionRecord(
     val entryType: PracticeEntryType,
     val entryCount: Int,
     val durationMs: Long,
-    val createdAt: Long,
+    val createdAtMs: Long,
     val wordIds: List<Long>,
     val questionCount: Int = 0,
     val completedCount: Int = 0,

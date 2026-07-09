@@ -25,7 +25,7 @@ data class AppUpdateInfo(
     val downloadUrl: String,
     val fileSha256: String?,
     val fileSizeBytes: Long?,
-    val publishedAt: String? = null,
+    val publishedAtMs: Long? = null,
     val riskTips: List<String> = emptyList(),
     val releaseLogUrl: String? = null,
     val policy: AppUpdatePolicy = AppUpdatePolicy()

@@ -6,7 +6,7 @@ data class ExamItemState(
     val attemptCount: Int = 0,
     val correctCount: Int = 0,
     val lastResult: ExamItemLastResult? = null,
-    val lastAnsweredAt: Long? = null
+    val lastAnsweredAtMs: Long? = null
 )
 
 data class WordExamItem(
@@ -56,6 +56,6 @@ data class ExamPracticeSessionSubmission(
     val completedCount: Int = 0,
     val correctCount: Int = 0,
     val submitCount: Int = 0,
-    val createdAt: Long = System.currentTimeMillis(),
+    val createdAtMs: Long = System.currentTimeMillis(),
     val items: List<ExamPracticeAnswerSubmission> = emptyList()
 )

@@ -1,4 +1,4 @@
-﻿package com.chen.memorizewords.data.wordbook.local.room.model.wordbook.syncstate
+package com.chen.memorizewords.data.wordbook.local.room.model.wordbook.syncstate
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -32,15 +32,15 @@ data class WordBookSyncStateEntity(
     val ignoredVersion: Long? = null,
     @ColumnInfo(name = "last_prompted_version")
     val lastPromptedVersion: Long? = null,
-    @ColumnInfo(name = "deferred_until")
-    val deferredUntil: Long? = null,
-    @ColumnInfo(name = "last_prompt_at")
+    @ColumnInfo(name = "deferred_until_ms")
+    val deferredUntilMs: Long? = null,
+    @ColumnInfo(name = "last_prompt_at_ms")
     val lastPromptAt: Long? = null,
     @ColumnInfo(name = "last_prompt_source")
     val lastPromptSource: WordBookUpdateTrigger? = null,
-    @ColumnInfo(name = "last_checked_at")
+    @ColumnInfo(name = "last_checked_at_ms")
     val lastCheckedAt: Long? = null,
-    @ColumnInfo(name = "last_completed_at")
+    @ColumnInfo(name = "last_completed_at_ms")
     val lastCompletedAt: Long? = null,
     @ColumnInfo(name = "last_failure_reason")
     val lastFailureReason: String? = null
@@ -58,8 +58,8 @@ data class WordBookSyncStateEntity(
         require(lastPromptedVersion == null || lastPromptedVersion >= 0L) {
             "lastPromptedVersion must be non-negative"
         }
-        require(deferredUntil == null || deferredUntil >= 0L) {
-            "deferredUntil must be non-negative"
+        require(deferredUntilMs == null || deferredUntilMs >= 0L) {
+            "deferredUntilMs must be non-negative"
         }
         require(lastPromptAt == null || lastPromptAt >= 0L) {
             "lastPromptAt must be non-negative"

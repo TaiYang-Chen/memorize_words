@@ -17,6 +17,7 @@ data class LoginResponseDto(
 @JsonClass(generateAdapter = false)
 data class UserDto(
     val id: Long,
+    val account: String? = null,
     val email: String?,
     val nickname: String?,
     val gender: String?,
@@ -33,8 +34,8 @@ data class OnboardingStateDto(
     val phase: String,
     val selectedWordBookId: Long?,
     val revision: Long,
-    val updatedAt: Long,
-    val completedAt: Long?
+    val updatedAtMs: Long,
+    val completedAtMs: Long?
 )
 
 @JsonClass(generateAdapter = false)
@@ -72,7 +73,7 @@ data class WordBookDto(
     val learnedWords: Int = 0,
     val contentVersion: Long = 0L,
     val contentPackage: WordBookContentPackageDto? = null,
-    val updatedAt: Long = 0L,
+    val updatedAtMs: Long = 0L,
     val isNew: Boolean = false,
     val isHot: Boolean = false,
     val isSelected: Boolean = false,
@@ -101,7 +102,7 @@ data class WordBookProgressDto(
     val wrongCount: Int,
     val studyDayCount: Int,
     val lastStudyDate: String? = null,
-    val updatedAt: Long = 0L,
+    val updatedAtMs: Long = 0L,
     val revision: Long = 0L
 )
 
@@ -128,7 +129,7 @@ data class StudyRecordDto(
 data class DailyStudyDurationDto(
     val date: String,
     val totalDurationMs: Long,
-    val updatedAt: Long,
+    val updatedAtMs: Long,
     val isNewPlanCompleted: Boolean,
     val isReviewPlanCompleted: Boolean
 )

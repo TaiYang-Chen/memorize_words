@@ -11,5 +11,5 @@ data class SyncPendingRecord(
     val failureKind: String?,
     val lastAttemptAt: Long,
     val nextRetryAt: Long,
-    val updatedAt: Long
+    val updatedAtMs: Long
 )

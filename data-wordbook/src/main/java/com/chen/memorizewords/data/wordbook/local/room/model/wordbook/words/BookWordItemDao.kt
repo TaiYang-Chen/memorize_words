@@ -1,4 +1,4 @@
-Ôªøpackage com.chen.memorizewords.data.wordbook.local.room.model.wordbook.words
+package com.chen.memorizewords.data.wordbook.local.room.model.wordbook.words
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -31,9 +31,9 @@ interface BookWordItemDao {
     suspend fun insertAll(wordBookWords: List<WordBookItemEntity>)
 
     /**
-     * Ëé∑ÂèñÊåáÂÆöÂçïËØç‰π¶‰∏≠ÊâÄÊúâÂçïËØçÁöÑÊï∞Èáè
-     * @param wordBookId ÂçïËØç‰π¶ ID
-     * @return ÂçïËØçÊï∞Èáè
+     * ªÒ»°÷∏∂®µ•¥  È÷–À˘”–µ•¥ µƒ ˝¡ø
+     * @param wordBookId µ•¥  È ID
+     * @return µ•¥  ˝¡ø
      */
     @Query(
         """
@@ -78,8 +78,8 @@ interface BookWordItemDao {
             ), '') AS meanings,
             COALESCE(wls.mastery_level, 0) AS masteryLevel,
             COALESCE(wls.total_learn_count, 0) AS totalLearnCount,
-            COALESCE(wls.last_learn_time, 0) AS lastLearnTime,
-            COALESCE(wls.next_review_time, 0) AS nextReviewTime,
+            COALESCE(wls.last_learned_at_ms, 0) AS lastLearnedAtMs,
+            COALESCE(wls.next_review_at_ms, 0) AS nextReviewAtMs,
             COALESCE(wls.user_status, 0) AS userStatus
         FROM word_book_words wbw
         LEFT JOIN words w ON w.id = wbw.word_id
@@ -113,8 +113,8 @@ interface BookWordItemDao {
             ), '') AS meanings,
             COALESCE(wls.mastery_level, 0) AS masteryLevel,
             COALESCE(wls.total_learn_count, 0) AS totalLearnCount,
-            COALESCE(wls.last_learn_time, 0) AS lastLearnTime,
-            COALESCE(wls.next_review_time, 0) AS nextReviewTime,
+            COALESCE(wls.last_learned_at_ms, 0) AS lastLearnedAtMs,
+            COALESCE(wls.next_review_at_ms, 0) AS nextReviewAtMs,
             COALESCE(wls.user_status, 0) AS userStatus
         FROM word_book_words wbw
         LEFT JOIN words w ON w.id = wbw.word_id
@@ -154,8 +154,8 @@ interface BookWordItemDao {
             ), '') AS meanings,
             COALESCE(wls.mastery_level, 0) AS masteryLevel,
             COALESCE(wls.total_learn_count, 0) AS totalLearnCount,
-            COALESCE(wls.last_learn_time, 0) AS lastLearnTime,
-            COALESCE(wls.next_review_time, 0) AS nextReviewTime,
+            COALESCE(wls.last_learned_at_ms, 0) AS lastLearnedAtMs,
+            COALESCE(wls.next_review_at_ms, 0) AS nextReviewAtMs,
             COALESCE(wls.user_status, 0) AS userStatus
         FROM word_book_words wbw
         LEFT JOIN words w ON w.id = wbw.word_id
@@ -196,8 +196,8 @@ interface BookWordItemDao {
             ), '') AS meanings,
             COALESCE(wls.mastery_level, 0) AS masteryLevel,
             COALESCE(wls.total_learn_count, 0) AS totalLearnCount,
-            COALESCE(wls.last_learn_time, 0) AS lastLearnTime,
-            COALESCE(wls.next_review_time, 0) AS nextReviewTime,
+            COALESCE(wls.last_learned_at_ms, 0) AS lastLearnedAtMs,
+            COALESCE(wls.next_review_at_ms, 0) AS nextReviewAtMs,
             COALESCE(wls.user_status, 0) AS userStatus
         FROM word_book_words wbw
         LEFT JOIN words w ON w.id = wbw.word_id
@@ -232,8 +232,8 @@ interface BookWordItemDao {
             ), '') AS meanings,
             COALESCE(wls.mastery_level, 0) AS masteryLevel,
             COALESCE(wls.total_learn_count, 0) AS totalLearnCount,
-            COALESCE(wls.last_learn_time, 0) AS lastLearnTime,
-            COALESCE(wls.next_review_time, 0) AS nextReviewTime,
+            COALESCE(wls.last_learned_at_ms, 0) AS lastLearnedAtMs,
+            COALESCE(wls.next_review_at_ms, 0) AS nextReviewAtMs,
             COALESCE(wls.user_status, 0) AS userStatus
         FROM word_book_words wbw
         LEFT JOIN words w ON w.id = wbw.word_id
@@ -258,23 +258,23 @@ interface BookWordItemDao {
               OR (:filter = 'TO_LEARN' AND COALESCE(wls.total_learn_count, 0) = 0 AND COALESCE(wls.mastery_level, 0) <= 0)
               OR (:filter = 'LEARNED' AND COALESCE(wls.total_learn_count, 0) > 0 AND COALESCE(wls.mastery_level, 0) > 0 AND COALESCE(wls.mastery_level, 0) < :masteredLevel AND COALESCE(wls.user_status, 0) != 1)
               OR (:filter = 'MASTERED' AND (COALESCE(wls.mastery_level, 0) >= :masteredLevel OR COALESCE(wls.user_status, 0) = 1))
-              OR (:filter = 'REVIEW_DUE' AND COALESCE(wls.total_learn_count, 0) > 0 AND COALESCE(wls.next_review_time, 0) > 0 AND COALESCE(wls.next_review_time, 0) <= :now AND COALESCE(wls.mastery_level, 0) < :masteredLevel AND COALESCE(wls.user_status, 0) != 1)
+              OR (:filter = 'REVIEW_DUE' AND COALESCE(wls.total_learn_count, 0) > 0 AND COALESCE(wls.next_review_at_ms, 0) > 0 AND COALESCE(wls.next_review_at_ms, 0) <= :now AND COALESCE(wls.mastery_level, 0) < :masteredLevel AND COALESCE(wls.user_status, 0) != 1)
           )
         ORDER BY
             CASE WHEN :sortType = 'ALPHABETIC_ASC' THEN w.word END COLLATE NOCASE ASC,
             CASE WHEN :sortType = 'ALPHABETIC_DESC' THEN w.word END COLLATE NOCASE DESC,
-            CASE WHEN :sortType = 'RECENT_LEARNED' THEN COALESCE(wls.last_learn_time, 0) END DESC,
+            CASE WHEN :sortType = 'RECENT_LEARNED' THEN COALESCE(wls.last_learned_at_ms, 0) END DESC,
             CASE WHEN :sortType = 'REVIEW_DUE_FIRST' THEN
                 CASE
                     WHEN COALESCE(wls.total_learn_count, 0) > 0
-                     AND COALESCE(wls.next_review_time, 0) > 0
-                     AND COALESCE(wls.next_review_time, 0) <= :now
+                     AND COALESCE(wls.next_review_at_ms, 0) > 0
+                     AND COALESCE(wls.next_review_at_ms, 0) <= :now
                      AND COALESCE(wls.mastery_level, 0) < :masteredLevel
                      AND COALESCE(wls.user_status, 0) != 1
                     THEN 1 ELSE 0
                 END
             END DESC,
-            CASE WHEN :sortType = 'REVIEW_DUE_FIRST' THEN COALESCE(wls.next_review_time, 9223372036854775807) END ASC,
+            CASE WHEN :sortType = 'REVIEW_DUE_FIRST' THEN COALESCE(wls.next_review_at_ms, 9223372036854775807) END ASC,
             wbw.word_id ASC
         LIMIT :limit OFFSET :offset
         """
@@ -318,23 +318,23 @@ interface BookWordItemDao {
               OR (:filter = 'TO_LEARN' AND COALESCE(wls.total_learn_count, 0) = 0 AND COALESCE(wls.mastery_level, 0) <= 0)
               OR (:filter = 'LEARNED' AND COALESCE(wls.total_learn_count, 0) > 0 AND COALESCE(wls.mastery_level, 0) > 0 AND COALESCE(wls.mastery_level, 0) < :masteredLevel AND COALESCE(wls.user_status, 0) != 1)
               OR (:filter = 'MASTERED' AND (COALESCE(wls.mastery_level, 0) >= :masteredLevel OR COALESCE(wls.user_status, 0) = 1))
-              OR (:filter = 'REVIEW_DUE' AND COALESCE(wls.total_learn_count, 0) > 0 AND COALESCE(wls.next_review_time, 0) > 0 AND COALESCE(wls.next_review_time, 0) <= :now AND COALESCE(wls.mastery_level, 0) < :masteredLevel AND COALESCE(wls.user_status, 0) != 1)
+              OR (:filter = 'REVIEW_DUE' AND COALESCE(wls.total_learn_count, 0) > 0 AND COALESCE(wls.next_review_at_ms, 0) > 0 AND COALESCE(wls.next_review_at_ms, 0) <= :now AND COALESCE(wls.mastery_level, 0) < :masteredLevel AND COALESCE(wls.user_status, 0) != 1)
           )
         ORDER BY
             CASE WHEN :sortType = 'ALPHABETIC_ASC' THEN w.word END COLLATE NOCASE ASC,
             CASE WHEN :sortType = 'ALPHABETIC_DESC' THEN w.word END COLLATE NOCASE DESC,
-            CASE WHEN :sortType = 'RECENT_LEARNED' THEN COALESCE(wls.last_learn_time, 0) END DESC,
+            CASE WHEN :sortType = 'RECENT_LEARNED' THEN COALESCE(wls.last_learned_at_ms, 0) END DESC,
             CASE WHEN :sortType = 'REVIEW_DUE_FIRST' THEN
                 CASE
                     WHEN COALESCE(wls.total_learn_count, 0) > 0
-                     AND COALESCE(wls.next_review_time, 0) > 0
-                     AND COALESCE(wls.next_review_time, 0) <= :now
+                     AND COALESCE(wls.next_review_at_ms, 0) > 0
+                     AND COALESCE(wls.next_review_at_ms, 0) <= :now
                      AND COALESCE(wls.mastery_level, 0) < :masteredLevel
                      AND COALESCE(wls.user_status, 0) != 1
                     THEN 1 ELSE 0
                 END
             END DESC,
-            CASE WHEN :sortType = 'REVIEW_DUE_FIRST' THEN COALESCE(wls.next_review_time, 9223372036854775807) END ASC,
+            CASE WHEN :sortType = 'REVIEW_DUE_FIRST' THEN COALESCE(wls.next_review_at_ms, 9223372036854775807) END ASC,
             wbw.word_id ASC
         LIMIT :limit
         """
@@ -359,8 +359,8 @@ interface BookWordItemDao {
             SUM(CASE WHEN COALESCE(wls.mastery_level, 0) >= :masteredLevel OR COALESCE(wls.user_status, 0) = 1 THEN 1 ELSE 0 END) AS masteredCount,
             SUM(CASE
                 WHEN COALESCE(wls.total_learn_count, 0) > 0
-                 AND COALESCE(wls.next_review_time, 0) > 0
-                 AND COALESCE(wls.next_review_time, 0) <= :now
+                 AND COALESCE(wls.next_review_at_ms, 0) > 0
+                 AND COALESCE(wls.next_review_at_ms, 0) <= :now
                  AND COALESCE(wls.mastery_level, 0) < :masteredLevel
                  AND COALESCE(wls.user_status, 0) != 1
                 THEN 1 ELSE 0
@@ -380,8 +380,8 @@ interface BookWordItemDao {
         now: Long
     ): WordListSummaryProjection
 
-    // È´òÊÄßËÉΩÔºöËøîÂõûÂ±û‰∫é bookId ‰∏îÂ∞öÊú™ÊúâÂ≠¶‰π†Áä∂ÊÄÅÁöÑ wordId ÂàóË°®
-    // ËØ¥ÊòéÔºöÈÄöËøáÂ≠êÊü•ËØ¢Âú® DB Â±ÇËøáÊª§ÊéâÂ∑≤Â≠òÂú®‰∫é word_learning_state Ë°®ÁöÑ word
+    // ∏ﬂ–‘ƒ‹£∫∑µªÿ Ù”⁄ bookId «“…–Œ¥”–—ßœ∞◊¥Ã¨µƒ wordId ¡–±Ì
+    // Àµ√˜£∫Õ®π˝◊”≤È—Ø‘⁄ DB ≤„π˝¬ÀµÙ“—¥Ê‘⁄”⁄ word_learning_state ±Ìµƒ word
     @Query(
         """
         SELECT w.word_id
@@ -605,8 +605,8 @@ data class WordListRowProjection(
     val meanings: String,
     val masteryLevel: Int,
     val totalLearnCount: Int = 0,
-    val lastLearnTime: Long = 0,
-    val nextReviewTime: Long = 0,
+    val lastLearnedAtMs: Long = 0,
+    val nextReviewAtMs: Long = 0,
     val userStatus: Int = 0
 )
 

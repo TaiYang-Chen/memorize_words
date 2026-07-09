@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "9939844353014270d653fe697cdbd68c",
+    "identityHash": "69cd5d09b418cc6631bc3fcffd8bae01",
     "entities": [
       {
         "tableName": "floating_word_display_record",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`date` TEXT NOT NULL, `display_count` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, PRIMARY KEY(`date`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`date` TEXT NOT NULL, `display_count` INTEGER NOT NULL, `updated_at_ms` INTEGER NOT NULL, PRIMARY KEY(`date`))",
         "fields": [
           {
             "fieldPath": "date",
@@ -22,7 +22,7 @@
           },
           {
             "fieldPath": "updatedAt",
-            "columnName": "updated_at",
+            "columnName": "updated_at_ms",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -101,7 +101,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9939844353014270d653fe697cdbd68c')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '69cd5d09b418cc6631bc3fcffd8bae01')"
     ]
   }
 }

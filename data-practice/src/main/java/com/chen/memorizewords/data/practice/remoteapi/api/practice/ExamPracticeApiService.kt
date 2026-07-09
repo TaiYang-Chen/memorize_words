@@ -17,7 +17,7 @@ data class ExamItemStateDto(
     val attemptCount: Int = 0,
     val correctCount: Int = 0,
     val lastResult: String? = null,
-    val lastAnsweredAt: Long? = null
+    val lastAnsweredAtMs: Long? = null
 )
 
 @JsonClass(generateAdapter = false)
@@ -75,7 +75,7 @@ data class ExamPracticeSessionSubmitRequest(
     val completedCount: Int = 0,
     val correctCount: Int = 0,
     val submitCount: Int = 0,
-    val createdAt: Long = System.currentTimeMillis(),
+    val createdAtMs: Long = System.currentTimeMillis(),
     val items: List<ExamPracticeSessionItemAnswerDto> = emptyList()
 )
 

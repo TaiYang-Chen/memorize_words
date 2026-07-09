@@ -167,8 +167,8 @@ class LearningCommandRepository @Inject constructor(
             bookId = command.bookId,
             totalLearnCount = (previous?.totalLearnCount ?: 0) +
                 if (command.action.incrementsLearnCount()) 1 else 0,
-            lastLearnTime = command.occurredAt,
-            nextReviewTime = command.occurredAt + TimeUnit.DAYS.toMillis(sm2.interval),
+            lastLearnedAtMs = command.occurredAt,
+            nextReviewAtMs = command.occurredAt + TimeUnit.DAYS.toMillis(sm2.interval),
             masteryLevel = mastery,
             userStatus = userStatus,
             interval = sm2.interval,

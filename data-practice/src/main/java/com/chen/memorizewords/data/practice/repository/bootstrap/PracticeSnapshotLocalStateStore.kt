@@ -27,7 +27,7 @@ class PracticeSnapshotLocalStateStore @Inject constructor(
                         DailyPracticeDurationEntity(
                             date = duration.date,
                             totalDurationMs = duration.totalDurationMs,
-                            updatedAt = duration.updatedAt
+                            updatedAtMs = duration.updatedAtMs
                         )
                     }
                 )
@@ -56,7 +56,7 @@ private fun PracticeSessionRecord.toEntity(): PracticeSessionRecordEntity {
         entryType = entryType,
         entryCount = entryCount,
         durationMs = durationMs,
-        createdAt = createdAt,
+        createdAtMs = createdAtMs,
         questionCount = questionCount,
         completedCount = completedCount,
         correctCount = correctCount,

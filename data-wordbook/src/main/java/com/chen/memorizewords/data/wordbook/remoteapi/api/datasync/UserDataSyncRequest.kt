@@ -1,4 +1,4 @@
-﻿package com.chen.memorizewords.data.wordbook.remoteapi.api.datasync
+package com.chen.memorizewords.data.wordbook.remoteapi.api.datasync
 
 import com.chen.memorizewords.core.network.http.NetworkRequestExecutor
 import com.chen.memorizewords.data.wordbook.remoteapi.dto.wordbook.WordBookDto
@@ -186,7 +186,7 @@ class UserDataSyncRequest @Inject constructor(
     suspend fun upsertDailyStudyDuration(
         date: String,
         totalDurationMs: Long,
-        updatedAt: Long,
+        updatedAtMs: Long,
         isNewPlanCompleted: Boolean,
         isReviewPlanCompleted: Boolean
     ): NetworkResult<Unit> = requestExecutor.executeAuthenticated {
@@ -194,7 +194,7 @@ class UserDataSyncRequest @Inject constructor(
             date = date,
             request = DailyStudyDurationSyncRequest(
                 totalDurationMs = totalDurationMs,
-                updatedAt = updatedAt,
+                updatedAtMs = updatedAtMs,
                 isNewPlanCompleted = isNewPlanCompleted,
                 isReviewPlanCompleted = isReviewPlanCompleted
             )
@@ -242,15 +242,15 @@ class UserDataSyncRequest @Inject constructor(
     suspend fun upsertCheckInRecord(
         date: String,
         type: String,
-        signedAt: Long,
-        updatedAt: Long
+        signedAtMs: Long,
+        updatedAtMs: Long
     ): NetworkResult<Unit> = requestExecutor.executeAuthenticated {
         apiService.upsertCheckInRecord(
             date = date,
             request = CheckInRecordSyncRequest(
                 type = type,
-                signedAt = signedAt,
-                updatedAt = updatedAt
+                signedAtMs = signedAtMs,
+                updatedAtMs = updatedAtMs
             )
         ).await<ApiResponse<Unit>, Unit>()
     }

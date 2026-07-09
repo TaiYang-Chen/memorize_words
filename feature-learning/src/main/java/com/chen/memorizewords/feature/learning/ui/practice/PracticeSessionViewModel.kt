@@ -85,7 +85,7 @@ class PracticeSessionViewModel @Inject constructor(
             entryType = sessionEntryType,
             entryCount = sessionEntryCount,
             durationMs = totalDurationMs,
-            createdAt = System.currentTimeMillis(),
+            createdAtMs = System.currentTimeMillis(),
             wordIds = sessionWordIds,
             questionCount = sessionSummary.questionCount,
             completedCount = sessionSummary.completedCount,

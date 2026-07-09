@@ -1,4 +1,4 @@
-﻿package com.chen.memorizewords.data.wordbook.remoteapi.dto.wordstate
+package com.chen.memorizewords.data.wordbook.remoteapi.dto.wordstate
 
 import com.squareup.moshi.JsonClass
 
@@ -7,8 +7,8 @@ data class WordStateDto(
     val wordId: Long,
     val bookId: Long,
     val totalLearnCount: Int,
-    val lastLearnTime: Long,
-    val nextReviewTime: Long,
+    val lastLearnedAtMs: Long,
+    val nextReviewAtMs: Long,
     val masteryLevel: Int,
     val userStatus: Int,
     val repetition: Int,

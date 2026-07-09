@@ -10,7 +10,7 @@ interface StudyPendingOutboxDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(items: List<StudyPendingOutboxEntity>)
 
-    @Query("SELECT * FROM study_pending_outbox ORDER BY updated_at ASC, id ASC")
+    @Query("SELECT * FROM study_pending_outbox ORDER BY updated_at_ms ASC, id ASC")
     suspend fun getAll(): List<StudyPendingOutboxEntity>
 
     @Query("DELETE FROM study_pending_outbox WHERE biz_key IN (:bizKeys)")

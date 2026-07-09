@@ -32,7 +32,7 @@ class PendingSyncDetailFormatter @Inject constructor(
             stateLabel = formatState(record.state),
             operationLabel = formatOperation(record.operation),
             bizKeyText = "bizKey: ${record.bizKey}",
-            updatedAtText = "\u66f4\u65b0\u65f6\u95f4: ${formatTimestamp(record.updatedAt)}",
+            updatedAtText = "\u66f4\u65b0\u65f6\u95f4: ${formatTimestamp(record.updatedAtMs)}",
             retryText = record.retryCount.takeIf { it > 0 }
                 ?.let { "\u91cd\u8bd5\u6b21\u6570: $it" }
                 .orEmpty(),
@@ -71,7 +71,7 @@ class PendingSyncDetailFormatter @Inject constructor(
                 rootObject,
                 label("\u4e1a\u52a1\u65e5\u671f", "date"),
                 label("\u5b66\u4e60\u65f6\u957f", "totalDurationMs"),
-                label("\u66f4\u65b0\u65f6\u95f4", "updatedAt"),
+                label("\u66f4\u65b0\u65f6\u95f4", "updatedAtMs"),
                 label("\u65b0\u8bcd\u8ba1\u5212\u5b8c\u6210", "isNewPlanCompleted"),
                 label("\u590d\u4e60\u8ba1\u5212\u5b8c\u6210", "isReviewPlanCompleted")
             )
@@ -80,7 +80,7 @@ class PendingSyncDetailFormatter @Inject constructor(
                 rootObject,
                 label("\u4e1a\u52a1\u65e5\u671f", "date"),
                 label("\u7ec3\u4e60\u65f6\u957f", "totalDurationMs"),
-                label("\u66f4\u65b0\u65f6\u95f4", "updatedAt")
+                label("\u66f4\u65b0\u65f6\u95f4", "updatedAtMs")
             )
 
             PRACTICE_SESSION -> buildFields(
@@ -91,7 +91,7 @@ class PendingSyncDetailFormatter @Inject constructor(
                 label("\u8fdb\u5165\u65b9\u5f0f", "entryType"),
                 label("\u8fdb\u5165\u6570\u91cf", "entryCount"),
                 label("\u7ec3\u4e60\u65f6\u957f", "durationMs"),
-                label("\u521b\u5efa\u65f6\u95f4", "createdAt"),
+                label("\u521b\u5efa\u65f6\u95f4", "createdAtMs"),
                 label("\u5355\u8bcd ID \u5217\u8868", "wordIds"),
                 label("\u9898\u76ee\u6570", "questionCount"),
                 label("\u5b8c\u6210\u6570", "completedCount"),
@@ -124,7 +124,7 @@ class PendingSyncDetailFormatter @Inject constructor(
                 label("\u5f15\u5bfc\u9636\u6bb5", "phase"),
                 label("\u5df2\u9009\u8bcd\u4e66 ID", "selectedWordBookId"),
                 label("\u7248\u672c\u53f7", "revision"),
-                label("\u66f4\u65b0\u65f6\u95f4", "updatedAt"),
+                label("\u66f4\u65b0\u65f6\u95f4", "updatedAtMs"),
                 label("\u5b8c\u6210\u65f6\u95f4", "completedAt")
             )
 
@@ -163,15 +163,15 @@ class PendingSyncDetailFormatter @Inject constructor(
                 label("\u4e1a\u52a1\u65e5\u671f", "date"),
                 label("\u5c55\u793a\u6b21\u6570", "displayCount"),
                 label("\u5355\u8bcd ID \u5217\u8868", "wordIds"),
-                label("\u66f4\u65b0\u65f6\u95f4", "updatedAt")
+                label("\u66f4\u65b0\u65f6\u95f4", "updatedAtMs")
             )
 
             CHECKIN_RECORD -> buildFields(
                 rootObject,
                 label("\u4e1a\u52a1\u65e5\u671f", "date"),
                 label("\u7b7e\u5230\u7c7b\u578b", "type"),
-                label("\u7b7e\u5230\u65f6\u95f4", "signedAt"),
-                label("\u66f4\u65b0\u65f6\u95f4", "updatedAt")
+                label("\u7b7e\u5230\u65f6\u95f4", "signedAtMs"),
+                label("\u66f4\u65b0\u65f6\u95f4", "updatedAtMs")
             )
 
             else -> extractAllFields(rootObject)

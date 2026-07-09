@@ -13,7 +13,7 @@ interface PracticeReportDao {
         """
         SELECT * FROM practice_report
         WHERE kind = :kind
-        ORDER BY completedAtMillis DESC
+        ORDER BY completed_at_ms DESC
         LIMIT 1
         """
     )

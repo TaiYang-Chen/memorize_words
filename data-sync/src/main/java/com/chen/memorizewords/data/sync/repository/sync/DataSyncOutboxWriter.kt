@@ -18,7 +18,7 @@ class DataSyncOutboxWriter @Inject constructor(
             bizKey = command.key,
             operation = command.operation.toDataOperation(),
             payload = command.payload,
-            updatedAt = command.updatedAtEpochMillis
+            updatedAtMs = command.updatedAtEpochMillis
         )
         syncOutboxWorkScheduler.scheduleDrain()
     }
@@ -32,7 +32,7 @@ class DataSyncOutboxWriter @Inject constructor(
                     bizKey = command.key,
                     operation = command.operation.toDataOperation(),
                     payload = command.payload,
-                    updatedAt = command.updatedAtEpochMillis
+                    updatedAtMs = command.updatedAtEpochMillis
                 )
             }
         )

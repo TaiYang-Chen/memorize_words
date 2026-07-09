@@ -89,8 +89,8 @@ private fun CheckInRecord.toEntity(): CheckInRecordEntity {
     return CheckInRecordEntity(
         date = date,
         type = type,
-        signedAt = signedAt,
-        updatedAt = updatedAt
+        signedAtMs = signedAtMs,
+        updatedAtMs = updatedAtMs
     )
 }
 
@@ -98,7 +98,7 @@ private fun StudyDailyDurationSnapshot.toEntity(): DailyStudyDurationEntity {
     return DailyStudyDurationEntity(
         date = date,
         totalDurationMs = totalDurationMs,
-        updatedAt = updatedAt,
+        updatedAtMs = updatedAtMs,
         isNewPlanCompleted = isNewPlanCompleted,
         isReviewPlanCompleted = isReviewPlanCompleted
     )

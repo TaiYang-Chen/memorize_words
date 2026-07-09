@@ -30,7 +30,7 @@ interface SyncOutboxDao {
         SELECT *
         FROM sync_outbox
         WHERE biz_type = :bizType
-        ORDER BY updated_at ASC, id ASC
+        ORDER BY updated_at_ms ASC, id ASC
         """
     )
     suspend fun getByBizType(bizType: String): List<SyncOutboxEntity>
@@ -40,7 +40,7 @@ interface SyncOutboxDao {
         SELECT *
         FROM sync_outbox
         WHERE biz_type = :bizType
-        ORDER BY updated_at ASC, id ASC
+        ORDER BY updated_at_ms ASC, id ASC
         """
     )
     fun observeByBizType(bizType: String): Flow<List<SyncOutboxEntity>>
@@ -92,23 +92,23 @@ interface SyncOutboxDao {
         UPDATE sync_outbox
         SET state = 'IN_FLIGHT',
             lease_token = :leaseToken,
-            lease_expires_at = :leaseExpiresAt,
-            last_attempt_at = :attemptedAt,
-            updated_at = :updatedAt
+            lease_expires_at_ms = :leaseExpiresAt,
+            last_attempt_at_ms = :attemptedAt,
+            updated_at_ms = :updatedAtMs
         WHERE id IN (
             SELECT id
             FROM sync_outbox
             WHERE state = 'QUEUED'
                OR (
                     state = 'RETRY_WAITING'
-                    AND next_retry_at <= :now
+                    AND next_retry_at_ms <= :now
                )
                OR (
                     state = 'IN_FLIGHT'
-                    AND lease_expires_at > 0
-                    AND lease_expires_at <= :now
+                    AND lease_expires_at_ms > 0
+                    AND lease_expires_at_ms <= :now
                )
-            ORDER BY updated_at ASC, id ASC
+            ORDER BY updated_at_ms ASC, id ASC
             LIMIT :limit
         )
         """
@@ -119,10 +119,10 @@ interface SyncOutboxDao {
         leaseToken: String,
         leaseExpiresAt: Long,
         attemptedAt: Long,
-        updatedAt: Long
+        updatedAtMs: Long
     ): Int
 
-    @Query("SELECT * FROM sync_outbox WHERE lease_token = :leaseToken ORDER BY updated_at ASC, id ASC")
+    @Query("SELECT * FROM sync_outbox WHERE lease_token = :leaseToken ORDER BY updated_at_ms ASC, id ASC")
     suspend fun getByLeaseToken(leaseToken: String): List<SyncOutboxEntity>
 
     @Query(
@@ -132,11 +132,11 @@ interface SyncOutboxDao {
             retry_count = retry_count + 1,
             last_error = :lastError,
             failure_kind = :failureKind,
-            last_attempt_at = :lastAttemptAt,
-            next_retry_at = :nextRetryAt,
+            last_attempt_at_ms = :lastAttemptAt,
+            next_retry_at_ms = :nextRetryAt,
             lease_token = NULL,
-            lease_expires_at = 0,
-            updated_at = :updatedAt
+            lease_expires_at_ms = 0,
+            updated_at_ms = :updatedAtMs
         WHERE id = :id AND lease_token = :leaseToken
         """
     )
@@ -147,16 +147,16 @@ interface SyncOutboxDao {
         failureKind: SyncOutboxFailureKind,
         lastAttemptAt: Long,
         nextRetryAt: Long,
-        updatedAt: Long
+        updatedAtMs: Long
     ): Int
 
     @Query(
         """
         UPDATE sync_outbox
-        SET next_retry_at = :now,
-            updated_at = :now
+        SET next_retry_at_ms = :now,
+            updated_at_ms = :now
         WHERE state = 'RETRY_WAITING'
-          AND next_retry_at > :now
+          AND next_retry_at_ms > :now
         """
     )
     suspend fun resumeRetryWaiting(now: Long): Int
@@ -167,10 +167,10 @@ interface SyncOutboxDao {
         SET state = 'BLOCKED',
             last_error = :lastError,
             failure_kind = :failureKind,
-            last_attempt_at = :lastAttemptAt,
+            last_attempt_at_ms = :lastAttemptAt,
             lease_token = NULL,
-            lease_expires_at = 0,
-            updated_at = :updatedAt
+            lease_expires_at_ms = 0,
+            updated_at_ms = :updatedAtMs
         WHERE id = :id AND lease_token = :leaseToken
         """
     )
@@ -180,7 +180,7 @@ interface SyncOutboxDao {
         lastError: String?,
         failureKind: SyncOutboxFailureKind,
         lastAttemptAt: Long,
-        updatedAt: Long
+        updatedAtMs: Long
     ): Int
 
     @Query("DELETE FROM sync_outbox WHERE id = :id AND lease_token = :leaseToken")

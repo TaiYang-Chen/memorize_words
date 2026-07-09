@@ -120,7 +120,7 @@ class LoginBootstrapApplierImplTest {
                 todayStudyDuration = LoginBootstrapDailyStudyDuration(
                     date = "2026-03-24",
                     totalDurationMs = 12_000L,
-                    updatedAt = 1770000000000L,
+                    updatedAtMs = 1770000000000L,
                     isNewPlanCompleted = false,
                     isReviewPlanCompleted = false
                 ),

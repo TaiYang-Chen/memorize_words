@@ -3,7 +3,7 @@ package com.chen.memorizewords.domain.practice
 data class PracticeDailyDurationSnapshot(
     val date: String,
     val totalDurationMs: Long,
-    val updatedAt: Long
+    val updatedAtMs: Long
 )
 
 interface PracticeSnapshotLocalStatePort {

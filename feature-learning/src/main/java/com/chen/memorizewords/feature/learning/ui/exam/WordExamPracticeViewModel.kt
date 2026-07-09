@@ -268,7 +268,7 @@ class WordExamPracticeViewModel @Inject constructor(
                     entryType = PracticeEntryType.SELF,
                     entryCount = 1,
                     durationMs = durationMs,
-                    createdAt = System.currentTimeMillis(),
+                    createdAtMs = System.currentTimeMillis(),
                     wordIds = listOf(state.wordId),
                     questionCount = summary.questionCount,
                     completedCount = summary.completedCount,
@@ -281,7 +281,7 @@ class WordExamPracticeViewModel @Inject constructor(
                     sessionId = sessionId,
                     kind = PracticeKind.EXAM,
                     report = report,
-                    completedAtMillis = System.currentTimeMillis()
+                    completedAtMs = System.currentTimeMillis()
                 )
             )
             examPracticeRepository.submitSession(

@@ -13,7 +13,7 @@ data class WordBookDto(
     val learnedWords: Int,
     val contentVersion: Long = 0L,
     val contentPackage: WordBookContentPackageDto? = null,
-    val updatedAt: Long = 0L,
+    val updatedAtMs: Long = 0L,
     val isNew: Boolean = false,
     val isHot: Boolean = false,
     val isSelected: Boolean = false,

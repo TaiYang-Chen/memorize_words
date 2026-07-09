@@ -54,7 +54,7 @@ class SyncOutboxProcessor @Inject constructor(
                         failureKind = failure.failureKind.toDataFailureKind(),
                         lastAttemptAt = attemptTime,
                         nextRetryAt = attemptTime + syncOutboxBackoffDelayMillis(entity.retryCount + 1),
-                        updatedAt = attemptTime
+                        updatedAtMs = attemptTime
                     )
                     shouldRetry = true
                 } else {
@@ -64,7 +64,7 @@ class SyncOutboxProcessor @Inject constructor(
                         lastError = failure.persistedMessage,
                         failureKind = failure.failureKind.toDataFailureKind(),
                         lastAttemptAt = attemptTime,
-                        updatedAt = attemptTime
+                        updatedAtMs = attemptTime
                     )
                 }
             }

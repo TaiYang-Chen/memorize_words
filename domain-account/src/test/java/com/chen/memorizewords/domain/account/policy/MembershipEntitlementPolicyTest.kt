@@ -16,7 +16,7 @@ class MembershipEntitlementPolicyTest {
             status = MembershipStatus(
                 active = true,
                 validUntilDate = "2026-06-24",
-                validUntilAt = VALID_UNTIL_FUTURE,
+                validUntilAtMs = VALID_UNTIL_FUTURE,
                 remainingDays = 1
             ),
             currentTimeMillis = NOW
@@ -53,7 +53,7 @@ class MembershipEntitlementPolicyTest {
             status = MembershipStatus(
                 active = true,
                 validUntilDate = "2026-06-23",
-                validUntilAt = VALID_UNTIL_PAST,
+                validUntilAtMs = VALID_UNTIL_PAST,
                 remainingDays = 1
             ),
             currentTimeMillis = NOW
@@ -74,7 +74,7 @@ class MembershipEntitlementPolicyTest {
             status = MembershipStatus(
                 active = true,
                 validUntilDate = "2026-06-24",
-                validUntilAt = VALID_UNTIL_FUTURE,
+                validUntilAtMs = VALID_UNTIL_FUTURE,
                 remainingDays = 7
             ),
             currentTimeMillis = NOW
@@ -91,11 +91,11 @@ class MembershipEntitlementPolicyTest {
     }
 
     @Test
-    fun `cached active membership with invalid date and no timestamp requires membership`() {
+    fun `cached active membership without timestamp requires membership`() {
         val normalized = normalizeMembershipStatus(
             status = MembershipStatus(
                 active = true,
-                validUntilDate = "2026-02-31",
+                validUntilDate = "2026-06-24",
                 remainingDays = 1
             ),
             currentTimeMillis = NOW
@@ -117,7 +117,7 @@ class MembershipEntitlementPolicyTest {
         val normalized = normalizeMembershipStatus(
             status = MembershipStatus(
                 active = true,
-                validUntilAt = NOW,
+                validUntilAtMs = NOW,
                 remainingDays = 1
             ),
             currentTimeMillis = NOW

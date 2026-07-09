@@ -162,9 +162,9 @@ class PracticeUiMapper @Inject constructor(
     private fun buildRecordSubtitle(record: PracticeSessionRecord): String {
         val week = practiceRecordWeekLabel(
             recordDate = record.date,
-            createdAt = record.createdAt
+            createdAtMs = record.createdAtMs
         )
-        val time = practiceRecordClockText(record.createdAt, Locale.getDefault())
+        val time = practiceRecordClockText(record.createdAtMs, Locale.getDefault())
         val duration = formatDuration(record.durationMs)
         val modeLabel = when (record.mode) {
             PracticeMode.LISTENING -> resourceProvider.getString(R.string.practice_record_mode_listening)
@@ -201,7 +201,7 @@ class PracticeUiMapper @Inject constructor(
 
     private fun practiceRecordWeekLabel(
         recordDate: String,
-        createdAt: Long,
+        createdAtMs: Long,
         locale: Locale = Locale.getDefault()
     ): String {
         val calendar = Calendar.getInstance()
@@ -211,7 +211,7 @@ class PracticeUiMapper @Inject constructor(
         if (parsedDate != null) {
             calendar.time = parsedDate
         } else {
-            calendar.timeInMillis = createdAt
+            calendar.timeInMillis = createdAtMs
         }
         val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
         val dayCalendar = Calendar.getInstance().apply { set(Calendar.DAY_OF_WEEK, dayOfWeek) }
@@ -219,10 +219,10 @@ class PracticeUiMapper @Inject constructor(
     }
 
     private fun practiceRecordClockText(
-        createdAt: Long,
+        createdAtMs: Long,
         locale: Locale = Locale.getDefault()
     ): String {
-        return SimpleDateFormat("HH:mm", locale).format(Date(createdAt))
+        return SimpleDateFormat("HH:mm", locale).format(Date(createdAtMs))
     }
 
     private fun practiceRecordSpellingSummaryBrief(record: PracticeSessionRecord): String {

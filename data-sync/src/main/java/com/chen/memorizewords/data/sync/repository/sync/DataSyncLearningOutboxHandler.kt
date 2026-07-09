@@ -48,7 +48,7 @@ class DataSyncLearningOutboxHandler @Inject constructor(
                 remoteLearningSyncDataSource.upsertPracticeDuration(
                     date = payload.date,
                     totalDurationMs = payload.totalDurationMs,
-                    updatedAt = payload.updatedAt
+                    updatedAtMs = payload.updatedAtMs
                 ).getOrThrow()
             }
 
@@ -64,7 +64,7 @@ class DataSyncLearningOutboxHandler @Inject constructor(
                             .getOrDefault(PracticeEntryType.SELF),
                         entryCount = payload.entryCount,
                         durationMs = payload.durationMs,
-                        createdAt = payload.createdAt,
+                        createdAtMs = payload.createdAtMs,
                         wordIds = payload.wordIds,
                         questionCount = payload.questionCount,
                         completedCount = payload.completedCount,
@@ -146,7 +146,7 @@ class DataSyncLearningOutboxHandler @Inject constructor(
                         date = payload.date,
                         displayCount = payload.displayCount,
                         wordIds = payload.wordIds,
-                        updatedAt = payload.updatedAt
+                        updatedAtMs = payload.updatedAtMs
                     )
                 ).getOrThrow()
             }

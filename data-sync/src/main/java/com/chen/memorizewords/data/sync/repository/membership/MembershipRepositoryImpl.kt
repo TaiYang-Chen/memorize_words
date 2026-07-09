@@ -141,7 +141,7 @@ private fun MembershipStatusDto.toDomain(): MembershipStatus {
         level = level,
         active = active,
         validUntilDate = validUntilDate,
-        validUntilAt = validUntilAt,
+        validUntilAtMs = validUntilAtMs,
         remainingDays = remainingDays,
         totalGrantedDays = totalGrantedDays,
         todayCheckedIn = todayCheckedIn

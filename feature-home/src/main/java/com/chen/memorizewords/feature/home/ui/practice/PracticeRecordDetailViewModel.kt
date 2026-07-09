@@ -88,7 +88,7 @@ class PracticeRecordDetailViewModel @Inject constructor(
         }
         return definitions
             .take(3)
-            .joinToString("；") { "${it.partOfSpeech.abbr} ${it.meaningChinese}" }
+            .joinToString(PRACTICE_RECORD_SEPARATOR) { "${it.partOfSpeech.abbr} ${it.meaningChinese}" }
     }
 
     private fun buildPhonetic(word: Word): String {
@@ -134,9 +134,9 @@ class PracticeRecordDetailViewModel @Inject constructor(
     private fun buildRecordSubtitle(record: PracticeSessionRecord): String {
         val week = resolvePracticeRecordWeekLabel(
             recordDate = record.date,
-            createdAt = record.createdAt
+            createdAtMs = record.createdAtMs
         )
-        val time = formatPracticeRecordClockText(record.createdAt, Locale.getDefault())
+        val time = formatPracticeRecordClockText(record.createdAtMs, Locale.getDefault())
         val duration = formatDuration(record.durationMs)
         val modeLabel = when (record.mode) {
             PracticeMode.LISTENING -> resourceProvider.getString(R.string.practice_record_mode_listening)

@@ -391,7 +391,7 @@ class AboutFragment : BaseFragment<AboutViewModel, ModuleFeedbackFragmentAboutBi
             )
         }
         content.addView(textLine(getString(R.string.feature_feedback_update_version_span, info.versionSpan), bold = true))
-        content.addView(textLine(getString(R.string.feature_feedback_update_publish_time, info.publishedAt ?: "--")))
+        content.addView(textLine(getString(R.string.feature_feedback_update_publish_time, info.publishedAtMs ?: "--")))
         content.addView(textLine(getString(R.string.feature_feedback_update_package_size, formatBytes(info.fileSizeBytes))))
         content.addView(textLine(getString(R.string.feature_feedback_update_security_hint)))
         content.addView(textLine(getString(R.string.feature_feedback_update_notes_title), bold = true))

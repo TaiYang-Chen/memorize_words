@@ -3,7 +3,7 @@ data class PracticeSessionReportRecord(
     val sessionId: String,
     val kind: PracticeKind,
     val report: PracticeReport,
-    val completedAtMillis: Long
+    val completedAtMs: Long
 )
 
 interface PracticeReportRepository {

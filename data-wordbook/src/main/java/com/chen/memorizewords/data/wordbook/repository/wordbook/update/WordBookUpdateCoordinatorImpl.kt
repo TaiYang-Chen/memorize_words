@@ -1,4 +1,4 @@
-﻿package com.chen.memorizewords.data.wordbook.repository.wordbook.update
+package com.chen.memorizewords.data.wordbook.repository.wordbook.update
 
 import com.chen.memorizewords.data.wordbook.local.room.wordbook.WordBookSyncStateStore
 import com.chen.memorizewords.data.wordbook.repository.sync.NetworkMonitor
@@ -112,16 +112,16 @@ class WordBookUpdateCoordinatorImpl @Inject constructor(
 
     override suspend fun remindLater() {
         val candidate = foregroundPrompt.value?.candidate ?: uiState.value.candidate ?: return
-        val deferredUntil = System.currentTimeMillis() + uiState.value.settings.remindLaterDurationMs
-        repository.saveDeferredUntil(candidate.bookId, deferredUntil)
+        val deferredUntilMs = System.currentTimeMillis() + uiState.value.settings.remindLaterDurationMs
+        repository.savedeferredUntilMs(candidate.bookId, deferredUntilMs)
         repository.reportAction(
             action = WordBookUpdateAction.REMIND_LATER,
             candidate = candidate,
             trigger = uiState.value.lastTrigger,
-            deferredUntil = deferredUntil
+            deferredUntilMs = deferredUntilMs
         )
         foregroundPrompt.value = null
-        updateState { it.copy(deferredUntil = deferredUntil) }
+        updateState { it.copy(deferredUntilMs = deferredUntilMs) }
     }
 
     override suspend fun ignoreVersion() {
@@ -130,7 +130,7 @@ class WordBookUpdateCoordinatorImpl @Inject constructor(
         foregroundPrompt.value = null
         updateState { current ->
             if (current.candidate?.targetVersion == candidate.targetVersion) {
-                current.copy(candidate = null, deferredUntil = 0L, detailsVisible = false)
+                current.copy(candidate = null, deferredUntilMs = 0L, detailsVisible = false)
             } else {
                 current
             }
@@ -169,7 +169,7 @@ class WordBookUpdateCoordinatorImpl @Inject constructor(
     private suspend fun refreshCandidate(trigger: WordBookUpdateTrigger): WordBookUpdateCandidate? {
         val currentBook = wordBookRepository.getCurrentWordBook() ?: run {
             foregroundPrompt.value = null
-            updateState { it.copy(candidate = null, deferredUntil = 0L, lastTrigger = trigger) }
+            updateState { it.copy(candidate = null, deferredUntilMs = 0L, lastTrigger = trigger) }
             return null
         }
         val candidate = repository.fetchCandidate(trigger).getOrNull()
@@ -179,7 +179,7 @@ class WordBookUpdateCoordinatorImpl @Inject constructor(
             updateState {
                 it.copy(
                     candidate = null,
-                    deferredUntil = syncStateStore.getDeferredUntil(currentBook.id),
+                    deferredUntilMs = syncStateStore.getdeferredUntilMs(currentBook.id),
                     lastTrigger = trigger
                 )
             }
@@ -189,7 +189,7 @@ class WordBookUpdateCoordinatorImpl @Inject constructor(
         updateState {
             it.copy(
                 candidate = candidate,
-                deferredUntil = syncStateStore.getDeferredUntil(candidate.bookId),
+                deferredUntilMs = syncStateStore.getdeferredUntilMs(candidate.bookId),
                 lastTrigger = trigger
             )
         }
@@ -228,7 +228,7 @@ class WordBookUpdateCoordinatorImpl @Inject constructor(
                             foregroundPrompt.value = null
                             updateState { current ->
                                 if (current.candidate?.targetVersion == state.targetVersion) {
-                                    current.copy(candidate = null, deferredUntil = 0L)
+                                    current.copy(candidate = null, deferredUntilMs = 0L)
                                 } else {
                                     current
                                 }
@@ -259,7 +259,7 @@ class WordBookUpdateCoordinatorImpl @Inject constructor(
         val state = syncStateStore.getState(candidate.bookId) ?: return true
         if (state.localVersion >= candidate.targetVersion) return false
         if ((state.ignoredVersion ?: 0L) >= candidate.targetVersion) return false
-        if ((state.deferredUntil ?: 0L) > System.currentTimeMillis()) return false
+        if ((state.deferredUntilMs ?: 0L) > System.currentTimeMillis()) return false
         val running = uiState.value.jobState as? WordBookUpdateJobState.Running
         return running?.targetVersion != candidate.targetVersion
     }

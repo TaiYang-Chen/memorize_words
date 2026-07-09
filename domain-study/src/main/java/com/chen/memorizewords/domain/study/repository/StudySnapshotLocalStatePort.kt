@@ -7,7 +7,7 @@ import com.chen.memorizewords.domain.study.model.record.DailyStudyRecords
 data class StudyDailyDurationSnapshot(
     val date: String,
     val totalDurationMs: Long,
-    val updatedAt: Long,
+    val updatedAtMs: Long,
     val isNewPlanCompleted: Boolean,
     val isReviewPlanCompleted: Boolean
 )
