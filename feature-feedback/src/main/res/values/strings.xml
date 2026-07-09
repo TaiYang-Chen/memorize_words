@@ -14,8 +14,6 @@
     <string name="module_feedback_latest_version">最新版</string>
     <string name="feature_feedback_about_release_url" translatable="false">https://www.xiaobaibeidanci.com/download</string>
     <string name="feature_feedback_about_official_website_url" translatable="false">https://www.xiaobaibeidanci.com</string>
-    <string name="feature_feedback_about_terms_url" translatable="false">https://www.xiaobaibeidanci.com/terms</string>
-    <string name="feature_feedback_about_privacy_url" translatable="false">https://www.xiaobaibeidanci.com/privacy</string>
     <string name="feature_feedback_about_link_unavailable">链接暂不可用</string>
     <string name="feature_feedback_about_no_handler">未找到可打开的应用</string>
     <string name="module_feedback_app_icon_desc">应用图标</string>
@@ -40,6 +38,12 @@
     <string name="module_feedback_delete_image">删除图片</string>
     <string name="module_feedback_nav_feedback_title">意见反馈</string>
     <string name="module_feedback_nav_about_title">关于我们</string>
+    <string name="feature_feedback_agreement_title_default">协议说明</string>
+    <string name="feature_feedback_agreement_updated_label">更新日期：%1$s</string>
+    <string name="feature_feedback_agreement_effective_label">生效日期：%1$s</string>
+    <string name="feature_feedback_agreement_summary_title">重点摘要</string>
+    <string name="feature_feedback_agreement_catalog_title">目录</string>
+    <string name="feature_feedback_agreement_version_label">版本：%1$s</string>
     <string name="feature_feedback_update_status_checking">检查中</string>
     <string name="feature_feedback_update_status_latest">已是最新</string>
     <string name="feature_feedback_update_status_available">发现 v%1$s</string>

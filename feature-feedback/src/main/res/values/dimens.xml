@@ -40,4 +40,13 @@
     <dimen name="module_feedback_about_status_size">14sp</dimen>
     <dimen name="module_feedback_about_footer_top_margin">64dp</dimen>
     <dimen name="module_feedback_about_footer_size">12sp</dimen>
+
+    <dimen name="feature_feedback_agreement_content_top">28dp</dimen>
+    <dimen name="feature_feedback_agreement_bottom_padding">32dp</dimen>
+    <dimen name="feature_feedback_agreement_display_size">22sp</dimen>
+    <dimen name="feature_feedback_agreement_section_size">17sp</dimen>
+    <dimen name="feature_feedback_agreement_item_title_size">15sp</dimen>
+    <dimen name="feature_feedback_agreement_body_size">14sp</dimen>
+    <dimen name="feature_feedback_agreement_meta_size">12sp</dimen>
+    <dimen name="feature_feedback_agreement_body_line_spacing">5dp</dimen>
 </resources>

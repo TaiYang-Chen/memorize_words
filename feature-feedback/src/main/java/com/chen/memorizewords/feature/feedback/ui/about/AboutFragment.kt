@@ -13,12 +13,14 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.core.os.bundleOf
 import androidx.core.content.FileProvider
 import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.chen.memorizewords.core.ui.R as CoreUiR
 import com.chen.memorizewords.core.ui.ext.dimenPx
 import com.chen.memorizewords.core.ui.ext.dimenPxFloat
@@ -29,6 +31,7 @@ import com.chen.memorizewords.domain.sync.appupdate.AppUpdateInfo
 import com.chen.memorizewords.domain.sync.appupdate.AppUpdateStatus
 import com.chen.memorizewords.feature.feedback.R
 import com.chen.memorizewords.feature.feedback.databinding.ModuleFeedbackFragmentAboutBinding
+import com.chen.memorizewords.feature.feedback.ui.agreement.AgreementFragment
 import com.chen.memorizewords.feature.feedback.ui.util.AppInfoProvider
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
@@ -110,8 +113,16 @@ class AboutFragment : BaseFragment<AboutViewModel, ModuleFeedbackFragmentAboutBi
             is AboutViewModel.Route.OpenReleasePage -> openUrl(target.url)
             is AboutViewModel.Route.OpenUrl -> openUrl(target.url)
             is AboutViewModel.Route.OpenAppMarket -> openAppMarket(target.packageName)
+            is AboutViewModel.Route.OpenAgreement -> openAgreement(target.agreementType)
             else -> super.onNavigationRoute(event)
         }
+    }
+
+    private fun openAgreement(agreementType: String) {
+        findNavController().navigate(
+            R.id.agreementFragment,
+            bundleOf(AgreementFragment.ARG_AGREEMENT_TYPE to agreementType)
+        )
     }
 
     private fun openAppMarket(packageName: String) {

@@ -17,4 +17,14 @@
         android:label="@string/module_feedback_nav_about_title">
         <deepLink app:uri="myapp://about" />
     </fragment>
+
+    <fragment
+        android:id="@+id/agreementFragment"
+        android:name="com.chen.memorizewords.feature.feedback.ui.agreement.AgreementFragment"
+        android:label="@string/feature_feedback_agreement_title_default">
+        <argument
+            android:name="agreementType"
+            android:defaultValue="privacy"
+            app:argType="string" />
+    </fragment>
 </navigation>

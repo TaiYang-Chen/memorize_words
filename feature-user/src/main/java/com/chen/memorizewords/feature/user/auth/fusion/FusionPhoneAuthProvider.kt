@@ -1,13 +1,9 @@
 package com.chen.memorizewords.feature.user.auth.fusion
 
-import android.app.Activity
 import android.content.Context
 import android.util.Base64
 import android.util.Log
-import com.alicom.fusion.auth.AlicomFusionAuthCallBack
-import com.alicom.fusion.auth.AlicomFusionBusiness
 import com.alicom.fusion.auth.AlicomFusionLog
-import com.alicom.fusion.auth.HalfWayVerifyResult
 import com.alicom.fusion.auth.config.AlicomFusionSceneUtil
 import com.alicom.fusion.auth.config.AlicomFusionCheckUtil
 import com.alicom.fusion.auth.error.AlicomFusionEvent
@@ -15,135 +11,18 @@ import com.alicom.fusion.auth.net.FusionRequestUtils
 import com.alicom.fusion.auth.numberauth.NumberAuthUtil
 import com.alicom.fusion.auth.smsauth.FusionSmsManager
 import com.alicom.fusion.auth.tools.FusionPackageUtils
-import com.alicom.fusion.auth.token.AlicomFusionAuthToken
 import com.chen.memorizewords.domain.account.usecase.user.GetFusionAuthTokenUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
-import kotlin.coroutines.resume
 
 @Singleton
 class FusionPhoneAuthProvider @Inject constructor(
     private val getFusionAuthTokenUseCase: GetFusionAuthTokenUseCase
 ) {
-    private var business: AlicomFusionBusiness? = null
     private var smsSession: FusionSmsSession? = null
-
-    suspend fun requestVerifyToken(
-        activity: Activity,
-        templateId: String = LOGIN_SCENE_ID,
-        phoneForVerification: String = ""
-    ): Result<String> = runCatching {
-        val token = withContext(Dispatchers.IO) {
-            getFusionAuthTokenUseCase().getOrThrow()
-        }
-        withContext(Dispatchers.Main) {
-            suspendCancellableCoroutine { continuation ->
-                val fusionBusiness = AlicomFusionBusiness()
-                business = fusionBusiness
-                AlicomFusionBusiness.useSDKSupplyUMSDK(false, "")
-                AlicomFusionLog.setLogEnable(false)
-
-                val authToken = AlicomFusionAuthToken().apply {
-                    setAuthToken(token.authToken)
-                }
-                fusionBusiness.initWithToken(activity.applicationContext, token.schemeCode, authToken)
-                fusionBusiness.setAlicomFusionAuthCallBack(object : AlicomFusionAuthCallBack {
-                    override fun onSDKTokenUpdate(): AlicomFusionAuthToken {
-                        return AlicomFusionAuthToken().apply {
-                            setAuthToken(token.authToken)
-                        }
-                    }
-
-                    override fun onSDKTokenAuthSuccess() {
-                        Log.i(TAG, "Fusion token auth success. templateId=$templateId")
-                        fusionBusiness.startSceneWithTemplateId(activity, templateId)
-                    }
-
-                    override fun onSDKTokenAuthFailure(
-                        token: AlicomFusionAuthToken?,
-                        event: AlicomFusionEvent?
-                    ) {
-                        Log.w(TAG, "Fusion token auth failure. ${event.describe(templateId)}")
-                        if (continuation.isActive) {
-                            continuation.resume(Result.failure(FusionPhoneAuthException(event.message())))
-                        }
-                        destroy()
-                    }
-
-                    override fun onVerifySuccess(
-                        verifyToken: String?,
-                        nodeName: String?,
-                        event: AlicomFusionEvent?
-                    ) {
-                        Log.i(TAG, "Fusion verify success. templateId=$templateId, nodeName=$nodeName, ${event.describe(templateId)}")
-                        if (verifyToken.isNullOrBlank()) {
-                            if (continuation.isActive) {
-                                continuation.resume(Result.failure(FusionPhoneAuthException(event.message())))
-                            }
-                        } else if (continuation.isActive) {
-                            fusionBusiness.continueSceneWithTemplateId(templateId, true)
-                            continuation.resume(Result.success(verifyToken))
-                        }
-                        destroy()
-                    }
-
-                    override fun onHalfWayVerifySuccess(
-                        nodeName: String?,
-                        maskToken: String?,
-                        event: AlicomFusionEvent?,
-                        halfWayVerifyResult: HalfWayVerifyResult?
-                    ) {
-                        Log.i(TAG, "Fusion halfway verify. templateId=$templateId, nodeName=$nodeName, hasMaskToken=${!maskToken.isNullOrBlank()}, ${event.describe(templateId)}")
-                        halfWayVerifyResult?.verifyResult(!maskToken.isNullOrBlank())
-                    }
-
-                    override fun onVerifyFailed(event: AlicomFusionEvent?, nodeName: String?) {
-                        Log.w(TAG, "Fusion verify failed. templateId=$templateId, nodeName=$nodeName, ${event.describe(templateId)}")
-                        if (continuation.isActive) {
-                            continuation.resume(Result.failure(FusionPhoneAuthException(event.message())))
-                        }
-                        destroy()
-                    }
-
-                    override fun onTemplateFinish(event: AlicomFusionEvent?) {
-                        Log.w(TAG, "Fusion template finish before verify success. ${event.describe(templateId)}")
-                        if (continuation.isActive) {
-                            continuation.resume(Result.failure(FusionPhoneAuthException(event.message())))
-                        }
-                        destroy()
-                    }
-
-                    override fun onAuthEvent(event: AlicomFusionEvent?) {
-                        Log.i(TAG, "Fusion auth event. ${event.describe(templateId)}")
-                    }
-
-                    override fun onGetPhoneNumberForVerification(
-                        nodeName: String?,
-                        event: AlicomFusionEvent?
-                    ): String {
-                        Log.i(TAG, "Fusion requested phone for verification. templateId=$templateId, nodeName=$nodeName, ${event.describe(templateId)}")
-                        return phoneForVerification
-                    }
-
-                    override fun onVerifyInterrupt(event: AlicomFusionEvent?) {
-                        Log.w(TAG, "Fusion verify interrupted. ${event.describe(templateId)}")
-                        if (continuation.isActive) {
-                            continuation.resume(Result.failure(FusionPhoneAuthException(event.message())))
-                        }
-                        destroy()
-                    }
-                })
-
-                continuation.invokeOnCancellation {
-                    destroy()
-                }
-            }.getOrThrow()
-        }
-    }
 
     suspend fun sendSmsCodeInPlace(
         context: Context,
@@ -207,8 +86,6 @@ class FusionPhoneAuthProvider @Inject constructor(
     }
 
     fun destroy() {
-        business?.destory()
-        business = null
         smsSession = null
     }
 
@@ -288,7 +165,6 @@ class FusionPhoneAuthProvider @Inject constructor(
 
     private companion object {
         const val TAG = "FusionPhoneAuth"
-        const val LOGIN_SCENE_ID = "100001"
         const val SMS_AUTH_TYPE = 4
         const val TOKEN_VALID = 0
         const val DEFAULT_ERROR_MESSAGE = "Fusion phone auth failed"

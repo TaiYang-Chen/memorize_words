@@ -8,6 +8,7 @@ import com.chen.memorizewords.domain.sync.appupdate.AppUpdateLocalStateRepositor
 import com.chen.memorizewords.domain.sync.appupdate.AppUpdateManager
 import com.chen.memorizewords.domain.sync.appupdate.AppUpdateStatus
 import com.chen.memorizewords.feature.feedback.R
+import com.chen.memorizewords.feature.feedback.ui.agreement.AgreementTypes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.io.File
 import javax.inject.Inject
@@ -30,6 +31,7 @@ class AboutViewModel @Inject constructor(
         data class OpenUrl(val url: String) : Route
         data class OpenReleasePage(val url: String) : Route
         data class OpenAppMarket(val packageName: String) : Route
+        data class OpenAgreement(val agreementType: String) : Route
     }
 
     private val _missionText =
@@ -136,19 +138,11 @@ class AboutViewModel @Inject constructor(
     }
 
     fun onTermsClicked() {
-        navigateRoute(
-            Route.OpenUrl(
-                resourceProvider.getString(R.string.feature_feedback_about_terms_url)
-            )
-        )
+        navigateRoute(Route.OpenAgreement(AgreementTypes.TERMS))
     }
 
     fun onPrivacyClicked() {
-        navigateRoute(
-            Route.OpenUrl(
-                resourceProvider.getString(R.string.feature_feedback_about_privacy_url)
-            )
-        )
+        navigateRoute(Route.OpenAgreement(AgreementTypes.PRIVACY))
     }
 
     private companion object {
