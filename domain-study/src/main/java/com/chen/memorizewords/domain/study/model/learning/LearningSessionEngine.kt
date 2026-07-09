@@ -1,17 +1,15 @@
-package com.chen.memorizewords.feature.learning.ui.learning
+package com.chen.memorizewords.domain.study.model.learning
 
 import com.chen.memorizewords.domain.wordbook.model.learning.LearningTestMode
-import com.chen.memorizewords.domain.study.model.learning.WordSessionStatus
-import com.chen.memorizewords.domain.word.model.word.Word
 import java.util.ArrayDeque
 
-internal class LearningSessionCoordinator(
-    words: List<Word>,
+class LearningSessionEngine(
+    wordIds: List<Long>,
     private val wrongTrackMasteryTarget: Int = DEFAULT_WRONG_TRACK_MASTERY_TARGET
 ) {
 
     data class SessionSnapshot(
-        val currentWord: Word?,
+        val currentWordId: Long?,
         val currentTestMode: LearningTestMode,
         val isWrongTrackWord: Boolean,
         val isAnswered: Boolean,
@@ -27,7 +25,7 @@ internal class LearningSessionCoordinator(
 
     data class SessionResult(
         val snapshot: SessionSnapshot,
-        val newlyCompletedWord: Word? = null
+        val completedWordId: Long? = null
     )
 
     private enum class QueueType {
@@ -41,11 +39,10 @@ internal class LearningSessionCoordinator(
         var testMode: LearningTestMode = LearningTestMode.MEANING_CHOICE
     )
 
-    private val originalWords = words.toList()
-    private val wordsById = originalWords.associateBy { it.id }
-    private val progressByWordId = originalWords.associate { it.id to WordProgress() }.toMutableMap()
+    private val originalWordIds = wordIds.distinct()
+    private val progressByWordId = originalWordIds.associateWith { WordProgress() }.toMutableMap()
     private val newQueue = ArrayDeque<Long>().apply {
-        originalWords.forEach { addLast(it.id) }
+        originalWordIds.forEach { addLast(it) }
     }
     private val wrongQueue = ArrayDeque<Long>()
     private val completedWordIds = linkedSetOf<Long>()
@@ -79,14 +76,12 @@ internal class LearningSessionCoordinator(
         }
 
         val progress = progressByWordId.getValue(wordId)
-        val currentWord = wordsById.getValue(wordId)
-        var newlyCompletedWord: Word? = null
+        var completedWordId: Long? = null
 
         when {
             isCorrect && progress.status == WordSessionStatus.UNSEEN -> {
-                progress.status = WordSessionStatus.MASTERED
                 progress.consecutiveCorrect = 1
-                newlyCompletedWord = completeWord(wordId, currentWord)
+                completedWordId = completeWord(wordId)
             }
 
             !isCorrect && progress.status == WordSessionStatus.UNSEEN -> {
@@ -99,8 +94,7 @@ internal class LearningSessionCoordinator(
             isCorrect && progress.status == WordSessionStatus.WRONG_TRACK -> {
                 progress.consecutiveCorrect += 1
                 if (progress.consecutiveCorrect >= wrongTrackMasteryTarget) {
-                    progress.status = WordSessionStatus.MASTERED
-                    newlyCompletedWord = completeWord(wordId, currentWord)
+                    completedWordId = completeWord(wordId)
                 } else {
                     enqueueWrongWord(wordId)
                 }
@@ -113,31 +107,28 @@ internal class LearningSessionCoordinator(
             }
         }
 
-        currentWordCompleted = newlyCompletedWord != null
+        currentWordCompleted = completedWordId != null
         return SessionResult(
             snapshot = buildSnapshot(),
-            newlyCompletedWord = newlyCompletedWord
+            completedWordId = completedWordId
         )
     }
 
     fun markCurrentWordMastered(): SessionResult {
         val wordId = currentWordId ?: return SessionResult(buildSnapshot())
         val progress = progressByWordId.getValue(wordId)
-        val currentWord = wordsById.getValue(wordId)
         if (progress.status == WordSessionStatus.MASTERED) {
             currentWordCompleted = true
             currentAnswered = true
             return SessionResult(buildSnapshot())
         }
 
-        progress.status = WordSessionStatus.MASTERED
         progress.consecutiveCorrect = maxOf(progress.consecutiveCorrect, 1)
-        currentWordCompleted = true
         currentAnswered = true
-        val newlyCompletedWord = completeWord(wordId, currentWord)
+        val completedWordId = completeWord(wordId)
         return SessionResult(
             snapshot = buildSnapshot(),
-            newlyCompletedWord = newlyCompletedWord
+            completedWordId = completedWordId
         )
     }
 
@@ -147,28 +138,33 @@ internal class LearningSessionCoordinator(
     }
 
     private fun selectNextCard() {
-        val nextType = resolveNextQueueType()
-        if (nextType == null) {
-            currentWordId = null
-            currentPresentedMode = LearningTestMode.MEANING_CHOICE
+        while (true) {
+            val nextType = resolveNextQueueType()
+            if (nextType == null) {
+                currentWordId = null
+                currentPresentedMode = LearningTestMode.MEANING_CHOICE
+                currentAnswered = false
+                currentWordCompleted = false
+                return
+            }
+
+            val nextWordId = when (nextType) {
+                QueueType.NEW -> newQueue.removeFirst()
+                QueueType.WRONG -> wrongQueue.removeFirst()
+            }
+
+            if (!isDisplayableWord(nextWordId)) {
+                continue
+            }
+
+            currentWordId = nextWordId
+            currentPresentedMode = progressByWordId.getValue(nextWordId).testMode
+            lastPresentedQueueType = nextType
             currentAnswered = false
             currentWordCompleted = false
+            questionToken += 1
             return
         }
-
-        val nextWordId = when (nextType) {
-            QueueType.NEW -> newQueue.removeFirst()
-            QueueType.WRONG -> wrongQueue.removeFirst()
-        }
-
-        currentWordId = nextWordId
-        currentPresentedMode = progressByWordId
-            .getValue(nextWordId)
-            .testMode
-        lastPresentedQueueType = nextType
-        currentAnswered = false
-        currentWordCompleted = false
-        questionToken += 1
     }
 
     private fun resolveNextQueueType(): QueueType? {
@@ -185,33 +181,55 @@ internal class LearningSessionCoordinator(
         }
     }
 
-    private fun completeWord(wordId: Long, word: Word): Word? {
+    private fun completeWord(wordId: Long): Long? {
+        val progress = progressByWordId.getValue(wordId)
+        progress.status = WordSessionStatus.MASTERED
+        removePendingWord(wordId)
         val isNewCompletion = completedWordIds.add(wordId)
         currentWordCompleted = true
-        return if (isNewCompletion) word else null
+        return if (isNewCompletion) wordId else null
     }
 
     private fun enqueueWrongWord(wordId: Long) {
+        val progress = progressByWordId[wordId] ?: return
+        if (progress.status != WordSessionStatus.WRONG_TRACK) return
         if (!wrongQueue.contains(wordId)) {
             wrongQueue.addLast(wordId)
         }
     }
 
+    private fun removePendingWord(wordId: Long) {
+        removeAll(newQueue, wordId)
+        removeAll(wrongQueue, wordId)
+    }
+
+    private fun removeAll(queue: ArrayDeque<Long>, wordId: Long) {
+        val iterator = queue.iterator()
+        while (iterator.hasNext()) {
+            if (iterator.next() == wordId) {
+                iterator.remove()
+            }
+        }
+    }
+
+    private fun isDisplayableWord(wordId: Long): Boolean {
+        return progressByWordId[wordId]?.status != WordSessionStatus.MASTERED
+    }
+
     private fun buildSnapshot(): SessionSnapshot {
-        val currentWord = currentWordId?.let(wordsById::get)
         val progress = currentWordId?.let(progressByWordId::get)
         return SessionSnapshot(
-            currentWord = currentWord,
-            currentTestMode = if (currentWord != null) currentPresentedMode else LearningTestMode.MEANING_CHOICE,
+            currentWordId = currentWordId,
+            currentTestMode = if (currentWordId != null) currentPresentedMode else LearningTestMode.MEANING_CHOICE,
             isWrongTrackWord = progress?.status == WordSessionStatus.WRONG_TRACK,
             isAnswered = currentAnswered,
             isCurrentWordCompleted = currentWordCompleted,
             learnedWordsCount = completedWordIds.size,
-            totalWordsCount = originalWords.size,
+            totalWordsCount = originalWordIds.size,
             answeredCount = answeredCount,
             correctCount = correctCount,
             wrongCount = wrongCount,
-            isFinished = completedWordIds.size >= originalWords.size,
+            isFinished = completedWordIds.size >= originalWordIds.size,
             questionToken = questionToken
         )
     }

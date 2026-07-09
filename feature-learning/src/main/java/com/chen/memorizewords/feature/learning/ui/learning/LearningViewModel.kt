@@ -6,6 +6,7 @@ import com.chen.memorizewords.core.common.session.SessionTimer
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.domain.word.query.WordReadFacade
 import com.chen.memorizewords.domain.study.orchestrator.learning.LearningSessionTypes
+import com.chen.memorizewords.domain.study.model.learning.LearningSessionEngine
 import com.chen.memorizewords.domain.study.service.StudyStatsFacade
 import com.chen.memorizewords.domain.study.model.record.TodayCheckInEntryState
 import com.chen.memorizewords.domain.wordbook.usecase.GetCurrentWordBookUseCase
@@ -134,8 +135,9 @@ class LearningViewModel @Inject constructor(
     private var prefillLearnedCount: Int = 0
     private var sessionType: Int = 0
     private var sessionWordCount: Int = 0
-    private var sessionCoordinator: LearningSessionCoordinator? = null
+    private var sessionEngine: LearningSessionEngine? = null
     private var sessionLoadKey: String? = null
+    private var wordsById: Map<Long, Word> = emptyMap()
 
     private var pronunciationType: PronunciationType = PronunciationType.US
     private val sessionTimer = SessionTimer()
@@ -184,13 +186,14 @@ class LearningViewModel @Inject constructor(
         if (sessionLoadKey == loadKey) return
         sessionLoadKey = loadKey
         words = initialWordList
+        wordsById = initialWordList.associateBy { it.id }
         prefillLearnedCount = initialLearnedCount
         sessionTimer.reset()
         trackingEnabled = true
         sessionFinished = false
-        sessionCoordinator = LearningSessionCoordinator(initialWordList)
+        sessionEngine = LearningSessionEngine(initialWordList.map { it.id })
         applySessionSnapshot(
-            snapshot = sessionCoordinator?.snapshot(),
+            snapshot = sessionEngine?.snapshot(),
             learningState = LearningState.TEST
         )
         if (initialWordList.isEmpty()) {
@@ -222,16 +225,16 @@ class LearningViewModel @Inject constructor(
     }
 
     fun handleUserAnswer(isCorrect: Boolean) {
-        val coordinator = sessionCoordinator ?: return
-        val result = coordinator.submitAnswer(isCorrect)
+        val engine = sessionEngine ?: return
+        val result = engine.submitAnswer(isCorrect)
         applySessionSnapshot(
             snapshot = result.snapshot,
             learningState = LearningState.TEST
         )
-        result.newlyCompletedWord?.let { completedWord ->
+        result.completedWordId?.let(wordsById::get)?.let { completedWord ->
             persistCompletedWord(completedWord, markAsMastered = false)
         }
-        val answeredWord = result.snapshot.currentWord
+        val answeredWord = result.snapshot.currentWordId?.let(wordsById::get)
         if (answeredWord != null) {
             viewModelScope.launch {
                 val bookId = resolveCurrentBookId() ?: return@launch
@@ -241,15 +244,15 @@ class LearningViewModel @Inject constructor(
     }
 
     fun toNext() {
-        val coordinator = sessionCoordinator ?: return
+        val engine = sessionEngine ?: return
         if (uiState.value.learningState == LearningState.TEST) {
             if (!uiState.value.isAnswered) return
             toDetail()
             return
         }
 
-        val nextSnapshot = coordinator.moveToNext()
-        if (nextSnapshot.isFinished && nextSnapshot.currentWord == null) {
+        val nextSnapshot = engine.moveToNext()
+        if (nextSnapshot.isFinished && nextSnapshot.currentWordId == null) {
             finishSession()
             return
         }
@@ -261,7 +264,7 @@ class LearningViewModel @Inject constructor(
 
     fun toDetail() {
         applySessionSnapshot(
-            snapshot = sessionCoordinator?.snapshot(),
+            snapshot = sessionEngine?.snapshot(),
             learningState = LearningState.DETAIL
         )
     }
@@ -277,15 +280,15 @@ class LearningViewModel @Inject constructor(
     }
 
     fun onSetWordAsMastered() {
-        val coordinator = sessionCoordinator ?: return
+        val engine = sessionEngine ?: return
         val currentWord = uiState.value.currentWord ?: return
-        val result = coordinator.markCurrentWordMastered()
-        if (result.newlyCompletedWord != null) {
+        val result = engine.markCurrentWordMastered()
+        if (result.completedWordId != null) {
             persistCompletedWord(currentWord, markAsMastered = true)
         }
 
-        val nextSnapshot = coordinator.moveToNext()
-        if (nextSnapshot.isFinished && nextSnapshot.currentWord == null) {
+        val nextSnapshot = engine.moveToNext()
+        if (nextSnapshot.isFinished && nextSnapshot.currentWordId == null) {
             finishSession()
         } else {
             applySessionSnapshot(
@@ -383,14 +386,15 @@ class LearningViewModel @Inject constructor(
     }
 
     private fun applySessionSnapshot(
-        snapshot: LearningSessionCoordinator.SessionSnapshot?,
+        snapshot: LearningSessionEngine.SessionSnapshot?,
         learningState: LearningState
     ) {
         val safeSnapshot = snapshot ?: emptySnapshot()
+        val currentWord = safeSnapshot.currentWordId?.let(wordsById::get)
         updateUiState {
             it.copy(
                 learningState = learningState,
-                currentWord = safeSnapshot.currentWord,
+                currentWord = currentWord,
                 learnedWordsCount = prefillLearnedCount + safeSnapshot.learnedWordsCount,
                 totalWordsCount = prefillLearnedCount + safeSnapshot.totalWordsCount,
                 currentTestMode = safeSnapshot.currentTestMode,
@@ -410,7 +414,7 @@ class LearningViewModel @Inject constructor(
                 questionToken = safeSnapshot.questionToken
             )
         }
-        updateCurrentWordMeta(safeSnapshot.currentWord)
+        updateCurrentWordMeta(currentWord)
     }
 
     private fun updateCurrentWordMeta(word: Word?) {
@@ -433,7 +437,7 @@ class LearningViewModel @Inject constructor(
     private fun finishSession() {
         if (sessionFinished) return
         sessionFinished = true
-        val snapshot = sessionCoordinator?.snapshot()
+        val snapshot = sessionEngine?.snapshot()
         val studyDurationMs = sessionTimer.finish()
         trackingEnabled = false
 
@@ -462,9 +466,9 @@ class LearningViewModel @Inject constructor(
         }
     }
 
-    private fun emptySnapshot(): LearningSessionCoordinator.SessionSnapshot {
-        return LearningSessionCoordinator.SessionSnapshot(
-            currentWord = null,
+    private fun emptySnapshot(): LearningSessionEngine.SessionSnapshot {
+        return LearningSessionEngine.SessionSnapshot(
+            currentWordId = null,
             currentTestMode = LearningTestMode.MEANING_CHOICE,
             isWrongTrackWord = false,
             isAnswered = false,
