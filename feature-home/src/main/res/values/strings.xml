@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="home_logout_loading">退出登录中...</string>
     <string name="title">小白背单词</string>
     <string name="profile">个人中心</string>
     <string name="home_nav_home">首页</string>

@@ -326,8 +326,35 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun logout() {
+        performLogout(force = false)
+    }
+
+    private fun forceLogout() {
+        performLogout(force = true)
+    }
+
+    private fun performLogout(force: Boolean) {
         viewModelScope.launch {
-            logoutUseCase().onSuccess { outcome ->
+            val result = withLoading(resourceProvider.getString(R.string.home_logout_loading)) {
+                logoutUseCase(force = force)
+            }
+            if (force) {
+                result.onSuccess { outcome ->
+                    if (outcome is LogoutOutcome.LocalClearedRemoteFailed) {
+                        val fallback = resourceProvider.getString(R.string.home_logout_failed)
+                        showToast(outcome.cause.message?.ifBlank { fallback } ?: fallback)
+                    }
+                }.onFailure { failure ->
+                    val fallback = resourceProvider.getString(R.string.home_logout_failed)
+                    showToast(failure.message?.ifBlank { fallback } ?: fallback)
+                }
+                navigateRoute(
+                    Route.OpenAuth(clearTask = true)
+                )
+                return@launch
+            }
+
+            result.onSuccess { outcome ->
                 if (outcome is LogoutOutcome.LocalClearedRemoteFailed) {
                     val fallback = resourceProvider.getString(R.string.home_logout_failed)
                     showToast(outcome.cause.message?.ifBlank { fallback } ?: fallback)
@@ -347,23 +374,6 @@ class ProfileViewModel @Inject constructor(
                 val fallback = resourceProvider.getString(R.string.home_logout_failed)
                 showToast(failure.message?.ifBlank { fallback } ?: fallback)
             }
-        }
-    }
-
-    private fun forceLogout() {
-        viewModelScope.launch {
-            logoutUseCase(force = true).onSuccess { outcome ->
-                if (outcome is LogoutOutcome.LocalClearedRemoteFailed) {
-                    val fallback = resourceProvider.getString(R.string.home_logout_failed)
-                    showToast(outcome.cause.message?.ifBlank { fallback } ?: fallback)
-                }
-            }.onFailure { failure ->
-                val fallback = resourceProvider.getString(R.string.home_logout_failed)
-                showToast(failure.message?.ifBlank { fallback } ?: fallback)
-            }
-            navigateRoute(
-                Route.OpenAuth(clearTask = true)
-            )
         }
     }
 

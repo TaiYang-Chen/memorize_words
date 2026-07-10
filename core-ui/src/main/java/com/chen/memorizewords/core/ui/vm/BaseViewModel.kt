@@ -68,6 +68,18 @@ open class BaseViewModel : ViewModel() {
         }
     }
 
+    protected suspend fun <T> withLoading(
+        message: String = DEFAULT_LOADING_MESSAGE,
+        block: suspend () -> T
+    ): T {
+        showLoading(message)
+        return try {
+            block()
+        } finally {
+            hideLoading()
+        }
+    }
+
     fun finish() {
         emitEvent(UiEvent.Navigation.Finish)
     }

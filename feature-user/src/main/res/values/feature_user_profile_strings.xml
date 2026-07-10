@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="feature_user_profile_logout_loading">退出登录中...</string>
     <string name="feature_user_profile_title">个人信息</string>
     <string name="feature_user_profile_back">返回</string>
     <string name="feature_user_profile_more">更多</string>
