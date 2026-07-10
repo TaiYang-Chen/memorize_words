@@ -3,6 +3,7 @@ package com.chen.memorizewords.feature.home.ui.profile
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.widget.Toast
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
@@ -13,6 +14,8 @@ import coil.load
 import coil.transform.CircleCropTransformation
 import com.chen.memorizewords.core.navigation.AppRoute
 import com.chen.memorizewords.core.navigation.RouteNavigator
+import com.chen.memorizewords.core.session.logout.SessionLogoutCoordinator
+import com.chen.memorizewords.core.ui.session.logout.SessionLogoutHost
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.core.ui.vm.UiEvent
 import com.chen.memorizewords.domain.account.model.user.User
@@ -49,9 +52,31 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ModuleHomeFragmentProfile
     @Inject
     lateinit var routeNavigator: RouteNavigator
 
+    @Inject
+    lateinit var logoutCoordinator: SessionLogoutCoordinator
+
+    private lateinit var logoutHost: SessionLogoutHost
+
     override fun initView(savedInstanceState: Bundle?) {
         databind.viewModel = viewModel
         databind.lifecycleOwner = viewLifecycleOwner
+        logoutHost = SessionLogoutHost(
+            fragment = this,
+            coordinator = logoutCoordinator,
+            configuration = SessionLogoutHost.Configuration(
+                loadingMessage = getString(R.string.home_logout_loading),
+                riskTitle = getString(R.string.home_logout_risk_title),
+                riskMessage = getString(R.string.home_logout_risk_message),
+                onCompleted = { terminal ->
+                    viewModel.resolveLogoutCompletionMessage(terminal)?.let(::showLogoutMessage)
+                },
+                onFailed = { failure ->
+                    showLogoutMessage(viewModel.resolveLogoutFailureMessage(failure))
+                },
+                navigateToAuth = ::navigateToAuthAfterLogout
+            )
+        )
+        logoutHost.bind()
     }
 
     override fun createObserver() {
@@ -122,15 +147,6 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ModuleHomeFragmentProfile
             ProfileViewModel.Route.OpenPersonalQr -> {
                 startActivity(PersonalQrActivity.createIntent(requireContext()))
             }
-            is ProfileViewModel.Route.OpenAuth -> {
-                startActivity(
-                    authEntry.createAuthIntent(requireContext()).apply {
-                        if (target.clearTask) {
-                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                        }
-                    }
-                )
-            }
             else -> super.onNavigationRoute(event)
         }
     }
@@ -140,10 +156,18 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ModuleHomeFragmentProfile
             viewModel.onLogoutConfirmed()
             return
         }
-        if (event.action == ProfileViewModel.ACTION_FORCE_LOGOUT) {
-            viewModel.onForceLogoutConfirmed()
-            return
-        }
         super.onConfirmDialog(event)
+    }
+
+    private fun navigateToAuthAfterLogout() {
+        startActivity(
+            authEntry.createAuthIntent(requireContext()).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            }
+        )
+    }
+
+    private fun showLogoutMessage(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 }

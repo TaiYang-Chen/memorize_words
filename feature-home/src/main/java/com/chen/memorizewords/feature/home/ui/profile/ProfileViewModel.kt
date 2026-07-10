@@ -5,13 +5,13 @@ import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.navigation.AppRoute
 import com.chen.memorizewords.core.navigation.AuthEntryDestination
 import com.chen.memorizewords.core.navigation.WordBookEntryDestination
+import com.chen.memorizewords.core.session.logout.LogoutPresentationState
+import com.chen.memorizewords.core.session.logout.LogoutTerminal
+import com.chen.memorizewords.core.session.logout.SessionLogoutCoordinator
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
-import com.chen.memorizewords.domain.account.model.LogoutOutcome
 import com.chen.memorizewords.domain.account.model.user.User
-import com.chen.memorizewords.domain.account.repository.user.LogoutDataLossRiskException
 import com.chen.memorizewords.domain.account.usecase.user.CacheLoadedAvatarUseCase
 import com.chen.memorizewords.domain.account.usecase.user.GetUserFlowUseCase
-import com.chen.memorizewords.domain.account.usecase.user.LogoutUseCase
 import com.chen.memorizewords.domain.account.usecase.membership.ObserveMembershipStatusUseCase
 import com.chen.memorizewords.domain.account.usecase.membership.RefreshMembershipStatusUseCase
 import com.chen.memorizewords.domain.study.model.record.DailyDurationStats
@@ -41,7 +41,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     getUserFlowUseCase: GetUserFlowUseCase,
-    private val logoutUseCase: LogoutUseCase,
+    private val logoutCoordinator: SessionLogoutCoordinator,
     observeMembershipStatusUseCase: ObserveMembershipStatusUseCase,
     private val refreshMembershipStatusUseCase: RefreshMembershipStatusUseCase,
     private val studyStatsFacade: StudyStatsFacade,
@@ -51,23 +51,29 @@ class ProfileViewModel @Inject constructor(
 
     companion object {
         const val ACTION_LOGOUT_CONFIRM = "logout_confirm"
-        const val ACTION_FORCE_LOGOUT = "force_logout"
         private const val CURRENT_BUSINESS_DATE_REFRESH_INTERVAL_MS = 60_000L
     }
 
     sealed interface Route {
-        data class OpenAuth(val clearTask: Boolean = false) : Route
         data object OpenMembership : Route
         data object OpenPersonalQr : Route
     }
 
-    val user: StateFlow<User?> =
+    private val sourceUser: StateFlow<User?> =
         getUserFlowUseCase()
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5_000),
                 initialValue = null
             )
+
+    private val logoutPresentation = LogoutPresentationState(
+        source = sourceUser,
+        logoutState = logoutCoordinator.state,
+        scope = viewModelScope,
+        initialValue = sourceUser.value
+    )
+    val user: StateFlow<User?> = logoutPresentation.value
 
     val studyTotalWordCount: StateFlow<Int> =
         studyStatsFacade.getStudyTotalWordCount()
@@ -325,64 +331,27 @@ class ProfileViewModel @Inject constructor(
         )
     }
 
-    private fun logout() {
-        performLogout(force = false)
+    fun onLogoutConfirmed() {
+        logoutCoordinator.requestLogout()
     }
 
-    private fun forceLogout() {
-        performLogout(force = true)
-    }
-
-    private fun performLogout(force: Boolean) {
-        viewModelScope.launch {
-            val result = withLoading(resourceProvider.getString(R.string.home_logout_loading)) {
-                logoutUseCase(force = force)
+    fun resolveLogoutCompletionMessage(terminal: LogoutTerminal): String? {
+        val fallback = resourceProvider.getString(R.string.home_logout_failed)
+        return when (terminal) {
+            is LogoutTerminal.Success -> {
+                val outcome = terminal.outcome
+                if (outcome is com.chen.memorizewords.domain.account.model.LogoutOutcome.LocalClearedRemoteFailed) {
+                    outcome.cause.message?.ifBlank { fallback } ?: fallback
+                } else null
             }
-            if (force) {
-                result.onSuccess { outcome ->
-                    if (outcome is LogoutOutcome.LocalClearedRemoteFailed) {
-                        val fallback = resourceProvider.getString(R.string.home_logout_failed)
-                        showToast(outcome.cause.message?.ifBlank { fallback } ?: fallback)
-                    }
-                }.onFailure { failure ->
-                    val fallback = resourceProvider.getString(R.string.home_logout_failed)
-                    showToast(failure.message?.ifBlank { fallback } ?: fallback)
-                }
-                navigateRoute(
-                    Route.OpenAuth(clearTask = true)
-                )
-                return@launch
-            }
-
-            result.onSuccess { outcome ->
-                if (outcome is LogoutOutcome.LocalClearedRemoteFailed) {
-                    val fallback = resourceProvider.getString(R.string.home_logout_failed)
-                    showToast(outcome.cause.message?.ifBlank { fallback } ?: fallback)
-                }
-                navigateRoute(
-                    Route.OpenAuth(clearTask = true)
-                )
-            }.onFailure { failure ->
-                if (failure is LogoutDataLossRiskException) {
-                    showConfirmDialog(
-                        action = ACTION_FORCE_LOGOUT,
-                        title = resourceProvider.getString(R.string.home_logout_risk_title),
-                        message = resourceProvider.getString(R.string.home_logout_risk_message)
-                    )
-                    return@onFailure
-                }
-                val fallback = resourceProvider.getString(R.string.home_logout_failed)
-                showToast(failure.message?.ifBlank { fallback } ?: fallback)
-            }
+            is LogoutTerminal.ForceFailure ->
+                terminal.failure.message?.ifBlank { fallback } ?: fallback
         }
     }
 
-    fun onForceLogoutConfirmed() {
-        forceLogout()
-    }
-
-    fun onLogoutConfirmed() {
-        logout()
+    fun resolveLogoutFailureMessage(failure: Throwable): String {
+        val fallback = resourceProvider.getString(R.string.home_logout_failed)
+        return failure.message?.ifBlank { fallback } ?: fallback
     }
 }
 

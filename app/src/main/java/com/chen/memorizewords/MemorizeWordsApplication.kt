@@ -5,6 +5,7 @@ import android.app.Application
 import android.os.Build
 import android.util.Log
 import androidx.work.Configuration
+import com.chen.memorizewords.core.common.coroutines.ApplicationScope
 import com.chen.memorizewords.startup.ApplicationStartupManager
 import com.chen.memorizewords.startup.LocalAssetResetter
 import dagger.hilt.EntryPoint
@@ -13,13 +14,10 @@ import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.android.HiltAndroidApp
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 
 @HiltAndroidApp
 class MemorizeWordsApplication : Application(), Configuration.Provider {
 
-    private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private val appEntryPoint by lazy(LazyThreadSafetyMode.NONE) {
         EntryPointAccessors.fromApplication(
             this,
@@ -35,7 +33,7 @@ class MemorizeWordsApplication : Application(), Configuration.Provider {
         Log.i("LocalAssetResetter", resetReport.summary())
 
         appEntryPoint.applicationStartupManager()
-            .start(application = this, appScope = appScope)
+            .start(application = this, appScope = appEntryPoint.applicationScope())
     }
 
     override val workManagerConfiguration: Configuration
@@ -61,4 +59,7 @@ class MemorizeWordsApplication : Application(), Configuration.Provider {
 @InstallIn(SingletonComponent::class)
 interface MemorizeWordsApplicationEntryPoint {
     fun applicationStartupManager(): ApplicationStartupManager
+
+    @ApplicationScope
+    fun applicationScope(): CoroutineScope
 }

@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
@@ -28,6 +29,8 @@ import com.chen.memorizewords.domain.account.model.user.avatarLoadSource
 import com.chen.memorizewords.domain.account.model.user.hasReadableLocalAvatar
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.core.ui.vm.UiEvent
+import com.chen.memorizewords.core.session.logout.SessionLogoutCoordinator
+import com.chen.memorizewords.core.ui.session.logout.SessionLogoutHost
 import com.chen.memorizewords.feature.user.R
 import com.chen.memorizewords.feature.user.auth.social.QQAuthProvider
 import com.chen.memorizewords.feature.user.auth.social.WeChatAuthProvider
@@ -57,7 +60,11 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ModuleUserFragmentProfile
     @Inject
     lateinit var qqAuthProvider: QQAuthProvider
 
+    @Inject
+    lateinit var logoutCoordinator: SessionLogoutCoordinator
+
     private var pendingCameraUri: Uri? = null
+    private lateinit var logoutHost: SessionLogoutHost
 
     private val pickMediaLauncher = registerForActivityResult(
         ActivityResultContracts.PickVisualMedia()
@@ -102,6 +109,23 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ModuleUserFragmentProfile
         databind.lifecycleOwner = viewLifecycleOwner
         bindStaticActions()
         observeUser()
+        logoutHost = SessionLogoutHost(
+            fragment = this,
+            coordinator = logoutCoordinator,
+            configuration = SessionLogoutHost.Configuration(
+                loadingMessage = getString(R.string.feature_user_profile_logout_loading),
+                riskTitle = getString(R.string.feature_user_profile_logout_risk_title),
+                riskMessage = getString(R.string.feature_user_profile_logout_risk_message),
+                onCompleted = { terminal ->
+                    viewModel.resolveLogoutCompletionMessage(terminal)?.let(::showLogoutMessage)
+                },
+                onFailed = { failure ->
+                    showLogoutMessage(viewModel.resolveLogoutFailureMessage(failure))
+                },
+                navigateToAuth = ::navigateToAuthAfterLogout
+            )
+        )
+        logoutHost.bind()
     }
 
     override fun createObserver() {
@@ -113,16 +137,6 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ModuleUserFragmentProfile
                 findNavController().navigate(
                     R.id.action_module_login_profilefragment_to_avatarPreviewFragment,
                     Bundle().apply { putString("avatarSource", target.avatarSource) }
-                )
-            }
-
-            is ProfileViewModel.Route.OpenAuth -> {
-                startActivity(
-                    Intent(requireContext(), AuthActivity::class.java).apply {
-                        if (target.clearTask) {
-                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                        }
-                    }
                 )
             }
 
@@ -157,11 +171,19 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ModuleUserFragmentProfile
             viewModel.onLogoutConfirmed()
             return
         }
-        if (event.action == ProfileViewModel.ACTION_FORCE_LOGOUT) {
-            viewModel.onForceLogoutConfirmed()
-            return
-        }
         super.onConfirmDialog(event)
+    }
+
+    private fun navigateToAuthAfterLogout() {
+        startActivity(
+            Intent(requireContext(), AuthActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            }
+        )
+    }
+
+    private fun showLogoutMessage(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     override fun customConfirmDialog(event: UiEvent.Dialog.CustomConfirmDialog) {

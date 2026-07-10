@@ -19,6 +19,7 @@ android {
 dependencies {
     api(project(":core-common"))
     api(project(":core-navigation"))
+    implementation(project(":core-session"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -27,4 +28,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.coil)
+
+    testImplementation(kotlin("test"))
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(project(":domain"))
 }
