@@ -138,7 +138,7 @@
     <string name="learning_share_uk_phonetic">英音</string>
     <string name="learning_share_definitions_title">释义</string>
     <string name="learning_share_examples_title">例句</string>
-    <string name="practice_shadowing_quota_remaining">今日评分剩余 %1$d 次</string>
+    <string name="practice_shadowing_quota_remaining">今日评测剩余 %1$d 次</string>
     <string name="practice_shadowing_quota_unknown">今日额度暂未更新</string>
     <string name="practice_shadowing_quota_exhausted">今日评分已用完</string>
     <string name="practice_shadowing_rate_limited">操作有些频繁，请稍后使用当前录音重新评分。</string>

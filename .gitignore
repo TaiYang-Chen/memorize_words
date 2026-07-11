@@ -2,6 +2,7 @@
 *.log
 .gradle
 /local.properties
+/release/
 .idea/
 .*/
 .DS_Store

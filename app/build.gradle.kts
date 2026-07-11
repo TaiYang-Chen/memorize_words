@@ -1,4 +1,5 @@
 import java.util.Properties
+import java.security.MessageDigest
 
 plugins {
     id("memorize.android-application")
@@ -103,4 +104,56 @@ dependencies {
 
     debugImplementation(libs.debug.db)
     testImplementation(kotlin("test"))
+}
+
+val archiveReleaseArtifacts by tasks.registering {
+    group = "build"
+    description = "Build and archive the signed release APK, AAB, mapping file, and checksums."
+    dependsOn("assembleRelease", "bundleRelease")
+
+    doLast {
+        val releaseSigning = android.signingConfigs.getByName("release")
+        check(releaseSigning.storeFile?.isFile == true) {
+            "Release signing keystore is missing. Check RELEASE_STORE_FILE in local.properties."
+        }
+
+        val archiveDir = rootProject.layout.projectDirectory.dir("release").asFile
+        archiveDir.mkdirs()
+
+        val artifacts = listOf(
+            layout.buildDirectory.file("outputs/apk/release/app-release.apk").get().asFile to
+                archiveDir.resolve("memorize_words-release.apk"),
+            layout.buildDirectory.file("outputs/bundle/release/app-release.aab").get().asFile to
+                archiveDir.resolve("memorize_words-release.aab"),
+            layout.buildDirectory.file("outputs/mapping/release/mapping.txt").get().asFile to
+                archiveDir.resolve("mapping.txt")
+        )
+
+        artifacts.forEach { (source, destination) ->
+            check(source.isFile) { "Expected release artifact is missing: ${source.absolutePath}" }
+            source.copyTo(destination, overwrite = true)
+        }
+
+        fun sha256(file: File): String {
+            val digest = MessageDigest.getInstance("SHA-256")
+            file.inputStream().use { input ->
+                val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+                while (true) {
+                    val count = input.read(buffer)
+                    if (count < 0) break
+                    digest.update(buffer, 0, count)
+                }
+            }
+            return digest.digest().joinToString("") { byte -> "%02x".format(byte) }
+        }
+
+        val checksumFiles = listOf(releaseSigning.storeFile!!) + artifacts.map { (_, destination) ->
+            destination
+        }
+        archiveDir.resolve("SHA256SUMS.txt").writeText(
+            checksumFiles.joinToString(separator = System.lineSeparator(), postfix = System.lineSeparator()) {
+                file -> "${sha256(file)}  ${file.name}"
+            }
+        )
+    }
 }

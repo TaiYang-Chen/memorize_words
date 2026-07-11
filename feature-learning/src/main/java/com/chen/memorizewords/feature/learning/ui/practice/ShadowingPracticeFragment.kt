@@ -783,28 +783,28 @@ class ShadowingPracticeFragment :
                 iconResId = R.drawable.feature_learning_ic_microphone,
                 backgroundColorResId = R.color.feature_learning_shadowing_disabled,
                 iconColorResId = R.color.feature_learning_shadowing_text_primary,
-                elevationDp = 3
+                strokeColorResId = R.color.feature_learning_shadowing_record_disabled_stroke
             )
 
             recording -> RecordButtonStyle(
                 iconResId = R.drawable.feature_learning_ic_stop,
                 backgroundColorResId = R.color.feature_learning_shadowing_record_recording_bg,
                 iconColorResId = R.color.feature_learning_shadowing_record_icon_recording,
-                elevationDp = 10
+                strokeColorResId = R.color.feature_learning_shadowing_record_recording_stroke
             )
 
             state.latestAttempt != null -> RecordButtonStyle(
                 iconResId = R.drawable.feature_learning_ic_microphone,
                 backgroundColorResId = R.color.feature_learning_shadowing_record_rerecord_bg,
                 iconColorResId = R.color.feature_learning_shadowing_record_icon,
-                elevationDp = 8
+                strokeColorResId = R.color.feature_learning_shadowing_record_stroke
             )
 
             else -> RecordButtonStyle(
                 iconResId = R.drawable.feature_learning_ic_microphone,
                 backgroundColorResId = R.color.feature_learning_shadowing_record_bg,
                 iconColorResId = R.color.feature_learning_shadowing_record_icon,
-                elevationDp = 8
+                strokeColorResId = R.color.feature_learning_shadowing_record_stroke
             )
         }
         databind.ivRecordAction.setImageResource(recordStyle.iconResId)
@@ -814,7 +814,9 @@ class ShadowingPracticeFragment :
         databind.cardRecord.setCardBackgroundColor(
             ContextCompat.getColor(requireContext(), recordStyle.backgroundColorResId)
         )
-        databind.cardRecord.cardElevation = (recordStyle.elevationDp).dpToPx(requireContext()).toFloat()
+        databind.cardRecord.strokeColor =
+            ContextCompat.getColor(requireContext(), recordStyle.strokeColorResId)
+        databind.cardRecord.cardElevation = 0f
     }
 
     private fun refreshPermissionState() {
@@ -955,7 +957,7 @@ class ShadowingPracticeFragment :
         val iconResId: Int,
         val backgroundColorResId: Int,
         val iconColorResId: Int,
-        val elevationDp: Int
+        val strokeColorResId: Int
     )
 
     companion object {

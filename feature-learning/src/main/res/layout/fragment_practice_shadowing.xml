@@ -59,7 +59,9 @@
         <TextView
             android:id="@+id/tv_quota"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/core_ui_dp_32"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
             android:layout_marginEnd="@dimen/page_margin"
             android:background="@drawable/feature_learning_bg_shadowing_chip"
             android:gravity="center"
@@ -108,7 +110,9 @@
                         android:layout_height="@dimen/feature_learning_shadowing_play_button"
                         app:cardBackgroundColor="@android:color/white"
                         app:cardCornerRadius="@dimen/core_ui_dp_23"
-                        app:cardElevation="@dimen/core_ui_dp_4">
+                        app:cardElevation="0dp"
+                        app:strokeColor="@color/feature_learning_shadowing_action_stroke"
+                        app:strokeWidth="@dimen/core_ui_dp_1">
 
                         <ImageView
                             android:layout_width="match_parent"
@@ -143,7 +147,9 @@
                         android:layout_height="@dimen/feature_learning_shadowing_record_button"
                         app:cardBackgroundColor="@color/feature_learning_shadowing_record_bg"
                         app:cardCornerRadius="@dimen/core_ui_dp_35"
-                        app:cardElevation="@dimen/core_ui_dp_8">
+                        app:cardElevation="0dp"
+                        app:strokeColor="@color/feature_learning_shadowing_record_stroke"
+                        app:strokeWidth="@dimen/core_ui_dp_1">
 
                         <ImageView
                             android:id="@+id/iv_record_action"
@@ -179,7 +185,9 @@
                         android:layout_height="@dimen/feature_learning_shadowing_play_button"
                         app:cardBackgroundColor="@android:color/white"
                         app:cardCornerRadius="@dimen/core_ui_dp_23"
-                        app:cardElevation="@dimen/core_ui_dp_4">
+                        app:cardElevation="0dp"
+                        app:strokeColor="@color/feature_learning_shadowing_action_stroke"
+                        app:strokeWidth="@dimen/core_ui_dp_1">
 
                         <ImageView
                             android:layout_width="match_parent"
@@ -309,21 +317,9 @@
                             android:gravity="center_vertical"
                             android:orientation="horizontal">
 
-                            <TextView
-                                android:id="@+id/tv_wave_avatar"
-                                android:layout_width="@dimen/core_ui_dp_28"
-                                android:layout_height="@dimen/core_ui_dp_28"
-                                android:background="@drawable/feature_learning_bg_shadowing_avatar"
-                                android:gravity="center"
-                                android:text="AI"
-                                android:textColor="@color/feature_learning_shadowing_text_primary"
-                                android:textSize="@dimen/core_ui_sp_10"
-                                android:textStyle="bold" />
-
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/core_ui_dp_10"
                                 android:layout_weight="1"
                                 android:orientation="vertical">
 
