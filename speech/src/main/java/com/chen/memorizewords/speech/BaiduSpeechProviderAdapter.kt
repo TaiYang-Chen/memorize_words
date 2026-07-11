@@ -193,6 +193,7 @@ class BaiduSpeechProviderAdapter @Inject constructor(
             }
         }
         val remoteResult = practiceSpeechRequest.evaluateShadowing(
+            requestId = task.requestId,
             referenceText = task.referenceText,
             provider = provider.name,
             audioFilePath = normalizedInput.filePath,
@@ -261,7 +262,7 @@ private fun NetworkResult.Failure.toBackendTtsException(): BaiduClientException 
 
         is NetworkResult.Failure.HttpError -> BaiduApiException(
             message = message ?: "Backend TTS request failed: HTTP $code",
-            code = code.toString()
+            code = businessCode ?: code.toString()
         )
 
         is NetworkResult.Failure.NetworkError -> BaiduNetworkException(

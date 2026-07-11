@@ -233,4 +233,13 @@
     <string name="feature_home_membership_checkin_success">已获得 1 天体验会员</string>
     <string name="feature_home_membership_checkin_duplicate">今日已签到</string>
     <string name="feature_home_membership_checkin_failed">签到失败，请稍后重试</string>
+    <string name="feature_home_shadowing_quota_remaining">提升口语表达 · 今日剩余 %1$d 次评分</string>
+    <string name="feature_home_shadowing_quota_unknown">提升口语表达 · 额度暂未更新</string>
+    <string name="feature_home_shadowing_quota_exhausted">提升口语表达 · 今日评分已用完</string>
+    <string name="feature_home_shadowing_quota_notice_title">本次评分额度提示</string>
+    <string name="feature_home_shadowing_quota_notice_message">本次可为 %1$d 次跟读提供云端评分，其余单词仍可继续录音和练习。</string>
+    <string name="feature_home_membership_evaluation_policy">云端评分：普通用户每日 %1$d 次，会员每日 %2$d 次</string>
+    <string name="feature_home_membership_evaluation_unknown">云端评分额度暂未更新</string>
+    <string name="feature_home_membership_evaluation_usage">今日已用 %1$d/%2$d，剩余 %3$d 次，明日恢复</string>
+    <string name="feature_home_membership_evaluation_usage_unknown">今日使用情况暂未更新</string>
 </resources>

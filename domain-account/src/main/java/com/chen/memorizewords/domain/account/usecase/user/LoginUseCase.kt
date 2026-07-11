@@ -17,6 +17,9 @@ sealed class LoginError : Throwable() {
     class EmptyVerifyToken : LoginError()
     class EmptyOauthCode : LoginError()
     class AccountDeletionPending(override val message: String?) : LoginError()
+    class RegistrationRateLimited(val retryAfterSeconds: Long?) : LoginError()
+    class RegistrationVerificationRequired(val resetAtMs: Long?) : LoginError()
+    class RegistrationBusy : LoginError()
 }
 
 class LoginUseCase @Inject constructor(

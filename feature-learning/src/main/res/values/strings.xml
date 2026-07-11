@@ -138,4 +138,14 @@
     <string name="learning_share_uk_phonetic">英音</string>
     <string name="learning_share_definitions_title">释义</string>
     <string name="learning_share_examples_title">例句</string>
+    <string name="practice_shadowing_quota_remaining">今日评分剩余 %1$d 次</string>
+    <string name="practice_shadowing_quota_unknown">今日额度暂未更新</string>
+    <string name="practice_shadowing_quota_exhausted">今日评分已用完</string>
+    <string name="practice_shadowing_rate_limited">操作有些频繁，请稍后使用当前录音重新评分。</string>
+    <string name="practice_shadowing_quota_exhausted_message">今日云端评分已用完，你仍可继续录音、回放和练习。</string>
+    <string name="practice_shadowing_service_busy">评分服务暂时繁忙，当前录音已保留，请稍后重试。</string>
+    <string name="practice_shadowing_request_in_progress">这段录音正在评分，请稍候。</string>
+    <string name="practice_shadowing_recording_too_large">录音内容过长，请缩短后重新录制。</string>
+    <string name="practice_shadowing_local_issue_too_long">录音超过 60 秒，请缩短后重新录制。</string>
+    <string name="practice_shadowing_evaluate_exhausted">今日评分已用完</string>
 </resources>

@@ -56,6 +56,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/tv_quota"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/core_ui_dp_32"
+            android:layout_marginEnd="@dimen/page_margin"
+            android:background="@drawable/feature_learning_bg_shadowing_chip"
+            android:gravity="center"
+            android:minWidth="@dimen/core_ui_dp_96"
+            android:paddingStart="@dimen/core_ui_dp_10"
+            android:paddingEnd="@dimen/core_ui_dp_10"
+            android:text="@string/practice_shadowing_quota_unknown"
+            android:textColor="@color/feature_learning_shadowing_text_secondary"
+            android:textSize="@dimen/core_ui_text_11"
+            app:layout_constraintBottom_toBottomOf="@id/tv_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_title" />
+
         <LinearLayout
             android:id="@+id/layout_bottom_panel"
             android:layout_width="0dp"

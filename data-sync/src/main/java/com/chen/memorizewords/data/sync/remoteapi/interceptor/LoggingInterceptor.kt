@@ -14,6 +14,7 @@ class LoggingInterceptor @Inject constructor() : Interceptor {
         redactHeader("Authorization")
         redactHeader("Cookie")
         redactHeader("Set-Cookie")
+        redactHeader(InstallationIdInterceptor.HEADER_INSTALLATION_ID)
         level = if (GlobalConfig.enableBodyLogging) {
             HttpLoggingInterceptor.Level.BODY
         } else {

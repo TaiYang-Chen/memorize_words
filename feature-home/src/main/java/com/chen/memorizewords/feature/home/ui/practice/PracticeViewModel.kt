@@ -11,6 +11,9 @@ import com.chen.memorizewords.domain.floating.service.FloatingReviewFacade
 import com.chen.memorizewords.domain.practice.service.PracticeFacade
 import com.chen.memorizewords.domain.practice.PracticeMode
 import com.chen.memorizewords.domain.practice.PracticeAvailability
+import com.chen.memorizewords.domain.practice.usage.ObservePracticeUsageUseCase
+import com.chen.memorizewords.domain.practice.usage.PracticeUsageState
+import com.chen.memorizewords.domain.practice.usage.RefreshPracticeUsageUseCase
 import com.chen.memorizewords.feature.home.R
 import com.chen.memorizewords.core.navigation.FloatingWordActions
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,7 +32,9 @@ class PracticeViewModel @Inject constructor(
     private val practiceUiMapper: PracticeUiMapper,
     private val floatingReviewFacade: FloatingReviewFacade,
     observeMembershipStatusUseCase: ObserveMembershipStatusUseCase,
-    private val resolveMembershipFeatureAccessUseCase: ResolveMembershipFeatureAccessUseCase
+    private val resolveMembershipFeatureAccessUseCase: ResolveMembershipFeatureAccessUseCase,
+    observePracticeUsageUseCase: ObservePracticeUsageUseCase,
+    private val refreshPracticeUsageUseCase: RefreshPracticeUsageUseCase
 ) : BaseViewModel() {
 
     sealed interface Route {
@@ -67,6 +72,9 @@ class PracticeViewModel @Inject constructor(
                 SharingStarted.WhileSubscribed(5_000),
                 null
             )
+
+    val practiceUsageState: StateFlow<PracticeUsageState> = observePracticeUsageUseCase()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), PracticeUsageState.Unknown)
 
     val floatingEnabled: StateFlow<Boolean> =
         combine(
@@ -153,6 +161,7 @@ class PracticeViewModel @Inject constructor(
         )
 
     init {
+        refreshPracticeUsage()
         viewModelScope.launch {
             membershipStatus.collect { status ->
                 if (status != null && !status.active) {
@@ -160,6 +169,23 @@ class PracticeViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun refreshPracticeUsage() {
+        viewModelScope.launch { refreshPracticeUsageUseCase() }
+    }
+
+    fun recommendedShadowingCount(): Int {
+        val evaluation = when (val state = practiceUsageState.value) {
+            is PracticeUsageState.Available -> state.usage.evaluation
+            is PracticeUsageState.Stale -> state.usage.evaluation
+            is PracticeUsageState.Exhausted -> state.usage.evaluation
+            else -> null
+        }
+        if (evaluation == null) return 10
+        if (evaluation.remaining <= 0) return 10
+        val tierDefault = if (evaluation.tier.name == "MEMBER") 20 else 10
+        return minOf(tierDefault, evaluation.remaining).coerceAtLeast(1)
     }
 
     fun openListening() {

@@ -3,12 +3,17 @@ package com.chen.memorizewords.feature.user.ui.register
 import android.os.Bundle
 import android.text.InputType
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.core.ui.vm.UiEvent
 import com.chen.memorizewords.feature.user.R
 import com.chen.memorizewords.feature.user.databinding.ModuleUserFragmentRegisterBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RegisterFragment : BaseFragment<RegisterViewModel, ModuleUserFragmentRegisterBinding>() {
@@ -23,6 +28,23 @@ class RegisterFragment : BaseFragment<RegisterViewModel, ModuleUserFragmentRegis
         databind.viewModel = viewModel
         databind.lifecycleOwner = viewLifecycleOwner
         setupPasswordToggle()
+        observeRegisterState()
+    }
+
+    private fun observeRegisterState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { state ->
+                    databind.tvSystemMessage.isVisible = !state.systemMessage.isNullOrBlank()
+                    databind.tvSystemMessage.text = state.systemMessage.orEmpty()
+                    databind.btnLogin.isEnabled = !state.submitting
+                    databind.btnLogin.alpha = if (state.submitting) 0.6f else 1f
+                    val verifiedAlpha = if (state.emphasizeVerifiedRegistration) 1f else 0.82f
+                    databind.tvPhoneCodeRegister.alpha = verifiedAlpha
+                    databind.tvEmailCodeRegister.alpha = verifiedAlpha
+                }
+            }
+        }
     }
 
     override fun onNavigationRoute(event: UiEvent.Navigation.Route) {

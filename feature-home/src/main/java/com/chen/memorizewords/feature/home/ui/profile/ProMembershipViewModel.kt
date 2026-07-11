@@ -7,6 +7,9 @@ import com.chen.memorizewords.domain.account.model.membership.MembershipStatus
 import com.chen.memorizewords.domain.account.usecase.membership.CheckInMembershipUseCase
 import com.chen.memorizewords.domain.account.usecase.membership.ObserveMembershipStatusUseCase
 import com.chen.memorizewords.domain.account.usecase.membership.RefreshMembershipStatusUseCase
+import com.chen.memorizewords.domain.practice.usage.ObservePracticeUsageUseCase
+import com.chen.memorizewords.domain.practice.usage.PracticeUsageState
+import com.chen.memorizewords.domain.practice.usage.RefreshPracticeUsageUseCase
 import com.chen.memorizewords.feature.home.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -22,25 +25,30 @@ class ProMembershipViewModel @Inject constructor(
     observeMembershipStatusUseCase: ObserveMembershipStatusUseCase,
     private val refreshMembershipStatusUseCase: RefreshMembershipStatusUseCase,
     private val checkInMembershipUseCase: CheckInMembershipUseCase,
+    observePracticeUsageUseCase: ObservePracticeUsageUseCase,
+    private val refreshPracticeUsageUseCase: RefreshPracticeUsageUseCase,
     private val resourceProvider: ResourceProvider
 ) : BaseViewModel() {
 
     private val checkingIn = MutableStateFlow(false)
     private val membershipStatus = observeMembershipStatusUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+    private val practiceUsage = observePracticeUsageUseCase()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), PracticeUsageState.Unknown)
 
     val uiState: StateFlow<ProMembershipUiState> =
-        combine(membershipStatus, checkingIn) { status, isCheckingIn ->
-            buildUiState(status, isCheckingIn)
+        combine(membershipStatus, checkingIn, practiceUsage) { status, isCheckingIn, usage ->
+            buildUiState(status, isCheckingIn, usage)
         }.stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5_000),
-            buildUiState(null, false)
+            buildUiState(null, false, PracticeUsageState.Unknown)
         )
 
     init {
         viewModelScope.launch {
             refreshMembershipStatusUseCase()
+            refreshPracticeUsageUseCase()
         }
     }
 
@@ -51,6 +59,7 @@ class ProMembershipViewModel @Inject constructor(
             try {
                 checkInMembershipUseCase()
                     .onSuccess { reward ->
+                        refreshPracticeUsageUseCase()
                         showToast(
                             resourceProvider.getString(
                                 if (reward.granted) {
@@ -70,7 +79,11 @@ class ProMembershipViewModel @Inject constructor(
         }
     }
 
-    private fun buildUiState(status: MembershipStatus?, checkingIn: Boolean): ProMembershipUiState {
+    private fun buildUiState(
+        status: MembershipStatus?,
+        checkingIn: Boolean,
+        usageState: PracticeUsageState
+    ): ProMembershipUiState {
         val active = status?.active == true
         val todayCheckedIn = status?.todayCheckedIn == true
         val title = if (active) {
@@ -93,12 +106,33 @@ class ProMembershipViewModel @Inject constructor(
         } else {
             resourceProvider.getString(R.string.feature_home_membership_checkin_button)
         }
+        val evaluation = when (usageState) {
+            is PracticeUsageState.Available -> usageState.usage.evaluation
+            is PracticeUsageState.Stale -> usageState.usage.evaluation
+            is PracticeUsageState.Exhausted -> usageState.usage.evaluation
+            else -> null
+        }
         return ProMembershipUiState(
             title = title,
             subtitle = subtitle,
             note = resourceProvider.getString(R.string.feature_home_membership_note),
             buttonText = buttonText,
-            checkInEnabled = !todayCheckedIn && !checkingIn
+            checkInEnabled = !todayCheckedIn && !checkingIn,
+            evaluationBenefitText = evaluation?.let {
+                resourceProvider.getString(
+                    R.string.feature_home_membership_evaluation_policy,
+                    it.policy.freeDailyLimit,
+                    it.policy.memberDailyLimit
+                )
+            } ?: resourceProvider.getString(R.string.feature_home_membership_evaluation_unknown),
+            evaluationUsageText = evaluation?.let {
+                resourceProvider.getString(
+                    R.string.feature_home_membership_evaluation_usage,
+                    it.used,
+                    it.dailyLimit,
+                    it.remaining
+                )
+            } ?: resourceProvider.getString(R.string.feature_home_membership_evaluation_usage_unknown)
         )
     }
 }
@@ -108,5 +142,7 @@ data class ProMembershipUiState(
     val subtitle: String,
     val note: String,
     val buttonText: String,
-    val checkInEnabled: Boolean
+    val checkInEnabled: Boolean,
+    val evaluationBenefitText: String,
+    val evaluationUsageText: String
 )

@@ -148,7 +148,7 @@ private fun NetworkResult.Failure.toBackendTtsException(): BaiduClientException 
 
         is NetworkResult.Failure.HttpError -> BaiduApiException(
             message = message ?: "Backend Aliyun TTS request failed: HTTP $code",
-            code = code.toString()
+            code = businessCode ?: code.toString()
         )
 
         is NetworkResult.Failure.NetworkError -> BaiduNetworkException(

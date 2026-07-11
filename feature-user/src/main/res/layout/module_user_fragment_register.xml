@@ -45,7 +45,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/core_ui_dp_48"
             android:layout_marginStart="@dimen/core_ui_dp_32"
-            android:layout_marginTop="@dimen/core_ui_dp_56"
+            android:layout_marginTop="@dimen/core_ui_dp_16"
             android:layout_marginEnd="@dimen/core_ui_dp_32"
             android:background="@drawable/module_user_login_bg_edit_text"
             android:hint="@string/module_user_register_account_hint"
@@ -56,7 +56,23 @@
             android:textSize="@dimen/core_ui_text_15"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+            app:layout_constraintTop_toBottomOf="@id/tvSystemMessage" />
+
+        <TextView
+            android:id="@+id/tvSystemMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/core_ui_dp_32"
+            android:layout_marginTop="@dimen/core_ui_dp_24"
+            android:layout_marginEnd="@dimen/core_ui_dp_32"
+            android:background="#FFF4DB"
+            android:padding="@dimen/core_ui_dp_12"
+            android:textColor="#7A4B00"
+            android:textSize="@dimen/core_ui_text_13"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvRegister" />
 
         <FrameLayout
             android:id="@+id/flPassword"

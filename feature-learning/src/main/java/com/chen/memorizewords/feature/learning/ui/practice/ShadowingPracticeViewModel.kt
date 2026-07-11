@@ -15,6 +15,9 @@ import com.chen.memorizewords.domain.practice.ShadowingPracticeAttemptOutcome
 import com.chen.memorizewords.domain.practice.ShadowingPracticeSessionPolicy
 import com.chen.memorizewords.domain.practice.usecase.EvaluateShadowingUseCase
 import com.chen.memorizewords.domain.practice.usecase.SynthesizeSpeechUseCase
+import com.chen.memorizewords.domain.practice.usage.ObservePracticeUsageUseCase
+import com.chen.memorizewords.domain.practice.usage.PracticeUsageState
+import com.chen.memorizewords.domain.practice.usage.RefreshPracticeUsageUseCase
 import com.chen.memorizewords.domain.word.usecase.GetWordDefinitionsUseCase
 import com.chen.memorizewords.feature.learning.R
 import com.chen.memorizewords.domain.practice.speech.ShadowingAnalysisSource
@@ -27,6 +30,7 @@ import com.chen.memorizewords.domain.practice.speech.SpeechFailureResult
 import com.chen.memorizewords.domain.practice.speech.SpeechTask
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.Locale
+import java.util.UUID
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -85,7 +89,9 @@ class ShadowingPracticeViewModel @Inject constructor(
     private val evaluateShadowing: EvaluateShadowingUseCase,
     private val wordProvider: PracticeWordProvider,
     private val getWordDefinitions: GetWordDefinitionsUseCase,
-    private val practiceReportRepository: PracticeReportRepository
+    private val practiceReportRepository: PracticeReportRepository,
+    observePracticeUsageUseCase: ObservePracticeUsageUseCase,
+    private val refreshPracticeUsageUseCase: RefreshPracticeUsageUseCase
 ) : BaseViewModel() {
 
     data class ShadowingUiState(
@@ -114,8 +120,13 @@ class ShadowingPracticeViewModel @Inject constructor(
         val detailSourceNote: String = "",
         val isCompleted: Boolean = false,
         val nextActionText: String = "",
+        val showEvaluateAction: Boolean = false,
         val canEvaluateLatestAttempt: Boolean = false,
         val isEvaluatingLatestAttempt: Boolean = false,
+        val quotaText: String = "",
+        val quotaLow: Boolean = false,
+        val quotaExhausted: Boolean = false,
+        val quotaUnknown: Boolean = true,
         val autoPlaySequenceId: Int = 0,
         val summary: PracticeSessionSummary = PracticeSessionSummary()
     )
@@ -155,8 +166,27 @@ class ShadowingPracticeViewModel @Inject constructor(
     private var sessionId: String = ""
     private var reportSaved: Boolean = false
     private var doneEffectEmitted: Boolean = false
+    private var practiceUsageState: PracticeUsageState = PracticeUsageState.Unknown
+
+    init {
+        viewModelScope.launch {
+            observePracticeUsageUseCase().collect { state ->
+                practiceUsageState = state
+                currentRuntime()?.let { runtime ->
+                    _uiState.value = buildUiState(
+                        runtime = runtime,
+                        stage = _uiState.value.stage,
+                        loading = _uiState.value.loading,
+                        autoPlaySequenceId = _uiState.value.autoPlaySequenceId,
+                        isEvaluatingLatestAttempt = _uiState.value.isEvaluatingLatestAttempt
+                    )
+                }
+            }
+        }
+    }
 
     fun loadWithSelection(selectedIds: LongArray?, randomCount: Int) {
+        viewModelScope.launch { refreshPracticeUsageUseCase() }
         val newLoadKey = buildPracticeSelectionKey(selectedIds, randomCount)
         if (loadKey == newLoadKey) return
         loadKey = newLoadKey
@@ -169,8 +199,7 @@ class ShadowingPracticeViewModel @Inject constructor(
 
     fun onRecordingStarted() {
         val runtime = currentRuntime() ?: return
-        if (_uiState.value.loading || _uiState.value.isCompleted) return
-        evaluatingAttemptId = null
+        if (_uiState.value.loading || _uiState.value.isCompleted || evaluatingAttemptId != null) return
         _uiState.value = buildUiState(
             runtime = runtime,
             stage = ShadowingStage.RECORDING,
@@ -197,7 +226,7 @@ class ShadowingPracticeViewModel @Inject constructor(
     ) {
         val runtimeIndex = currentRuntimeIndex ?: return
         val runtime = runtimes.getOrNull(runtimeIndex) ?: return
-        val attemptId = nextAttemptId(runtime.word.id)
+        val attemptId = nextAttemptId()
         val attempt = AttemptRecord(
             attemptId = attemptId,
             audioFilePath = audioFilePath,
@@ -220,7 +249,7 @@ class ShadowingPracticeViewModel @Inject constructor(
         if (
             state.loading ||
             state.stage == ShadowingStage.RECORDING ||
-            state.isEvaluatingLatestAttempt
+            evaluatingAttemptId != null
         ) {
             return
         }
@@ -257,6 +286,9 @@ class ShadowingPracticeViewModel @Inject constructor(
         if (attempt.durationMs in 1 until MIN_EVALUATE_DURATION_MS) {
             return resourceProvider.getString(R.string.practice_shadowing_local_issue_too_short)
         }
+        if (attempt.durationMs > MAX_EVALUATE_DURATION_MS) {
+            return resourceProvider.getString(R.string.practice_shadowing_local_issue_too_long)
+        }
         val samples = attempt.waveformSamples
         if (samples.isEmpty()) return null
         val averageVolume = samples.map { it.coerceIn(0, 100) }.average()
@@ -283,7 +315,7 @@ class ShadowingPracticeViewModel @Inject constructor(
             stage = _uiState.value.stage,
             loading = false,
             autoPlaySequenceId = _uiState.value.autoPlaySequenceId,
-            isEvaluatingLatestAttempt = evaluatingAttemptId == attemptId
+            isEvaluatingLatestAttempt = evaluatingAttemptId != null
         )
     }
 
@@ -291,7 +323,8 @@ class ShadowingPracticeViewModel @Inject constructor(
         val runtime = currentRuntime() ?: return
         if (
             _uiState.value.loading ||
-            _uiState.value.stage == ShadowingStage.RECORDING
+            _uiState.value.stage == ShadowingStage.RECORDING ||
+            evaluatingAttemptId != null
         ) {
             return
         }
@@ -306,7 +339,8 @@ class ShadowingPracticeViewModel @Inject constructor(
     fun nextWord() {
         if (
             _uiState.value.loading ||
-            _uiState.value.stage == ShadowingStage.RECORDING
+            _uiState.value.stage == ShadowingStage.RECORDING ||
+            evaluatingAttemptId != null
         ) {
             return
         }
@@ -346,6 +380,7 @@ class ShadowingPracticeViewModel @Inject constructor(
             val result = withContext(Dispatchers.IO) {
                 evaluateShadowing(
                     SpeechTask.EvaluateShadowing(
+                        requestId = attemptId,
                         referenceText = wordText,
                         audioInput = SpeechAudioInput.FileInput(
                             audioFilePath
@@ -375,15 +410,15 @@ class ShadowingPracticeViewModel @Inject constructor(
 
                 is SpeechFailureResult -> oldAttempt.copy(
                     evaluation = null,
-                    errorMessage = normalizeShadowingFailureMessage(
-                        message = result.message,
-                        resourceProvider = resourceProvider
-                    )
+                    errorMessage = shadowingFailureMessage(result)
                 )
 
                 else -> oldAttempt
             }
             latestRuntime.attempts[latestAttemptIndex] = updatedAttempt
+            if (result is SpeechFailureResult && result.causeCode == "PRACTICE_EVALUATION_QUOTA_EXHAUSTED") {
+                refreshPracticeUsageUseCase()
+            }
             recordAttempt(
                 word = latestRuntime.word,
                 attemptIndex = latestAttemptIndex,
@@ -409,7 +444,7 @@ class ShadowingPracticeViewModel @Inject constructor(
             val words = wordProvider.loadWords(
                 selectedIds = selectedIds,
                 randomCount = randomCount,
-                defaultLimit = 30
+                defaultLimit = recommendedDefaultLimit()
             )
             runtimes = words.map { WordRuntime(word = it) }
             _sessionWordIds.value = words.map { it.id }
@@ -439,9 +474,9 @@ class ShadowingPracticeViewModel @Inject constructor(
         renderCurrentWord(runtimeIndex)
     }
 
-    private fun nextAttemptId(wordId: Long): String {
+    private fun nextAttemptId(): String {
         nextAttemptSequence += 1
-        return "shadowing_${wordId}_${System.currentTimeMillis()}_$nextAttemptSequence"
+        return UUID.randomUUID().toString()
     }
 
     private fun selectNextWordIndex(): Int? {
@@ -564,6 +599,7 @@ class ShadowingPracticeViewModel @Inject constructor(
             isEvaluatingLatestAttempt = selectedAttempt?.isEvaluating == true || isEvaluatingLatestAttempt
         )
         val statusPair = buildStatus(stage = stage, runtime = runtime)
+        val quota = quotaPresentation()
         return ShadowingUiState(
             loading = loading,
             stage = stage,
@@ -594,13 +630,88 @@ class ShadowingPracticeViewModel @Inject constructor(
             detailSourceNote = selectedAttempt?.detailSourceNote.orEmpty(),
             isCompleted = false,
             nextActionText = nextActionText,
-            canEvaluateLatestAttempt = selectedAttempt != null &&
+            showEvaluateAction = selectedAttempt != null &&
                 !selectedAttempt.hasEvaluation &&
                 stage != ShadowingStage.RECORDING &&
                 selectedAttempt.isEvaluating.not(),
+            canEvaluateLatestAttempt = selectedAttempt != null &&
+                !selectedAttempt.hasEvaluation &&
+                stage != ShadowingStage.RECORDING &&
+                evaluatingAttemptId == null && !quota.exhausted,
             isEvaluatingLatestAttempt = selectedAttempt?.isEvaluating == true || isEvaluatingLatestAttempt,
+            quotaText = quota.text,
+            quotaLow = quota.low,
+            quotaExhausted = quota.exhausted,
+            quotaUnknown = quota.unknown,
             autoPlaySequenceId = autoPlaySequenceId,
             summary = summary
+        )
+    }
+
+    private data class QuotaPresentation(
+        val text: String,
+        val low: Boolean,
+        val exhausted: Boolean,
+        val unknown: Boolean
+    )
+
+    private fun quotaPresentation(): QuotaPresentation {
+        val evaluation = when (val state = practiceUsageState) {
+            is PracticeUsageState.Available -> state.usage.evaluation
+            is PracticeUsageState.Stale -> state.usage.evaluation
+            is PracticeUsageState.Exhausted -> state.usage.evaluation
+            else -> null
+        }
+        if (evaluation == null) {
+            return QuotaPresentation(
+                resourceProvider.getString(R.string.practice_shadowing_quota_unknown),
+                low = false,
+                exhausted = false,
+                unknown = true
+            )
+        }
+        if (evaluation.remaining <= 0) {
+            return QuotaPresentation(
+                resourceProvider.getString(R.string.practice_shadowing_quota_exhausted),
+                low = true,
+                exhausted = true,
+                unknown = false
+            )
+        }
+        val threshold = maxOf(3, (evaluation.dailyLimit * 0.1).toInt())
+        return QuotaPresentation(
+            resourceProvider.getString(R.string.practice_shadowing_quota_remaining, evaluation.remaining),
+            low = evaluation.remaining <= threshold,
+            exhausted = false,
+            unknown = false
+        )
+    }
+
+    private fun recommendedDefaultLimit(): Int {
+        val evaluation = when (val state = practiceUsageState) {
+            is PracticeUsageState.Available -> state.usage.evaluation
+            is PracticeUsageState.Stale -> state.usage.evaluation
+            is PracticeUsageState.Exhausted -> state.usage.evaluation
+            else -> null
+        } ?: return 10
+        if (evaluation.remaining <= 0) return 10
+        val default = if (evaluation.tier.name == "MEMBER") 20 else 10
+        return minOf(default, evaluation.remaining).coerceAtLeast(1)
+    }
+
+    private fun shadowingFailureMessage(result: SpeechFailureResult): String {
+        val stringId = when (result.causeCode) {
+            "PRACTICE_EVALUATION_RATE_LIMITED" -> R.string.practice_shadowing_rate_limited
+            "PRACTICE_EVALUATION_QUOTA_EXHAUSTED" -> R.string.practice_shadowing_quota_exhausted_message
+            "PRACTICE_EVALUATION_SERVICE_BUSY", "SECURITY_PROTECTION_SERVICE_UNAVAILABLE" ->
+                R.string.practice_shadowing_service_busy
+            "PRACTICE_EVALUATION_REQUEST_IN_PROGRESS" -> R.string.practice_shadowing_request_in_progress
+            "REQUEST_PAYLOAD_TOO_LARGE" -> R.string.practice_shadowing_recording_too_large
+            else -> null
+        }
+        return stringId?.let(resourceProvider::getString) ?: normalizeShadowingFailureMessage(
+            message = result.message,
+            resourceProvider = resourceProvider
         )
     }
 
@@ -886,6 +997,7 @@ class ShadowingPracticeViewModel @Inject constructor(
     companion object {
         private const val PASS_SCORE = 80
         private const val MIN_EVALUATE_DURATION_MS = 450L
+        private const val MAX_EVALUATE_DURATION_MS = 60_000L
         private const val MIN_SPEECH_SAMPLE_VOLUME = 12
         private const val MIN_AVERAGE_VOLUME = 8.0
         private const val MIN_SPEECH_RATIO = 15

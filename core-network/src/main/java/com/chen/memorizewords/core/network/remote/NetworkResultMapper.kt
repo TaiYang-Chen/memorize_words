@@ -6,7 +6,15 @@ import java.net.SocketTimeoutException
 fun mapFailureToException(failure: NetworkResult.Failure): Throwable {
     return when (failure) {
         is NetworkResult.Failure.HttpError ->
-            HttpStatusException(failure.code, failure.message)
+            HttpStatusException(
+                code = failure.code,
+                businessCode = failure.businessCode,
+                retryAfterSeconds = failure.retryAfterSeconds,
+                resetAtMs = failure.resetAtMs,
+                serverTimeMs = failure.serverTimeMs,
+                traceId = failure.traceId,
+                message = failure.message
+            )
 
         is NetworkResult.Failure.Unauthorized ->
             UnauthorizedNetworkException(failure.message)

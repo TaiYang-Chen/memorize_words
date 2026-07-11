@@ -33,6 +33,7 @@ data class TtsResponseDto(
 
 @JsonClass(generateAdapter = false)
 data class ShadowingEvaluateRequestDto(
+    val requestId: String,
     val referenceText: String,
     val provider: String,
     val audioBase64: String,
@@ -67,7 +68,8 @@ data class ShadowingEvaluateResponseDto(
     val syllableDetails: List<ShadowingDetailDto>? = null,
     val wordDetails: List<ShadowingDetailDto>? = null,
     val recordingQuality: RecordingQualityDto? = null,
-    val rawProviderTraceId: String? = null
+    val rawProviderTraceId: String? = null,
+    val evaluationUsage: EvaluationUsageDto? = null
 )
 
 @JsonClass(generateAdapter = false)
@@ -90,6 +92,35 @@ data class RecordingQualityDto(
 )
 
 @JsonClass(generateAdapter = false)
+data class EvaluationPolicyDto(
+    val freeDailyLimit: Int,
+    val memberDailyLimit: Int
+)
+
+@JsonClass(generateAdapter = false)
+data class EvaluationUsageDto(
+    val tier: String,
+    val dailyLimit: Int,
+    val used: Int,
+    val remaining: Int,
+    val resetAtMs: Long,
+    val policy: EvaluationPolicyDto
+)
+
+@JsonClass(generateAdapter = false)
+data class PracticeUsageDto(
+    val serverTimeMs: Long,
+    val tts: TtsUsageDto,
+    val evaluation: EvaluationUsageDto
+)
+
+@JsonClass(generateAdapter = false)
+data class TtsUsageDto(
+    val available: Boolean,
+    val unlimitedDaily: Boolean
+)
+
+@JsonClass(generateAdapter = false)
 data class ProviderListDto(
     val providers: List<String>
 )
@@ -99,6 +130,7 @@ interface PracticeApiService {
         const val PATH_TTS = "practice/tts"
         const val PATH_SHADOWING_EVALUATE = "practice/shadowing/evaluate"
         const val PATH_PROVIDERS = "practice/providers"
+        const val PATH_USAGE = "practice/usage"
     }
 
     @POST(PATH_TTS)
@@ -111,4 +143,7 @@ interface PracticeApiService {
 
     @GET(PATH_PROVIDERS)
     fun getProviders(): Call<ApiResponse<ProviderListDto>>
+
+    @GET(PATH_USAGE)
+    fun getUsage(): Call<ApiResponse<PracticeUsageDto>>
 }

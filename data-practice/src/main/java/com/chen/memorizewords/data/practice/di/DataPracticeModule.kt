@@ -16,6 +16,8 @@ import com.chen.memorizewords.data.practice.local.PracticeDatabase
 import com.chen.memorizewords.data.practice.remote.practice.RemoteExamPracticeDataSource
 import com.chen.memorizewords.data.practice.remote.practice.RemoteExamPracticeDataSourceImpl
 import com.chen.memorizewords.data.practice.remoteapi.api.practice.ExamPracticeApiService
+import com.chen.memorizewords.data.practice.remoteapi.api.practice.PracticeApiService
+import com.chen.memorizewords.data.practice.repository.usage.PracticeUsageRepositoryImpl
 import com.chen.memorizewords.domain.practice.PracticeReportRepository
 import com.chen.memorizewords.domain.practice.PracticeRecordRepository
 import com.chen.memorizewords.domain.practice.PracticeSnapshotLocalStatePort
@@ -23,6 +25,7 @@ import com.chen.memorizewords.domain.practice.PracticeSessionRecordRepository
 import com.chen.memorizewords.domain.practice.PracticeSettingsLocalStatePort
 import com.chen.memorizewords.domain.practice.PracticeSettingsRepository
 import com.chen.memorizewords.domain.practice.repository.ExamPracticeRepository
+import com.chen.memorizewords.domain.practice.usage.PracticeUsageRepository
 import com.chen.memorizewords.domain.practice.repository.ListeningPracticePreferencesRepository as DomainListeningPracticePreferencesRepository
 import dagger.Binds
 import dagger.Module
@@ -85,6 +88,11 @@ abstract class DataPracticeBindingModule {
     abstract fun bindRemoteExamPracticeDataSource(
         impl: RemoteExamPracticeDataSourceImpl
     ): RemoteExamPracticeDataSource
+
+    @Binds
+    abstract fun bindPracticeUsageRepository(
+        impl: PracticeUsageRepositoryImpl
+    ): PracticeUsageRepository
 }
 
 @Module
@@ -116,5 +124,11 @@ object DataPracticeDatabaseModule {
     @Singleton
     fun provideExamPracticeApiService(retrofit: Retrofit): ExamPracticeApiService {
         return retrofit.create(ExamPracticeApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providePracticeApiService(retrofit: Retrofit): PracticeApiService {
+        return retrofit.create(PracticeApiService::class.java)
     }
 }

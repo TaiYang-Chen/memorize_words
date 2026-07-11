@@ -42,6 +42,11 @@
     <string name="module_user_login_sms_required">请输入验证码</string>
     <string name="module_user_send_code_failed">验证码发送失败</string>
     <string name="module_user_register_failed">注册失败</string>
+    <string name="module_user_register_rate_limited">操作有些频繁，请稍后再试。你输入的内容已保留。</string>
+    <string name="module_user_register_rate_limited_seconds">操作有些频繁，请在约 %1$d 秒后再试。你输入的内容已保留。</string>
+    <string name="module_user_register_rate_limited_minutes">操作有些频繁，请在约 %1$d 分钟后再试。你输入的内容已保留。</string>
+    <string name="module_user_register_verification_required">当前网络创建账号较多，可以改用手机号或邮箱验证注册。</string>
+    <string name="module_user_register_service_busy">注册服务暂时繁忙，请稍后重新提交。</string>
     <string name="module_user_bind_phone_title">绑定手机号</string>
     <string name="module_user_bind_phone_sms_title">验证码绑定</string>
     <string name="module_user_bind_phone_phone_hint">手机号</string>

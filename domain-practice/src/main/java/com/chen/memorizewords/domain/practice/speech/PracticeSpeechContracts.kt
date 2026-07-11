@@ -1,5 +1,7 @@
 package com.chen.memorizewords.domain.practice.speech
 
+import com.chen.memorizewords.domain.practice.usage.EvaluationUsage
+
 enum class SpeechProviderType {
     BAIDU,
     ALIYUN,
@@ -42,6 +44,7 @@ sealed interface SpeechTask {
     }
 
     data class EvaluateShadowing(
+        val requestId: String,
         val referenceText: String,
         val audioInput: SpeechAudioInput,
         val locale: String = "en-US",
@@ -236,5 +239,6 @@ data class ShadowingEvaluationResult(
     val rawProviderTraceId: String? = null,
     val analysisSource: ShadowingAnalysisSource = ShadowingAnalysisSource.PROVIDER_ONLY,
     val detailSourceNote: String? = null,
-    val guidanceText: String? = null
+    val guidanceText: String? = null,
+    val evaluationUsage: EvaluationUsage? = null
 ) : SpeechSuccess

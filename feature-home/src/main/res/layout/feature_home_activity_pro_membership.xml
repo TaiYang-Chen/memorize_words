@@ -120,6 +120,16 @@
                     android:textSize="@dimen/core_ui_text_14" />
 
                 <TextView
+                    android:id="@+id/feature_home_tv_member_evaluation_usage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/core_ui_dp_6"
+                    android:background="#FFF8E7"
+                    android:padding="@dimen/core_ui_dp_10"
+                    android:textColor="#7A4B00"
+                    android:textSize="@dimen/core_ui_text_13" />
+
+                <TextView
                     android:id="@+id/feature_home_tv_member_benefit_sync"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

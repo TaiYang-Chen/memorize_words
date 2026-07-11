@@ -10,6 +10,7 @@ import com.chen.memorizewords.feature.home.R
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class PracticeEntrySelectBottomSheet(
+    private val defaultRandomCount: Int,
     private val onRandomSelected: (Int) -> Unit,
     private val onSelfSelected: () -> Unit
 ) : BottomSheetDialogFragment() {
@@ -24,8 +25,11 @@ class PracticeEntrySelectBottomSheet(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val countInput = view.findViewById<EditText>(R.id.et_random_count)
+        countInput.setText(defaultRandomCount.coerceAtLeast(1).toString())
+        countInput.setSelection(countInput.text?.length ?: 0)
         view.findViewById<View>(R.id.btn_random).setOnClickListener {
-            val count = countInput.text?.toString()?.toIntOrNull()?.coerceAtLeast(1) ?: 20
+            val count = countInput.text?.toString()?.toIntOrNull()?.coerceAtLeast(1)
+                ?: defaultRandomCount.coerceAtLeast(1)
             onRandomSelected(count)
             dismiss()
         }

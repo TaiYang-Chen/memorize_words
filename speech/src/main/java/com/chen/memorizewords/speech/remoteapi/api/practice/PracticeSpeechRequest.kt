@@ -21,6 +21,7 @@ class PracticeSpeechRequest @Inject constructor(
         }
 
     suspend fun evaluateShadowing(
+        requestId: String,
         referenceText: String,
         provider: String,
         audioFilePath: String,
@@ -32,16 +33,26 @@ class PracticeSpeechRequest @Inject constructor(
         if (!file.exists() || !file.isFile) {
             return@executeAuthenticated NetworkResult.Failure.GenericError("Audio file not found")
         }
+        if (file.length() > MAX_EVALUATION_AUDIO_BYTES) {
+            return@executeAuthenticated NetworkResult.Failure.HttpError(
+                code = 413,
+                message = "Recording is too large",
+                businessCode = "REQUEST_PAYLOAD_TOO_LARGE"
+            )
+        }
         val payload = withContext(Dispatchers.IO) {
             encodeAudioFileToBase64(file)
         }
         val request = ShadowingEvaluateRequestDto(
+            requestId = requestId,
             referenceText = referenceText,
             provider = provider,
             audioBase64 = payload,
             audioFormat = audioFormat,
             durationMs = durationMs,
             waveformSamples = waveformSamples
+                ?.take(MAX_WAVEFORM_SAMPLES)
+                ?.map { it.coerceIn(MIN_WAVEFORM_SAMPLE, MAX_WAVEFORM_SAMPLE) }
         )
         apiService.evaluateShadowing(request)
             .await<ApiResponse<ShadowingEvaluateResponseDto>, ShadowingEvaluateResponseDto>()
@@ -126,3 +137,7 @@ private fun appendBase64Remainder(output: StringBuilder, first: Byte, second: By
 }
 
 private const val BASE64_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+private const val MAX_EVALUATION_AUDIO_BYTES = 2L * 1024L * 1024L
+private const val MAX_WAVEFORM_SAMPLES = 6_000
+private const val MIN_WAVEFORM_SAMPLE = 0
+private const val MAX_WAVEFORM_SAMPLE = 100

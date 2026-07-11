@@ -27,8 +27,6 @@ class ProMembershipActivity :
             "- ${getString(R.string.feature_home_profile_member_benefit_books)}"
         databind.featureHomeTvMemberBenefitStats.text =
             "- ${getString(R.string.feature_home_profile_member_benefit_stats)}"
-        databind.featureHomeTvMemberBenefitPractice.text =
-            "- ${getString(R.string.feature_home_profile_member_benefit_practice)}"
         databind.featureHomeTvMemberBenefitSync.text =
             "- ${getString(R.string.feature_home_profile_member_benefit_sync)}"
         databind.featureHomeBtnOpenMember.setOnClickListener {
@@ -43,6 +41,8 @@ class ProMembershipActivity :
                     databind.featureHomeTvMemberStatus.text = state.title
                     databind.featureHomeTvMemberStatusSubtitle.text = state.subtitle
                     databind.featureHomeTvMemberNote.text = state.note
+                    databind.featureHomeTvMemberBenefitPractice.text = state.evaluationBenefitText
+                    databind.featureHomeTvMemberEvaluationUsage.text = state.evaluationUsageText
                     databind.featureHomeBtnOpenMember.text = state.buttonText
                     databind.featureHomeBtnOpenMember.isEnabled = state.checkInEnabled
                     databind.featureHomeBtnOpenMember.alpha = if (state.checkInEnabled) 1f else 0.55f

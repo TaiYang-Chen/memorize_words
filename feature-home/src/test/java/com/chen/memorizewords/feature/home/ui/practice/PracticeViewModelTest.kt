@@ -27,6 +27,12 @@ import com.chen.memorizewords.domain.practice.PracticeSettings
 import com.chen.memorizewords.domain.practice.PracticeSettingsRepository
 import com.chen.memorizewords.domain.practice.PracticeWordProvider
 import com.chen.memorizewords.domain.practice.service.PracticeFacade
+import com.chen.memorizewords.domain.practice.usage.EvaluationUsage
+import com.chen.memorizewords.domain.practice.usage.ObservePracticeUsageUseCase
+import com.chen.memorizewords.domain.practice.usage.PracticeUsage
+import com.chen.memorizewords.domain.practice.usage.PracticeUsageRepository
+import com.chen.memorizewords.domain.practice.usage.PracticeUsageState
+import com.chen.memorizewords.domain.practice.usage.RefreshPracticeUsageUseCase
 import com.chen.memorizewords.domain.study.model.progress.word.WordLearningState
 import com.chen.memorizewords.domain.study.repository.WordLearningRepository
 import com.chen.memorizewords.domain.word.model.WordListRow
@@ -193,6 +199,7 @@ class PracticeViewModelTest {
         membershipRepository: FakeMembershipRepository
     ): PracticeViewModel {
         val resourceProvider = FakeResourceProvider()
+        val practiceUsageRepository = FakePracticeUsageRepository()
         return PracticeViewModel(
             practiceFacade = PracticeFacade(
                 practiceWordProvider = FakePracticeWordProvider(),
@@ -213,8 +220,21 @@ class PracticeViewModelTest {
             resolveMembershipFeatureAccessUseCase = ResolveMembershipFeatureAccessUseCase(
                 repository = membershipRepository,
                 policy = MembershipEntitlementPolicy()
-            )
+            ),
+            observePracticeUsageUseCase = ObservePracticeUsageUseCase(practiceUsageRepository),
+            refreshPracticeUsageUseCase = RefreshPracticeUsageUseCase(practiceUsageRepository)
         )
+    }
+
+    private class FakePracticeUsageRepository : PracticeUsageRepository {
+        override fun observe(): Flow<PracticeUsageState> = flowOf(PracticeUsageState.Unknown)
+
+        override suspend fun refresh(): Result<PracticeUsage> =
+            Result.failure(IllegalStateException("Practice usage is not needed by this test"))
+
+        override suspend fun updateEvaluationUsage(usage: EvaluationUsage) = Unit
+
+        override suspend fun clear() = Unit
     }
 
     private class FakeFloatingWordSettingsRepository(
@@ -271,7 +291,8 @@ class PracticeViewModelTest {
             return if (active) {
                 MembershipStatus(
                     active = true,
-                    validUntilDate = "2099-12-31"
+                    validUntilDate = "2099-12-31",
+                    validUntilAtMs = 4_102_444_740_000L
                 )
             } else {
                 MembershipStatus(active = false)

@@ -33,6 +33,7 @@ data class TtsResponseDto(
 
 @JsonClass(generateAdapter = false)
 data class ShadowingEvaluateRequestDto(
+    val requestId: String,
     val referenceText: String,
     val provider: String,
     val audioBase64: String,
@@ -67,7 +68,24 @@ data class ShadowingEvaluateResponseDto(
     val syllableDetails: List<ShadowingDetailDto>? = null,
     val wordDetails: List<ShadowingDetailDto>? = null,
     val recordingQuality: RecordingQualityDto? = null,
-    val rawProviderTraceId: String? = null
+    val rawProviderTraceId: String? = null,
+    val evaluationUsage: EvaluationUsageDto? = null
+)
+
+@JsonClass(generateAdapter = false)
+data class EvaluationPolicyDto(
+    val freeDailyLimit: Int,
+    val memberDailyLimit: Int
+)
+
+@JsonClass(generateAdapter = false)
+data class EvaluationUsageDto(
+    val tier: String,
+    val dailyLimit: Int,
+    val used: Int,
+    val remaining: Int,
+    val resetAtMs: Long,
+    val policy: EvaluationPolicyDto
 )
 
 @JsonClass(generateAdapter = false)

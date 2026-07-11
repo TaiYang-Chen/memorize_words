@@ -93,7 +93,7 @@ class AuthRepositoryImpl @Inject constructor(
                 account = account,
                 password = password
             )
-            remote.register(request).getOrThrow().toDomain(clockProvider.nowEpochMillis())
+            remote.register(request).getOrMapRegistrationFailure().toDomain(clockProvider.nowEpochMillis())
         }
     }
 
@@ -186,6 +186,23 @@ class AuthRepositoryImpl @Inject constructor(
         return getOrElse { failure ->
             if (failure is HttpStatusException && failure.code == 409) {
                 throw LoginError.AccountDeletionPending(failure.message)
+            }
+            throw failure
+        }
+    }
+
+    private fun <T> Result<T>.getOrMapRegistrationFailure(): T {
+        return getOrElse { failure ->
+            if (failure is HttpStatusException) {
+                throw when (failure.businessCode) {
+                    "AUTH_REGISTER_RATE_LIMITED" ->
+                        LoginError.RegistrationRateLimited(failure.retryAfterSeconds)
+                    "AUTH_REGISTER_VERIFICATION_REQUIRED" ->
+                        LoginError.RegistrationVerificationRequired(failure.resetAtMs)
+                    "AUTH_REGISTER_CAPACITY_BUSY", "SECURITY_PROTECTION_SERVICE_UNAVAILABLE" ->
+                        LoginError.RegistrationBusy()
+                    else -> failure
+                }
             }
             throw failure
         }

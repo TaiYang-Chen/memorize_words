@@ -1,5 +1,19 @@
 package com.chen.memorizewords.speech.api
 
+data class EvaluationPolicy(
+    val freeDailyLimit: Int,
+    val memberDailyLimit: Int
+)
+
+data class EvaluationUsage(
+    val tier: String,
+    val dailyLimit: Int,
+    val used: Int,
+    val remaining: Int,
+    val resetAtMs: Long,
+    val policy: EvaluationPolicy
+)
+
 sealed interface SpeechResult {
     val provider: SpeechProviderType
     val traceId: String
@@ -55,7 +69,8 @@ data class ShadowingEvaluationResult(
     val rawProviderTraceId: String? = null,
     val analysisSource: ShadowingAnalysisSource = ShadowingAnalysisSource.PROVIDER_ONLY,
     val detailSourceNote: String? = null,
-    val guidanceText: String? = null
+    val guidanceText: String? = null,
+    val evaluationUsage: EvaluationUsage? = null
 ) : SpeechSuccess
 
 data class DefaultSpeechFailureResult(

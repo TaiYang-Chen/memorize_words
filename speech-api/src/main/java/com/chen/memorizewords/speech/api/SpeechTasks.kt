@@ -22,6 +22,7 @@ sealed interface SpeechTask {
     }
 
     data class EvaluateShadowing(
+        val requestId: String,
         val referenceText: String,
         val audioInput: SpeechAudioInput,
         val locale: String = "en-US",

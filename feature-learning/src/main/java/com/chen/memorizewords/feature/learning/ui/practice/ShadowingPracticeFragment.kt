@@ -193,6 +193,14 @@ class ShadowingPracticeFragment :
 
     private fun renderState(state: ShadowingPracticeViewModel.ShadowingUiState) {
         databind.tvProgress.text = state.progressText
+        databind.tvQuota.text = state.quotaText
+        databind.tvQuota.setTextColor(
+            androidx.core.content.ContextCompat.getColor(
+                requireContext(),
+                if (state.quotaLow) R.color.feature_learning_shadowing_feedback_retry
+                else R.color.feature_learning_shadowing_text_secondary
+            )
+        )
         databind.tvWord.text = state.word
         databind.tvPhoneticChip.text = state.phoneticText
         databind.tvMeaning.text = state.meaningText
@@ -224,8 +232,13 @@ class ShadowingPracticeFragment :
         }.orEmpty()
         databind.tvScoreDetail.isVisible =
             latestAttempt?.hasEvaluation == true && !state.isEvaluatingLatestAttempt
-        databind.btnEvaluatePronunciation.isVisible = state.canEvaluateLatestAttempt
+        databind.btnEvaluatePronunciation.isVisible = state.showEvaluateAction
         databind.btnEvaluatePronunciation.isEnabled = state.canEvaluateLatestAttempt
+        databind.btnEvaluatePronunciation.alpha = if (state.canEvaluateLatestAttempt) 1f else 0.5f
+        databind.btnEvaluatePronunciation.text = getString(
+            if (state.quotaExhausted) R.string.practice_shadowing_evaluate_exhausted
+            else R.string.practice_shadowing_evaluate_action
+        )
         databind.tvScoreBreakdown.text = state.scoreBreakdownText
         databind.tvScoreBreakdown.isVisible =
             state.scoreBreakdownText.isNotBlank() && !state.isEvaluatingLatestAttempt
@@ -755,8 +768,10 @@ class ShadowingPracticeFragment :
 
         databind.cardPlayReference.isEnabled = canPlayReference
         databind.cardPlayMine.isEnabled = canPlayMine
-        databind.cardRecord.isEnabled = !state.loading && !state.isCompleted
-        databind.btnNextWord.isEnabled = !recording && !state.loading
+        databind.cardRecord.isEnabled =
+            !state.loading && !state.isCompleted && !state.isEvaluatingLatestAttempt
+        databind.btnNextWord.isEnabled =
+            !recording && !state.loading && !state.isEvaluatingLatestAttempt
         databind.btnNextWord.text = state.nextActionText
         databind.tvRecordLabel.text = recordLabel
 

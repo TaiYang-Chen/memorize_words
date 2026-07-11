@@ -15,6 +15,8 @@ import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.core.ui.vm.UiEvent
 import com.chen.memorizewords.domain.practice.PracticeEntryType
 import com.chen.memorizewords.domain.practice.PracticeMode
+import com.chen.memorizewords.domain.practice.usage.EvaluationUsage
+import com.chen.memorizewords.domain.practice.usage.PracticeUsageState
 import com.chen.memorizewords.feature.home.R
 import com.chen.memorizewords.feature.home.databinding.ModuleHomeFragmentPracticeBinding
 import com.chen.memorizewords.core.navigation.FloatingWordEntry
@@ -41,6 +43,7 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
     private var pendingSelectedIds: LongArray? = null
     private var latestFloatingEnabled: Boolean = false
     private var ignoreSwitchUpdate: Boolean = false
+    private var latestEvaluationUsage: EvaluationUsage? = null
 
     private val pickWordsLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -90,6 +93,9 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
                         updateFloatingSwitch(enabled)
                     }
                 }
+                launch {
+                    viewModel.practiceUsageState.collect(::renderPracticeUsage)
+                }
             }
         }
     }
@@ -111,6 +117,7 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
 
     override fun onResume() {
         super.onResume()
+        viewModel.refreshPracticeUsage()
         if (view != null) {
             updateFloatingSwitch(latestFloatingEnabled)
         }
@@ -137,6 +144,11 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
 
     private fun showSelectionSheet(mode: PracticeMode) {
         PracticeEntrySelectBottomSheet(
+            defaultRandomCount = if (mode == PracticeMode.SHADOWING) {
+                viewModel.recommendedShadowingCount()
+            } else {
+                20
+            },
             onRandomSelected = { count ->
                 pendingSelectedIds = null
                 startPractice(mode, selectedIds = null, randomCount = count)
@@ -156,7 +168,8 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
     private fun startPractice(
         mode: PracticeMode,
         selectedIds: LongArray?,
-        randomCount: Int
+        randomCount: Int,
+        quotaConfirmed: Boolean = false
     ) {
         val entryType = if (selectedIds != null) {
             PracticeEntryType.SELF
@@ -168,6 +181,17 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
         } else {
             randomCount
         }.coerceAtLeast(0)
+        val remaining = latestEvaluationUsage?.remaining
+        if (mode == PracticeMode.SHADOWING && !quotaConfirmed && remaining != null && entryCount > remaining) {
+            showConfirmBottomDialog(
+                tag = "ShadowingQuotaNotice",
+                title = getString(R.string.feature_home_shadowing_quota_notice_title),
+                message = getString(R.string.feature_home_shadowing_quota_notice_message, remaining)
+            ) {
+                startPractice(mode, selectedIds, randomCount, quotaConfirmed = true)
+            }
+            return
+        }
         startActivity(
             practiceEntry.createPracticeIntent(
                 context = requireContext(),
@@ -178,6 +202,21 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
                 selectedIds = selectedIds
             )
         )
+    }
+
+    private fun renderPracticeUsage(state: PracticeUsageState) {
+        val usage = when (state) {
+            is PracticeUsageState.Available -> state.usage.evaluation
+            is PracticeUsageState.Stale -> state.usage.evaluation
+            is PracticeUsageState.Exhausted -> state.usage.evaluation
+            else -> null
+        }
+        latestEvaluationUsage = usage
+        databind.cardShadowing.tvModeSubtitle.text = when {
+            usage == null -> getString(R.string.feature_home_shadowing_quota_unknown)
+            usage.remaining <= 0 -> getString(R.string.feature_home_shadowing_quota_exhausted)
+            else -> getString(R.string.feature_home_shadowing_quota_remaining, usage.remaining)
+        }
     }
 
     private fun updateFloatingSwitch(enabled: Boolean) {

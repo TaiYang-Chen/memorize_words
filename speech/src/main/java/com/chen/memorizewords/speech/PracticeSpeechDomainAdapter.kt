@@ -75,6 +75,7 @@ private fun DomainSpeechTask.toApi(): SpeechTask {
         )
 
         is DomainSpeechTask.EvaluateShadowing -> SpeechTask.EvaluateShadowing(
+            requestId = requestId,
             referenceText = referenceText,
             audioInput = audioInput.toApi(),
             locale = locale,
@@ -121,7 +122,24 @@ private fun SpeechResult.toDomain(): DomainSpeechResult {
             rawProviderTraceId = rawProviderTraceId,
             analysisSource = analysisSource.toDomain(),
             detailSourceNote = detailSourceNote,
-            guidanceText = guidanceText
+            guidanceText = guidanceText,
+            evaluationUsage = evaluationUsage?.let { usage ->
+                com.chen.memorizewords.domain.practice.usage.EvaluationUsage(
+                    tier = if (usage.tier.equals("MEMBER", ignoreCase = true)) {
+                        com.chen.memorizewords.domain.practice.usage.EvaluationTier.MEMBER
+                    } else {
+                        com.chen.memorizewords.domain.practice.usage.EvaluationTier.FREE
+                    },
+                    dailyLimit = usage.dailyLimit,
+                    used = usage.used,
+                    remaining = usage.remaining,
+                    resetAtMs = usage.resetAtMs,
+                    policy = com.chen.memorizewords.domain.practice.usage.EvaluationPolicy(
+                        usage.policy.freeDailyLimit,
+                        usage.policy.memberDailyLimit
+                    )
+                )
+            }
         )
 
         is DefaultSpeechFailureResult -> toDomainFailureResult()

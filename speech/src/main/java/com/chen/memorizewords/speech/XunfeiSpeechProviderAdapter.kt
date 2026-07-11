@@ -73,6 +73,7 @@ class XunfeiSpeechProviderAdapter @Inject constructor(
             )
         }
         val remoteResult = practiceSpeechRequest.evaluateShadowing(
+            requestId = task.requestId,
             referenceText = task.referenceText,
             provider = provider.name,
             audioFilePath = normalizedInput.filePath,
@@ -86,6 +87,7 @@ class XunfeiSpeechProviderAdapter @Inject constructor(
                 provider = provider,
                 traceId = traceId,
                 failure = SpeechFailure.ProviderFailure("Backend Xunfei evaluate request failed."),
+                causeCode = (remoteResult as? NetworkResult.Failure.HttpError)?.businessCode,
                 message = remoteResult.messageOrDefault()
             )
         }
@@ -117,6 +119,19 @@ private fun ShadowingEvaluateResponseDto.toSpeechResult(
         analysisSource = analysisSource.toAnalysisSource(),
         detailSourceNote = detailSourceNote,
         guidanceText = guidanceText
+        ,evaluationUsage = evaluationUsage?.let { usage ->
+            com.chen.memorizewords.speech.api.EvaluationUsage(
+                tier = usage.tier,
+                dailyLimit = usage.dailyLimit,
+                used = usage.used,
+                remaining = usage.remaining,
+                resetAtMs = usage.resetAtMs,
+                policy = com.chen.memorizewords.speech.api.EvaluationPolicy(
+                    freeDailyLimit = usage.policy.freeDailyLimit,
+                    memberDailyLimit = usage.policy.memberDailyLimit
+                )
+            )
+        }
     )
 }
 

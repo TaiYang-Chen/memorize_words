@@ -15,6 +15,7 @@ import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.LearningSyncA
 import com.chen.memorizewords.data.sync.remoteapi.constants.NetworkConstants
 import com.chen.memorizewords.data.sync.remoteapi.eventlistener.NetworkEventListener
 import com.chen.memorizewords.data.sync.remoteapi.interceptor.LoggingInterceptor
+import com.chen.memorizewords.data.sync.remoteapi.interceptor.InstallationIdInterceptor
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -39,7 +40,8 @@ object NetworkModule {
         }
         return CoreNetworkConfig(
             baseUrl = GlobalConfig.baseUrl,
-            enableBodyLogging = true
+            // LoggingInterceptor is the single opt-in debug logging path; release builds disable it.
+            enableBodyLogging = false
         )
     }
 
@@ -70,6 +72,7 @@ object NetworkModule {
     @Singleton
     fun provideOkHttpClient(
         loggingInterceptor: LoggingInterceptor,
+        installationIdInterceptor: InstallationIdInterceptor,
         cache: Cache,
         eventListenerFactory: NetworkEventListener.Factory,
         config: CoreNetworkConfig,
@@ -85,7 +88,7 @@ object NetworkModule {
             accessTokenSource = accessTokenSource,
             cache = cache,
             routePolicy = routePolicy,
-            applicationInterceptors = listOf(loggingInterceptor)
+            applicationInterceptors = listOf(installationIdInterceptor, loggingInterceptor)
         ).newBuilder()
             .eventListenerFactory(eventListenerFactory)
             .build()
