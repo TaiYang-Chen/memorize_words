@@ -5,7 +5,7 @@ plugins {
     id("memorize.android-hilt-library")
 }
 
-val releaseApiBaseUrl = "https://47.95.233.62:8080/api/"
+val releaseApiBaseUrl = "http://47.95.233.62:8080/api/"
 
 android {
     namespace = "com.chen.memorizewords.data"
@@ -111,8 +111,8 @@ gradle.taskGraph.whenReady {
     }
     if (releaseRequested) {
         val apiBaseUrl = releaseApiBaseUrl()
-        require(apiBaseUrl.startsWith("https://", ignoreCase = true)) {
-            "Release network baseUrl must use HTTPS."
+        require(apiBaseUrl.startsWith("http://", ignoreCase = true)) {
+            "Release network baseUrl must use HTTP."
         }
         require(apiBaseUrl.endsWith("/")) {
             "Release network baseUrl must end with '/'."
@@ -159,5 +159,5 @@ fun autoDetectedDebugApiBaseUrl(): String {
             !ip.startsWith("127.") && !ip.startsWith("169.254.")
         }
         ?: "127.0.0.1"
-    return "https://$hostIp:8080/api/"
+    return "http://$hostIp:8080/api/"
 }
