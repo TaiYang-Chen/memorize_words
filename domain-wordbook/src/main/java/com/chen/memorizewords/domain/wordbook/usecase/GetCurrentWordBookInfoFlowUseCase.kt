@@ -43,6 +43,8 @@ class GetCurrentWordBookInfoFlowUseCase @Inject constructor(
                 it.copy(
                     learningWords = stats?.learningCount ?: 0,
                     masteredWords = stats?.masteredCount ?: 0,
+                    correctCount = stats?.correctCount ?: 0,
+                    wrongCount = stats?.wrongCount ?: 0,
                     studyDayCount = stats?.studyDayCount ?: 0,
                     accuracyRate = calculateAccuracyRate(
                         stats?.correctCount ?: 0,

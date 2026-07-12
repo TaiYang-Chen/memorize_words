@@ -74,12 +74,13 @@ class SplashActivity : AppCompatActivity(), AppUpdateDialogFragment.Listener {
         val splashShownAt = SystemClock.elapsedRealtime()
 
         lifecycleScope.launch {
+            val hasNetwork = networkMonitor.isCurrentlyOnline()
             val targetRoute = startupRouteResolver.resolveRoute(
-                startupOrchestrator.resolveLaunchDestination(
-                    hasNetwork = networkMonitor.isCurrentlyOnline()
-                )
+                startupOrchestrator.resolveLaunchDestinationLocal()
             )
-            val updateInfo = appUpdateStartupCoordinator.resolveStartupPrompt()
+            val updateInfo = appUpdateStartupCoordinator.resolveStartupPrompt(
+                hasNetwork = hasNetwork
+            )
             val elapsed = SystemClock.elapsedRealtime() - splashShownAt
             val remaining = MIN_SPLASH_DISPLAY_DURATION_MS - elapsed
             if (remaining > 0) {

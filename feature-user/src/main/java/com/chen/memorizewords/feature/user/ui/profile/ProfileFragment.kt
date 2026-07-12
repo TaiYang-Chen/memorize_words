@@ -263,7 +263,6 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ModuleUserFragmentProfile
     }
 
     private fun bindStaticActions() {
-        databind.accountIdRow.setOnClickListener { copyAccountId() }
         databind.ivCopyAccountId.setOnClickListener { copyAccountId() }
     }
 
@@ -277,7 +276,11 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ModuleUserFragmentProfile
             accountId
         )
         clipboardManager.setPrimaryClip(clipData)
-        viewModel.showToast(getString(R.string.feature_user_profile_account_id_copied))
+        Toast.makeText(
+            requireContext(),
+            R.string.feature_user_profile_account_id_copied,
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     private fun showAvatarActions() {

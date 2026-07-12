@@ -9,6 +9,7 @@ import com.chen.memorizewords.domain.sync.appupdate.AppUpdatePromptPolicy
 import com.chen.memorizewords.domain.sync.appupdate.CheckAppUpdateUseCase
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.withTimeoutOrNull
 
 @Singleton
 class AppUpdateStartupCoordinator @Inject constructor(
@@ -16,7 +17,13 @@ class AppUpdateStartupCoordinator @Inject constructor(
     private val localStateRepository: AppUpdateLocalStateRepository,
     private val promptPolicy: AppUpdatePromptPolicy
 ) {
-    suspend fun resolveStartupPrompt(nowMillis: Long = System.currentTimeMillis()): AppUpdateInfo? {
+    suspend fun resolveStartupPrompt(
+        hasNetwork: Boolean,
+        nowMillis: Long = System.currentTimeMillis(),
+        timeoutMillis: Long = STARTUP_UPDATE_TIMEOUT_MILLIS
+    ): AppUpdateInfo? {
+        if (!hasNetwork) return cachedForceUpdateOrNull(nowMillis)
+
         val request = AppUpdateCheck(
             platform = "ANDROID",
             versionName = BuildConfig.VERSION_NAME,
@@ -25,12 +32,11 @@ class AppUpdateStartupCoordinator @Inject constructor(
             packageName = BuildConfig.APPLICATION_ID,
             installId = localStateRepository.getOrCreateInstallId()
         )
-        val result = checkAppUpdate(request).getOrElse {
-            return promptPolicy.cachedForceUpdateOrNull(
-                cached = localStateRepository.getCachedForceUpdate(),
-                nowMillis = nowMillis
-            )
-        }
+        val result = withTimeoutOrNull(timeoutMillis) {
+            checkAppUpdate(request)
+        }?.getOrElse {
+            return cachedForceUpdateOrNull(nowMillis)
+        } ?: return cachedForceUpdateOrNull(nowMillis)
         return when (result) {
             AppUpdateCheckResult.NoUpdate -> {
                 localStateRepository.setCachedForceUpdate(null, nowMillis)
@@ -52,7 +58,15 @@ class AppUpdateStartupCoordinator @Inject constructor(
         localStateRepository.setDismissed(releaseId, nowMillis)
     }
 
+    private fun cachedForceUpdateOrNull(nowMillis: Long): AppUpdateInfo? {
+        return promptPolicy.cachedForceUpdateOrNull(
+            cached = localStateRepository.getCachedForceUpdate(),
+            nowMillis = nowMillis
+        )
+    }
+
     private companion object {
         const val APP_UPDATE_CHANNEL = "DEFAULT"
+        const val STARTUP_UPDATE_TIMEOUT_MILLIS = 2_000L
     }
 }

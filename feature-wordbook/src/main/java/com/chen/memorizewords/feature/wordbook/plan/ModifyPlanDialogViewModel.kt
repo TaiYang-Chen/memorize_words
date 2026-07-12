@@ -2,9 +2,11 @@ package com.chen.memorizewords.feature.wordbook.plan
 
 import androidx.databinding.ObservableField
 import androidx.lifecycle.viewModelScope
+import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.core.ui.vm.UiEvent
 import com.chen.memorizewords.domain.wordbook.usecase.SaveStudyCountUseCase
+import com.chen.memorizewords.feature.wordbook.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -12,7 +14,8 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class ModifyPlanDialogViewModel @Inject constructor(
-    private val saveStudyCountUseCase: SaveStudyCountUseCase
+    private val saveStudyCountUseCase: SaveStudyCountUseCase,
+    private val resourceProvider: ResourceProvider
 ) : BaseViewModel() {
 
     val dailyNewCount = ObservableField("15")
@@ -54,22 +57,22 @@ class ModifyPlanDialogViewModel @Inject constructor(
 
         when {
             newCountStr.isBlank() -> {
-                showToast("Please enter daily new-word count.")
+                showToast(resourceProvider.getString(R.string.module_wordbook_modify_plan_new_count_required))
                 return
             }
 
             newCount == null -> {
-                showToast("Please enter a valid number.")
+                showToast(resourceProvider.getString(R.string.module_wordbook_modify_plan_count_invalid))
                 return
             }
 
             newCount < 1 -> {
-                showToast("Daily new-word count must be >= 1.")
+                showToast(resourceProvider.getString(R.string.module_wordbook_modify_plan_new_count_too_small))
                 return
             }
 
             newCount > 999 -> {
-                showToast("Daily new-word count must be <= 999.")
+                showToast(resourceProvider.getString(R.string.module_wordbook_modify_plan_new_count_too_large))
                 return
             }
         }
@@ -79,22 +82,22 @@ class ModifyPlanDialogViewModel @Inject constructor(
 
         when {
             reviewCountStr.isBlank() -> {
-                showToast("Please enter daily review-word count.")
+                showToast(resourceProvider.getString(R.string.module_wordbook_modify_plan_review_count_required))
                 return
             }
 
             reviewCount == null -> {
-                showToast("Please enter a valid number.")
+                showToast(resourceProvider.getString(R.string.module_wordbook_modify_plan_count_invalid))
                 return
             }
 
             reviewCount < 1 -> {
-                showToast("Daily review-word count must be >= 1.")
+                showToast(resourceProvider.getString(R.string.module_wordbook_modify_plan_review_count_too_small))
                 return
             }
 
             reviewCount > 999 -> {
-                showToast("Daily review-word count must be <= 999.")
+                showToast(resourceProvider.getString(R.string.module_wordbook_modify_plan_review_count_too_large))
                 return
             }
         }
@@ -108,7 +111,11 @@ class ModifyPlanDialogViewModel @Inject constructor(
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             saveStudyCountUseCase(newCount, reviewCount)
-            emitEvent(UiEvent.Toast("Study plan updated."))
+            emitEvent(
+                UiEvent.Toast(
+                    resourceProvider.getString(R.string.module_wordbook_modify_plan_update_success)
+                )
+            )
             emitEvent(UiEvent.Navigation.Back)
         }
     }

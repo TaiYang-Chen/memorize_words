@@ -8,12 +8,15 @@ data class WordBookInfo(
     val totalWords: Int = 0,
     val learningWords: Int = 0,
     val masteredWords: Int = 0,
+    val correctCount: Int = 0,
+    val wrongCount: Int = 0,
     val studyDayCount: Int = 0,
     val accuracyRate: Float = 0f,
     val isSelected: Boolean = false,
     val createdByUserId: String? = null
 ) {
     val startedWords = learningWords + masteredWords
+    val learnedWords = startedWords
     val remainWords = (totalWords - startedWords).coerceAtLeast(0)
     fun remainDays(count: Int) = remainWords / count
 }

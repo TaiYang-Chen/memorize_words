@@ -77,7 +77,7 @@
                         android:layout_height="wrap_content"
                         android:drawableStart="@drawable/module_home_bg_circle_4ade80"
                         android:paddingStart="@dimen/core_ui_dp_8"
-                        android:text="总共已学"
+                        android:text="学习中"
                         android:textSize="@dimen/core_ui_text_11" />
 
                     <TextView

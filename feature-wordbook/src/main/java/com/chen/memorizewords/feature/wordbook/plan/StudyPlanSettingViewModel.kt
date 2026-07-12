@@ -12,12 +12,15 @@ import com.chen.memorizewords.domain.wordbook.usecase.GetStudyPlanFlowUseCase
 import com.chen.memorizewords.domain.wordbook.usecase.ObserveCurrentWordBookSelectionIdUseCase
 import com.chen.memorizewords.domain.wordbook.usecase.ObserveWordBookContentStateUseCase
 import com.chen.memorizewords.domain.wordbook.usecase.SaveStudyPlanUseCase
+import com.chen.memorizewords.domain.wordbook.usecase.ResetCurrentWordBookProgressUseCase
 import com.chen.memorizewords.feature.wordbook.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -32,7 +35,8 @@ class StudyPlanSettingViewModel @Inject constructor(
     observeCurrentWordBookSelectionIdUseCase: ObserveCurrentWordBookSelectionIdUseCase,
     observeWordBookContentStateUseCase: ObserveWordBookContentStateUseCase,
     getStudyPlanFlowUseCase: GetStudyPlanFlowUseCase,
-    private val saveStudyPlanUseCase: SaveStudyPlanUseCase
+    private val saveStudyPlanUseCase: SaveStudyPlanUseCase,
+    private val resetCurrentWordBookProgressUseCase: ResetCurrentWordBookProgressUseCase
 ) : BaseViewModel() {
 
     companion object {
@@ -95,6 +99,9 @@ class StudyPlanSettingViewModel @Inject constructor(
                 initialValue = null
             )
 
+    private val _isResetting = MutableStateFlow(false)
+    val isResetting: StateFlow<Boolean> = _isResetting.asStateFlow()
+
     val wordBookCardState: StateFlow<StudyPlanWordBookCardState> =
         combine(
             currentSelectionId,
@@ -119,6 +126,9 @@ class StudyPlanSettingViewModel @Inject constructor(
                         totalWords = wordBook.totalWords,
                         learningWords = wordBook.learningWords,
                         masteredWords = wordBook.masteredWords,
+                        correctCount = wordBook.correctCount,
+                        wrongCount = wordBook.wrongCount,
+                        studyDayCount = wordBook.studyDayCount,
                         statusText = "\u6b63\u5728\u5b66\u4e60",
                         canOpenWordList = true
                     )
@@ -132,6 +142,9 @@ class StudyPlanSettingViewModel @Inject constructor(
                         totalWords = wordBook.totalWords,
                         learningWords = wordBook.learningWords,
                         masteredWords = wordBook.masteredWords,
+                        correctCount = wordBook.correctCount,
+                        wrongCount = wordBook.wrongCount,
+                        studyDayCount = wordBook.studyDayCount,
                         statusText = "\u4e0b\u8f7d\u5931\u8d25"
                     )
                 }
@@ -144,6 +157,9 @@ class StudyPlanSettingViewModel @Inject constructor(
                         totalWords = wordBook.totalWords,
                         learningWords = wordBook.learningWords,
                         masteredWords = wordBook.masteredWords,
+                        correctCount = wordBook.correctCount,
+                        wrongCount = wordBook.wrongCount,
+                        studyDayCount = wordBook.studyDayCount,
                         statusText = "\u5185\u5bb9\u51c6\u5907\u4e2d"
                     )
                 }
@@ -231,11 +247,49 @@ class StudyPlanSettingViewModel @Inject constructor(
     }
 
     fun resetBookWord() {
-        showToast("重置进度需要通过学习事件执行，当前版本暂未开放")
+        if (_isResetting.value) return
+        val state = wordBookCardState.value
+        if (state.bookId <= 0L || !state.canOpenWordList) {
+            showToast("当前词书暂不可重置")
+            return
+        }
+        if (!state.hasProgress) {
+            showToast("当前词书暂无学习进度")
+            return
+        }
+        showConfirmDialog(
+            action = ACTION_RESET_BOOK_WORDS,
+            title = "重置词书进度",
+            message = "重置后数据不会恢复，是否确认重置？",
+            confirmText = "确认重置",
+            cancelText = "取消"
+        )
     }
 
     fun onResetBookWordConfirmed() {
-        resetBookWord()
+        if (_isResetting.value) return
+        val target = wordBookCardState.value
+        if (target.bookId <= 0L) return
+        viewModelScope.launch {
+            _isResetting.value = true
+            showLoading("正在重置…")
+            try {
+                resetCurrentWordBookProgressUseCase(target.bookId)
+                    .onSuccess { showToast("词书进度已重置") }
+                    .onFailure { throwable ->
+                        showToast(
+                            if (throwable is java.io.IOException) {
+                                "重置词书进度需要连接网络"
+                            } else {
+                                throwable.message?.takeIf(String::isNotBlank) ?: "重置失败，请稍后重试"
+                            }
+                        )
+                    }
+            } finally {
+                hideLoading()
+                _isResetting.value = false
+            }
+        }
     }
 }
 
@@ -247,10 +301,17 @@ data class StudyPlanWordBookCardState(
     val totalWords: Int,
     val learningWords: Int,
     val masteredWords: Int,
+    val correctCount: Int,
+    val wrongCount: Int,
+    val studyDayCount: Int,
     val statusText: String,
     val canOpenWordList: Boolean
 ) {
+    val learnedWords: Int get() = learningWords + masteredWords
     val remainWords: Int get() = (totalWords - learningWords - masteredWords).coerceAtLeast(0)
+    val hasProgress: Boolean
+        get() = learningWords > 0 || masteredWords > 0 ||
+            correctCount > 0 || wrongCount > 0 || studyDayCount > 0
 
     companion object {
         fun noSelection(): StudyPlanWordBookCardState =
@@ -262,6 +323,9 @@ data class StudyPlanWordBookCardState(
                 totalWords = 0,
                 learningWords = 0,
                 masteredWords = 0,
+                correctCount = 0,
+                wrongCount = 0,
+                studyDayCount = 0,
                 statusText = "\u672a\u9009\u62e9",
                 canOpenWordList = false
             )
@@ -275,6 +339,9 @@ data class StudyPlanWordBookCardState(
                 totalWords = 0,
                 learningWords = 0,
                 masteredWords = 0,
+                correctCount = 0,
+                wrongCount = 0,
+                studyDayCount = 0,
                 statusText = "\u540c\u6b65\u4e2d",
                 canOpenWordList = false
             )
@@ -287,6 +354,9 @@ data class StudyPlanWordBookCardState(
             totalWords: Int,
             learningWords: Int,
             masteredWords: Int,
+            correctCount: Int,
+            wrongCount: Int,
+            studyDayCount: Int,
             statusText: String,
             canOpenWordList: Boolean = false
         ): StudyPlanWordBookCardState =
@@ -298,6 +368,9 @@ data class StudyPlanWordBookCardState(
                 totalWords = totalWords,
                 learningWords = learningWords,
                 masteredWords = masteredWords,
+                correctCount = correctCount,
+                wrongCount = wrongCount,
+                studyDayCount = studyDayCount,
                 statusText = statusText,
                 canOpenWordList = canOpenWordList
             )

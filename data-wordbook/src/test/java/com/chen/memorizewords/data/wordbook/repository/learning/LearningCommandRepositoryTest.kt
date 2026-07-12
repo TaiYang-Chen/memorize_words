@@ -5,6 +5,7 @@ import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.current.Cu
 import com.chen.memorizewords.data.wordbook.repository.WordBookTransactionRunner
 import com.chen.memorizewords.domain.study.model.learning.LearningEventAction
 import com.chen.memorizewords.domain.study.model.learning.RecordLearningEventCommand
+import com.chen.memorizewords.domain.study.repository.learning.BookLearningWriteCoordinator
 import com.chen.memorizewords.domain.word.model.word.Word
 import com.google.gson.Gson
 import java.lang.reflect.InvocationHandler
@@ -29,7 +30,8 @@ class LearningCommandRepositoryTest {
             wordBookDao = throwingProxy(),
             bookWordItemDao = throwingProxy(),
             wordDefinitionDao = throwingProxy(),
-            gson = Gson()
+            gson = Gson(),
+            coordinator = ImmediateBookLearningWriteCoordinator
         )
 
         val error = assertFailsWith<IllegalStateException> {
@@ -41,6 +43,10 @@ class LearningCommandRepositoryTest {
 
     private class FakeWordBookTransactionRunner : WordBookTransactionRunner {
         override suspend fun <T> runInTransaction(block: suspend () -> T): T = block()
+    }
+
+    private object ImmediateBookLearningWriteCoordinator : BookLearningWriteCoordinator {
+        override suspend fun <T> withBookWrite(bookId: Long, block: suspend () -> T): T = block()
     }
 
     private companion object {

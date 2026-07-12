@@ -12,7 +12,7 @@
         <FrameLayout
             android:id="@+id/layout_header"
             android:layout_width="0dp"
-            android:layout_height="@dimen/title_height"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/page_margin"
             android:layout_marginTop="@dimen/title_margin"
             android:layout_marginEnd="@dimen/page_margin"
@@ -22,8 +22,8 @@
 
             <ImageButton
                 android:id="@+id/btn_back"
-                android:layout_width="@dimen/title_icon_touch_size"
-                android:layout_height="@dimen/title_icon_touch_size"
+                android:layout_width="@dimen/title_icon_size"
+                android:layout_height="@dimen/title_icon_size"
                 android:layout_gravity="center_vertical|start"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/practice_spelling_back"
@@ -430,7 +430,7 @@
             <FrameLayout
                 android:id="@+id/layout_detail_header"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/title_height"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/page_margin"
                 android:layout_marginTop="@dimen/title_margin"
                 android:layout_marginEnd="@dimen/page_margin"
@@ -440,8 +440,8 @@
 
                 <ImageButton
                     android:id="@+id/btn_detail_back"
-                    android:layout_width="@dimen/title_icon_touch_size"
-                    android:layout_height="@dimen/title_icon_touch_size"
+                    android:layout_width="@dimen/title_icon_size"
+                    android:layout_height="@dimen/title_icon_size"
                     android:layout_gravity="center_vertical|start"
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/practice_spelling_detail_back"

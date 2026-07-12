@@ -639,7 +639,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{viewModel.masteredWordsText}"
+                                android:text="@{viewModel.learnedWordsText}"
                                 android:textColor="#28D895"
                                 android:textSize="@dimen/core_ui_text_20"
                                 android:textStyle="bold"
@@ -649,10 +649,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/core_ui_dp_7"
-                                android:text="@{viewModel.masteredWordsTitleText}"
+                                android:text="@{viewModel.learnedWordsTitleText}"
                                 android:textColor="#6B7280"
                                 android:textSize="@dimen/core_ui_text_11"
-                                tools:text="已掌握单词" />
+                                tools:text="已学习" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -688,7 +688,7 @@
                                 android:text="@{viewModel.totalWordsTitleText}"
                                 android:textColor="#6B7280"
                                 android:textSize="@dimen/core_ui_text_11"
-                                tools:text="总词量" />
+                                tools:text="词书总量" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -710,7 +710,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{viewModel.accuracyRateText}"
+                                android:text="@{viewModel.learningWordsText}"
                                 android:textColor="#111827"
                                 android:textSize="@dimen/core_ui_text_20"
                                 android:textStyle="bold"
@@ -720,10 +720,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/core_ui_dp_7"
-                                android:text="@{viewModel.accuracyRateTitleText}"
+                                android:text="@{viewModel.learningWordsTitleText}"
                                 android:textColor="#6B7280"
                                 android:textSize="@dimen/core_ui_text_11"
-                                tools:text="正确率" />
+                                tools:text="学习中" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -744,7 +744,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{viewModel.continuousDaysText}"
+                                android:text="@{viewModel.masteredWordsText}"
                                 android:textColor="#111827"
                                 android:textSize="@dimen/core_ui_text_20"
                                 android:textStyle="bold"
@@ -754,7 +754,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/core_ui_dp_7"
-                                android:text="@{viewModel.continuousDaysTitleText}"
+                                android:text="@{viewModel.masteredWordsTitleText}"
                                 android:textColor="#6B7280"
                                 android:textSize="@dimen/core_ui_text_11"
                                 tools:text="连续学习" />
@@ -779,7 +779,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{viewModel.expectedCompletionText}"
+                                android:text="@{viewModel.accuracyRateText}"
                                 android:textColor="#111827"
                                 android:textSize="@dimen/core_ui_text_20"
                                 android:textStyle="bold"
@@ -789,7 +789,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/core_ui_dp_7"
-                                android:text="@{viewModel.expectedCompletionTitleText}"
+                                android:text="@{viewModel.accuracyRateTitleText}"
                                 android:textColor="#6B7280"
                                 android:textSize="@dimen/core_ui_text_11"
                                 tools:text="预计完成" />
@@ -813,7 +813,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{viewModel.todayStudyDurationText}"
+                                android:text="@{viewModel.continuousDaysText}"
                                 android:textColor="#111827"
                                 android:textSize="@dimen/core_ui_text_20"
                                 android:textStyle="bold"
@@ -823,7 +823,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/core_ui_dp_7"
-                                android:text="@{viewModel.todayDurationTitleText}"
+                                android:text="@{viewModel.continuousDaysTitleText}"
                                 android:textColor="#6B7280"
                                 android:textSize="@dimen/core_ui_text_11"
                                 tools:text="今日用时" />

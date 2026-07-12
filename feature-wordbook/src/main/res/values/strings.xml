@@ -32,8 +32,8 @@
     <string name="module_wordbook_study_mode_listening_desc">听取英文发音，选择正确释义，提升听力敏感度与反应速度。</string>
 
     <string name="feature_wordbook_my_book_status_studying">正在学习</string>
-    <string name="feature_wordbook_my_book_progress_label">已学: %1$d / %2$d</string>
-    <string name="feature_wordbook_my_book_mastered_label">熟练: %1$d</string>
+    <string name="feature_wordbook_my_book_progress_label">已学习：%1$d / %2$d</string>
+    <string name="feature_wordbook_my_book_mastered_label">已掌握：%1$d</string>
     <string name="feature_wordbook_my_book_delete">&#21024;&#38500;&#35789;&#20070;</string>
     <string name="feature_wordbook_favorites_title">我的收藏</string>
     <string name="feature_wordbook_favorites_cancel">取消</string>

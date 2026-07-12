@@ -178,7 +178,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/core_ui_dp_4"
                     android:gravity="center"
-                    android:text="总词量"
+                    android:text="词书总量"
                     android:textColor="#666666"
                     android:textSize="@dimen/core_ui_sp_10" />
             </LinearLayout>
@@ -239,7 +239,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/core_ui_dp_4"
                     android:gravity="center"
-                    android:text="正确率"
+                    android:text="答题正确率"
                     android:textColor="#666666"
                     android:textSize="@dimen/core_ui_sp_10" />
             </LinearLayout>

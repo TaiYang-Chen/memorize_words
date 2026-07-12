@@ -10,6 +10,7 @@ import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.chen.memorizewords.data.sync.local.mmkv.download.UpdateDownloadStore
+import com.chen.memorizewords.data.sync.remoteapi.di.DownloadHttpClient
 import com.chen.memorizewords.domain.wordbook.model.download.DownloadCompletionAction
 import com.chen.memorizewords.domain.wordbook.model.download.DownloadRequest
 import com.chen.memorizewords.domain.wordbook.model.download.DownloadStatus
@@ -314,6 +315,7 @@ class FileDownloadWorker(
 @EntryPoint
 @InstallIn(SingletonComponent::class)
 interface FileDownloadWorkerEntryPoint {
+    @DownloadHttpClient
     fun okHttpClient(): OkHttpClient
     fun downloadStore(): UpdateDownloadStore
 }

@@ -8,4 +8,17 @@
     <string name="module_wordbook_word_order_alpha_desc">首字母降序</string>
     <string name="module_wordbook_word_order_length_asc">长度升序</string>
     <string name="module_wordbook_word_order_length_desc">长度降序</string>
+    <string name="module_wordbook_reset_progress">重置</string>
+    <string name="module_wordbook_modify_plan_new_count_required">请输入每日新学单词数</string>
+    <string name="module_wordbook_modify_plan_review_count_required">请输入每日复习单词数</string>
+    <string name="module_wordbook_modify_plan_count_invalid">请输入有效的数字</string>
+    <string name="module_wordbook_modify_plan_new_count_too_small">每日新学单词数不能少于 1 个</string>
+    <string name="module_wordbook_modify_plan_new_count_too_large">每日新学单词数不能超过 999 个</string>
+    <string name="module_wordbook_modify_plan_review_count_too_small">每日复习单词数不能少于 1 个</string>
+    <string name="module_wordbook_modify_plan_review_count_too_large">每日复习单词数不能超过 999 个</string>
+    <string name="module_wordbook_modify_plan_update_success">学习计划修改成功</string>
+    <string name="module_wordbook_metric_total_words">词书总量 %1$d 词</string>
+    <string name="module_wordbook_metric_learned">已学习</string>
+    <string name="module_wordbook_metric_learning">学习中</string>
+    <string name="module_wordbook_metric_mastered">已掌握</string>
 </resources>

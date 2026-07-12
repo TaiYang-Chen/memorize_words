@@ -20,6 +20,7 @@ import com.chen.memorizewords.domain.study.model.learning.RecordLearningEventCom
 import com.chen.memorizewords.domain.study.model.learning.RecordLearningEventResult
 import com.chen.memorizewords.domain.study.model.progress.word.calculateSm2Review
 import com.chen.memorizewords.domain.study.repository.learning.LearningCommandPort
+import com.chen.memorizewords.domain.study.repository.learning.BookLearningWriteCoordinator
 import com.chen.memorizewords.domain.sync.LearningEventSyncPayload
 import com.google.gson.Gson
 import java.util.UUID
@@ -37,14 +38,17 @@ class LearningCommandRepository @Inject constructor(
     private val wordBookDao: WordBookDao,
     private val bookWordItemDao: BookWordItemDao,
     private val wordDefinitionDao: WordDefinitionDao,
-    private val gson: Gson
+    private val gson: Gson,
+    private val coordinator: BookLearningWriteCoordinator
 ) : LearningCommandPort {
 
     override suspend fun record(command: RecordLearningEventCommand): RecordLearningEventResult {
         require(command.bookId > 0L) { "bookId must be positive" }
         require(command.word.id > 0L) { "wordId must be positive" }
-        return transactionRunner.runInTransaction {
-            recordInTransaction(command)
+        return coordinator.withBookWrite(command.bookId) {
+            transactionRunner.runInTransaction {
+                recordInTransaction(command)
+            }
         }
     }
 

@@ -221,7 +221,6 @@
                         </LinearLayout>
 
                         <LinearLayout
-                            android:id="@+id/accountIdRow"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/feature_user_profile_row_height"
                             android:gravity="center_vertical"
@@ -246,13 +245,17 @@
                                 android:textSize="@dimen/feature_user_profile_account_id_size"
                                 tools:text="10293847" />
 
-                            <ImageView
+                            <androidx.appcompat.widget.AppCompatImageButton
                                 android:id="@+id/ivCopyAccountId"
-                                android:layout_width="@dimen/feature_user_profile_copy_icon_size"
-                                android:layout_height="@dimen/feature_user_profile_copy_icon_size"
+                                android:layout_width="@dimen/feature_user_profile_copy_button_size"
+                                android:layout_height="@dimen/feature_user_profile_copy_button_size"
                                 android:layout_marginStart="@dimen/feature_user_profile_copy_icon_spacing"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:clickable="true"
                                 android:contentDescription="@string/feature_user_profile_copy_account_id"
-                                android:src="@drawable/feature_user_ic_profile_copy" />
+                                android:focusable="true"
+                                android:padding="@dimen/feature_user_profile_copy_button_padding"
+                                app:srcCompat="@drawable/feature_user_ic_profile_copy" />
                         </LinearLayout>
 
                         <LinearLayout

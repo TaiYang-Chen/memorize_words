@@ -112,6 +112,7 @@ class WordBookUserSyncOutboxHandlerTest {
         ): Result<WordBookDto> = unexpected()
         override suspend fun addMyWordBook(bookId: Long): Result<Unit> = unexpected()
         override suspend fun getWordStates(bookId: Long, page: Int, count: Int): Result<PageData<WordStateDto>> = unexpected()
+        override suspend fun resetWordBookProgress(bookId: Long): Result<Unit> = unexpected()
         override suspend fun addFavorite(favorite: WordFavorites): Result<Unit> = unexpected()
         override suspend fun getFavorites(page: Int, count: Int): Result<PageData<FavoriteDto>> = unexpected()
         override suspend fun removeFavorite(wordId: Long): Result<Unit> = unexpected()

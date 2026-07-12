@@ -19,14 +19,14 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/title_height"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/title_margin"
             android:layout_marginBottom="@dimen/core_ui_dp_12">
 
             <ImageView
                 android:id="@+id/btnBack"
-                android:layout_width="@dimen/title_icon_touch_size"
-                android:layout_height="@dimen/title_icon_touch_size"
+                android:layout_width="@dimen/title_icon_size"
+                android:layout_height="@dimen/title_icon_size"
                 android:layout_gravity="center_vertical|start"
                 android:padding="@dimen/core_ui_dp_7"
                 android:onClick="@{()->viewModel.back()}"

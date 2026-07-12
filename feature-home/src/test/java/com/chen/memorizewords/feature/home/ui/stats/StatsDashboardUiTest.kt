@@ -18,22 +18,21 @@ class StatsDashboardUiTest {
     }
 
     @Test
-    fun buildOverviewCardsUsesRealCountsDurationAndAccuracy() {
+    fun buildOverviewCardsUsesUnifiedCurrentBookMetrics() {
         val cards = buildOverviewCards(
-            totalWords = 12,
-            streakDays = 3,
-            totalDurationMs = 5_400_000L,
-            todayWordCount = 4,
-            todayDurationMs = 1_800_000L,
+            learnedWords = 21,
+            learningWords = 13,
+            masteredWords = 8,
             accuracyRate = 76.24f
         )
 
-        assertEquals("12", cards[0].value)
-        assertEquals("今日 +4", cards[0].changeText)
-        assertEquals("3", cards[1].value)
-        assertEquals("1.5", cards[2].value)
-        assertEquals("今日 +0.5h", cards[2].changeText)
+        assertEquals("21", cards[0].value)
+        assertEquals("已学习", cards[0].title)
+        assertEquals("学习中 13 · 已掌握 8", cards[0].changeText)
+        assertEquals("13", cards[1].value)
+        assertEquals("8", cards[2].value)
         assertEquals("76.2", cards[3].value)
+        assertEquals("答题正确率", cards[3].title)
     }
 
     @Test

@@ -25,8 +25,9 @@
     <dimen name="feature_user_profile_account_id_size">15sp</dimen>
     <dimen name="feature_user_profile_chevron_size">12dp</dimen>
     <dimen name="feature_user_profile_trailing_icon_spacing">10dp</dimen>
-    <dimen name="feature_user_profile_copy_icon_size">16dp</dimen>
-    <dimen name="feature_user_profile_copy_icon_spacing">12dp</dimen>
+    <dimen name="feature_user_profile_copy_button_size">48dp</dimen>
+    <dimen name="feature_user_profile_copy_button_padding">16dp</dimen>
+    <dimen name="feature_user_profile_copy_icon_spacing">0dp</dimen>
     <dimen name="feature_user_profile_vip_horizontal_padding">10dp</dimen>
     <dimen name="feature_user_profile_vip_vertical_padding">4dp</dimen>
     <dimen name="feature_user_profile_vip_drawable_padding">4dp</dimen>

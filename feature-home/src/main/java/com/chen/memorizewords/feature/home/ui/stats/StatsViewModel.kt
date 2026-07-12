@@ -16,6 +16,7 @@ import com.chen.memorizewords.domain.study.usecase.word.study.GetTodayReviewWord
 import com.chen.memorizewords.domain.study.usecase.word.study.GetTodayStudyDurationUseCase
 import com.chen.memorizewords.domain.study.usecase.word.study.GetWeeklyDurationStatsUseCase
 import com.chen.memorizewords.domain.study.usecase.word.study.GetWeeklyWordStatsUseCase
+import com.chen.memorizewords.domain.wordbook.model.WordBookInfo
 import com.chen.memorizewords.domain.wordbook.usecase.GetCurrentWordBookInfoFlowUseCase
 import com.chen.memorizewords.feature.home.R
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -121,10 +122,9 @@ class StatsViewModel @Inject constructor(
             newCount + reviewCount
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
 
-    private val currentWordBookAccuracyRate: StateFlow<Float> =
+    private val currentWordBookInfo: StateFlow<WordBookInfo?> =
         getCurrentWordBookInfoFlowUseCase()
-            .map { it?.accuracyRate ?: 0f }
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0f)
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     val totalStudyDurationText: StateFlow<String> =
         getStudyTotalDurationUseCase()
@@ -195,25 +195,12 @@ class StatsViewModel @Inject constructor(
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     val overviewCards: StateFlow<List<StatsOverviewCardUi>> =
-        combine(
-            combine(
-                totalStudyWords,
-                continuousCheckInDays,
-                totalStudyDurationMs,
-                todayWordCount,
-                todayStudyDurationMs
-            ) { words, streakDays, durationMs, todayWords, todayDuration ->
-                StatsOverviewMetrics(words, streakDays, durationMs, todayWords, todayDuration)
-            },
-            currentWordBookAccuracyRate
-        ) { metrics, accuracyRate ->
+        currentWordBookInfo.map { info ->
             buildOverviewCards(
-                totalWords = metrics.words,
-                streakDays = metrics.streakDays,
-                totalDurationMs = metrics.durationMs,
-                todayWordCount = metrics.todayWords,
-                todayDurationMs = metrics.todayDuration,
-                accuracyRate = accuracyRate
+                learnedWords = info?.learnedWords ?: 0,
+                learningWords = info?.learningWords ?: 0,
+                masteredWords = info?.masteredWords ?: 0,
+                accuracyRate = info?.accuracyRate ?: 0f
             )
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
@@ -336,56 +323,46 @@ class StatsViewModel @Inject constructor(
 }
 
 internal fun buildOverviewCards(
-    totalWords: Int,
-    streakDays: Int,
-    totalDurationMs: Long,
-    todayWordCount: Int,
-    todayDurationMs: Long,
+    learnedWords: Int,
+    learningWords: Int,
+    masteredWords: Int,
     accuracyRate: Float = 0f
 ): List<StatsOverviewCardUi> {
     return listOf(
         StatsOverviewCardUi(
-            value = totalWords.coerceAtLeast(0).toString(),
+            value = learnedWords.coerceAtLeast(0).toString(),
             unit = "词",
-            title = "掌握词汇",
-            changeText = "今日 +${todayWordCount.coerceAtLeast(0)}",
+            title = "已学习",
+            changeText = "学习中 ${learningWords.coerceAtLeast(0)} · 已掌握 ${masteredWords.coerceAtLeast(0)}",
             iconResId = R.drawable.feature_home_ic_profile_book_open,
             iconBackgroundResId = R.drawable.feature_home_stats_icon_green_bg
         ),
         StatsOverviewCardUi(
-            value = streakDays.coerceAtLeast(0).toString(),
-            unit = "天",
-            title = "连续学习",
-            changeText = "最长连续 ${streakDays.coerceAtLeast(0)} 天",
+            value = learningWords.coerceAtLeast(0).toString(),
+            unit = "词",
+            title = "学习中",
+            changeText = "当前词书",
             iconResId = R.drawable.feature_home_ic_profile_flame,
             iconBackgroundResId = R.drawable.feature_home_stats_icon_orange_bg
         ),
         StatsOverviewCardUi(
-            value = formatHoursValue(totalDurationMs),
-            unit = "小时",
-            title = "累计学习时长",
-            changeText = "今日 +${formatHoursValue(todayDurationMs)}h",
-            iconResId = R.drawable.feature_home_ic_profile_clock,
+            value = masteredWords.coerceAtLeast(0).toString(),
+            unit = "词",
+            title = "已掌握",
+            changeText = "当前词书",
+            iconResId = R.drawable.feature_home_stats_ic_check_circle,
             iconBackgroundResId = R.drawable.feature_home_stats_icon_blue_bg
         ),
         StatsOverviewCardUi(
             value = formatPercentValue(accuracyRate),
             unit = "%",
-            title = "学习正确率",
-            changeText = "稳定记录中",
+            title = "答题正确率",
+            changeText = "当前词书累计",
             iconResId = R.drawable.feature_home_ic_profile_menu_chart,
             iconBackgroundResId = R.drawable.feature_home_stats_icon_purple_bg
         )
     )
 }
-
-private data class StatsOverviewMetrics(
-    val words: Int,
-    val streakDays: Int,
-    val durationMs: Long,
-    val todayWords: Int,
-    val todayDuration: Long
-)
 
 internal fun buildTrendPoints(
     weekRange: StatsWeekRange,
@@ -443,7 +420,7 @@ internal fun buildReportRows(
     }
     return listOf(
         StatsReportRowUi("本周学习时长", formatHoursValue(totalDurationMs), "小时", R.drawable.feature_home_ic_profile_clock, R.drawable.feature_home_stats_icon_blue_bg),
-        StatsReportRowUi("本周掌握单词", totalWords.coerceAtLeast(0).toString(), "个", R.drawable.feature_home_ic_profile_book_open, R.drawable.feature_home_stats_icon_green_bg),
+        StatsReportRowUi("本周学习次数", totalWords.coerceAtLeast(0).toString(), "次", R.drawable.feature_home_ic_profile_book_open, R.drawable.feature_home_stats_icon_green_bg),
         StatsReportRowUi("最佳学习日", bestDay, "", R.drawable.feature_home_ic_profile_report_calendar_star, R.drawable.feature_home_stats_icon_green_bg),
         StatsReportRowUi("连续打卡天数", streakDays.coerceAtLeast(0).toString(), "天", R.drawable.feature_home_ic_profile_flame, R.drawable.feature_home_stats_icon_orange_bg)
     )

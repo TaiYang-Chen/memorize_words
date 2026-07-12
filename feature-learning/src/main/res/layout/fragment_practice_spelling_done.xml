@@ -16,7 +16,7 @@
         <FrameLayout
             android:id="@+id/top_bar"
             android:layout_width="0dp"
-            android:layout_height="@dimen/title_height"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/title_margin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -24,8 +24,8 @@
 
             <ImageButton
                 android:id="@+id/btn_close"
-                android:layout_width="@dimen/title_icon_touch_size"
-                android:layout_height="@dimen/title_icon_touch_size"
+                android:layout_width="@dimen/title_icon_size"
+                android:layout_height="@dimen/title_icon_size"
                 android:layout_gravity="center_vertical|start"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/practice_spelling_done_exit"
@@ -262,7 +262,7 @@
             <FrameLayout
                 android:id="@+id/detail_header"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/title_height"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/page_margin"
                 android:layout_marginTop="@dimen/title_margin"
                 android:layout_marginEnd="@dimen/page_margin"
@@ -272,8 +272,8 @@
 
                 <ImageButton
                     android:id="@+id/btn_detail_back"
-                    android:layout_width="@dimen/title_icon_touch_size"
-                    android:layout_height="@dimen/title_icon_touch_size"
+                    android:layout_width="@dimen/title_icon_size"
+                    android:layout_height="@dimen/title_icon_size"
                     android:layout_gravity="center_vertical|start"
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/practice_spelling_done_detail_back"

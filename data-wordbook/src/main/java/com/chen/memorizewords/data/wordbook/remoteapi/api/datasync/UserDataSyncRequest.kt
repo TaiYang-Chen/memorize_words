@@ -77,6 +77,12 @@ class UserDataSyncRequest @Inject constructor(
             .await<ApiResponse<PageData<WordStateDto>>, PageData<WordStateDto>>()
     }
 
+    suspend fun resetWordBookProgress(bookId: Long): NetworkResult<Unit> =
+        requestExecutor.executeAuthenticated {
+            apiService.resetWordBookProgress(bookId)
+                .await<ApiResponse<Unit>, Unit>()
+        }
+
     suspend fun addFavorite(
         wordId: Long,
         word: String,

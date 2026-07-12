@@ -33,6 +33,7 @@ interface RemoteUserSyncDataSource {
     suspend fun addMyWordBook(bookId: Long): Result<Unit>
     suspend fun removeMyWordBook(bookId: Long): Result<Unit>
     suspend fun getWordStates(bookId: Long, page: Int, count: Int): Result<PageData<WordStateDto>>
+    suspend fun resetWordBookProgress(bookId: Long): Result<Unit>
     suspend fun addFavorite(favorite: WordFavorites): Result<Unit>
     suspend fun getFavorites(page: Int, count: Int): Result<PageData<FavoriteDto>>
     suspend fun removeFavorite(wordId: Long): Result<Unit>

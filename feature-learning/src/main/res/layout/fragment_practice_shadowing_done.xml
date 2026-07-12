@@ -16,7 +16,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/topBar"
             android:layout_width="0dp"
-            android:layout_height="@dimen/title_height"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/core_ui_dp_36"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

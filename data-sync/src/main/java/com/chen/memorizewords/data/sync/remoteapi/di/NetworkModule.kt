@@ -22,6 +22,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import java.io.File
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 import okhttp3.Cache
 import okhttp3.OkHttpClient
@@ -80,7 +81,9 @@ object NetworkModule {
     ): OkHttpClient {
         return CoreNetworkFactory.createOkHttpClient(
             config = config.copy(
-                timeoutSeconds = NetworkConstants.TIMEOUT_SECONDS,
+                connectTimeoutSeconds = NetworkConstants.API_CONNECT_TIMEOUT_SECONDS,
+                readTimeoutSeconds = NetworkConstants.API_READ_TIMEOUT_SECONDS,
+                writeTimeoutSeconds = NetworkConstants.API_WRITE_TIMEOUT_SECONDS,
                 connectionPoolMaxIdle = NetworkConstants.CONNECTION_POOL_MAX_IDLE,
                 connectionPoolKeepAliveMinutes = NetworkConstants.CONNECTION_POOL_KEEP_ALIVE
             ),
@@ -90,6 +93,17 @@ object NetworkModule {
             applicationInterceptors = listOf(installationIdInterceptor, loggingInterceptor)
         ).newBuilder()
             .eventListenerFactory(eventListenerFactory)
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    @DownloadHttpClient
+    fun provideDownloadOkHttpClient(okHttpClient: OkHttpClient): OkHttpClient {
+        return okHttpClient.newBuilder()
+            .connectTimeout(NetworkConstants.DOWNLOAD_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            .readTimeout(NetworkConstants.DOWNLOAD_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            .writeTimeout(NetworkConstants.DOWNLOAD_TIMEOUT_SECONDS, TimeUnit.SECONDS)
             .build()
     }
 

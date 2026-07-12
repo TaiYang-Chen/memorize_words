@@ -20,23 +20,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/feature_wordbook_word_list_surface"
-            android:paddingStart="@dimen/core_ui_dp_20"
-            android:paddingTop="@dimen/title_margin"
-            android:paddingEnd="@dimen/core_ui_dp_20"
+            android:paddingTop="@dimen/page_margin"
+            android:paddingStart="@dimen/page_margin"
+            android:paddingEnd="@dimen/page_margin"
             android:paddingBottom="@dimen/core_ui_dp_10">
 
             <FrameLayout
                 android:id="@+id/layoutToolbar"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/title_height"
+                android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="@dimen/title_margin"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageButton
                     android:id="@+id/btnBack"
-                    android:layout_width="@dimen/title_icon_touch_size"
-                    android:layout_height="@dimen/title_icon_touch_size"
+                    android:layout_width="@dimen/title_icon_size"
+                    android:layout_height="@dimen/title_icon_size"
                     android:layout_gravity="center_vertical|start"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="返回"
@@ -62,8 +63,8 @@
 
                 <ImageButton
                     android:id="@+id/btnSort"
-                    android:layout_width="@dimen/title_icon_touch_size"
-                    android:layout_height="@dimen/title_icon_touch_size"
+                    android:layout_width="@dimen/title_icon_size"
+                    android:layout_height="@dimen/title_icon_size"
                     android:layout_gravity="center_vertical|end"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="排序"
@@ -85,7 +86,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
-                tools:text="共 4532 词 · 已学 120 · 待复习 18" />
+                tools:text="词书总量 4532 · 已学习 120 · 待复习 18" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
@@ -166,12 +167,12 @@
                     <TextView
                         android:id="@+id/chipLearned"
                         style="@style/FeatureWordBookWordListChip"
-                        android:text="已学" />
+                        android:text="学习中" />
 
                     <TextView
                         android:id="@+id/chipMastered"
                         style="@style/FeatureWordBookWordListChip"
-                        android:text="掌握" />
+                        android:text="已掌握" />
 
                     <TextView
                         android:id="@+id/chipReview"

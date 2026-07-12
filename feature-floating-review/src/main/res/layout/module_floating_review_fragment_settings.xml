@@ -34,8 +34,8 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="@dimen/title_icon_touch_size"
-                    android:layout_height="@dimen/title_icon_touch_size"
+                    android:layout_width="@dimen/title_icon_size"
+                    android:layout_height="@dimen/title_icon_size"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/module_floating_review_back"
                     android:onClick="@{()->viewModel.back()}"

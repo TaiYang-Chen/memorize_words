@@ -171,7 +171,7 @@ class WordListViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 summary = summary,
-                summaryText = "共 ${summary.totalCount} 词 · 已学 ${summary.learnedCount} · 待复习 ${summary.reviewDueCount}"
+                summaryText = "词书总量 ${summary.totalCount} · 已学习 ${summary.learnedCount} · 待复习 ${summary.reviewDueCount}"
             )
         }
     }
@@ -184,7 +184,7 @@ class WordListViewModel @Inject constructor(
 data class WordListUiState(
     val bookName: String = "",
     val summary: WordListSummary = WordListSummary(),
-    val summaryText: String = "共 0 词 · 已学 0 · 待复习 0",
+    val summaryText: String = "词书总量 0 · 已学习 0 · 待复习 0",
     val selectedFilter: WordFilter = WordFilter.ALL,
     val selectedSortType: WordSortType = WordSortType.BOOK_ORDER,
     val keyword: String = "",
@@ -199,8 +199,8 @@ sealed interface WordListEffect : UiEffect {
 fun WordLearningStatus.displayName(): String {
     return when (this) {
         WordLearningStatus.TO_LEARN -> "未学"
-        WordLearningStatus.LEARNED -> "已学"
-        WordLearningStatus.MASTERED -> "掌握"
+        WordLearningStatus.LEARNED -> "学习中"
+        WordLearningStatus.MASTERED -> "已掌握"
         WordLearningStatus.REVIEW_DUE -> "待复习"
     }
 }

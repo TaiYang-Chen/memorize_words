@@ -12,7 +12,7 @@
         <LinearLayout
             android:id="@+id/layout_header"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/title_height"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/page_margin"
             android:layout_marginTop="@dimen/title_margin"
             android:gravity="center_vertical"
@@ -22,8 +22,8 @@
 
             <ImageButton
                 android:id="@+id/btn_back"
-                android:layout_width="@dimen/title_icon_touch_size"
-                android:layout_height="@dimen/title_icon_touch_size"
+                android:layout_width="@dimen/title_icon_size"
+                android:layout_height="@dimen/title_icon_size"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/practice_shadowing_title_compare"
                 android:padding="@dimen/core_ui_dp_7"
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/title_margin"
             android:gravity="center"
-            android:minHeight="@dimen/title_height"
+
             android:text="@string/practice_shadowing_title_compare"
             android:textColor="@color/feature_learning_shadowing_text_primary"
             android:textSize="@dimen/title_text_size"

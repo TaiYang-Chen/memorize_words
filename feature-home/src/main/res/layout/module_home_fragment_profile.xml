@@ -182,18 +182,9 @@
                         android:text="@{viewModel.profileAccountIdDisplayText}"
                         android:textColor="#2D3D56"
                         android:textSize="@dimen/core_ui_text_12"
+                        app:layout_constraintEnd_toStartOf="@id/feature_home_iv_profile_mascot"
                         app:layout_constraintStart_toStartOf="@id/tv_user_name"
                         app:layout_constraintTop_toBottomOf="@id/tv_user_name" />
-
-                    <ImageView
-                        android:id="@+id/feature_home_iv_profile_copy"
-                        android:layout_width="@dimen/core_ui_dp_15"
-                        android:layout_height="@dimen/core_ui_dp_15"
-                        android:contentDescription="@null"
-                        android:src="@drawable/feature_home_ic_profile_copy"
-                        app:layout_constraintBottom_toBottomOf="@id/tv_user_id"
-                        app:layout_constraintStart_toEndOf="@+id/tv_user_id"
-                        app:layout_constraintTop_toTopOf="@id/tv_user_id" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <LinearLayout

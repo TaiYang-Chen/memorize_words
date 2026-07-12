@@ -14,16 +14,31 @@
 
         <!-- 璁剧疆鏂囧瓧鏍峰紡锛堥€変腑鏃舵樉绀猴級 -->
         <item name="itemTextAppearanceActive">@style/BottomNavTextActive</item>
+        <item name="itemTextAppearanceInactive">@style/BottomNavTextInactive</item>
+        <item name="itemActiveIndicatorStyle">@style/FeatureHomeBottomNavActiveIndicator</item>
     </style>
 
     <style name="BottomNavTextActive" parent="TextAppearance.AppCompat.Caption">
         <item name="android:textSize">@dimen/core_ui_text_12</item>
-        <item name="android:textStyle">normal</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="BottomNavTextInactive" parent="TextAppearance.AppCompat.Caption">
         <item name="android:textSize">@dimen/core_ui_text_12</item>
         <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="FeatureHomeBottomNavIndicatorShape" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+
+    <style name="FeatureHomeBottomNavActiveIndicator" parent="">
+        <item name="android:width">64dp</item>
+        <item name="android:height">32dp</item>
+        <item name="marginHorizontal">4dp</item>
+        <item name="shapeAppearance">@style/FeatureHomeBottomNavIndicatorShape</item>
+        <item name="android:color">@color/feature_home_bottom_nav_indicator</item>
     </style>
 
     <style name="FeatureHomeStatsSectionTitle">

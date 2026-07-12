@@ -2,6 +2,7 @@ package com.chen.memorizewords.data.wordbook.repository.wordbook
 
 import android.content.Context
 import com.chen.memorizewords.core.network.CoreNetworkHeaders
+import com.chen.memorizewords.data.sync.remoteapi.di.DownloadHttpClient
 import com.chen.memorizewords.data.wordbook.remoteapi.dto.wordbook.WordDto
 import com.chen.memorizewords.domain.wordbook.model.WordBook
 import com.chen.memorizewords.domain.wordbook.model.WordBookContentPackage
@@ -33,6 +34,7 @@ interface WordBookContentPackageImporter {
 
 class HttpWordBookContentPackageImporter @Inject constructor(
     @ApplicationContext context: Context,
+    @param:DownloadHttpClient
     private val okHttpClient: OkHttpClient,
     private val gson: Gson,
     private val contentLocalStore: WordBookContentLocalStore

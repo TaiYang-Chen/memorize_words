@@ -37,7 +37,7 @@
     <string name="feature_home_stats_total_days">总学习天数</string>
     <string name="feature_home_stats_keep_going">坚持就是胜利，你是最棒的！</string>
     <string name="feature_home_stats_total_duration">累计时长</string>
-    <string name="feature_home_stats_mastered_words">掌握词汇</string>
+    <string name="feature_home_stats_mastered_words">已掌握</string>
     <string name="feature_home_stats_hours_unit">小时</string>
     <string name="feature_home_stats_words_unit">词</string>
     <string name="feature_home_stats_back_today">回到今天</string>
@@ -208,7 +208,7 @@
     <string name="feature_home_profile_week_report">本周学习报告</string>
     <string name="feature_home_profile_view_detail">查看详情</string>
     <string name="feature_home_profile_report_time">学习时长</string>
-    <string name="feature_home_profile_report_words">掌握单词</string>
+    <string name="feature_home_profile_report_words">已掌握</string>
     <string name="feature_home_profile_report_best_day">最佳学习日</string>
     <string name="feature_home_profile_report_streak">连续学习</string>
     <string name="feature_home_profile_vs_last_week_time">较上周 +6.2h</string>

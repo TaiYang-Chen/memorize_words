@@ -292,6 +292,8 @@ class HomeViewModel @Inject constructor(
     val todayReviewStatusText: StateFlow<String> = dashboardField { it.todayReviewStatusText }
     val estimatedStudyMinutesText: StateFlow<String> = dashboardField { it.estimatedStudyMinutesText }
     val masteredWordsText: StateFlow<String> = dashboardField { it.masteredWordsText }
+    val learnedWordsText: StateFlow<String> = dashboardField { it.learnedWordsText }
+    val learningWordsText: StateFlow<String> = dashboardField { it.learningWordsText }
     val totalWordsText: StateFlow<String> = dashboardField { it.totalWordsText }
     val accuracyRateText: StateFlow<String> = dashboardField { it.accuracyRateText }
     val continuousDaysText: StateFlow<String> = dashboardField { it.continuousDaysText }
@@ -310,6 +312,8 @@ class HomeViewModel @Inject constructor(
     val estimatedTaskTitleText: StateFlow<String> = dashboardField { it.estimatedTaskTitleText }
     val estimatedTaskHintText: StateFlow<String> = dashboardField { it.estimatedTaskHintText }
     val masteredWordsTitleText: StateFlow<String> = dashboardField { it.masteredWordsTitleText }
+    val learnedWordsTitleText: StateFlow<String> = dashboardField { it.learnedWordsTitleText }
+    val learningWordsTitleText: StateFlow<String> = dashboardField { it.learningWordsTitleText }
     val totalWordsTitleText: StateFlow<String> = dashboardField { it.totalWordsTitleText }
     val accuracyRateTitleText: StateFlow<String> = dashboardField { it.accuracyRateTitleText }
     val continuousDaysTitleText: StateFlow<String> = dashboardField { it.continuousDaysTitleText }
@@ -596,6 +600,8 @@ data class HomeDashboardUiState(
     val todayReviewDone: Boolean,
     val estimatedStudyMinutesText: String,
     val masteredWordsText: String,
+    val learnedWordsText: String,
+    val learningWordsText: String,
     val totalWordsText: String,
     val accuracyRateText: String,
     val continuousDaysText: String,
@@ -614,6 +620,8 @@ data class HomeDashboardUiState(
     val estimatedTaskTitleText: String,
     val estimatedTaskHintText: String,
     val masteredWordsTitleText: String,
+    val learnedWordsTitleText: String,
+    val learningWordsTitleText: String,
     val totalWordsTitleText: String,
     val accuracyRateTitleText: String,
     val continuousDaysTitleText: String,
@@ -655,6 +663,8 @@ internal fun buildHomeDashboardUiState(
         todayReviewDone = isTaskDone(safeTodayReview, safeReviewPlan),
         estimatedStudyMinutesText = formatMinuteText(estimatedMinutes),
         masteredWordsText = formatWordBookNumberText(wordBookInfo?.masteredWords),
+        learnedWordsText = formatWordBookNumberText(wordBookInfo?.learnedWords),
+        learningWordsText = formatWordBookNumberText(wordBookInfo?.learningWords),
         totalWordsText = formatWordBookNumberText(wordBookInfo?.totalWords),
         accuracyRateText = formatWordBookAccuracyRateText(wordBookInfo?.accuracyRate),
         continuousDaysText = formatDayCountText(continuousDays),
@@ -672,9 +682,11 @@ internal fun buildHomeDashboardUiState(
         reviewTaskTitleText = "\u590d\u4e60\u5355\u8bcd",
         estimatedTaskTitleText = "\u9884\u8ba1\u7528\u65f6",
         estimatedTaskHintText = "\u5408\u7406\u5b89\u6392\u65f6\u95f4",
-        masteredWordsTitleText = "\u5df2\u638c\u63e1\u5355\u8bcd",
-        totalWordsTitleText = "\u603b\u8bcd\u91cf",
-        accuracyRateTitleText = "\u6b63\u786e\u7387",
+        masteredWordsTitleText = "\u5df2\u638c\u63e1",
+        learnedWordsTitleText = "\u5df2\u5b66\u4e60",
+        learningWordsTitleText = "\u5b66\u4e60\u4e2d",
+        totalWordsTitleText = "\u8bcd\u4e66\u603b\u91cf",
+        accuracyRateTitleText = "\u7b54\u9898\u6b63\u786e\u7387",
         continuousDaysTitleText = "\u8fde\u7eed\u5b66\u4e60",
         expectedCompletionTitleText = "\u9884\u8ba1\u5b8c\u6210",
         todayDurationTitleText = "\u4eca\u65e5\u7528\u65f6"

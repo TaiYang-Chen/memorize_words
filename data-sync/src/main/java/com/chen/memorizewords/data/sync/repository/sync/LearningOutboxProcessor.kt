@@ -10,6 +10,7 @@ import com.chen.memorizewords.data.wordbook.local.room.model.learning.outbox.Lea
 import com.chen.memorizewords.domain.study.model.progress.word.WordLearningState
 import com.chen.memorizewords.domain.study.repository.learning.LearningEventSyncResultSnapshot
 import com.chen.memorizewords.domain.study.repository.learning.LearningSyncStatePort
+import com.chen.memorizewords.domain.study.repository.learning.BookLearningWriteCoordinator
 import com.chen.memorizewords.domain.sync.LearningEventSyncPayload
 import com.chen.memorizewords.domain.sync.SyncConflictPolicy
 import com.chen.memorizewords.domain.wordbook.model.study.progress.wordbook.WordBookProgress
@@ -24,6 +25,7 @@ class LearningOutboxProcessor @Inject constructor(
     private val remoteLearningSyncDataSource: RemoteLearningSyncDataSource,
     private val learningSyncStatePort: LearningSyncStatePort,
     private val conflictPolicy: SyncConflictPolicy,
+    private val coordinator: BookLearningWriteCoordinator,
     private val gson: Gson
 ) {
     suspend fun drainBatch(limit: Int = DEFAULT_BATCH_SIZE): SyncOutboxProcessor.DrainResult {
@@ -46,10 +48,13 @@ class LearningOutboxProcessor @Inject constructor(
             if (claimed != 1) return@forEach
 
             val result = runCatching {
-                val response = remoteLearningSyncDataSource
-                    .recordLearningEvent(gson.fromJson(entity.payload, LearningEventSyncPayload::class.java).toRequest())
-                    .getOrThrow()
-                learningSyncStatePort.applyLearningEventSyncResult(response.toSnapshot())
+                val payload = gson.fromJson(entity.payload, LearningEventSyncPayload::class.java)
+                coordinator.withBookWrite(payload.bookId) {
+                    val response = remoteLearningSyncDataSource
+                        .recordLearningEvent(payload.toRequest())
+                        .getOrThrow()
+                    learningSyncStatePort.applyLearningEventSyncResult(response.toSnapshot())
+                }
             }
             if (result.isSuccess) {
                 learningOutboxDao.deleteClaimed(entity.clientEventId, leaseToken)

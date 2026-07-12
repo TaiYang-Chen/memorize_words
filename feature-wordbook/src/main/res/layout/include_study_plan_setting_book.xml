@@ -55,7 +55,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/core_ui_dp_8"
-                android:text="@{wordBookCardState.totalWords+`词`}"
+                android:text="@{@string/module_wordbook_metric_total_words(wordBookCardState.totalWords)}"
                 android:textColor="@color/feature_wordbook_study_plan_text_secondary"
                 android:textSize="@dimen/core_ui_text_11"
                 android:textStyle="bold"
@@ -150,7 +150,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif"
-                            android:text="@{String.valueOf(wordBookCardState.masteredWords)}"
+                            android:text="@{String.valueOf(wordBookCardState.learnedWords)}"
                             android:textColor="@color/feature_wordbook_study_plan_text_primary"
                             android:textSize="@dimen/core_ui_text_16"
                             android:textStyle="bold"
@@ -160,7 +160,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="掌握"
+                            android:text="@string/module_wordbook_metric_learned"
                             android:textColor="@color/feature_wordbook_study_plan_text_secondary"
                             android:textSize="@dimen/core_ui_text_11" />
 
@@ -198,7 +198,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="已学"
+                            android:text="@string/module_wordbook_metric_learning"
                             android:textColor="@color/feature_wordbook_study_plan_text_secondary"
                             android:textSize="@dimen/core_ui_text_11" />
 
@@ -226,7 +226,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif"
-                            android:text="@{String.valueOf(wordBookCardState.remainWords)}"
+                            android:text="@{String.valueOf(wordBookCardState.masteredWords)}"
                             android:textColor="@color/feature_wordbook_study_plan_text_primary"
                             android:textSize="@dimen/core_ui_text_16"
                             android:textStyle="bold"
@@ -236,7 +236,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="剩余"
+                            android:text="@string/module_wordbook_metric_mastered"
                             android:textColor="@color/feature_wordbook_study_plan_text_secondary"
                             android:textSize="@dimen/core_ui_text_11" />
 
@@ -277,11 +277,13 @@
 
                 <!-- 重置按钮 -->
                 <LinearLayout
+                    android:id="@+id/layoutResetProgress"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/core_ui_dp_4"
                     android:layout_weight="1"
                     android:background="@drawable/module_wordbook_selector_fbfaf6_radius"
+                    android:enabled="@{wordBookCardState.canOpenWordList &amp;&amp; wordBookCardState.hasProgress &amp;&amp; !viewmodel.isResetting}"
                     android:gravity="center"
                     android:onClick="@{()->viewmodel.resetBookWord()}"
                     android:orientation="vertical"
@@ -300,7 +302,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="重置"
+                        android:text="@string/module_wordbook_reset_progress"
                         android:textColor="@color/feature_wordbook_study_plan_text_primary"
                         android:textSize="@dimen/core_ui_text_11" />
 

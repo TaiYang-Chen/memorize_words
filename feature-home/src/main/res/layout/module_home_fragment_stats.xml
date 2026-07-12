@@ -354,7 +354,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/core_ui_dp_3"
-                                android:text="掌握词汇"
+                                android:text="已学习"
                                 android:textColor="#60708A"
                                 android:textSize="@dimen/core_ui_text_13"
                                 android:textStyle="bold" />
@@ -364,7 +364,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/core_ui_dp_8"
-                                android:text="今日 +0"
+                                android:text="学习中 0 · 已掌握 0"
                                 android:textColor="#18C88E"
                                 android:textSize="@dimen/core_ui_sp_8"
                                 android:textStyle="bold" />
@@ -425,7 +425,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="@dimen/core_ui_dp_7"
-                                    android:text="天"
+                                    android:text="词"
                                     android:textColor="#4F5E75"
                                     android:textSize="@dimen/core_ui_text_13"
                                     android:textStyle="bold" />
@@ -436,7 +436,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/core_ui_dp_3"
-                                android:text="连续学习"
+                                android:text="学习中"
                                 android:textColor="#60708A"
                                 android:textSize="@dimen/core_ui_text_13"
                                 android:textStyle="bold" />
@@ -446,7 +446,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/core_ui_dp_8"
-                                android:text="最长连续 0 天"
+                                android:text="当前词书"
                                 android:textColor="#D57637"
                                 android:textSize="@dimen/core_ui_sp_8"
                                 android:textStyle="bold" />
@@ -484,7 +484,7 @@
                                 android:layout_height="@dimen/core_ui_dp_16"
                                 android:layout_gravity="center"
                                 android:contentDescription="@null"
-                                android:src="@drawable/feature_home_stats_ic_clock" />
+                                android:src="@drawable/feature_home_stats_ic_check_circle" />
                         </FrameLayout>
 
                         <LinearLayout
@@ -515,7 +515,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="@dimen/core_ui_dp_7"
-                                    android:text="小时"
+                                    android:text="词"
                                     android:textColor="#4F5E75"
                                     android:textSize="@dimen/core_ui_text_13"
                                     android:textStyle="bold" />
@@ -526,7 +526,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/core_ui_dp_3"
-                                android:text="累计学习时长"
+                                android:text="已掌握"
                                 android:textColor="#60708A"
                                 android:textSize="@dimen/core_ui_text_13"
                                 android:textStyle="bold" />
@@ -536,7 +536,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/core_ui_dp_8"
-                                android:text="今日 +0h"
+                                android:text="当前词书"
                                 android:textColor="#168AF2"
                                 android:textSize="@dimen/core_ui_sp_8"
                                 android:textStyle="bold" />
@@ -608,7 +608,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/core_ui_dp_3"
-                                android:text="学习正确率"
+                                android:text="答题正确率"
                                 android:textColor="#60708A"
                                 android:textSize="@dimen/core_ui_text_13"
                                 android:textStyle="bold" />
@@ -618,7 +618,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/core_ui_dp_8"
-                                android:text="稳定记录中"
+                                android:text="当前词书累计"
                                 android:textColor="#8B5CF6"
                                 android:textSize="@dimen/core_ui_sp_8"
                                 android:textStyle="bold" />

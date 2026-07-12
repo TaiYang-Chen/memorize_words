@@ -57,9 +57,9 @@ object CoreNetworkFactory {
                 )
             )
             .retryOnConnectionFailure(true)
-            .connectTimeout(config.timeoutSeconds, config.timeoutUnit)
-            .readTimeout(config.timeoutSeconds, config.timeoutUnit)
-            .writeTimeout(config.timeoutSeconds, config.timeoutUnit)
+            .connectTimeout(config.connectTimeoutSeconds, config.timeoutUnit)
+            .readTimeout(config.readTimeoutSeconds, config.timeoutUnit)
+            .writeTimeout(config.writeTimeoutSeconds, config.timeoutUnit)
             .build()
     }
 

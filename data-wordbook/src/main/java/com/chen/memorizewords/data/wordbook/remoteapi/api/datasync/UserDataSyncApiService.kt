@@ -208,6 +208,7 @@ interface UserDataSyncApiService {
         const val PATH_CREATE_MY_WORD_BOOK = "me/wordbooks/create"
         const val PATH_MY_WORD_BOOK_ITEM = "me/wordbooks/{bookId}"
         const val PATH_WORD_STATES = "me/wordbooks/{bookId}/word-states"
+        const val PATH_RESET_WORD_BOOK_PROGRESS = "me/wordbooks/{bookId}/learning-progress/reset"
         const val PATH_WORD_BOOK_PROGRESS_LIST = "me/wordbooks/progress"
         const val PATH_WORD_BOOK_PENDING_UPDATE = "me/wordbooks/{bookId}/updates/pending"
         const val PATH_WORD_BOOK_UPDATE_IGNORE = "me/wordbooks/{bookId}/updates/{version}/ignore"
@@ -259,6 +260,11 @@ interface UserDataSyncApiService {
         @Query("page") page: Int,
         @Query("count") count: Int
     ): Call<ApiResponse<PageData<WordStateDto>>>
+
+    @POST(PATH_RESET_WORD_BOOK_PROGRESS)
+    fun resetWordBookProgress(
+        @Path("bookId") bookId: Long
+    ): Call<ApiResponse<Unit>>
 
     @POST(PATH_FAVORITES)
     fun addFavorite(@Body request: FavoriteSyncRequest): Call<ApiResponse<Unit>>

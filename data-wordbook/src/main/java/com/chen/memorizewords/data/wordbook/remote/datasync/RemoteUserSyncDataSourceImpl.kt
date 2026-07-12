@@ -128,6 +128,10 @@ class RemoteUserSyncDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun resetWordBookProgress(bookId: Long): Result<Unit> {
+        return remoteResultAdapter.toResult { request.resetWordBookProgress(bookId) }
+    }
+
     override suspend fun addFavorite(favorite: WordFavorites): Result<Unit> {
         return remoteResultAdapter.toResult {
             request.addFavorite(

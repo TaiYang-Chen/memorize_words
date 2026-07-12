@@ -25,6 +25,8 @@ import com.chen.memorizewords.data.wordbook.repository.WorkManagerWordBookWorkCa
 import com.chen.memorizewords.data.wordbook.repository.bootstrap.WordBookSnapshotLocalStateStore
 import com.chen.memorizewords.data.wordbook.repository.learning.LearningCommandRepository
 import com.chen.memorizewords.data.wordbook.repository.learning.LearningSyncStateRepository
+import com.chen.memorizewords.data.wordbook.repository.learning.BookLearningWriteCoordinatorImpl
+import com.chen.memorizewords.data.wordbook.repository.learning.WordBookProgressResetRepositoryImpl
 import com.chen.memorizewords.data.wordbook.repository.learning.WordLearningStateRepositoryImpl
 import com.chen.memorizewords.data.wordbook.repository.WordBookUpdateRepositoryImpl
 import com.chen.memorizewords.data.wordbook.repository.onboarding.OnboardingRepositoryImpl
@@ -39,10 +41,12 @@ import com.chen.memorizewords.domain.study.repository.WordLearningRepository
 import com.chen.memorizewords.domain.study.repository.WordLearningStateStore
 import com.chen.memorizewords.domain.study.repository.learning.LearningCommandPort
 import com.chen.memorizewords.domain.study.repository.learning.LearningSyncStatePort
+import com.chen.memorizewords.domain.study.repository.learning.BookLearningWriteCoordinator
 import com.chen.memorizewords.domain.wordbook.repository.LearningProgressRepository
 import com.chen.memorizewords.domain.wordbook.repository.WordBookContentReadinessPort
 import com.chen.memorizewords.domain.wordbook.repository.WordBookSnapshotLocalStatePort
 import com.chen.memorizewords.domain.wordbook.repository.WordBookRepository
+import com.chen.memorizewords.domain.wordbook.repository.WordBookProgressResetRepository
 import com.chen.memorizewords.domain.wordbook.repository.WordBookUpdateRepository
 import com.chen.memorizewords.domain.wordbook.repository.onboarding.OnboardingRepository
 import com.chen.memorizewords.domain.wordbook.repository.shop.RemoteWordBookRepository
@@ -106,6 +110,16 @@ abstract class DataWordBookModule {
     abstract fun bindLearningSyncStatePort(
         impl: LearningSyncStateRepository
     ): LearningSyncStatePort
+
+    @Binds
+    abstract fun bindBookLearningWriteCoordinator(
+        impl: BookLearningWriteCoordinatorImpl
+    ): BookLearningWriteCoordinator
+
+    @Binds
+    abstract fun bindWordBookProgressResetRepository(
+        impl: WordBookProgressResetRepositoryImpl
+    ): WordBookProgressResetRepository
 
     @Binds
     abstract fun bindWordLearningRepository(
