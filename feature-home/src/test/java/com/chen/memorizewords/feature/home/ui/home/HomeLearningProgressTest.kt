@@ -188,10 +188,12 @@ class HomeLearningProgressTest {
             todayReviewCount = 0,
             todayStudyDurationMs = 15 * 60 * 1000L,
             continuousDays = 2,
-            totalStudyDays = 4
+            totalStudyDays = 4,
+            learnButtonSubtitleText = "今日已学15个单词，可继续加量新学"
         )
 
         assertEquals("雅思核心词汇", ui.wordBookTitleText)
+        assertEquals("今日已学15个单词，可继续加量新学", ui.learnButtonSubtitleText)
         assertEquals("新学 15 / 复习 30", ui.planCardSubtitleText)
         assertEquals("15/15", ui.todayNewProgressText)
         assertEquals("已完成", ui.todayNewStatusText)

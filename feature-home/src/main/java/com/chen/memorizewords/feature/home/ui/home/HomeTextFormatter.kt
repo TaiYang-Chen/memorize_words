@@ -20,6 +20,33 @@ internal class HomeTextFormatter(
         }
     }
 
+    fun formatLearnButtonSubtitleText(newCount: Int, plan: StudyPlan): String {
+        val safeNewCount = newCount.coerceAtLeast(0)
+        val safeDailyNewCount = plan.dailyNewCount.coerceAtLeast(0)
+        return when {
+            safeDailyNewCount <= 0 || safeNewCount <= 0 -> resourceProvider.getString(
+                R.string.home_learn_subtitle_start,
+                safeDailyNewCount,
+                safeDailyNewCount
+            )
+
+            safeNewCount < safeDailyNewCount -> {
+                val remainingCount = safeDailyNewCount - safeNewCount
+                resourceProvider.getString(
+                    R.string.home_learn_subtitle_continue,
+                    safeNewCount,
+                    remainingCount,
+                    remainingCount
+                )
+            }
+
+            else -> resourceProvider.getString(
+                R.string.home_learn_subtitle_new_more,
+                safeNewCount
+            )
+        }
+    }
+
     fun formatDuration(durationMs: Long): String {
         val totalSeconds = (durationMs / 1000L).coerceAtLeast(0L)
         val hours = totalSeconds / 3600L

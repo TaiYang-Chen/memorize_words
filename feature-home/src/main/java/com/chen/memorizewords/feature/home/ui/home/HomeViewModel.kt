@@ -233,7 +233,11 @@ class HomeViewModel @Inject constructor(
                 todayReviewCount = values[3] as Int,
                 todayStudyDurationMs = values[4] as Long,
                 continuousDays = values[5] as Int,
-                totalStudyDays = values[6] as Int
+                totalStudyDays = values[6] as Int,
+                learnButtonSubtitleText = textFormatter.formatLearnButtonSubtitleText(
+                    newCount = values[2] as Int,
+                    plan = values[1] as StudyPlan
+                )
             )
         }.stateIn(
             viewModelScope,
@@ -245,7 +249,11 @@ class HomeViewModel @Inject constructor(
                 todayReviewCount = todayReviewCount.value,
                 todayStudyDurationMs = todayStudyDurationMs.value,
                 continuousDays = continuousCheckInDays.value,
-                totalStudyDays = studyTotalDayCount.value
+                totalStudyDays = studyTotalDayCount.value,
+                learnButtonSubtitleText = textFormatter.formatLearnButtonSubtitleText(
+                    newCount = todayNewCount.value,
+                    plan = studyPlan.value
+                )
             )
         )
 
@@ -636,7 +644,8 @@ internal fun buildHomeDashboardUiState(
     todayReviewCount: Int,
     todayStudyDurationMs: Long,
     continuousDays: Int,
-    totalStudyDays: Int
+    totalStudyDays: Int,
+    learnButtonSubtitleText: String
 ): HomeDashboardUiState {
     val safeNewPlan = plan.dailyNewCount.coerceAtLeast(0)
     val safeReviewPlan = plan.dailyReviewCount.coerceAtLeast(0)
@@ -652,7 +661,7 @@ internal fun buildHomeDashboardUiState(
         progressPercentText = "${calculateLearnProgress(safeTodayNew, safeTodayReview, plan)}%",
         todayCompletedWordsText = "\u4eca\u65e5\u5b8c\u6210 ${formatTodayCompletedWordsText(safeTodayNew, safeTodayReview, plan)} \u4e2a\u5355\u8bcd",
         remainingReviewWordsText = "\u8fd8\u9700\u590d\u4e60 ${calculateRemainingCount(safeTodayReview, safeReviewPlan)} \u4e2a\u5355\u8bcd",
-        learnButtonSubtitleText = "\u65b0\u5b66 $safeNewPlan \u4e2a\u5355\u8bcd \u00b7 \u9884\u8ba1 $estimatedMinutes \u5206\u949f",
+        learnButtonSubtitleText = learnButtonSubtitleText,
         reviewCardSubtitleText = "${formatCountProgressText(safeTodayReview, safeReviewPlan)} ${formatTaskStatus(safeTodayReview, safeReviewPlan)}",
         planCardSubtitleText = "\u65b0\u5b66 $safeNewPlan / \u590d\u4e60 $safeReviewPlan",
         todayNewProgressText = formatCountProgressText(safeTodayNew, safeNewPlan),

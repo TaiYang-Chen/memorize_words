@@ -260,9 +260,11 @@
                         </LinearLayout>
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/core_ui_dp_5"
+                            android:gravity="center"
+                            android:maxLines="2"
                             android:text="@{viewModel.learnButtonSubtitleText}"
                             android:textColor="#DCE6FF"
                             android:textSize="@dimen/core_ui_text_12"

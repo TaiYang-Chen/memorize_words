@@ -51,6 +51,9 @@
     <string name="home_learn_button_start">开始学习</string>
     <string name="home_learn_button_continue">继续学习</string>
     <string name="home_learn_button_new_more">加量新学</string>
+    <string name="home_learn_subtitle_start">新学%1$d个单词，预计%2$d分钟</string>
+    <string name="home_learn_subtitle_continue">已学%1$d个单词，还剩%2$d个单词即可完成任务，预计%3$d分钟</string>
+    <string name="home_learn_subtitle_new_more">今日已学%1$d个单词，可继续加量新学</string>
     <string name="home_learning_prepare_loading">正在准备学习...</string>
     <string name="home_learning_prepare_failed">学习数据同步失败，请稍后重试</string>
     <string name="home_learning_no_words">当前没有可学习的单词</string>
