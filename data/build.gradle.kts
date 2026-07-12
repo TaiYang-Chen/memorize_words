@@ -1,11 +1,8 @@
-import java.net.Inet4Address
-import java.net.NetworkInterface
-
 plugins {
     id("memorize.android-hilt-library")
 }
 
-val releaseApiBaseUrl = "http://47.95.233.62:8080/api/"
+val apiBaseUrl = "http://47.95.233.62:8080/api/"
 
 android {
     namespace = "com.chen.memorizewords.data"
@@ -26,10 +23,10 @@ android {
 
     buildTypes {
         getByName("debug") {
-            buildConfigField("String", "API_BASE_URL", debugApiBaseUrl().toBuildConfigString())
+            buildConfigField("String", "API_BASE_URL", apiBaseUrl.toBuildConfigString())
         }
         getByName("release") {
-            buildConfigField("String", "API_BASE_URL", releaseApiBaseUrl().toBuildConfigString())
+            buildConfigField("String", "API_BASE_URL", apiBaseUrl.toBuildConfigString())
         }
     }
 
@@ -110,7 +107,6 @@ gradle.taskGraph.whenReady {
             task.name.equals("packageRelease", ignoreCase = true)
     }
     if (releaseRequested) {
-        val apiBaseUrl = releaseApiBaseUrl()
         require(apiBaseUrl.startsWith("http://", ignoreCase = true)) {
             "Release network baseUrl must use HTTP."
         }
@@ -122,42 +118,4 @@ gradle.taskGraph.whenReady {
 
 fun String.toBuildConfigString(): String {
     return "\"" + replace("\\", "\\\\").replace("\"", "\\\"") + "\""
-}
-
-fun debugApiBaseUrl(): String {
-    return explicitApiBaseUrl() ?: autoDetectedDebugApiBaseUrl()
-}
-
-fun releaseApiBaseUrl(): String {
-    return explicitApiBaseUrl() ?: releaseApiBaseUrl
-}
-
-fun explicitApiBaseUrl(): String? {
-    return providers.gradleProperty("memorize.apiBaseUrl")
-        .orElse(providers.environmentVariable("MEMORIZE_API_BASE_URL"))
-        .orNull
-        ?.takeIf { it.isNotBlank() }
-}
-
-fun autoDetectedDebugApiBaseUrl(): String {
-    val hostIp = NetworkInterface.getNetworkInterfaces()
-        .asSequence()
-        .filter { networkInterface ->
-            networkInterface.isUp &&
-                !networkInterface.isLoopback &&
-                !networkInterface.isVirtual &&
-                !networkInterface.displayName.contains("VMware", ignoreCase = true) &&
-                !networkInterface.displayName.contains("VirtualBox", ignoreCase = true) &&
-                !networkInterface.displayName.contains("vEthernet", ignoreCase = true) &&
-                !networkInterface.displayName.contains("Loopback", ignoreCase = true) &&
-                !networkInterface.displayName.contains("WSL", ignoreCase = true)
-        }
-        .flatMap { it.inetAddresses.asSequence() }
-        .filterIsInstance<Inet4Address>()
-        .map { it.hostAddress }
-        .firstOrNull { ip ->
-            !ip.startsWith("127.") && !ip.startsWith("169.254.")
-        }
-        ?: "127.0.0.1"
-    return "http://$hostIp:8080/api/"
 }
