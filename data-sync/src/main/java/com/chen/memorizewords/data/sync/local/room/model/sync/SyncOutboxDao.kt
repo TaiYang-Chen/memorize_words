@@ -157,9 +157,23 @@ interface SyncOutboxDao {
             updated_at_ms = :now
         WHERE state = 'RETRY_WAITING'
           AND next_retry_at_ms > :now
+          AND (
+               failure_kind IS NULL
+            OR failure_kind IN ('NETWORK', 'AUTH', 'SERVER', 'UNKNOWN')
+          )
         """
     )
     suspend fun resumeRetryWaiting(now: Long): Int
+
+    @Query(
+        """
+        SELECT MIN(next_retry_at_ms)
+        FROM sync_outbox
+        WHERE state = 'RETRY_WAITING'
+          AND next_retry_at_ms > :now
+        """
+    )
+    suspend fun getEarliestRetryAt(now: Long): Long?
 
     @Query(
         """

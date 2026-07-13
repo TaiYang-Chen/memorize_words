@@ -12,7 +12,7 @@ import javax.inject.Singleton
 class SyncOutboxStore @Inject constructor(
     private val syncDatabase: SyncDatabase,
     private val syncOutboxDao: SyncOutboxDao
-) : SyncOutboxRetryWaitResumer {
+) {
 
     suspend fun enqueueLatest(
         bizType: String,
@@ -71,7 +71,7 @@ class SyncOutboxStore @Inject constructor(
         }
     }
 
-    override suspend fun resumeRetryWaiting(now: Long) {
+    suspend fun resumeRetryWaiting(now: Long) {
         syncOutboxDao.resumeRetryWaiting(now)
     }
 

@@ -6,6 +6,8 @@ import com.chen.memorizewords.domain.sync.SyncConflictPolicy
 import com.chen.memorizewords.domain.sync.SyncOutboxHandler as DomainSyncOutboxHandler
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.CancellationException
+import kotlin.random.Random
 
 @Singleton
 class SyncOutboxProcessor @Inject constructor(
@@ -35,9 +37,16 @@ class SyncOutboxProcessor @Inject constructor(
 
         var shouldRetry = false
         batch.forEach { entity ->
-            val result = runCatching { dispatch(entity) }
-            if (result.isSuccess) {
+            val result = try {
+                dispatch(entity)
                 handlersByBizType[entity.bizType]?.onSuccess(entity.toDomainRecord())
+                Result.success(Unit)
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (throwable: Throwable) {
+                Result.failure(throwable)
+            }
+            if (result.isSuccess) {
                 syncOutboxDao.deleteClaimed(
                     id = entity.id,
                     leaseToken = entity.leaseToken.orEmpty()
@@ -53,7 +62,10 @@ class SyncOutboxProcessor @Inject constructor(
                         lastError = failure.persistedMessage,
                         failureKind = failure.failureKind.toDataFailureKind(),
                         lastAttemptAt = attemptTime,
-                        nextRetryAt = attemptTime + syncOutboxBackoffDelayMillis(entity.retryCount + 1),
+                        nextRetryAt = attemptTime + (
+                            failure.retryAfterMillis
+                                ?: syncOutboxBackoffDelayMillis(entity.retryCount + 1)
+                            ),
                         updatedAtMs = attemptTime
                     )
                     shouldRetry = true
@@ -102,11 +114,15 @@ private fun com.chen.memorizewords.domain.sync.SyncFailureKind.toDataFailureKind
     }
 }
 
-internal fun syncOutboxBackoffDelayMillis(attemptNumber: Int): Long {
-    return when (attemptNumber.coerceAtLeast(1)) {
+internal fun syncOutboxBackoffDelayMillis(
+    attemptNumber: Int,
+    jitterFactor: Double = Random.Default.nextDouble(from = 0.5, until = 1.5)
+): Long {
+    val baseDelay = when (attemptNumber.coerceAtLeast(1)) {
         1 -> 30_000L
         2 -> 2 * 60_000L
         3 -> 10 * 60_000L
         else -> 30 * 60_000L
     }
+    return (baseDelay * jitterFactor.coerceIn(0.5, 1.5)).toLong()
 }

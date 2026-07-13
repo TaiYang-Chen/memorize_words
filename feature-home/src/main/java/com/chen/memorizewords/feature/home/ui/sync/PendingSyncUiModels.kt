@@ -6,7 +6,7 @@ data class PendingSyncDetailFieldUi(
 )
 
 data class PendingSyncItemUi(
-    val id: Long,
+    val id: String,
     val bizTypeLabel: String,
     val stateLabel: String,
     val operationLabel: String,

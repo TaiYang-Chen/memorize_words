@@ -35,7 +35,6 @@ internal class HomeTextFormatter(
                 resourceProvider.getString(
                     R.string.home_learn_subtitle_continue,
                     safeNewCount,
-                    remainingCount,
                     remainingCount
                 )
             }

@@ -83,10 +83,14 @@ class SyncRepositoryImpl @Inject constructor(
         .distinctUntilChanged()
         .stateIn(scope, SharingStarted.Eagerly, 0)
 
-    private val pendingSyncRecordsFlow = syncOutboxDao.observeAllPending()
-        .map(::mapSyncPendingRecords)
+    private val pendingSyncRecordsFlow = combine(
+        syncOutboxDao.observeAllPending(),
+        learningOutboxDao.observeAllPending()
+    ) { globalRecords, learningRecords ->
+        mapSyncPendingRecords(globalRecords) + mapLearningPendingRecords(learningRecords)
+    }
+        .map { records -> records.sortedByDescending(SyncPendingRecord::updatedAtMs) }
         .distinctUntilChanged()
-        .stateIn(scope, SharingStarted.Eagerly, emptyList())
 
     private val syncBannerStateFlow = combine(
         pendingCountFlow,
@@ -110,6 +114,7 @@ class SyncRepositoryImpl @Inject constructor(
         .stateIn(scope, SharingStarted.Eagerly, postLoginBootstrapStateStore.getState())
 
     init {
+        syncOutboxWorkScheduler.ensurePeriodicDrain()
         scope.launch {
             staleBlockedWordBookDeleteOutboxCleaner.clean()
         }
@@ -164,6 +169,7 @@ class SyncRepositoryImpl @Inject constructor(
     override fun observeSyncBannerState(): Flow<SyncBannerState> = syncBannerStateFlow
 
     override fun triggerDrain() {
+        syncOutboxWorkScheduler.ensurePeriodicDrain()
         syncOutboxWorkScheduler.scheduleDrain()
     }
 }
@@ -179,7 +185,8 @@ internal fun mapSyncPendingRecords(
         )
         .map { entity ->
             SyncPendingRecord(
-                id = entity.id,
+                id = "global:${entity.id}",
+                sourceId = SOURCE_GLOBAL,
                 bizType = entity.bizType,
                 bizKey = entity.bizKey,
                 operation = entity.operation.name,
@@ -194,6 +201,54 @@ internal fun mapSyncPendingRecords(
             )
         }
 }
+
+internal fun mapLearningPendingRecords(
+    entities: List<LearningOutboxEntity>
+): List<SyncPendingRecord> {
+    return entities.map { entity ->
+        SyncPendingRecord(
+            id = "learning:${entity.clientEventId}",
+            sourceId = SOURCE_LEARNING,
+            bizType = BIZ_TYPE_LEARNING_RECORDED,
+            bizKey = "learning_event:${entity.clientEventId}",
+            operation = SyncOutboxOperation.UPSERT.name,
+            payload = entity.payload,
+            state = when (entity.status) {
+                LearningOutboxEntity.STATUS_PENDING -> {
+                    if (entity.attemptCount > 0) SyncOutboxState.RETRY_WAITING.name
+                    else SyncOutboxState.QUEUED.name
+                }
+                LearningOutboxEntity.STATUS_SYNCING -> SyncOutboxState.IN_FLIGHT.name
+                LearningOutboxEntity.STATUS_BLOCKED -> SyncOutboxState.BLOCKED.name
+                else -> entity.status
+            },
+            retryCount = entity.attemptCount,
+            lastError = entity.lastError,
+            failureKind = inferLearningFailureKind(entity.lastError),
+            lastAttemptAt = entity.lastAttemptAt ?: 0L,
+            nextRetryAt = entity.nextRetryAt,
+            updatedAtMs = entity.updatedAtMs
+        )
+    }
+}
+
+private fun inferLearningFailureKind(lastError: String?): String? {
+    val message = lastError.orEmpty()
+    return when {
+        "|io|" in message -> SyncOutboxFailureKind.NETWORK.name
+        "|auth|" in message -> SyncOutboxFailureKind.AUTH.name
+        "|http:429|" in message -> SyncOutboxFailureKind.RATE_LIMIT.name
+        "|http:5" in message -> SyncOutboxFailureKind.SERVER.name
+        "|conflict" in message -> SyncOutboxFailureKind.CONFLICT.name
+        message.startsWith("TERMINAL|") -> SyncOutboxFailureKind.CLIENT.name
+        message.isNotBlank() -> SyncOutboxFailureKind.UNKNOWN.name
+        else -> null
+    }
+}
+
+private const val SOURCE_GLOBAL = "global"
+private const val SOURCE_LEARNING = "learning"
+private const val BIZ_TYPE_LEARNING_RECORDED = "LEARNING_RECORDED"
 
 private fun syncOutboxStatePriority(state: String): Int {
     return when (state) {

@@ -58,7 +58,21 @@ class NetworkEventListener @Inject constructor() : EventListener() {
 
     class Factory @Inject constructor(private val listener: NetworkEventListener) : EventListener.Factory {
         override fun create(call: Call): EventListener {
-            return if (GlobalConfig.isDebug) listener else EventListener.NONE
+            return if (
+                shouldEnableNetworkEventLogging(
+                    isDebug = GlobalConfig.isDebug,
+                    enableNetworkLogging = GlobalConfig.enableBodyLogging
+                )
+            ) {
+                listener
+            } else {
+                EventListener.NONE
+            }
         }
     }
 }
+
+internal fun shouldEnableNetworkEventLogging(
+    isDebug: Boolean,
+    enableNetworkLogging: Boolean
+): Boolean = isDebug && enableNetworkLogging

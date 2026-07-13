@@ -2,6 +2,7 @@ package com.chen.memorizewords.data.sync.remoteapi.api
 
 import com.chen.memorizewords.core.network.http.NetworkRequestExecutor
 import com.chen.memorizewords.core.network.http.NetworkResult
+import com.chen.memorizewords.core.network.http.AuthenticatedRequestOrigin
 import com.chen.memorizewords.domain.account.auth.AccessTokenState
 import com.chen.memorizewords.domain.account.auth.TokenProvider
 import com.chen.memorizewords.domain.sync.service.AuthenticatedRequestSuccessReporter
@@ -31,11 +32,14 @@ class DataSyncNetworkRequestExecutor @Inject constructor(
     }
 
     override
-    suspend fun <T> executeAuthenticated(block: suspend () -> NetworkResult<T>): NetworkResult<T> {
+    suspend fun <T> executeAuthenticated(
+        origin: AuthenticatedRequestOrigin,
+        block: suspend () -> NetworkResult<T>
+    ): NetworkResult<T> {
         return when (val tokenState = tokenProvider.resolveAccessTokenState()) {
             is AccessTokenState.Available -> {
                 val result = executePublic(block)
-                if (result is NetworkResult.Success) {
+                if (result is NetworkResult.Success && origin == AuthenticatedRequestOrigin.USER) {
                     try {
                         authenticatedRequestSuccessReporter.onAuthenticatedRequestSucceeded()
                     } catch (cancelled: CancellationException) {

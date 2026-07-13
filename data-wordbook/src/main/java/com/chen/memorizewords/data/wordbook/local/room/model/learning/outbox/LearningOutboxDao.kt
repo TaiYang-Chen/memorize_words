@@ -14,10 +14,13 @@ interface LearningOutboxDao {
 
     @Query(
         """
-        SELECT *
-        FROM learning_outbox
-        WHERE status = :status
-        ORDER BY updated_at_ms ASC
+        SELECT o.*
+        FROM learning_outbox o
+        LEFT JOIN learning_event e ON e.client_event_id = o.client_event_id
+        WHERE o.status = :status
+        ORDER BY e.client_sequence IS NULL ASC,
+                 e.client_sequence ASC,
+                 o.created_at_ms ASC
         LIMIT :limit
         """
     )
@@ -27,9 +30,35 @@ interface LearningOutboxDao {
         """
         SELECT *
         FROM learning_outbox
-        WHERE status = :pendingStatus
-          AND next_retry_at_ms <= :now
-        ORDER BY updated_at_ms ASC
+        WHERE status IN ('PENDING', 'SYNCING', 'BLOCKED')
+        ORDER BY updated_at_ms DESC, client_event_id DESC
+        """
+    )
+    fun observeAllPending(): Flow<List<LearningOutboxEntity>>
+
+    @Query(
+        """
+        SELECT o.*
+        FROM learning_outbox o
+        LEFT JOIN learning_event e ON e.client_event_id = o.client_event_id
+        WHERE o.status = :pendingStatus
+          AND o.next_retry_at_ms <= :now
+          AND o.client_event_id = (
+              SELECT previous.client_event_id
+              FROM learning_outbox previous
+              LEFT JOIN learning_event previous_event
+                ON previous_event.client_event_id = previous.client_event_id
+              WHERE previous.book_id = o.book_id
+                AND previous.status IN ('PENDING', 'SYNCING', 'BLOCKED')
+              ORDER BY previous_event.client_sequence IS NULL ASC,
+                       previous_event.client_sequence ASC,
+                       previous.created_at_ms ASC,
+                       previous.client_event_id ASC
+              LIMIT 1
+          )
+        ORDER BY e.client_sequence IS NULL ASC,
+                 e.client_sequence ASC,
+                 o.created_at_ms ASC
         LIMIT :limit
         """
     )
@@ -100,6 +129,23 @@ interface LearningOutboxDao {
     @Query(
         """
         UPDATE learning_outbox
+        SET next_retry_at_ms = :now,
+            updated_at_ms = :now
+        WHERE status = 'PENDING'
+          AND next_retry_at_ms > :now
+          AND (
+               last_error LIKE 'RETRY|io|%'
+            OR last_error LIKE 'RETRY|auth|%'
+            OR last_error LIKE 'RETRY|http:5%'
+            OR last_error LIKE 'RETRY|unknown%'
+          )
+        """
+    )
+    suspend fun resumeRetryWaiting(now: Long): Int
+
+    @Query(
+        """
+        UPDATE learning_outbox
         SET status = :blockedStatus,
             attempt_count = attempt_count + 1,
             last_error = :error,
@@ -149,4 +195,15 @@ interface LearningOutboxDao {
 
     @Query("SELECT COUNT(*) FROM learning_outbox WHERE status = :status")
     fun observeCountByStatus(status: String): Flow<Int>
+
+    @Query(
+        """
+        SELECT MIN(next_retry_at_ms)
+        FROM learning_outbox
+        WHERE status = 'PENDING'
+          AND next_retry_at_ms > :now
+        """
+    )
+    suspend fun getEarliestRetryAt(now: Long): Long?
+
 }

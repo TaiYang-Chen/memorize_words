@@ -1,6 +1,7 @@
 package com.chen.memorizewords.data.wordbook.remoteapi.api.datasync
 
 import com.chen.memorizewords.core.network.http.NetworkRequestExecutor
+import com.chen.memorizewords.core.network.http.AuthenticatedRequestOrigin
 import com.chen.memorizewords.data.wordbook.remoteapi.dto.wordbook.WordBookDto
 import com.chen.memorizewords.data.wordbook.remoteapi.dto.wordstate.WordStateDto
 import com.chen.memorizewords.core.network.http.ApiResponse
@@ -22,7 +23,7 @@ class UserDataSyncRequest @Inject constructor(
     }
 
     suspend fun updateOnboardingState(request: OnboardingStateDto): NetworkResult<Unit> =
-        requestExecutor.executeAuthenticated {
+        requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
             apiService.updateOnboardingState(request)
                 .await<ApiResponse<Unit>, Unit>()
         }
@@ -32,7 +33,8 @@ class UserDataSyncRequest @Inject constructor(
             .awaitNullable<ApiResponse<StudyPlanDto?>, StudyPlanDto>()
     }
 
-    suspend fun updateStudyPlan(request: StudyPlanDto): NetworkResult<Unit> = requestExecutor.executeAuthenticated {
+    suspend fun updateStudyPlan(request: StudyPlanDto): NetworkResult<Unit> =
+        requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
         apiService.updateStudyPlan(request)
             .await<ApiResponse<Unit>, Unit>()
     }
@@ -63,7 +65,8 @@ class UserDataSyncRequest @Inject constructor(
         ).await<ApiResponse<WordBookDto>, WordBookDto>()
     }
 
-    suspend fun removeMyWordBook(bookId: Long): NetworkResult<Unit> = requestExecutor.executeAuthenticated {
+    suspend fun removeMyWordBook(bookId: Long): NetworkResult<Unit> =
+        requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
         apiService.removeMyWordBook(bookId)
             .await<ApiResponse<Unit>, Unit>()
     }
@@ -89,7 +92,7 @@ class UserDataSyncRequest @Inject constructor(
         definitions: String,
         phonetic: String?,
         addedDate: String
-    ): NetworkResult<Unit> = requestExecutor.executeAuthenticated {
+    ): NetworkResult<Unit> = requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
         apiService.addFavorite(
             FavoriteSyncRequest(
                 wordId = wordId,
@@ -109,7 +112,8 @@ class UserDataSyncRequest @Inject constructor(
             .await<ApiResponse<PageData<FavoriteDto>>, PageData<FavoriteDto>>()
     }
 
-    suspend fun removeFavorite(wordId: Long): NetworkResult<Unit> = requestExecutor.executeAuthenticated {
+    suspend fun removeFavorite(wordId: Long): NetworkResult<Unit> =
+        requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
         apiService.removeFavorite(wordId)
             .await<ApiResponse<Unit>, Unit>()
     }
@@ -195,7 +199,7 @@ class UserDataSyncRequest @Inject constructor(
         updatedAtMs: Long,
         isNewPlanCompleted: Boolean,
         isReviewPlanCompleted: Boolean
-    ): NetworkResult<Unit> = requestExecutor.executeAuthenticated {
+    ): NetworkResult<Unit> = requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
         apiService.upsertDailyStudyDuration(
             date = date,
             request = DailyStudyDurationSyncRequest(
@@ -208,7 +212,7 @@ class UserDataSyncRequest @Inject constructor(
     }
 
     suspend fun setCurrentWordBookSelection(bookId: Long): NetworkResult<Unit> =
-        requestExecutor.executeAuthenticated {
+        requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
             apiService.setCurrentWordBookSelection(
                 bookId = bookId,
                 request = WordBookSelectionSyncRequest(selected = true)
@@ -250,7 +254,7 @@ class UserDataSyncRequest @Inject constructor(
         type: String,
         signedAtMs: Long,
         updatedAtMs: Long
-    ): NetworkResult<Unit> = requestExecutor.executeAuthenticated {
+    ): NetworkResult<Unit> = requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
         apiService.upsertCheckInRecord(
             date = date,
             request = CheckInRecordSyncRequest(

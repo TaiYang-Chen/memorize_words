@@ -14,6 +14,7 @@ import com.chen.memorizewords.data.sync.repository.sync.SyncOutboxDrainScheduler
 import com.chen.memorizewords.data.sync.repository.sync.SyncOutboxRetryWaitResumer
 import com.chen.memorizewords.data.sync.repository.sync.SyncOutboxStore
 import com.chen.memorizewords.data.sync.repository.sync.SyncOutboxWorkScheduler
+import com.chen.memorizewords.data.sync.repository.sync.UnifiedSyncRetryWaitResumer
 import com.chen.memorizewords.data.sync.bootstrap.HomeStartupSnapshotStore
 import com.chen.memorizewords.data.sync.bootstrap.LoginBootstrapApplierImpl
 import com.chen.memorizewords.domain.account.repository.LoginBootstrapApplier
@@ -74,7 +75,7 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindSyncOutboxRetryWaitResumer(
-        impl: SyncOutboxStore
+        impl: UnifiedSyncRetryWaitResumer
     ): SyncOutboxRetryWaitResumer
 
     @Binds

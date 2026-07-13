@@ -1,6 +1,7 @@
 package com.chen.memorizewords.data.account.remoteapi.api.auth
 
 import com.chen.memorizewords.core.network.http.NetworkRequestExecutor
+import com.chen.memorizewords.core.network.http.AuthenticatedRequestOrigin
 import com.chen.memorizewords.data.account.remoteapi.dto.LoginResponseDto
 import com.chen.memorizewords.data.account.remoteapi.dto.ProfileDto
 import com.chen.memorizewords.data.account.remoteapi.dto.SendSmsCodeResponseDto
@@ -54,12 +55,14 @@ class AuthRequest @Inject constructor(
                 .await<ApiResponse<FusionAuthTokenDto>, FusionAuthTokenDto>()
         }
 
-    suspend fun logout(): NetworkResult<Unit> = requestExecutor.executeAuthenticated {
+    suspend fun logout(): NetworkResult<Unit> =
+        requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
         authApiService.logout()
             .await<ApiResponse<Unit>, Unit>()
     }
 
-    suspend fun deleteAccount(): NetworkResult<Unit> = requestExecutor.executeAuthenticated {
+    suspend fun deleteAccount(): NetworkResult<Unit> =
+        requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
         authApiService.deleteAccount()
             .await<ApiResponse<Unit>, Unit>()
     }

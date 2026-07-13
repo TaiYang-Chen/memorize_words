@@ -268,7 +268,7 @@
                             android:text="@{viewModel.learnButtonSubtitleText}"
                             android:textColor="#DCE6FF"
                             android:textSize="@dimen/core_ui_text_12"
-                            tools:text="新学 15 个单词 · 预计 15 分钟" />
+                            tools:text="已学13个，还剩2个" />
                     </LinearLayout>
 
                     <LinearLayout

@@ -18,6 +18,7 @@ import com.google.gson.Gson
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.CancellationException
 
 @Singleton
 class LearningOutboxProcessor @Inject constructor(
@@ -47,14 +48,28 @@ class LearningOutboxProcessor @Inject constructor(
             )
             if (claimed != 1) return@forEach
 
-            val result = runCatching {
-                val payload = gson.fromJson(entity.payload, LearningEventSyncPayload::class.java)
-                coordinator.withBookWrite(payload.bookId) {
-                    val response = remoteLearningSyncDataSource
-                        .recordLearningEvent(payload.toRequest())
-                        .getOrThrow()
-                    learningSyncStatePort.applyLearningEventSyncResult(response.toSnapshot())
-                }
+            val result = try {
+                Result.success(
+                    run {
+                        val payload = gson.fromJson(entity.payload, LearningEventSyncPayload::class.java)
+                        coordinator.withBookWrite(payload.bookId) {
+                            val response = remoteLearningSyncDataSource
+                                .recordLearningEvent(payload.toRequest())
+                                .getOrThrow()
+                            val snapshot = response.toSnapshot()
+                            if (snapshot.conflict) {
+                                throw SyncEventConflictException(
+                                    "learning event conflict: ${snapshot.clientEventId}"
+                                )
+                            }
+                            learningSyncStatePort.applyLearningEventSyncResult(snapshot)
+                        }
+                    }
+                )
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (throwable: Throwable) {
+                Result.failure(throwable)
             }
             if (result.isSuccess) {
                 learningOutboxDao.deleteClaimed(entity.clientEventId, leaseToken)
@@ -66,7 +81,10 @@ class LearningOutboxProcessor @Inject constructor(
                         clientEventId = entity.clientEventId,
                         leaseToken = leaseToken,
                         error = failure.persistedMessage,
-                        nextRetryAt = attemptTime + syncOutboxBackoffDelayMillis(entity.attemptCount + 1),
+                        nextRetryAt = attemptTime + (
+                            failure.retryAfterMillis
+                                ?: syncOutboxBackoffDelayMillis(entity.attemptCount + 1)
+                            ),
                         updatedAtMs = attemptTime
                     )
                     shouldRetry = true

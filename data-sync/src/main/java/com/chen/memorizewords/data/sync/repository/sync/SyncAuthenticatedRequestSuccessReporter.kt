@@ -12,6 +12,6 @@ class SyncAuthenticatedRequestSuccessReporter @Inject constructor(
 
     override suspend fun onAuthenticatedRequestSucceeded() {
         syncOutboxRetryWaitResumer.resumeRetryWaiting()
-        syncOutboxDrainScheduler.scheduleImmediateDrain()
+        syncOutboxDrainScheduler.scheduleRecoveryDrain()
     }
 }

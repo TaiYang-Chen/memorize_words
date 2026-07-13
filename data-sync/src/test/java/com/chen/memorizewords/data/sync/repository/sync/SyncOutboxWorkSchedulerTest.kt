@@ -9,10 +9,10 @@ import kotlin.test.assertTrue
 class SyncOutboxWorkSchedulerTest {
 
     @Test
-    fun `drain request does not require WorkManager network constraint`() {
+    fun `drain request requires connected network`() {
         val request = buildSyncOutboxDrainRequest(SyncWorkConstants.TAG_SYNC_OUTBOX_DRAIN)
 
-        assertEquals(NetworkType.NOT_REQUIRED, request.workSpec.constraints.requiredNetworkType)
+        assertEquals(NetworkType.CONNECTED, request.workSpec.constraints.requiredNetworkType)
         assertTrue(SyncWorkConstants.TAG_SYNC_OUTBOX_DRAIN in request.tags)
     }
 

@@ -7,6 +7,8 @@ object SyncWorkConstants {
 
     const val TAG_SYNC_OUTBOX_DRAIN = "sync_outbox_drain"
     const val TAG_SYNC_OUTBOX_IMMEDIATE_DRAIN = "sync_outbox_immediate_drain"
+    const val TAG_SYNC_OUTBOX_RETRY = "sync_outbox_retry"
+    const val TAG_SYNC_OUTBOX_PERIODIC = "sync_outbox_periodic"
     const val TAG_DATA_BOOTSTRAP = "data_bootstrap"
     const val TAG_POST_LOGIN_BOOTSTRAP = "post_login_bootstrap"
 
@@ -60,6 +62,8 @@ object SyncWorkConstants {
 
     const val WORK_SYNC_OUTBOX_DRAIN = "work_sync_outbox_drain"
     const val WORK_SYNC_OUTBOX_IMMEDIATE_DRAIN = "work_sync_outbox_immediate_drain"
+    const val WORK_SYNC_OUTBOX_RETRY = "work_sync_outbox_retry"
+    const val WORK_SYNC_OUTBOX_PERIODIC = "work_sync_outbox_periodic"
     const val WORK_POST_LOGIN_BOOTSTRAP = "work_post_login_bootstrap"
 
     const val TAG_PRACTICE_SETTINGS_SYNC = "practice_settings_sync"

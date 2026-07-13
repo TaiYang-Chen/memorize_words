@@ -39,6 +39,9 @@ class DataSyncUserScopedDataResetContributor @Inject constructor(
         val workManager = runCatching { WorkManager.getInstance(appContext) }.getOrNull() ?: return
         listOf(
             SyncWorkConstants.TAG_SYNC_OUTBOX_DRAIN,
+            SyncWorkConstants.TAG_SYNC_OUTBOX_IMMEDIATE_DRAIN,
+            SyncWorkConstants.TAG_SYNC_OUTBOX_RETRY,
+            SyncWorkConstants.TAG_SYNC_OUTBOX_PERIODIC,
             SyncWorkConstants.TAG_POST_LOGIN_BOOTSTRAP,
             SyncWorkConstants.TAG_ADD_MY_WORD_BOOK,
             SyncWorkConstants.TAG_STUDY_PLAN_SYNC,
@@ -49,6 +52,9 @@ class DataSyncUserScopedDataResetContributor @Inject constructor(
         ).forEach(workManager::cancelAllWorkByTag)
         listOf(
             SyncWorkConstants.WORK_SYNC_OUTBOX_DRAIN,
+            SyncWorkConstants.WORK_SYNC_OUTBOX_IMMEDIATE_DRAIN,
+            SyncWorkConstants.WORK_SYNC_OUTBOX_RETRY,
+            SyncWorkConstants.WORK_SYNC_OUTBOX_PERIODIC,
             SyncWorkConstants.WORK_POST_LOGIN_BOOTSTRAP,
             SyncWorkConstants.UNIQUE_DATA_BOOTSTRAP,
             LEGACY_WORK_WORD_BOOK_BOOTSTRAP

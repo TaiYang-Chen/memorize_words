@@ -40,7 +40,8 @@ enum class SyncFailureKind {
 data class SyncFailureDecision(
     val shouldRetry: Boolean,
     val failureKind: SyncFailureKind,
-    val persistedMessage: String
+    val persistedMessage: String,
+    val retryAfterMillis: Long? = null
 )
 
 interface SyncOutboxWriter {

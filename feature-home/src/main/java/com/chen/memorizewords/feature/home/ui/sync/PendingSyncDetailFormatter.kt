@@ -174,6 +174,19 @@ class PendingSyncDetailFormatter @Inject constructor(
                 label("\u66f4\u65b0\u65f6\u95f4", "updatedAtMs")
             )
 
+            LEARNING_RECORDED -> buildFields(
+                rootObject,
+                label("\u4e8b\u4ef6 ID", "clientEventId"),
+                label("\u8bcd\u4e66 ID", "bookId"),
+                label("\u5355\u8bcd ID", "wordId"),
+                label("\u5b66\u4e60\u52a8\u4f5c", "action"),
+                label("\u8d28\u91cf\u8bc4\u5206", "quality"),
+                label("\u662f\u5426\u6b63\u786e", "correct"),
+                label("\u4e1a\u52a1\u65e5\u671f", "businessDate"),
+                label("\u53d1\u751f\u65f6\u95f4", "occurredAt"),
+                label("\u57fa\u7840\u7248\u672c", "baseStateRevision")
+            )
+
             else -> extractAllFields(rootObject)
         }
 
@@ -256,6 +269,7 @@ class PendingSyncDetailFormatter @Inject constructor(
             FLOATING_SETTINGS -> "\u60ac\u6d6e\u590d\u4e60\u8bbe\u7f6e"
             FLOATING_DISPLAY_RECORD -> "\u60ac\u6d6e\u590d\u4e60\u5c55\u793a\u8bb0\u5f55"
             CHECKIN_RECORD -> "\u7b7e\u5230\u8bb0\u5f55"
+            LEARNING_RECORDED -> "\u5b66\u4e60\u4e8b\u4ef6"
             else -> bizType
         }
     }
@@ -285,6 +299,7 @@ class PendingSyncDetailFormatter @Inject constructor(
             "SERVER" -> "\u670d\u52a1\u7aef"
             "RATE_LIMIT" -> "\u9650\u6d41"
             "CLIENT" -> "\u5ba2\u6237\u7aef"
+            "CONFLICT" -> "\u6570\u636e\u51b2\u7a81"
             "UNKNOWN" -> "\u672a\u77e5"
             else -> failureKind
         }
@@ -338,5 +353,6 @@ class PendingSyncDetailFormatter @Inject constructor(
         private const val FLOATING_SETTINGS = "FLOATING_SETTINGS"
         private const val FLOATING_DISPLAY_RECORD = "FLOATING_DISPLAY_RECORD"
         private const val CHECKIN_RECORD = "CHECKIN_RECORD"
+        private const val LEARNING_RECORDED = "LEARNING_RECORDED"
     }
 }

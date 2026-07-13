@@ -27,7 +27,7 @@ class HomeTextFormatterTest {
             plan = StudyPlan(dailyNewCount = 15)
         )
 
-        assertEquals("已学6个单词，还剩9个单词即可完成任务，预计9分钟", text)
+        assertEquals("已学6个，还剩9个", text)
     }
 
     @Test
@@ -57,7 +57,7 @@ class HomeTextFormatterTest {
                     "新学${formatArgs[0]}个单词，预计${formatArgs[1]}分钟"
 
                 R.string.home_learn_subtitle_continue ->
-                    "已学${formatArgs[0]}个单词，还剩${formatArgs[1]}个单词即可完成任务，预计${formatArgs[2]}分钟"
+                    "已学${formatArgs[0]}个，还剩${formatArgs[1]}个单词"
 
                 R.string.home_learn_subtitle_new_more ->
                     "今日已学${formatArgs[0]}个单词，可继续加量新学"

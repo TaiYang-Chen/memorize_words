@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.chen.memorizewords.feature.home.databinding.FeatureHomeItemPendingSyncRecordBinding
 
 class PendingSyncAdapter(
-    private val onItemClick: (Long) -> Unit
+    private val onItemClick: (String) -> Unit
 ) : ListAdapter<PendingSyncItemUi, PendingSyncAdapter.PendingSyncViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PendingSyncViewHolder {
@@ -29,7 +29,7 @@ class PendingSyncAdapter(
         private val binding: FeatureHomeItemPendingSyncRecordBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: PendingSyncItemUi, onItemClick: (Long) -> Unit) {
+        fun bind(item: PendingSyncItemUi, onItemClick: (String) -> Unit) {
             binding.tvPendingItemTitle.text = item.bizTypeLabel
             binding.tvPendingItemMeta.text = "${item.stateLabel} · ${item.operationLabel}"
             binding.tvPendingItemBizKey.text = item.bizKeyText

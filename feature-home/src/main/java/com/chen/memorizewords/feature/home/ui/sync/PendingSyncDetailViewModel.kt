@@ -17,7 +17,7 @@ class PendingSyncDetailViewModel @Inject constructor(
     private val formatter: PendingSyncDetailFormatter
 ) : BaseViewModel() {
 
-    private val expandedIds = MutableStateFlow<Set<Long>>(emptySet())
+    private val expandedIds = MutableStateFlow<Set<String>>(emptySet())
 
     val uiState: StateFlow<PendingSyncDetailUiState> =
         combine(
@@ -45,7 +45,7 @@ class PendingSyncDetailViewModel @Inject constructor(
         back()
     }
 
-    fun onItemClicked(id: Long) {
+    fun onItemClicked(id: String) {
         expandedIds.value = expandedIds.value.toMutableSet().apply {
             if (!add(id)) {
                 remove(id)

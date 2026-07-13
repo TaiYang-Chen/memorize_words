@@ -19,6 +19,8 @@ class DataSyncConflictPolicy @Inject constructor() : SyncConflictPolicy {
 internal class MissingSyncOutboxHandlerException(topic: String) :
     IllegalStateException("No SyncOutboxHandler for topic=$topic")
 
+internal class SyncEventConflictException(message: String) : IllegalStateException(message)
+
 internal fun classifySyncOutboxFailure(throwable: Throwable?): SyncFailureDecision {
     return when (throwable) {
         null -> SyncFailureDecision(
@@ -33,6 +35,12 @@ internal fun classifySyncOutboxFailure(throwable: Throwable?): SyncFailureDecisi
             persistedMessage = "BLOCKED|missing_handler|${throwable.message.orEmpty()}"
         )
 
+        is SyncEventConflictException -> SyncFailureDecision(
+            shouldRetry = false,
+            failureKind = SyncFailureKind.CONFLICT,
+            persistedMessage = "BLOCKED|conflict|${throwable.message.orEmpty()}"
+        )
+
         is UnauthorizedNetworkException -> SyncFailureDecision(
             shouldRetry = true,
             failureKind = SyncFailureKind.AUTH,
@@ -42,15 +50,16 @@ internal fun classifySyncOutboxFailure(throwable: Throwable?): SyncFailureDecisi
         is HttpStatusException -> {
             when {
                 throwable.code == 409 || throwable.code == 412 -> SyncFailureDecision(
-                    shouldRetry = true,
+                    shouldRetry = false,
                     failureKind = SyncFailureKind.CONFLICT,
-                    persistedMessage = "RETRY|conflict:${throwable.code}|${throwable.message.orEmpty()}"
+                    persistedMessage = "BLOCKED|conflict:${throwable.code}|${throwable.message.orEmpty()}"
                 )
 
                 throwable.code == 429 -> SyncFailureDecision(
                     shouldRetry = true,
                     failureKind = SyncFailureKind.RATE_LIMIT,
-                    persistedMessage = "RETRY|http:${throwable.code}|${throwable.message.orEmpty()}"
+                    persistedMessage = "RETRY|http:${throwable.code}|${throwable.message.orEmpty()}",
+                    retryAfterMillis = resolveRetryAfterMillis(throwable)
                 )
 
                 throwable.code >= 500 -> SyncFailureDecision(
@@ -79,4 +88,13 @@ internal fun classifySyncOutboxFailure(throwable: Throwable?): SyncFailureDecisi
             persistedMessage = "RETRY|unknown|${throwable.message.orEmpty()}"
         )
     }
+}
+
+private fun resolveRetryAfterMillis(throwable: HttpStatusException): Long? {
+    throwable.retryAfterSeconds?.let { seconds ->
+        return (seconds.coerceAtLeast(0L) * 1_000L)
+    }
+    val resetAtMs = throwable.resetAtMs ?: return null
+    val referenceTime = throwable.serverTimeMs ?: System.currentTimeMillis()
+    return (resetAtMs - referenceTime).coerceAtLeast(0L)
 }

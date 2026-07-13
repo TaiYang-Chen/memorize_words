@@ -1,6 +1,7 @@
 package com.chen.memorizewords.data.sync.remoteapi.api.learningsync
 
 import com.chen.memorizewords.core.network.http.NetworkRequestExecutor
+import com.chen.memorizewords.core.network.http.AuthenticatedRequestOrigin
 import com.chen.memorizewords.core.network.http.ApiResponse
 import com.chen.memorizewords.core.network.http.PageData
 import com.chen.memorizewords.core.network.http.NetworkResult
@@ -15,7 +16,7 @@ class LearningSyncRequest @Inject constructor(
     private val requestExecutor: NetworkRequestExecutor
 ) {
     suspend fun recordLearningEvent(request: LearningEventRequest): NetworkResult<LearningEventResultDto> =
-        requestExecutor.executeAuthenticated {
+        requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
             apiService.recordLearningEvent(request)
                 .await<ApiResponse<LearningEventResultDto>, LearningEventResultDto>()
         }
@@ -26,7 +27,7 @@ class LearningSyncRequest @Inject constructor(
     }
 
     suspend fun updatePracticeSettings(request: PracticeSettingsSyncRequest): NetworkResult<Unit> =
-        requestExecutor.executeAuthenticated {
+        requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
             apiService.updatePracticeSettings(request)
                 .await<ApiResponse<Unit>, Unit>()
         }
@@ -34,7 +35,7 @@ class LearningSyncRequest @Inject constructor(
     suspend fun upsertPracticeDuration(
         date: String,
         request: PracticeDurationSyncRequest
-    ): NetworkResult<Unit> = requestExecutor.executeAuthenticated {
+    ): NetworkResult<Unit> = requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
         apiService.upsertPracticeDuration(date, request)
             .await<ApiResponse<Unit>, Unit>()
     }
@@ -48,7 +49,7 @@ class LearningSyncRequest @Inject constructor(
     }
 
     suspend fun appendPracticeSession(request: PracticeSessionSyncRequest): NetworkResult<Unit> =
-        requestExecutor.executeAuthenticated {
+        requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
             apiService.appendPracticeSession(request)
                 .await<ApiResponse<Unit>, Unit>()
         }
@@ -67,7 +68,7 @@ class LearningSyncRequest @Inject constructor(
     }
 
     suspend fun updateFloatingSettings(request: FloatingSettingsSyncRequest): NetworkResult<Unit> =
-        requestExecutor.executeAuthenticated {
+        requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
             apiService.updateFloatingSettings(request)
                 .await<ApiResponse<Unit>, Unit>()
         }
@@ -75,7 +76,7 @@ class LearningSyncRequest @Inject constructor(
     suspend fun upsertFloatingDisplayRecord(
         date: String,
         request: FloatingDisplayRecordSyncRequest
-    ): NetworkResult<Unit> = requestExecutor.executeAuthenticated {
+    ): NetworkResult<Unit> = requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
         apiService.upsertFloatingDisplayRecord(date, request)
             .await<ApiResponse<Unit>, Unit>()
     }
