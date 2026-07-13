@@ -138,8 +138,6 @@ class HomeLearningProgressTest {
         assertEquals("已完成", formatTaskStatus(15, 15))
         assertEquals("已完成", formatTaskStatus(18, 15))
         assertEquals("暂无计划", formatTaskStatus(0, 0))
-        assertTrue(isTaskDone(15, 15))
-        assertFalse(isTaskDone(0, 0))
     }
 
     @Test
@@ -159,7 +157,6 @@ class HomeLearningProgressTest {
         assertEquals(0, calculateLearnProgress(0, 0, plan))
         assertEquals("0/0", formatTodayCompletedWordsText(0, 0, plan))
         assertEquals("0/0", formatCountProgressText(0, 0))
-        assertEquals("0分钟", formatEstimatedStudyMinutesText(plan))
     }
 
     @Test
@@ -195,11 +192,6 @@ class HomeLearningProgressTest {
         assertEquals("雅思核心词汇", ui.wordBookTitleText)
         assertEquals("今日已学15个单词，可继续加量新学", ui.learnButtonSubtitleText)
         assertEquals("新学 15 / 复习 30", ui.planCardSubtitleText)
-        assertEquals("15/15", ui.todayNewProgressText)
-        assertEquals("已完成", ui.todayNewStatusText)
-        assertEquals("0/30", ui.todayReviewProgressText)
-        assertEquals("待完成", ui.todayReviewStatusText)
-        assertEquals("15分钟", ui.estimatedStudyMinutesText)
         assertEquals("2 天", ui.continuousDaysText)
         assertEquals("5 天", ui.expectedCompletionText)
     }

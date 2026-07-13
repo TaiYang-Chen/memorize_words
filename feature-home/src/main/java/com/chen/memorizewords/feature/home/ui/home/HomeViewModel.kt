@@ -294,11 +294,6 @@ class HomeViewModel @Inject constructor(
     val learnButtonSubtitleText: StateFlow<String> = dashboardField { it.learnButtonSubtitleText }
     val reviewCardSubtitleText: StateFlow<String> = dashboardField { it.reviewCardSubtitleText }
     val planCardSubtitleText: StateFlow<String> = dashboardField { it.planCardSubtitleText }
-    val todayNewProgressText: StateFlow<String> = dashboardField { it.todayNewProgressText }
-    val todayReviewProgressText: StateFlow<String> = dashboardField { it.todayReviewProgressText }
-    val todayNewStatusText: StateFlow<String> = dashboardField { it.todayNewStatusText }
-    val todayReviewStatusText: StateFlow<String> = dashboardField { it.todayReviewStatusText }
-    val estimatedStudyMinutesText: StateFlow<String> = dashboardField { it.estimatedStudyMinutesText }
     val masteredWordsText: StateFlow<String> = dashboardField { it.masteredWordsText }
     val learnedWordsText: StateFlow<String> = dashboardField { it.learnedWordsText }
     val learningWordsText: StateFlow<String> = dashboardField { it.learningWordsText }
@@ -313,12 +308,7 @@ class HomeViewModel @Inject constructor(
     val reviewCardDescriptionText: StateFlow<String> = dashboardField { it.reviewCardDescriptionText }
     val planCardTitleText: StateFlow<String> = dashboardField { it.planCardTitleText }
     val planCardDescriptionText: StateFlow<String> = dashboardField { it.planCardDescriptionText }
-    val todaySectionTitleText: StateFlow<String> = dashboardField { it.todaySectionTitleText }
     val overviewSectionTitleText: StateFlow<String> = dashboardField { it.overviewSectionTitleText }
-    val newTaskTitleText: StateFlow<String> = dashboardField { it.newTaskTitleText }
-    val reviewTaskTitleText: StateFlow<String> = dashboardField { it.reviewTaskTitleText }
-    val estimatedTaskTitleText: StateFlow<String> = dashboardField { it.estimatedTaskTitleText }
-    val estimatedTaskHintText: StateFlow<String> = dashboardField { it.estimatedTaskHintText }
     val masteredWordsTitleText: StateFlow<String> = dashboardField { it.masteredWordsTitleText }
     val learnedWordsTitleText: StateFlow<String> = dashboardField { it.learnedWordsTitleText }
     val learningWordsTitleText: StateFlow<String> = dashboardField { it.learningWordsTitleText }
@@ -328,8 +318,6 @@ class HomeViewModel @Inject constructor(
     val expectedCompletionTitleText: StateFlow<String> = dashboardField { it.expectedCompletionTitleText }
     val todayDurationTitleText: StateFlow<String> = dashboardField { it.todayDurationTitleText }
     val learnProcess: StateFlow<Int> = dashboardField { it.progressPercent }
-    val todayNewDoneIconVisible: StateFlow<Boolean> = dashboardField { it.todayNewDone }
-    val todayReviewDoneIconVisible: StateFlow<Boolean> = dashboardField { it.todayReviewDone }
 
     private fun <T> dashboardField(selector: (HomeDashboardUiState) -> T): StateFlow<T> {
         return dashboardUiState
@@ -600,13 +588,6 @@ data class HomeDashboardUiState(
     val learnButtonSubtitleText: String,
     val reviewCardSubtitleText: String,
     val planCardSubtitleText: String,
-    val todayNewProgressText: String,
-    val todayReviewProgressText: String,
-    val todayNewStatusText: String,
-    val todayReviewStatusText: String,
-    val todayNewDone: Boolean,
-    val todayReviewDone: Boolean,
-    val estimatedStudyMinutesText: String,
     val masteredWordsText: String,
     val learnedWordsText: String,
     val learningWordsText: String,
@@ -621,12 +602,7 @@ data class HomeDashboardUiState(
     val reviewCardDescriptionText: String,
     val planCardTitleText: String,
     val planCardDescriptionText: String,
-    val todaySectionTitleText: String,
     val overviewSectionTitleText: String,
-    val newTaskTitleText: String,
-    val reviewTaskTitleText: String,
-    val estimatedTaskTitleText: String,
-    val estimatedTaskHintText: String,
     val masteredWordsTitleText: String,
     val learnedWordsTitleText: String,
     val learningWordsTitleText: String,
@@ -651,7 +627,6 @@ internal fun buildHomeDashboardUiState(
     val safeReviewPlan = plan.dailyReviewCount.coerceAtLeast(0)
     val safeTodayNew = todayNewCount.coerceAtLeast(0)
     val safeTodayReview = todayReviewCount.coerceAtLeast(0)
-    val estimatedMinutes = calculateEstimatedStudyMinutes(plan)
 
     return HomeDashboardUiState(
         homeTitleText = "\u5c0f\u767d\u80cc\u5355\u8bcd",
@@ -664,13 +639,6 @@ internal fun buildHomeDashboardUiState(
         learnButtonSubtitleText = learnButtonSubtitleText,
         reviewCardSubtitleText = "${formatCountProgressText(safeTodayReview, safeReviewPlan)} ${formatTaskStatus(safeTodayReview, safeReviewPlan)}",
         planCardSubtitleText = "\u65b0\u5b66 $safeNewPlan / \u590d\u4e60 $safeReviewPlan",
-        todayNewProgressText = formatCountProgressText(safeTodayNew, safeNewPlan),
-        todayReviewProgressText = formatCountProgressText(safeTodayReview, safeReviewPlan),
-        todayNewStatusText = formatTaskStatus(safeTodayNew, safeNewPlan),
-        todayReviewStatusText = formatTaskStatus(safeTodayReview, safeReviewPlan),
-        todayNewDone = isTaskDone(safeTodayNew, safeNewPlan),
-        todayReviewDone = isTaskDone(safeTodayReview, safeReviewPlan),
-        estimatedStudyMinutesText = formatMinuteText(estimatedMinutes),
         masteredWordsText = formatWordBookNumberText(wordBookInfo?.masteredWords),
         learnedWordsText = formatWordBookNumberText(wordBookInfo?.learnedWords),
         learningWordsText = formatWordBookNumberText(wordBookInfo?.learningWords),
@@ -685,12 +653,7 @@ internal fun buildHomeDashboardUiState(
         reviewCardDescriptionText = "\u5de9\u56fa\u8bb0\u5fc6\uff0c\u5f3a\u5316\u638c\u63e1",
         planCardTitleText = "\u4fee\u6539\u8ba1\u5212",
         planCardDescriptionText = "\u8c03\u6574\u6bcf\u65e5\u5b66\u4e60\u76ee\u6807",
-        todaySectionTitleText = "\u4eca\u65e5\u4efb\u52a1",
         overviewSectionTitleText = "\u5b66\u4e60\u6982\u89c8",
-        newTaskTitleText = "\u65b0\u8bcd\u5b66\u4e60",
-        reviewTaskTitleText = "\u590d\u4e60\u5355\u8bcd",
-        estimatedTaskTitleText = "\u9884\u8ba1\u7528\u65f6",
-        estimatedTaskHintText = "\u5408\u7406\u5b89\u6392\u65f6\u95f4",
         masteredWordsTitleText = "\u5df2\u638c\u63e1",
         learnedWordsTitleText = "\u5df2\u5b66\u4e60",
         learningWordsTitleText = "\u5b66\u4e60\u4e2d",
@@ -726,10 +689,6 @@ internal fun calculateRemainingCount(doneCount: Int, planCount: Int): Int {
     return (planCount.coerceAtLeast(0) - doneCount.coerceAtLeast(0)).coerceAtLeast(0)
 }
 
-internal fun calculateEstimatedStudyMinutes(plan: StudyPlan): Int {
-    return plan.dailyNewCount.coerceAtLeast(0)
-}
-
 internal fun formatTodayCompletedWordsText(
     todayNewCount: Int,
     todayReviewCount: Int,
@@ -743,10 +702,6 @@ internal fun formatCountProgressText(doneCount: Int, planCount: Int): String {
     return "${doneCount.coerceAtLeast(0)}/${planCount.coerceAtLeast(0)}"
 }
 
-internal fun isTaskDone(doneCount: Int, planCount: Int): Boolean {
-    return planCount > 0 && doneCount >= planCount
-}
-
 internal fun formatTaskStatus(doneCount: Int, planCount: Int): String {
     val safePlan = planCount.coerceAtLeast(0)
     val safeDone = doneCount.coerceAtLeast(0)
@@ -756,14 +711,6 @@ internal fun formatTaskStatus(doneCount: Int, planCount: Int): String {
         safeDone >= safePlan -> "\u5df2\u5b8c\u6210"
         else -> "\u8fdb\u884c\u4e2d"
     }
-}
-
-internal fun formatMinuteText(minutes: Int): String {
-    return "${minutes.coerceAtLeast(0)}\u5206\u949f"
-}
-
-internal fun formatEstimatedStudyMinutesText(plan: StudyPlan): String {
-    return formatMinuteText(calculateEstimatedStudyMinutes(plan))
 }
 
 internal fun formatDayCountText(days: Int): String {
