@@ -1,9 +1,7 @@
 package com.chen.memorizewords.data.floating.repository
 
-import com.chen.memorizewords.domain.sync.FloatingSettingsSyncPayload
-import com.chen.memorizewords.domain.sync.OutboxTopic
-import com.chen.memorizewords.domain.sync.SyncOperation
-import com.chen.memorizewords.domain.sync.SyncOutboxWriter
+import com.chen.memorizewords.core.common.coroutines.DirectSyncLauncher
+import com.chen.memorizewords.data.sync.remote.learningsync.RemoteLearningSyncDataSource
 import com.chen.memorizewords.domain.floating.FloatingSettingsLocalStatePort
 import com.chen.memorizewords.domain.floating.model.FloatingDockConfig
 import com.chen.memorizewords.domain.floating.model.FloatingDockState
@@ -68,7 +66,9 @@ internal fun normalizeFloatingWordSettings(settings: FloatingWordSettings): Floa
 @Singleton
 class FloatingWordSettingsRepositoryImpl @Inject constructor(
     private val mmkv: MMKV,
-    private val SyncOutboxWriter: SyncOutboxWriter,    private val gson: Gson
+    private val gson: Gson,
+    private val remoteLearningSyncDataSource: RemoteLearningSyncDataSource,
+    private val directSyncLauncher: DirectSyncLauncher
 ) : FloatingWordSettingsRepository, FloatingSettingsLocalStatePort {
 
     companion object {
@@ -107,7 +107,7 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
         val normalized = normalizeSettings(settings)
         persistSettings(normalized)
         state.value = normalized
-        persistOutbox(normalized)
+        upload(normalized)
     }
 
     override suspend fun updateBallPosition(x: Int, y: Int, dockState: FloatingDockState?) {
@@ -118,7 +118,7 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
         ))
         persistSettings(latest)
         state.value = latest
-        persistOutbox(latest)
+        upload(latest)
     }
 
     override fun overwriteFromRemote(settings: FloatingWordSettings) {
@@ -244,30 +244,11 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
         mmkv.encode(KEY_DOCK_STATE, target.dockState?.let(gson::toJson))
     }
 
-    private suspend fun persistOutbox(settings: FloatingWordSettings) {
-        SyncOutboxWriter.enqueueLatest(
-            bizType = OutboxTopic.FLOATING_SETTINGS,
-            bizKey = "floating_settings",
-            operation = SyncOperation.UPSERT,
-            payload = gson.toJson(
-                FloatingSettingsSyncPayload(
-                    enabled = settings.enabled,
-                    sourceType = settings.sourceType.name,
-                    orderType = settings.orderType.name,
-                    fieldConfigsJson = gson.toJson(settings.fieldConfigs),
-                    selectedWordIdsJson = gson.toJson(settings.selectedWordIds),
-                    floatingBallX = settings.floatingBallX,
-                    floatingBallY = settings.floatingBallY,
-                    autoStartOnBoot = settings.autoStartOnBoot,
-                    autoStartOnAppLaunch = settings.autoStartOnAppLaunch,
-                    ballSizePercent = settings.ballSizePercent,
-                    ballOpacityPercent = settings.ballOpacityPercent,
-                    cardOpacityPercent = settings.cardOpacityPercent,
-                    cardGapDp = settings.cardGapDp,
-                    dockConfigJson = gson.toJson(settings.dockConfig),
-                    dockStateJson = settings.dockState?.let(gson::toJson)
-                )
-            )
+    private fun upload(settings: FloatingWordSettings) {
+        directSyncLauncher.launch(
+            operation = "floating_settings",
+            orderingKey = "floating_settings",
+            request = { remoteLearningSyncDataSource.updateFloatingSettings(settings) }
         )
     }
 }

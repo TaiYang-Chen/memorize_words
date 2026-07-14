@@ -20,8 +20,7 @@ class LocalAssetResetPolicy(
     ),
     val preservedLongKeys: List<String> = listOf(
         "key_expires_at",
-        "user_id",
-        "local_user_data_owner_user_id"
+        "user_id"
     ),
     val preservedBooleanKeys: List<String> = emptyList()
 ) {

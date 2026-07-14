@@ -1,8 +1,6 @@
 package com.chen.memorizewords.data.wordbook.repository.learning
 
 import com.chen.memorizewords.data.wordbook.local.room.model.learning.event.LearningEventDao
-import com.chen.memorizewords.data.wordbook.local.room.model.learning.outbox.LearningOutboxDao
-import com.chen.memorizewords.data.wordbook.local.room.model.learning.outbox.LearningOutboxEntity
 import com.chen.memorizewords.data.wordbook.local.room.model.study.progress.word.WordLearningStateDao
 import com.chen.memorizewords.data.wordbook.local.room.model.study.progress.word.toEntity
 import com.chen.memorizewords.data.wordbook.local.room.model.study.progress.wordbook.WordBookProgressDao
@@ -16,20 +14,12 @@ import javax.inject.Inject
 class LearningSyncStateRepository @Inject constructor(
     private val transactionRunner: WordBookTransactionRunner,
     private val learningEventDao: LearningEventDao,
-    private val learningOutboxDao: LearningOutboxDao,
     private val wordLearningStateDao: WordLearningStateDao,
     private val wordBookProgressDao: WordBookProgressDao
 ) : LearningSyncStatePort {
 
     override suspend fun hasPendingLearningEvents(): Boolean {
-        return learningEventDao.countPending() > 0 ||
-            learningOutboxDao.countByStatuses(
-                listOf(
-                    LearningOutboxEntity.STATUS_PENDING,
-                    LearningOutboxEntity.STATUS_SYNCING,
-                    LearningOutboxEntity.STATUS_BLOCKED
-                )
-            ) > 0
+        return learningEventDao.countPending() > 0
     }
 
     override suspend fun applyLearningEventSyncResult(result: LearningEventSyncResultSnapshot) {

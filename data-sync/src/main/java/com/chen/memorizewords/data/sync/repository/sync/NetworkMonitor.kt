@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
-import android.net.NetworkRequest
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,7 +20,13 @@ class NetworkMonitor @Inject constructor(
     private val connectivityManager: ConnectivityManager? =
         appContext.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
 
-    val isOnline: Flow<Boolean> = callbackFlow {
+    val networkCandidateAvailable: Flow<Boolean> = observeNetwork(::hasUsableNetwork)
+
+    val isOnline: Flow<Boolean> = observeNetwork(::hasValidatedNetwork)
+
+    private fun observeNetwork(
+        resolver: (ConnectivityManager) -> Boolean
+    ): Flow<Boolean> = callbackFlow {
         val manager = connectivityManager
         if (manager == null) {
             trySend(false)
@@ -31,25 +36,20 @@ class NetworkMonitor @Inject constructor(
 
         val callback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
-                trySend(hasValidatedNetwork(manager))
+                trySend(resolver(manager))
             }
 
             override fun onCapabilitiesChanged(network: Network, networkCapabilities: NetworkCapabilities) {
-                trySend(hasValidatedNetwork(manager))
+                trySend(resolver(manager))
             }
 
             override fun onLost(network: Network) {
-                trySend(hasValidatedNetwork(manager))
+                trySend(resolver(manager))
             }
         }
 
-        trySend(hasValidatedNetwork(manager))
-        manager.registerNetworkCallback(
-            NetworkRequest.Builder()
-                .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-                .build(),
-            callback
-        )
+        trySend(resolver(manager))
+        manager.registerDefaultNetworkCallback(callback)
 
         awaitClose {
             runCatching { manager.unregisterNetworkCallback(callback) }
@@ -68,6 +68,15 @@ class NetworkMonitor @Inject constructor(
         return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
             capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) &&
             capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+    }
+
+    private fun hasUsableNetwork(manager: ConnectivityManager): Boolean {
+        val activeNetwork = manager.activeNetwork ?: return false
+        val capabilities = manager.getNetworkCapabilities(activeNetwork) ?: return false
+        // VALIDATED depends on Android reaching its own probe endpoint. That endpoint can be
+        // unavailable even when the app server is reachable, especially on emulators or
+        // restricted networks. The real Retrofit request remains the source of truth.
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
     private fun hasValidatedNetwork(manager: ConnectivityManager): Boolean {

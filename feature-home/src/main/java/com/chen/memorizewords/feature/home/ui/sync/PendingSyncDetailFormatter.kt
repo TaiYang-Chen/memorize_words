@@ -1,5 +1,6 @@
 package com.chen.memorizewords.feature.home.ui.sync
 
+import com.chen.memorizewords.domain.sync.FailureQueueEventType
 import com.chen.memorizewords.domain.sync.model.SyncPendingRecord
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -67,7 +68,7 @@ class PendingSyncDetailFormatter @Inject constructor(
         )
 
         val fields = when (bizType) {
-            DAILY_STUDY_DURATION -> buildFields(
+            FailureQueueEventType.DAILY_STUDY_DURATION -> buildFields(
                 rootObject,
                 label("\u4e1a\u52a1\u65e5\u671f", "date"),
                 label("\u5b66\u4e60\u65f6\u957f", "totalDurationMs"),
@@ -76,16 +77,15 @@ class PendingSyncDetailFormatter @Inject constructor(
                 label("\u590d\u4e60\u8ba1\u5212\u5b8c\u6210", "isReviewPlanCompleted")
             )
 
-            PRACTICE_DURATION -> buildFields(
+            FailureQueueEventType.PRACTICE_DURATION -> buildFields(
                 rootObject,
                 label("\u4e1a\u52a1\u65e5\u671f", "date"),
                 label("\u7ec3\u4e60\u65f6\u957f", "totalDurationMs"),
                 label("\u66f4\u65b0\u65f6\u95f4", "updatedAtMs")
             )
 
-            PRACTICE_SESSION -> buildFields(
+            FailureQueueEventType.PRACTICE_SESSION -> buildFields(
                 rootObject,
-                label("\u8bb0\u5f55 ID", "id"),
                 label("\u4e1a\u52a1\u65e5\u671f", "date"),
                 label("\u6a21\u5f0f", "mode"),
                 label("\u8fdb\u5165\u65b9\u5f0f", "entryType"),
@@ -99,19 +99,29 @@ class PendingSyncDetailFormatter @Inject constructor(
                 label("\u63d0\u4ea4\u6570", "submitCount")
             )
 
-            FAVORITE -> buildFields(
+            FailureQueueEventType.FAVORITE_ADD -> buildFields(
                 rootObject,
                 label("\u5355\u8bcd ID", "wordId"),
                 label("\u5355\u8bcd", "word"),
                 label("\u91ca\u4e49", "definitions"),
                 label("\u97f3\u6807", "phonetic"),
-                label("\u6536\u85cf\u65e5\u671f", "addedDate"),
-                label("\u6536\u85cf\u65f6\u95f4", "addedAt")
+                label("\u6536\u85cf\u65e5\u671f", "addedDate")
             )
 
-            WORD_BOOK_SELECTION -> buildFields(rootObject, label("\u8bcd\u4e66 ID", "bookId"))
+            FailureQueueEventType.FAVORITE_REMOVE -> buildFields(
+                rootObject,
+                label("\u5355\u8bcd ID", "wordId")
+            )
 
-            STUDY_PLAN -> buildFields(
+            FailureQueueEventType.WORD_BOOK_DELETE -> buildFields(
+                rootObject,
+                label("\u8bcd\u4e66 ID", "bookId")
+            )
+
+            FailureQueueEventType.WORD_BOOK_SELECTION ->
+                buildFields(rootObject, label("\u8bcd\u4e66 ID", "bookId"))
+
+            FailureQueueEventType.STUDY_PLAN -> buildFields(
                 rootObject,
                 label("\u6bcf\u65e5\u65b0\u8bcd\u6570", "dailyNewWords"),
                 label("\u6bcf\u65e5\u590d\u4e60\u6570", "dailyReviewWords"),
@@ -119,16 +129,16 @@ class PendingSyncDetailFormatter @Inject constructor(
                 label("\u5355\u8bcd\u987a\u5e8f", "wordOrderType")
             )
 
-            ONBOARDING_STATE -> buildFields(
+            FailureQueueEventType.ONBOARDING_STATE -> buildFields(
                 rootObject,
                 label("\u5f15\u5bfc\u9636\u6bb5", "phase"),
                 label("\u5df2\u9009\u8bcd\u4e66 ID", "selectedWordBookId"),
                 label("\u7248\u672c\u53f7", "revision"),
                 label("\u66f4\u65b0\u65f6\u95f4", "updatedAtMs"),
-                label("\u5b8c\u6210\u65f6\u95f4", "completedAt")
+                label("\u5b8c\u6210\u65f6\u95f4", "completedAtMs")
             )
 
-            PRACTICE_SETTINGS -> buildFields(
+            FailureQueueEventType.PRACTICE_SETTINGS -> buildFields(
                 rootObject,
                 label("\u8bcd\u4e66 ID", "selectedBookId"),
                 label("\u95f4\u9694\u79d2\u6570", "intervalSeconds"),
@@ -140,13 +150,13 @@ class PendingSyncDetailFormatter @Inject constructor(
                 label("\u8bed\u97f3\u63d0\u4f9b\u65b9", "provider")
             )
 
-            FLOATING_SETTINGS -> buildFields(
+            FailureQueueEventType.FLOATING_SETTINGS -> buildFields(
                 rootObject,
                 label("\u542f\u7528\u72b6\u6001", "enabled"),
                 label("\u6765\u6e90\u7c7b\u578b", "sourceType"),
                 label("\u6392\u5e8f\u65b9\u5f0f", "orderType"),
-                label("\u5b57\u6bb5\u914d\u7f6e", "fieldConfigsJson"),
-                label("\u5df2\u9009\u5355\u8bcd ID", "selectedWordIdsJson"),
+                label("\u5b57\u6bb5\u914d\u7f6e", "fieldConfigs"),
+                label("\u5df2\u9009\u5355\u8bcd ID", "selectedWordIds"),
                 label("\u60ac\u6d6e\u7403 X", "floatingBallX"),
                 label("\u60ac\u6d6e\u7403 Y", "floatingBallY"),
                 label("\u5f00\u673a\u542f\u52a8", "autoStartOnBoot"),
@@ -154,11 +164,11 @@ class PendingSyncDetailFormatter @Inject constructor(
                 label("\u60ac\u6d6e\u7403\u900f\u660e\u5ea6", "ballOpacityPercent"),
                 label("\u5361\u7247\u900f\u660e\u5ea6", "cardOpacityPercent"),
                 label("\u5c0f\u4eba\u4e0e\u5f39\u6846\u95f4\u9694", "cardGapDp"),
-                label("\u505c\u9760\u914d\u7f6e", "dockConfigJson"),
-                label("\u505c\u9760\u72b6\u6001", "dockStateJson")
+                label("\u505c\u9760\u914d\u7f6e", "dockConfig"),
+                label("\u505c\u9760\u72b6\u6001", "dockState")
             )
 
-            FLOATING_DISPLAY_RECORD -> buildFields(
+            FailureQueueEventType.FLOATING_DISPLAY_RECORD -> buildFields(
                 rootObject,
                 label("\u4e1a\u52a1\u65e5\u671f", "date"),
                 label("\u5c55\u793a\u6b21\u6570", "displayCount"),
@@ -166,7 +176,7 @@ class PendingSyncDetailFormatter @Inject constructor(
                 label("\u66f4\u65b0\u65f6\u95f4", "updatedAtMs")
             )
 
-            CHECKIN_RECORD -> buildFields(
+            FailureQueueEventType.CHECKIN_RECORD -> buildFields(
                 rootObject,
                 label("\u4e1a\u52a1\u65e5\u671f", "date"),
                 label("\u7b7e\u5230\u7c7b\u578b", "type"),
@@ -174,16 +184,17 @@ class PendingSyncDetailFormatter @Inject constructor(
                 label("\u66f4\u65b0\u65f6\u95f4", "updatedAtMs")
             )
 
-            LEARNING_RECORDED -> buildFields(
+            FailureQueueEventType.LEARNING_EVENT -> buildFields(
                 rootObject,
                 label("\u4e8b\u4ef6 ID", "clientEventId"),
+                label("\u5ba2\u6237\u7aef\u5e8f\u53f7", "clientSequence"),
                 label("\u8bcd\u4e66 ID", "bookId"),
                 label("\u5355\u8bcd ID", "wordId"),
                 label("\u5b66\u4e60\u52a8\u4f5c", "action"),
                 label("\u8d28\u91cf\u8bc4\u5206", "quality"),
                 label("\u662f\u5426\u6b63\u786e", "correct"),
                 label("\u4e1a\u52a1\u65e5\u671f", "businessDate"),
-                label("\u53d1\u751f\u65f6\u95f4", "occurredAt"),
+                label("\u53d1\u751f\u65f6\u95f4", "occurredAtMs"),
                 label("\u57fa\u7840\u7248\u672c", "baseStateRevision")
             )
 
@@ -237,7 +248,8 @@ class PendingSyncDetailFormatter @Inject constructor(
     private fun formatNumericValue(key: String, rawValue: String): String {
         val longValue = rawValue.toLongOrNull()
         return when {
-            (key.endsWith("At") || key.endsWith("Time")) && longValue != null -> {
+            (key.endsWith("At") || key.endsWith("AtMs") || key.endsWith("Time")) &&
+                longValue != null -> {
                 formatTimestamp(longValue)
             }
 
@@ -258,25 +270,27 @@ class PendingSyncDetailFormatter @Inject constructor(
 
     private fun formatBizType(bizType: String): String {
         return when (bizType) {
-            DAILY_STUDY_DURATION -> "\u5b66\u4e60\u65f6\u957f"
-            PRACTICE_DURATION -> "\u7ec3\u4e60\u65f6\u957f"
-            PRACTICE_SESSION -> "\u7ec3\u4e60\u8bb0\u5f55"
-            FAVORITE -> "\u6536\u85cf\u5355\u8bcd"
-            WORD_BOOK_SELECTION -> "\u5f53\u524d\u8bcd\u4e66"
-            STUDY_PLAN -> "\u5b66\u4e60\u8ba1\u5212"
-            ONBOARDING_STATE -> "\u5f15\u5bfc\u72b6\u6001"
-            PRACTICE_SETTINGS -> "\u7ec3\u4e60\u8bbe\u7f6e"
-            FLOATING_SETTINGS -> "\u60ac\u6d6e\u590d\u4e60\u8bbe\u7f6e"
-            FLOATING_DISPLAY_RECORD -> "\u60ac\u6d6e\u590d\u4e60\u5c55\u793a\u8bb0\u5f55"
-            CHECKIN_RECORD -> "\u7b7e\u5230\u8bb0\u5f55"
-            LEARNING_RECORDED -> "\u5b66\u4e60\u4e8b\u4ef6"
+            FailureQueueEventType.DAILY_STUDY_DURATION -> "\u5b66\u4e60\u65f6\u957f"
+            FailureQueueEventType.PRACTICE_DURATION -> "\u7ec3\u4e60\u65f6\u957f"
+            FailureQueueEventType.PRACTICE_SESSION -> "\u7ec3\u4e60\u8bb0\u5f55"
+            FailureQueueEventType.FAVORITE_ADD -> "\u65b0\u589e\u6536\u85cf"
+            FailureQueueEventType.FAVORITE_REMOVE -> "\u53d6\u6d88\u6536\u85cf"
+            FailureQueueEventType.WORD_BOOK_DELETE -> "\u5220\u9664\u8bcd\u4e66"
+            FailureQueueEventType.WORD_BOOK_SELECTION -> "\u5f53\u524d\u8bcd\u4e66"
+            FailureQueueEventType.STUDY_PLAN -> "\u5b66\u4e60\u8ba1\u5212"
+            FailureQueueEventType.ONBOARDING_STATE -> "\u5f15\u5bfc\u72b6\u6001"
+            FailureQueueEventType.PRACTICE_SETTINGS -> "\u7ec3\u4e60\u8bbe\u7f6e"
+            FailureQueueEventType.FLOATING_SETTINGS -> "\u60ac\u6d6e\u590d\u4e60\u8bbe\u7f6e"
+            FailureQueueEventType.FLOATING_DISPLAY_RECORD -> "\u60ac\u6d6e\u590d\u4e60\u5c55\u793a\u8bb0\u5f55"
+            FailureQueueEventType.CHECKIN_RECORD -> "\u7b7e\u5230\u8bb0\u5f55"
+            FailureQueueEventType.LEARNING_EVENT -> "\u5b66\u4e60\u4e8b\u4ef6"
             else -> bizType
         }
     }
 
     private fun formatState(state: String): String {
         return when (state) {
-            "QUEUED" -> "\u6392\u961f\u4e2d"
+            "PENDING", "QUEUED" -> "\u6392\u961f\u4e2d"
             "IN_FLIGHT" -> "\u4e0a\u4f20\u4e2d"
             "RETRY_WAITING" -> "\u7b49\u5f85\u91cd\u8bd5"
             "BLOCKED" -> "\u5df2\u963b\u585e"
@@ -288,6 +302,8 @@ class PendingSyncDetailFormatter @Inject constructor(
         return when (operation) {
             "UPSERT" -> "\u65b0\u589e\u6216\u66f4\u65b0"
             "DELETE" -> "\u5220\u9664"
+            "LATEST" -> "\u4fdd\u7559\u6700\u65b0\u72b6\u6001"
+            "APPEND" -> "\u6309\u4e8b\u4ef6\u8ffd\u52a0"
             else -> operation
         }
     }
@@ -341,18 +357,5 @@ class PendingSyncDetailFormatter @Inject constructor(
     companion object {
         private const val PARSE_FAILED_MESSAGE =
             "\u5b57\u6bb5\u89e3\u6790\u5931\u8d25\uff0c\u4ec5\u5c55\u793a\u539f\u59cb\u5185\u5bb9"
-
-        private const val DAILY_STUDY_DURATION = "DAILY_STUDY_DURATION"
-        private const val PRACTICE_DURATION = "PRACTICE_DURATION"
-        private const val PRACTICE_SESSION = "PRACTICE_SESSION"
-        private const val FAVORITE = "FAVORITE"
-        private const val WORD_BOOK_SELECTION = "WORD_BOOK_SELECTION"
-        private const val STUDY_PLAN = "STUDY_PLAN"
-        private const val ONBOARDING_STATE = "ONBOARDING_STATE"
-        private const val PRACTICE_SETTINGS = "PRACTICE_SETTINGS"
-        private const val FLOATING_SETTINGS = "FLOATING_SETTINGS"
-        private const val FLOATING_DISPLAY_RECORD = "FLOATING_DISPLAY_RECORD"
-        private const val CHECKIN_RECORD = "CHECKIN_RECORD"
-        private const val LEARNING_RECORDED = "LEARNING_RECORDED"
     }
 }

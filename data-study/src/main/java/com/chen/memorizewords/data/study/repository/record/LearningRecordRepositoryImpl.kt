@@ -4,6 +4,7 @@ import com.chen.memorizewords.core.common.calendar.CheckInBusinessCalendar
 import com.chen.memorizewords.core.common.calendar.CheckInConfig
 import com.chen.memorizewords.core.common.calendar.CheckInConfigDataSource
 import com.chen.memorizewords.core.common.calendar.UNKNOWN_MAKEUP_CARD_BALANCE
+import com.chen.memorizewords.core.common.coroutines.DirectSyncLauncher
 import com.chen.memorizewords.data.study.local.room.model.study.checkin.CheckInRecordDao
 import com.chen.memorizewords.data.study.local.room.model.study.checkin.CheckInRecordEntity
 import com.chen.memorizewords.data.study.local.room.model.study.daily.CalendarDayStatsProjection
@@ -15,12 +16,8 @@ import com.chen.memorizewords.data.wordbook.local.room.model.learning.record.Lea
 import com.chen.memorizewords.data.wordbook.local.room.model.learning.record.LearningDailyWordStatsProjection
 import com.chen.memorizewords.data.wordbook.local.room.model.learning.record.WordStudyRecordDao
 import com.chen.memorizewords.data.study.repository.local.StudyRecordLocalStore
-import com.chen.memorizewords.domain.sync.CheckInRecordSyncPayload
-import com.chen.memorizewords.domain.sync.OutboxCommand
-import com.chen.memorizewords.domain.sync.OutboxRecord
-import com.chen.memorizewords.domain.sync.OutboxTopic
-import com.chen.memorizewords.domain.sync.SyncOutboxReader
-import com.chen.memorizewords.domain.sync.SyncOutboxWriter
+import com.chen.memorizewords.data.wordbook.remote.datasync.RemoteUserSyncDataSource
+import com.chen.memorizewords.domain.sync.PendingCheckInSyncQuery
 import com.chen.memorizewords.domain.study.model.record.CalendarDayStats
 import com.chen.memorizewords.domain.study.model.record.CheckInRecord
 import com.chen.memorizewords.domain.study.model.record.CheckInType
@@ -32,9 +29,7 @@ import com.chen.memorizewords.domain.study.model.record.DailyWordStats
 import com.chen.memorizewords.domain.study.model.record.MakeUpCheckInException
 import com.chen.memorizewords.domain.study.model.record.TodayCheckInEntryState
 import com.chen.memorizewords.domain.study.repository.record.LearningRecordRepository
-import com.google.gson.Gson
 import javax.inject.Inject
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -49,10 +44,10 @@ class LearningRecordRepositoryImpl @Inject constructor(
     private val checkInRecordDao: CheckInRecordDao,
     private val checkInConfigDataSource: CheckInConfigDataSource,
     private val checkInBusinessCalendar: CheckInBusinessCalendar,
-    private val syncOutboxReader: SyncOutboxReader,
     private val studyRecordLocalStore: StudyRecordLocalStore,
-    private val syncOutboxWriter: SyncOutboxWriter,
-    private val gson: Gson
+    private val remoteUserSyncDataSource: RemoteUserSyncDataSource,
+    private val pendingCheckInSyncQuery: PendingCheckInSyncQuery,
+    private val directSyncLauncher: DirectSyncLauncher
 ) : LearningRecordRepository {
 
     override fun getCurrentBusinessDate(): String {
@@ -60,8 +55,20 @@ class LearningRecordRepositoryImpl @Inject constructor(
     }
 
     override suspend fun addStudyDuration(durationMs: Long) {
-        studyRecordLocalStore.addStudyDuration(durationMs)
-        flushPendingStudyOutbox()
+        val snapshot = studyRecordLocalStore.addStudyDuration(durationMs).dailyStudyDuration ?: return
+        directSyncLauncher.launch(
+            operation = "daily_study_duration",
+            orderingKey = "daily_study_duration:${snapshot.date}",
+            request = {
+                remoteUserSyncDataSource.upsertDailyStudyDuration(
+                    date = snapshot.date,
+                    totalDurationMs = snapshot.totalDurationMs,
+                    updatedAtMs = snapshot.updatedAtMs,
+                    isNewPlanCompleted = snapshot.isNewPlanCompleted,
+                    isReviewPlanCompleted = snapshot.isReviewPlanCompleted
+                )
+            }
+        )
     }
 
     override fun getStudyTotalDayCount(): Flow<Int> {
@@ -173,9 +180,8 @@ class LearningRecordRepositoryImpl @Inject constructor(
             .flatMapLatest { config ->
                 combine(
                     checkInRecordDao.observeByDate(date),
-                    syncOutboxReader.observeByTopic(OutboxTopic.CHECKIN_RECORD)
-                ) { record, pendingOutbox ->
-                    val pendingMakeupCount = countPendingMakeupCheckIns(pendingOutbox)
+                    pendingCheckInSyncQuery.observePendingMakeupCheckInCount()
+                ) { record, pendingMakeupCount ->
                     val availableMakeupCardCount = resolveAvailableMakeupCardCount(
                         config = config,
                         pendingMakeupCount = pendingMakeupCount
@@ -212,9 +218,7 @@ class LearningRecordRepositoryImpl @Inject constructor(
             return Result.success(existing.toDomain())
         }
 
-        val pendingMakeupCount = countPendingMakeupCheckIns(
-            syncOutboxReader.getByTopic(OutboxTopic.CHECKIN_RECORD)
-        )
+        val pendingMakeupCount = pendingCheckInSyncQuery.countPendingMakeupCheckIns()
         val availableMakeupCardCount = resolveAvailableMakeupCardCount(config, pendingMakeupCount)
             ?: return Result.failure(MakeUpCheckInException.BalanceUnknown)
         if (availableMakeupCardCount <= 0) {
@@ -228,8 +232,22 @@ class LearningRecordRepositoryImpl @Inject constructor(
             signedAtMs = now,
             updatedAtMs = now
         )
-        studyRecordLocalStore.upsertCheckInRecord(entity)
-        flushPendingStudyOutbox()
+        val snapshot = studyRecordLocalStore.upsertCheckInRecord(entity).checkInRecord ?: entity
+        directSyncLauncher.launch(
+            operation = "makeup_checkin",
+            orderingKey = "checkin:${snapshot.date}",
+            request = {
+                remoteUserSyncDataSource.upsertCheckInRecord(
+                    date = snapshot.date,
+                    type = snapshot.type.name,
+                    signedAtMs = snapshot.signedAtMs,
+                    updatedAtMs = snapshot.updatedAtMs
+                )
+            },
+            onSuccess = {
+                checkInConfigDataSource.consumeCachedMakeupCardBalance()
+            }
+        )
         return Result.success(entity.toDomain())
     }
 
@@ -251,31 +269,24 @@ class LearningRecordRepositoryImpl @Inject constructor(
             signedAtMs = now,
             updatedAtMs = now
         )
-        studyRecordLocalStore.upsertCheckInRecord(entity)
-        flushPendingStudyOutbox()
-        return Result.success(entity.toDomain())
-    }
-
-    private suspend fun flushPendingStudyOutbox() {
-        flushPendingOutboxCommands(
-            loadCommands = studyRecordLocalStore::getPendingOutboxCommands,
-            enqueueCommands = syncOutboxWriter::enqueueLatest,
-            deleteCommands = studyRecordLocalStore::deletePendingOutboxCommands
+        val snapshot = studyRecordLocalStore.upsertCheckInRecord(entity).checkInRecord ?: entity
+        directSyncLauncher.launch(
+            operation = "auto_checkin",
+            orderingKey = "checkin:${snapshot.date}",
+            request = {
+                remoteUserSyncDataSource.upsertCheckInRecord(
+                    date = snapshot.date,
+                    type = snapshot.type.name,
+                    signedAtMs = snapshot.signedAtMs,
+                    updatedAtMs = snapshot.updatedAtMs
+                )
+            }
         )
+        return Result.success(entity.toDomain())
     }
 
     private fun isAutoCheckInEligible(duration: DailyStudyDurationEntity?): Boolean {
         return isAutoCheckInEligibleForDuration(duration)
-    }
-
-
-    private fun countPendingMakeupCheckIns(outboxEntities: List<OutboxRecord>): Int {
-        return outboxEntities.count { entity ->
-            runCatching {
-                gson.fromJson(entity.payload, CheckInRecordSyncPayload::class.java).type ==
-                    CheckInType.MAKEUP.name
-            }.getOrDefault(false)
-        }
     }
 
     private fun resolveAvailableMakeupCardCount(
@@ -343,22 +354,4 @@ private fun CheckInRecordEntity.toDomain(): CheckInRecord {
         signedAtMs = signedAtMs,
         updatedAtMs = updatedAtMs
     )
-}
-
-internal suspend fun flushPendingOutboxCommands(
-    loadCommands: suspend () -> List<OutboxCommand>,
-    enqueueCommands: suspend (List<OutboxCommand>) -> Unit,
-    deleteCommands: suspend (List<OutboxCommand>) -> Unit
-): Boolean {
-    val commands = loadCommands()
-    if (commands.isEmpty()) return true
-    return try {
-        enqueueCommands(commands)
-        deleteCommands(commands)
-        true
-    } catch (e: CancellationException) {
-        throw e
-    } catch (_: Exception) {
-        false
-    }
 }

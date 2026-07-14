@@ -43,18 +43,16 @@ suspend inline fun <reified T, reified R> Call<T>.awaitInternal(
 ): NetworkResult<R> = suspendCancellableCoroutine { continuation ->
     enqueue(object : Callback<T> {
         override fun onResponse(call: Call<T>, response: Response<T>) {
-            continuation.resumeWith(
-                runCatching {
-                    val encodedPath = call.request().url.encodedPath
-                    if (!response.isSuccessful) {
-                        return@runCatching ApiResponseParser.httpFailure(
-                            code = response.code(),
-                            message = response.message(),
-                            errorBody = response.errorBody()?.string(),
-                            encodedPath = encodedPath
-                        )
-                    }
-
+            val result = try {
+                val encodedPath = call.request().url.encodedPath
+                if (!response.isSuccessful) {
+                    ApiResponseParser.httpFailure(
+                        code = response.code(),
+                        message = response.message(),
+                        errorBody = response.errorBody()?.string(),
+                        encodedPath = encodedPath
+                    )
+                } else {
                     when (bodyPolicy) {
                         BodyPolicy.RequireBody ->
                             ApiResponseParser.parseRequired(
@@ -68,17 +66,24 @@ suspend inline fun <reified T, reified R> Call<T>.awaitInternal(
                                 apiResponse = response.body() as? ApiResponse<R?>,
                                 encodedPath = encodedPath
                             ) as NetworkResult<R>
+
+                        BodyPolicy.UnitBody ->
+                            ApiResponseParser.parseRequired(
+                                apiResponse = response.body() as? ApiResponse<R>,
+                                encodedPath = encodedPath,
+                                successTypeIsUnit = true
+                            )
                     }
                 }
-            )
+            } catch (failure: Exception) {
+                continuation.resumeWith(Result.failure(failure))
+                return
+            }
+            continuation.resumeWith(Result.success(result))
         }
 
         override fun onFailure(call: Call<T>, t: Throwable) {
-            continuation.resumeWith(
-                runCatching {
-                    NetworkResult.Failure.NetworkError(t)
-                }
-            )
+            continuation.resumeWith(Result.success(NetworkResult.Failure.NetworkError(t)))
         }
     })
 
@@ -86,5 +91,59 @@ suspend inline fun <reified T, reified R> Call<T>.awaitInternal(
         if (continuation.isCancelled) {
             cancel()
         }
+    }
+}
+
+@Throws(Exception::class)
+suspend fun <T> Call<ApiResponse<T>>.awaitApiResponse(
+    bodyPolicy: BodyPolicy
+): NetworkResult<T> = suspendCancellableCoroutine { continuation ->
+    enqueue(object : Callback<ApiResponse<T>> {
+        override fun onResponse(call: Call<ApiResponse<T>>, response: Response<ApiResponse<T>>) {
+            val result: NetworkResult<T> = try {
+                val encodedPath = call.request().url.encodedPath
+                if (!response.isSuccessful) {
+                    ApiResponseParser.httpFailure(
+                        code = response.code(),
+                        message = response.message(),
+                        errorBody = response.errorBody()?.string(),
+                        encodedPath = encodedPath
+                    )
+                } else {
+                    @Suppress("UNCHECKED_CAST")
+                    when (bodyPolicy) {
+                        BodyPolicy.RequireBody -> ApiResponseParser.parseRequired(
+                            apiResponse = response.body(),
+                            encodedPath = encodedPath,
+                            successTypeIsUnit = false
+                        )
+
+                        BodyPolicy.AllowNullBody -> ApiResponseParser.parseNullable(
+                            apiResponse = response.body() as ApiResponse<T?>?,
+                            encodedPath = encodedPath
+                        ) as NetworkResult<T>
+
+                        BodyPolicy.UnitBody -> ApiResponseParser.parseRequired(
+                            apiResponse = response.body(),
+                            encodedPath = encodedPath,
+                            successTypeIsUnit = true
+                        )
+                    }
+                }
+            } catch (failure: Exception) {
+                NetworkResult.Failure.GenericError(
+                    "Response processing failed: ${failure.message ?: failure.javaClass.simpleName}"
+                )
+            }
+            continuation.resumeWith(Result.success(result))
+        }
+
+        override fun onFailure(call: Call<ApiResponse<T>>, t: Throwable) {
+            continuation.resumeWith(Result.success(NetworkResult.Failure.NetworkError(t)))
+        }
+    })
+
+    continuation.invokeOnCancellation {
+        if (continuation.isCancelled) cancel()
     }
 }

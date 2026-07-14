@@ -4,6 +4,11 @@ import com.chen.memorizewords.data.sync.remoteapi.dto.wordbook.WordBookDto
 import com.chen.memorizewords.data.sync.remoteapi.dto.wordstate.WordStateDto
 import com.chen.memorizewords.core.network.http.ApiResponse
 import com.chen.memorizewords.core.network.http.PageData
+import com.chen.memorizewords.core.network.http.FailureEventDeliveryMode
+import com.chen.memorizewords.core.network.http.FailureQueuedEvent
+import com.chen.memorizewords.core.network.http.SyncEventParam
+import com.chen.memorizewords.core.network.http.SyncEventParams
+import com.chen.memorizewords.domain.sync.FailureQueueEventType
 import com.squareup.moshi.JsonClass
 import retrofit2.Call
 import retrofit2.http.Body
@@ -244,13 +249,25 @@ interface UserDataSyncApiService {
     fun getStudyPlan(): Call<ApiResponse<StudyPlanDto?>>
 
     @PUT(PATH_STUDY_PLAN)
-    fun updateStudyPlan(@Body request: StudyPlanDto): Call<ApiResponse<Unit>>
+    @FailureQueuedEvent(
+        eventType = FailureQueueEventType.STUDY_PLAN,
+        deliveryMode = FailureEventDeliveryMode.LATEST,
+        dedupeKey = "study_plan",
+        orderingKey = "study_plan"
+    )
+    fun updateStudyPlan(@SyncEventParams @Body request: StudyPlanDto): Call<ApiResponse<Unit>>
 
     @GET(PATH_ONBOARDING)
     fun getOnboardingState(): Call<ApiResponse<OnboardingStateDto?>>
 
     @PUT(PATH_ONBOARDING)
-    fun updateOnboardingState(@Body request: OnboardingStateDto): Call<ApiResponse<Unit>>
+    @FailureQueuedEvent(
+        eventType = FailureQueueEventType.ONBOARDING_STATE,
+        deliveryMode = FailureEventDeliveryMode.LATEST,
+        dedupeKey = "onboarding",
+        orderingKey = "onboarding"
+    )
+    fun updateOnboardingState(@SyncEventParams @Body request: OnboardingStateDto): Call<ApiResponse<Unit>>
 
     @GET(PATH_MY_WORD_BOOKS)
     fun getMyWordBooks(): Call<ApiResponse<List<WordBookDto>>>
@@ -266,7 +283,13 @@ interface UserDataSyncApiService {
     ): Call<ApiResponse<PageData<WordStateDto>>>
 
     @POST(PATH_FAVORITES)
-    fun addFavorite(@Body request: FavoriteSyncRequest): Call<ApiResponse<Unit>>
+    @FailureQueuedEvent(
+        eventType = FailureQueueEventType.FAVORITE_ADD,
+        deliveryMode = FailureEventDeliveryMode.LATEST,
+        dedupeKey = "favorite:{wordId}",
+        orderingKey = "favorite:{wordId}"
+    )
+    fun addFavorite(@SyncEventParams @Body request: FavoriteSyncRequest): Call<ApiResponse<Unit>>
 
     @GET(PATH_FAVORITES)
     fun getFavorites(
@@ -275,7 +298,15 @@ interface UserDataSyncApiService {
     ): Call<ApiResponse<PageData<FavoriteDto>>>
 
     @DELETE(PATH_FAVORITE_ITEM)
-    fun removeFavorite(@Path("wordId") wordId: Long): Call<ApiResponse<Unit>>
+    @FailureQueuedEvent(
+        eventType = FailureQueueEventType.FAVORITE_REMOVE,
+        deliveryMode = FailureEventDeliveryMode.LATEST,
+        dedupeKey = "favorite:{wordId}",
+        orderingKey = "favorite:{wordId}"
+    )
+    fun removeFavorite(
+        @SyncEventParam("wordId") @Path("wordId") wordId: Long
+    ): Call<ApiResponse<Unit>>
 
     @GET(PATH_WORD_BOOK_PROGRESS_LIST)
     fun getWordBookProgressList(): Call<ApiResponse<List<WordBookProgressDto>>>
@@ -336,15 +367,27 @@ interface UserDataSyncApiService {
     ): Call<ApiResponse<PageData<DailyStudyDurationDto>>>
 
     @PUT(PATH_STUDY_DURATION_ITEM)
+    @FailureQueuedEvent(
+        eventType = FailureQueueEventType.DAILY_STUDY_DURATION,
+        deliveryMode = FailureEventDeliveryMode.LATEST,
+        dedupeKey = "daily_study_duration:{date}",
+        orderingKey = "daily_study_duration:{date}"
+    )
     fun upsertDailyStudyDuration(
-        @Path("date") date: String,
-        @Body request: DailyStudyDurationSyncRequest
+        @SyncEventParam("date") @Path("date") date: String,
+        @SyncEventParams @Body request: DailyStudyDurationSyncRequest
     ): Call<ApiResponse<Unit>>
 
     @PUT(PATH_WORD_BOOK_SELECTION)
+    @FailureQueuedEvent(
+        eventType = FailureQueueEventType.WORD_BOOK_SELECTION,
+        deliveryMode = FailureEventDeliveryMode.LATEST,
+        dedupeKey = "word_book_selection",
+        orderingKey = "word_book_selection"
+    )
     fun setCurrentWordBookSelection(
-        @Path("bookId") bookId: Long,
-        @Body request: WordBookSelectionSyncRequest
+        @SyncEventParam("bookId") @Path("bookId") bookId: Long,
+        @SyncEventParams @Body request: WordBookSelectionSyncRequest
     ): Call<ApiResponse<Unit>>
 
     @GET(PATH_CHECKIN_CONFIG)
@@ -363,9 +406,15 @@ interface UserDataSyncApiService {
     ): Call<ApiResponse<PageData<CheckInRecordDto>>>
 
     @PUT(PATH_CHECKIN_RECORD_ITEM)
+    @FailureQueuedEvent(
+        eventType = FailureQueueEventType.CHECKIN_RECORD,
+        deliveryMode = FailureEventDeliveryMode.LATEST,
+        dedupeKey = "checkin:{date}",
+        orderingKey = "checkin:{date}"
+    )
     fun upsertCheckInRecord(
-        @Path("date") date: String,
-        @Body request: CheckInRecordSyncRequest
+        @SyncEventParam("date") @Path("date") date: String,
+        @SyncEventParams @Body request: CheckInRecordSyncRequest
     ): Call<ApiResponse<Unit>>
 
     @GET(PATH_MEMBERSHIP)

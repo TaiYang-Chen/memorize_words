@@ -4,7 +4,6 @@ import com.chen.memorizewords.domain.account.model.LogoutOutcome
 import com.chen.memorizewords.domain.account.policy.LogoutDataLossPolicy
 import com.chen.memorizewords.domain.account.repository.AccountSessionRepository
 import com.chen.memorizewords.domain.account.repository.LocalAccountRepository
-import com.chen.memorizewords.domain.account.repository.UserDataOwnerRepository
 import com.chen.memorizewords.domain.account.repository.UserScopedDataCleaner
 import com.chen.memorizewords.domain.account.repository.user.AuthRepository
 import com.chen.memorizewords.domain.account.repository.user.LogoutDataLossRiskException
@@ -16,7 +15,6 @@ class LogoutUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     private val localAccountRepository: LocalAccountRepository,
     private val accountSessionRepository: AccountSessionRepository,
-    private val userDataOwnerRepository: UserDataOwnerRepository,
     private val userScopedDataCleaner: UserScopedDataCleaner,
     private val syncLogoutFlusher: SyncLogoutFlusher,
     private val logoutDataLossPolicy: LogoutDataLossPolicy
@@ -57,11 +55,9 @@ class LogoutUseCase @Inject constructor(
         accountSessionRepository.clearSession()
         localAccountRepository.clearUser()
         userScopedDataCleaner.clearUserScopedData()
-        userDataOwnerRepository.clearOwnerUserId()
     }
 
     private companion object {
         const val MAX_LOGOUT_SYNC_DRAIN_ROUNDS = 5
     }
 }
-

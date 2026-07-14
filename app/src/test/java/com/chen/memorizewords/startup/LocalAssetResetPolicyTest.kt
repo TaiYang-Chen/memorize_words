@@ -15,7 +15,6 @@ class LocalAssetResetPolicyTest {
         assertContains(policy.preservedStringKeys, "key_refresh_token")
         assertContains(policy.preservedLongKeys, "key_expires_at")
         assertContains(policy.preservedLongKeys, "user_id")
-        assertContains(policy.preservedLongKeys, "local_user_data_owner_user_id")
     }
 
     @Test

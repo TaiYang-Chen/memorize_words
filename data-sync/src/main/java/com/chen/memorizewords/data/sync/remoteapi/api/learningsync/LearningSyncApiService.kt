@@ -2,6 +2,11 @@ package com.chen.memorizewords.data.sync.remoteapi.api.learningsync
 
 import com.chen.memorizewords.core.network.http.ApiResponse
 import com.chen.memorizewords.core.network.http.PageData
+import com.chen.memorizewords.core.network.http.FailureEventDeliveryMode
+import com.chen.memorizewords.core.network.http.FailureQueuedEvent
+import com.chen.memorizewords.core.network.http.SyncEventParam
+import com.chen.memorizewords.core.network.http.SyncEventParams
+import com.chen.memorizewords.domain.sync.FailureQueueEventType
 import com.squareup.moshi.JsonClass
 import retrofit2.Call
 import retrofit2.http.Body
@@ -242,18 +247,40 @@ interface LearningSyncApiService {
     }
 
     @POST(PATH_LEARNING_EVENTS)
-    fun recordLearningEvent(@Body request: LearningEventRequest): Call<ApiResponse<LearningEventResultDto>>
+    @FailureQueuedEvent(
+        eventType = FailureQueueEventType.LEARNING_EVENT,
+        deliveryMode = FailureEventDeliveryMode.APPEND,
+        orderingKey = "learning:{bookId}",
+        sequenceParam = "clientSequence"
+    )
+    fun recordLearningEvent(
+        @SyncEventParams @Body request: LearningEventRequest
+    ): Call<ApiResponse<LearningEventResultDto>>
 
     @PUT(PATH_PRACTICE_SETTINGS)
-    fun updatePracticeSettings(@Body request: PracticeSettingsSyncRequest): Call<ApiResponse<Unit>>
+    @FailureQueuedEvent(
+        eventType = FailureQueueEventType.PRACTICE_SETTINGS,
+        deliveryMode = FailureEventDeliveryMode.LATEST,
+        dedupeKey = "practice_settings",
+        orderingKey = "practice_settings"
+    )
+    fun updatePracticeSettings(
+        @SyncEventParams @Body request: PracticeSettingsSyncRequest
+    ): Call<ApiResponse<Unit>>
 
     @GET(PATH_PRACTICE_SETTINGS)
     fun getPracticeSettings(): Call<ApiResponse<PracticeSettingsDto?>>
 
     @PUT(PATH_PRACTICE_DURATION_ITEM)
+    @FailureQueuedEvent(
+        eventType = FailureQueueEventType.PRACTICE_DURATION,
+        deliveryMode = FailureEventDeliveryMode.LATEST,
+        dedupeKey = "practice_duration:{date}",
+        orderingKey = "practice_duration:{date}"
+    )
     fun upsertPracticeDuration(
-        @Path("date") date: String,
-        @Body request: PracticeDurationSyncRequest
+        @SyncEventParam("date") @Path("date") date: String,
+        @SyncEventParams @Body request: PracticeDurationSyncRequest
     ): Call<ApiResponse<Unit>>
 
     @GET("me/practice/durations")
@@ -263,7 +290,14 @@ interface LearningSyncApiService {
     ): Call<ApiResponse<PageData<PracticeDurationDto>>>
 
     @POST(PATH_PRACTICE_SESSIONS)
-    fun appendPracticeSession(@Body request: PracticeSessionSyncRequest): Call<ApiResponse<Unit>>
+    @FailureQueuedEvent(
+        eventType = FailureQueueEventType.PRACTICE_SESSION,
+        deliveryMode = FailureEventDeliveryMode.APPEND,
+        orderingKey = "practice_session"
+    )
+    fun appendPracticeSession(
+        @SyncEventParams @Body request: PracticeSessionSyncRequest
+    ): Call<ApiResponse<Unit>>
 
     @GET(PATH_PRACTICE_SESSIONS)
     fun getPracticeSessions(
@@ -272,15 +306,29 @@ interface LearningSyncApiService {
     ): Call<ApiResponse<PageData<PracticeSessionDto>>>
 
     @PUT(PATH_FLOATING_SETTINGS)
-    fun updateFloatingSettings(@Body request: FloatingSettingsSyncRequest): Call<ApiResponse<Unit>>
+    @FailureQueuedEvent(
+        eventType = FailureQueueEventType.FLOATING_SETTINGS,
+        deliveryMode = FailureEventDeliveryMode.LATEST,
+        dedupeKey = "floating_settings",
+        orderingKey = "floating_settings"
+    )
+    fun updateFloatingSettings(
+        @SyncEventParams @Body request: FloatingSettingsSyncRequest
+    ): Call<ApiResponse<Unit>>
 
     @GET(PATH_FLOATING_SETTINGS)
     fun getFloatingSettings(): Call<ApiResponse<FloatingSettingsDto?>>
 
     @PUT(PATH_FLOATING_DISPLAY_RECORD_ITEM)
+    @FailureQueuedEvent(
+        eventType = FailureQueueEventType.FLOATING_DISPLAY_RECORD,
+        deliveryMode = FailureEventDeliveryMode.LATEST,
+        dedupeKey = "floating_display:{date}",
+        orderingKey = "floating_display:{date}"
+    )
     fun upsertFloatingDisplayRecord(
-        @Path("date") date: String,
-        @Body request: FloatingDisplayRecordSyncRequest
+        @SyncEventParam("date") @Path("date") date: String,
+        @SyncEventParams @Body request: FloatingDisplayRecordSyncRequest
     ): Call<ApiResponse<Unit>>
 
     @GET("me/floating/display-records")

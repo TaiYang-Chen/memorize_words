@@ -1,14 +1,11 @@
 ﻿package com.chen.memorizewords.data.study.repository.study
 
 import com.chen.memorizewords.data.study.local.mmkv.plan.StudyPlanDataSource
-import com.chen.memorizewords.domain.sync.StudyPlanSyncPayload
-import com.chen.memorizewords.domain.sync.OutboxTopic
-import com.chen.memorizewords.domain.sync.SyncOperation
-import com.chen.memorizewords.domain.sync.SyncOutboxWriter
+import com.chen.memorizewords.core.common.coroutines.DirectSyncLauncher
+import com.chen.memorizewords.data.wordbook.remote.datasync.RemoteUserSyncDataSource
 import com.chen.memorizewords.domain.wordbook.model.study.StudyPlan
 import com.chen.memorizewords.domain.wordbook.repository.StudyPlanLocalStatePort
 import com.chen.memorizewords.domain.wordbook.repository.StudyPlanRepository
-import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.runBlocking
@@ -17,26 +14,15 @@ import javax.inject.Inject
 
 class StudyPlanRepositoryImpl @Inject constructor(
     private val studyPlanDataSource: StudyPlanDataSource,
-    private val SyncOutboxWriter: SyncOutboxWriter,    private val gson: Gson
+    private val remoteUserSyncDataSource: RemoteUserSyncDataSource,
+    private val directSyncLauncher: DirectSyncLauncher
 ) : StudyPlanRepository, StudyPlanLocalStatePort {
 
     override suspend fun saveStudyPlan(studyPlan: StudyPlan) {
         withContext(Dispatchers.IO) {
             studyPlanDataSource.saveStudyPlan(studyPlan)
-            SyncOutboxWriter.enqueueLatest(
-                bizType = OutboxTopic.STUDY_PLAN,
-                bizKey = "study_plan",
-                operation = SyncOperation.UPSERT,
-                payload = gson.toJson(
-                    StudyPlanSyncPayload(
-                        dailyNewWords = studyPlan.dailyNewCount,
-                        dailyReviewWords = studyPlan.dailyReviewCount,
-                        testMode = studyPlan.testMode.name,
-                        wordOrderType = studyPlan.wordOrderType.name
-                    )
-                )
-            )
         }
+        upload(studyPlan)
     }
 
     override suspend fun getStudyPlan(): StudyPlan? {
@@ -48,24 +34,12 @@ class StudyPlanRepositoryImpl @Inject constructor(
     }
 
     override suspend fun saveStudyCount(dailyNewCount: Int, dailyReviewCount: Int) {
-        withContext(Dispatchers.IO) {
+        val plan = withContext(Dispatchers.IO) {
             studyPlanDataSource.saveStudyCount(dailyNewCount, dailyReviewCount)
-            val plan = studyPlanDataSource.getStudyPlan()
+            studyPlanDataSource.getStudyPlan()
                 ?: StudyPlan(dailyNewCount = dailyNewCount, dailyReviewCount = dailyReviewCount)
-            SyncOutboxWriter.enqueueLatest(
-                bizType = OutboxTopic.STUDY_PLAN,
-                bizKey = "study_plan",
-                operation = SyncOperation.UPSERT,
-                payload = gson.toJson(
-                    StudyPlanSyncPayload(
-                        dailyNewWords = dailyNewCount,
-                        dailyReviewWords = dailyReviewCount,
-                        testMode = plan.testMode.name,
-                        wordOrderType = plan.wordOrderType.name
-                    )
-                )
-            )
         }
+        upload(plan)
     }
 
     override fun overwriteFromRemote(studyPlan: StudyPlan?) {
@@ -82,5 +56,13 @@ class StudyPlanRepositoryImpl @Inject constructor(
         runBlocking(Dispatchers.IO) {
             studyPlanDataSource.clearStudyPlan()
         }
+    }
+
+    private fun upload(plan: StudyPlan) {
+        directSyncLauncher.launch(
+            operation = "study_plan",
+            orderingKey = "study_plan",
+            request = { remoteUserSyncDataSource.updateStudyPlan(plan) }
+        )
     }
 }

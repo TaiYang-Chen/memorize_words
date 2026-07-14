@@ -3,9 +3,12 @@ package com.chen.memorizewords.data.wordbook.repository.learning
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.current.CurrentWordBookSelectionDao
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.current.CurrentWordBookSelectionEntity
 import com.chen.memorizewords.data.wordbook.repository.WordBookTransactionRunner
+import com.chen.memorizewords.data.sync.remote.learningsync.RemoteLearningSyncDataSource
+import com.chen.memorizewords.core.common.coroutines.DirectSyncLauncher
 import com.chen.memorizewords.domain.study.model.learning.LearningEventAction
 import com.chen.memorizewords.domain.study.model.learning.RecordLearningEventCommand
 import com.chen.memorizewords.domain.study.repository.learning.BookLearningWriteCoordinator
+import com.chen.memorizewords.domain.study.repository.learning.LearningSyncStatePort
 import com.chen.memorizewords.domain.word.model.word.Word
 import com.google.gson.Gson
 import java.lang.reflect.InvocationHandler
@@ -14,6 +17,8 @@ import kotlin.test.Test
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
 class LearningCommandRepositoryTest {
 
@@ -22,7 +27,6 @@ class LearningCommandRepositoryTest {
         val repository = LearningCommandRepository(
             transactionRunner = FakeWordBookTransactionRunner(),
             learningEventDao = throwingProxy(),
-            learningOutboxDao = throwingProxy(),
             wordStudyRecordDao = throwingProxy(),
             wordLearningStateDao = throwingProxy(),
             wordBookProgressDao = throwingProxy(),
@@ -31,7 +35,10 @@ class LearningCommandRepositoryTest {
             bookWordItemDao = throwingProxy(),
             wordDefinitionDao = throwingProxy(),
             gson = Gson(),
-            coordinator = ImmediateBookLearningWriteCoordinator
+            coordinator = ImmediateBookLearningWriteCoordinator,
+            remoteLearningSyncDataSource = throwingProxy<RemoteLearningSyncDataSource>(),
+            learningSyncStatePort = throwingProxy<LearningSyncStatePort>(),
+            directSyncLauncher = DirectSyncLauncher(CoroutineScope(Dispatchers.Unconfined))
         )
 
         val error = assertFailsWith<IllegalStateException> {

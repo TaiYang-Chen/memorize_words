@@ -17,7 +17,7 @@ class UserDataCleaner @Inject constructor(
     private val appContext = context.applicationContext
 
     suspend fun clearUserLearningData() {
-        resetContributors.forEach { contributor ->
+        resetContributors.sortedBy(UserScopedDataResetContributor::resetPriority).forEach { contributor ->
             contributor.clearUserScopedData()
         }
         clearUserScopedMmkvState()

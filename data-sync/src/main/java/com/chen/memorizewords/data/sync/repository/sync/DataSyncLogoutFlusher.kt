@@ -1,8 +1,6 @@
 package com.chen.memorizewords.data.sync.repository.sync
 
-import com.chen.memorizewords.data.sync.local.room.model.sync.SyncOutboxDao
-import com.chen.memorizewords.data.wordbook.local.room.model.learning.outbox.LearningOutboxDao
-import com.chen.memorizewords.data.wordbook.local.room.model.learning.outbox.LearningOutboxEntity
+import com.chen.memorizewords.data.sync.local.room.model.sync.FailedSyncEventDao
 import com.chen.memorizewords.domain.sync.SyncDrainOutcome
 import com.chen.memorizewords.domain.sync.SyncLogoutFlusher
 import javax.inject.Inject
@@ -10,26 +8,22 @@ import javax.inject.Singleton
 
 @Singleton
 class DataSyncLogoutFlusher @Inject constructor(
-    private val syncOutboxDao: SyncOutboxDao,
-    private val learningOutboxDao: LearningOutboxDao,
-    private val unifiedSyncEngine: UnifiedSyncEngine
+    private val failedSyncEventDao: FailedSyncEventDao,
+    private val retryEngine: FailedSyncRetryEngine
 ) : SyncLogoutFlusher {
 
     override suspend fun getPendingCount(): Int {
-        return syncOutboxDao.getPendingCountValue() + learningOutboxDao.countByStatuses(
-            listOf(
-                LearningOutboxEntity.STATUS_PENDING,
-                LearningOutboxEntity.STATUS_SYNCING,
-                LearningOutboxEntity.STATUS_BLOCKED
-            )
-        )
+        return failedSyncEventDao.pendingCount()
     }
 
     override suspend fun drainOnce(): SyncDrainOutcome {
-        val outcome = unifiedSyncEngine.drain()
+        val before = getPendingCount()
+        if (before <= 0) return SyncDrainOutcome.EMPTY
+        val outcome = retryEngine.drain(recovery = true)
+        val after = getPendingCount()
         return when {
             outcome.nextRetryAtMs != null -> SyncDrainOutcome.RETRY_NEEDED
-            outcome.processedAny -> SyncDrainOutcome.DRAINED
+            after < before -> SyncDrainOutcome.DRAINED
             else -> SyncDrainOutcome.EMPTY
         }
     }

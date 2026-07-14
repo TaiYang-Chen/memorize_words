@@ -7,26 +7,24 @@ import com.chen.memorizewords.data.floating.local.room.model.floating.FloatingWo
 import com.chen.memorizewords.data.floating.local.room.model.floating.FloatingWordDisplayRecordEntity
 import com.chen.memorizewords.data.floating.local.room.model.floating.FloatingWordDisplayRecordWithWords
 import com.chen.memorizewords.data.floating.local.room.model.floating.FloatingWordDisplayWordEntity
-import com.chen.memorizewords.domain.sync.FloatingDisplayRecordSyncPayload
-import com.chen.memorizewords.domain.sync.OutboxTopic
-import com.chen.memorizewords.domain.sync.SyncOperation
-import com.chen.memorizewords.domain.sync.SyncOutboxWriter
+import com.chen.memorizewords.core.common.coroutines.DirectSyncLauncher
+import com.chen.memorizewords.data.sync.remote.learningsync.RemoteLearningSyncDataSource
 import com.chen.memorizewords.domain.floating.model.FloatingWordDisplayRecord
 import com.chen.memorizewords.domain.floating.repository.FloatingWordDisplayRecordRepository
-import com.google.gson.Gson
 import javax.inject.Inject
 
 class FloatingWordDisplayRecordRepositoryImpl @Inject constructor(
     private val floatingDatabase: FloatingDatabase,
     private val dao: FloatingWordDisplayRecordDao,
     private val checkInBusinessCalendar: CheckInBusinessCalendar,
-    private val SyncOutboxWriter: SyncOutboxWriter,    private val gson: Gson
+    private val remoteLearningSyncDataSource: RemoteLearningSyncDataSource,
+    private val directSyncLauncher: DirectSyncLauncher
 ) : FloatingWordDisplayRecordRepository {
 
     override suspend fun recordDisplay(wordId: Long) {
         if (wordId <= 0L) return
         val date = checkInBusinessCalendar.currentBusinessDate()
-        floatingDatabase.withTransaction {
+        val snapshot = floatingDatabase.withTransaction {
             val current = dao.getByDate(date)
             val currentWordIds = current?.words?.sortedBy { it.sequence }?.map { it.wordId }.orEmpty()
             val updated = if (current == null) {
@@ -48,20 +46,18 @@ class FloatingWordDisplayRecordRepositoryImpl @Inject constructor(
             if (words.isNotEmpty()) {
                 dao.upsertWords(words)
             }
-            SyncOutboxWriter.enqueueLatest(
-                bizType = OutboxTopic.FLOATING_DISPLAY_RECORD,
-                bizKey = "floating_display_record:${updated.date}",
-                operation = SyncOperation.UPSERT,
-                payload = gson.toJson(
-                    FloatingDisplayRecordSyncPayload(
-                        date = updated.date,
-                        displayCount = updated.displayCount,
-                        wordIds = updatedWordIds,
-                        updatedAtMs = updated.updatedAtMs
-                    )
-                )
+            FloatingWordDisplayRecord(
+                date = updated.date,
+                displayCount = updated.displayCount,
+                wordIds = updatedWordIds,
+                updatedAtMs = updated.updatedAtMs
             )
         }
+        directSyncLauncher.launch(
+            operation = "floating_display_record",
+            orderingKey = "floating_display:${snapshot.date}",
+            request = { remoteLearningSyncDataSource.upsertFloatingDisplayRecord(snapshot) }
+        )
     }
 
     override suspend fun getRecordByDate(date: String): FloatingWordDisplayRecord? {

@@ -1,20 +1,23 @@
 package com.chen.memorizewords.data.wordbook.repository.onboarding
 
 import com.chen.memorizewords.data.wordbook.local.mmkv.onboarding.OnboardingSnapshotDataSource
+import com.chen.memorizewords.core.common.coroutines.DirectSyncLauncher
+import com.chen.memorizewords.data.wordbook.remote.datasync.RemoteUserSyncDataSource
 import com.chen.memorizewords.domain.account.auth.LocalAccountStore
 import com.chen.memorizewords.domain.account.model.user.User
 import com.chen.memorizewords.domain.account.repository.LocalAccountRepository
-import com.chen.memorizewords.domain.sync.OutboxCommand
-import com.chen.memorizewords.domain.sync.SyncOutboxWriter
 import com.chen.memorizewords.domain.wordbook.model.onboarding.OnboardingPhase
 import com.chen.memorizewords.domain.wordbook.model.onboarding.OnboardingSnapshot
-import com.google.gson.Gson
+import java.lang.reflect.InvocationHandler
+import java.lang.reflect.Proxy
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
 class OnboardingRepositoryImplTest {
 
@@ -26,8 +29,11 @@ class OnboardingRepositoryImplTest {
             localAccountStore = accountRepository,
             localAccountRepository = accountRepository,
             onboardingSnapshotDataSource = snapshotDataSource,
-            syncOutboxWriter = FakeSyncOutboxWriter(),
-            gson = Gson()
+            remoteUserSyncDataSource = proxy { methodName ->
+                if (methodName.startsWith("updateOnboardingState")) Result.success(Unit)
+                else error("Unexpected call: $methodName")
+            },
+            directSyncLauncher = DirectSyncLauncher(CoroutineScope(Dispatchers.Unconfined))
         )
 
         val snapshot = repository.completeOnboarding(selectedWordBookId = 1001L)
@@ -50,6 +56,15 @@ class OnboardingRepositoryImplTest {
             onboardingCompleted = onboardingCompleted
         )
     }
+
+    @Suppress("UNCHECKED_CAST")
+    private inline fun <reified T : Any> proxy(
+        crossinline handler: (String) -> Any?
+    ): T = Proxy.newProxyInstance(
+        T::class.java.classLoader,
+        arrayOf(T::class.java),
+        InvocationHandler { _, method, _ -> handler(method.name) }
+    ) as T
 }
 
 private class FakeLocalAccountRepository(
@@ -96,8 +111,4 @@ private class FakeOnboardingSnapshotDataSource : OnboardingSnapshotDataSource {
     override suspend fun clearSnapshot(userId: Long) {
         snapshots.getOrPut(userId) { MutableStateFlow(null) }.value = null
     }
-}
-
-private class FakeSyncOutboxWriter : SyncOutboxWriter {
-    override suspend fun enqueueLatest(command: OutboxCommand) = Unit
 }

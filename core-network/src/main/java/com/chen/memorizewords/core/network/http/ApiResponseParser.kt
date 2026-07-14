@@ -7,6 +7,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 sealed interface BodyPolicy {
     data object RequireBody : BodyPolicy
     data object AllowNullBody : BodyPolicy
+    data object UnitBody : BodyPolicy
 }
 
 object ApiResponseParser {

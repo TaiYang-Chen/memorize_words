@@ -5,6 +5,7 @@ import androidx.work.WorkManager
 import com.chen.memorizewords.data.sync.local.mmkv.checkin.CheckInConfigDataSource
 import com.chen.memorizewords.data.sync.local.mmkv.download.UpdateDownloadStore
 import com.chen.memorizewords.data.sync.local.room.model.sync.SyncOutboxDao
+import com.chen.memorizewords.data.sync.repository.sync.FailureQueueResetter
 import com.chen.memorizewords.data.sync.repository.sync.SyncWorkConstants
 import com.chen.memorizewords.domain.account.UserScopedDataResetContributor
 import com.chen.memorizewords.domain.sync.repository.HomeStartupSnapshotRepository
@@ -21,13 +22,17 @@ import javax.inject.Singleton
 class DataSyncUserScopedDataResetContributor @Inject constructor(
     @ApplicationContext context: Context,
     private val syncOutboxDao: SyncOutboxDao,
+    private val failureQueueResetter: FailureQueueResetter,
     private val checkInConfigDataSource: CheckInConfigDataSource,
     private val updateDownloadStore: UpdateDownloadStore,
     private val homeStartupSnapshotRepository: HomeStartupSnapshotRepository
 ) : UserScopedDataResetContributor {
+    override val resetPriority: Int = Int.MIN_VALUE
+
     private val appContext = context.applicationContext
 
     override suspend fun clearUserScopedData() {
+        failureQueueResetter.reset()
         cancelUserScopedWork()
         syncOutboxDao.deleteAll()
         checkInConfigDataSource.clearUserScopedState()

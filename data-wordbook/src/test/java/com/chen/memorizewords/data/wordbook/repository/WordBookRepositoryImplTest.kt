@@ -12,6 +12,7 @@ import com.chen.memorizewords.data.wordbook.remote.datasync.RemoteUserSyncDataSo
 import com.chen.memorizewords.data.wordbook.remote.wordbook.RemoteWordBookDataSource
 import com.chen.memorizewords.data.wordbook.repository.wordbook.WordBookContentLocalStore
 import com.chen.memorizewords.data.wordbook.repository.wordbook.WordBookContentDownloader
+import com.chen.memorizewords.core.common.coroutines.DirectSyncLauncher
 import com.chen.memorizewords.data.wordbook.local.room.wordbook.WordBookSyncStateStore
 import com.chen.memorizewords.domain.study.model.favorites.WordFavorites
 import com.chen.memorizewords.domain.study.repository.word.FavoritesRepository
@@ -32,13 +33,7 @@ import com.chen.memorizewords.data.wordbook.local.room.model.words.root.root.Roo
 import com.chen.memorizewords.data.wordbook.local.room.model.words.root.root.WordRootDao
 import com.chen.memorizewords.data.wordbook.local.room.model.words.root.rootword.RootWordDao
 import com.chen.memorizewords.data.wordbook.local.room.model.words.word.WordDao
-import com.chen.memorizewords.domain.sync.OutboxCommand
-import com.chen.memorizewords.domain.sync.OutboxTopic
-import com.chen.memorizewords.domain.sync.SyncOperation
-import com.chen.memorizewords.domain.sync.SyncOutboxWriter
-import com.chen.memorizewords.domain.sync.WordBookDeleteSyncPayload
 import com.chen.memorizewords.domain.wordbook.repository.WordOrderType
-import com.google.gson.Gson
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Proxy
 import androidx.sqlite.db.SupportSQLiteOpenHelper
@@ -50,49 +45,45 @@ import kotlin.test.assertTrue
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.joinAll
 
 class WordBookRepositoryImplTest {
 
     @Test
-    fun `delete my wordbook removes local book after remote success`() = runBlocking {
+    fun `delete my wordbook removes local book then starts direct upload`() = runBlocking {
         val fixture = RepositoryFixture(
             books = listOf(wordBook(1L), wordBook(2L)),
             selectedBookId = 1L
         )
 
         val result = fixture.repository.deleteMyWordBook(2L)
+        fixture.awaitUploads()
 
         assertTrue(result.isSuccess)
         assertFalse(fixture.wordBookDao.books.containsKey(2L))
         assertEquals(listOf(2L), fixture.wordBookDao.deletedBookIds)
-        assertTrue(fixture.remoteRemover.removedBookIds.isEmpty())
+        assertEquals(listOf(2L), fixture.removedBookIds)
         assertEquals(listOf(2L), fixture.workCanceller.cancelledBookIds)
-
-        val command = fixture.syncOutboxWriter.commands.single()
-        assertEquals(OutboxTopic.WORD_BOOK_DELETE, command.topic)
-        assertEquals("word_book_delete:2", command.key)
-        assertEquals(SyncOperation.DELETE, command.operation)
-        assertEquals(
-            2L,
-            Gson().fromJson(command.payload, WordBookDeleteSyncPayload::class.java).bookId
-        )
     }
 
     @Test
-    fun `delete my wordbook removes local book without remote call`() = runBlocking {
+    fun `delete my wordbook starts upload and cancels local work`() = runBlocking {
         val fixture = RepositoryFixture(
             books = listOf(wordBook(1L), wordBook(2L)),
             selectedBookId = 1L
         )
 
         val result = fixture.repository.deleteMyWordBook(2L)
+        fixture.awaitUploads()
 
         assertTrue(result.isSuccess)
         assertFalse(fixture.wordBookDao.books.containsKey(2L))
         assertEquals(listOf(2L), fixture.wordBookDao.deletedBookIds)
-        assertTrue(fixture.remoteRemover.removedBookIds.isEmpty())
+        assertEquals(listOf(2L), fixture.removedBookIds)
         assertEquals(listOf(2L), fixture.workCanceller.cancelledBookIds)
-        assertEquals(listOf(OutboxTopic.WORD_BOOK_DELETE), fixture.syncOutboxWriter.commands.map { it.topic })
     }
 
     @Test
@@ -107,9 +98,8 @@ class WordBookRepositoryImplTest {
         assertTrue(result.isFailure)
         assertIs<IllegalStateException>(result.exceptionOrNull())
         assertTrue(fixture.wordBookDao.books.containsKey(2L))
-        assertTrue(fixture.remoteRemover.removedBookIds.isEmpty())
+        assertTrue(fixture.removedBookIds.isEmpty())
         assertTrue(fixture.wordBookDao.deletedBookIds.isEmpty())
-        assertTrue(fixture.syncOutboxWriter.commands.isEmpty())
     }
 
     @Test
@@ -198,11 +188,19 @@ class WordBookRepositoryImplTest {
         val wordBookDao = FakeWordBookDao(books)
         val currentSelectionDao = FakeCurrentWordBookSelectionDao(selectedBookId)
         val favoritesRepository = FakeFavoritesRepository()
-        val remoteRemover = FakeMyWordBookRemoteRemover()
-        val remoteUserSyncDataSource: RemoteUserSyncDataSource = throwingProxy()
+        val removedBookIds = mutableListOf<Long>()
+        val remoteUserSyncDataSource: RemoteUserSyncDataSource = proxy { methodName, args ->
+            when {
+                methodName.startsWith("removeMyWordBook") -> {
+                    removedBookIds += args.first() as Long
+                    Result.success(Unit)
+                }
+                else -> unexpected(methodName)
+            }
+        }
         val wordBookContentDownloader = throwingWordBookContentDownloader()
         val workCanceller = FakeWordBookWorkCanceller()
-        val syncOutboxWriter = FakeSyncOutboxWriter()
+        private val applicationJob = SupervisorJob()
 
         val repository = WordBookRepositoryImpl(
             transactionRunner = FakeWordBookTransactionRunner(),
@@ -212,13 +210,17 @@ class WordBookRepositoryImplTest {
             currentWordBookSelectionDao = currentSelectionDao.proxy,
             wordBookContentStateDao = throwingProxy(),
             favoritesRepository = favoritesRepository,
-            myWordBookRemoteRemover = remoteRemover,
             remoteUserSyncDataSource = remoteUserSyncDataSource,
             wordBookContentDownloader = wordBookContentDownloader,
             wordBookWorkCanceller = workCanceller,
-            SyncOutboxWriter = syncOutboxWriter,
-            gson = Gson()
+            directSyncLauncher = DirectSyncLauncher(
+                CoroutineScope(applicationJob + Dispatchers.Unconfined)
+            )
         )
+
+        suspend fun awaitUploads() {
+            applicationJob.children.toList().joinAll()
+        }
     }
 
     private data class BookWordDaoCall(
@@ -375,15 +377,6 @@ class WordBookRepositoryImplTest {
         }
     }
 
-    private class FakeMyWordBookRemoteRemover : MyWordBookRemoteRemover {
-        val removedBookIds = mutableListOf<Long>()
-
-        override suspend fun removeMyWordBook(bookId: Long): Result<Unit> {
-            removedBookIds += bookId
-            return Result.success(Unit)
-        }
-    }
-
     private class FakeWordBookTransactionRunner : WordBookTransactionRunner {
         override suspend fun <T> runInTransaction(block: suspend () -> T): T = block()
     }
@@ -393,14 +386,6 @@ class WordBookRepositoryImplTest {
 
         override fun cancel(bookId: Long) {
             cancelledBookIds += bookId
-        }
-    }
-
-    private class FakeSyncOutboxWriter : SyncOutboxWriter {
-        val commands = mutableListOf<OutboxCommand>()
-
-        override suspend fun enqueueLatest(command: OutboxCommand) {
-            commands += command
         }
     }
 

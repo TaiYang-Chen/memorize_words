@@ -34,9 +34,7 @@ import com.chen.memorizewords.data.wordbook.repository.wordbook.HttpWordBookCont
 import com.chen.memorizewords.data.wordbook.repository.wordbook.WordBookContentPackageImporter
 import com.chen.memorizewords.data.wordbook.repository.wordbook.WordBookContentReadinessAdapter
 import com.chen.memorizewords.data.wordbook.repository.wordbook.update.WordBookUpdateCoordinatorImpl
-import com.chen.memorizewords.data.wordbook.sync.WordBookUserSyncOutboxHandler
 import com.chen.memorizewords.domain.wordbook.repository.CurrentWordBookLocalStatePort
-import com.chen.memorizewords.domain.sync.SyncOutboxHandler
 import com.chen.memorizewords.domain.study.repository.WordLearningRepository
 import com.chen.memorizewords.domain.study.repository.WordLearningStateStore
 import com.chen.memorizewords.domain.study.repository.learning.LearningCommandPort
@@ -58,7 +56,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import dagger.multibindings.IntoSet
 import javax.inject.Singleton
 import retrofit2.Retrofit
 
@@ -174,11 +171,6 @@ abstract class DataWordBookModule {
         impl: OnboardingSnapshotDataSourceImpl
     ): OnboardingSnapshotDataSource
 
-    @Binds
-    @IntoSet
-    abstract fun bindWordBookUserSyncOutboxHandler(
-        impl: WordBookUserSyncOutboxHandler
-    ): SyncOutboxHandler
 }
 
 @Module

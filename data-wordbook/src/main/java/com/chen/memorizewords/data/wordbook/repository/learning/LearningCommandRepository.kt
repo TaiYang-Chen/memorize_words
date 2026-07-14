@@ -2,8 +2,6 @@ package com.chen.memorizewords.data.wordbook.repository.learning
 
 import com.chen.memorizewords.data.wordbook.local.room.model.learning.event.LearningEventDao
 import com.chen.memorizewords.data.wordbook.local.room.model.learning.event.LearningEventEntity
-import com.chen.memorizewords.data.wordbook.local.room.model.learning.outbox.LearningOutboxDao
-import com.chen.memorizewords.data.wordbook.local.room.model.learning.outbox.LearningOutboxEntity
 import com.chen.memorizewords.data.wordbook.local.room.model.learning.record.WordStudyRecordDao
 import com.chen.memorizewords.data.wordbook.local.room.model.learning.record.WordStudyRecordEntity
 import com.chen.memorizewords.data.wordbook.local.room.model.study.progress.word.WordLearningStateDao
@@ -22,6 +20,16 @@ import com.chen.memorizewords.domain.study.model.progress.word.calculateSm2Revie
 import com.chen.memorizewords.domain.study.repository.learning.LearningCommandPort
 import com.chen.memorizewords.domain.study.repository.learning.BookLearningWriteCoordinator
 import com.chen.memorizewords.domain.sync.LearningEventSyncPayload
+import com.chen.memorizewords.core.common.coroutines.DirectSyncLauncher
+import com.chen.memorizewords.data.sync.remote.learningsync.RemoteLearningSyncDataSource
+import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.LearningEventRequest
+import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.LearningEventResultDto
+import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.LearningProgressDto
+import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.LearningWordStateDto
+import com.chen.memorizewords.domain.study.model.progress.word.WordLearningState
+import com.chen.memorizewords.domain.study.repository.learning.LearningEventSyncResultSnapshot
+import com.chen.memorizewords.domain.study.repository.learning.LearningSyncStatePort
+import com.chen.memorizewords.domain.wordbook.model.study.progress.wordbook.WordBookProgress
 import com.google.gson.Gson
 import java.util.UUID
 import java.util.concurrent.TimeUnit
@@ -30,7 +38,6 @@ import javax.inject.Inject
 class LearningCommandRepository @Inject constructor(
     private val transactionRunner: WordBookTransactionRunner,
     private val learningEventDao: LearningEventDao,
-    private val learningOutboxDao: LearningOutboxDao,
     private val wordStudyRecordDao: WordStudyRecordDao,
     private val wordLearningStateDao: WordLearningStateDao,
     private val wordBookProgressDao: WordBookProgressDao,
@@ -39,20 +46,40 @@ class LearningCommandRepository @Inject constructor(
     private val bookWordItemDao: BookWordItemDao,
     private val wordDefinitionDao: WordDefinitionDao,
     private val gson: Gson,
-    private val coordinator: BookLearningWriteCoordinator
+    private val coordinator: BookLearningWriteCoordinator,
+    private val remoteLearningSyncDataSource: RemoteLearningSyncDataSource,
+    private val learningSyncStatePort: LearningSyncStatePort,
+    private val directSyncLauncher: DirectSyncLauncher
 ) : LearningCommandPort {
 
     override suspend fun record(command: RecordLearningEventCommand): RecordLearningEventResult {
         require(command.bookId > 0L) { "bookId must be positive" }
         require(command.word.id > 0L) { "wordId must be positive" }
-        return coordinator.withBookWrite(command.bookId) {
-            transactionRunner.runInTransaction {
+        val committed = coordinator.withBookWrite(command.bookId) {
+            val committed = transactionRunner.runInTransaction {
                 recordInTransaction(command)
             }
+            // Register the direct upload before releasing the per-book write lock so network
+            // entry order always matches the committed clientSequence order. The launcher yields
+            // before executing the request, therefore no network work runs inside the transaction.
+            directSyncLauncher.launch(
+                operation = "learning_event",
+                orderingKey = "learning:${committed.payload.bookId}",
+                request = {
+                    remoteLearningSyncDataSource.recordLearningEvent(committed.payload.toRequest())
+                },
+                onSuccess = { response ->
+                    coordinator.withBookWrite(committed.payload.bookId) {
+                        learningSyncStatePort.applyLearningEventSyncResult(response.toSnapshot())
+                    }
+                }
+            )
+            committed
         }
+        return committed.result
     }
 
-    private suspend fun recordInTransaction(command: RecordLearningEventCommand): RecordLearningEventResult {
+    private suspend fun recordInTransaction(command: RecordLearningEventCommand): CommittedLearningEvent {
         val currentBookId = currentWordBookSelectionDao.getById()?.bookId
             ?: throw IllegalStateException("current word book is not selected")
         check(currentBookId == command.bookId) {
@@ -122,21 +149,15 @@ class LearningCommandRepository @Inject constructor(
             baseStateRevision = baseRevision,
             payloadJson = command.payloadJson
         )
-        learningOutboxDao.upsert(
-            LearningOutboxEntity(
+        return CommittedLearningEvent(
+            result = RecordLearningEventResult(
                 clientEventId = clientEventId,
-                bookId = command.bookId,
                 wordId = command.word.id,
-                payload = gson.toJson(payload)
-            )
-        )
-
-        return RecordLearningEventResult(
-            clientEventId = clientEventId,
-            wordId = command.word.id,
-            bookId = command.bookId,
-            stateRevision = next?.stateRevision ?: baseRevision,
-            progressRevision = progressRevision
+                bookId = command.bookId,
+                stateRevision = next?.stateRevision ?: baseRevision,
+                progressRevision = progressRevision
+            ),
+            payload = payload
         )
     }
 
@@ -258,3 +279,62 @@ class LearningCommandRepository @Inject constructor(
         const val MASTERED_LEVEL = 5
     }
 }
+
+private data class CommittedLearningEvent(
+    val result: RecordLearningEventResult,
+    val payload: LearningEventSyncPayload
+)
+
+private fun LearningEventSyncPayload.toRequest(): LearningEventRequest = LearningEventRequest(
+    clientEventId = clientEventId,
+    deviceId = deviceId,
+    clientSequence = clientSequence,
+    bookId = bookId,
+    wordId = wordId,
+    action = action,
+    quality = quality,
+    correct = correct,
+    businessDate = businessDate,
+    occurredAtMs = occurredAt,
+    baseStateRevision = baseStateRevision,
+    payloadJson = payloadJson,
+    schemaVersion = schemaVersion
+)
+
+private fun LearningEventResultDto.toSnapshot(): LearningEventSyncResultSnapshot {
+    val progress = learningProgress ?: wordBookProgress
+    return LearningEventSyncResultSnapshot(
+        clientEventId = clientEventId,
+        conflict = conflict,
+        wordState = wordState?.toDomain(),
+        learningProgress = progress?.toDomain(),
+        serverStateRevision = wordState?.stateRevision ?: 0L
+    )
+}
+
+private fun LearningWordStateDto.toDomain(): WordLearningState = WordLearningState(
+    wordId = wordId,
+    bookId = bookId,
+    totalLearnCount = totalLearnCount,
+    lastLearnedAtMs = lastLearnedAtMs,
+    nextReviewAtMs = nextReviewAtMs,
+    masteryLevel = masteryLevel,
+    userStatus = userStatus,
+    repetition = repetition,
+    interval = interval,
+    efactor = efactor,
+    stateRevision = stateRevision
+)
+
+private fun LearningProgressDto.toDomain(): WordBookProgress = WordBookProgress(
+    wordBookId = bookId,
+    wordBookName = bookName,
+    learningCount = learnedCount,
+    masteredCount = masteredCount,
+    totalCount = totalCount,
+    correctCount = correctCount,
+    wrongCount = wrongCount,
+    studyDayCount = studyDayCount,
+    lastStudyDate = lastStudyDate.orEmpty(),
+    revision = revision
+)

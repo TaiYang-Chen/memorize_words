@@ -1,7 +1,7 @@
 package com.chen.memorizewords.data.wordbook.remoteapi.api.datasync
 
 import com.chen.memorizewords.core.network.http.NetworkRequestExecutor
-import com.chen.memorizewords.core.network.http.AuthenticatedRequestOrigin
+import com.chen.memorizewords.core.network.http.BodyPolicy
 import com.chen.memorizewords.data.wordbook.remoteapi.dto.wordbook.WordBookDto
 import com.chen.memorizewords.data.wordbook.remoteapi.dto.wordstate.WordStateDto
 import com.chen.memorizewords.core.network.http.ApiResponse
@@ -23,10 +23,11 @@ class UserDataSyncRequest @Inject constructor(
     }
 
     suspend fun updateOnboardingState(request: OnboardingStateDto): NetworkResult<Unit> =
-        requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
-            apiService.updateOnboardingState(request)
-                .await<ApiResponse<Unit>, Unit>()
-        }
+        requestExecutor.executeAuthenticated(
+            apiService.updateOnboardingState(request),
+            BodyPolicy.UnitBody,
+            latestDedupeKey = "onboarding"
+        )
 
     suspend fun getStudyPlan(): NetworkResult<StudyPlanDto?> = requestExecutor.executeAuthenticated {
         apiService.getStudyPlan()
@@ -34,10 +35,11 @@ class UserDataSyncRequest @Inject constructor(
     }
 
     suspend fun updateStudyPlan(request: StudyPlanDto): NetworkResult<Unit> =
-        requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
-        apiService.updateStudyPlan(request)
-            .await<ApiResponse<Unit>, Unit>()
-    }
+        requestExecutor.executeAuthenticated(
+            apiService.updateStudyPlan(request),
+            BodyPolicy.UnitBody,
+            latestDedupeKey = "study_plan"
+        )
 
     suspend fun getMyWordBooks(): NetworkResult<List<WordBookDto>> = requestExecutor.executeAuthenticated {
         apiService.getMyWordBooks()
@@ -66,10 +68,11 @@ class UserDataSyncRequest @Inject constructor(
     }
 
     suspend fun removeMyWordBook(bookId: Long): NetworkResult<Unit> =
-        requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
-        apiService.removeMyWordBook(bookId)
-            .await<ApiResponse<Unit>, Unit>()
-    }
+        requestExecutor.executeAuthenticated(
+            apiService.removeMyWordBook(bookId),
+            BodyPolicy.UnitBody,
+            latestDedupeKey = "word_book_delete:$bookId"
+        )
 
     suspend fun getWordStates(
         bookId: Long,
@@ -92,7 +95,7 @@ class UserDataSyncRequest @Inject constructor(
         definitions: String,
         phonetic: String?,
         addedDate: String
-    ): NetworkResult<Unit> = requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
+    ): NetworkResult<Unit> = requestExecutor.executeAuthenticated(
         apiService.addFavorite(
             FavoriteSyncRequest(
                 wordId = wordId,
@@ -101,8 +104,10 @@ class UserDataSyncRequest @Inject constructor(
                 phonetic = phonetic,
                 addedDate = addedDate
             )
-        ).await<ApiResponse<Unit>, Unit>()
-    }
+        ),
+        BodyPolicy.UnitBody,
+        latestDedupeKey = "favorite:$wordId"
+    )
 
     suspend fun getFavorites(
         page: Int,
@@ -113,10 +118,11 @@ class UserDataSyncRequest @Inject constructor(
     }
 
     suspend fun removeFavorite(wordId: Long): NetworkResult<Unit> =
-        requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
-        apiService.removeFavorite(wordId)
-            .await<ApiResponse<Unit>, Unit>()
-    }
+        requestExecutor.executeAuthenticated(
+            apiService.removeFavorite(wordId),
+            BodyPolicy.UnitBody,
+            latestDedupeKey = "favorite:$wordId"
+        )
 
     suspend fun getWordBookProgressList(): NetworkResult<List<WordBookProgressDto>> =
         requestExecutor.executeAuthenticated {
@@ -199,7 +205,7 @@ class UserDataSyncRequest @Inject constructor(
         updatedAtMs: Long,
         isNewPlanCompleted: Boolean,
         isReviewPlanCompleted: Boolean
-    ): NetworkResult<Unit> = requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
+    ): NetworkResult<Unit> = requestExecutor.executeAuthenticated(
         apiService.upsertDailyStudyDuration(
             date = date,
             request = DailyStudyDurationSyncRequest(
@@ -208,16 +214,20 @@ class UserDataSyncRequest @Inject constructor(
                 isNewPlanCompleted = isNewPlanCompleted,
                 isReviewPlanCompleted = isReviewPlanCompleted
             )
-        ).await<ApiResponse<Unit>, Unit>()
-    }
+        ),
+        BodyPolicy.UnitBody,
+        latestDedupeKey = "daily_study_duration:$date"
+    )
 
     suspend fun setCurrentWordBookSelection(bookId: Long): NetworkResult<Unit> =
-        requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
+        requestExecutor.executeAuthenticated(
             apiService.setCurrentWordBookSelection(
                 bookId = bookId,
                 request = WordBookSelectionSyncRequest(selected = true)
-            ).await<ApiResponse<Unit>, Unit>()
-        }
+            ),
+            BodyPolicy.UnitBody,
+            latestDedupeKey = "word_book_selection"
+        )
 
     suspend fun getCheckInConfig(): NetworkResult<CheckInConfigDto?> = requestExecutor.executeAuthenticated {
         apiService.getCheckInConfig()
@@ -254,7 +264,7 @@ class UserDataSyncRequest @Inject constructor(
         type: String,
         signedAtMs: Long,
         updatedAtMs: Long
-    ): NetworkResult<Unit> = requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
+    ): NetworkResult<Unit> = requestExecutor.executeAuthenticated(
         apiService.upsertCheckInRecord(
             date = date,
             request = CheckInRecordSyncRequest(
@@ -262,6 +272,8 @@ class UserDataSyncRequest @Inject constructor(
                 signedAtMs = signedAtMs,
                 updatedAtMs = updatedAtMs
             )
-        ).await<ApiResponse<Unit>, Unit>()
-    }
+        ),
+        BodyPolicy.UnitBody,
+        latestDedupeKey = "checkin:$date"
+    )
 }

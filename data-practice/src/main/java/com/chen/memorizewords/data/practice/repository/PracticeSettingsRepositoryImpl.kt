@@ -1,15 +1,12 @@
 package com.chen.memorizewords.data.practice.repository
 
-import com.chen.memorizewords.domain.sync.PracticeSettingsSyncPayload
-import com.chen.memorizewords.domain.sync.OutboxTopic
-import com.chen.memorizewords.domain.sync.SyncOperation
-import com.chen.memorizewords.domain.sync.SyncOutboxWriter
+import com.chen.memorizewords.core.common.coroutines.DirectSyncLauncher
+import com.chen.memorizewords.data.sync.remote.learningsync.RemoteLearningSyncDataSource
 import com.chen.memorizewords.domain.practice.AudioLoopPlaybackMode
 import com.chen.memorizewords.domain.practice.AudioLoopPlayOrder
 import com.chen.memorizewords.domain.practice.PracticeSettings
 import com.chen.memorizewords.domain.practice.PracticeSettingsLocalStatePort
 import com.chen.memorizewords.domain.practice.PracticeSettingsRepository
-import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -20,8 +17,8 @@ import kotlinx.coroutines.flow.asStateFlow
 @Singleton
 class PracticeSettingsRepositoryImpl @Inject constructor(
     private val mmkv: MMKV,
-    private val SyncOutboxWriter: SyncOutboxWriter,
-    private val gson: Gson
+    private val remoteLearningSyncDataSource: RemoteLearningSyncDataSource,
+    private val directSyncLauncher: DirectSyncLauncher
 ) : PracticeSettingsRepository, PracticeSettingsLocalStatePort {
 
     companion object {
@@ -41,7 +38,6 @@ class PracticeSettingsRepositoryImpl @Inject constructor(
         private const val KEY_AUDIO_LOOP_KEEP_SCREEN_ON = "practice_audio_loop_keep_screen_on"
         private const val KEY_AUDIO_LOOP_PLAY_ORDER = "practice_audio_loop_play_order"
         private const val KEY_SPEECH_PROVIDER = "practice_speech_provider"
-        private const val SYNC_PROVIDER = "BAIDU"
     }
 
     private val state = MutableStateFlow(readFromLocal())
@@ -55,30 +51,10 @@ class PracticeSettingsRepositoryImpl @Inject constructor(
         writeSettingsToLocal(normalized)
         state.value = normalized
 
-        SyncOutboxWriter.enqueueLatest(
-            bizType = OutboxTopic.PRACTICE_SETTINGS,
-            bizKey = "practice_settings",
-            operation = SyncOperation.UPSERT,
-            payload = gson.toJson(
-                PracticeSettingsSyncPayload(
-                    selectedBookId = normalized.selectedBookId,
-                    intervalSeconds = normalized.intervalSeconds,
-                    loopEnabled = normalized.loopEnabled,
-                    showPhonetic = normalized.showPhonetic,
-                    showMeaning = normalized.showMeaning,
-                    playbackMode = normalized.playbackMode.name,
-                    playTimes = normalized.playTimes,
-                    wordRepeatTimes = normalized.wordRepeatTimes,
-                    exampleRepeatTimes = normalized.exampleRepeatTimes,
-                    dictationPauseSeconds = normalized.dictationPauseSeconds,
-                    revealDelaySeconds = normalized.revealDelaySeconds,
-                    playbackSpeed = normalized.playbackSpeed,
-                    timedStopMinutes = normalized.timedStopMinutes,
-                    keepScreenOn = normalized.keepScreenOn,
-                    playOrder = normalized.playOrder.name,
-                    provider = SYNC_PROVIDER
-                )
-            )
+        directSyncLauncher.launch(
+            operation = "practice_settings",
+            orderingKey = "practice_settings",
+            request = { remoteLearningSyncDataSource.updatePracticeSettings(normalized) }
         )
     }
 

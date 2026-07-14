@@ -9,7 +9,6 @@ import com.chen.memorizewords.data.account.remote.user.RemoteAuthDataSourceImpl
 import com.chen.memorizewords.data.account.remoteapi.api.auth.AuthApiService
 import com.chen.memorizewords.data.account.repository.AccountSessionRepositoryImpl
 import com.chen.memorizewords.data.account.repository.LocalAccountRepositoryImpl
-import com.chen.memorizewords.data.account.repository.UserDataOwnerRepositoryImpl
 import com.chen.memorizewords.data.account.repository.UserScopedDataCleanerImpl
 import com.chen.memorizewords.data.account.repository.user.AuthRepositoryImpl
 import com.chen.memorizewords.data.account.repository.user.UserRepositoryImpl
@@ -17,8 +16,6 @@ import com.chen.memorizewords.data.account.session.AuthSessionRefreshRemoteDataS
 import com.chen.memorizewords.data.account.session.LocalAuthSessionCleaner
 import com.chen.memorizewords.data.account.session.LocalAuthStateCleaner
 import com.chen.memorizewords.data.account.session.LocalAuthStateProvider
-import com.chen.memorizewords.data.account.session.LocalUserDataOwnerDataSource
-import com.chen.memorizewords.data.account.session.LocalUserDataOwnerDataSourceImpl
 import com.chen.memorizewords.data.account.session.SessionKickoutNotifierImpl
 import com.chen.memorizewords.data.account.session.SessionLocalDataSource
 import com.chen.memorizewords.data.account.session.SessionManager
@@ -34,7 +31,6 @@ import com.chen.memorizewords.domain.account.auth.SessionKickoutNotifier
 import com.chen.memorizewords.domain.account.auth.TokenProvider
 import com.chen.memorizewords.domain.account.repository.AccountSessionRepository
 import com.chen.memorizewords.domain.account.repository.LocalAccountRepository
-import com.chen.memorizewords.domain.account.repository.UserDataOwnerRepository
 import com.chen.memorizewords.domain.account.repository.UserScopedDataCleaner
 import com.chen.memorizewords.domain.account.repository.user.AuthRepository
 import com.chen.memorizewords.domain.account.repository.user.UserRepository
@@ -66,9 +62,6 @@ abstract class DataAccountRepositoryModule {
 
     @Binds
     abstract fun bindAccountSessionRepository(impl: AccountSessionRepositoryImpl): AccountSessionRepository
-
-    @Binds
-    abstract fun bindUserDataOwnerRepository(impl: UserDataOwnerRepositoryImpl): UserDataOwnerRepository
 
     @Binds
     abstract fun bindUserScopedDataCleaner(impl: UserScopedDataCleanerImpl): UserScopedDataCleaner
@@ -111,12 +104,6 @@ object DataAccountModule {
     @Singleton
     fun provideLocalAccountStore(authLocalDataSource: AuthLocalDataSource): LocalAccountStore {
         return authLocalDataSource
-    }
-
-    @Provides
-    @Singleton
-    fun provideLocalUserDataOwnerDataSource(mmkv: MMKV): LocalUserDataOwnerDataSource {
-        return LocalUserDataOwnerDataSourceImpl(mmkv)
     }
 
     @Provides

@@ -1,16 +1,13 @@
 package com.chen.memorizewords.data.wordbook.repository.onboarding
 
 import com.chen.memorizewords.data.wordbook.local.mmkv.onboarding.OnboardingSnapshotDataSource
-import com.chen.memorizewords.domain.sync.OnboardingStateSyncPayload
-import com.chen.memorizewords.domain.sync.OutboxTopic
-import com.chen.memorizewords.domain.sync.SyncOperation
-import com.chen.memorizewords.domain.sync.SyncOutboxWriter
+import com.chen.memorizewords.core.common.coroutines.DirectSyncLauncher
+import com.chen.memorizewords.data.wordbook.remote.datasync.RemoteUserSyncDataSource
 import com.chen.memorizewords.domain.account.auth.LocalAccountStore
 import com.chen.memorizewords.domain.account.repository.LocalAccountRepository
 import com.chen.memorizewords.domain.wordbook.model.onboarding.OnboardingPhase
 import com.chen.memorizewords.domain.wordbook.model.onboarding.OnboardingSnapshot
 import com.chen.memorizewords.domain.wordbook.repository.onboarding.OnboardingRepository
-import com.google.gson.Gson
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,8 +24,8 @@ class OnboardingRepositoryImpl @Inject constructor(
     private val localAccountStore: LocalAccountStore,
     private val localAccountRepository: LocalAccountRepository,
     private val onboardingSnapshotDataSource: OnboardingSnapshotDataSource,
-    private val syncOutboxWriter: SyncOutboxWriter,
-    private val gson: Gson
+    private val remoteUserSyncDataSource: RemoteUserSyncDataSource,
+    private val directSyncLauncher: DirectSyncLauncher
 ) : OnboardingRepository {
 
     override fun getCurrentSnapshot(): OnboardingSnapshot {
@@ -96,7 +93,7 @@ class OnboardingRepositoryImpl @Inject constructor(
             )
             onboardingSnapshotDataSource.saveSnapshot(userId, next)
             markCurrentUserOnboardingCompleted(userId)
-            enqueueSnapshotSync(userId, next)
+            uploadSnapshot(next)
             next
         }
     }
@@ -107,21 +104,11 @@ class OnboardingRepositoryImpl @Inject constructor(
         localAccountRepository.saveUser(currentUser.copy(onboardingCompleted = true))
     }
 
-    private suspend fun enqueueSnapshotSync(userId: Long, snapshot: OnboardingSnapshot) {
-        syncOutboxWriter.enqueueLatest(
-            bizType = OutboxTopic.ONBOARDING_STATE,
-            bizKey = "onboarding_state:$userId",
-            operation = SyncOperation.UPSERT,
-            payload = gson.toJson(
-                OnboardingStateSyncPayload(
-                    phase = snapshot.phase.name,
-                    selectedWordBookId = snapshot.selectedWordBookId,
-                    revision = snapshot.revision,
-                    updatedAtMs = snapshot.updatedAtMs,
-                    completedAtMs = snapshot.completedAt
-                )
-            ),
-            updatedAtMs = snapshot.updatedAtMs
+    private fun uploadSnapshot(snapshot: OnboardingSnapshot) {
+        directSyncLauncher.launch(
+            operation = "onboarding_state",
+            orderingKey = "onboarding",
+            request = { remoteUserSyncDataSource.updateOnboardingState(snapshot) }
         )
     }
 

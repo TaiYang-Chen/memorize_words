@@ -1,7 +1,7 @@
 package com.chen.memorizewords.data.sync.remoteapi.api.learningsync
 
 import com.chen.memorizewords.core.network.http.NetworkRequestExecutor
-import com.chen.memorizewords.core.network.http.AuthenticatedRequestOrigin
+import com.chen.memorizewords.core.network.http.BodyPolicy
 import com.chen.memorizewords.core.network.http.ApiResponse
 import com.chen.memorizewords.core.network.http.PageData
 import com.chen.memorizewords.core.network.http.NetworkResult
@@ -16,10 +16,7 @@ class LearningSyncRequest @Inject constructor(
     private val requestExecutor: NetworkRequestExecutor
 ) {
     suspend fun recordLearningEvent(request: LearningEventRequest): NetworkResult<LearningEventResultDto> =
-        requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
-            apiService.recordLearningEvent(request)
-                .await<ApiResponse<LearningEventResultDto>, LearningEventResultDto>()
-        }
+        requestExecutor.executeAuthenticated(apiService.recordLearningEvent(request))
 
     suspend fun getPracticeSettings(): NetworkResult<PracticeSettingsDto?> = requestExecutor.executeAuthenticated {
         apiService.getPracticeSettings()
@@ -27,18 +24,20 @@ class LearningSyncRequest @Inject constructor(
     }
 
     suspend fun updatePracticeSettings(request: PracticeSettingsSyncRequest): NetworkResult<Unit> =
-        requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
-            apiService.updatePracticeSettings(request)
-                .await<ApiResponse<Unit>, Unit>()
-        }
+        requestExecutor.executeAuthenticated(
+            apiService.updatePracticeSettings(request),
+            BodyPolicy.UnitBody,
+            latestDedupeKey = "practice_settings"
+        )
 
     suspend fun upsertPracticeDuration(
         date: String,
         request: PracticeDurationSyncRequest
-    ): NetworkResult<Unit> = requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
-        apiService.upsertPracticeDuration(date, request)
-            .await<ApiResponse<Unit>, Unit>()
-    }
+    ): NetworkResult<Unit> = requestExecutor.executeAuthenticated(
+        apiService.upsertPracticeDuration(date, request),
+        BodyPolicy.UnitBody,
+        latestDedupeKey = "practice_duration:$date"
+    )
 
     suspend fun getPracticeDurations(
         page: Int,
@@ -49,10 +48,10 @@ class LearningSyncRequest @Inject constructor(
     }
 
     suspend fun appendPracticeSession(request: PracticeSessionSyncRequest): NetworkResult<Unit> =
-        requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
-            apiService.appendPracticeSession(request)
-                .await<ApiResponse<Unit>, Unit>()
-        }
+        requestExecutor.executeAuthenticated(
+            apiService.appendPracticeSession(request),
+            BodyPolicy.UnitBody
+        )
 
     suspend fun getPracticeSessions(
         page: Int,
@@ -68,18 +67,20 @@ class LearningSyncRequest @Inject constructor(
     }
 
     suspend fun updateFloatingSettings(request: FloatingSettingsSyncRequest): NetworkResult<Unit> =
-        requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
-            apiService.updateFloatingSettings(request)
-                .await<ApiResponse<Unit>, Unit>()
-        }
+        requestExecutor.executeAuthenticated(
+            apiService.updateFloatingSettings(request),
+            BodyPolicy.UnitBody,
+            latestDedupeKey = "floating_settings"
+        )
 
     suspend fun upsertFloatingDisplayRecord(
         date: String,
         request: FloatingDisplayRecordSyncRequest
-    ): NetworkResult<Unit> = requestExecutor.executeAuthenticated(AuthenticatedRequestOrigin.SYNC) {
-        apiService.upsertFloatingDisplayRecord(date, request)
-            .await<ApiResponse<Unit>, Unit>()
-    }
+    ): NetworkResult<Unit> = requestExecutor.executeAuthenticated(
+        apiService.upsertFloatingDisplayRecord(date, request),
+        BodyPolicy.UnitBody,
+        latestDedupeKey = "floating_display:$date"
+    )
 
     suspend fun getFloatingDisplayRecords(
         page: Int,

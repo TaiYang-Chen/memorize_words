@@ -14,11 +14,7 @@ import com.chen.memorizewords.data.wordbook.local.room.model.words.word.WordDao
 import com.chen.memorizewords.data.wordbook.local.room.model.words.word.toDomain
 import com.chen.memorizewords.data.wordbook.remote.datasync.RemoteUserSyncDataSource
 import com.chen.memorizewords.data.wordbook.repository.wordbook.WordBookContentDownloader
-import com.chen.memorizewords.domain.sync.OutboxTopic
-import com.chen.memorizewords.domain.sync.SyncOperation
-import com.chen.memorizewords.domain.sync.SyncOutboxWriter
-import com.chen.memorizewords.domain.sync.WordBookDeleteSyncPayload
-import com.chen.memorizewords.domain.sync.WordBookSelectionSyncPayload
+import com.chen.memorizewords.core.common.coroutines.DirectSyncLauncher
 import com.chen.memorizewords.core.common.paging.PageSlice
 import com.chen.memorizewords.domain.wordbook.model.WordBook
 import com.chen.memorizewords.domain.wordbook.model.WordBookContentState
@@ -35,7 +31,6 @@ import com.chen.memorizewords.domain.study.repository.word.FavoritesRepository
 import com.chen.memorizewords.domain.wordbook.repository.CurrentWordBookLocalStatePort
 import com.chen.memorizewords.domain.wordbook.repository.WordOrderType
 import com.chen.memorizewords.domain.wordbook.repository.WordBookRepository
-import com.google.gson.Gson
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -52,12 +47,10 @@ class WordBookRepositoryImpl @Inject constructor(
     private val currentWordBookSelectionDao: CurrentWordBookSelectionDao,
     private val wordBookContentStateDao: WordBookContentStateDao,
     private val favoritesRepository: FavoritesRepository,
-    private val myWordBookRemoteRemover: MyWordBookRemoteRemover,
     private val remoteUserSyncDataSource: RemoteUserSyncDataSource,
     private val wordBookContentDownloader: WordBookContentDownloader,
     private val wordBookWorkCanceller: WordBookWorkCanceller,
-    private val SyncOutboxWriter: SyncOutboxWriter,
-    private val gson: Gson
+    private val directSyncLauncher: DirectSyncLauncher
 ) : WordBookRepository, CurrentWordBookLocalStatePort {
 
     override fun getMyWordBooksMinimalFlow(): Flow<List<WordBookInfo>> {
@@ -115,13 +108,12 @@ class WordBookRepositoryImpl @Inject constructor(
             if (!wordBookDao.exists(bookId)) return@withContext
             transactionRunner.runInTransaction {
                 currentWordBookSelectionDao.upsert(CurrentWordBookSelectionEntity(bookId = bookId))
-                SyncOutboxWriter.enqueueLatest(
-                    bizType = OutboxTopic.WORD_BOOK_SELECTION,
-                    bizKey = "word_book_selection",
-                    operation = SyncOperation.UPSERT,
-                    payload = gson.toJson(WordBookSelectionSyncPayload(bookId = bookId))
-                )
             }
+            directSyncLauncher.launch(
+                operation = "word_book_selection",
+                orderingKey = "word_book_selection",
+                request = { remoteUserSyncDataSource.setCurrentWordBookSelection(bookId) }
+            )
         }
     }
 
@@ -139,14 +131,14 @@ class WordBookRepositoryImpl @Inject constructor(
                 transactionRunner.runInTransaction {
                     ensureDeletableMyWordBook(bookId)
                     wordBookDao.deleteByIds(listOf(bookId))
-                    SyncOutboxWriter.enqueueLatest(
-                        bizType = OutboxTopic.WORD_BOOK_DELETE,
-                        bizKey = "word_book_delete:$bookId",
-                        operation = SyncOperation.DELETE,
-                        payload = gson.toJson(WordBookDeleteSyncPayload(bookId = bookId))
-                    )
                 }
+                directSyncLauncher.launch(
+                    operation = "word_book_delete",
+                    orderingKey = "word_book:$bookId",
+                    request = { remoteUserSyncDataSource.removeMyWordBook(bookId) }
+                )
                 wordBookWorkCanceller.cancel(bookId)
+                Unit
             }
         }
     }
