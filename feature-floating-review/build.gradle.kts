@@ -22,6 +22,7 @@ android {
 dependencies {
     implementation(project(":core-ui"))
     implementation(project(":core-navigation"))
+    implementation(project(":core-sprite-animation"))
     implementation(project(":domain"))
 
     implementation(libs.androidx.appcompat)

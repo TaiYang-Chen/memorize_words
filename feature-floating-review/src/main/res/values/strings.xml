@@ -36,6 +36,7 @@
     <string name="module_floating_review_notification_ready">点击悬浮球开始复习</string>
     <string name="module_floating_review_detail">查看详情</string>
     <string name="module_floating_review_empty">暂无可复习单词</string>
+    <string name="feature_floating_review_loading">加载中…</string>
     <string name="module_floating_review_close">关闭悬浮</string>
     <string name="module_floating_review_preview_permission_required">请先授予悬浮窗权限后再预览透明度效果</string>
     <string name="module_floating_review_phonetic_both">美 [%1$s]  英 [%2$s]</string>

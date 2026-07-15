@@ -5,7 +5,8 @@ import android.view.WindowManager
 internal fun floatingBallWindowFlags(): Int {
     return WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
         WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
+        WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
 }
 
 internal fun floatingCardWindowFlags(): Int {

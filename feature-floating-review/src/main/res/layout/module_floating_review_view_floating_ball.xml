@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.AppCompatImageView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.chen.memorizewords.core.sprite.SpriteAnimationView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/feature_floating_review_pet_width"
     android:layout_height="@dimen/feature_floating_review_pet_height"
-    android:adjustViewBounds="true"
     android:background="@android:color/transparent"
     android:clickable="true"
-    android:focusable="true"
-    android:scaleType="fitCenter"
-    android:src="@drawable/feature_floating_review_floating_pet" />
+    android:focusable="true" />
