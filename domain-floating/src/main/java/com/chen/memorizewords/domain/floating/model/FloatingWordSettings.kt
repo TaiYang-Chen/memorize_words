@@ -7,6 +7,7 @@ data class FloatingWordSettings(
     val ballOpacityPercent: Int = 100,
     val cardOpacityPercent: Int = 100,
     val cardGapDp: Int = -20,
+    val selectedCharacterPackId: String = DEFAULT_CHARACTER_PACK_ID,
     val sourceType: FloatingWordSourceType = FloatingWordSourceType.CURRENT_BOOK,
     val orderType: FloatingWordOrderType = FloatingWordOrderType.RANDOM,
     val fieldConfigs: List<FloatingWordFieldConfig> = defaultFieldConfigs(),
@@ -17,6 +18,8 @@ data class FloatingWordSettings(
     val dockState: FloatingDockState? = null
 ) {
     companion object {
+        const val DEFAULT_CHARACTER_PACK_ID = "green_pet"
+
         fun defaultFieldConfigs(): List<FloatingWordFieldConfig> {
             return listOf(
                 FloatingWordFieldConfig(FloatingWordFieldType.WORD, true, 18),

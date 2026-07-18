@@ -7,10 +7,16 @@ import com.chen.memorizewords.data.floating.repository.bootstrap.FloatingSnapsho
 import com.chen.memorizewords.data.floating.local.FloatingDatabase
 import com.chen.memorizewords.data.floating.repository.FloatingWordDisplayRecordRepositoryImpl
 import com.chen.memorizewords.data.floating.repository.FloatingWordSettingsRepositoryImpl
+import com.chen.memorizewords.data.floating.repository.CharacterPackRepositoryImpl
+import com.chen.memorizewords.data.floating.repository.DownloadedSpritePackSource
+import com.chen.memorizewords.data.floating.remoteapi.CharacterPackApiService
+import com.chen.memorizewords.core.sprite.DownloadedSpriteSource
+import com.chen.memorizewords.core.sprite.SpritePackSource
 import com.chen.memorizewords.domain.floating.FloatingSnapshotLocalStatePort
 import com.chen.memorizewords.domain.floating.FloatingSettingsLocalStatePort
 import com.chen.memorizewords.domain.floating.repository.FloatingWordDisplayRecordRepository
 import com.chen.memorizewords.domain.floating.repository.FloatingWordSettingsRepository
+import com.chen.memorizewords.domain.floating.repository.CharacterPackRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -18,6 +24,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
+import retrofit2.Retrofit
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -41,6 +48,11 @@ abstract class DataFloatingModule {
     abstract fun bindFloatingSnapshotLocalStatePort(
         impl: FloatingSnapshotLocalStateStore
     ): FloatingSnapshotLocalStatePort
+
+    @Binds
+    abstract fun bindCharacterPackRepository(
+        impl: CharacterPackRepositoryImpl
+    ): CharacterPackRepository
 }
 
 @Module
@@ -57,4 +69,14 @@ object DataFloatingDatabaseModule {
     @Provides
     fun provideFloatingWordDisplayRecordDao(database: FloatingDatabase) =
         database.floatingWordDisplayRecordDao()
+
+    @Provides
+    @Singleton
+    fun provideCharacterPackApiService(retrofit: Retrofit): CharacterPackApiService =
+        retrofit.create(CharacterPackApiService::class.java)
+
+    @Provides
+    @Singleton
+    @DownloadedSpriteSource
+    fun provideDownloadedSpritePackSource(source: DownloadedSpritePackSource): SpritePackSource = source
 }

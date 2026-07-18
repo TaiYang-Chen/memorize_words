@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:paddingStart="@dimen/module_floating_review_page_horizontal_padding"
+        android:paddingEnd="@dimen/module_floating_review_page_horizontal_padding">
+
+        <ImageView
+            android:id="@+id/btnCharacterBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/module_floating_review_back"
+            android:padding="12dp"
+            android:src="@drawable/module_floating_review_ic_arrow_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvCharacterTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/module_floating_review_character_title"
+            android:textColor="#111827"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/btnCharacterBack"
+            app:layout_constraintEnd_toStartOf="@id/btnCharacterRefresh"
+            app:layout_constraintStart_toEndOf="@id/btnCharacterBack"
+            app:layout_constraintTop_toTopOf="@id/btnCharacterBack" />
+
+        <ImageView
+            android:id="@+id/btnCharacterRefresh"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/module_floating_review_character_refresh"
+            android:padding="13dp"
+            android:src="@drawable/module_floating_review_ic_refresh"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvCharacterSubtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/module_floating_review_character_subtitle"
+            android:textColor="#64748B"
+            android:textSize="13sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnCharacterBack" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCharacterPacks"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="14dp"
+            android:clipToPadding="false"
+            android:paddingBottom="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvCharacterSubtitle" />
+
+        <TextView
+            android:id="@+id/tvCharacterEmpty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/module_floating_review_character_empty"
+            android:textColor="#64748B"
+            android:textSize="14sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvCharacterSubtitle" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

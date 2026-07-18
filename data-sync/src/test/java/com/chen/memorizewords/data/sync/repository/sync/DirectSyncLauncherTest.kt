@@ -24,15 +24,16 @@ class DirectSyncLauncherTest {
         try {
             launcher.launch<Unit>(
                 operation = "test_upload",
-                orderingKey = "test"
-            ) {
+                orderingKey = "test",
+                request = {
                 started.complete(Unit)
                 try {
                     awaitCancellation()
                 } finally {
                     cancelled.complete(Unit)
                 }
-            }
+                }
+            )
 
             withTimeout(2_000L) { started.await() }
             launcher.cancelAll()

@@ -7,5 +7,14 @@
     <fragment
         android:id="@+id/floatingReviewSettingsFragment"
         android:name="com.chen.memorizewords.feature.floatingreview.ui.settings.FloatingReviewSettingsFragment"
-        android:label="@string/module_floating_review_settings_title" />
+        android:label="@string/module_floating_review_settings_title">
+        <action
+            android:id="@+id/action_floatingReviewSettings_to_characterPacks"
+            app:destination="@id/characterPackFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/characterPackFragment"
+        android:name="com.chen.memorizewords.feature.floatingreview.ui.character.CharacterPackFragment"
+        android:label="@string/module_floating_review_character_title" />
 </navigation>

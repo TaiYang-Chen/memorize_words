@@ -16,6 +16,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.navigation.fragment.findNavController
 import com.chen.memorizewords.core.navigation.FloatingWordActions
 import com.chen.memorizewords.core.navigation.FloatingWordEntry
 import com.chen.memorizewords.core.navigation.PracticeEntry
@@ -126,6 +127,12 @@ class FloatingReviewSettingsFragment :
         val seekBallOpacity = view.findViewById<SeekBar>(R.id.seekBallOpacity)
         val seekCardOpacity = view.findViewById<SeekBar>(R.id.seekCardOpacity)
         val seekCardGap = view.findViewById<SeekBar>(R.id.seekCardGap)
+
+        view.findViewById<View>(R.id.layoutCharacterPack).setOnClickListener {
+            findNavController().navigate(
+                R.id.action_floatingReviewSettings_to_characterPacks
+            )
+        }
 
         view.findViewById<View>(R.id.layoutSourceCurrent).setOnClickListener {
             viewModel.onSourceTypeChanged(FloatingWordSourceType.CURRENT_BOOK)

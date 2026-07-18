@@ -34,6 +34,9 @@ internal fun normalizeBallOpacityPercent(value: Int): Int = value.coerceIn(0, 10
 internal fun normalizeCardOpacityPercent(value: Int): Int = value.coerceIn(0, 100)
 internal fun normalizeCardGapDp(value: Int): Int =
     value.coerceIn(MIN_CARD_GAP_DP, MAX_CARD_GAP_DP)
+internal fun normalizeCharacterPackId(value: String): String =
+    value.takeIf { it.matches(Regex("[a-z0-9][a-z0-9_-]{0,63}")) }
+        ?: FloatingWordSettings.DEFAULT_CHARACTER_PACK_ID
 internal fun sanitizeDockState(
     dockState: FloatingDockState?,
     dockConfig: FloatingDockConfig
@@ -58,6 +61,7 @@ internal fun normalizeFloatingWordSettings(settings: FloatingWordSettings): Floa
         ballOpacityPercent = normalizeBallOpacityPercent(settings.ballOpacityPercent),
         cardOpacityPercent = normalizeCardOpacityPercent(settings.cardOpacityPercent),
         cardGapDp = normalizeCardGapDp(settings.cardGapDp),
+        selectedCharacterPackId = normalizeCharacterPackId(settings.selectedCharacterPackId),
         dockConfig = normalizedDockConfig,
         dockState = sanitizeDockState(settings.dockState, normalizedDockConfig)
     )
@@ -87,6 +91,7 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
         private const val KEY_BALL_OPACITY_PERCENT = "floating_word_ball_opacity_percent"
         private const val KEY_CARD_OPACITY_PERCENT = "floating_word_card_opacity_percent"
         private const val KEY_CARD_GAP_DP = "floating_word_card_gap_dp"
+        private const val KEY_SELECTED_CHARACTER_PACK_ID = "floating_word_selected_character_pack_id"
     }
 
     private val fieldConfigType = object : TypeToken<List<FloatingWordFieldConfig>>() {}.type
@@ -143,7 +148,8 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
             KEY_BALL_SIZE_PERCENT,
             KEY_BALL_OPACITY_PERCENT,
             KEY_CARD_OPACITY_PERCENT,
-            KEY_CARD_GAP_DP
+            KEY_CARD_GAP_DP,
+            KEY_SELECTED_CHARACTER_PACK_ID
         ).forEach(mmkv::removeValueForKey)
         state.value = readFromLocal()
     }
@@ -204,6 +210,10 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
                     KEY_CARD_GAP_DP,
                     DEFAULT_CARD_GAP_DP
                 ),
+                selectedCharacterPackId = mmkv.decodeString(
+                    KEY_SELECTED_CHARACTER_PACK_ID,
+                    FloatingWordSettings.DEFAULT_CHARACTER_PACK_ID
+                ).orEmpty().ifBlank { FloatingWordSettings.DEFAULT_CHARACTER_PACK_ID },
                 dockConfig = dockConfig,
                 dockState = dockState
             )
@@ -240,6 +250,7 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
         mmkv.encode(KEY_BALL_OPACITY_PERCENT, target.ballOpacityPercent)
         mmkv.encode(KEY_CARD_OPACITY_PERCENT, target.cardOpacityPercent)
         mmkv.encode(KEY_CARD_GAP_DP, target.cardGapDp)
+        mmkv.encode(KEY_SELECTED_CHARACTER_PACK_ID, target.selectedCharacterPackId)
         mmkv.encode(KEY_DOCK_CONFIG, gson.toJson(target.dockConfig))
         mmkv.encode(KEY_DOCK_STATE, target.dockState?.let(gson::toJson))
     }

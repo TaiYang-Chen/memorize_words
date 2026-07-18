@@ -119,4 +119,5 @@ object FloatingWordActions {
     const val ACTION_REFRESH = "floating_word_refresh"
     const val ACTION_PREVIEW_CARD = "floating_word_preview_card"
     const val ACTION_APPLY_BALL_APPEARANCE = "floating_word_apply_ball_appearance"
+    const val ACTION_APPLY_CHARACTER_PACK = "floating_word_apply_character_pack"
 }

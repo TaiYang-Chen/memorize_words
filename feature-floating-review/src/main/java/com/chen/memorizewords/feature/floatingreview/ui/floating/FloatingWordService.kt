@@ -30,6 +30,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.chen.memorizewords.core.sprite.SpriteAnimationView
+import com.chen.memorizewords.core.sprite.SpritePackId
 import com.chen.memorizewords.core.ui.ext.dpToPx
 import coil.load
 import com.chen.memorizewords.core.navigation.FloatingWordActions
@@ -174,6 +175,7 @@ class FloatingWordService : Service() {
         const val ACTION_REFRESH = FloatingWordActions.ACTION_REFRESH
         const val ACTION_PREVIEW_CARD = FloatingWordActions.ACTION_PREVIEW_CARD
         const val ACTION_APPLY_BALL_APPEARANCE = FloatingWordActions.ACTION_APPLY_BALL_APPEARANCE
+        const val ACTION_APPLY_CHARACTER_PACK = FloatingWordActions.ACTION_APPLY_CHARACTER_PACK
 
         private const val CHANNEL_ID = "floating_word_review_channel"
         private const val NOTIFICATION_ID = 5321
@@ -280,6 +282,10 @@ class FloatingWordService : Service() {
             when (action) {
                 ACTION_APPLY_BALL_APPEARANCE ->
                     applyBallAppearanceIfAttached(requestGeneration, startId)
+                ACTION_APPLY_CHARACTER_PACK ->
+                    if (ensureForegroundAndViews(requestGeneration)) {
+                        applyCharacterPack(requestGeneration)
+                    }
                 ACTION_PREVIEW_CARD ->
                     if (ensureForegroundAndViews(requestGeneration)) previewCard()
                 ACTION_REFRESH ->
@@ -379,6 +385,13 @@ class FloatingWordService : Service() {
         reconcileBallPosition(persistIfNeeded = false)
     }
 
+    private suspend fun applyCharacterPack(requestGeneration: Long) {
+        if (!isServiceOperationActive(requestGeneration)) return
+        val settings = resolveLatestSettings()
+        if (!isServiceOperationActive(requestGeneration)) return
+        floatingPetController.forceReloadPack(SpritePackId(settings.selectedCharacterPackId))
+    }
+
     private fun isServiceOperationActive(operationGeneration: Long): Boolean {
         return isFloatingServiceOperationActive(
             stopping = stopping,
@@ -433,7 +446,12 @@ class FloatingWordService : Service() {
         windowManager.addView(cardView, cardParams)
         windowManager.addView(ballView, ballParams)
 
-        (ballView as? SpriteAnimationView)?.let(floatingPetController::attach)
+        (ballView as? SpriteAnimationView)?.let { spriteView ->
+            floatingPetController.attach(
+                spriteView,
+                SpritePackId(currentSettings.selectedCharacterPackId)
+            )
+        }
 
         applyFloatingAppearance()
         configureBallGestures()

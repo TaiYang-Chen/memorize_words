@@ -128,6 +128,59 @@
                         android:textStyle="bold" />
 
                     <LinearLayout
+                        android:id="@+id/layoutCharacterPack"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/core_ui_dp_14"
+                        android:background="@drawable/module_floating_review_bg_settings_row_idle"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:minHeight="@dimen/core_ui_dp_58"
+                        android:orientation="horizontal"
+                        android:paddingStart="@dimen/core_ui_dp_12"
+                        android:paddingEnd="@dimen/core_ui_dp_12">
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:contentDescription="@string/module_floating_review_character_entry"
+                            android:src="@drawable/module_floating_review_character_default_preview" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/core_ui_dp_12"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/module_floating_review_character_entry"
+                                android:textColor="#1F2937"
+                                android:textSize="@dimen/core_ui_text_15"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/module_floating_review_character_entry_summary"
+                                android:textColor="#64748B"
+                                android:textSize="@dimen/core_ui_text_12" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="›"
+                            android:textColor="#94A3B8"
+                            android:textSize="24sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/core_ui_dp_16"

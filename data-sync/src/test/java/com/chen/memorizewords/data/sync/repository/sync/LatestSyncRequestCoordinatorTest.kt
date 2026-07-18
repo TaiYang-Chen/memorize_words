@@ -93,6 +93,7 @@ class LatestSyncRequestCoordinatorTest {
         allowReplayToFinish.complete(Unit)
         replay.await()
         normal.await()
+        Unit
     }
 
     @Test

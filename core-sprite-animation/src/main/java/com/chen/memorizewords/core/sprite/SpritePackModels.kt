@@ -2,6 +2,7 @@ package com.chen.memorizewords.core.sprite
 
 import android.content.res.AssetManager
 import java.io.File
+import javax.inject.Qualifier
 
 @JvmInline
 value class SpritePackId(val value: String) {
@@ -112,5 +113,13 @@ interface SpritePackSource {
 interface SpritePackRepository {
     suspend fun get(packId: SpritePackId): SpritePack
 }
+
+fun interface SpritePackContractValidator {
+    fun validate(manifest: SpritePackManifest)
+}
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class DownloadedSpriteSource
 
 class SpritePackValidationException(message: String) : IllegalArgumentException(message)

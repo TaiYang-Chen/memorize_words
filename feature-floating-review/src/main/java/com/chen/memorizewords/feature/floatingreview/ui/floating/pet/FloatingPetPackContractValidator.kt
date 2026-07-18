@@ -1,13 +1,14 @@
 package com.chen.memorizewords.feature.floatingreview.ui.floating.pet
 
 import com.chen.memorizewords.core.sprite.SpritePackManifest
+import com.chen.memorizewords.core.sprite.SpritePackContractValidator
 import com.chen.memorizewords.core.sprite.SpritePlaybackMode
 import javax.inject.Inject
 
 class FloatingPetPackContractValidator @Inject constructor(
     private val actionPolicy: FloatingPetActionPolicy
-) {
-    fun validate(manifest: SpritePackManifest) {
+) : SpritePackContractValidator {
+    override fun validate(manifest: SpritePackManifest) {
         val decodedFrameBytes = manifest.atlas.frameWidth.toLong() *
             manifest.atlas.frameHeight * ARGB_8888_BYTES_PER_PIXEL
         require(decodedFrameBytes <= MAX_FLOATING_PET_FRAME_BYTES) {

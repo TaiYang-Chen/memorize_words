@@ -198,6 +198,7 @@ data class FloatingSettingsSyncRequest(
     val ballOpacityPercent: Int = 100,
     val cardOpacityPercent: Int,
     val cardGapDp: Int,
+    val selectedCharacterPackId: String,
     val dockConfig: FloatingDockConfigDto? = null,
     val dockState: FloatingDockStateDto? = null
 )
@@ -217,6 +218,7 @@ data class FloatingSettingsDto(
     val ballOpacityPercent: Int = 100,
     val cardOpacityPercent: Int = 100,
     val cardGapDp: Int,
+    val selectedCharacterPackId: String,
     val dockConfig: FloatingDockConfigDto? = null,
     val dockState: FloatingDockStateDto? = null
 )

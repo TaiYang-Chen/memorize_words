@@ -5,6 +5,9 @@ import com.chen.memorizewords.core.sprite.BundledSpritePackSource
 import com.chen.memorizewords.core.sprite.CompositeSpritePackRepository
 import com.chen.memorizewords.core.sprite.DefaultSpriteSessionFactory
 import com.chen.memorizewords.core.sprite.SpritePackRepository
+import com.chen.memorizewords.core.sprite.SpritePackContractValidator
+import com.chen.memorizewords.core.sprite.SpritePackSource
+import com.chen.memorizewords.core.sprite.DownloadedSpriteSource
 import com.chen.memorizewords.core.sprite.SpriteSessionFactory
 import com.chen.memorizewords.feature.floatingreview.ui.floating.pet.FloatingPetActionPolicy
 import com.chen.memorizewords.feature.floatingreview.ui.floating.pet.FloatingPetController
@@ -24,9 +27,10 @@ object FloatingPetAnimationModule {
     @Singleton
     fun provideSpritePackRepository(
         @ApplicationContext context: Context,
+        @DownloadedSpriteSource downloadedSource: SpritePackSource,
         contractValidator: FloatingPetPackContractValidator
     ): SpritePackRepository = CompositeSpritePackRepository(
-        sources = listOf(BundledSpritePackSource(context.assets)),
+        sources = listOf(downloadedSource, BundledSpritePackSource(context.assets)),
         fallbackPackId = FloatingPetController.DEFAULT_PACK_ID,
         validateCandidate = contractValidator::validate
     )
@@ -41,4 +45,10 @@ object FloatingPetAnimationModule {
     @Singleton
     fun provideFloatingPetActionPolicy(): FloatingPetActionPolicy =
         ManifestFloatingPetActionPolicy()
+
+    @Provides
+    @Singleton
+    fun provideSpritePackContractValidator(
+        validator: FloatingPetPackContractValidator
+    ): SpritePackContractValidator = validator
 }

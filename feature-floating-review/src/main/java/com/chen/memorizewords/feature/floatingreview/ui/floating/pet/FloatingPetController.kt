@@ -111,6 +111,13 @@ class FloatingPetController @Inject constructor(
         }
     }
 
+    fun forceReloadPack(packId: SpritePackId) {
+        checkMainThread()
+        if (released) return
+        submittedPackId = null
+        switchPack(packId)
+    }
+
     fun detach() {
         checkMainThread()
         if (released) return

@@ -43,4 +43,13 @@ class FloatingWordSettingsNormalizationTest {
         assertEquals(-60, negativeInRange.cardGapDp)
         assertEquals(MAX_CARD_GAP_DP, tooLarge.cardGapDp)
     }
+
+    @Test
+    fun `unsafe character pack id falls back to bundled pack`() {
+        val settings = normalizeFloatingWordSettings(
+            FloatingWordSettings(selectedCharacterPackId = "../unsafe")
+        )
+
+        assertEquals(FloatingWordSettings.DEFAULT_CHARACTER_PACK_ID, settings.selectedCharacterPackId)
+    }
 }
