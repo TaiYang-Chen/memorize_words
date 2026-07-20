@@ -1,7 +1,5 @@
 package com.chen.memorizewords.feature.floatingreview.di
 
-import android.content.Context
-import com.chen.memorizewords.core.sprite.BundledSpritePackSource
 import com.chen.memorizewords.core.sprite.CompositeSpritePackRepository
 import com.chen.memorizewords.core.sprite.DefaultSpriteSessionFactory
 import com.chen.memorizewords.core.sprite.SpritePackRepository
@@ -16,7 +14,6 @@ import com.chen.memorizewords.feature.floatingreview.ui.floating.pet.ManifestFlo
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -26,12 +23,10 @@ object FloatingPetAnimationModule {
     @Provides
     @Singleton
     fun provideSpritePackRepository(
-        @ApplicationContext context: Context,
         @DownloadedSpriteSource downloadedSource: SpritePackSource,
         contractValidator: FloatingPetPackContractValidator
     ): SpritePackRepository = CompositeSpritePackRepository(
-        sources = listOf(downloadedSource, BundledSpritePackSource(context.assets)),
-        fallbackPackId = FloatingPetController.DEFAULT_PACK_ID,
+        sources = listOf(downloadedSource),
         validateCandidate = contractValidator::validate
     )
 

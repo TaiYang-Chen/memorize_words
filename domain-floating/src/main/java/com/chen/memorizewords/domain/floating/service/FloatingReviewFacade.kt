@@ -30,6 +30,10 @@ class FloatingReviewFacade @Inject constructor(
         floatingWordSettingsRepository.saveSettings(settings)
     }
 
+    suspend fun updateSettings(
+        transform: (FloatingWordSettings) -> FloatingWordSettings
+    ): FloatingWordSettings = floatingWordSettingsRepository.updateSettings(transform)
+
     suspend fun updateBallPosition(x: Int, y: Int, dockState: FloatingDockState?) {
         floatingWordSettingsRepository.updateBallPosition(x, y, dockState)
     }

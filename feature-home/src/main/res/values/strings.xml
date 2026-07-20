@@ -105,6 +105,26 @@
     <string name="feature_home_floating_settings">设置</string>
     <string name="feature_home_floating_permission_title">悬浮窗权限</string>
     <string name="feature_home_floating_permission_message">为显示悬浮复习卡，请在系统设置中允许本应用显示在其他应用上层。</string>
+    <string name="feature_home_floating_permission_confirm">去授权</string>
+    <string name="feature_home_floating_permission_cancel">暂不开启</string>
+    <string name="feature_home_floating_setup_title">先领养一个桌宠</string>
+    <string name="feature_home_floating_setup_message">角色可通过 Wi-Fi 或移动网络下载，下载完成后可离线使用。</string>
+    <string name="feature_home_floating_character_preview">桌宠角色预览</string>
+    <string name="feature_home_floating_recommended">推荐</string>
+    <string name="feature_home_floating_download_enable">下载并开启 · %1$s</string>
+    <string name="feature_home_floating_choose_other">看看其他角色</string>
+    <string name="feature_home_floating_not_now">暂不开启</string>
+    <string name="feature_home_floating_cancel_download">取消下载</string>
+    <string name="feature_home_floating_download_queued">等待可用网络，Wi-Fi 和移动网络均可下载</string>
+    <string name="feature_home_floating_downloading">角色下载中 %1$d%%</string>
+    <string name="feature_home_floating_installing">正在校验并安装</string>
+    <string name="feature_home_floating_download_failed">角色下载失败，请重试</string>
+    <string name="feature_home_floating_retry">重试下载</string>
+    <string name="feature_home_floating_no_character">联网后即可下载桌宠角色</string>
+    <string name="feature_home_floating_retry_catalog">重试</string>
+    <string name="feature_home_floating_ready">角色已准备好，继续开启</string>
+    <string name="feature_home_floating_continue_enable">继续开启</string>
+    <string name="feature_home_floating_start_failed">桌宠未能启动，已关闭开关，请重试</string>
     <string name="feature_home_wordbook_update_channel_name">词书更新</string>
     <string name="feature_home_wordbook_update_notify_title">词书已更新</string>
     <string name="feature_home_wordbook_update_notify_content">《%1$s》有新版本，点击更新</string>
@@ -245,4 +265,5 @@
     <string name="feature_home_membership_evaluation_unknown">云端评分额度暂未更新</string>
     <string name="feature_home_membership_evaluation_usage">今日已用 %1$d/%2$d，剩余 %3$d 次，明日恢复</string>
     <string name="feature_home_membership_evaluation_usage_unknown">今日使用情况暂未更新</string>
+    <string name="feature_home_floating_selection_required">&#x5F53;&#x524D;&#x89D2;&#x8272;&#x5DF2;&#x4E0D;&#x53EF;&#x7528;&#xFF0C;&#x8BF7;&#x91CD;&#x65B0;&#x9009;&#x62E9;&#x684C;&#x5BA0;&#x3002;</string>
 </resources>

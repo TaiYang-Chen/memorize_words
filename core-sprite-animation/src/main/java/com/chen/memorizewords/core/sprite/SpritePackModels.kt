@@ -1,6 +1,5 @@
 package com.chen.memorizewords.core.sprite
 
-import android.content.res.AssetManager
 import java.io.File
 import javax.inject.Qualifier
 
@@ -93,11 +92,6 @@ data class SpritePackManifest(
 }
 
 sealed interface SpriteAtlasSource {
-    data class BundledAsset(
-        val assetManager: AssetManager,
-        val assetPath: String
-    ) : SpriteAtlasSource
-
     data class LocalFile(val file: File) : SpriteAtlasSource
 }
 
@@ -111,6 +105,8 @@ interface SpritePackSource {
 }
 
 interface SpritePackRepository {
+    suspend fun find(packId: SpritePackId): SpritePack?
+
     suspend fun get(packId: SpritePackId): SpritePack
 }
 

@@ -20,13 +20,17 @@ import androidx.navigation.fragment.findNavController
 import com.chen.memorizewords.core.navigation.FloatingWordActions
 import com.chen.memorizewords.core.navigation.FloatingWordEntry
 import com.chen.memorizewords.core.navigation.PracticeEntry
+import com.chen.memorizewords.core.navigation.FloatingWordEntryExtras
+import com.chen.memorizewords.core.navigation.CharacterSelectionMode
 import com.chen.memorizewords.core.ui.fragment.BaseVmDbFragment
 import com.chen.memorizewords.core.ui.vm.UiEvent
 import com.chen.memorizewords.domain.floating.model.FloatingWordFieldType
 import com.chen.memorizewords.domain.floating.model.FloatingWordOrderType
 import com.chen.memorizewords.domain.floating.model.FloatingWordSettings
 import com.chen.memorizewords.domain.floating.model.FloatingWordSourceType
+import com.chen.memorizewords.domain.floating.service.FloatingActivationCoordinator
 import com.chen.memorizewords.feature.floatingreview.R
+import com.chen.memorizewords.feature.floatingreview.FloatingReviewActivity
 import com.chen.memorizewords.feature.floatingreview.databinding.ModuleFloatingReviewFragmentSettingsBinding
 import com.google.android.material.switchmaterial.SwitchMaterial
 import dagger.hilt.android.AndroidEntryPoint
@@ -65,6 +69,9 @@ class FloatingReviewSettingsFragment :
 
     @Inject
     lateinit var floatingWordEntry: FloatingWordEntry
+
+    @Inject
+    lateinit var floatingActivationCoordinator: FloatingActivationCoordinator
 
     private var settings: FloatingWordSettings = FloatingWordSettings()
     private lateinit var adapter: FloatingWordFieldConfigAdapter
@@ -106,11 +113,18 @@ class FloatingReviewSettingsFragment :
         }
     }
 
+    override fun consumeUiEvent(event: UiEvent): Boolean {
+        if (event is UiEvent.Navigation.Back) {
+            (activity as? FloatingReviewActivity)?.returnToOrigin()
+            return true
+        }
+        return false
+    }
+
     override fun onStop() {
         if (
             previewServiceStartedTemporarily &&
-            !settings.enabled &&
-            !requireActivity().isChangingConfigurations
+            !settings.enabled
         ) {
             floatingWordEntry.dispatchServiceAction(
                 requireContext(),
@@ -130,7 +144,13 @@ class FloatingReviewSettingsFragment :
 
         view.findViewById<View>(R.id.layoutCharacterPack).setOnClickListener {
             findNavController().navigate(
-                R.id.action_floatingReviewSettings_to_characterPacks
+                R.id.action_floatingReviewSettings_to_characterPacks,
+                Bundle().apply {
+                    putString(
+                        FloatingWordEntryExtras.EXTRA_CHARACTER_MODE,
+                        CharacterSelectionMode.MANAGE.name
+                    )
+                }
             )
         }
 
@@ -297,6 +317,20 @@ class FloatingReviewSettingsFragment :
     }
 
     private fun ensureFloatingPreview() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            if (!floatingActivationCoordinator.hasUsablePack()) {
+                Toast.makeText(
+                    requireContext(),
+                    R.string.module_floating_review_character_missing_preview,
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@launch
+            }
+            startFloatingPreview()
+        }
+    }
+
+    private fun startFloatingPreview() {
         val context = context ?: return
         if (!Settings.canDrawOverlays(context)) {
             if (!hasShownPreviewPermissionToast) {
@@ -312,7 +346,6 @@ class FloatingReviewSettingsFragment :
 
         if (!settings.enabled && !previewServiceStartedTemporarily) {
             previewServiceStartedTemporarily = true
-            floatingWordEntry.dispatchServiceAction(context, FloatingWordActions.ACTION_START)
         }
 
         floatingWordEntry.dispatchServiceAction(context, FloatingWordActions.ACTION_PREVIEW_CARD)

@@ -48,9 +48,25 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/tvCharacterDefault"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/module_floating_review_bg_settings_chip"
+                    android:paddingStart="8dp"
+                    android:paddingTop="3dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="3dp"
+                    android:text="@string/module_floating_review_character_default"
+                    android:textColor="#0A5FD3"
+                    android:textSize="11sp"
+                    android:visibility="gone" />
+
+                <TextView
                     android:id="@+id/tvCharacterBadge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
                     android:background="@drawable/module_floating_review_bg_settings_chip"
                     android:paddingStart="8dp"
                     android:paddingTop="3dp"

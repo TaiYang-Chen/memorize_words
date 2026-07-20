@@ -1,6 +1,7 @@
 package com.chen.memorizewords.data.account.di
 
 import com.chen.memorizewords.data.account.local.mmkv.auth.AuthLocalDataSource
+import com.chen.memorizewords.data.account.floating.AccountFloatingActivationEligibilityChecker
 import com.chen.memorizewords.data.account.local.mmkv.auth.AuthLocalDataSourceImpl
 import com.chen.memorizewords.data.account.local.avatar.AvatarLocalDataSource
 import com.chen.memorizewords.data.account.local.avatar.AvatarLocalDataSourceImpl
@@ -35,6 +36,7 @@ import com.chen.memorizewords.domain.account.repository.UserScopedDataCleaner
 import com.chen.memorizewords.domain.account.repository.user.AuthRepository
 import com.chen.memorizewords.domain.account.repository.user.UserRepository
 import com.chen.memorizewords.domain.account.time.ClockProvider
+import com.chen.memorizewords.domain.floating.service.FloatingActivationEligibilityChecker
 import com.tencent.mmkv.MMKV
 import dagger.Binds
 import dagger.Module
@@ -68,6 +70,11 @@ abstract class DataAccountRepositoryModule {
 
     @Binds
     abstract fun bindClockProvider(impl: SystemClockProvider): ClockProvider
+
+    @Binds
+    abstract fun bindFloatingActivationEligibilityChecker(
+        impl: AccountFloatingActivationEligibilityChecker
+    ): FloatingActivationEligibilityChecker
 }
 
 @Module
@@ -111,7 +118,7 @@ object DataAccountModule {
     @AccountSessionStorage
     fun provideAccountSessionMMKV(@ApplicationContext context: Context): MMKV {
         MMKV.initialize(context.applicationContext)
-        return MMKV.mmkvWithID("account_session", MMKV.SINGLE_PROCESS_MODE)
+        return MMKV.mmkvWithID("account_session", MMKV.MULTI_PROCESS_MODE)
     }
 
     @Provides

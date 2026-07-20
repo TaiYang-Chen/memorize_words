@@ -116,9 +116,9 @@ class FloatingReviewSettingsViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             val current = floatingReviewFacade.getSettings()
-            val updated = transform(current)
-            if (updated == current) return@launch
-            floatingReviewFacade.saveSettings(updated)
+            val requested = transform(current)
+            if (requested == current) return@launch
+            val updated = floatingReviewFacade.updateSettings(transform)
             if (previewCard) {
                 dispatchMemberOnlyFloatingAction(FloatingWordActions.ACTION_PREVIEW_CARD)
             }

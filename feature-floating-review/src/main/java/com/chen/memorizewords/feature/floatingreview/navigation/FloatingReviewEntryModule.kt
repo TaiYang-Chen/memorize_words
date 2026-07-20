@@ -5,6 +5,10 @@ import android.content.Intent
 import com.chen.memorizewords.feature.floatingreview.FloatingReviewActivity
 import com.chen.memorizewords.feature.floatingreview.ui.floating.FloatingWordService
 import com.chen.memorizewords.core.navigation.FloatingWordEntry
+import com.chen.memorizewords.core.navigation.FloatingWordDestination
+import com.chen.memorizewords.core.navigation.FloatingWordEntryExtras
+import com.chen.memorizewords.core.navigation.CharacterSelectionMode
+import com.chen.memorizewords.core.navigation.FloatingWordReturnDestination
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -23,13 +27,37 @@ abstract class FloatingReviewEntryModule {
 
 @Singleton
 class DefaultFloatingWordEntry @Inject constructor() : FloatingWordEntry {
-    override fun createServiceIntent(context: Context, action: String): Intent {
+    override fun createServiceIntent(
+        context: Context,
+        action: String,
+        activationRequestId: String?
+    ): Intent {
         return Intent(context, FloatingWordService::class.java).apply {
             this.action = action
+            activationRequestId?.let {
+                putExtra(FloatingWordEntryExtras.EXTRA_ACTIVATION_REQUEST_ID, it)
+            }
         }
     }
 
-    override fun createSettingsIntent(context: Context): Intent {
-        return Intent(context, FloatingReviewActivity::class.java)
+    override fun createSettingsIntent(
+        context: Context,
+        destination: FloatingWordDestination,
+        activationRequestId: String?,
+        returnDestination: FloatingWordReturnDestination
+    ): Intent {
+        return Intent(context, FloatingReviewActivity::class.java).apply {
+            putExtra(FloatingWordEntryExtras.EXTRA_DESTINATION, destination.name)
+            putExtra(
+                FloatingWordEntryExtras.EXTRA_CHARACTER_MODE,
+                if (destination == FloatingWordDestination.CHARACTER_SELECTION) {
+                    CharacterSelectionMode.ACTIVATE.name
+                } else {
+                    CharacterSelectionMode.MANAGE.name
+                }
+            )
+            putExtra(FloatingWordEntryExtras.EXTRA_ACTIVATION_REQUEST_ID, activationRequestId)
+            putExtra(FloatingWordEntryExtras.EXTRA_RETURN_DESTINATION, returnDestination.name)
+        }
     }
 }

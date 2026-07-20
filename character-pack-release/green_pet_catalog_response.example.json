@@ -1,0 +1,20 @@
+{
+  "code": 200,
+  "message": "success",
+  "data": [
+    {
+      "packId": "green_pet",
+      "packVersion": 1,
+      "displayName": "绿宠",
+      "description": "默认推荐桌宠角色，下载后可离线使用。",
+      "sortOrder": 0,
+      "isDefault": true,
+      "previewUrl": "REPLACE_WITH_HTTPS_PREVIEW_URL",
+      "packageUrl": "REPLACE_WITH_HTTPS_PACKAGE_URL",
+      "packageSha256": "cacdb4558f610053978fcb9ea597119bcaec6e1c9f4ce5c197ace8578c078276",
+      "packageSizeBytes": 1421233,
+      "manifestSchemaVersion": 1,
+      "updatedAtMs": 1784073600000
+    }
+  ]
+}

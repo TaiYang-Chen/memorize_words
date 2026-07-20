@@ -57,7 +57,7 @@ class HomeTextFormatterTest {
                     "新学${formatArgs[0]}个单词，预计${formatArgs[1]}分钟"
 
                 R.string.home_learn_subtitle_continue ->
-                    "已学${formatArgs[0]}个，还剩${formatArgs[1]}个单词"
+                    "已学${formatArgs[0]}个，还剩${formatArgs[1]}个"
 
                 R.string.home_learn_subtitle_new_more ->
                     "今日已学${formatArgs[0]}个单词，可继续加量新学"

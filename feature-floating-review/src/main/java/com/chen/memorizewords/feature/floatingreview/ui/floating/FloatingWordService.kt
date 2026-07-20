@@ -34,6 +34,7 @@ import com.chen.memorizewords.core.sprite.SpritePackId
 import com.chen.memorizewords.core.ui.ext.dpToPx
 import coil.load
 import com.chen.memorizewords.core.navigation.FloatingWordActions
+import com.chen.memorizewords.core.navigation.FloatingWordEntryExtras
 import com.chen.memorizewords.domain.account.model.membership.MembershipFeature
 import com.chen.memorizewords.domain.account.model.membership.MembershipFeatureAccess
 import com.chen.memorizewords.domain.account.usecase.membership.ResolveMembershipFeatureAccessUseCase
@@ -43,6 +44,11 @@ import com.chen.memorizewords.domain.floating.model.FloatingWordFieldType
 import com.chen.memorizewords.domain.floating.model.FloatingWordOrderType
 import com.chen.memorizewords.domain.floating.model.FloatingWordSettings
 import com.chen.memorizewords.domain.floating.model.FloatingWordSourceType
+import com.chen.memorizewords.domain.floating.repository.CharacterPackRepository
+import com.chen.memorizewords.domain.floating.model.InstalledCharacterPack
+import com.chen.memorizewords.domain.floating.service.FloatingActivationCoordinator
+import com.chen.memorizewords.domain.floating.service.FloatingActivationEvent
+import com.chen.memorizewords.domain.floating.service.FloatingActivationEventReporter
 import com.chen.memorizewords.domain.word.model.word.Word
 import com.chen.memorizewords.domain.word.model.word.WordDefinitions
 import com.chen.memorizewords.domain.word.model.word.WordExample
@@ -101,6 +107,88 @@ internal fun isFloatingServiceOperationActive(
 ): Boolean {
     return !stopping && operationGeneration == currentGeneration
 }
+
+internal enum class FloatingServiceRunMode {
+    NOT_STARTED,
+    ENABLED,
+    TEMPORARY_PREVIEW
+}
+
+internal data class FloatingServiceHealthSnapshot(
+    val settingsEnabled: Boolean,
+    val overlayPermissionGranted: Boolean,
+    val membershipAllowed: Boolean,
+    val characterPackUsable: Boolean
+)
+
+private data class CharacterPackInstallRevision(
+    val packId: String,
+    val packVersion: Int,
+    val installedDirectory: String
+)
+
+internal fun shouldKeepFloatingServiceRunning(
+    snapshot: FloatingServiceHealthSnapshot,
+    runMode: FloatingServiceRunMode
+): Boolean {
+    val settingsAllowRun = snapshot.settingsEnabled ||
+        runMode == FloatingServiceRunMode.TEMPORARY_PREVIEW
+    return settingsAllowRun &&
+        snapshot.overlayPermissionGranted &&
+        snapshot.membershipAllowed &&
+        snapshot.characterPackUsable
+}
+
+internal fun shouldReportFloatingStarted(
+    alreadyReported: Boolean,
+    reportInProgress: Boolean,
+    runMode: FloatingServiceRunMode,
+    ballViewAttached: Boolean,
+    cardViewAttached: Boolean
+): Boolean {
+    return !alreadyReported &&
+        !reportInProgress &&
+        runMode == FloatingServiceRunMode.ENABLED &&
+        ballViewAttached &&
+        cardViewAttached
+}
+
+internal fun shouldReplaceFloatingStartedReport(
+    reportInProgress: Boolean,
+    activeRequestId: String?,
+    incomingRequestId: String?
+): Boolean {
+    return reportInProgress &&
+        incomingRequestId != null &&
+        activeRequestId != incomingRequestId
+}
+
+internal fun shouldStopColdAppearanceRequest(
+    ballViewAttached: Boolean,
+    lifecycleOperationInProgress: Boolean
+): Boolean = !ballViewAttached && !lifecycleOperationInProgress
+
+internal fun isFloatingAppearanceOnlyAction(action: String?): Boolean {
+    return action == FloatingWordActions.ACTION_APPLY_BALL_APPEARANCE ||
+        action == FloatingWordActions.ACTION_APPLY_CHARACTER_PACK
+}
+
+internal fun shouldAcknowledgeManagementPackReload(
+    requestedPackId: String?,
+    downloadRequestId: String?,
+    selectedPackId: String?,
+    loadedPackId: SpritePackId?
+): Boolean {
+    return !requestedPackId.isNullOrBlank() &&
+        !downloadRequestId.isNullOrBlank() &&
+        requestedPackId == selectedPackId &&
+        loadedPackId?.value == selectedPackId
+}
+
+internal fun shouldDisableActivationAfterSurfaceFailure(
+    failure: RuntimeException,
+    overlayPermissionGranted: Boolean
+): Boolean = failure is SecurityException || !overlayPermissionGranted
 
 internal fun advanceFloatingWordSequence(
     words: List<Word>,
@@ -181,6 +269,7 @@ class FloatingWordService : Service() {
         private const val NOTIFICATION_ID = 5321
         private const val EMPTY_PLACEHOLDER = "-"
         private const val PREVIEW_AUTO_HIDE_DELAY_MS = 1_200L
+        private const val RUNTIME_HEALTH_CHECK_INTERVAL_MS = 60_000L
     }
 
     @Inject
@@ -192,6 +281,15 @@ class FloatingWordService : Service() {
     @Inject
     lateinit var floatingPetController: FloatingPetController
 
+    @Inject
+    lateinit var floatingActivationCoordinator: FloatingActivationCoordinator
+
+    @Inject
+    lateinit var characterPackRepository: CharacterPackRepository
+
+    @Inject
+    lateinit var floatingActivationEventReporter: FloatingActivationEventReporter
+
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val dockManager = FloatingDockManager()
     private val speechLayoutEngine = FloatingSpeechLayoutEngine()
@@ -200,8 +298,10 @@ class FloatingWordService : Service() {
     private var ballView: View? = null
     private var cardView: View? = null
     private var ballParams: WindowManager.LayoutParams? = null
+    private var characterPackRevisionJob: Job? = null
     private var cardParams: WindowManager.LayoutParams? = null
     private var settingsJob: Job? = null
+    private var runtimeHealthJob: Job? = null
     private var previewAutoHideJob: Job? = null
     private var previewAutoHidePending = false
     private var cardLoadJob: Job? = null
@@ -221,6 +321,14 @@ class FloatingWordService : Service() {
     private var operationGeneration = 0L
     private var stopping = false
     private var lifecycleOperationJob: Job? = null
+    private var runMode = FloatingServiceRunMode.NOT_STARTED
+    private var hasReportedFloatingStarted = false
+    private var floatingStartedReportJob: Job? = null
+    private var floatingStartedReportRequestId: String? = null
+    private var loadedCharacterPackRevision: CharacterPackInstallRevision? = null
+    private var floatingStartedReportAttempt = 0L
+    private var floatingSurfaceGeneration = 0L
+    private val managementPackReloadRequestsInFlight = mutableSetOf<String>()
 
     private var isDragging = false
     private var lastBallTapEventTimeMillis: Long? = null
@@ -239,7 +347,44 @@ class FloatingWordService : Service() {
         ensureChannel()
         settingsJob = serviceScope.launch {
             floatingWordController.observeSettings().collect { settings ->
+                val observedGeneration = operationGeneration
                 updateCurrentSettings(settings)
+                if (
+                    runMode == FloatingServiceRunMode.ENABLED &&
+                    !settings.enabled
+                ) {
+                    val latest = try {
+                        floatingWordController.getSettings()
+                    } catch (cancelled: CancellationException) {
+                        throw cancelled
+                    } catch (_: Exception) {
+                        settings
+                    }
+                    updateCurrentSettings(latest)
+                    if (!latest.enabled && isServiceOperationActive(observedGeneration)) {
+                        stopFloating(requestGeneration = observedGeneration)
+                    }
+                    return@collect
+                }
+                if (
+                    runMode != FloatingServiceRunMode.NOT_STARTED &&
+                    settings.selectedCharacterPackId.isNullOrBlank()
+                ) {
+                    serviceScope.launch {
+                        if (!isServiceOperationActive(observedGeneration)) return@launch
+                        disableActivationBestEffort()
+                        if (isServiceOperationActive(observedGeneration)) {
+                            stopFloating(requestGeneration = observedGeneration)
+                        }
+                    }
+                    return@collect
+                }
+                if (
+                    runMode == FloatingServiceRunMode.TEMPORARY_PREVIEW &&
+                    settings.enabled
+                ) {
+                    runMode = FloatingServiceRunMode.ENABLED
+                }
                 applyFloatingAppearance()
                 if (ballView != null && !isDragging) {
                     applyBallSize()
@@ -251,47 +396,134 @@ class FloatingWordService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val action = intent?.action
+        val activationRequestId = intent
+            ?.getStringExtra(FloatingWordEntryExtras.EXTRA_ACTIVATION_REQUEST_ID)
+            ?.takeIf { action == ACTION_START && it.isNotBlank() }
+        val requestedCharacterPackId = intent
+            ?.getStringExtra(FloatingWordEntryExtras.EXTRA_CHARACTER_PACK_ID)
+            ?.takeIf { action == ACTION_APPLY_CHARACTER_PACK && it.isNotBlank() }
+        val downloadRequestId = intent
+            ?.getStringExtra(FloatingWordEntryExtras.EXTRA_DOWNLOAD_REQUEST_ID)
+            ?.takeIf { action == ACTION_APPLY_CHARACTER_PACK && it.isNotBlank() }
         if (action == ACTION_STOP) {
             stopFloating(startId = startId)
             return START_NOT_STICKY
         }
+        val isAppearanceOnly = isFloatingAppearanceOnlyAction(action)
         if (stopping) {
-            if (action == ACTION_APPLY_BALL_APPEARANCE) {
+            if (isAppearanceOnly) {
                 stopSelf(startId)
                 return START_NOT_STICKY
             }
             stopping = false
         }
-        val isAppearanceOnly = action == ACTION_APPLY_BALL_APPEARANCE
-        if (!isAppearanceOnly) {
-            startForeground(
-                NOTIFICATION_ID,
-                buildNotification(getString(R.string.module_floating_review_notification_ready))
+        if (
+            isAppearanceOnly &&
+            shouldStopColdAppearanceRequest(
+                ballViewAttached = ballView?.isAttachedToWindow == true,
+                lifecycleOperationInProgress = lifecycleOperationJob?.isActive == true
             )
+        ) {
+            stopSelf(startId)
+            return START_NOT_STICKY
+        }
+        val correlatedPackReloadRequestId = downloadRequestId?.takeIf {
+            action == ACTION_APPLY_CHARACTER_PACK && requestedCharacterPackId != null
+        }
+        if (
+            correlatedPackReloadRequestId != null &&
+            !managementPackReloadRequestsInFlight.add(correlatedPackReloadRequestId)
+        ) {
+            return START_STICKY
+        }
+        if (!isAppearanceOnly) {
             lifecycleOperationJob?.cancel()
+            runtimeHealthJob?.cancel()
+            runtimeHealthJob = null
             operationGeneration++
         }
         val requestGeneration = operationGeneration
-        val operationJob = serviceScope.launch {
-            if (!isServiceOperationActive(requestGeneration)) return@launch
-            if (!canUseFloatingReview()) {
-                stopFloating(requestGeneration = requestGeneration)
-                return@launch
+        if (!isAppearanceOnly) {
+            try {
+                startForeground(
+                    NOTIFICATION_ID,
+                    buildNotification(getString(R.string.module_floating_review_notification_ready))
+                )
+            } catch (failure: RuntimeException) {
+                serviceScope.launch {
+                    handleSurfaceFailure(
+                        failure = failure,
+                        requestGeneration = requestGeneration,
+                        startId = startId
+                    )
+                }
+                return START_NOT_STICKY
             }
-            if (!isServiceOperationActive(requestGeneration)) return@launch
-            when (action) {
-                ACTION_APPLY_BALL_APPEARANCE ->
-                    applyBallAppearanceIfAttached(requestGeneration, startId)
-                ACTION_APPLY_CHARACTER_PACK ->
-                    if (ensureForegroundAndViews(requestGeneration)) {
-                        applyCharacterPack(requestGeneration)
+        }
+        val operationJob = serviceScope.launch {
+            try {
+                if (!isServiceOperationActive(requestGeneration)) return@launch
+                val membershipAllowed = canUseFloatingReview()
+                if (!isServiceOperationActive(requestGeneration)) return@launch
+                if (!membershipAllowed) {
+                    disableActivationBestEffort()
+                    stopFloating(requestGeneration = requestGeneration)
+                    return@launch
+                }
+                if (
+                    !isAppearanceOnly &&
+                    action != ACTION_PREVIEW_CARD
+                ) {
+                    val canStartCurrent = floatingActivationCoordinator.canStartCurrent()
+                    if (!isServiceOperationActive(requestGeneration)) return@launch
+                    if (!canStartCurrent) {
+                        floatingActivationCoordinator.disableIfPackMissing()
+                        stopFloating(requestGeneration = requestGeneration)
+                        return@launch
                     }
-                ACTION_PREVIEW_CARD ->
-                    if (ensureForegroundAndViews(requestGeneration)) previewCard()
-                ACTION_REFRESH ->
-                    if (ensureForegroundAndViews(requestGeneration)) refreshWords(showNext = false)
-                else ->
-                    if (ensureForegroundAndViews(requestGeneration)) refreshWords(showNext = false)
+                }
+                if (!isServiceOperationActive(requestGeneration)) return@launch
+                when (action) {
+                    ACTION_APPLY_BALL_APPEARANCE ->
+                        applyBallAppearanceIfAttached(requestGeneration, startId)
+                    ACTION_APPLY_CHARACTER_PACK ->
+                        if (ensureForegroundAndViews(requestGeneration)) {
+                            applyCharacterPack(
+                                requestGeneration = requestGeneration,
+                                requestedPackId = requestedCharacterPackId,
+                                downloadRequestId = downloadRequestId
+                            )
+                        }
+                    ACTION_PREVIEW_CARD ->
+                        if (
+                            ensureForegroundAndViews(
+                                operationGeneration = requestGeneration,
+                                allowDisabledPreview = true
+                            )
+                        ) {
+                            previewCard()
+                        }
+                    ACTION_REFRESH ->
+                        if (ensureForegroundAndViews(requestGeneration)) refreshWords(showNext = false)
+                    else ->
+                        if (
+                            ensureForegroundAndViews(
+                                operationGeneration = requestGeneration,
+                                activationRequestId = activationRequestId
+                            )
+                        ) {
+                            refreshWords(showNext = false)
+                        }
+                }
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (_: Exception) {
+                // Keep a committed activation pending so the next foreground transition can retry.
+                stopFloating(requestGeneration = requestGeneration)
+            } finally {
+                correlatedPackReloadRequestId?.let(
+                    managementPackReloadRequestsInFlight::remove
+                )
             }
         }
         if (!isAppearanceOnly) lifecycleOperationJob = operationJob
@@ -309,7 +541,9 @@ class FloatingWordService : Service() {
         removeViews()
         floatingPetController.release()
         settingsJob?.cancel()
+        runtimeHealthJob?.cancel()
         previewAutoHideJob?.cancel()
+        characterPackRevisionJob?.cancel()
         lifecycleOperationJob = null
         serviceScope.coroutineContext[Job]?.cancel()
         super.onDestroy()
@@ -324,19 +558,58 @@ class FloatingWordService : Service() {
 
     override fun onBind(intent: Intent?): IBinder? = null
 
-    private suspend fun ensureForegroundAndViews(operationGeneration: Long): Boolean {
+    private suspend fun ensureForegroundAndViews(
+        operationGeneration: Long,
+        allowDisabledPreview: Boolean = false,
+        activationRequestId: String? = null
+    ): Boolean {
+        if (!isServiceOperationActive(operationGeneration)) return false
+        resolveLatestSettings()
         if (!isServiceOperationActive(operationGeneration)) return false
         if (!Settings.canDrawOverlays(this)) {
+            disableActivationBestEffort()
             stopFloating(requestGeneration = operationGeneration)
             return false
         }
-        startForeground(
-            NOTIFICATION_ID,
-            buildNotification(getString(R.string.module_floating_review_notification_ready))
-        )
-        resolveLatestSettings()
+        val hasUsablePack = floatingActivationCoordinator.hasUsablePack()
         if (!isServiceOperationActive(operationGeneration)) return false
-        ensureViews()
+        if (!hasUsablePack) {
+            floatingActivationCoordinator.disableIfPackMissing()
+            stopFloating(requestGeneration = operationGeneration)
+            return false
+        }
+        val settings = resolveLatestSettings()
+        val selectedPackId = settings.selectedCharacterPackId?.takeIf { it.isNotBlank() }
+        if (selectedPackId == null) {
+            disableActivationBestEffort()
+            stopFloating(requestGeneration = operationGeneration)
+            return false
+        }
+        val targetRunMode = when {
+            settings.enabled -> FloatingServiceRunMode.ENABLED
+            allowDisabledPreview &&
+                (runMode == FloatingServiceRunMode.TEMPORARY_PREVIEW || ballView == null) ->
+                FloatingServiceRunMode.TEMPORARY_PREVIEW
+            else -> {
+                stopFloating(requestGeneration = operationGeneration)
+                return false
+            }
+        }
+        try {
+            startForeground(
+                NOTIFICATION_ID,
+                buildNotification(getString(R.string.module_floating_review_notification_ready))
+            )
+            if (!isServiceOperationActive(operationGeneration)) return false
+            ensureViews(SpritePackId(selectedPackId))
+        } catch (failure: RuntimeException) {
+            handleSurfaceFailure(failure, requestGeneration = operationGeneration)
+            return false
+        }
+        runMode = targetRunMode
+        reportFloatingStartedIfNeeded(activationRequestId)
+        startCharacterPackRevisionMonitoring(operationGeneration)
+        startRuntimeHealthMonitoring(operationGeneration)
         applyFloatingAppearance()
         reconcileBallPosition(persistIfNeeded = true)
         return true
@@ -348,12 +621,41 @@ class FloatingWordService : Service() {
             !isServiceOperationActive(requestGeneration)
         ) return
         stopping = true
+        runMode = FloatingServiceRunMode.NOT_STARTED
         operationGeneration++
         lifecycleOperationJob?.cancel()
         lifecycleOperationJob = null
+        runtimeHealthJob?.cancel()
+        runtimeHealthJob = null
         removeViews()
+        characterPackRevisionJob?.cancel()
+        characterPackRevisionJob = null
         stopForeground(STOP_FOREGROUND_REMOVE)
+        loadedCharacterPackRevision = null
         if (startId == null) stopSelf() else stopSelf(startId)
+    }
+
+    private suspend fun handleSurfaceFailure(
+        failure: RuntimeException,
+        requestGeneration: Long? = null,
+        startId: Int? = null
+    ) {
+        if (
+            requestGeneration != null &&
+            !isServiceOperationActive(requestGeneration)
+        ) return
+        try {
+            if (
+                shouldDisableActivationAfterSurfaceFailure(
+                    failure = failure,
+                    overlayPermissionGranted = Settings.canDrawOverlays(this)
+                )
+            ) {
+                disableActivationBestEffort()
+            }
+        } finally {
+            stopFloating(requestGeneration = requestGeneration, startId = startId)
+        }
     }
 
     private suspend fun canUseFloatingReview(): Boolean {
@@ -361,12 +663,227 @@ class FloatingWordService : Service() {
             MembershipFeatureAccess.ALLOWED
     }
 
+    private suspend fun disableActivationBestEffort() {
+        try {
+            floatingActivationCoordinator.disableRunningStatePreservingRequest()
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (_: Exception) {
+            // Surface teardown still takes priority over a persistence/reporting failure.
+        }
+    }
+
+    private fun startCharacterPackRevisionMonitoring(operationGeneration: Long) {
+        characterPackRevisionJob?.cancel()
+        characterPackRevisionJob = serviceScope.launch {
+            try {
+                characterPackRepository.observeInstalled().collect { installed ->
+                    if (!isServiceOperationActive(operationGeneration)) return@collect
+                    val selectedPackId = currentSettings.selectedCharacterPackId ?: return@collect
+                    if (
+                        ballView?.isAttachedToWindow != true ||
+                        cardView?.isAttachedToWindow != true
+                    ) {
+                        return@collect
+                    }
+                    reloadInstalledCharacterPackIfNeeded(
+                        packId = selectedPackId,
+                        installed = installed[selectedPackId]
+                    )
+                }
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (_: Exception) {
+                // Runtime health monitoring remains active and retries a missed reload safely.
+            }
+        }
+    }
+
+    private suspend fun reloadInstalledCharacterPackIfNeeded(
+        packId: String,
+        installed: InstalledCharacterPack? = null
+    ) {
+        val revision = installed?.toCharacterPackRevision()
+            ?: currentCharacterPackRevision(packId)
+            ?: return
+        if (revision == loadedCharacterPackRevision) return
+        val loadedPackId = floatingPetController.forceReloadPackAndAwait(SpritePackId(packId))
+        if (loadedPackId?.value == packId) {
+            loadedCharacterPackRevision = revision
+        }
+    }
+
+    private suspend fun currentCharacterPackRevision(
+        packId: String
+    ): CharacterPackInstallRevision? {
+        return try {
+            characterPackRepository.getInstalled(packId)?.toCharacterPackRevision()
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    private fun InstalledCharacterPack.toCharacterPackRevision(): CharacterPackInstallRevision =
+        CharacterPackInstallRevision(
+            packId = packId,
+            packVersion = packVersion,
+            installedDirectory = installedDirectory
+        )
+
+    private fun startRuntimeHealthMonitoring(operationGeneration: Long) {
+        runtimeHealthJob?.cancel()
+        runtimeHealthJob = serviceScope.launch {
+            while (isServiceOperationActive(operationGeneration)) {
+                delay(RUNTIME_HEALTH_CHECK_INTERVAL_MS)
+                if (!isServiceOperationActive(operationGeneration)) return@launch
+                val healthy = try {
+                    isRuntimeHealthy(operationGeneration)
+                } catch (cancelled: CancellationException) {
+                    throw cancelled
+                } catch (_: Exception) {
+                    false
+                }
+                if (!isServiceOperationActive(operationGeneration)) return@launch
+                if (!healthy) {
+                    stopFloating(requestGeneration = operationGeneration)
+                    return@launch
+                }
+            }
+        }
+    }
+
+    private suspend fun isRuntimeHealthy(operationGeneration: Long): Boolean {
+        if (!isServiceOperationActive(operationGeneration)) return true
+        val previousPackId = currentSettings.selectedCharacterPackId
+        val settings = floatingWordController.getSettings()
+        if (!isServiceOperationActive(operationGeneration)) return true
+        updateCurrentSettings(settings)
+        if (
+            !settings.enabled &&
+            runMode != FloatingServiceRunMode.TEMPORARY_PREVIEW
+        ) {
+            return false
+        }
+        val selectedPackId = settings.selectedCharacterPackId?.takeIf { it.isNotBlank() }
+        if (selectedPackId == null) {
+            disableActivationBestEffort()
+            return false
+        }
+
+        val overlayPermissionGranted = Settings.canDrawOverlays(this)
+        val membershipAllowed = canUseFloatingReview()
+        if (!isServiceOperationActive(operationGeneration)) return true
+        if (!overlayPermissionGranted || !membershipAllowed) {
+            disableActivationBestEffort()
+            return false
+        }
+        val characterPackUsable = floatingActivationCoordinator.isCurrentPackUsable()
+        if (!isServiceOperationActive(operationGeneration)) return true
+        val snapshot = FloatingServiceHealthSnapshot(
+            settingsEnabled = settings.enabled,
+            overlayPermissionGranted = overlayPermissionGranted,
+            membershipAllowed = membershipAllowed,
+            characterPackUsable = characterPackUsable
+        )
+        if (!shouldKeepFloatingServiceRunning(snapshot, runMode)) {
+            if (!characterPackUsable) disableActivationBestEffort()
+            return false
+        }
+        if (
+            runMode == FloatingServiceRunMode.TEMPORARY_PREVIEW &&
+            settings.enabled
+        ) {
+            runMode = FloatingServiceRunMode.ENABLED
+        }
+        if (
+            runMode == FloatingServiceRunMode.ENABLED &&
+            ballView?.isAttachedToWindow == true &&
+            cardView?.isAttachedToWindow == true
+        ) {
+            if (previousPackId != settings.selectedCharacterPackId) {
+                loadedCharacterPackRevision = null
+            }
+            reloadInstalledCharacterPackIfNeeded(selectedPackId)
+        }
+        applyFloatingAppearance()
+        if (!isDragging) reconcileBallPosition(persistIfNeeded = false)
+        return true
+    }
+
+    private fun reportFloatingStartedIfNeeded(activationRequestId: String?) {
+        if (
+            shouldReplaceFloatingStartedReport(
+                reportInProgress = floatingStartedReportJob?.isActive == true,
+                activeRequestId = floatingStartedReportRequestId,
+                incomingRequestId = activationRequestId
+            )
+        ) {
+            floatingStartedReportJob?.cancel()
+            floatingStartedReportJob = null
+            floatingStartedReportRequestId = null
+        }
+        if (!shouldReportFloatingStarted(
+                alreadyReported = hasReportedFloatingStarted && activationRequestId == null,
+                reportInProgress = floatingStartedReportJob?.isActive == true,
+                runMode = runMode,
+                ballViewAttached = ballView?.isAttachedToWindow == true,
+                cardViewAttached = cardView?.isAttachedToWindow == true
+            )
+        ) return
+
+        val startedPackId = currentSettings.selectedCharacterPackId
+            ?.takeIf { it.isNotBlank() } ?: return
+        val reportSurfaceGeneration = floatingSurfaceGeneration
+        val reportAttempt = ++floatingStartedReportAttempt
+        val job = serviceScope.launch(start = CoroutineStart.LAZY) {
+            try {
+                val didReport = if (activationRequestId != null) {
+                    floatingActivationCoordinator.completeActivationOnFloatingStarted(
+                        packId = startedPackId,
+                        expectedRequestId = activationRequestId
+                    )
+                } else {
+                    reportUncorrelatedFloatingStarted(startedPackId)
+                }
+                if (didReport && floatingSurfaceGeneration == reportSurfaceGeneration) {
+                    hasReportedFloatingStarted = true
+                }
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (_: Exception) {
+                // A committed request stays pending and can be finalized by a later foreground start.
+            } finally {
+                if (
+                    floatingSurfaceGeneration == reportSurfaceGeneration &&
+                    floatingStartedReportAttempt == reportAttempt
+                ) {
+                    floatingStartedReportJob = null
+                    floatingStartedReportRequestId = null
+                }
+            }
+        }
+        floatingStartedReportJob = job
+        floatingStartedReportRequestId = activationRequestId
+        job.start()
+    }
+
+    private fun reportUncorrelatedFloatingStarted(packId: String): Boolean {
+        return runCatching {
+            floatingActivationEventReporter.report(
+                FloatingActivationEvent.FLOATING_STARTED,
+                mapOf("packId" to packId)
+            )
+        }.isSuccess
+    }
+
     private suspend fun applyBallAppearanceIfAttached(
         operationGeneration: Long,
         startId: Int
     ) {
         if (!isServiceOperationActive(operationGeneration)) return
-        if (ballView == null || ballParams == null) {
+        if (ballView?.isAttachedToWindow != true || ballParams == null) {
             if (lifecycleOperationJob?.isActive != true) {
                 // This appearance-only start may already have a newer appearance request behind it.
                 // Stop only when its startId is still current; do not invalidate the newer request.
@@ -374,22 +891,65 @@ class FloatingWordService : Service() {
             }
             return
         }
+        resolveLatestSettings()
         if (!Settings.canDrawOverlays(this)) {
+            disableActivationBestEffort()
             stopFloating(requestGeneration = operationGeneration)
             return
         }
-        resolveLatestSettings()
+        val currentPackUsable = floatingActivationCoordinator.isCurrentPackUsable()
+        if (!isServiceOperationActive(operationGeneration)) return
+        if (!currentPackUsable) {
+            disableActivationBestEffort()
+            stopFloating(requestGeneration = operationGeneration)
+            return
+        }
         if (!isServiceOperationActive(operationGeneration)) return
         applyBallSize()
         applyBallOpacity()
         reconcileBallPosition(persistIfNeeded = false)
     }
 
-    private suspend fun applyCharacterPack(requestGeneration: Long) {
+    private suspend fun applyCharacterPack(
+        requestGeneration: Long,
+        requestedPackId: String?,
+        downloadRequestId: String?
+    ) {
         if (!isServiceOperationActive(requestGeneration)) return
         val settings = resolveLatestSettings()
         if (!isServiceOperationActive(requestGeneration)) return
-        floatingPetController.forceReloadPack(SpritePackId(settings.selectedCharacterPackId))
+        val selectedPackId = settings.selectedCharacterPackId?.takeIf { it.isNotBlank() }
+        if (selectedPackId == null) {
+            disableActivationBestEffort()
+            stopFloating(requestGeneration = requestGeneration)
+            return
+        }
+        val loadedPackId = floatingPetController.forceReloadPackAndAwait(
+            SpritePackId(selectedPackId)
+        )
+        if (!isServiceOperationActive(requestGeneration)) return
+        if (loadedPackId?.value == selectedPackId) {
+            loadedCharacterPackRevision = currentCharacterPackRevision(selectedPackId)
+        }
+        val latestSelectedPackId = resolveLatestSettings().selectedCharacterPackId
+        if (
+            !shouldAcknowledgeManagementPackReload(
+                requestedPackId = requestedPackId,
+                downloadRequestId = downloadRequestId,
+                selectedPackId = latestSelectedPackId,
+                loadedPackId = loadedPackId
+            )
+        ) return
+        try {
+            characterPackRepository.acknowledgeManagementDownloadCompletion(
+                packId = checkNotNull(requestedPackId),
+                downloadRequestId = checkNotNull(downloadRequestId)
+            )
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (_: Exception) {
+            // Keep the completion marker so a later visible management page can retry safely.
+        }
     }
 
     private fun isServiceOperationActive(operationGeneration: Long): Boolean {
@@ -432,31 +992,64 @@ class FloatingWordService : Service() {
         }
     }
 
-    private fun ensureViews() {
-        if (ballView != null && cardView != null) return
+    private fun ensureViews(packId: SpritePackId) {
+        if (
+            ballView?.isAttachedToWindow == true &&
+            cardView?.isAttachedToWindow == true
+        ) return
+        if (ballView != null || cardView != null) removeViews()
+
         val inflater = LayoutInflater.from(this)
-        ballView = inflater.inflate(R.layout.module_floating_review_view_floating_ball, null)
-        cardView = inflater.inflate(R.layout.module_floating_review_view_floating_card, null).apply {
+        val newBallView = inflater.inflate(R.layout.module_floating_review_view_floating_ball, null)
+        val newCardView = inflater.inflate(R.layout.module_floating_review_view_floating_card, null).apply {
             visibility = View.GONE
         }
+        val newBallParams = createBallLayoutParams()
+        val newCardParams = createCardLayoutParams()
+        var cardAttached = false
+        var ballAttached = false
 
-        ballParams = createBallLayoutParams()
-        cardParams = createCardLayoutParams()
+        try {
+            windowManager.addView(newCardView, newCardParams)
+            cardAttached = true
+            windowManager.addView(newBallView, newBallParams)
+            ballAttached = true
 
-        windowManager.addView(cardView, cardParams)
-        windowManager.addView(ballView, ballParams)
+            ballView = newBallView
+            cardView = newCardView
+            ballParams = newBallParams
+            cardParams = newCardParams
 
-        (ballView as? SpriteAnimationView)?.let { spriteView ->
+            val spriteView = newBallView as? SpriteAnimationView
+                ?: error("Floating ball layout must use SpriteAnimationView as its root")
             floatingPetController.attach(
                 spriteView,
-                SpritePackId(currentSettings.selectedCharacterPackId)
+                packId
             )
-        }
 
-        applyFloatingAppearance()
-        configureBallGestures()
-        bindBallDrag()
-        bindCardActions()
+            applyFloatingAppearance()
+            configureBallGestures()
+            bindBallDrag()
+            bindCardActions()
+            floatingSurfaceGeneration++
+        } catch (failure: RuntimeException) {
+            runCatching { floatingPetController.detach() }
+            if (ballAttached || newBallView.isAttachedToWindow) {
+                removeWindowViewSafely(newBallView)
+            }
+            if (cardAttached || newCardView.isAttachedToWindow) {
+                removeWindowViewSafely(newCardView)
+            }
+            ballView = null
+            cardView = null
+            ballParams = null
+            cardParams = null
+            lastMovementBounds = null
+            cachedCardWidth = 0
+            cachedCardHeight = 0
+            ballGestureDetector = null
+            throw failure
+        }
     }
 
     private fun reconcileBallPosition(persistIfNeeded: Boolean) {
@@ -487,6 +1080,12 @@ class FloatingWordService : Service() {
     }
 
     private fun removeViews() {
+        floatingSurfaceGeneration++
+        floatingStartedReportAttempt++
+        floatingStartedReportJob?.cancel()
+        floatingStartedReportJob = null
+        floatingStartedReportRequestId = null
+        hasReportedFloatingStarted = false
         previewAutoHideJob?.cancel()
         previewAutoHideJob = null
         previewAutoHidePending = false
@@ -496,12 +1095,27 @@ class FloatingWordService : Service() {
         wordRefreshJob?.cancel()
         wordRefreshJob = null
         wordSequenceRefreshPending = true
-        floatingPetController.detach()
-        ballView?.let { runCatching { windowManager.removeView(it) } }
-        cardView?.let { runCatching { windowManager.removeView(it) } }
+        val oldBallView = ballView
+        val oldCardView = cardView
         ballView = null
         cardView = null
+        ballParams = null
+        cardParams = null
         lastMovementBounds = null
+        cachedCardWidth = 0
+        cachedCardHeight = 0
+        ballGestureDetector = null
+        isDragging = false
+        lastBallTapEventTimeMillis = null
+        runCatching { floatingPetController.detach() }
+        oldBallView?.let(::removeWindowViewSafely)
+        oldCardView?.let(::removeWindowViewSafely)
+    }
+
+    private fun removeWindowViewSafely(view: View) {
+        if (runCatching { windowManager.removeViewImmediate(view) }.isFailure) {
+            runCatching { windowManager.removeView(view) }
+        }
     }
 
     private fun createBallLayoutParams(): WindowManager.LayoutParams {

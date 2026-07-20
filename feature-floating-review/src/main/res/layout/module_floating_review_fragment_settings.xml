@@ -142,16 +142,9 @@
                         android:paddingStart="@dimen/core_ui_dp_12"
                         android:paddingEnd="@dimen/core_ui_dp_12">
 
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:contentDescription="@string/module_floating_review_character_entry"
-                            android:src="@drawable/module_floating_review_character_default_preview" />
-
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/core_ui_dp_12"
                             android:layout_weight="1"
                             android:orientation="vertical">
 

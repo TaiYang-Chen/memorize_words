@@ -131,7 +131,7 @@ data class FloatingSettingsSyncPayload(
     val ballOpacityPercent: Int,
     val cardOpacityPercent: Int,
     val cardGapDp: Int,
-    val selectedCharacterPackId: String,
+    val selectedCharacterPackId: String? = null,
     val dockConfigJson: String? = null,
     val dockStateJson: String? = null
 )

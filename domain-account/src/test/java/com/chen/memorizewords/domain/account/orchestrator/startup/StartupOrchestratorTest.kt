@@ -143,6 +143,19 @@ class StartupOrchestratorTest {
         assertEquals(true, shouldAutoStart)
     }
 
+    @Test
+    fun `pending floating activation can resume without auto start setting`() = runBlocking {
+        val orchestrator = createOrchestrator(
+            isAuthenticated = true,
+            membershipFeatureAccess = MembershipFeatureAccess.ALLOWED,
+            floatingAutoStartEnabled = false
+        )
+
+        val canActivate = orchestrator.canActivateFloating(canDrawOverlays = true)
+
+        assertEquals(true, canActivate)
+    }
+
     private fun createOrchestrator(
         isAuthenticated: Boolean,
         onboardingCompleted: Boolean = false,

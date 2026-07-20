@@ -3,6 +3,7 @@ package com.chen.memorizewords.feature.floatingreview.ui.floating.pet
 import com.chen.memorizewords.core.sprite.SpriteClipId
 import com.chen.memorizewords.core.sprite.SpritePackId
 import com.chen.memorizewords.core.sprite.SpritePackManifest
+import kotlinx.coroutines.CompletableDeferred
 
 enum class StandardPetAction(val semanticKey: String) {
     IDLE("idle"),
@@ -14,7 +15,11 @@ enum class StandardPetAction(val semanticKey: String) {
 sealed interface FloatingPetCommand {
     data class SetCardVisible(val visible: Boolean) : FloatingPetCommand
     data class PlayOptionalAction(val actionId: String) : FloatingPetCommand
-    data class SwitchPack(val packId: SpritePackId) : FloatingPetCommand
+    data class SwitchPack(
+        val packId: SpritePackId,
+        val forceReload: Boolean = false,
+        val completion: CompletableDeferred<SpritePackId?>? = null
+    ) : FloatingPetCommand
     data class Detach(val attachmentGeneration: Long) : FloatingPetCommand
     data object Release : FloatingPetCommand
 }

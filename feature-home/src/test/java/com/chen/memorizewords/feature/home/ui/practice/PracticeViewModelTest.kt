@@ -1,5 +1,6 @@
 package com.chen.memorizewords.feature.home.ui.practice
 
+import androidx.lifecycle.SavedStateHandle
 import com.chen.memorizewords.core.common.paging.PageSlice
 import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.navigation.FloatingWordActions
@@ -13,11 +14,25 @@ import com.chen.memorizewords.domain.account.repository.membership.MembershipRep
 import com.chen.memorizewords.domain.account.usecase.membership.ObserveMembershipStatusUseCase
 import com.chen.memorizewords.domain.account.usecase.membership.ResolveMembershipFeatureAccessUseCase
 import com.chen.memorizewords.domain.floating.model.FloatingDockState
+import com.chen.memorizewords.domain.floating.model.FloatingActivationEligibility
+import com.chen.memorizewords.domain.floating.model.FloatingActivationPhase
+import com.chen.memorizewords.domain.floating.model.FloatingActivationSource
 import com.chen.memorizewords.domain.floating.model.FloatingWordDisplayRecord
 import com.chen.memorizewords.domain.floating.model.FloatingWordSettings
+import com.chen.memorizewords.domain.floating.model.CharacterPackCatalogItem
+import com.chen.memorizewords.domain.floating.model.CharacterPackDownloadState
+import com.chen.memorizewords.domain.floating.model.CharacterPackResolution
+import com.chen.memorizewords.domain.floating.model.InstalledCharacterPack
+import com.chen.memorizewords.domain.floating.model.PendingFloatingActivation
+import com.chen.memorizewords.domain.floating.repository.CharacterPackRepository
+import com.chen.memorizewords.domain.floating.repository.FloatingActivationStateRepository
 import com.chen.memorizewords.domain.floating.repository.FloatingWordDisplayRecordRepository
 import com.chen.memorizewords.domain.floating.repository.FloatingWordSettingsRepository
 import com.chen.memorizewords.domain.floating.service.FloatingReviewFacade
+import com.chen.memorizewords.domain.floating.service.FloatingActivationCoordinator
+import com.chen.memorizewords.domain.floating.service.FloatingActivationEvent
+import com.chen.memorizewords.domain.floating.service.FloatingActivationEventReporter
+import com.chen.memorizewords.domain.floating.service.FloatingActivationEligibilityChecker
 import com.chen.memorizewords.domain.practice.PracticeAvailability
 import com.chen.memorizewords.domain.practice.PracticeDailyDurationStats
 import com.chen.memorizewords.domain.practice.PracticeRecordRepository
@@ -74,6 +89,55 @@ import kotlin.test.assertTrue
 class PracticeViewModelTest {
 
     @Test
+    fun `floating setup dialog is hidden for ready installed character`() {
+        val ui = FloatingPetSetupUi(
+            requestId = "request-id",
+            source = FloatingActivationSource.HOME,
+            phase = FloatingActivationPhase.READY
+        )
+
+        assertFalse(ui.shouldShowSetupDialog)
+    }
+
+    @Test
+    fun `floating setup dialog is shown only for actionable setup phases`() {
+        val visiblePhases = listOf(
+            FloatingActivationPhase.NEEDS_DOWNLOAD,
+            FloatingActivationPhase.QUEUED,
+            FloatingActivationPhase.DOWNLOADING,
+            FloatingActivationPhase.INSTALLING,
+            FloatingActivationPhase.FAILED
+        )
+
+        visiblePhases.forEach { phase ->
+            assertTrue(
+                FloatingPetSetupUi(
+                    requestId = "request-id",
+                    source = FloatingActivationSource.HOME,
+                    phase = phase
+                ).shouldShowSetupDialog,
+                "Expected setup dialog for $phase"
+            )
+        }
+        assertFalse(FloatingPetSetupUi().shouldShowSetupDialog)
+        assertFalse(
+            FloatingPetSetupUi(
+                requestId = "request-id",
+                source = FloatingActivationSource.CHARACTER_SELECTION,
+                phase = FloatingActivationPhase.NEEDS_DOWNLOAD
+            ).shouldShowSetupDialog
+        )
+        assertFalse(
+            FloatingPetSetupUi(
+                requestId = "request-id",
+                source = FloatingActivationSource.HOME,
+                phase = FloatingActivationPhase.NEEDS_DOWNLOAD,
+                committed = true
+            ).shouldShowSetupDialog
+        )
+    }
+
+    @Test
     fun `enabling floating review enables app launch auto start and dispatches start`() = runTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         Dispatchers.setMain(dispatcher)
@@ -87,14 +151,15 @@ class PracticeViewModelTest {
             )
             val routes = collectRoutes(viewModel)
 
-            viewModel.onFloatingEnabledChanged(true)
+            viewModel.onFloatingSwitchChecked(canDrawOverlays = true)
             advanceUntilIdle()
 
             assertTrue(floatingSettings.current.enabled)
             assertTrue(floatingSettings.current.autoStartOnAppLaunch)
-            assertEquals(1, floatingSettings.saveCount)
+            assertEquals(2, floatingSettings.saveCount)
             val route = assertIs<PracticeViewModel.Route.DispatchFloatingAction>(routes.single())
             assertEquals(FloatingWordActions.ACTION_START, route.action)
+            assertTrue(!route.activationRequestId.isNullOrBlank())
         } finally {
             Dispatchers.resetMain()
         }
@@ -216,13 +281,27 @@ class PracticeViewModelTest {
                 wordRepository = FakeWordRepository(),
                 wordBookRepository = FakeWordBookRepository()
             ),
+            floatingActivationCoordinator = FloatingActivationCoordinator(
+                characterPackRepository = FakeCharacterPackRepository(),
+                settingsRepository = floatingSettingsRepository,
+                activationStateRepository = FakeFloatingActivationStateRepository(),
+                rawEventReporter = NoOpFloatingActivationEventReporter,
+                eligibilityChecker = FloatingActivationEligibilityChecker {
+                    if (membershipRepository.getCachedStatus()?.active == true) {
+                        FloatingActivationEligibility.ELIGIBLE
+                    } else {
+                        FloatingActivationEligibility.MEMBERSHIP_REQUIRED
+                    }
+                }
+            ),
             observeMembershipStatusUseCase = ObserveMembershipStatusUseCase(membershipRepository),
             resolveMembershipFeatureAccessUseCase = ResolveMembershipFeatureAccessUseCase(
                 repository = membershipRepository,
                 policy = MembershipEntitlementPolicy()
             ),
             observePracticeUsageUseCase = ObservePracticeUsageUseCase(practiceUsageRepository),
-            refreshPracticeUsageUseCase = RefreshPracticeUsageUseCase(practiceUsageRepository)
+            refreshPracticeUsageUseCase = RefreshPracticeUsageUseCase(practiceUsageRepository),
+            savedStateHandle = SavedStateHandle()
         )
     }
 
@@ -258,6 +337,76 @@ class PracticeViewModelTest {
         override suspend fun updateBallPosition(x: Int, y: Int, dockState: FloatingDockState?) {
             state.value = state.value.copy(floatingBallX = x, floatingBallY = y, dockState = dockState)
         }
+    }
+
+    private class FakeCharacterPackRepository : CharacterPackRepository {
+        override suspend fun acknowledgeManagementDownloadCompletion(
+            packId: String,
+            downloadRequestId: String
+        ): Boolean = false
+
+        private val catalogItem = CharacterPackCatalogItem(
+            packId = "test-pack",
+            packVersion = 1,
+            displayName = "Test Pet",
+            previewUrl = "https://example.test/preview.png",
+            packageUrl = "https://example.test/test-pack.zip",
+            packageSha256 = "a".repeat(64),
+            packageSizeBytes = 1L,
+            manifestSchemaVersion = 1,
+            updatedAtMs = 1L
+        )
+        private val installedPack = InstalledCharacterPack(
+            packId = catalogItem.packId,
+            packVersion = 1,
+            displayName = "Green Pet",
+            installedDirectory = "unused",
+            installedAtMs = 1L
+        )
+
+        override fun observeCatalog(): Flow<List<CharacterPackCatalogItem>> = flowOf(listOf(catalogItem))
+        override fun observeInstalled(): Flow<Map<String, InstalledCharacterPack>> = flowOf(
+            mapOf(installedPack.packId to installedPack)
+        )
+        override fun observeDownloads(): Flow<Map<String, CharacterPackDownloadState>> =
+            flowOf(emptyMap())
+        override suspend fun refreshCatalog(): Result<Unit> = Result.success(Unit)
+        override suspend fun resolveAppliedCharacterPack(): Result<CharacterPackResolution> =
+            Result.success(CharacterPackResolution.Resolved(catalogItem))
+        override suspend fun applyCharacterPack(packId: String): Result<Unit> =
+            Result.success(Unit)
+        override suspend fun startDownload(
+            item: CharacterPackCatalogItem,
+            selectAfterInstall: Boolean,
+            activationRequestId: String?
+        ): Result<Unit> = Result.success(Unit)
+        override suspend fun cancelDownload(packId: String) = Unit
+        override suspend fun deleteInstalled(packId: String) = Unit
+        override suspend fun getInstalled(packId: String): InstalledCharacterPack? =
+            installedPack.takeIf { it.packId == packId }
+        override suspend fun isInstalledUsable(packId: String): Boolean =
+            packId == installedPack.packId
+    }
+
+    private class FakeFloatingActivationStateRepository : FloatingActivationStateRepository {
+        private val state = MutableStateFlow<PendingFloatingActivation?>(null)
+        override fun observePending(): Flow<PendingFloatingActivation?> = state
+        override suspend fun getPending(): PendingFloatingActivation? = state.value
+        override suspend fun savePending(pending: PendingFloatingActivation) {
+            state.value = pending
+        }
+        override suspend fun clearPending(requestId: String?): Boolean {
+            if (requestId != null && state.value?.requestId != requestId) return false
+            state.value = null
+            return true
+        }
+    }
+
+    private object NoOpFloatingActivationEventReporter : FloatingActivationEventReporter {
+        override fun report(
+            event: FloatingActivationEvent,
+            attributes: Map<String, String>
+        ) = Unit
     }
 
     private class FakeMembershipRepository(

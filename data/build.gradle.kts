@@ -2,7 +2,12 @@ plugins {
     id("memorize.android-hilt-library")
 }
 
-val apiBaseUrl = "http://47.95.233.62:8080/api/"
+val debugApiBaseUrl = providers.gradleProperty("memorize.debugApiBaseUrl")
+    .orElse("http://47.95.233.62:8080/api/")
+    .get()
+val configuredReleaseApiBaseUrl = providers.gradleProperty("memorize.releaseApiBaseUrl").orNull
+val releaseApiBaseUrl = configuredReleaseApiBaseUrl
+    ?: "https://release-api-not-configured.invalid/"
 
 android {
     namespace = "com.chen.memorizewords.data"
@@ -23,10 +28,10 @@ android {
 
     buildTypes {
         getByName("debug") {
-            buildConfigField("String", "API_BASE_URL", apiBaseUrl.toBuildConfigString())
+            buildConfigField("String", "API_BASE_URL", debugApiBaseUrl.toBuildConfigString())
         }
         getByName("release") {
-            buildConfigField("String", "API_BASE_URL", apiBaseUrl.toBuildConfigString())
+            buildConfigField("String", "API_BASE_URL", releaseApiBaseUrl.toBuildConfigString())
         }
     }
 
@@ -79,7 +84,6 @@ dependencies {
     implementation(project(":core-common"))
     implementation(project(":core-database"))
     implementation(project(":core-network"))
-    implementation(project(":core-navigation"))
     implementation(project(":core-sprite-animation"))
 
     implementation(libs.androidx.core.ktx)
@@ -109,10 +113,13 @@ gradle.taskGraph.whenReady {
             task.name.equals("packageRelease", ignoreCase = true)
     }
     if (releaseRequested) {
-        require(apiBaseUrl.startsWith("http://", ignoreCase = true)) {
-            "Release network baseUrl must use HTTP."
+        require(!configuredReleaseApiBaseUrl.isNullOrBlank()) {
+            "Release network baseUrl must be supplied with -Pmemorize.releaseApiBaseUrl."
         }
-        require(apiBaseUrl.endsWith("/")) {
+        require(releaseApiBaseUrl.startsWith("https://", ignoreCase = true)) {
+            "Release network baseUrl must use HTTPS."
+        }
+        require(releaseApiBaseUrl.endsWith("/")) {
             "Release network baseUrl must end with '/'."
         }
     }

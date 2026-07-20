@@ -43,6 +43,7 @@ abstract class BaseVmDialogFragment<VM : BaseViewModel> : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        registerConfirmBottomResultListener()
         initView(savedInstanceState)
         createObserver()
         initData()
@@ -81,10 +82,9 @@ abstract class BaseVmDialogFragment<VM : BaseViewModel> : DialogFragment() {
                                 ).show(parentFragmentManager, "ShowSingleConfirmDialog")
                             }
                             is UiEvent.Dialog.ConfirmBottom -> {
-                                ShowConfirmBottomDialog(
+                                ShowConfirmBottomDialog.newInstance(
                                     data = event,
-                                    onConfirm = { onConfirmBottomDialog(event) },
-                                    onCancel = { onCancelBottomDialog(event) }
+                                    resultKey = confirmBottomResultKey()
                                 ).show(
                                     parentFragmentManager,
                                     "ShowConfirmBottomDialog"
@@ -150,4 +150,21 @@ abstract class BaseVmDialogFragment<VM : BaseViewModel> : DialogFragment() {
     }
 
     open fun initData() {}
+
+    private fun registerConfirmBottomResultListener() {
+        parentFragmentManager.setFragmentResultListener(
+            confirmBottomResultKey(),
+            viewLifecycleOwner
+        ) { _, result ->
+            val event = ShowConfirmBottomDialog.eventFromResult(result)
+            if (result.getBoolean(ShowConfirmBottomDialog.RESULT_CONFIRMED)) {
+                onConfirmBottomDialog(event)
+            } else {
+                onCancelBottomDialog(event)
+            }
+        }
+    }
+
+    private fun confirmBottomResultKey(): String =
+        "${javaClass.name}:${tag.orEmpty()}:$id:confirm_bottom"
 }

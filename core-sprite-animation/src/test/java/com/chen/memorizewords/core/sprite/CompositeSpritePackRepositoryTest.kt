@@ -4,6 +4,7 @@ import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertNull
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.test.runTest
 
@@ -73,6 +74,15 @@ class CompositeSpritePackRepositoryTest {
         assertFailsWith<CancellationException> {
             repository.get(fallbackId)
         }
+    }
+
+    @Test
+    fun `returns null when no downloaded pack or fallback exists`() = runTest {
+        val repository = CompositeSpritePackRepository(
+            sources = listOf(FakeSource(emptyMap()))
+        )
+
+        assertNull(repository.find(SpritePackId("missing_pet")))
     }
 
     private fun pack(id: SpritePackId): SpritePack {

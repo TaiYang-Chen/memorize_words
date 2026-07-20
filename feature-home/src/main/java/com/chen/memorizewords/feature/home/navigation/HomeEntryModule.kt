@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import com.chen.memorizewords.feature.home.HomeActivity
 import com.chen.memorizewords.core.navigation.HomeEntry
+import com.chen.memorizewords.core.navigation.HomeDestination
+import com.chen.memorizewords.core.navigation.HomeEntryExtras
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -22,7 +24,9 @@ abstract class HomeEntryModule {
 
 @Singleton
 class DefaultHomeEntry @Inject constructor() : HomeEntry {
-    override fun createHomeIntent(context: Context): Intent {
-        return Intent(context, HomeActivity::class.java)
+    override fun createHomeIntent(context: Context, destination: HomeDestination): Intent {
+        return Intent(context, HomeActivity::class.java).apply {
+            putExtra(HomeEntryExtras.EXTRA_DESTINATION, destination.name)
+        }
     }
 }

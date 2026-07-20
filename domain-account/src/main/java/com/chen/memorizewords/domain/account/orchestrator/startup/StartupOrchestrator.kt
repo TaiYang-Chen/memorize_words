@@ -49,6 +49,11 @@ class StartupOrchestrator @Inject constructor(
     }
 
     suspend fun shouldAutoStartFloating(canDrawOverlays: Boolean): Boolean {
+        if (!canActivateFloating(canDrawOverlays)) return false
+        return floatingAutoStartReader.isAutoStartEnabled()
+    }
+
+    suspend fun canActivateFloating(canDrawOverlays: Boolean): Boolean {
         if (!canDrawOverlays) return false
         if (!authStateProvider.isAuthenticated()) return false
         if (
@@ -57,7 +62,7 @@ class StartupOrchestrator @Inject constructor(
         ) {
             return false
         }
-        return floatingAutoStartReader.isAutoStartEnabled()
+        return true
     }
 
     private suspend fun resolveAuthenticatedDestination(): StartupLaunchDestination {

@@ -35,8 +35,11 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideCoreNetworkConfig(): CoreNetworkConfig {
-        require(GlobalConfig.baseUrl.startsWith("http://", ignoreCase = true)) {
-            "Network baseUrl must use HTTP."
+        require(
+            GlobalConfig.baseUrl.startsWith("https://", ignoreCase = true) ||
+                GlobalConfig.baseUrl.startsWith("http://", ignoreCase = true)
+        ) {
+            "Network baseUrl must use HTTP or HTTPS."
         }
         return CoreNetworkConfig(
             baseUrl = GlobalConfig.baseUrl,

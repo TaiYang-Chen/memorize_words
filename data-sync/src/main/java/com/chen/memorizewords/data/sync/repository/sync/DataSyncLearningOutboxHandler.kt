@@ -129,7 +129,9 @@ class DataSyncLearningOutboxHandler @Inject constructor(
                         ballOpacityPercent = payload.ballOpacityPercent,
                         cardOpacityPercent = payload.cardOpacityPercent,
                         cardGapDp = payload.cardGapDp,
-                        selectedCharacterPackId = payload.selectedCharacterPackId,
+                        selectedCharacterPackId = resolveFloatingCharacterPackId(
+                            payload.selectedCharacterPackId
+                        ),
                         dockConfig = payload.dockConfigJson?.let {
                             gson.fromJson(it, FloatingDockConfig::class.java)
                         } ?: FloatingDockConfig(),
@@ -153,4 +155,8 @@ class DataSyncLearningOutboxHandler @Inject constructor(
             }
         }
     }
+}
+
+internal fun resolveFloatingCharacterPackId(value: String?): String? {
+    return value?.trim()?.takeIf { it.matches(Regex("[a-z0-9][a-z0-9_-]{0,63}")) }
 }

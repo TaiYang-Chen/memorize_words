@@ -13,6 +13,7 @@ import com.chen.memorizewords.core.sprite.SpritePlaybackSession
 import com.chen.memorizewords.core.sprite.SpriteSessionFactory
 import javax.inject.Inject
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -55,6 +56,7 @@ class FloatingPetController @Inject constructor(
     private var playbackRecoveryAttempted = false
     private var trimPending = false
     private var released = false
+    private val pendingPackLoadCompletions = mutableSetOf<CompletableDeferred<SpritePackId?>>()
 
     var state: FloatingPetPlaybackState
         get() = playbackStateMachine.state
@@ -66,8 +68,10 @@ class FloatingPetController @Inject constructor(
                 try {
                     handle(command)
                 } catch (cancelled: CancellationException) {
+                    completeCommandPackLoad(command, null)
                     throw cancelled
                 } catch (_: Exception) {
+                    completeCommandPackLoad(command, null)
                     if (
                         command !is FloatingPetCommand.Detach &&
                         command != FloatingPetCommand.Release
@@ -79,7 +83,7 @@ class FloatingPetController @Inject constructor(
         }
     }
 
-    fun attach(view: SpriteAnimationView, packId: SpritePackId = DEFAULT_PACK_ID) {
+    fun attach(view: SpriteAnimationView, packId: SpritePackId) {
         checkMainThread()
         if (released) return
         attachmentGeneration++
@@ -114,8 +118,30 @@ class FloatingPetController @Inject constructor(
     fun forceReloadPack(packId: SpritePackId) {
         checkMainThread()
         if (released) return
-        submittedPackId = null
-        switchPack(packId)
+        if (commands.trySend(FloatingPetCommand.SwitchPack(packId, forceReload = true)).isSuccess) {
+            submittedPackId = packId
+        }
+    }
+
+    suspend fun forceReloadPackAndAwait(packId: SpritePackId): SpritePackId? {
+        checkMainThread()
+        if (released) return null
+        val completion = CompletableDeferred<SpritePackId?>()
+        pendingPackLoadCompletions += completion
+        if (
+            commands.trySend(
+                FloatingPetCommand.SwitchPack(
+                    packId = packId,
+                    forceReload = true,
+                    completion = completion
+                )
+            ).isFailure
+        ) {
+            completePackLoad(completion, null)
+            return null
+        }
+        submittedPackId = packId
+        return completion.await()
     }
 
     fun detach() {
@@ -158,7 +184,11 @@ class FloatingPetController @Inject constructor(
                 renderRequestedVisibility()
             }
             is FloatingPetCommand.PlayOptionalAction -> playOptional(command.actionId)
-            is FloatingPetCommand.SwitchPack -> loadPack(command.packId)
+            is FloatingPetCommand.SwitchPack -> loadPack(
+                packId = command.packId,
+                forceReload = command.forceReload,
+                completion = command.completion
+            )
             is FloatingPetCommand.Detach -> {
                 if (command.attachmentGeneration == attachmentGeneration) detachNow()
             }
@@ -166,26 +196,38 @@ class FloatingPetController @Inject constructor(
         }
     }
 
-    private suspend fun loadPack(packId: SpritePackId) {
+    private suspend fun loadPack(
+        packId: SpritePackId,
+        forceReload: Boolean = false,
+        completion: CompletableDeferred<SpritePackId?>? = null
+    ) {
         loadJob?.cancelAndJoin()
         detachedReleaseJob?.join()
         detachedReleaseJob = null
-        val targetView = view ?: return
+        val targetView = view ?: run {
+            completion?.let { completePackLoad(it, null) }
+            return
+        }
         val requestGeneration = ++packLoadGeneration
         optionalResumeVisible = null
         loadJob = scope.launch {
             var pendingSession: SpritePlaybackSession? = null
             var installedSession: SpritePlaybackSession? = null
+            var loadedPackId: SpritePackId? = null
             try {
                 val pack = resolveValidatedPack(packId)
                 val currentSession = session
-                if (
-                    currentSession != null &&
-                    sessionView === targetView &&
-                    currentSession.manifest.packId == pack.manifest.packId &&
-                    currentSession.manifest.packVersion == pack.manifest.packVersion
+                if (shouldReuseFloatingPetSession(
+                        forceReload = forceReload,
+                        hasCurrentSession = currentSession != null,
+                        sameView = sessionView === targetView,
+                        samePackId = currentSession?.manifest?.packId == pack.manifest.packId,
+                        samePackVersion = currentSession?.manifest?.packVersion ==
+                            pack.manifest.packVersion
+                    )
                 ) {
                     submittedPackId = pack.manifest.packId
+                    loadedPackId = pack.manifest.packId
                     return@launch
                 }
                 val newSession = sessionFactory.create(pack, targetView, scope)
@@ -226,6 +268,7 @@ class FloatingPetController @Inject constructor(
                 state = FloatingPetPlaybackState.IDLE
                 if (!requestedVisible) scheduleIdlePrewarm(newSession)
                 renderRequestedVisibility()
+                loadedPackId = pack.manifest.packId
             } catch (cancelled: CancellationException) {
                 if (
                     session === installedSession &&
@@ -272,22 +315,34 @@ class FloatingPetController @Inject constructor(
                         closeAndAwaitRelease(unusedSession)
                     }
                 }
+                completion?.let { completePackLoad(it, loadedPackId) }
                 if (requestGeneration == packLoadGeneration) loadJob = null
             }
         }
     }
 
+    private fun completeCommandPackLoad(
+        command: FloatingPetCommand,
+        loadedPackId: SpritePackId?
+    ) {
+        (command as? FloatingPetCommand.SwitchPack)?.completion?.let { completion ->
+            completePackLoad(completion, loadedPackId)
+        }
+    }
+
+    private fun completePackLoad(
+        completion: CompletableDeferred<SpritePackId?>,
+        loadedPackId: SpritePackId?
+    ) {
+        pendingPackLoadCompletions.remove(completion)
+        completion.complete(loadedPackId)
+    }
+
     private suspend fun resolveValidatedPack(packId: SpritePackId): SpritePack {
-        val resolved = repository.get(packId)
-        try {
-            packContractValidator.validate(resolved.manifest)
-            return resolved
-        } catch (error: IllegalArgumentException) {
-            if (resolved.manifest.packId == DEFAULT_PACK_ID) throw error
-        }
-        return repository.get(DEFAULT_PACK_ID).also { fallback ->
-            packContractValidator.validate(fallback.manifest)
-        }
+        val resolved = repository.find(packId)
+            ?: throw IllegalStateException("Character pack ${packId.value} is unavailable")
+        packContractValidator.validate(resolved.manifest)
+        return resolved
     }
 
     private fun renderRequestedVisibility() {
@@ -728,6 +783,9 @@ class FloatingPetController @Inject constructor(
             released = true
             state = FloatingPetPlaybackState.RELEASED
             commands.close()
+            pendingPackLoadCompletions.toList().forEach { completion ->
+                completePackLoad(completion, null)
+            }
             scope.coroutineContext[Job]?.cancel()
         }
     }
@@ -749,7 +807,6 @@ class FloatingPetController @Inject constructor(
     }
 
     companion object {
-        val DEFAULT_PACK_ID = SpritePackId("green_pet")
         private const val OPEN_PRELOAD_FRAME_COUNT = 12
         private const val CLOSE_PRELOAD_FRAME_COUNT = 3
 
@@ -760,3 +817,15 @@ class FloatingPetController @Inject constructor(
         }
     }
 }
+
+internal fun shouldReuseFloatingPetSession(
+    forceReload: Boolean,
+    hasCurrentSession: Boolean,
+    sameView: Boolean,
+    samePackId: Boolean,
+    samePackVersion: Boolean
+): Boolean = !forceReload &&
+    hasCurrentSession &&
+    sameView &&
+    samePackId &&
+    samePackVersion

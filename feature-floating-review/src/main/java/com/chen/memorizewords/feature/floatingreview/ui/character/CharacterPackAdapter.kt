@@ -6,7 +6,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import coil.dispose
 import coil.load
 import com.google.android.material.button.MaterialButton
 import com.chen.memorizewords.domain.floating.model.CharacterPackDownloadStatus
@@ -14,6 +16,7 @@ import com.chen.memorizewords.feature.floatingreview.R
 import java.util.Locale
 
 class CharacterPackAdapter(
+    private val activationMode: Boolean,
     private val onPrimary: (CharacterPackUiItem) -> Unit,
     private val onCancel: (CharacterPackUiItem) -> Unit,
     private val onDelete: (CharacterPackUiItem) -> Unit
@@ -21,8 +24,18 @@ class CharacterPackAdapter(
     private var items: List<CharacterPackUiItem> = emptyList()
 
     fun submitItems(updated: List<CharacterPackUiItem>) {
+        val previous = items
+        val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+            override fun getOldListSize(): Int = previous.size
+            override fun getNewListSize(): Int = updated.size
+            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+                previous[oldItemPosition].packId == updated[newItemPosition].packId
+
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+                previous[oldItemPosition] == updated[newItemPosition]
+        })
         items = updated
-        notifyDataSetChanged()
+        diff.dispatchUpdatesTo(this)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
@@ -45,6 +58,7 @@ class CharacterPackAdapter(
         private val preview = view.findViewById<ImageView>(R.id.ivCharacterPreview)
         private val name = view.findViewById<TextView>(R.id.tvCharacterName)
         private val description = view.findViewById<TextView>(R.id.tvCharacterDescription)
+        private val defaultBadge = view.findViewById<TextView>(R.id.tvCharacterDefault)
         private val badge = view.findViewById<TextView>(R.id.tvCharacterBadge)
         private val progress = view.findViewById<ProgressBar>(R.id.progressCharacterDownload)
         private val progressText = view.findViewById<TextView>(R.id.tvCharacterProgress)
@@ -56,15 +70,19 @@ class CharacterPackAdapter(
             name.text = item.displayName
             description.text = item.description.orEmpty()
             description.visibility = if (item.description.isNullOrBlank()) View.GONE else View.VISIBLE
-            if (item.builtIn) {
-                preview.setImageResource(R.drawable.module_floating_review_character_default_preview)
-            } else {
+            val previewFallback = R.drawable.module_floating_review_bg_floating_ball
+            if (!item.previewUrl.isNullOrBlank()) {
                 preview.load(item.previewUrl) {
                     crossfade(true)
-                    placeholder(R.drawable.module_floating_review_bg_floating_ball)
-                    error(R.drawable.module_floating_review_bg_floating_ball)
+                    placeholder(previewFallback)
+                    error(previewFallback)
+                    fallback(previewFallback)
                 }
+            } else {
+                preview.dispose()
+                preview.setImageResource(previewFallback)
             }
+            defaultBadge.visibility = if (item.defaultPack) View.VISIBLE else View.GONE
             badge.visibility = if (item.selected || item.accountSelectedMissing) View.VISIBLE else View.GONE
             badge.text = if (item.accountSelectedMissing) {
                 itemView.context.getString(R.string.module_floating_review_character_waiting_download)
@@ -76,9 +94,11 @@ class CharacterPackAdapter(
             val active = state?.status == CharacterPackDownloadStatus.QUEUED ||
                 state?.status == CharacterPackDownloadStatus.DOWNLOADING ||
                 state?.status == CharacterPackDownloadStatus.INSTALLING
+            val requiresDownload = !item.usable || (!activationMode && item.updateAvailable)
+            val showFailure = state?.status == CharacterPackDownloadStatus.FAILED && requiresDownload
             progress.visibility = if (active) View.VISIBLE else View.GONE
             progress.progress = state?.progress ?: 0
-            progressText.visibility = if (active || state?.status == CharacterPackDownloadStatus.FAILED) {
+            progressText.visibility = if (active || showFailure) {
                 View.VISIBLE
             } else View.GONE
             progressText.text = when (state?.status) {
@@ -91,22 +111,37 @@ class CharacterPackAdapter(
             }
             cancel.visibility = if (active) View.VISIBLE else View.GONE
             primary.isEnabled = !active &&
-                !(item.selected && item.installed && !item.updateAvailable) &&
-                (item.installed || item.catalogItem != null)
+                (activationMode || !(item.selected && item.usable && !item.updateAvailable)) &&
+                (item.usable || item.catalogItem != null)
             primary.text = when {
-                state?.status == CharacterPackDownloadStatus.FAILED -> itemView.context.getString(R.string.module_floating_review_character_retry)
-                item.updateAvailable -> itemView.context.getString(R.string.module_floating_review_character_update)
-                !item.installed && item.catalogItem == null -> itemView.context.getString(
+                activationMode && item.usable -> itemView.context.getString(
+                    R.string.module_floating_review_character_use_enable
+                )
+                showFailure ->
+                    itemView.context.getString(R.string.module_floating_review_character_retry)
+                !item.usable && item.catalogItem == null -> itemView.context.getString(
                     R.string.module_floating_review_character_unavailable
                 )
-                !item.installed -> itemView.context.getString(
-                    R.string.module_floating_review_character_download_use_with_size,
+                !item.usable -> itemView.context.getString(
+                    if (activationMode) {
+                        R.string.module_floating_review_character_download_enable_with_size
+                    } else {
+                        R.string.module_floating_review_character_download_with_size
+                    },
                     formatBytes(item.packageSizeBytes)
                 )
+                item.updateAvailable -> itemView.context.getString(R.string.module_floating_review_character_update)
                 item.selected -> itemView.context.getString(R.string.module_floating_review_character_in_use)
-                else -> itemView.context.getString(R.string.module_floating_review_character_use)
+                else -> itemView.context.getString(
+                    if (activationMode) {
+                        R.string.module_floating_review_character_use_enable
+                    } else {
+                        R.string.module_floating_review_character_use
+                    }
+                )
             }
-            delete.visibility = if (!item.builtIn && item.installed) View.VISIBLE else View.GONE
+            delete.visibility = if (!activationMode && item.installed) View.VISIBLE else View.GONE
+            delete.isEnabled = !active
             primary.setOnClickListener { onPrimary(item) }
             cancel.setOnClickListener { onCancel(item) }
             delete.setOnClickListener { onDelete(item) }

@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.chen.memorizewords.core.navigation.AppLaunchEntry
 import com.chen.memorizewords.core.navigation.AppRoute
+import com.chen.memorizewords.core.navigation.HomeDestination
+import com.chen.memorizewords.core.navigation.HomeEntryExtras
 import com.chen.memorizewords.core.navigation.RouteNavigator
 import com.chen.memorizewords.core.ui.activity.BaseVmDbActivity
 import com.chen.memorizewords.core.ui.vm.UiEvent
@@ -63,7 +65,14 @@ class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBindi
             }
         })
         setupBottomNav(savedInstanceState == null)
+        openRequestedDestination()
         viewModel.checkAutoLogin()
+    }
+
+    override fun onNewIntent(intent: android.content.Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        openRequestedDestination()
     }
 
     private fun setupBottomNav(selectDefault: Boolean) {
@@ -96,6 +105,17 @@ class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBindi
 
     private fun showStats() {
         showFragment(statsTag) { StatsFragment() }
+    }
+
+    private fun openRequestedDestination() {
+        val destination = runCatching {
+            HomeDestination.valueOf(
+                intent.getStringExtra(HomeEntryExtras.EXTRA_DESTINATION).orEmpty()
+            )
+        }.getOrDefault(HomeDestination.DEFAULT)
+        if (destination == HomeDestination.PRACTICE) {
+            databind.bottomNav.selectedItemId = R.id.menu_practice
+        }
     }
 
     override fun openHomeTab(tab: HomeFragment.HomeTab) {

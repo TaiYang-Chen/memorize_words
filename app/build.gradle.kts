@@ -1,5 +1,9 @@
-import java.util.Properties
+import java.nio.file.AtomicMoveNotSupportedException
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 import java.security.MessageDigest
+import java.util.Properties
+import org.gradle.api.tasks.Delete
 
 plugins {
     id("memorize.android-application")
@@ -106,10 +110,25 @@ dependencies {
     testImplementation(kotlin("test"))
 }
 
+val releaseArchiveDir = rootProject.layout.projectDirectory.dir("release/generated")
+val releaseArchiveStagingDir = rootProject.layout.projectDirectory.dir("release/.generated-staging")
+
+val cleanReleaseArchive by tasks.registering(Delete::class) {
+    group = "build"
+    description = "Remove previously generated release archives before a new release build."
+    delete(releaseArchiveDir, releaseArchiveStagingDir)
+}
+
+tasks.matching { task ->
+    task.name == "assembleRelease" || task.name == "bundleRelease"
+}.configureEach {
+    mustRunAfter(cleanReleaseArchive)
+}
+
 val archiveReleaseArtifacts by tasks.registering {
     group = "build"
-    description = "Build and archive the signed release APK, AAB, mapping file, and checksums."
-    dependsOn("assembleRelease", "bundleRelease")
+    description = "Build and archive signed release artifacts without copying signing credentials."
+    dependsOn(cleanReleaseArchive, "assembleRelease", "bundleRelease")
 
     doLast {
         val releaseSigning = android.signingConfigs.getByName("release")
@@ -117,16 +136,22 @@ val archiveReleaseArtifacts by tasks.registering {
             "Release signing keystore is missing. Check RELEASE_STORE_FILE in local.properties."
         }
 
-        val archiveDir = rootProject.layout.projectDirectory.dir("release").asFile
-        archiveDir.mkdirs()
+        val archiveDir = releaseArchiveDir.asFile
+        val stagingDir = releaseArchiveStagingDir.asFile
+        check(!archiveDir.exists()) {
+            "Release archive directory was not cleaned: ${archiveDir.absolutePath}"
+        }
+        check(stagingDir.mkdirs() || stagingDir.isDirectory) {
+            "Unable to create release archive staging directory: ${stagingDir.absolutePath}"
+        }
 
         val artifacts = listOf(
             layout.buildDirectory.file("outputs/apk/release/app-release.apk").get().asFile to
-                archiveDir.resolve("memorize_words-release.apk"),
+                stagingDir.resolve("memorize_words-release.apk"),
             layout.buildDirectory.file("outputs/bundle/release/app-release.aab").get().asFile to
-                archiveDir.resolve("memorize_words-release.aab"),
+                stagingDir.resolve("memorize_words-release.aab"),
             layout.buildDirectory.file("outputs/mapping/release/mapping.txt").get().asFile to
-                archiveDir.resolve("mapping.txt")
+                stagingDir.resolve("mapping.txt")
         )
 
         artifacts.forEach { (source, destination) ->
@@ -147,13 +172,20 @@ val archiveReleaseArtifacts by tasks.registering {
             return digest.digest().joinToString("") { byte -> "%02x".format(byte) }
         }
 
-        val checksumFiles = listOf(releaseSigning.storeFile!!) + artifacts.map { (_, destination) ->
-            destination
-        }
-        archiveDir.resolve("SHA256SUMS.txt").writeText(
+        val checksumFiles = artifacts.map { (_, destination) -> destination }
+        stagingDir.resolve("SHA256SUMS.txt").writeText(
             checksumFiles.joinToString(separator = System.lineSeparator(), postfix = System.lineSeparator()) {
                 file -> "${sha256(file)}  ${file.name}"
             }
         )
+        try {
+            Files.move(
+                stagingDir.toPath(),
+                archiveDir.toPath(),
+                StandardCopyOption.ATOMIC_MOVE
+            )
+        } catch (_: AtomicMoveNotSupportedException) {
+            Files.move(stagingDir.toPath(), archiveDir.toPath())
+        }
     }
 }

@@ -39,7 +39,9 @@ sealed interface UiEvent {
         data class ConfirmBottom(
             val action: String? = null,
             val title: String,
-            val message: String
+            val message: String,
+            val confirmText: String = "确定",
+            val cancelText: String = "再想想"
         ) : Dialog
     }
 

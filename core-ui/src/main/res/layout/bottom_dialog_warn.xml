@@ -70,7 +70,7 @@
 
         <TextView
             android:id="@+id/cancel"
-            android:text="我在想想"
+            android:text="再想想"
             android:layout_width="wrap_content"
             android:layout_marginBottom="@dimen/core_ui_dp_40"
             android:textSize="@dimen/core_ui_text_14"

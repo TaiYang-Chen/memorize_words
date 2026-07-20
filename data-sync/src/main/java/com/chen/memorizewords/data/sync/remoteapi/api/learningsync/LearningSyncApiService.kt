@@ -6,6 +6,7 @@ import com.chen.memorizewords.core.network.http.FailureEventDeliveryMode
 import com.chen.memorizewords.core.network.http.FailureQueuedEvent
 import com.chen.memorizewords.core.network.http.SyncEventParam
 import com.chen.memorizewords.core.network.http.SyncEventParams
+import com.chen.memorizewords.domain.floating.model.FloatingWordSettings
 import com.chen.memorizewords.domain.sync.FailureQueueEventType
 import com.squareup.moshi.JsonClass
 import retrofit2.Call
@@ -198,7 +199,7 @@ data class FloatingSettingsSyncRequest(
     val ballOpacityPercent: Int = 100,
     val cardOpacityPercent: Int,
     val cardGapDp: Int,
-    val selectedCharacterPackId: String,
+    val selectedCharacterPackId: String? = null,
     val dockConfig: FloatingDockConfigDto? = null,
     val dockState: FloatingDockStateDto? = null
 )
@@ -218,7 +219,7 @@ data class FloatingSettingsDto(
     val ballOpacityPercent: Int = 100,
     val cardOpacityPercent: Int = 100,
     val cardGapDp: Int,
-    val selectedCharacterPackId: String,
+    val selectedCharacterPackId: String? = null,
     val dockConfig: FloatingDockConfigDto? = null,
     val dockState: FloatingDockStateDto? = null
 )

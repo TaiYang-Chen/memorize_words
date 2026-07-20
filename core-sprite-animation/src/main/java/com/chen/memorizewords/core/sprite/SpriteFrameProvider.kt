@@ -38,10 +38,6 @@ class BitmapRegionSpriteFrameProvider(
     private val cleanupScope = CoroutineScope(SupervisorJob() + dispatcher)
     private val inputStream: InputStream = try {
         when (source) {
-            is SpriteAtlasSource.BundledAsset -> source.assetManager.open(
-                source.assetPath,
-                android.content.res.AssetManager.ACCESS_RANDOM
-            )
             is SpriteAtlasSource.LocalFile -> FileInputStream(source.file)
         }
     } catch (error: Throwable) {

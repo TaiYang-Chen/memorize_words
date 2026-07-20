@@ -3,6 +3,7 @@ package com.chen.memorizewords.data.floating.repository
 import com.chen.memorizewords.domain.floating.model.FloatingWordSettings
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
 class FloatingWordSettingsNormalizationTest {
 
@@ -45,11 +46,11 @@ class FloatingWordSettingsNormalizationTest {
     }
 
     @Test
-    fun `unsafe character pack id falls back to bundled pack`() {
+    fun `unsafe character pack id is cleared`() {
         val settings = normalizeFloatingWordSettings(
             FloatingWordSettings(selectedCharacterPackId = "../unsafe")
         )
 
-        assertEquals(FloatingWordSettings.DEFAULT_CHARACTER_PACK_ID, settings.selectedCharacterPackId)
+        assertNull(settings.selectedCharacterPackId)
     }
 }

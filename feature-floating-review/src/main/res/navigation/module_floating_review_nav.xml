@@ -16,5 +16,15 @@
     <fragment
         android:id="@+id/characterPackFragment"
         android:name="com.chen.memorizewords.feature.floatingreview.ui.character.CharacterPackFragment"
-        android:label="@string/module_floating_review_character_title" />
+        android:label="@string/module_floating_review_character_title">
+        <argument
+            android:name="floating_character_mode"
+            app:argType="string"
+            android:defaultValue="MANAGE" />
+        <argument
+            android:name="floating_activation_request_id"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
 </navigation>

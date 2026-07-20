@@ -41,6 +41,7 @@ abstract class BaseVmActivity<VM : BaseViewModel> : AppCompatActivity() {
         } else {
             setContentView(layoutId())
         }
+        registerConfirmBottomResultListener()
         createObserver()
         initView(savedInstanceState)
         observeBaseUi()
@@ -78,10 +79,9 @@ abstract class BaseVmActivity<VM : BaseViewModel> : AppCompatActivity() {
                                 ).show(supportFragmentManager, "ShowSingleConfirmDialog")
                             }
                             is UiEvent.Dialog.ConfirmBottom -> {
-                                ShowConfirmBottomDialog(
+                                ShowConfirmBottomDialog.newInstance(
                                     data = event,
-                                    onConfirm = { onConfirmBottomDialog(event) },
-                                    onCancel = { onCancelBottomDialog(event) }
+                                    resultKey = confirmBottomResultKey()
                                 ).show(
                                     supportFragmentManager,
                                     "ShowConfirmBottomDialog"
@@ -140,6 +140,23 @@ abstract class BaseVmActivity<VM : BaseViewModel> : AppCompatActivity() {
 
     open fun onUiEffect(effect: UiEffect) {
     }
+
+    private fun registerConfirmBottomResultListener() {
+        supportFragmentManager.setFragmentResultListener(
+            confirmBottomResultKey(),
+            this
+        ) { _, result ->
+            val event = ShowConfirmBottomDialog.eventFromResult(result)
+            if (result.getBoolean(ShowConfirmBottomDialog.RESULT_CONFIRMED)) {
+                onConfirmBottomDialog(event)
+            } else {
+                onCancelBottomDialog(event)
+            }
+        }
+    }
+
+    private fun confirmBottomResultKey(): String =
+        "${javaClass.name}:confirm_bottom"
 
     override fun onDestroy() {
         loadingDialogController.hide()
