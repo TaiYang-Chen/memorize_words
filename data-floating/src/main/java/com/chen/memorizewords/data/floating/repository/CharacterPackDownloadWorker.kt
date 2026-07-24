@@ -9,6 +9,7 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.chen.memorizewords.core.sprite.SpritePackContractValidator
 import com.chen.memorizewords.core.sprite.SpritePackId
+import com.chen.memorizewords.core.sprite.SpritePackManifest
 import com.chen.memorizewords.core.sprite.SpritePackManifestParser
 import com.chen.memorizewords.data.floating.di.CharacterPackHttpClient
 import com.chen.memorizewords.data.floating.local.CharacterPackConditionalWriteResult
@@ -54,6 +55,9 @@ class CharacterPackDownloadWorker(
     private suspend fun doWorkOnIoDispatcher(): Result {
         val packId = inputData.getString(CharacterPackWork.KEY_PACK_ID).orEmpty()
         val packVersion = inputData.getInt(CharacterPackWork.KEY_PACK_VERSION, 0)
+        val requestedManifestSchemaVersion = inputData.getInt(
+            CharacterPackWork.KEY_MANIFEST_SCHEMA_VERSION, 0
+        )
         val displayName = inputData.getString(CharacterPackWork.KEY_DISPLAY_NAME).orEmpty()
         val description = inputData.getString(CharacterPackWork.KEY_DESCRIPTION)
         val previewUrl = inputData.getString(CharacterPackWork.KEY_PREVIEW_URL)
@@ -71,6 +75,12 @@ class CharacterPackDownloadWorker(
             CharacterPackWorkerEntryPoint::class.java
         )
         val store = entryPoint.store()
+        val expectedManifestSchemaVersion = requestedManifestSchemaVersion
+            .takeIf { it in SUPPORTED_MANIFEST_SCHEMA_VERSIONS }
+            ?: store.catalog().firstOrNull {
+                it.packId == packId && it.packVersion == packVersion
+            }?.manifestSchemaVersion
+            ?: 0
         val baseState = CharacterPackDownloadState(
             packId = packId,
             packVersion = packVersion,
@@ -84,6 +94,7 @@ class CharacterPackDownloadWorker(
         if (
             !CharacterPackLocalStore.isSafePackId(packId) ||
             packVersion <= 0 ||
+            expectedManifestSchemaVersion !in SUPPORTED_MANIFEST_SCHEMA_VERSIONS ||
             packageHttpUrl?.isHttps != true ||
             !expectedSha256.matches(Regex("[a-fA-F0-9]{64}")) ||
             expectedSize !in 1..CharacterPackLocalStore.MAX_PACKAGE_BYTES ||
@@ -159,7 +170,10 @@ class CharacterPackDownloadWorker(
                 throw CharacterPackInstallationException("Unable to create install directory")
             }
             val extractedEntries = extractSafely(zipFile, installRoot)
-            val manifestFile = File(installRoot, "manifest.json")
+            val manifestFile = File(
+                installRoot,
+                CharacterPackPackageLayout.MANIFEST_FILE_NAME
+            )
             val manifest = try {
                 CharacterPackManifestFileReader.parse(
                     file = manifestFile,
@@ -169,7 +183,11 @@ class CharacterPackDownloadWorker(
             } catch (error: Exception) {
                 throw CharacterPackValidationException("Invalid character manifest", error)
             }
-            if (manifest.packId != SpritePackId(packId) || manifest.packVersion != packVersion) {
+            if (
+                manifest.packId != SpritePackId(packId) ||
+                manifest.packVersion != packVersion ||
+                manifest.schemaVersion != expectedManifestSchemaVersion
+            ) {
                 throw CharacterPackValidationException("Character package identity mismatch")
             }
             try {
@@ -177,22 +195,18 @@ class CharacterPackDownloadWorker(
             } catch (error: Exception) {
                 throw CharacterPackValidationException("Character manifest contract mismatch", error)
             }
-            if (extractedEntries != setOf("manifest.json", manifest.atlas.fileName)) {
+            if (extractedEntries != CharacterPackPackageLayout.expectedEntries(manifest)) {
                 throw CharacterPackValidationException("Invalid character package entries")
             }
-            val atlas = File(installRoot, manifest.atlas.fileName).canonicalFile
-            if (atlas.parentFile != installRoot.canonicalFile || !atlas.isFile) {
-                throw CharacterPackValidationException("Character atlas is missing")
-            }
             try {
-                CharacterPackWebpContainerValidator.validate(atlas, MAX_UNCOMPRESSED_BYTES)
-                CharacterPackAtlasDecoderValidator.validate(
-                    atlasFile = atlas,
-                    atlas = manifest.atlas,
-                    decodeLastFrame = true
+                CharacterPackTextureFileValidator.validate(
+                    root = installRoot,
+                    manifest = manifest,
+                    decodeLastWebpFrame = true,
+                    validateKtx2RuntimeReadiness = true
                 )
             } catch (error: Exception) {
-                throw CharacterPackValidationException("Character atlas cannot be decoded", error)
+                throw CharacterPackValidationException("Character textures are invalid", error)
             }
             ensureWorkerActive()
             ensureCurrent(store, baseState)
@@ -219,6 +233,12 @@ class CharacterPackDownloadWorker(
                 errorCode = null,
                 errorMessage = null
             )
+            val pendingRuntimeValidation =
+                manifest.schemaVersion == SpritePackManifest.KTX2_SCHEMA_VERSION
+            val runtimeFallback = CharacterPackRuntimeInstallPolicy.fallbackFor(
+                required = pendingRuntimeValidation,
+                previous = previouslyInstalled
+            )
             val installed = InstalledCharacterPack(
                 packId = packId,
                 packVersion = packVersion,
@@ -226,7 +246,10 @@ class CharacterPackDownloadWorker(
                 description = description,
                 previewUrl = previewUrl,
                 installedDirectory = finalRoot.absolutePath,
-                installedAtMs = System.currentTimeMillis()
+                installedAtMs = System.currentTimeMillis(),
+                pendingRuntimeValidation = pendingRuntimeValidation,
+                lastKnownGoodVersion = runtimeFallback?.packVersion,
+                lastKnownGoodDirectory = runtimeFallback?.installedDirectory
             )
             when (
                 store.commitInstallationIfCurrent(
@@ -242,10 +265,10 @@ class CharacterPackDownloadWorker(
                     throw CharacterPackPersistenceException()
             }
             installationCommitted = true
-            cleanupReplacedVersion(
+            cleanupReplacedVersions(
                 previous = previouslyInstalled,
-                packRoot = packRoot,
-                keepDirectory = finalRoot
+                installed = installed,
+                packRoot = packRoot
             )
 
             reportEventSafely(
@@ -648,10 +671,10 @@ class CharacterPackDownloadWorker(
         }
     }
 
-    private fun cleanupReplacedVersion(
+    private fun cleanupReplacedVersions(
         previous: InstalledCharacterPack?,
-        packRoot: File,
-        keepDirectory: File
+        installed: InstalledCharacterPack,
+        packRoot: File
     ) {
         previous ?: return
         val safeRoot = try {
@@ -659,16 +682,32 @@ class CharacterPackDownloadWorker(
         } catch (_: IOException) {
             return
         }
-        val previousDirectory = try {
-            File(previous.installedDirectory).canonicalFile
-        } catch (_: IOException) {
-            return
+        val retainedDirectories = listOfNotNull(
+            installed.installedDirectory,
+            installed.lastKnownGoodDirectory
+        ).mapNotNull { path ->
+            managedInstalledDirectory(safeRoot, path)?.absolutePath
+        }.toSet()
+        listOfNotNull(
+            previous.installedDirectory,
+            previous.lastKnownGoodDirectory
+        ).distinct().mapNotNull { path ->
+            managedInstalledDirectory(safeRoot, path)
+        }.filterNot { directory ->
+            directory.absolutePath in retainedDirectories
+        }.forEach { directory ->
+            directory.deleteRecursively()
         }
-        if (
-            previousDirectory.parentFile == safeRoot &&
-            previousDirectory.absolutePath != keepDirectory.absolutePath
-        ) {
-            previousDirectory.deleteRecursively()
+    }
+
+    private fun managedInstalledDirectory(safeRoot: File, path: String): File? {
+        return try {
+            File(path).canonicalFile.takeIf { directory ->
+                directory.parentFile == safeRoot &&
+                    CharacterPackLocalStore.isManagedInstalledDirectoryName(directory.name)
+            }
+        } catch (_: IOException) {
+            null
         }
     }
 
@@ -738,11 +777,14 @@ class CharacterPackDownloadWorker(
     }
 
     companion object {
-        private const val MAX_ENTRY_COUNT = 8
+        private const val MAX_ENTRY_COUNT = 16
         private const val MAX_UNCOMPRESSED_BYTES = CharacterPackLocalStore.MAX_ATLAS_BYTES
         private const val MAX_NETWORK_RETRIES = 2
         private const val PROGRESS_INTERVAL_MS = 500L
         private val SUPPORTED_ZIP_METHODS = setOf(0, 8)
+        private val SUPPORTED_MANIFEST_SCHEMA_VERSIONS = setOf(
+            SpritePackManifest.KTX2_SCHEMA_VERSION
+        )
     }
 }
 
@@ -782,6 +824,32 @@ private class CharacterPackStorageException(
 
 private class ObsoleteCharacterPackWorkException : IllegalStateException()
 
+internal data class CharacterPackRuntimeFallbackRevision(
+    val packVersion: Int,
+    val installedDirectory: String
+)
+
+internal object CharacterPackRuntimeInstallPolicy {
+    fun fallbackFor(
+        required: Boolean,
+        previous: InstalledCharacterPack?
+    ): CharacterPackRuntimeFallbackRevision? {
+        if (!required || previous == null) return null
+        if (!previous.pendingRuntimeValidation) {
+            return CharacterPackRuntimeFallbackRevision(
+                packVersion = previous.packVersion,
+                installedDirectory = previous.installedDirectory
+            )
+        }
+        val fallbackVersion = previous.lastKnownGoodVersion ?: return null
+        val fallbackDirectory = previous.lastKnownGoodDirectory ?: return null
+        if (fallbackVersion <= 0 || fallbackDirectory.isBlank()) return null
+        return CharacterPackRuntimeFallbackRevision(
+            packVersion = fallbackVersion,
+            installedDirectory = fallbackDirectory
+        )
+    }
+}
 internal object CharacterPackDownloadPolicy {
     fun contentLengthMatchesCatalog(declaredLength: Long, catalogLength: Long): Boolean =
         declaredLength < 0L || declaredLength == catalogLength

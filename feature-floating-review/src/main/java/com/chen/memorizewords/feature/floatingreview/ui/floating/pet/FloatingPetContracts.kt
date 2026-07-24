@@ -12,8 +12,26 @@ enum class StandardPetAction(val semanticKey: String) {
     CARD_CLOSE("card_close")
 }
 
+enum class PetEvent(val wireName: String) {
+    PET_TAP("pet_tap"),
+    CARD_OPENED("card_opened"),
+    CARD_CLOSED("card_closed"),
+    WORD_CHANGED("word_changed"),
+    FAVORITE_ADDED("favorite_added"),
+    FAVORITE_REMOVED("favorite_removed"),
+    DRAG_STARTED("drag_started"),
+    DRAG_ENDED("drag_ended");
+
+    companion object {
+        private val valuesByWireName = entries.associateBy(PetEvent::wireName)
+
+        fun fromWireName(wireName: String): PetEvent? = valuesByWireName[wireName]
+    }
+}
+
 sealed interface FloatingPetCommand {
     data class SetCardVisible(val visible: Boolean) : FloatingPetCommand
+    data class PlayEvent(val event: PetEvent) : FloatingPetCommand
     data class PlayOptionalAction(val actionId: String) : FloatingPetCommand
     data class SwitchPack(
         val packId: SpritePackId,
@@ -34,6 +52,11 @@ interface FloatingPetActionPolicy {
         manifest: SpritePackManifest,
         actionId: String
     ): SpriteClipId?
+
+    fun resolveEventAction(
+        manifest: SpritePackManifest,
+        event: PetEvent
+    ): SpriteClipId?
 }
 
 class ManifestFloatingPetActionPolicy : FloatingPetActionPolicy {
@@ -50,6 +73,11 @@ class ManifestFloatingPetActionPolicy : FloatingPetActionPolicy {
     } else {
         manifest.semanticBindings[actionId]
     }
+
+    override fun resolveEventAction(
+        manifest: SpritePackManifest,
+        event: PetEvent
+    ): SpriteClipId? = manifest.eventBindings[event.wireName]
 
     private companion object {
         val STANDARD_ACTION_KEYS = StandardPetAction.values()

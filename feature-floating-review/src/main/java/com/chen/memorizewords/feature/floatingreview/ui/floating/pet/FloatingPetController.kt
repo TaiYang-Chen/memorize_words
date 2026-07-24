@@ -1,16 +1,18 @@
 package com.chen.memorizewords.feature.floatingreview.ui.floating.pet
 
 import android.os.Looper
-import com.chen.memorizewords.core.sprite.SpriteAnimationView
+import com.chen.memorizewords.core.sprite.FloatingPetAnimationSessionFactory
+import com.chen.memorizewords.core.sprite.FloatingPetRenderHost
 import com.chen.memorizewords.core.sprite.SpriteClipId
 import com.chen.memorizewords.core.sprite.SpriteClipSpec
 import com.chen.memorizewords.core.sprite.SpritePack
 import com.chen.memorizewords.core.sprite.SpritePackId
 import com.chen.memorizewords.core.sprite.SpritePackRepository
+import com.chen.memorizewords.core.sprite.SpritePackRuntimeRole
 import com.chen.memorizewords.core.sprite.SpritePlaybackMode
 import com.chen.memorizewords.core.sprite.SpriteReverseResult
 import com.chen.memorizewords.core.sprite.SpritePlaybackSession
-import com.chen.memorizewords.core.sprite.SpriteSessionFactory
+import java.util.ArrayDeque
 import javax.inject.Inject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
@@ -29,16 +31,16 @@ import kotlinx.coroutines.withContext
 
 class FloatingPetController @Inject constructor(
     private val repository: SpritePackRepository,
-    private val sessionFactory: SpriteSessionFactory,
+    private val sessionFactory: FloatingPetAnimationSessionFactory,
     private val actionPolicy: FloatingPetActionPolicy,
     private val packContractValidator: FloatingPetPackContractValidator
 ) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val commands = Channel<FloatingPetCommand>(Channel.UNLIMITED)
     private val playbackStateMachine = FloatingPetPlaybackStateMachine()
-    private var view: SpriteAnimationView? = null
+    private var view: FloatingPetRenderHost? = null
     private var session: SpritePlaybackSession? = null
-    private var sessionView: SpriteAnimationView? = null
+    private var sessionView: FloatingPetRenderHost? = null
     private var loadJob: Job? = null
     private var detachedReleaseJob: Job? = null
     private var openPreloadJob: Job? = null
@@ -51,6 +53,7 @@ class FloatingPetController @Inject constructor(
     private var packLoadGeneration = 0L
     private var attachmentGeneration = 0L
     private var optionalResumeVisible: Boolean? = null
+    private val pendingEvents = ArrayDeque<PetEvent>()
     private var submittedPackId: SpritePackId? = null
     private var activePackId: SpritePackId? = null
     private var playbackRecoveryAttempted = false
@@ -83,7 +86,7 @@ class FloatingPetController @Inject constructor(
         }
     }
 
-    fun attach(view: SpriteAnimationView, packId: SpritePackId) {
+    fun attach(view: FloatingPetRenderHost, packId: SpritePackId) {
         checkMainThread()
         if (released) return
         attachmentGeneration++
@@ -105,6 +108,11 @@ class FloatingPetController @Inject constructor(
     fun playOptionalAction(actionId: String) {
         checkMainThread()
         if (!released) commands.trySend(FloatingPetCommand.PlayOptionalAction(actionId))
+    }
+
+    fun playEvent(event: PetEvent) {
+        checkMainThread()
+        if (!released) commands.trySend(FloatingPetCommand.PlayEvent(event))
     }
 
     fun switchPack(packId: SpritePackId) {
@@ -144,6 +152,16 @@ class FloatingPetController @Inject constructor(
         return completion.await()
     }
 
+    fun isPackReady(packId: SpritePackId): Boolean {
+        checkMainThread()
+        return !released &&
+            session != null &&
+            activePackId == packId &&
+            state != FloatingPetPlaybackState.UNINITIALIZED &&
+            state != FloatingPetPlaybackState.SWITCHING_PACK &&
+            state != FloatingPetPlaybackState.RELEASED
+    }
+
     fun detach() {
         checkMainThread()
         if (released) return
@@ -180,9 +198,11 @@ class FloatingPetController @Inject constructor(
         when (command) {
             is FloatingPetCommand.SetCardVisible -> {
                 playbackRecoveryAttempted = false
+                pendingEvents.clear()
                 requestedVisible = command.visible
                 renderRequestedVisibility()
             }
+            is FloatingPetCommand.PlayEvent -> handlePetEvent(command.event)
             is FloatingPetCommand.PlayOptionalAction -> playOptional(command.actionId)
             is FloatingPetCommand.SwitchPack -> loadPack(
                 packId = command.packId,
@@ -210,30 +230,69 @@ class FloatingPetController @Inject constructor(
         }
         val requestGeneration = ++packLoadGeneration
         optionalResumeVisible = null
+        pendingEvents.clear()
         loadJob = scope.launch {
             var pendingSession: SpritePlaybackSession? = null
             var installedSession: SpritePlaybackSession? = null
             var loadedPackId: SpritePackId? = null
             try {
-                val pack = resolveValidatedPack(packId)
-                val currentSession = session
-                if (shouldReuseFloatingPetSession(
-                        forceReload = forceReload,
-                        hasCurrentSession = currentSession != null,
-                        sameView = sessionView === targetView,
-                        samePackId = currentSession?.manifest?.packId == pack.manifest.packId,
-                        samePackVersion = currentSession?.manifest?.packVersion ==
-                            pack.manifest.packVersion
-                    )
-                ) {
-                    submittedPackId = pack.manifest.packId
-                    loadedPackId = pack.manifest.packId
-                    return@launch
+                val resolved = resolvePack(packId)
+                var preparedPack: SpritePack? = null
+                var preparedSession: SpritePlaybackSession? = null
+                var lastFailure: Exception? = null
+                for (candidate in runtimeCandidates(resolved)) {
+                    try {
+                        packContractValidator.validate(candidate.manifest)
+                        val currentSession = session
+                        if (shouldReuseFloatingPetSession(
+                                forceReload = forceReload,
+                                hasCurrentSession = currentSession != null,
+                                sameView = sessionView === targetView,
+                                samePackId = currentSession?.manifest?.packId ==
+                                    candidate.manifest.packId,
+                                samePackVersion = currentSession?.manifest?.packVersion ==
+                                    candidate.manifest.packVersion
+                            )
+                        ) {
+                            submittedPackId = candidate.manifest.packId
+                            loadedPackId = runtimePackLoadCompletionId(candidate)
+                            return@launch
+                        }
+                        trimFloatingPetSessionBeforeReplacement(currentSession)
+                        val candidateSession = sessionFactory.create(candidate, targetView, scope)
+                        pendingSession = candidateSession
+                        val idle = actionPolicy.resolveStandardAction(
+                            candidate.manifest,
+                            StandardPetAction.IDLE
+                        )
+                        // The staged renderer is transparent, so this validates a real first draw
+                        // before it can replace the active renderer.
+                        candidateSession.prepare(idle, presentFrame = true)
+                        preparedPack = candidate
+                        preparedSession = candidateSession
+                        break
+                    } catch (cancelled: CancellationException) {
+                        throw cancelled
+                    } catch (error: Exception) {
+                        pendingSession?.let { failedSession ->
+                            withContext(NonCancellable) {
+                                try {
+                                    closeAndAwaitRelease(failedSession)
+                                } catch (closeFailure: Exception) {
+                                    error.addSuppressed(closeFailure)
+                                }
+                            }
+                        }
+                        pendingSession = null
+                        lastFailure = error
+                    }
                 }
-                val newSession = sessionFactory.create(pack, targetView, scope)
-                pendingSession = newSession
-                val idle = actionPolicy.resolveStandardAction(pack.manifest, StandardPetAction.IDLE)
-                newSession.prepare(idle, presentFrame = false)
+                val pack = preparedPack ?: throw (
+                    lastFailure ?: IllegalStateException(
+                        "Character pack has no runtime-compatible revision"
+                    )
+                )
+                val newSession = checkNotNull(preparedSession)
                 if (
                     requestGeneration != packLoadGeneration ||
                     view !== targetView ||
@@ -265,10 +324,11 @@ class FloatingPetController @Inject constructor(
                     }
                 }
                 currentCoroutineContext().ensureActive()
+                prewarmBoundEventTextures(newSession)
                 state = FloatingPetPlaybackState.IDLE
                 if (!requestedVisible) scheduleIdlePrewarm(newSession)
                 renderRequestedVisibility()
-                loadedPackId = pack.manifest.packId
+                loadedPackId = runtimePackLoadCompletionId(pack)
             } catch (cancelled: CancellationException) {
                 if (
                     session === installedSession &&
@@ -338,12 +398,13 @@ class FloatingPetController @Inject constructor(
         completion.complete(loadedPackId)
     }
 
-    private suspend fun resolveValidatedPack(packId: SpritePackId): SpritePack {
-        val resolved = repository.find(packId)
+    private suspend fun resolvePack(packId: SpritePackId): SpritePack {
+        return repository.find(packId)
             ?: throw IllegalStateException("Character pack ${packId.value} is unavailable")
-        packContractValidator.validate(resolved.manifest)
-        return resolved
     }
+
+    private fun runtimeCandidates(pack: SpritePack): List<SpritePack> =
+        listOfNotNull(pack, pack.runtimeFallback)
 
     private fun renderRequestedVisibility() {
         val activeSession = session ?: return
@@ -364,7 +425,7 @@ class FloatingPetController @Inject constructor(
                             if (session !== activeSession || !requestedVisible) {
                                 return@reversePlaybackDirection
                             }
-                            playVisibleLoop(activeSession)
+                            finishOpenTransition(activeSession)
                         },
                         onError = { handlePlaybackError(activeSession) }
                     )) {
@@ -373,7 +434,7 @@ class FloatingPetController @Inject constructor(
                     }
                     SpriteReverseResult.NOT_STARTED -> {
                         activeSession.cancelPlayback()
-                        playVisibleLoop(activeSession)
+                        finishOpenTransition(activeSession)
                     }
                     SpriteReverseResult.UNSUPPORTED -> Unit
                 }
@@ -436,7 +497,11 @@ class FloatingPetController @Inject constructor(
             playClose(activeSession)
             return
         }
-        playVisibleLoop(activeSession)
+        state = FloatingPetPlaybackState.VISIBLE_LOOP
+        queueEventIfBound(activeSession, PetEvent.CARD_OPENED)
+        if (!playNextPendingEvent(activeSession)) {
+            playVisibleLoop(activeSession)
+        }
     }
 
     private fun playVisibleLoop(activeSession: SpritePlaybackSession) {
@@ -468,7 +533,10 @@ class FloatingPetController @Inject constructor(
         if (requestedVisible) {
             renderRequestedVisibility()
         } else {
-            playIdleAndContinue(activeSession)
+            queueEventIfBound(activeSession, PetEvent.CARD_CLOSED)
+            if (!playNextPendingEvent(activeSession)) {
+                playIdleAndContinue(activeSession)
+            }
         }
     }
 
@@ -498,6 +566,7 @@ class FloatingPetController @Inject constructor(
         }
         openPreloadJob = scope.launch {
             prewarmOpen(activeSession)
+            prewarmBoundEventTextures(activeSession)
             if (
                 session === activeSession &&
                 state == FloatingPetPlaybackState.IDLE &&
@@ -608,6 +677,35 @@ class FloatingPetController @Inject constructor(
         }
     }
 
+    private suspend fun prewarmBoundEventTextures(activeSession: SpritePlaybackSession) {
+        for (event in EVENT_TEXTURE_PRELOAD_ORDER) {
+            if (session !== activeSession) return
+            val clipId = resolveFiniteEventClip(activeSession, event) ?: continue
+            try {
+                // KTX2 uploads the complete optional texture on the GL thread here. play() never
+                // falls back to I/O/transcoding, so an early tap can only play or fail safely.
+                activeSession.preloadClipHead(clipId, frameCount = 1)
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (_: Exception) {
+                // Optional actions are best effort and may be absent or exceed the current LRU room.
+            }
+        }
+    }
+
+    private fun handlePetEvent(event: PetEvent) {
+        val activeSession = session ?: return
+        val clipId = resolveFiniteEventClip(activeSession, event) ?: return
+        when (state) {
+            FloatingPetPlaybackState.IDLE,
+            FloatingPetPlaybackState.VISIBLE_LOOP -> playOptionalClip(activeSession, clipId)
+            FloatingPetPlaybackState.OPENING,
+            FloatingPetPlaybackState.CLOSING,
+            FloatingPetPlaybackState.OPTIONAL -> queueEvent(event)
+            else -> Unit
+        }
+    }
+
     private fun playOptional(actionId: String) {
         if (
             state != FloatingPetPlaybackState.IDLE &&
@@ -616,8 +714,21 @@ class FloatingPetController @Inject constructor(
         ) return
         val activeSession = session ?: return
         val clipId = actionPolicy.resolveOptionalAction(activeSession.manifest, actionId) ?: return
+        playOptionalClip(activeSession, clipId)
+    }
+
+    private fun playOptionalClip(
+        activeSession: SpritePlaybackSession,
+        clipId: SpriteClipId
+    ): Boolean {
+        if (session !== activeSession) return false
+        if (
+            state != FloatingPetPlaybackState.IDLE &&
+            state != FloatingPetPlaybackState.VISIBLE_LOOP &&
+            state != FloatingPetPlaybackState.OPTIONAL
+        ) return false
         val clip = activeSession.manifest.clip(clipId)
-        if (clip.playbackMode == SpritePlaybackMode.LOOP) return
+        if (clip.playbackMode == SpritePlaybackMode.LOOP) return false
         playbackRecoveryAttempted = false
         loopPreloadJob?.cancel()
         loopPreloadJob = null
@@ -632,9 +743,12 @@ class FloatingPetController @Inject constructor(
             onComplete = { restoreAfterOptional(activeSession) },
             onError = { handlePlaybackError(activeSession) }
         )
+        return true
     }
 
     private fun restoreAfterOptional(activeSession: SpritePlaybackSession) {
+        if (session !== activeSession) return
+        if (playNextPendingEvent(activeSession)) return
         val resumeVisible = optionalResumeVisible ?: requestedVisible
         optionalResumeVisible = null
         if (requestedVisible != resumeVisible) {
@@ -648,6 +762,42 @@ class FloatingPetController @Inject constructor(
             playVisibleLoop(activeSession)
         } else {
             playIdleAndContinue(activeSession)
+        }
+    }
+
+    private fun queueEventIfBound(
+        activeSession: SpritePlaybackSession,
+        event: PetEvent
+    ) {
+        if (resolveFiniteEventClip(activeSession, event) != null) {
+            queueEvent(event)
+        }
+    }
+
+    private fun queueEvent(event: PetEvent) {
+        if (pendingEvents.peekLast() == event) return
+        if (pendingEvents.size >= MAX_PENDING_EVENTS) {
+            pendingEvents.removeFirst()
+        }
+        pendingEvents.addLast(event)
+    }
+
+    private fun playNextPendingEvent(activeSession: SpritePlaybackSession): Boolean {
+        while (pendingEvents.isNotEmpty()) {
+            val event = pendingEvents.removeFirst()
+            val clipId = resolveFiniteEventClip(activeSession, event) ?: continue
+            if (playOptionalClip(activeSession, clipId)) return true
+        }
+        return false
+    }
+
+    private fun resolveFiniteEventClip(
+        activeSession: SpritePlaybackSession,
+        event: PetEvent
+    ): SpriteClipId? {
+        val clipId = actionPolicy.resolveEventAction(activeSession.manifest, event) ?: return null
+        return clipId.takeIf {
+            activeSession.manifest.clip(it).playbackMode != SpritePlaybackMode.LOOP
         }
     }
 
@@ -668,6 +818,7 @@ class FloatingPetController @Inject constructor(
     private fun handlePlaybackError(activeSession: SpritePlaybackSession) {
         if (session !== activeSession || released) return
         optionalResumeVisible = null
+        pendingEvents.clear()
         openPreloadJob?.cancel()
         openPreloadJob = null
         loopPreloadJob?.cancel()
@@ -741,6 +892,7 @@ class FloatingPetController @Inject constructor(
     private fun detachNow() {
         packLoadGeneration++
         optionalResumeVisible = null
+        pendingEvents.clear()
         loadJob?.cancel()
         loadJob = null
         openPreloadJob?.cancel()
@@ -809,6 +961,18 @@ class FloatingPetController @Inject constructor(
     companion object {
         private const val OPEN_PRELOAD_FRAME_COUNT = 12
         private const val CLOSE_PRELOAD_FRAME_COUNT = 3
+        private const val MAX_PENDING_EVENTS = 8
+        // Low priority first: the bounded LRU leaves the most interaction-critical textures hot.
+        val EVENT_TEXTURE_PRELOAD_ORDER = listOf(
+            PetEvent.CARD_OPENED,
+            PetEvent.CARD_CLOSED,
+            PetEvent.DRAG_ENDED,
+            PetEvent.DRAG_STARTED,
+            PetEvent.WORD_CHANGED,
+            PetEvent.FAVORITE_REMOVED,
+            PetEvent.FAVORITE_ADDED,
+            PetEvent.PET_TAP
+        )
 
         private fun resolveLoopPreloadDelayMillis(transitionClip: SpriteClipSpec): Long {
             val bufferedFrames = minOf(OPEN_PRELOAD_FRAME_COUNT, transitionClip.frameCount)
@@ -816,6 +980,12 @@ class FloatingPetController @Inject constructor(
                 .coerceAtLeast(1L)
         }
     }
+}
+
+internal suspend fun trimFloatingPetSessionBeforeReplacement(
+    session: SpritePlaybackSession?
+) {
+    session?.trimMemoryAndAwait()
 }
 
 internal fun shouldReuseFloatingPetSession(
@@ -829,3 +999,7 @@ internal fun shouldReuseFloatingPetSession(
     sameView &&
     samePackId &&
     samePackVersion
+internal fun runtimePackLoadCompletionId(pack: SpritePack): SpritePackId? =
+    pack.manifest.packId.takeIf {
+        pack.runtimeRole == SpritePackRuntimeRole.PRIMARY
+    }

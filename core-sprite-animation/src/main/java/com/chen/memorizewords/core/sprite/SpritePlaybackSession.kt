@@ -57,6 +57,14 @@ interface SpritePlaybackSession : Closeable {
     ): SpriteReverseResult
     fun cancelPlayback()
     fun trimMemory()
+    /**
+     * Releases non-essential renderer resources and returns only after that release is visible to
+     * a replacement renderer. Legacy bitmap sessions trim synchronously on the main thread; GPU
+     * sessions override this to provide a barrier on their dedicated GL thread.
+     */
+    suspend fun trimMemoryAndAwait() {
+        trimMemory()
+    }
     /** Suspends until every decoded bitmap owned by a closed session has been released. */
     suspend fun awaitReleased()
 }

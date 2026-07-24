@@ -66,7 +66,8 @@ internal fun normalizeFloatingWordSettings(settings: FloatingWordSettings): Floa
         ballOpacityPercent = normalizeBallOpacityPercent(settings.ballOpacityPercent),
         cardOpacityPercent = normalizeCardOpacityPercent(settings.cardOpacityPercent),
         cardGapDp = normalizeCardGapDp(settings.cardGapDp),
-        selectedCharacterPackId = normalizeCharacterPackId(settings.selectedCharacterPackId),
+        selectedCharacterPackId =
+            normalizeCharacterPackId(settings.selectedCharacterPackId) ?: "green_pet",
         dockConfig = normalizedDockConfig,
         dockState = sanitizeDockState(settings.dockState, normalizedDockConfig)
     )

@@ -57,7 +57,7 @@ class CharacterPackResolveDtoTest {
         packageUrl = "https://cdn.example.com/blue_pet.zip",
         packageSha256 = "a".repeat(64),
         packageSizeBytes = 1_000L,
-        manifestSchemaVersion = 1,
+        manifestSchemaVersion = 2,
         updatedAtMs = 1L
     )
 }

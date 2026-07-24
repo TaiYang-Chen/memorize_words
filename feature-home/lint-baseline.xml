@@ -829,7 +829,7 @@
     <issue
         id="ResourceName"
         message="Resource named &apos;`title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_title`&apos; ?"
-        errorLine1="    &lt;string name=&quot;title&quot;>小白背单词&lt;/string>"
+        errorLine1="    &lt;string name=&quot;title&quot;>炫羲单词&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"

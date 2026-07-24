@@ -6,13 +6,24 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Query
 
 interface CharacterPackApiService {
     @GET("app/character-packs")
-    fun getCharacterPacks(): Call<ApiResponse<List<CharacterPackDto>>>
+    fun getCharacterPacks(
+        @Query("supportedManifestSchemas") supportedManifestSchemas: String =
+            CharacterPackClientCapabilities.MANIFEST_SCHEMAS,
+        @Query("supportedRenderers") supportedRenderers: String =
+            CharacterPackClientCapabilities.RENDERERS
+    ): Call<ApiResponse<List<CharacterPackDto>>>
 
     @POST("app/character-packs/resolve")
-    fun resolveAppliedCharacterPack(): Call<ApiResponse<CharacterPackResolveDto>>
+    fun resolveAppliedCharacterPack(
+        @Query("supportedManifestSchemas") supportedManifestSchemas: String =
+            CharacterPackClientCapabilities.MANIFEST_SCHEMAS,
+        @Query("supportedRenderers") supportedRenderers: String =
+            CharacterPackClientCapabilities.RENDERERS
+    ): Call<ApiResponse<CharacterPackResolveDto>>
 
     @PUT("app/character-packs/applied")
     fun applyCharacterPack(@Body request: ApplyCharacterPackRequest): Call<ApiResponse<Unit>>

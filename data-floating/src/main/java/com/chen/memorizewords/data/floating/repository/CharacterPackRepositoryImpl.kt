@@ -174,6 +174,7 @@ class CharacterPackRepositoryImpl @Inject constructor(
                     workDataOf(
                         CharacterPackWork.KEY_PACK_ID to item.packId,
                         CharacterPackWork.KEY_PACK_VERSION to item.packVersion,
+                        CharacterPackWork.KEY_MANIFEST_SCHEMA_VERSION to item.manifestSchemaVersion,
                         CharacterPackWork.KEY_DISPLAY_NAME to item.displayName,
                         CharacterPackWork.KEY_DESCRIPTION to item.description,
                         CharacterPackWork.KEY_PREVIEW_URL to item.previewUrl,
@@ -340,6 +341,7 @@ class CharacterPackRepositoryImpl @Inject constructor(
             workDataOf(
                 CharacterPackWork.KEY_PACK_ID to item.packId,
                 CharacterPackWork.KEY_PACK_VERSION to item.packVersion,
+                CharacterPackWork.KEY_MANIFEST_SCHEMA_VERSION to item.manifestSchemaVersion,
                 CharacterPackWork.KEY_DISPLAY_NAME to item.displayName,
                 CharacterPackWork.KEY_DESCRIPTION to item.description,
                 CharacterPackWork.KEY_PREVIEW_URL to item.previewUrl,
@@ -415,6 +417,61 @@ class CharacterPackRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun acknowledgeRuntimeReady(
+        packId: String,
+        packVersion: Int,
+        installedDirectory: String
+    ): Boolean = mutationMutex.withLock {
+        val pending = store.installed(packId)?.takeIf { installed ->
+            installed.packVersion == packVersion &&
+                installed.installedDirectory == installedDirectory &&
+                installed.pendingRuntimeValidation
+        } ?: return@withLock false
+        when (
+            store.acknowledgeRuntimeReadyIfCurrent(
+                packId = packId,
+                packVersion = packVersion,
+                installedDirectory = installedDirectory
+            )
+        ) {
+            CharacterPackConditionalWriteResult.UPDATED -> {
+                pending.lastKnownGoodDirectory?.let { fallbackDirectory ->
+                    deleteInstalledDirectoryIfUnreferenced(packId, fallbackDirectory)
+                }
+                true
+            }
+            CharacterPackConditionalWriteResult.STALE -> false
+            CharacterPackConditionalWriteResult.PERSISTENCE_FAILED ->
+                throw CharacterPackPersistenceException()
+        }
+    }
+
+    override suspend fun rollbackPendingRuntimeValidation(
+        packId: String,
+        packVersion: Int,
+        installedDirectory: String
+    ): Boolean = mutationMutex.withLock {
+        val pending = store.installed(packId)?.takeIf { installed ->
+            installed.packVersion == packVersion &&
+                installed.installedDirectory == installedDirectory &&
+                installed.pendingRuntimeValidation
+        } ?: return@withLock false
+        when (
+            store.rollbackPendingRuntimeValidationIfCurrent(
+                packId = packId,
+                packVersion = packVersion,
+                installedDirectory = installedDirectory
+            )
+        ) {
+            CharacterPackConditionalWriteResult.UPDATED -> {
+                deleteInstalledDirectoryIfUnreferenced(packId, pending.installedDirectory)
+                true
+            }
+            CharacterPackConditionalWriteResult.STALE -> false
+            CharacterPackConditionalWriteResult.PERSISTENCE_FAILED ->
+                throw CharacterPackPersistenceException()
+        }
+    }
     override suspend fun deleteInstalled(packId: String) = mutationMutex.withLock {
         if (!CharacterPackLocalStore.isSafePackId(packId)) return@withLock
         invalidateAndCancel(packId)
@@ -432,7 +489,6 @@ class CharacterPackRepositoryImpl @Inject constructor(
 
     override suspend fun isInstalledUsable(packId: String): Boolean {
         if (!CharacterPackLocalStore.isSafePackId(packId)) return false
-        val installed = store.installed(packId) ?: return false
         val usable = try {
             val pack = downloadedSource.load(SpritePackId(packId))
             if (pack == null) {
@@ -446,7 +502,9 @@ class CharacterPackRepositoryImpl @Inject constructor(
         } catch (_: Exception) {
             false
         }
-        if (!usable) removeInvalidInstalledPack(installed)
+        if (!usable) {
+            store.installed(packId)?.let { removeInvalidInstalledPack(it) }
+        }
         return usable
     }
 
@@ -462,7 +520,28 @@ class CharacterPackRepositoryImpl @Inject constructor(
         ) {
             return
         }
-        safeInstalledDirectory(installed.packId, installed.installedDirectory)?.let { directory ->
+        listOfNotNull(
+            installed.installedDirectory,
+            installed.lastKnownGoodDirectory
+        ).distinct().forEach { path ->
+            safeInstalledDirectory(installed.packId, path)?.let { directory ->
+                withContext(Dispatchers.IO) { directory.deleteRecursively() }
+            }
+        }
+    }
+
+    private suspend fun deleteInstalledDirectoryIfUnreferenced(
+        packId: String,
+        path: String
+    ) {
+        val current = store.installed(packId)
+        if (
+            current?.installedDirectory == path ||
+            current?.lastKnownGoodDirectory == path
+        ) {
+            return
+        }
+        safeInstalledDirectory(packId, path)?.let { directory ->
             withContext(Dispatchers.IO) { directory.deleteRecursively() }
         }
     }
@@ -470,7 +549,10 @@ class CharacterPackRepositoryImpl @Inject constructor(
     private fun safeInstalledDirectory(packId: String, path: String): File? {
         return try {
             val packRoot = File(context.filesDir, "character_packs/$packId").canonicalFile
-            File(path).canonicalFile.takeIf { it.parentFile == packRoot }
+            File(path).canonicalFile.takeIf { directory ->
+                directory.parentFile == packRoot &&
+                    CharacterPackLocalStore.isManagedInstalledDirectoryName(directory.name)
+            }
         } catch (_: IOException) {
             null
         }
@@ -478,8 +560,13 @@ class CharacterPackRepositoryImpl @Inject constructor(
 
     private fun cleanupOrphanedDirectories() {
         val now = System.currentTimeMillis()
-        val installedDirectories = store.installedPacks().values.mapNotNull { installed ->
-            safeInstalledDirectory(installed.packId, installed.installedDirectory)?.absolutePath
+        val installedDirectories = store.installedPacks().values.flatMap { installed ->
+            listOfNotNull(
+                installed.installedDirectory,
+                installed.lastKnownGoodDirectory
+            ).mapNotNull { path ->
+                safeInstalledDirectory(installed.packId, path)?.absolutePath
+            }
         }.toSet()
         val filesRoot = File(context.filesDir, "character_packs")
         filesRoot.listFiles()
@@ -542,6 +629,7 @@ internal class CharacterPackPersistenceException : IOException(
 internal object CharacterPackWork {
     const val KEY_PACK_ID = "pack_id"
     const val KEY_PACK_VERSION = "pack_version"
+    const val KEY_MANIFEST_SCHEMA_VERSION = "manifest_schema_version"
     const val KEY_DISPLAY_NAME = "display_name"
     const val KEY_DESCRIPTION = "description"
     const val KEY_PREVIEW_URL = "preview_url"

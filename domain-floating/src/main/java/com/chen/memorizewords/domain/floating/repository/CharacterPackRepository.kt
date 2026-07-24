@@ -25,6 +25,16 @@ interface CharacterPackRepository {
     ): Boolean
     suspend fun cancelDownload(packId: String)
     suspend fun deleteInstalled(packId: String)
+    suspend fun acknowledgeRuntimeReady(
+        packId: String,
+        packVersion: Int,
+        installedDirectory: String
+    ): Boolean = false
+    suspend fun rollbackPendingRuntimeValidation(
+        packId: String,
+        packVersion: Int,
+        installedDirectory: String
+    ): Boolean = false
     suspend fun getInstalled(packId: String): InstalledCharacterPack?
     suspend fun isInstalledUsable(packId: String): Boolean
 }

@@ -1,0 +1,64 @@
+# Copy this file beside your source videos / PNG frame directories and rename it pack.yaml.
+packId: green_pet
+packVersion: 2
+fallbackClip: idle
+
+target:
+  fps: 30
+  frameWidth: 336
+  frameHeight: 336
+  padding: 8
+  anchor: bottom_center
+  requireAlpha: true
+  edgeDilatePixels: 4
+  maxTextureSize: 2016
+  gridCandidates: [4, 5, 6]
+
+encoder:
+  preferred: auto
+  uastcQuality: 2
+  zstdLevel: 18
+
+preview:
+  action: card_visible
+  frame: 0
+
+actions:
+  idle:
+    source: frames/idle
+    sourceFps: 30
+    mode: hold_last
+    semantic: idle
+
+  card_open:
+    source: card_open.mov
+    mode: once
+    next: card_visible
+    reversible: true
+    semantic: card_open
+
+  card_visible:
+    source: frames/card_visible
+    sourceFps: 24
+    mode: loop
+    semantic: card_visible
+
+  card_close:
+    source: card_close.mov
+    mode: once
+    next: idle
+    reversible: true
+    semantic: card_close
+
+  tap:
+    source: tap.mov
+    mode: once
+    event: pet_tap
+    texture: optional
+
+  favorite:
+    source: frames/favorite
+    sourceFps: 30
+    mode: once
+    event: favorite_added
+    texture: optional

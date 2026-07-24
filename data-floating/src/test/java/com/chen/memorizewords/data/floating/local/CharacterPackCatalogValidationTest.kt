@@ -7,15 +7,20 @@ import kotlin.test.assertTrue
 
 class CharacterPackCatalogValidationTest {
     @Test
-    fun `valid catalog item is accepted`() {
+    fun `only schema two catalog items are accepted`() {
         assertTrue(CharacterPackLocalStore.isValidCatalogItem(validItem()))
+        assertFalse(
+            CharacterPackLocalStore.isValidCatalogItem(
+                validItem().copy(manifestSchemaVersion = 1)
+            )
+        )
     }
 
     @Test
     fun `unsupported or unverifiable catalog items are rejected`() {
         assertFalse(
             CharacterPackLocalStore.isValidCatalogItem(
-                validItem().copy(manifestSchemaVersion = 2)
+                validItem().copy(manifestSchemaVersion = 3)
             )
         )
         assertFalse(
@@ -79,7 +84,7 @@ class CharacterPackCatalogValidationTest {
         packageUrl = "https://example.com/green_pet.zip",
         packageSha256 = "a".repeat(64),
         packageSizeBytes = 1_421_233L,
-        manifestSchemaVersion = 1,
+        manifestSchemaVersion = 2,
         updatedAtMs = 1L
     )
 }

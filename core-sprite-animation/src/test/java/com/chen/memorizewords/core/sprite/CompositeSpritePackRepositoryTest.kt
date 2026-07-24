@@ -85,6 +85,46 @@ class CompositeSpritePackRepositoryTest {
         assertNull(repository.find(SpritePackId("missing_pet")))
     }
 
+    @Test
+    fun exposesLaterSamePackSourceAsRuntimeFallback() = runTest {
+        val packId = SpritePackId("green_pet")
+        val base = pack(packId)
+        val downloaded = base.copy(
+            manifest = base.manifest.copy(packVersion = 2)
+        )
+        val repository = CompositeSpritePackRepository(
+            sources = listOf(
+                FakeSource(mapOf(packId to downloaded)),
+                FakeSource(mapOf(packId to pack(packId)))
+            )
+        )
+
+        val resolved = repository.get(packId)
+
+        assertEquals(2, resolved.manifest.packVersion)
+        assertEquals(1, resolved.runtimeFallback?.manifest?.packVersion)
+        assertEquals(
+            SpritePackRuntimeRole.LAST_KNOWN_GOOD,
+            resolved.runtimeFallback?.runtimeRole
+        )
+    }
+
+    @Test
+    fun marksLaterSourceAsFallbackWhenEarlierCandidateFails() = runTest {
+        val packId = SpritePackId("green_pet")
+        val repository = CompositeSpritePackRepository(
+            sources = listOf(
+                ThrowingSource(IllegalStateException("corrupt installed revision")),
+                FakeSource(mapOf(packId to pack(packId)))
+            )
+        )
+
+        assertEquals(
+            SpritePackRuntimeRole.LAST_KNOWN_GOOD,
+            repository.get(packId).runtimeRole
+        )
+    }
+
     private fun pack(id: SpritePackId): SpritePack {
         val idle = SpriteClipId("idle")
         return SpritePack(

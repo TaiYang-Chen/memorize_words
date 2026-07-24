@@ -34,7 +34,10 @@ data class InstalledCharacterPack(
     val description: String? = null,
     val previewUrl: String? = null,
     val installedDirectory: String,
-    val installedAtMs: Long
+    val installedAtMs: Long,
+    val pendingRuntimeValidation: Boolean = false,
+    val lastKnownGoodVersion: Int? = null,
+    val lastKnownGoodDirectory: String? = null
 )
 
 enum class CharacterPackDownloadStatus {

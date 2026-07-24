@@ -147,9 +147,9 @@ val archiveReleaseArtifacts by tasks.registering {
 
         val artifacts = listOf(
             layout.buildDirectory.file("outputs/apk/release/app-release.apk").get().asFile to
-                stagingDir.resolve("memorize_words-release.apk"),
+                stagingDir.resolve("xuanxi_words-release.apk"),
             layout.buildDirectory.file("outputs/bundle/release/app-release.aab").get().asFile to
-                stagingDir.resolve("memorize_words-release.aab"),
+                stagingDir.resolve("xuanxi_words-release.aab"),
             layout.buildDirectory.file("outputs/mapping/release/mapping.txt").get().asFile to
                 stagingDir.resolve("mapping.txt")
         )

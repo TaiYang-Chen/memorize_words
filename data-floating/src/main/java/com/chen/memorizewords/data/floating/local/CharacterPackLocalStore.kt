@@ -309,6 +309,105 @@ class CharacterPackLocalStore internal constructor(
     }
 
     @Synchronized
+    internal fun acknowledgeRuntimeReadyIfCurrent(
+        packId: String,
+        packVersion: Int,
+        installedDirectory: String
+    ): CharacterPackConditionalWriteResult = keyValueStore.withProcessLock {
+        if (!isSafePackId(packId) || packVersion <= 0 || installedDirectory.isBlank()) {
+            return@withProcessLock CharacterPackConditionalWriteResult.STALE
+        }
+        refreshFromDisk()
+        val current = persistedState.installed[packId]
+        if (
+            current == null ||
+            current.packVersion != packVersion ||
+            current.installedDirectory != installedDirectory ||
+            !current.pendingRuntimeValidation
+        ) {
+            return@withProcessLock CharacterPackConditionalWriteResult.STALE
+        }
+        val ready = current.copy(
+            pendingRuntimeValidation = false,
+            lastKnownGoodVersion = null,
+            lastKnownGoodDirectory = null
+        )
+        val installed = persistedState.installed.toMutableMap().apply {
+            put(packId, ready)
+        }.toMap()
+        if (persist(persistedState.copy(installed = installed))) {
+            CharacterPackConditionalWriteResult.UPDATED
+        } else {
+            CharacterPackConditionalWriteResult.PERSISTENCE_FAILED
+        }
+    }
+
+    @Synchronized
+    internal fun rollbackPendingRuntimeValidationIfCurrent(
+        packId: String,
+        packVersion: Int,
+        installedDirectory: String
+    ): CharacterPackConditionalWriteResult = keyValueStore.withProcessLock {
+        if (!isSafePackId(packId) || packVersion <= 0 || installedDirectory.isBlank()) {
+            return@withProcessLock CharacterPackConditionalWriteResult.STALE
+        }
+        refreshFromDisk()
+        val current = persistedState.installed[packId]
+        if (
+            current == null ||
+            current.packVersion != packVersion ||
+            current.installedDirectory != installedDirectory ||
+            !current.pendingRuntimeValidation
+        ) {
+            return@withProcessLock CharacterPackConditionalWriteResult.STALE
+        }
+        val replacement = current.lastKnownGoodVersion?.let { fallbackVersion ->
+            current.lastKnownGoodDirectory?.let { fallbackDirectory ->
+                current.copy(
+                    packVersion = fallbackVersion,
+                    installedDirectory = fallbackDirectory,
+                    pendingRuntimeValidation = false,
+                    lastKnownGoodVersion = null,
+                    lastKnownGoodDirectory = null
+                )
+            }
+        }
+        if (replacement != null && !isValidInstalledItem(replacement)) {
+            return@withProcessLock CharacterPackConditionalWriteResult.STALE
+        }
+        val installed = persistedState.installed.toMutableMap().apply {
+            if (replacement == null) remove(packId) else put(packId, replacement)
+        }.toMap()
+        val currentDownload = persistedState.downloads[packId]
+        val failedDownload = currentDownload?.takeIf { download ->
+            download.status == CharacterPackDownloadStatus.COMPLETED &&
+                download.packVersion == packVersion &&
+                isInstalledDirectoryForRequest(
+                    value = installedDirectory,
+                    packVersion = packVersion,
+                    downloadRequestId = download.downloadRequestId
+                )
+        }?.copy(
+            status = CharacterPackDownloadStatus.FAILED,
+            errorMessage = "Character runtime validation failed; restored last-known-good version",
+            errorCode = CharacterPackDownloadError.INSTALLATION,
+            selectAfterInstall = false,
+            activationRequestId = null
+        )
+        val downloads = if (failedDownload == null) {
+            persistedState.downloads
+        } else {
+            persistedState.downloads.toMutableMap().apply {
+                put(packId, failedDownload)
+            }.toMap()
+        }
+        if (persist(persistedState.copy(installed = installed, downloads = downloads))) {
+            CharacterPackConditionalWriteResult.UPDATED
+        } else {
+            CharacterPackConditionalWriteResult.PERSISTENCE_FAILED
+        }
+    }
+    @Synchronized
     internal fun removeManagementCompletionIfCurrent(
         packId: String,
         downloadRequestId: String
@@ -318,11 +417,19 @@ class CharacterPackLocalStore internal constructor(
         }
         refreshFromDisk()
         val current = persistedState.downloads[packId]
+        val installed = persistedState.installed[packId]
         if (
             current?.downloadRequestId != downloadRequestId ||
             current.status != CharacterPackDownloadStatus.COMPLETED ||
             current.selectAfterInstall ||
-            current.activationRequestId != null
+            current.activationRequestId != null ||
+            installed == null ||
+            installed.pendingRuntimeValidation ||
+            !isInstalledDirectoryForRequest(
+                value = installed.installedDirectory,
+                packVersion = current.packVersion,
+                downloadRequestId = downloadRequestId
+            )
         ) {
             return@withProcessLock CharacterPackConditionalWriteResult.STALE
         }
@@ -588,7 +695,7 @@ class CharacterPackLocalStore internal constructor(
         private const val OUTER_PROCESS_REFRESH_INTERVAL_MS = 750L
         internal const val MAX_MANIFEST_BYTES = 128L * 1024L
         internal const val MAX_ATLAS_BYTES = 60L * 1024L * 1024L
-        private const val SUPPORTED_MANIFEST_SCHEMA_VERSION = 1
+        private val SUPPORTED_MANIFEST_SCHEMA_VERSIONS = setOf(2)
         private const val MAX_DISPLAY_NAME_CHARS = 80
         private const val MAX_DESCRIPTION_CHARS = 500
         private const val MAX_URL_CHARS = 2_048
@@ -620,6 +727,17 @@ class CharacterPackLocalStore internal constructor(
             return match.groupValues[1].toIntOrNull() == packVersion
         }
 
+        internal fun isInstalledDirectoryForRequest(
+            value: String,
+            packVersion: Int,
+            downloadRequestId: String?
+        ): Boolean {
+            val requestId = downloadRequestId?.takeIf(::isValidRequestId) ?: return false
+            if (packVersion <= 0) return false
+            val directoryName = value.replace('\\', '/').substringAfterLast('/')
+            return directoryName == "$packVersion-$requestId"
+        }
+
         fun isValidCatalogItem(item: CharacterPackCatalogItem): Boolean {
             val previewUrl = item.previewUrl.toHttpUrlOrNull()
             val packageUrl = item.packageUrl.toHttpUrlOrNull()
@@ -640,7 +758,7 @@ class CharacterPackLocalStore internal constructor(
                 packageUrl.fragment == null &&
                 item.packageSha256.matches(SHA_256) &&
                 item.packageSizeBytes in 1..MAX_PACKAGE_BYTES &&
-                item.manifestSchemaVersion == SUPPORTED_MANIFEST_SCHEMA_VERSION &&
+                item.manifestSchemaVersion in SUPPORTED_MANIFEST_SCHEMA_VERSIONS &&
                 item.updatedAtMs >= 0L &&
                 downloadMetadataUtf8Bytes(item) <= MAX_DOWNLOAD_METADATA_UTF8_BYTES
         }
@@ -654,15 +772,27 @@ class CharacterPackLocalStore internal constructor(
             item.packageSha256
         ).sumOf { it.toByteArray(Charsets.UTF_8).size }
 
-        private fun isValidInstalledItem(item: InstalledCharacterPack): Boolean =
-            isSafePackId(item.packId) &&
+        private fun isValidInstalledItem(item: InstalledCharacterPack): Boolean {
+            val validFallback = when {
+                !item.pendingRuntimeValidation ->
+                    item.lastKnownGoodVersion == null && item.lastKnownGoodDirectory == null
+                item.lastKnownGoodVersion == null && item.lastKnownGoodDirectory == null -> true
+                item.lastKnownGoodVersion != null &&
+                    (item.lastKnownGoodVersion ?: 0) > 0 &&
+                    !item.lastKnownGoodDirectory.isNullOrBlank() &&
+                    item.lastKnownGoodDirectory != item.installedDirectory -> true
+                else -> false
+            }
+            return isSafePackId(item.packId) &&
                 item.packVersion > 0 &&
                 item.displayName.isNotBlank() &&
                 item.displayName.length <= MAX_DISPLAY_NAME_CHARS &&
                 (item.description?.length ?: 0) <= MAX_DESCRIPTION_CHARS &&
                 (item.previewUrl?.length ?: 0) <= MAX_URL_CHARS &&
                 item.installedDirectory.isNotBlank() &&
-                item.installedAtMs >= 0L
+                item.installedAtMs >= 0L &&
+                validFallback
+        }
 
         /** Validates a complete server directory, not an individual resolve response. */
         internal fun isValidCompleteCatalog(items: List<CharacterPackCatalogItem>): Boolean =

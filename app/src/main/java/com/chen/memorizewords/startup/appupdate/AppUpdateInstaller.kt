@@ -32,7 +32,7 @@ class AppUpdateInstaller @Inject constructor(
         info: AppUpdateInfo,
         onProgress: (Int) -> Unit = {}
     ): File {
-        val fileName = "memorize_words_${info.latestVersion.versionCode}.apk"
+        val fileName = "xuanxi_words_${info.latestVersion.versionCode}.apk"
         val taskId = "app_update_${info.releaseId}"
         downloadRepository.start(
             DownloadRequest(
@@ -40,8 +40,8 @@ class AppUpdateInstaller @Inject constructor(
                 url = info.downloadUrl,
                 fileName = fileName,
                 mimeType = APK_MIME_TYPE,
-                displayTitle = "Memorize Words ${info.latestVersion.versionName}",
-                displayDesc = "Downloading update package",
+                displayTitle = "炫羲单词 ${info.latestVersion.versionName}",
+                displayDesc = "正在下载更新包",
                 destinationDir = Environment.DIRECTORY_DOWNLOADS,
                 completionAction = DownloadCompletionAction.None
             )

@@ -510,7 +510,7 @@ class FloatingActivationCoordinatorTest {
         packageUrl = "https://example.com/$id.zip",
         packageSha256 = "a".repeat(64),
         packageSizeBytes = 100,
-        manifestSchemaVersion = 1,
+        manifestSchemaVersion = 2,
         updatedAtMs = 1
     )
 

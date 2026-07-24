@@ -4,6 +4,16 @@ plugins {
 
 android {
     namespace = "com.chen.memorizewords.core.sprite"
+    defaultConfig {
+        consumerProguardFiles("consumer-rules.pro")
+    }
+
+    externalNativeBuild {
+        cmake {
+            path = file("src/main/cpp/CMakeLists.txt")
+            version = "3.22.1"
+        }
+    }
 }
 
 dependencies {

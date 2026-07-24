@@ -353,7 +353,7 @@ class PracticeViewModelTest {
             packageUrl = "https://example.test/test-pack.zip",
             packageSha256 = "a".repeat(64),
             packageSizeBytes = 1L,
-            manifestSchemaVersion = 1,
+            manifestSchemaVersion = 2,
             updatedAtMs = 1L
         )
         private val installedPack = InstalledCharacterPack(

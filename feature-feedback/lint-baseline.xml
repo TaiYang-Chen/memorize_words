@@ -1016,7 +1016,7 @@
     <issue
         id="ResourceName"
         message="Resource named &apos;`module_feedback_app_name`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_app_name`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_feedback_app_name&quot;>小白背单词&lt;/string>"
+        errorLine1="    &lt;string name=&quot;module_feedback_app_name&quot;>炫羲单词&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
@@ -1126,7 +1126,7 @@
     <issue
         id="ResourceName"
         message="Resource named &apos;`module_feedback_company_copyright`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_company_copyright`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_feedback_company_copyright&quot;>© 2026 小白背单词 版权所有&lt;/string>"
+        errorLine1="    &lt;string name=&quot;module_feedback_company_copyright&quot;>© 2026 炫羲单词 版权所有&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"

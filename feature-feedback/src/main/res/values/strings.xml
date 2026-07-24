@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="module_feedback_app_name">小白背单词</string>
+    <string name="module_feedback_app_name">炫羲单词</string>
     <string name="module_feedback_about_title">关于我们</string>
     <string name="module_feedback_mission_title">我们的使命</string>
     <string name="module_feedback_mission_text">通过简洁设计与智能技术，为用户提供稳定、轻量、专注的背单词体验。</string>
@@ -10,7 +10,7 @@
     <string name="module_feedback_terms">服务条款</string>
     <string name="module_feedback_privacy">隐私政策</string>
     <string name="module_feedback_version_label">版本 %1$s</string>
-    <string name="module_feedback_company_copyright">© 2026 小白背单词 版权所有</string>
+    <string name="module_feedback_company_copyright">© 2026 炫羲单词 版权所有</string>
     <string name="module_feedback_latest_version">最新版</string>
     <string name="feature_feedback_about_release_url" translatable="false">https://www.xiaobaibeidanci.com/download</string>
     <string name="feature_feedback_about_official_website_url" translatable="false">https://www.xiaobaibeidanci.com</string>

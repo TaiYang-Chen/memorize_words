@@ -186,10 +186,10 @@ class AppUpdateManager @Inject constructor(
             val request = DownloadRequest(
                 taskId = taskId,
                 url = info.downloadUrl,
-                fileName = "memorize_words_${info.latestVersion.versionCode}.apk",
+                fileName = "xuanxi_words_${info.latestVersion.versionCode}.apk",
                 mimeType = APK_MIME_TYPE,
-                displayTitle = "Memorize Words ${info.latestVersion.versionName}",
-                displayDesc = "Downloading update package",
+                displayTitle = "炫羲单词 ${info.latestVersion.versionName}",
+                displayDesc = "正在下载更新包",
                 destinationDir = "Download"
             )
             runCatching {

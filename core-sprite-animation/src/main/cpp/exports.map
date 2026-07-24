@@ -1,0 +1,9 @@
+{
+    global:
+        Java_com_chen_memorizewords_core_sprite_BasisKtx2Native_nativeCreate;
+        Java_com_chen_memorizewords_core_sprite_BasisKtx2Native_nativeGetInfo;
+        Java_com_chen_memorizewords_core_sprite_BasisKtx2Native_nativeTranscodePage;
+        Java_com_chen_memorizewords_core_sprite_BasisKtx2Native_nativeDestroy;
+    local:
+        *;
+};

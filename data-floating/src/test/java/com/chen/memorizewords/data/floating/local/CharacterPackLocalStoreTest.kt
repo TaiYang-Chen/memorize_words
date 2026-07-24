@@ -236,6 +236,11 @@ class CharacterPackLocalStoreTest {
             downloadedBytes = 1_000L
         )
         assertTrue(store.putDownload(completed))
+        assertTrue(
+            store.putInstalled(
+                installedForRequest("green_pet", completedRequest)
+            )
+        )
 
         assertEquals(
             CharacterPackConditionalWriteResult.UPDATED,
@@ -268,6 +273,11 @@ class CharacterPackLocalStoreTest {
                     progress = 100,
                     downloadedBytes = 1_000L
                 )
+            )
+        )
+        assertTrue(
+            firstProcess.putInstalled(
+                installedForRequest("green_pet", requestId)
             )
         )
 
@@ -371,6 +381,169 @@ class CharacterPackLocalStoreTest {
         assertEquals(0, recovered?.progress)
     }
 
+    @Test
+    fun legacyInstalledJsonDefaultsRuntimeStateToReady() {
+        val requestId = UUID.randomUUID().toString()
+        val legacyInstalled = mapOf(
+            "packId" to "green_pet",
+            "packVersion" to 1,
+            "displayName" to "green_pet",
+            "installedDirectory" to "/data/character_packs/green_pet/1-$requestId",
+            "installedAtMs" to 1L
+        )
+        val keyValueStore = FakeCharacterPackKeyValueStore(
+            mutableMapOf(
+                KEY_STATE to gson.toJson(
+                    mapOf("installed" to mapOf("green_pet" to legacyInstalled))
+                )
+            )
+        )
+
+        val restored = CharacterPackLocalStore(keyValueStore, gson)
+            .installed("green_pet")
+
+        assertEquals(false, restored?.pendingRuntimeValidation)
+        assertNull(restored?.lastKnownGoodVersion)
+        assertNull(restored?.lastKnownGoodDirectory)
+    }
+
+    @Test
+    fun runtimeReadyAcknowledgementClearsLastKnownGoodMetadata() {
+        val store = CharacterPackLocalStore(FakeCharacterPackKeyValueStore(), gson)
+        val readyRequest = UUID.randomUUID().toString()
+        val pendingRequest = UUID.randomUUID().toString()
+        val ready = installedForRequest("green_pet", readyRequest)
+        val pending = installedForRequest(
+            packId = "green_pet",
+            requestId = pendingRequest,
+            packVersion = 2
+        ).copy(
+            pendingRuntimeValidation = true,
+            lastKnownGoodVersion = ready.packVersion,
+            lastKnownGoodDirectory = ready.installedDirectory
+        )
+        assertTrue(store.putInstalled(pending))
+
+        assertEquals(
+            CharacterPackConditionalWriteResult.UPDATED,
+            store.acknowledgeRuntimeReadyIfCurrent(
+                packId = pending.packId,
+                packVersion = pending.packVersion,
+                installedDirectory = pending.installedDirectory
+            )
+        )
+
+        val current = store.installed("green_pet")
+        assertEquals(2, current?.packVersion)
+        assertEquals(false, current?.pendingRuntimeValidation)
+        assertNull(current?.lastKnownGoodVersion)
+        assertNull(current?.lastKnownGoodDirectory)
+    }
+
+    @Test
+    fun runtimeFailureAtomicallyRestoresLastKnownGoodAndFailsDownload() {
+        val store = CharacterPackLocalStore(FakeCharacterPackKeyValueStore(), gson)
+        val readyRequest = UUID.randomUUID().toString()
+        val pendingRequest = UUID.randomUUID().toString()
+        val ready = installedForRequest("green_pet", readyRequest)
+        val pending = installedForRequest(
+            packId = "green_pet",
+            requestId = pendingRequest,
+            packVersion = 2
+        ).copy(
+            pendingRuntimeValidation = true,
+            lastKnownGoodVersion = ready.packVersion,
+            lastKnownGoodDirectory = ready.installedDirectory
+        )
+        val completed = queuedDownload("green_pet", pendingRequest).copy(
+            packVersion = 2,
+            status = CharacterPackDownloadStatus.COMPLETED,
+            progress = 100,
+            downloadedBytes = 1_000L,
+            selectAfterInstall = true,
+            activationRequestId = UUID.randomUUID().toString()
+        )
+        assertTrue(store.putInstalled(pending))
+        assertTrue(store.putDownload(completed))
+
+        assertEquals(
+            CharacterPackConditionalWriteResult.UPDATED,
+            store.rollbackPendingRuntimeValidationIfCurrent(
+                packId = pending.packId,
+                packVersion = pending.packVersion,
+                installedDirectory = pending.installedDirectory
+            )
+        )
+
+        val current = store.installed("green_pet")
+        assertEquals(ready.packVersion, current?.packVersion)
+        assertEquals(ready.installedDirectory, current?.installedDirectory)
+        assertEquals(false, current?.pendingRuntimeValidation)
+        assertEquals(
+            CharacterPackDownloadStatus.FAILED,
+            store.download("green_pet")?.status
+        )
+        assertEquals(false, store.download("green_pet")?.selectAfterInstall)
+        assertNull(store.download("green_pet")?.activationRequestId)
+    }
+
+    @Test
+    fun runtimeFailureWithoutLastKnownGoodRemovesCandidate() {
+        val store = CharacterPackLocalStore(FakeCharacterPackKeyValueStore(), gson)
+        val pending = installedForRequest(
+            packId = "green_pet",
+            requestId = UUID.randomUUID().toString(),
+            packVersion = 2
+        ).copy(pendingRuntimeValidation = true)
+        assertTrue(store.putInstalled(pending))
+
+        assertEquals(
+            CharacterPackConditionalWriteResult.UPDATED,
+            store.rollbackPendingRuntimeValidationIfCurrent(
+                packId = pending.packId,
+                packVersion = pending.packVersion,
+                installedDirectory = pending.installedDirectory
+            )
+        )
+        assertNull(store.installed("green_pet"))
+    }
+
+    @Test
+    fun managementCompletionRequiresMatchingRuntimeReadyDirectory() {
+        val store = CharacterPackLocalStore(FakeCharacterPackKeyValueStore(), gson)
+        val requestId = UUID.randomUUID().toString()
+        val pending = installedForRequest(
+            packId = "green_pet",
+            requestId = requestId,
+            packVersion = 2
+        ).copy(pendingRuntimeValidation = true)
+        val completed = queuedDownload("green_pet", requestId).copy(
+            packVersion = 2,
+            status = CharacterPackDownloadStatus.COMPLETED,
+            progress = 100,
+            downloadedBytes = 1_000L
+        )
+        assertTrue(store.putInstalled(pending))
+        assertTrue(store.putDownload(completed))
+
+        assertEquals(
+            CharacterPackConditionalWriteResult.STALE,
+            store.removeManagementCompletionIfCurrent("green_pet", requestId)
+        )
+        assertEquals(
+            CharacterPackConditionalWriteResult.UPDATED,
+            store.acknowledgeRuntimeReadyIfCurrent(
+                packId = pending.packId,
+                packVersion = pending.packVersion,
+                installedDirectory = pending.installedDirectory
+            )
+        )
+        assertEquals(
+            CharacterPackConditionalWriteResult.UPDATED,
+            store.removeManagementCompletionIfCurrent("green_pet", requestId)
+        )
+    }
+
     private fun persistedStateJson(
         catalog: List<CharacterPackCatalogItem> = emptyList(),
         installed: Map<String, InstalledCharacterPack> = emptyMap(),
@@ -381,6 +554,18 @@ class CharacterPackLocalStoreTest {
             "installed" to installed,
             "downloads" to downloads
         )
+    )
+
+    private fun installedForRequest(
+        packId: String,
+        requestId: String,
+        packVersion: Int = 1
+    ) = InstalledCharacterPack(
+        packId = packId,
+        packVersion = packVersion,
+        displayName = packId,
+        installedDirectory = "/data/character_packs/$packId/$packVersion-$requestId",
+        installedAtMs = 1L
     )
 
     private fun installed(packId: String) = InstalledCharacterPack(
@@ -414,7 +599,7 @@ class CharacterPackLocalStoreTest {
         packageUrl = "https://cdn.example.com/$packId.zip",
         packageSha256 = "a".repeat(64),
         packageSizeBytes = 1_000L,
-        manifestSchemaVersion = 1,
+        manifestSchemaVersion = 2,
         updatedAtMs = 1L
     )
 

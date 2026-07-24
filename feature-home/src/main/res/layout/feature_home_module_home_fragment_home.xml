@@ -34,7 +34,7 @@
                 android:textColor="#111827"
                 android:textSize="@dimen/title_text_size"
                 android:textStyle="bold"
-                tools:text="小白背单词" />
+                tools:text="炫羲单词" />
         </FrameLayout>
 
         <androidx.core.widget.NestedScrollView

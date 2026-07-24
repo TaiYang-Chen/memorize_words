@@ -11,6 +11,7 @@ import com.chen.memorizewords.core.sprite.SpritePack
 import com.chen.memorizewords.core.sprite.SpritePackId
 import com.chen.memorizewords.core.sprite.SpritePackManifestParser
 import com.chen.memorizewords.core.sprite.SpritePackSource
+import com.chen.memorizewords.core.sprite.SpriteTextureId
 import com.chen.memorizewords.data.floating.local.CharacterPackLocalStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
@@ -26,98 +27,63 @@ class DownloadedSpritePackSource @Inject constructor(
     private val store: CharacterPackLocalStore
 ) : SpritePackSource {
     private val parser = SpritePackManifestParser()
+
     override suspend fun load(packId: SpritePackId): SpritePack? = withContext(Dispatchers.IO) {
         val installed = store.installed(packId.value) ?: return@withContext null
-        try {
-            val expectedRoot = File(
-                context.filesDir,
-                "character_packs/${packId.value}"
-            ).canonicalFile
-            val root = File(installed.installedDirectory).canonicalFile
-            if (
-                root.parentFile != expectedRoot ||
-                !CharacterPackLocalStore.isInstalledDirectoryForVersion(
-                    value = root.name,
-                    packVersion = installed.packVersion
-                )
-            ) {
-                return@withContext null
-            }
-            val manifestFile = File(root, "manifest.json").canonicalFile
-            if (manifestFile.parentFile != root) {
-                return@withContext null
-            }
-            val manifest = CharacterPackManifestFileReader.parse(
-                file = manifestFile,
-                maxBytes = CharacterPackLocalStore.MAX_MANIFEST_BYTES,
-                parser = parser
-            )
-            if (manifest.packId != packId || manifest.packVersion != installed.packVersion) {
-                return@withContext null
-            }
-            val atlas = File(root, manifest.atlas.fileName).canonicalFile
-            if (atlas.parentFile != root || !atlas.isFile) return@withContext null
-            CharacterPackWebpContainerValidator.validate(
-                file = atlas,
-                maxBytes = CharacterPackLocalStore.MAX_ATLAS_BYTES
-            )
-            CharacterPackAtlasDecoderValidator.validate(
-                atlasFile = atlas,
-                atlas = manifest.atlas,
-                decodeLastFrame = true
-            )
-            SpritePack(manifest, SpriteAtlasSource.LocalFile(atlas))
-        } catch (cancelled: CancellationException) {
-            throw cancelled
-        } catch (_: Exception) {
-            null
+        val primary = loadRevisionOrNull(packId, installed.packVersion, installed.installedDirectory)
+        val fallback = if (installed.pendingRuntimeValidation) {
+            val version = installed.lastKnownGoodVersion
+            val directory = installed.lastKnownGoodDirectory
+            if (version != null && directory != null) loadRevisionOrNull(packId, version, directory) else null
+        } else null
+        when {
+            primary != null -> primary.copy(runtimeFallback = fallback?.asLastKnownGood())
+            fallback != null -> fallback.asLastKnownGood()
+            else -> throw IllegalStateException("Installed character pack has no loadable runtime revision")
         }
     }
+
+    private fun loadRevisionOrNull(packId: SpritePackId, packVersion: Int, installedDirectory: String): SpritePack? =
+        try { loadRevision(packId, packVersion, installedDirectory) }
+        catch (cancelled: CancellationException) { throw cancelled }
+        catch (_: Exception) { null }
+
+    private fun loadRevision(packId: SpritePackId, packVersion: Int, installedDirectory: String): SpritePack {
+        val expectedRoot = File(context.filesDir, "character_packs/${packId.value}").canonicalFile
+        val root = File(installedDirectory).canonicalFile
+        require(root.parentFile == expectedRoot && CharacterPackLocalStore.isInstalledDirectoryForVersion(root.name, packVersion))
+        val manifestFile = File(root, "manifest.json").canonicalFile
+        require(manifestFile.parentFile == root)
+        val manifest = CharacterPackManifestFileReader.parse(manifestFile, CharacterPackLocalStore.MAX_MANIFEST_BYTES, parser)
+        require(manifest.packId == packId && manifest.packVersion == packVersion)
+        val textureFiles = CharacterPackTextureFileValidator.validate(root, manifest, true, false)
+        val textureSources: Map<SpriteTextureId, SpriteAtlasSource> = buildMap {
+            textureFiles.forEach { (id, file) -> put(id, SpriteAtlasSource.LocalFile(file)) }
+        }
+        val fallbackTextureId = manifest.clip(manifest.fallbackClipId).textureId
+        val compatibilitySource = requireNotNull(textureSources[fallbackTextureId])
+        return SpritePack(manifest, compatibilitySource, textureSources)
+    }
+
 }
-
 internal object CharacterPackAtlasDecoderValidator {
-    fun validate(
-        atlasFile: File,
-        atlas: SpriteAtlasSpec,
-        decodeLastFrame: Boolean
-    ) {
+    fun validate(atlasFile: File, atlas: SpriteAtlasSpec, decodeLastFrame: Boolean) {
         atlasFile.inputStream().buffered().use { input ->
-            val decoder = requireNotNull(BitmapRegionDecoder.newInstance(input, false)) {
-                "Unable to create character atlas decoder"
-            }
+            val decoder = requireNotNull(BitmapRegionDecoder.newInstance(input, false))
             try {
-                require(decoder.width == atlas.width && decoder.height == atlas.height) {
-                    "Character atlas dimensions mismatch"
-                }
+                require(decoder.width == atlas.width && decoder.height == atlas.height)
                 decodeFrame(decoder, atlas, 0)
-                if (decodeLastFrame && atlas.frameCount > 1) {
-                    decodeFrame(decoder, atlas, atlas.frameCount - 1)
-                }
-            } finally {
-                decoder.recycle()
-            }
+                if (decodeLastFrame && atlas.frameCount > 1) decodeFrame(decoder, atlas, atlas.frameCount - 1)
+            } finally { decoder.recycle() }
         }
     }
-
-    private fun decodeFrame(
-        decoder: BitmapRegionDecoder,
-        atlas: SpriteAtlasSpec,
-        frameIndex: Int
-    ) {
+    private fun decodeFrame(decoder: BitmapRegionDecoder, atlas: SpriteAtlasSpec, frameIndex: Int) {
         val column = frameIndex % atlas.columns
         val row = frameIndex / atlas.columns
-        val region = Rect(
-            column * atlas.frameWidth,
-            row * atlas.frameHeight,
-            (column + 1) * atlas.frameWidth,
-            (row + 1) * atlas.frameHeight
-        )
-        val options = BitmapFactory.Options().apply {
-            inPreferredConfig = Bitmap.Config.ARGB_8888
-        }
-        val frame = requireNotNull(decoder.decodeRegion(region, options)) {
-            "Unable to decode character atlas frame $frameIndex"
-        }
+        val region = Rect(column * atlas.frameWidth, row * atlas.frameHeight,
+            (column + 1) * atlas.frameWidth, (row + 1) * atlas.frameHeight)
+        val options = BitmapFactory.Options().apply { inPreferredConfig = Bitmap.Config.ARGB_8888 }
+        val frame = requireNotNull(decoder.decodeRegion(region, options))
         if (!frame.isRecycled) frame.recycle()
     }
 }

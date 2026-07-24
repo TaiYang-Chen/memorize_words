@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.chen.memorizewords.core.sprite.SpriteAnimationView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.chen.memorizewords.core.sprite.FloatingPetRenderHost xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/feature_floating_review_pet_width"
     android:layout_height="@dimen/feature_floating_review_pet_height"
     android:background="@android:color/transparent"

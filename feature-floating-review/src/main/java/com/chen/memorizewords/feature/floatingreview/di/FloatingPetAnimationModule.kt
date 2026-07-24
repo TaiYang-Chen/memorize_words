@@ -1,12 +1,12 @@
 package com.chen.memorizewords.feature.floatingreview.di
 
 import com.chen.memorizewords.core.sprite.CompositeSpritePackRepository
-import com.chen.memorizewords.core.sprite.DefaultSpriteSessionFactory
+import com.chen.memorizewords.core.sprite.DefaultFloatingPetAnimationSessionFactory
+import com.chen.memorizewords.core.sprite.FloatingPetAnimationSessionFactory
 import com.chen.memorizewords.core.sprite.SpritePackRepository
 import com.chen.memorizewords.core.sprite.SpritePackContractValidator
 import com.chen.memorizewords.core.sprite.SpritePackSource
 import com.chen.memorizewords.core.sprite.DownloadedSpriteSource
-import com.chen.memorizewords.core.sprite.SpriteSessionFactory
 import com.chen.memorizewords.feature.floatingreview.ui.floating.pet.FloatingPetActionPolicy
 import com.chen.memorizewords.feature.floatingreview.ui.floating.pet.FloatingPetController
 import com.chen.memorizewords.feature.floatingreview.ui.floating.pet.FloatingPetPackContractValidator
@@ -32,9 +32,8 @@ object FloatingPetAnimationModule {
 
     @Provides
     @Singleton
-    fun provideSpriteSessionFactory(): SpriteSessionFactory = DefaultSpriteSessionFactory(
-        replacementFrameByteReserve = FloatingPetPackContractValidator.MAX_FLOATING_PET_FRAME_BYTES
-    )
+    fun provideFloatingPetAnimationSessionFactory(): FloatingPetAnimationSessionFactory =
+        DefaultFloatingPetAnimationSessionFactory()
 
     @Provides
     @Singleton
