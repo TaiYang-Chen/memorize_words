@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="FeatureHomeSoftShadow">
+        <attr name="feature_home_shadowAmbientColor" format="color" />
+        <attr name="feature_home_shadowAmbientRadius" format="dimension" />
+        <attr name="feature_home_shadowSpotColor" format="color" />
+        <attr name="feature_home_shadowSpotRadius" format="dimension" />
+        <attr name="feature_home_shadowSpotDy" format="dimension" />
+        <attr name="feature_home_shadowCornerRadius" format="dimension" />
+        <attr name="feature_home_shadowFillColor" format="color" />
+        <attr name="feature_home_shadowHorizontalInset" format="dimension" />
+    </declare-styleable>
+</resources>

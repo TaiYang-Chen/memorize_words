@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.chen.memorizewords.feature.home.ui.home.HomeViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/feature_home_v2_hero_root_height"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+
+        <com.chen.memorizewords.feature.home.ui.home.SoftShadowConstraintLayout
+            android:id="@+id/heroCard"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/feature_home_v2_hero_card_height"
+            android:layout_marginTop="@dimen/feature_home_v2_hero_card_top"
+            android:background="@drawable/feature_home_v2_hero_card_inset_bg"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:elevation="5dp"
+            android:outlineAmbientShadowColor="@color/feature_home_v2_shadow_hero_ambient"
+            android:outlineProvider="background"
+            android:outlineSpotShadowColor="@color/feature_home_v2_shadow_hero_spot"
+            android:paddingStart="@dimen/feature_home_v2_shadow_gutter"
+            android:paddingEnd="@dimen/feature_home_v2_shadow_gutter"
+            app:feature_home_shadowAmbientColor="@color/feature_home_v2_shadow_hero_side"
+            app:feature_home_shadowAmbientRadius="7dp"
+            app:feature_home_shadowCornerRadius="@dimen/feature_home_v2_card_radius"
+            app:feature_home_shadowFillColor="@color/feature_home_v2_surface"
+            app:feature_home_shadowHorizontalInset="@dimen/feature_home_v2_shadow_gutter"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <View
+                android:id="@+id/statusDot"
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:layout_marginStart="17dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/feature_home_v2_notification_dot"
+                android:backgroundTint="@color/feature_home_v2_green"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvStudyStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="7dp"
+                android:text="@string/feature_home_v2_studying"
+                android:textColor="@color/feature_home_v2_text_secondary"
+                android:textSize="9sp"
+                app:layout_constraintBottom_toBottomOf="@id/statusDot"
+                app:layout_constraintStart_toEndOf="@id/statusDot"
+                app:layout_constraintTop_toTopOf="@id/statusDot" />
+
+            <LinearLayout
+                android:id="@+id/wordBookRow"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/feature_home_v2_wordbook_row_height"
+                android:layout_marginStart="17dp"
+                android:layout_marginTop="7dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:contentDescription="@string/feature_home_v2_wordbook_action"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:onClick="@{() -> viewModel.toWordBookActivity()}"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvStudyStatus">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxWidth="175dp"
+                    android:maxLines="1"
+                    android:text="@{viewModel.wordBookTitleText}"
+                    android:textColor="@color/feature_home_v2_text_primary"
+                    android:textSize="@dimen/feature_home_v2_text_wordbook"
+                    android:textStyle="bold"
+                    tools:text="CET4 四级词汇" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="3dp"
+                    android:background="@drawable/feature_home_v2_metric_green_icon_bg"
+                    android:importantForAccessibility="no"
+                    android:padding="5dp"
+                    android:src="@drawable/feature_home_v2_ic_chevron_right" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/metricRow"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/feature_home_v2_metric_row_height"
+                android:layout_marginStart="17dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="17dp"
+                android:baselineAligned="false"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/wordBookRow">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.9"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:paddingTop="3dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/feature_home_v2_streak_label"
+                        android:textColor="@color/feature_home_v2_text_secondary"
+                        android:textSize="8sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:gravity="bottom"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:includeFontPadding="false"
+                            android:text="@{String.valueOf(viewModel.continuousDaysCount)}"
+                            android:textColor="@color/feature_home_v2_green_dark"
+                            android:textSize="@dimen/feature_home_v2_text_metric"
+                            android:textStyle="bold"
+                            tools:text="0" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginBottom="2dp"
+                            android:text="@string/feature_home_v2_day_unit"
+                            android:textColor="@color/feature_home_v2_text_primary"
+                            android:textSize="9sp" />
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="@string/feature_home_v2_streak_encouragement"
+                        android:textColor="@color/feature_home_v2_text_primary"
+                        android:textSize="9sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="@dimen/feature_home_v2_metric_divider_height"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/feature_home_v2_divider"
+                    android:translationY="1dp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.2"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:paddingTop="3dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/feature_home_v2_today_goal_label"
+                        android:textColor="@color/feature_home_v2_text_secondary"
+                        android:textSize="8sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:gravity="bottom"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:includeFontPadding="false"
+                            android:text="@{String.valueOf(viewModel.todayCompletedCount)}"
+                            android:textColor="@color/feature_home_v2_green_dark"
+                            android:textSize="@dimen/feature_home_v2_text_metric"
+                            android:textStyle="bold"
+                            tools:text="0" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="3dp"
+                            android:layout_marginBottom="2dp"
+                            android:text="@{`/ ` + String.valueOf(viewModel.todayPlanTotalCount)}"
+                            android:textColor="@color/feature_home_v2_text_primary"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            tools:text="/ 48" />
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/feature_home_v2_word_unit"
+                        android:textColor="@color/feature_home_v2_text_primary"
+                        android:textSize="9sp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <ProgressBar
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="0dp"
+                            android:layout_height="3dp"
+                            android:layout_weight="1"
+                            android:max="100"
+                            android:progress="@{viewModel.learnProcess}"
+                            android:progressDrawable="@drawable/feature_home_v2_progress"
+                            tools:progress="0" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:includeFontPadding="false"
+                            android:text="@{viewModel.progressPercentText}"
+                            android:textColor="@color/feature_home_v2_text_secondary"
+                            android:textSize="7sp"
+                            tools:text="0%" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="@dimen/feature_home_v2_metric_divider_height"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/feature_home_v2_divider"
+                    android:translationY="1dp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.9"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:paddingTop="3dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/feature_home_v2_review_remaining_label"
+                        android:textColor="@color/feature_home_v2_text_secondary"
+                        android:textSize="8sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:includeFontPadding="false"
+                        android:text="@{String.valueOf(viewModel.remainingReviewCount)}"
+                        android:textColor="@color/feature_home_v2_green_dark"
+                        android:textSize="@dimen/feature_home_v2_text_metric"
+                        android:textStyle="bold"
+                        tools:text="33" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/feature_home_v2_word_unit"
+                        android:textColor="@color/feature_home_v2_text_primary"
+                        android:textSize="9sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="@dimen/feature_home_v2_primary_button_height"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="13dp"
+                android:background="@drawable/feature_home_v2_primary_button_bg"
+                android:clickable="true"
+                android:enabled="@{viewModel.learningButtonEnabled}"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:onClick="@{() -> viewModel.onStartLearningClick()}"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+                <ImageView
+                    android:layout_width="@dimen/feature_home_v2_primary_button_icon"
+                    android:layout_height="@dimen/feature_home_v2_primary_button_icon"
+                    android:background="@drawable/feature_home_v2_play_circle_bg"
+                    android:importantForAccessibility="no"
+                    android:padding="5dp"
+                    android:src="@drawable/feature_home_v2_ic_play"
+                    app:tint="@color/feature_home_v2_green" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="7dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@{viewModel.learnButtonText}"
+                    android:textColor="@color/feature_home_v2_white"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    tools:text="开始学习" />
+            </LinearLayout>
+        </com.chen.memorizewords.feature.home.ui.home.SoftShadowConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/targetPill"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/feature_home_v2_target_pill_height"
+            android:layout_marginEnd="@dimen/feature_home_v2_target_pill_end"
+            android:layout_marginTop="@dimen/feature_home_v2_target_pill_top"
+            android:background="@drawable/feature_home_v2_target_bg"
+            android:elevation="7dp"
+            android:gravity="center_vertical"
+            android:outlineAmbientShadowColor="@color/feature_home_v2_shadow_warm_ambient"
+            android:outlineProvider="background"
+            android:outlineSpotShadowColor="@color/feature_home_v2_shadow_warm_spot"
+            android:orientation="horizontal"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+            <ImageView
+                android:layout_width="13dp"
+                android:layout_height="13dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/feature_home_v2_ic_target" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:text="@{viewModel.targetMinutesText}"
+                android:textColor="@color/feature_home_v2_orange"
+                android:textSize="8sp"
+                android:textStyle="bold"
+                tools:text="目标 15 分钟" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ivHeroMascot"
+            android:layout_width="@dimen/feature_home_v2_hero_mascot_width"
+            android:layout_height="@dimen/feature_home_v2_hero_mascot_height"
+            android:layout_marginEnd="@dimen/feature_home_v2_hero_mascot_end"
+            android:contentDescription="@string/feature_home_v2_mascot_hero"
+            android:elevation="6dp"
+            android:outlineProvider="none"
+            android:scaleType="fitCenter"
+            android:src="@drawable/feature_home_mascot_hero"
+            android:translationY="@dimen/feature_home_v2_hero_mascot_translation_y"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,9 +1,16 @@
 package com.chen.memorizewords.feature.home
 
+import android.graphics.Color
 import android.os.Bundle
 import android.os.SystemClock
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.chen.memorizewords.core.navigation.AppLaunchEntry
@@ -59,6 +66,7 @@ class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBindi
     }
 
     override fun initView(savedInstanceState: Bundle?) {
+        configureSystemBars()
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 handleExitBackPress()
@@ -67,6 +75,20 @@ class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBindi
         setupBottomNav(savedInstanceState == null)
         openRequestedDestination()
         viewModel.checkAutoLogin()
+    }
+
+    private fun configureSystemBars() {
+        window.statusBarColor = Color.TRANSPARENT
+        window.navigationBarColor = Color.WHITE
+        WindowCompat.getInsetsController(window, window.decorView).apply {
+            isAppearanceLightStatusBars = true
+            isAppearanceLightNavigationBars = true
+        }
+        ViewCompat.setOnApplyWindowInsetsListener(databind.homeFragmentContainer) { view, insets ->
+            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+            view.updatePadding(top = statusBarInsets.top)
+            insets
+        }
     }
 
     override fun onNewIntent(intent: android.content.Intent) {
@@ -79,8 +101,10 @@ class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBindi
         if (selectDefault) {
             showHome(immediate = true)
             databind.bottomNav.menu.findItem(R.id.menu_home).isChecked = true
+            updateStatusBarBackground(R.id.menu_home)
         }
         databind.bottomNav.setOnItemSelectedListener { item ->
+            updateStatusBarBackground(item.itemId)
             when (item.itemId) {
                 R.id.menu_home -> showHome()
                 R.id.menu_practice -> showPractice()
@@ -89,6 +113,25 @@ class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBindi
             }
             true
         }
+        if (!selectDefault) {
+            databind.bottomNav.post {
+                updateStatusBarBackground(databind.bottomNav.selectedItemId)
+            }
+        }
+    }
+
+    private fun updateStatusBarBackground(menuItemId: Int) {
+        databind.root.setBackgroundColor(
+            ContextCompat.getColor(this, statusBarBackgroundFor(menuItemId))
+        )
+    }
+
+    @ColorRes
+    private fun statusBarBackgroundFor(menuItemId: Int): Int = when (menuItemId) {
+        R.id.menu_practice -> R.color.feature_home_v2_status_bar_practice
+        R.id.menu_stats -> R.color.feature_home_v2_status_bar_stats
+        R.id.menu_profile -> R.color.feature_home_v2_status_bar_profile
+        else -> R.color.feature_home_v2_status_bar_home
     }
 
     private fun showHome(immediate: Boolean = false) {

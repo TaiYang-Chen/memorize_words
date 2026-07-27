@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="feature_home_bottom_nav_selected">#4F46E5</color>
-    <color name="feature_home_bottom_nav_unselected">#64748B</color>
-    <color name="feature_home_bottom_nav_indicator">#EEF2FF</color>
+    <color name="feature_home_bottom_nav_selected">#00BA82</color>
+    <color name="feature_home_bottom_nav_unselected">#7D8AA2</color>
+    <color name="feature_home_bottom_nav_indicator">#00000000</color>
 </resources>

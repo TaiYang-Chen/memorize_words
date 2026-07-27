@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.chen.memorizewords.feature.home.ui.home.HomeViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/feature_home_v2_xp_slot_height"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:elevation="4dp"
+        android:outlineProvider="none">
+
+    <com.chen.memorizewords.feature.home.ui.home.SoftShadowConstraintLayout
+        android:id="@+id/xpCard"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/feature_home_v2_xp_min_height"
+        android:layout_marginTop="@dimen/feature_home_v2_xp_banner_top"
+        android:background="@drawable/feature_home_v2_xp_inset_bg"
+        android:clickable="true"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:elevation="3dp"
+        android:focusable="true"
+        android:outlineAmbientShadowColor="@color/feature_home_v2_shadow_hero_ambient"
+        android:outlineProvider="background"
+        android:outlineSpotShadowColor="@color/feature_home_v2_shadow_hero_spot"
+        android:onClick="@{() -> viewModel.onPracticeClicked()}"
+        android:paddingStart="@dimen/feature_home_v2_shadow_gutter"
+        android:paddingEnd="@dimen/feature_home_v2_shadow_gutter"
+        app:feature_home_shadowAmbientColor="@color/feature_home_v2_shadow_hero_side"
+        app:feature_home_shadowAmbientRadius="5dp"
+        app:feature_home_shadowCornerRadius="@dimen/feature_home_v2_card_radius"
+        app:feature_home_shadowFillColor="#DBF5E9"
+        app:feature_home_shadowHorizontalInset="@dimen/feature_home_v2_shadow_gutter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/xpPaleBandGuide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.70" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/feature_home_v2_xp_pale_band"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/xpPaleBandGuide"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/xpTitleRow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="92dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginEnd="7dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toStartOf="@id/xpStatus"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/feature_home_v2_xp_title"
+                android:textColor="@color/feature_home_v2_text_primary"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="7dp"
+                android:text="@{viewModel.levelText}"
+                android:textColor="@color/feature_home_v2_green_dark"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                tools:text="Lv.1" />
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_marginStart="4dp"
+                android:background="@drawable/feature_home_v2_metric_green_icon_bg"
+                android:importantForAccessibility="no"
+                android:padding="4dp"
+                android:src="@drawable/feature_home_v2_ic_chevron_right" />
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/xpProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/feature_home_v2_xp_progress_height"
+            android:layout_marginStart="96dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginEnd="7dp"
+            android:max="100"
+            android:progress="@{viewModel.xpProgress}"
+            android:progressDrawable="@drawable/feature_home_v2_xp_progress"
+            app:layout_constraintEnd_toStartOf="@id/xpStatus"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/xpTitleRow"
+            tools:progress="96" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="96dp"
+            android:layout_marginTop="2dp"
+            android:includeFontPadding="false"
+            android:text="@{viewModel.xpText}"
+            android:textColor="@color/feature_home_v2_green_dark"
+            android:textSize="9sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/xpProgressBar"
+            tools:text="96 / 100 XP" />
+
+        <LinearLayout
+            android:id="@+id/xpStatus"
+            android:layout_width="@dimen/feature_home_v2_xp_status_width"
+            android:layout_height="@dimen/feature_home_v2_xp_status_height"
+            android:layout_marginEnd="11dp"
+            android:background="@drawable/feature_home_v2_xp_status_bg"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="6dp"
+            android:paddingEnd="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:background="@drawable/feature_home_v2_metric_green_icon_bg"
+                android:importantForAccessibility="no"
+                android:padding="3dp"
+                android:src="@drawable/feature_home_v2_ic_crown" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="@{viewModel.xpRemainingText}"
+                android:textColor="@color/feature_home_v2_text_secondary"
+                android:textSize="7sp"
+                android:textStyle="bold"
+                tools:text="再得 4 XP\n即可升级" />
+        </LinearLayout>
+    </com.chen.memorizewords.feature.home.ui.home.SoftShadowConstraintLayout>
+
+        <ImageView
+            android:id="@+id/ivXpMascot"
+            android:layout_width="@dimen/feature_home_v2_xp_mascot_width"
+            android:layout_height="@dimen/feature_home_v2_xp_mascot_height"
+            android:layout_marginStart="18dp"
+            android:contentDescription="@string/feature_home_v2_mascot_reading"
+            android:elevation="4dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/feature_home_mascot_reader"
+            app:layout_constraintBottom_toBottomOf="@id/xpCard"
+            app:layout_constraintStart_toStartOf="@id/xpCard" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

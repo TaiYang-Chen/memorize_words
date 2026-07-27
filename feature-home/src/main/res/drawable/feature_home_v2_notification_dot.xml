@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
+    <solid android:color="@color/feature_home_v2_notification_dot" />
+    <stroke
+        android:width="@dimen/feature_home_v2_border_width"
+        android:color="@color/feature_home_v2_white" />
+</shape>

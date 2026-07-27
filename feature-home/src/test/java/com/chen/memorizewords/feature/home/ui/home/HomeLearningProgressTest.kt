@@ -15,6 +15,35 @@ import kotlin.test.assertTrue
 class HomeLearningProgressTest {
 
     @Test
+    fun `greeting period follows local hour boundaries`() {
+        assertEquals(HomeGreetingPeriod.EVENING, resolveHomeGreetingPeriod(4))
+        assertEquals(HomeGreetingPeriod.MORNING, resolveHomeGreetingPeriod(5))
+        assertEquals(HomeGreetingPeriod.MORNING, resolveHomeGreetingPeriod(11))
+        assertEquals(HomeGreetingPeriod.AFTERNOON, resolveHomeGreetingPeriod(12))
+        assertEquals(HomeGreetingPeriod.AFTERNOON, resolveHomeGreetingPeriod(17))
+        assertEquals(HomeGreetingPeriod.EVENING, resolveHomeGreetingPeriod(18))
+        assertEquals(HomeGreetingPeriod.EVENING, resolveHomeGreetingPeriod(24))
+    }
+
+    @Test
+    fun `home task status covers zero partial and completed plans`() {
+        assertEquals(HomeTaskStatus.NO_PLAN, resolveHomeTaskStatus(0, 0))
+        assertEquals(HomeTaskStatus.NOT_STARTED, resolveHomeTaskStatus(0, 15))
+        assertEquals(HomeTaskStatus.IN_PROGRESS, resolveHomeTaskStatus(7, 15))
+        assertEquals(HomeTaskStatus.COMPLETED, resolveHomeTaskStatus(15, 15))
+        assertEquals(HomeTaskStatus.COMPLETED, resolveHomeTaskStatus(18, 15))
+    }
+
+    @Test
+    fun `target minutes and remaining xp are normalized`() {
+        assertEquals(0, calculateTargetMinutes(-5))
+        assertEquals(15, calculateTargetMinutes(15))
+        assertEquals(100, calculateRemainingXp(0))
+        assertEquals(4, calculateRemainingXp(96))
+        assertEquals(50, calculateRemainingXp(250))
+    }
+
+    @Test
     fun `new plan starts from zero when no words learned today`() {
         val progress = resolveNewLearningProgress(
             todayNewCount = 0,
@@ -193,8 +222,33 @@ class HomeLearningProgressTest {
         assertEquals("今日已学15个单词，可继续加量新学", ui.learnButtonSubtitleText)
         assertEquals("新学 15 / 复习 30", ui.planCardSubtitleText)
         assertEquals("2 天", ui.continuousDaysText)
+        assertEquals(2, ui.continuousDaysCount)
+        assertEquals(30, ui.remainingReviewCount)
+        assertEquals(15, ui.todayCompletedCount)
+        assertEquals(45, ui.todayPlanTotalCount)
         assertEquals("5 天", ui.expectedCompletionText)
     }
+
+    @Test
+    fun `dashboard numeric presentation fields clamp negative source values`() {
+        val ui = buildHomeDashboardUiState(
+            wordBookInfo = null,
+            plan = StudyPlan(dailyNewCount = -15, dailyReviewCount = -30),
+            todayNewCount = -3,
+            todayReviewCount = -7,
+            todayStudyDurationMs = -1L,
+            continuousDays = -2,
+            totalStudyDays = -4,
+            learnButtonSubtitleText = "--"
+        )
+
+        assertEquals(0, ui.continuousDaysCount)
+        assertEquals(0, ui.remainingReviewCount)
+        assertEquals(0, ui.todayCompletedCount)
+        assertEquals(0, ui.todayPlanTotalCount)
+        assertEquals(0, ui.progressPercent)
+    }
+
     @Test
     fun `startup snapshot fills current book while local progress is empty`() {
         val local = WordBookInfo(

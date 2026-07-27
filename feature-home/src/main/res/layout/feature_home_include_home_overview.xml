@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.chen.memorizewords.feature.home.ui.home.HomeViewModel" />
+    </data>
+
+    <com.chen.memorizewords.feature.home.ui.home.SoftShadowLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/feature_home_v2_overview_height"
+        android:background="@drawable/feature_home_v2_surface_inset_bg"
+        android:elevation="3dp"
+        android:outlineAmbientShadowColor="@color/feature_home_v2_shadow_surface_ambient"
+        android:outlineProvider="background"
+        android:outlineSpotShadowColor="@color/feature_home_v2_shadow_surface_spot"
+        android:orientation="vertical"
+        android:paddingStart="17dp"
+        android:paddingTop="@dimen/feature_home_v2_surface_padding"
+        android:paddingEnd="17dp"
+        android:paddingBottom="@dimen/feature_home_v2_surface_padding"
+        app:feature_home_shadowAmbientColor="@color/feature_home_v2_shadow_surface_side"
+        app:feature_home_shadowAmbientRadius="6dp"
+        app:feature_home_shadowCornerRadius="@dimen/feature_home_v2_card_radius"
+        app:feature_home_shadowFillColor="@color/feature_home_v2_surface"
+        app:feature_home_shadowHorizontalInset="@dimen/feature_home_v2_shadow_gutter">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="15dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/feature_home_v2_overview_title"
+                android:textColor="@color/feature_home_v2_text_primary"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:onClick="@{() -> viewModel.onStatsClicked()}"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/feature_home_v2_view_all"
+                    android:textColor="@color/feature_home_v2_text_secondary"
+                android:textSize="9sp" />
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_marginStart="2dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/feature_home_v2_ic_chevron_right" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/feature_home_v2_overview_cell_height"
+            android:layout_marginTop="7dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/feature_home_v2_metric_green_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp">
+                <FrameLayout
+                    android:layout_width="@dimen/feature_home_v2_overview_icon_container"
+                    android:layout_height="@dimen/feature_home_v2_overview_icon_container"
+                    android:background="@drawable/feature_home_v2_metric_green_icon_bg">
+                    <ImageView
+                        android:layout_width="@dimen/feature_home_v2_overview_icon_size"
+                        android:layout_height="@dimen/feature_home_v2_overview_icon_size"
+                        android:layout_gravity="center"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/feature_home_v2_ic_learned" />
+                </FrameLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/feature_home_v2_metric_learned"
+                        android:textColor="@color/feature_home_v2_text_secondary"
+                        android:textSize="8sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="bottom"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:includeFontPadding="false"
+                            android:text="@{viewModel.learnedWordsText}"
+                            android:textColor="@color/feature_home_v2_green_dark"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            tools:text="21" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="3dp"
+                            android:layout_marginBottom="1dp"
+                            android:text="@string/feature_home_v2_word_unit"
+                            android:textColor="@color/feature_home_v2_text_secondary"
+                            android:textSize="8sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+            <Space android:layout_width="10dp" android:layout_height="1dp" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/feature_home_v2_metric_purple_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp">
+                <FrameLayout
+                    android:layout_width="@dimen/feature_home_v2_overview_icon_container"
+                    android:layout_height="@dimen/feature_home_v2_overview_icon_container"
+                    android:background="@drawable/feature_home_v2_metric_purple_icon_bg">
+                    <ImageView
+                        android:layout_width="@dimen/feature_home_v2_overview_icon_size"
+                        android:layout_height="@dimen/feature_home_v2_overview_icon_size"
+                        android:layout_gravity="center"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/feature_home_v2_ic_mastered" />
+                </FrameLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/feature_home_v2_metric_mastered"
+                        android:textColor="@color/feature_home_v2_text_secondary"
+                        android:textSize="8sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="bottom"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:includeFontPadding="false"
+                            android:text="@{viewModel.masteredWordsText}"
+                            android:textColor="@color/feature_home_v2_purple"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            tools:text="21" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="3dp"
+                            android:layout_marginBottom="1dp"
+                            android:text="@string/feature_home_v2_word_unit"
+                            android:textColor="@color/feature_home_v2_text_secondary"
+                            android:textSize="8sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/feature_home_v2_overview_cell_height"
+            android:layout_marginTop="8.5dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/feature_home_v2_metric_orange_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp">
+                <FrameLayout
+                    android:layout_width="@dimen/feature_home_v2_overview_icon_container"
+                    android:layout_height="@dimen/feature_home_v2_overview_icon_container"
+                    android:background="@drawable/feature_home_v2_metric_orange_icon_bg">
+                    <ImageView
+                        android:layout_width="@dimen/feature_home_v2_overview_icon_size"
+                        android:layout_height="@dimen/feature_home_v2_overview_icon_size"
+                        android:layout_gravity="center"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/feature_home_v2_ic_total_words" />
+                </FrameLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/feature_home_v2_metric_total"
+                        android:textColor="@color/feature_home_v2_text_secondary"
+                        android:textSize="8sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="bottom"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:includeFontPadding="false"
+                            android:text="@{viewModel.totalWordsText}"
+                            android:textColor="@color/feature_home_v2_orange"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            tools:text="3849" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="3dp"
+                            android:layout_marginBottom="1dp"
+                            android:text="@string/feature_home_v2_word_unit"
+                            android:textColor="@color/feature_home_v2_text_secondary"
+                            android:textSize="8sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+            <Space android:layout_width="10dp" android:layout_height="1dp" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/feature_home_v2_metric_blue_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp">
+                <FrameLayout
+                    android:layout_width="@dimen/feature_home_v2_overview_icon_container"
+                    android:layout_height="@dimen/feature_home_v2_overview_icon_container"
+                    android:background="@drawable/feature_home_v2_metric_blue_icon_bg">
+                    <ImageView
+                        android:layout_width="@dimen/feature_home_v2_overview_icon_size"
+                        android:layout_height="@dimen/feature_home_v2_overview_icon_size"
+                        android:layout_gravity="center"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/feature_home_v2_ic_accuracy" />
+                </FrameLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/feature_home_v2_metric_accuracy"
+                        android:textColor="@color/feature_home_v2_text_secondary"
+                        android:textSize="8sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="bottom"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:includeFontPadding="false"
+                            android:text="@{viewModel.accuracyRateText}"
+                            android:textColor="@color/feature_home_v2_blue"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            tools:text="0.0%" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="3dp"
+                            android:layout_marginBottom="1dp"
+                            android:text="@string/feature_home_v2_accuracy_unit"
+                            android:textColor="@color/feature_home_v2_text_secondary"
+                            android:textSize="8sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </com.chen.memorizewords.feature.home.ui.home.SoftShadowLinearLayout>
+</layout>

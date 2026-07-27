@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.chen.memorizewords.feature.home.ui.home.HomeViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/feature_home_v2_header_min_height"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+
+        <TextView
+            android:id="@+id/tvGreeting"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="27dp"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:text="@{viewModel.greetingText}"
+            android:textColor="@color/feature_home_v2_text_primary"
+            android:textSize="@dimen/feature_home_v2_text_greeting"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/notificationContainer"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/feature_home_v2_preview_greeting" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:text="@string/feature_home_v2_greeting_subtitle"
+            android:textColor="@color/feature_home_v2_text_primary"
+            android:textSize="10sp"
+            app:layout_constraintEnd_toEndOf="@id/tvGreeting"
+            app:layout_constraintStart_toStartOf="@id/tvGreeting"
+            app:layout_constraintTop_toBottomOf="@id/tvGreeting" />
+
+        <FrameLayout
+            android:id="@+id/notificationContainer"
+            android:layout_width="@dimen/feature_home_v2_header_action_size"
+            android:layout_height="@dimen/feature_home_v2_header_action_size"
+            android:layout_marginEnd="3dp"
+            android:layout_marginTop="8dp"
+            android:translationX="5dp"
+            android:contentDescription="@string/feature_home_v2_notification_unavailable"
+            android:focusable="true"
+            app:layout_constraintEnd_toStartOf="@id/btnSettings"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="@dimen/feature_home_v2_header_icon_size"
+                android:layout_height="@dimen/feature_home_v2_header_icon_size"
+                android:layout_gravity="center"
+                android:importantForAccessibility="no"
+                android:src="@drawable/feature_home_v2_ic_notification" />
+
+            <View
+                android:layout_width="@dimen/feature_home_v2_notification_dot_size"
+                android:layout_height="@dimen/feature_home_v2_notification_dot_size"
+                android:layout_gravity="top|end"
+                android:layout_marginTop="3dp"
+                android:layout_marginEnd="3dp"
+                android:background="@drawable/feature_home_v2_notification_dot" />
+        </FrameLayout>
+
+        <ImageButton
+            android:id="@+id/btnSettings"
+            android:layout_width="@dimen/feature_home_v2_header_action_size"
+            android:layout_height="@dimen/feature_home_v2_header_action_size"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/feature_home_v2_settings"
+            android:onClick="@{() -> viewModel.onSettingsClicked()}"
+            android:padding="5dp"
+            android:src="@drawable/feature_home_v2_ic_settings"
+            android:translationX="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

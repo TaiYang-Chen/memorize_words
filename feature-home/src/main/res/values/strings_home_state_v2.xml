@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_home_v2_greeting_morning">早上好！ 👋</string>
+    <string name="feature_home_v2_greeting_afternoon">下午好！ 👋</string>
+    <string name="feature_home_v2_greeting_evening">晚上好！ 👋</string>
+    <string name="feature_home_v2_target_minutes">目标 %1$d 分钟</string>
+    <string name="feature_home_v2_task_no_plan">暂无计划</string>
+    <string name="feature_home_v2_task_not_started">未完成</string>
+    <string name="feature_home_v2_task_in_progress">进行中</string>
+    <string name="feature_home_v2_task_completed">已完成</string>
+    <string name="feature_home_v2_xp_remaining">再得 %1$d XP\n即可升级</string>
+</resources>

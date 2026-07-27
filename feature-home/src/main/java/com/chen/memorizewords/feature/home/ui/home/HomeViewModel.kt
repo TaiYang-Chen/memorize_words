@@ -4,10 +4,12 @@ import android.text.Spanned
 import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.navigation.AppRoute
+import com.chen.memorizewords.core.navigation.AuthEntryDestination
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.core.ui.vm.UiEvent
 import com.chen.memorizewords.domain.account.model.user.User
 import com.chen.memorizewords.domain.account.usecase.user.GetCurrentUserUseCase
+import com.chen.memorizewords.domain.practice.service.PracticeFacade
 import com.chen.memorizewords.domain.study.model.learning.LearningSessionRequest as DomainLearningSessionRequest
 import com.chen.memorizewords.domain.study.orchestrator.learning.LearningSessionFacade
 import com.chen.memorizewords.domain.study.service.StudyStatsFacade
@@ -25,7 +27,11 @@ import com.chen.memorizewords.domain.wordbook.usecase.GetStudyPlanFlowUseCase
 import com.chen.memorizewords.domain.wordbook.usecase.ObserveCurrentWordBookSelectionIdUseCase
 import com.chen.memorizewords.domain.wordbook.usecase.ObserveWordBookContentStateUseCase
 import com.chen.memorizewords.feature.home.R
+import com.chen.memorizewords.feature.home.ui.practice.PRACTICE_XP_PER_LEVEL
+import com.chen.memorizewords.feature.home.ui.practice.PracticeLevelUi
+import com.chen.memorizewords.feature.home.ui.practice.PracticeUiMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.util.Calendar
 import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.roundToInt
@@ -56,6 +62,8 @@ class HomeViewModel @Inject constructor(
     getStudyPlanFlowUseCase: GetStudyPlanFlowUseCase,
     private val learningSessionFacade: LearningSessionFacade,
     private val studyStatsFacade: StudyStatsFacade,
+    practiceFacade: PracticeFacade,
+    private val practiceUiMapper: PracticeUiMapper,
     private val syncFacade: SyncFacade,
     private val homeStartupSnapshotRepository: HomeStartupSnapshotRepository,
     private val resourceProvider: ResourceProvider
@@ -64,6 +72,7 @@ class HomeViewModel @Inject constructor(
     private val textFormatter = HomeTextFormatter(resourceProvider)
     private val learningLauncher = HomeLearningLauncher(learningSessionFacade)
     private val initialBusinessDate = studyStatsFacade.getCurrentBusinessDate()
+    private val initialHourOfDay = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
     private val startupSnapshot = resolveUsableHomeStartupSnapshot(
         snapshot = homeStartupSnapshotRepository.getSnapshot(),
         businessDate = initialBusinessDate,
@@ -117,6 +126,24 @@ class HomeViewModel @Inject constructor(
             }
         }.distinctUntilChanged()
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), initialBusinessDate)
+
+    private val currentHourOfDay: StateFlow<Int> =
+        flow {
+            while (true) {
+                emit(Calendar.getInstance().get(Calendar.HOUR_OF_DAY))
+                delay(BUSINESS_DATE_POLL_INTERVAL_MS)
+            }
+        }.distinctUntilChanged()
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), initialHourOfDay)
+
+    private val practiceLevelUi =
+        practiceFacade.getPracticeTotalDurationMs()
+            .map(practiceUiMapper::buildPracticeLevel)
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5_000),
+                practiceUiMapper.buildPracticeLevel(0L)
+            )
 
     private val startupSnapshotFlow: StateFlow<HomeStartupSnapshot?> =
         combine(
@@ -226,36 +253,52 @@ class HomeViewModel @Inject constructor(
             continuousCheckInDays,
             studyTotalDayCount
         ) { values ->
-            buildHomeDashboardUiState(
+            createDashboardUiState(
                 wordBookInfo = values[0] as WordBookInfo?,
                 plan = values[1] as StudyPlan,
                 todayNewCount = values[2] as Int,
                 todayReviewCount = values[3] as Int,
                 todayStudyDurationMs = values[4] as Long,
                 continuousDays = values[5] as Int,
-                totalStudyDays = values[6] as Int,
-                learnButtonSubtitleText = textFormatter.formatLearnButtonSubtitleText(
-                    newCount = values[2] as Int,
-                    plan = values[1] as StudyPlan
-                )
+                totalStudyDays = values[6] as Int
             )
         }.stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5_000),
-            buildHomeDashboardUiState(
+            createDashboardUiState(
                 wordBookInfo = wordBookInfo.value,
                 plan = studyPlan.value,
                 todayNewCount = todayNewCount.value,
                 todayReviewCount = todayReviewCount.value,
                 todayStudyDurationMs = todayStudyDurationMs.value,
                 continuousDays = continuousCheckInDays.value,
-                totalStudyDays = studyTotalDayCount.value,
-                learnButtonSubtitleText = textFormatter.formatLearnButtonSubtitleText(
-                    newCount = todayNewCount.value,
-                    plan = studyPlan.value
-                )
+                totalStudyDays = studyTotalDayCount.value
             )
         )
+
+    private fun createDashboardUiState(
+        wordBookInfo: WordBookInfo?,
+        plan: StudyPlan,
+        todayNewCount: Int,
+        todayReviewCount: Int,
+        todayStudyDurationMs: Long,
+        continuousDays: Int,
+        totalStudyDays: Int
+    ): HomeDashboardUiState {
+        return buildHomeDashboardUiState(
+            wordBookInfo = wordBookInfo,
+            plan = plan,
+            todayNewCount = todayNewCount,
+            todayReviewCount = todayReviewCount,
+            todayStudyDurationMs = todayStudyDurationMs,
+            continuousDays = continuousDays,
+            totalStudyDays = totalStudyDays,
+            learnButtonSubtitleText = textFormatter.formatLearnButtonSubtitleText(
+                newCount = todayNewCount,
+                plan = plan
+            )
+        )
+    }
 
     val homeTitleText: StateFlow<String> = dashboardField { it.homeTitleText }
     val wordBookTitleText: StateFlow<String> = dashboardField { it.wordBookTitleText }
@@ -319,6 +362,56 @@ class HomeViewModel @Inject constructor(
     val todayDurationTitleText: StateFlow<String> = dashboardField { it.todayDurationTitleText }
     val learnProcess: StateFlow<Int> = dashboardField { it.progressPercent }
 
+    val todayCompletedCount: StateFlow<Int> = dashboardField { it.todayCompletedCount }
+    val todayPlanTotalCount: StateFlow<Int> = dashboardField { it.todayPlanTotalCount }
+    val continuousDaysCount: StateFlow<Int> = dashboardField { it.continuousDaysCount }
+    val remainingReviewCount: StateFlow<Int> = dashboardField { it.remainingReviewCount }
+
+    val greetingText: StateFlow<String> =
+        currentHourOfDay
+            .map { hour -> textFormatter.formatGreeting(resolveHomeGreetingPeriod(hour)) }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5_000),
+                textFormatter.formatGreeting(resolveHomeGreetingPeriod(currentHourOfDay.value))
+            )
+
+    val targetMinutesText: StateFlow<String> =
+        studyPlan
+            .map { plan -> textFormatter.formatTargetMinutes(plan.dailyNewCount) }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5_000),
+                textFormatter.formatTargetMinutes(studyPlan.value.dailyNewCount)
+            )
+
+    val todayTaskProgressText: StateFlow<String> =
+        dashboardUiState
+            .map { state -> "${state.todayCompletedCount} / ${state.todayPlanTotalCount}" }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5_000),
+                "${dashboardUiState.value.todayCompletedCount} / ${dashboardUiState.value.todayPlanTotalCount}"
+            )
+
+    val todayTaskStatusText: StateFlow<String> =
+        dashboardUiState
+            .map { state ->
+                textFormatter.formatTaskStatus(
+                    resolveHomeTaskStatus(state.todayCompletedCount, state.todayPlanTotalCount)
+                )
+            }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5_000),
+                textFormatter.formatTaskStatus(
+                    resolveHomeTaskStatus(
+                        dashboardUiState.value.todayCompletedCount,
+                        dashboardUiState.value.todayPlanTotalCount
+                    )
+                )
+            )
+
     private fun <T> dashboardField(selector: (HomeDashboardUiState) -> T): StateFlow<T> {
         return dashboardUiState
             .map(selector)
@@ -363,6 +456,20 @@ class HomeViewModel @Inject constructor(
             )
         )
 
+    val levelText: StateFlow<String> = practiceLevelField { it.levelText }
+    val xpText: StateFlow<String> = practiceLevelField { it.xpText }
+    val xpProgress: StateFlow<Int> = practiceLevelField { it.xpProgress }
+    val xpRemainingText: StateFlow<String> =
+        practiceLevelField { level ->
+            textFormatter.formatXpRemaining(calculateRemainingXp(level.xpProgress))
+        }
+
+    private fun <T> practiceLevelField(selector: (PracticeLevelUi) -> T): StateFlow<T> {
+        return practiceLevelUi
+            .map(selector)
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), selector(practiceLevelUi.value))
+    }
+
     val syncBannerState: StateFlow<SyncBannerState> =
         syncFacade.observeSyncBannerState()
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), SyncBannerState.Hidden)
@@ -399,6 +506,10 @@ class HomeViewModel @Inject constructor(
 
     fun onProfileClicked() {
         navigateRoute(Route.ToProfileTab)
+    }
+
+    fun onSettingsClicked() {
+        navigate(AppRoute.Auth(deepLink = AuthEntryDestination.USER_PROFILE_DEEP_LINK))
     }
 
     fun onStartLearningClick() {
@@ -610,7 +721,11 @@ data class HomeDashboardUiState(
     val accuracyRateTitleText: String,
     val continuousDaysTitleText: String,
     val expectedCompletionTitleText: String,
-    val todayDurationTitleText: String
+    val todayDurationTitleText: String,
+    val todayCompletedCount: Int,
+    val todayPlanTotalCount: Int,
+    val continuousDaysCount: Int,
+    val remainingReviewCount: Int
 )
 
 internal fun buildHomeDashboardUiState(
@@ -627,15 +742,19 @@ internal fun buildHomeDashboardUiState(
     val safeReviewPlan = plan.dailyReviewCount.coerceAtLeast(0)
     val safeTodayNew = todayNewCount.coerceAtLeast(0)
     val safeTodayReview = todayReviewCount.coerceAtLeast(0)
+    val safeContinuousDays = continuousDays.coerceAtLeast(0)
+    val todayCompletedCount = safeTodayNew + safeTodayReview
+    val todayPlanTotalCount = calculateTodayPlanTotalCount(plan)
+    val remainingReviewCount = calculateRemainingCount(safeTodayReview, safeReviewPlan)
 
     return HomeDashboardUiState(
         homeTitleText = "\u5c0f\u767d\u80cc\u5355\u8bcd",
         wordBookTitleText = formatWordBookTitleText(wordBookInfo?.title),
-        streakText = "\u5df2\u8fde\u7eed\u5b66\u4e60 ${continuousDays.coerceAtLeast(0)} \u5929",
+        streakText = "\u5df2\u8fde\u7eed\u5b66\u4e60 $safeContinuousDays \u5929",
         progressPercent = calculateLearnProgress(safeTodayNew, safeTodayReview, plan),
         progressPercentText = "${calculateLearnProgress(safeTodayNew, safeTodayReview, plan)}%",
         todayCompletedWordsText = "\u4eca\u65e5\u5b8c\u6210 ${formatTodayCompletedWordsText(safeTodayNew, safeTodayReview, plan)} \u4e2a\u5355\u8bcd",
-        remainingReviewWordsText = "\u8fd8\u9700\u590d\u4e60 ${calculateRemainingCount(safeTodayReview, safeReviewPlan)} \u4e2a\u5355\u8bcd",
+        remainingReviewWordsText = "\u8fd8\u9700\u590d\u4e60 $remainingReviewCount \u4e2a\u5355\u8bcd",
         learnButtonSubtitleText = learnButtonSubtitleText,
         reviewCardSubtitleText = "${formatCountProgressText(safeTodayReview, safeReviewPlan)} ${formatTaskStatus(safeTodayReview, safeReviewPlan)}",
         planCardSubtitleText = "\u65b0\u5b66 $safeNewPlan / \u590d\u4e60 $safeReviewPlan",
@@ -644,7 +763,7 @@ internal fun buildHomeDashboardUiState(
         learningWordsText = formatWordBookNumberText(wordBookInfo?.learningWords),
         totalWordsText = formatWordBookNumberText(wordBookInfo?.totalWords),
         accuracyRateText = formatWordBookAccuracyRateText(wordBookInfo?.accuracyRate),
-        continuousDaysText = formatDayCountText(continuousDays),
+        continuousDaysText = formatDayCountText(safeContinuousDays),
         expectedCompletionText = formatExpectedCompletionText(wordBookInfo, plan),
         todayStudyDurationText = formatDurationText(todayStudyDurationMs),
         totalStudyDaysText = formatDayCountText(totalStudyDays),
@@ -661,8 +780,56 @@ internal fun buildHomeDashboardUiState(
         accuracyRateTitleText = "\u7b54\u9898\u6b63\u786e\u7387",
         continuousDaysTitleText = "\u8fde\u7eed\u5b66\u4e60",
         expectedCompletionTitleText = "\u9884\u8ba1\u5b8c\u6210",
-        todayDurationTitleText = "\u4eca\u65e5\u7528\u65f6"
+        todayDurationTitleText = "\u4eca\u65e5\u7528\u65f6",
+        todayCompletedCount = todayCompletedCount,
+        todayPlanTotalCount = todayPlanTotalCount,
+        continuousDaysCount = safeContinuousDays,
+        remainingReviewCount = remainingReviewCount
     )
+}
+
+internal enum class HomeGreetingPeriod {
+    MORNING,
+    AFTERNOON,
+    EVENING
+}
+
+internal fun resolveHomeGreetingPeriod(hourOfDay: Int): HomeGreetingPeriod {
+    val normalizedHour = Math.floorMod(hourOfDay, 24)
+    return when (normalizedHour) {
+        in 5..11 -> HomeGreetingPeriod.MORNING
+        in 12..17 -> HomeGreetingPeriod.AFTERNOON
+        else -> HomeGreetingPeriod.EVENING
+    }
+}
+
+internal enum class HomeTaskStatus {
+    NO_PLAN,
+    NOT_STARTED,
+    IN_PROGRESS,
+    COMPLETED
+}
+
+internal fun resolveHomeTaskStatus(doneCount: Int, planCount: Int): HomeTaskStatus {
+    val safeDone = doneCount.coerceAtLeast(0)
+    val safePlan = planCount.coerceAtLeast(0)
+    return when {
+        safePlan == 0 -> HomeTaskStatus.NO_PLAN
+        safeDone == 0 -> HomeTaskStatus.NOT_STARTED
+        safeDone >= safePlan -> HomeTaskStatus.COMPLETED
+        else -> HomeTaskStatus.IN_PROGRESS
+    }
+}
+
+internal fun calculateTargetMinutes(dailyNewCount: Int): Int = dailyNewCount.coerceAtLeast(0)
+
+internal fun calculateRemainingXp(
+    xpProgress: Int,
+    xpPerLevel: Int = PRACTICE_XP_PER_LEVEL
+): Int {
+    val safeLevelSize = xpPerLevel.coerceAtLeast(1)
+    val normalizedProgress = Math.floorMod(xpProgress, safeLevelSize)
+    return safeLevelSize - normalizedProgress
 }
 
 internal fun calculateLearnProgress(

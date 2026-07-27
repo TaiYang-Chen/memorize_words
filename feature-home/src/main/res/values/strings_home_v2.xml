@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_home_v2_greeting_subtitle">开始今天的学习吧</string>
+    <string name="feature_home_v2_notification_unavailable">通知，暂未开放</string>
+    <string name="feature_home_v2_settings">个人信息设置</string>
+    <string name="feature_home_v2_sync_preview">还有 3 条学习数据待上传</string>
+    <string name="feature_home_v2_wordbook_action">查看或调整当前词书</string>
+    <string name="feature_home_v2_mascot_hero">学习伙伴挥手并拿着词书</string>
+    <string name="feature_home_v2_today_plan">今日计划</string>
+    <string name="feature_home_v2_studying">正在学习</string>
+    <string name="feature_home_v2_streak_label">连续学习</string>
+    <string name="feature_home_v2_streak_encouragement">继续加油！</string>
+    <string name="feature_home_v2_today_goal_label">今日目标</string>
+    <string name="feature_home_v2_review_remaining_label">复习剩余</string>
+    <string name="feature_home_v2_word_unit">个单词</string>
+    <string name="feature_home_v2_day_unit">天</string>
+    <string name="feature_home_v2_start_learning">开始学习</string>
+    <string name="feature_home_v2_shortcut_review">复习单词</string>
+    <string name="feature_home_v2_shortcut_review_subtitle">巩固记忆</string>
+    <string name="feature_home_v2_shortcut_plan">调整计划</string>
+    <string name="feature_home_v2_shortcut_plan_subtitle">制定目标</string>
+    <string name="feature_home_v2_shortcut_mistakes">错题本</string>
+    <string name="feature_home_v2_shortcut_mistakes_subtitle">查漏补缺</string>
+    <string name="feature_home_v2_shortcut_report">学习报告</string>
+    <string name="feature_home_v2_shortcut_report_subtitle">查看数据</string>
+    <string name="feature_home_v2_mistakes_unavailable">错题本，暂未开放</string>
+    <string name="feature_home_v2_overview_title">学习概览</string>
+    <string name="feature_home_v2_view_all">查看全部</string>
+    <string name="feature_home_v2_metric_learned">已学习</string>
+    <string name="feature_home_v2_metric_mastered">已掌握</string>
+    <string name="feature_home_v2_metric_total">词书总量</string>
+    <string name="feature_home_v2_metric_accuracy">答题正确率</string>
+    <string name="feature_home_v2_accuracy_unit">正确率</string>
+    <string name="feature_home_v2_xp_title">学习等级</string>
+    <string name="feature_home_v2_xp_action">进入专项练习</string>
+    <string name="feature_home_v2_xp_upgrade_line_one">再得 %1$d XP</string>
+    <string name="feature_home_v2_xp_upgrade_line_two">即可升级</string>
+    <string name="feature_home_v2_mascot_reading">学习伙伴正在阅读</string>
+    <string name="feature_home_v2_today_task_title">今日任务</string>
+    <string name="feature_home_v2_today_task_name">完成今日学习目标</string>
+    <string name="feature_home_v2_today_task_hint">每天进步一点点，词汇量大大提高！</string>
+    <string name="feature_home_v2_preview_greeting">早上好</string>
+    <string name="feature_home_v2_preview_book">雅思核心词汇</string>
+    <string name="feature_home_v2_preview_streak">已连续学习 12 天</string>
+    <string name="feature_home_v2_preview_progress">15 / 45</string>
+    <string name="feature_home_v2_preview_target">目标 30 分钟</string>
+    <string name="feature_home_v2_preview_review">还需复习 30 个单词</string>
+    <string name="feature_home_v2_preview_level" translatable="false">Lv. 2</string>
+    <string name="feature_home_v2_preview_xp" translatable="false">45 / 100 XP</string>
+    <string name="feature_home_v2_preview_xp_remaining">距离升级还差 55 XP</string>
+    <string name="feature_home_v2_preview_task_status">进行中</string>
+</resources>

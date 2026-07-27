@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.chen.memorizewords.feature.home.ui.home.HomeViewModel" />
+    </data>
+
+    <com.chen.memorizewords.feature.home.ui.home.SoftShadowLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/feature_home_v2_shortcuts_height"
+        android:background="@drawable/feature_home_v2_surface_inset_bg"
+        android:baselineAligned="false"
+        android:elevation="3dp"
+        android:outlineAmbientShadowColor="@color/feature_home_v2_shadow_surface_ambient"
+        android:outlineProvider="background"
+        android:outlineSpotShadowColor="@color/feature_home_v2_shadow_surface_spot"
+        android:orientation="horizontal"
+        android:paddingStart="13dp"
+        android:paddingTop="11dp"
+        android:paddingEnd="13dp"
+        android:paddingBottom="7dp"
+        app:feature_home_shadowAmbientColor="@color/feature_home_v2_shadow_surface_side"
+        app:feature_home_shadowAmbientRadius="6dp"
+        app:feature_home_shadowCornerRadius="@dimen/feature_home_v2_card_radius"
+        app:feature_home_shadowFillColor="@color/feature_home_v2_surface"
+        app:feature_home_shadowHorizontalInset="@dimen/feature_home_v2_shadow_gutter">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_horizontal"
+            android:onClick="@{() -> viewModel.toLearningReviewActivity()}"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="@dimen/feature_home_v2_shortcut_icon_container"
+                android:layout_height="@dimen/feature_home_v2_shortcut_icon_container"
+                android:importantForAccessibility="no"
+                android:scaleType="fitCenter"
+                android:src="@drawable/feature_home_v2_asset_shortcut_review" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@string/feature_home_v2_shortcut_review"
+                android:textColor="@color/feature_home_v2_text_primary"
+                android:textSize="9sp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@string/feature_home_v2_shortcut_review_subtitle"
+                android:textColor="@color/feature_home_v2_text_tertiary"
+                android:textSize="8sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_horizontal"
+            android:onClick="@{() -> viewModel.toWordBookActivity()}"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="@dimen/feature_home_v2_shortcut_icon_container"
+                android:layout_height="@dimen/feature_home_v2_shortcut_icon_container"
+                android:importantForAccessibility="no"
+                android:scaleType="fitCenter"
+                android:src="@drawable/feature_home_v2_asset_shortcut_plan" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@string/feature_home_v2_shortcut_plan"
+                android:textColor="@color/feature_home_v2_text_primary"
+                android:textSize="9sp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@string/feature_home_v2_shortcut_plan_subtitle"
+                android:textColor="@color/feature_home_v2_text_tertiary"
+                android:textSize="8sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="@string/feature_home_v2_mistakes_unavailable"
+            android:focusable="true"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="@dimen/feature_home_v2_shortcut_icon_container"
+                android:layout_height="@dimen/feature_home_v2_shortcut_icon_container"
+                android:importantForAccessibility="no"
+                android:scaleType="fitCenter"
+                android:src="@drawable/feature_home_v2_asset_shortcut_mistakes" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@string/feature_home_v2_shortcut_mistakes"
+                android:textColor="@color/feature_home_v2_text_primary"
+                android:textSize="9sp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@string/feature_home_v2_shortcut_mistakes_subtitle"
+                android:textColor="@color/feature_home_v2_text_tertiary"
+                android:textSize="8sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_horizontal"
+            android:onClick="@{() -> viewModel.onStatsClicked()}"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="@dimen/feature_home_v2_shortcut_icon_container"
+                android:layout_height="@dimen/feature_home_v2_shortcut_icon_container"
+                android:importantForAccessibility="no"
+                android:scaleType="fitCenter"
+                android:src="@drawable/feature_home_v2_asset_shortcut_report" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@string/feature_home_v2_shortcut_report"
+                android:textColor="@color/feature_home_v2_text_primary"
+                android:textSize="9sp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@string/feature_home_v2_shortcut_report_subtitle"
+                android:textColor="@color/feature_home_v2_text_tertiary"
+                android:textSize="8sp" />
+        </LinearLayout>
+    </com.chen.memorizewords.feature.home.ui.home.SoftShadowLinearLayout>
+</layout>

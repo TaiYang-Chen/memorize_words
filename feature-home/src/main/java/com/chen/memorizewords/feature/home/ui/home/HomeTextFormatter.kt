@@ -20,6 +20,41 @@ internal class HomeTextFormatter(
         }
     }
 
+    fun formatGreeting(period: HomeGreetingPeriod): String {
+        return resourceProvider.getString(
+            when (period) {
+                HomeGreetingPeriod.MORNING -> R.string.feature_home_v2_greeting_morning
+                HomeGreetingPeriod.AFTERNOON -> R.string.feature_home_v2_greeting_afternoon
+                HomeGreetingPeriod.EVENING -> R.string.feature_home_v2_greeting_evening
+            }
+        )
+    }
+
+    fun formatTargetMinutes(dailyNewCount: Int): String {
+        return resourceProvider.getString(
+            R.string.feature_home_v2_target_minutes,
+            calculateTargetMinutes(dailyNewCount),
+        )
+    }
+
+    fun formatTaskStatus(status: HomeTaskStatus): String {
+        return resourceProvider.getString(
+            when (status) {
+                HomeTaskStatus.NO_PLAN -> R.string.feature_home_v2_task_no_plan
+                HomeTaskStatus.NOT_STARTED -> R.string.feature_home_v2_task_not_started
+                HomeTaskStatus.IN_PROGRESS -> R.string.feature_home_v2_task_in_progress
+                HomeTaskStatus.COMPLETED -> R.string.feature_home_v2_task_completed
+            }
+        )
+    }
+
+    fun formatXpRemaining(remainingXp: Int): String {
+        return resourceProvider.getString(
+            R.string.feature_home_v2_xp_remaining,
+            remainingXp.coerceAtLeast(0),
+        )
+    }
+
     fun formatLearnButtonSubtitleText(newCount: Int, plan: StudyPlan): String {
         val safeNewCount = newCount.coerceAtLeast(0)
         val safeDailyNewCount = plan.dailyNewCount.coerceAtLeast(0)

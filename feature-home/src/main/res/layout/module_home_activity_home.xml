@@ -8,7 +8,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/feature_home_v2_status_bar_home">
 
         <FrameLayout
             android:id="@+id/home_fragment_container"
@@ -23,7 +24,7 @@
             android:id="@+id/bottom_nav"
             style="@style/BottomNavigationTheme"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="85dp"
             android:background="@android:color/white"
             app:itemBackground="@android:color/transparent"
             app:labelVisibilityMode="labeled"

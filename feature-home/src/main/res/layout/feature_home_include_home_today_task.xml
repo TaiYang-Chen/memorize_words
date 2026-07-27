@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.chen.memorizewords.feature.home.ui.home.HomeViewModel" />
+    </data>
+
+    <com.chen.memorizewords.feature.home.ui.home.SoftShadowConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/feature_home_v2_task_height"
+        android:background="@drawable/feature_home_v2_task_inset_bg"
+        android:elevation="3dp"
+        android:outlineAmbientShadowColor="@color/feature_home_v2_shadow_surface_ambient"
+        android:outlineProvider="background"
+        android:outlineSpotShadowColor="@color/feature_home_v2_shadow_surface_spot"
+        android:paddingStart="17dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="17dp"
+        android:paddingBottom="4dp"
+        app:feature_home_shadowAmbientColor="@color/feature_home_v2_shadow_surface_side"
+        app:feature_home_shadowAmbientRadius="6dp"
+        app:feature_home_shadowCornerRadius="@dimen/feature_home_v2_card_radius"
+        app:feature_home_shadowFillColor="@color/feature_home_v2_surface"
+        app:feature_home_shadowHorizontalInset="@dimen/feature_home_v2_shadow_gutter">
+
+        <FrameLayout
+            android:id="@+id/taskIconContainer"
+            android:layout_width="@dimen/feature_home_v2_task_icon_container"
+            android:layout_height="@dimen/feature_home_v2_task_icon_container"
+            android:background="@drawable/feature_home_v2_shortcut_green_bg"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+            <ImageView
+                android:layout_width="@dimen/feature_home_v2_task_icon"
+                android:layout_height="@dimen/feature_home_v2_task_icon"
+                android:layout_gravity="center"
+                android:importantForAccessibility="no"
+                android:src="@drawable/feature_home_v2_ic_task" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tvTaskTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:text="@string/feature_home_v2_today_task_title"
+            android:textColor="@color/feature_home_v2_text_primary"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/taskIconContainer"
+            app:layout_constraintStart_toEndOf="@id/taskIconContainer"
+            app:layout_constraintTop_toTopOf="@id/taskIconContainer" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/feature_home_v2_today_task_hint"
+            android:textColor="@color/feature_home_v2_text_tertiary"
+            android:textSize="9sp"
+            app:layout_constraintBottom_toBottomOf="@id/tvTaskTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tvTaskTitle"
+            app:layout_constraintTop_toTopOf="@id/tvTaskTitle" />
+
+        <View
+            android:id="@+id/taskDot"
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="7dp"
+            android:background="@drawable/feature_home_v2_notification_dot"
+            android:backgroundTint="@color/feature_home_v2_green"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/taskIconContainer" />
+
+        <TextView
+            android:id="@+id/tvTodayTaskName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/feature_home_v2_today_task_name"
+            android:textColor="@color/feature_home_v2_text_secondary"
+            android:textSize="9sp"
+            app:layout_constraintBottom_toBottomOf="@id/taskDot"
+            app:layout_constraintStart_toEndOf="@id/taskDot"
+            app:layout_constraintTop_toTopOf="@id/taskDot" />
+
+        <TextView
+            android:id="@+id/tvTodayTaskProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{viewModel.todayTaskProgressText}"
+            android:textColor="@color/feature_home_v2_text_primary"
+            android:textSize="9sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/tvTodayTaskName"
+            app:layout_constraintStart_toEndOf="@id/tvTodayTaskName"
+            app:layout_constraintTop_toTopOf="@id/tvTodayTaskName"
+            tools:text="0 / 48" />
+
+        <TextView
+            android:id="@+id/tvTodayTaskStatus"
+            android:layout_width="63dp"
+            android:layout_height="18dp"
+            android:background="@drawable/feature_home_v2_status_bg"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="@{viewModel.todayTaskStatusText}"
+            android:textColor="@color/feature_home_v2_text_tertiary"
+            android:textSize="8sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="未完成" />
+    </com.chen.memorizewords.feature.home.ui.home.SoftShadowConstraintLayout>
+</layout>
