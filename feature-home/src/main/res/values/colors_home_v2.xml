@@ -3,7 +3,7 @@
     <color name="feature_home_v2_background_mint">#E8F7F0</color>
     <color name="feature_home_v2_background_white">#FCFDFE</color>
     <color name="feature_home_v2_status_bar_home">@color/feature_home_v2_background_mint</color>
-    <color name="feature_home_v2_status_bar_practice">#F8FBFF</color>
+    <color name="feature_home_v2_status_bar_practice">@color/feature_home_practice_v2_background_top</color>
     <color name="feature_home_v2_status_bar_stats">#F8FCFF</color>
     <color name="feature_home_v2_status_bar_profile">#FBFAFA</color>
     <color name="feature_home_v2_surface">#FEFEFE</color>

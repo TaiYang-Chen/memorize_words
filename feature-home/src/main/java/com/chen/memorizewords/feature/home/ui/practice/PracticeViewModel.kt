@@ -63,7 +63,7 @@ class PracticeViewModel @Inject constructor(
     }
 
     private val recentStats =
-        practiceFacade.getRecentPracticeDurationStats(7)
+        practiceFacade.getRecentPracticeDurationStats(PRACTICE_COMPARISON_DAYS)
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     private val recentSessions =
@@ -257,6 +257,10 @@ class PracticeViewModel @Inject constructor(
 
     fun openAudioLoop() {
         tryOpenPractice(PracticeMode.AUDIO_LOOP)
+    }
+
+    fun onUnavailableFeatureClicked() {
+        showToast(resourceProvider.getString(R.string.feature_home_practice_v2_unavailable))
     }
 
     fun onFloatingEnabledChanged(enabled: Boolean) {

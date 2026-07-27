@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="FeatureHomePracticeV2SectionTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/feature_home_bg_practice_section_marker</item>
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textColor">@color/feature_home_practice_v2_text_primary</item>
+        <item name="android:textSize">@dimen/feature_home_practice_v2_section_title_text</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="FeatureHomePracticeV2Card">
+        <item name="android:background">@drawable/feature_home_practice_v2_surface_inset_bg</item>
+        <item name="android:elevation">1dp</item>
+        <item name="android:outlineProvider">background</item>
+        <item name="feature_home_shadowAmbientColor">@color/feature_home_practice_v2_shadow_side</item>
+        <item name="feature_home_shadowAmbientRadius">5dp</item>
+        <item name="feature_home_shadowCornerRadius">@dimen/feature_home_practice_v2_card_radius</item>
+        <item name="feature_home_shadowFillColor">@color/feature_home_practice_v2_surface</item>
+        <item name="feature_home_shadowHorizontalInset">@dimen/feature_home_practice_v2_shadow_gutter</item>
+    </style>
+</resources>

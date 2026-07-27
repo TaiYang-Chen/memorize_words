@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="feature_home_practice_v2_page_padding">20dp</dimen>
+    <dimen name="feature_home_practice_v2_card_padding">13dp</dimen>
+    <dimen name="feature_home_practice_v2_card_radius">10dp</dimen>
+    <dimen name="feature_home_practice_v2_shadow_gutter">3dp</dimen>
+    <dimen name="feature_home_practice_v2_section_gap">8dp</dimen>
+    <dimen name="feature_home_practice_v2_header_height">76dp</dimen>
+    <dimen name="feature_home_practice_v2_header_action">28dp</dimen>
+    <dimen name="feature_home_practice_v2_goal_height">130dp</dimen>
+    <dimen name="feature_home_practice_v2_goal_mascot_width">92dp</dimen>
+    <dimen name="feature_home_practice_v2_goal_mascot_height">101dp</dimen>
+    <dimen name="feature_home_practice_v2_goal_mascot_end_margin">18dp</dimen>
+    <dimen name="feature_home_practice_v2_keep_going_start">132dp</dimen>
+    <dimen name="feature_home_practice_v2_goal_button_width">116dp</dimen>
+    <dimen name="feature_home_practice_v2_goal_button_height">35dp</dimen>
+    <dimen name="feature_home_practice_v2_goal_progress_width">64dp</dimen>
+    <dimen name="feature_home_practice_v2_mode_height">89dp</dimen>
+    <dimen name="feature_home_practice_v2_mode_gap">8dp</dimen>
+    <dimen name="feature_home_practice_v2_mode_icon">41dp</dimen>
+    <dimen name="feature_home_practice_v2_recommend_tile_height">44dp</dimen>
+    <dimen name="feature_home_practice_v2_growth_height">74dp</dimen>
+    <dimen name="feature_home_practice_v2_tool_height">46dp</dimen>
+    <dimen name="feature_home_practice_v2_record_min_height">56dp</dimen>
+    <dimen name="feature_home_practice_v2_title_text">17sp</dimen>
+    <dimen name="feature_home_practice_v2_section_title_text">11sp</dimen>
+    <dimen name="feature_home_practice_v2_card_title_text">12sp</dimen>
+    <dimen name="feature_home_practice_v2_body_text">10sp</dimen>
+    <dimen name="feature_home_practice_v2_label_text">9sp</dimen>
+    <dimen name="feature_home_practice_v2_caption_text">8sp</dimen>
+</resources>

@@ -1,60 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data />
 
     <LinearLayout
-        android:id="@+id/layoutRecordItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:foreground="?attr/selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="center_vertical"
-        android:minHeight="@dimen/core_ui_dp_64"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/core_ui_dp_8"
-        android:paddingEnd="@dimen/core_ui_dp_8"
-        android:paddingTop="@dimen/core_ui_dp_10"
-        android:paddingBottom="@dimen/core_ui_dp_10">
-
-        <FrameLayout
-            android:layout_width="@dimen/core_ui_dp_44"
-            android:layout_height="@dimen/core_ui_dp_44"
-            android:background="@drawable/module_home_bg_practice_record_icon"
-            android:gravity="center">
-
-            <ImageView
-                android:id="@+id/ivRecordIcon"
-                android:layout_width="@dimen/core_ui_dp_22"
-                android:layout_gravity="center"
-                android:layout_height="@dimen/core_ui_dp_22"
-                android:contentDescription="@null" />
-        </FrameLayout>
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:id="@+id/layoutRecordItem"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/core_ui_dp_12"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/feature_home_practice_v2_record_min_height"
+            android:orientation="horizontal"
+            android:paddingStart="2dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="2dp"
+            android:paddingBottom="10dp">
 
-            <TextView
-                android:id="@+id/tvRecordTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#0F172A"
-                android:textSize="@dimen/core_ui_text_14"
-                android:textStyle="bold" />
+            <FrameLayout
+                android:id="@+id/layoutRecordIcon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/module_home_bg_practice_record_icon">
 
-            <TextView
-                android:id="@+id/tvRecordSubtitle"
-                android:layout_width="wrap_content"
+                <ImageView
+                    android:id="@+id/ivRecordIcon"
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:layout_gravity="center"
+                    android:importantForAccessibility="no" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/core_ui_dp_4"
-                android:textColor="#64748B"
-                android:textSize="@dimen/core_ui_text_12" />
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvRecordTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/feature_home_practice_v2_text_primary"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    tools:text="听力练习 · 随机 20 词" />
+
+                <TextView
+                    android:id="@+id/tvRecordSubtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/feature_home_practice_v2_text_secondary"
+                    android:textSize="9sp"
+                    tools:text="周日 · 19:42 · 5分钟 · 听力" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:layout_marginStart="8dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/feature_home_v2_ic_chevron_right" />
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="52dp"
+            android:background="@color/feature_home_practice_v2_divider" />
     </LinearLayout>
 </layout>

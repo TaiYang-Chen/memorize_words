@@ -4724,4 +4724,48 @@
             file="src/main/AndroidManifest.xml"/>
     </issue>
 
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_logout_loading`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_logout_loading`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_logout_loading&quot;>退出登录中...&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="3"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_learn_subtitle_start`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_learn_subtitle_start`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_learn_subtitle_start&quot;>新学%1$d个单词，预计%2$d分钟&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="54"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_learn_subtitle_continue`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_learn_subtitle_continue`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_learn_subtitle_continue&quot;>已学%1$d个，还剩%2$d个&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="55"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_learn_subtitle_new_more`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_learn_subtitle_new_more`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_learn_subtitle_new_more&quot;>今日已学%1$d个单词，可继续加量新学&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="56"
+            column="13"/>
+    </issue>
+
 </issues>

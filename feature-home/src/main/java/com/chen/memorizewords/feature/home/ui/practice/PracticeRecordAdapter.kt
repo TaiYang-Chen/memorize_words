@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.content.res.ColorStateList
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -34,11 +35,16 @@ class PracticeRecordAdapter(
             binding.ivRecordIcon.setImageResource(item.iconRes)
             val tintColor = ContextCompat.getColor(binding.root.context, item.iconTintRes)
             binding.ivRecordIcon.imageTintList = ColorStateList.valueOf(tintColor)
+            binding.layoutRecordIcon.backgroundTintList = ColorStateList.valueOf(
+                ColorUtils.setAlphaComponent(tintColor, RECORD_ICON_BACKGROUND_ALPHA)
+            )
             binding.layoutRecordItem.setOnClickListener { onItemClick(item) }
         }
     }
 
     companion object {
+        private const val RECORD_ICON_BACKGROUND_ALPHA = 28
+
         private val DiffCallback = object : DiffUtil.ItemCallback<PracticeSessionRecordUi>() {
             override fun areItemsTheSame(
                 oldItem: PracticeSessionRecordUi,

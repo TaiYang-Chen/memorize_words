@@ -8,7 +8,7 @@
             <size
                 android:width="@dimen/core_ui_dp_2"
                 android:height="@dimen/core_ui_dp_13" />
-            <solid android:color="#1688F2" />
+            <solid android:color="#14C98A" />
         </shape>
     </item>
 </layer-list>

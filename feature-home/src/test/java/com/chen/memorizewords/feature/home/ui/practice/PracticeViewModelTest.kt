@@ -35,6 +35,7 @@ import com.chen.memorizewords.domain.floating.service.FloatingActivationEventRep
 import com.chen.memorizewords.domain.floating.service.FloatingActivationEligibilityChecker
 import com.chen.memorizewords.domain.practice.PracticeAvailability
 import com.chen.memorizewords.domain.practice.PracticeDailyDurationStats
+import com.chen.memorizewords.domain.practice.PracticeMode
 import com.chen.memorizewords.domain.practice.PracticeRecordRepository
 import com.chen.memorizewords.domain.practice.PracticeSessionRecord
 import com.chen.memorizewords.domain.practice.PracticeSessionRecordRepository
@@ -65,6 +66,7 @@ import com.chen.memorizewords.domain.wordbook.model.WordBookInfo
 import com.chen.memorizewords.domain.wordbook.model.WordListQuery
 import com.chen.memorizewords.domain.wordbook.repository.WordBookRepository
 import com.chen.memorizewords.domain.wordbook.repository.WordOrderType
+import com.chen.memorizewords.feature.home.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -87,6 +89,59 @@ import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class PracticeViewModelTest {
+
+    @Test
+    fun `all four practice cards keep their existing routes`() = runTest {
+        val dispatcher = StandardTestDispatcher(testScheduler)
+        Dispatchers.setMain(dispatcher)
+        try {
+            val viewModel = createViewModel()
+            val routes = collectRoutes(viewModel)
+
+            viewModel.openListening()
+            viewModel.openShadowing()
+            viewModel.openSpelling()
+            viewModel.openAudioLoop()
+            advanceUntilIdle()
+
+            assertEquals(
+                listOf(
+                    PracticeMode.LISTENING,
+                    PracticeMode.SHADOWING,
+                    PracticeMode.SPELLING,
+                    PracticeMode.AUDIO_LOOP
+                ),
+                routes.map { route ->
+                    assertIs<PracticeViewModel.Route.ToPracticeMode>(route).mode
+                }
+            )
+        } finally {
+            Dispatchers.resetMain()
+        }
+    }
+
+    @Test
+    fun `unavailable practice entries show not open message`() = runTest {
+        val dispatcher = StandardTestDispatcher(testScheduler)
+        Dispatchers.setMain(dispatcher)
+        try {
+            val viewModel = createViewModel()
+            val events = mutableListOf<UiEvent>()
+            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+                viewModel.uiEvent.collect(events::add)
+            }
+
+            viewModel.onUnavailableFeatureClicked()
+
+            val toast = assertIs<UiEvent.Toast>(events.single())
+            assertEquals(
+                R.string.feature_home_practice_v2_unavailable.toString(),
+                toast.message
+            )
+        } finally {
+            Dispatchers.resetMain()
+        }
+    }
 
     @Test
     fun `floating setup dialog is hidden for ready installed character`() {
@@ -260,8 +315,11 @@ class PracticeViewModelTest {
     }
 
     private fun createViewModel(
-        floatingSettingsRepository: FakeFloatingWordSettingsRepository,
-        membershipRepository: FakeMembershipRepository
+        floatingSettingsRepository: FakeFloatingWordSettingsRepository =
+            FakeFloatingWordSettingsRepository(
+                FloatingWordSettings(enabled = false, autoStartOnAppLaunch = false)
+            ),
+        membershipRepository: FakeMembershipRepository = FakeMembershipRepository(active = true)
     ): PracticeViewModel {
         val resourceProvider = FakeResourceProvider()
         val practiceUsageRepository = FakePracticeUsageRepository()

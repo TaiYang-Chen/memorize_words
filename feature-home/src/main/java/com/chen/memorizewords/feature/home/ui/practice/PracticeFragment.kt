@@ -3,20 +3,28 @@ package com.chen.memorizewords.feature.home.ui.practice
 import android.app.Activity
 import android.app.ForegroundServiceStartNotAllowedException
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Bundle
 import android.os.Build
 import android.provider.Settings
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.chen.memorizewords.core.ui.dialog.prefabricated.ShowConfirmBottomDialog
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.core.ui.vm.UiEvent
@@ -66,6 +74,9 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
     private var pendingQuotaMode: PracticeMode? = null
     private var pendingQuotaSelectedIds: LongArray? = null
     private var pendingQuotaRandomCount: Int = 0
+    private val recordAdapter = PracticeRecordAdapter { record ->
+        showRecordDetail(record.id)
+    }
 
     private val pickWordsLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -94,6 +105,12 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
         pendingQuotaRandomCount = savedInstanceState?.getInt(KEY_PENDING_QUOTA_RANDOM_COUNT) ?: 0
         databind.viewModel = viewModel
         databind.lifecycleOwner = viewLifecycleOwner
+        databind.rvPracticeRecords.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = recordAdapter
+            itemAnimator = null
+            isNestedScrollingEnabled = false
+        }
         databind.switchFloatingCard.setOnCheckedChangeListener { _, isChecked ->
             if (ignoreSwitchUpdate) return@setOnCheckedChangeListener
             if (isChecked) {
@@ -153,6 +170,13 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
                     viewModel.practiceUsageState.collect(::renderPracticeUsage)
                 }
                 launch {
+                    viewModel.recentRecords.collect { records ->
+                        recordAdapter.submitList(records)
+                        databind.layoutPracticeRecordsEmpty.isVisible = records.isEmpty()
+                        databind.rvPracticeRecords.isVisible = records.isNotEmpty()
+                    }
+                }
+                launch {
                     viewModel.floatingSetupUi.collect { ui ->
                         renderFloatingSetup(ui)
                         syncFloatingSetupDialog(ui)
@@ -165,16 +189,54 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
     private fun renderDashboard(ui: PracticeDashboardUi) {
         databind.tvPracticeTodayValue.text = ui.todayDurationValue
         databind.tvPracticeTodayUnit.text = ui.todayDurationUnit
+        databind.tvPracticeGoalProgress.text = SpannableString(ui.todayProgressText).apply {
+            val valueEnd = ui.todayProgressText.indexOf(" /").takeIf { it > 0 } ?: 0
+            if (valueEnd > 0) {
+                setSpan(
+                    ForegroundColorSpan(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.feature_home_practice_v2_green_dark
+                        )
+                    ),
+                    0,
+                    valueEnd,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
+        }
+        databind.tvPracticeGoalPercent.text = ui.todayPercentText
         databind.progressPracticeToday.max = PRACTICE_DAILY_GOAL_SECONDS.toInt()
         databind.progressPracticeToday.progress = ui.todayProgress
         databind.tvPracticeStreakValue.text = ui.continuousDaysText
         databind.tvPracticeWeekValue.text = ui.weekDurationValue
         databind.tvPracticeWeekUnit.text = ui.weekDurationUnit
         databind.tvPracticeWeekTrend.text = ui.weekTrendText
+        renderWeekTrend(ui.weekTrendDirection)
         databind.tvPracticeLevelValue.text = ui.levelText
         databind.tvPracticeXp.text = ui.xpText
         databind.progressPracticeXp.max = PRACTICE_XP_PER_LEVEL
         databind.progressPracticeXp.progress = ui.xpProgress
+    }
+
+    private fun renderWeekTrend(direction: PracticeTrendDirection) {
+        val (iconRes, colorRes) = when (direction) {
+            PracticeTrendDirection.UP -> {
+                R.drawable.feature_home_practice_v2_ic_trend_up to R.color.feature_home_practice_v2_green
+            }
+            PracticeTrendDirection.DOWN -> {
+                R.drawable.feature_home_practice_v2_ic_trend_down to R.color.feature_home_practice_v2_red
+            }
+            PracticeTrendDirection.FLAT -> {
+                R.drawable.feature_home_practice_v2_ic_trend_flat to R.color.feature_home_practice_v2_text_secondary
+            }
+        }
+        val color = ContextCompat.getColor(requireContext(), colorRes)
+        databind.tvPracticeWeekTrend.setTextColor(color)
+        databind.ivPracticeWeekTrend.apply {
+            setImageResource(iconRes)
+            imageTintList = ColorStateList.valueOf(color)
+        }
     }
 
     override fun onResume() {
@@ -255,6 +317,7 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
                 )
 
     private object Android12ForegroundServiceStartFailure {
+        @RequiresApi(Build.VERSION_CODES.S)
         fun isForegroundServiceStartNotAllowed(failure: RuntimeException): Boolean =
             failure is ForegroundServiceStartNotAllowedException
     }
@@ -340,11 +403,19 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
             else -> null
         }
         latestEvaluationUsage = usage
-        databind.cardShadowing.tvModeSubtitle.text = when {
-            usage == null -> getString(R.string.feature_home_shadowing_quota_unknown)
-            usage.remaining <= 0 -> getString(R.string.feature_home_shadowing_quota_exhausted)
-            else -> getString(R.string.feature_home_shadowing_quota_remaining, usage.remaining)
+        val quotaBadge = buildPracticeQuotaBadgeUi(usage)
+        databind.cardShadowing.tvModeBadge.text = if (quotaBadge.remaining == null) {
+            getString(quotaBadge.textRes)
+        } else {
+            getString(quotaBadge.textRes, quotaBadge.remaining)
         }
+    }
+
+    private fun showRecordDetail(recordId: Long) {
+        val tag = PracticeRecordDetailBottomSheetDialog.TAG
+        if (childFragmentManager.findFragmentByTag(tag) != null) return
+        PracticeRecordDetailBottomSheetDialog.newInstance(recordId)
+            .show(childFragmentManager, tag)
     }
 
     private fun updateFloatingSwitch(enabled: Boolean) {
@@ -519,6 +590,7 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
     }
 
     override fun onDestroyView() {
+        databind.rvPracticeRecords.adapter = null
         floatingSetupDialog?.dismiss()
         floatingSetupDialog = null
         floatingSetupView = null

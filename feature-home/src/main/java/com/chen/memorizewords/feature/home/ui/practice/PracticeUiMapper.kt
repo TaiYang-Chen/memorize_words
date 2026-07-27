@@ -23,17 +23,24 @@ class PracticeUiMapper @Inject constructor(
         recentStats: List<PracticeDailyDurationStats>,
         totalDurationMs: Long
     ): PracticeDashboardUi {
-        val todayParts = formatDurationParts(todayDurationMs)
-        val weekMinutes = (recentStats.sumOf { it.durationMs } / 60_000L).coerceAtLeast(0L)
+        val todayMinutes = (todayDurationMs / 60_000L).coerceAtLeast(0L)
+        val todayPercent = calculateTodayGoalPercent(todayDurationMs)
+        val weekComparison = buildWeekComparison(recentStats)
         val level = buildPracticeLevel(totalDurationMs)
         return PracticeDashboardUi(
-            todayDurationValue = todayParts.value,
-            todayDurationUnit = todayParts.unit,
+            todayDurationValue = todayMinutes.toString(),
+            todayDurationUnit = resourceProvider.getString(R.string.home_minutes_unit),
+            todayProgressText = resourceProvider.getString(
+                R.string.feature_home_practice_goal_progress,
+                todayMinutes
+            ),
+            todayPercentText = "$todayPercent%",
             todayProgress = calculateTodayGoalProgress(todayDurationMs),
             continuousDaysText = continuousDays.coerceAtLeast(0).toString(),
-            weekDurationValue = weekMinutes.toString(),
+            weekDurationValue = weekComparison.currentMinutes.toString(),
             weekDurationUnit = resourceProvider.getString(R.string.home_minutes_unit),
-            weekTrendText = formatIncreasePercent(recentStats),
+            weekTrendText = weekComparison.percentText,
+            weekTrendDirection = weekComparison.direction,
             levelText = level.levelText,
             xpText = level.xpText,
             xpProgress = level.xpProgress
@@ -41,14 +48,7 @@ class PracticeUiMapper @Inject constructor(
     }
 
     fun formatIncreasePercent(stats: List<PracticeDailyDurationStats>): String {
-        val today = stats.lastOrNull()?.durationMs ?: 0L
-        val yesterday = stats.getOrNull(stats.size - 2)?.durationMs ?: 0L
-        if (yesterday <= 0L) {
-            return if (today <= 0L) "0%" else "100%+"
-        }
-        val percent = ((today - yesterday).toDouble() * 100.0 / yesterday.toDouble())
-        val rounded = percent.roundToInt()
-        return if (rounded >= 0) "+$rounded%" else "$rounded%"
+        return buildWeekComparison(stats).percentText
     }
 
     fun formatDuration(durationMs: Long): String {
@@ -114,6 +114,14 @@ class PracticeUiMapper @Inject constructor(
         return seconds.coerceAtMost(PRACTICE_DAILY_GOAL_SECONDS).toInt()
     }
 
+    fun calculateTodayGoalPercent(durationMs: Long): Int {
+        val seconds = (durationMs / 1000L).coerceAtLeast(0L)
+        if (seconds == 0L) return 0
+        return ((seconds * 100L) / PRACTICE_DAILY_GOAL_SECONDS)
+            .coerceIn(0L, 100L)
+            .toInt()
+    }
+
     fun buildPracticeLevel(totalDurationMs: Long): PracticeLevelUi {
         val totalXp = (totalDurationMs / 60_000L).coerceAtLeast(0L).toInt()
         val level = totalXp / PRACTICE_XP_PER_LEVEL + 1
@@ -122,6 +130,39 @@ class PracticeUiMapper @Inject constructor(
             levelText = "Lv.$level",
             xpText = "$xpInLevel / $PRACTICE_XP_PER_LEVEL XP",
             xpProgress = xpInLevel
+        )
+    }
+
+    private fun buildWeekComparison(
+        stats: List<PracticeDailyDurationStats>
+    ): PracticeWeekComparisonUi {
+        val currentStats = stats.takeLast(PRACTICE_WEEK_DAYS)
+        val previousStats = stats
+            .dropLast(currentStats.size)
+            .takeLast(PRACTICE_WEEK_DAYS)
+        val currentDurationMs = currentStats.sumOf { it.durationMs }.coerceAtLeast(0L)
+        val previousDurationMs = previousStats.sumOf { it.durationMs }.coerceAtLeast(0L)
+        val currentMinutes = currentDurationMs / 60_000L
+        val percentText = when {
+            previousDurationMs <= 0L && currentDurationMs <= 0L -> "0%"
+            previousDurationMs <= 0L -> "100%+"
+            else -> {
+                val percent = (
+                    (currentDurationMs - previousDurationMs).toDouble() * 100.0 /
+                        previousDurationMs.toDouble()
+                    ).roundToInt()
+                if (percent > 0) "+$percent%" else "$percent%"
+            }
+        }
+        val direction = when {
+            currentDurationMs > previousDurationMs -> PracticeTrendDirection.UP
+            currentDurationMs < previousDurationMs -> PracticeTrendDirection.DOWN
+            else -> PracticeTrendDirection.FLAT
+        }
+        return PracticeWeekComparisonUi(
+            currentMinutes = currentMinutes,
+            percentText = percentText,
+            direction = direction
         )
     }
 
@@ -251,3 +292,9 @@ class PracticeUiMapper @Inject constructor(
         private const val PRACTICE_RECORD_SEPARATOR = " · "
     }
 }
+
+private data class PracticeWeekComparisonUi(
+    val currentMinutes: Long,
+    val percentText: String,
+    val direction: PracticeTrendDirection
+)

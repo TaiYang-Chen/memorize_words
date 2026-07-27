@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="feature_home_practice_v2_background">#FBFDFD</color>
+    <color name="feature_home_practice_v2_background_top">#F4FAF8</color>
+    <color name="feature_home_practice_v2_surface">#FEFEFE</color>
+    <color name="feature_home_practice_v2_text_primary">#071A3A</color>
+    <color name="feature_home_practice_v2_text_secondary">#546180</color>
+    <color name="feature_home_practice_v2_text_tertiary">#8C9AB4</color>
+    <color name="feature_home_practice_v2_green">#13C98A</color>
+    <color name="feature_home_practice_v2_green_dark">#00B978</color>
+    <color name="feature_home_practice_v2_green_soft">#E7F9F2</color>
+    <color name="feature_home_practice_v2_blue">#1597EA</color>
+    <color name="feature_home_practice_v2_blue_soft">#EAF5FF</color>
+    <color name="feature_home_practice_v2_orange">#FF850D</color>
+    <color name="feature_home_practice_v2_orange_soft">#FFF2E3</color>
+    <color name="feature_home_practice_v2_purple">#9754EB</color>
+    <color name="feature_home_practice_v2_purple_soft">#F5EAFF</color>
+    <color name="feature_home_practice_v2_red">#EF5A5A</color>
+    <color name="feature_home_practice_v2_divider">#E9EEF4</color>
+    <color name="feature_home_practice_v2_progress_track">#E8EDF5</color>
+    <color name="feature_home_practice_v2_goal_surface">#F8FFFC</color>
+    <color name="feature_home_practice_v2_goal_border">#EDF7F3</color>
+    <color name="feature_home_practice_v2_shadow_side">#1293A4B6</color>
+    <color name="feature_home_practice_v2_shadow_goal_side">#0F81CDB2</color>
+</resources>

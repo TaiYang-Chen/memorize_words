@@ -19,23 +19,23 @@
     </style>
 
     <style name="BottomNavTextActive" parent="TextAppearance.AppCompat.Caption">
-        <item name="android:textSize">@dimen/core_ui_text_12</item>
+        <item name="android:textSize">10sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="BottomNavTextInactive" parent="TextAppearance.AppCompat.Caption">
-        <item name="android:textSize">@dimen/core_ui_text_12</item>
+        <item name="android:textSize">10sp</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <style name="FeatureHomeBottomNavIndicatorShape" parent="ShapeAppearance.MaterialComponents.SmallComponent">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">16dp</item>
+        <item name="cornerSize">12dp</item>
     </style>
 
     <style name="FeatureHomeBottomNavActiveIndicator" parent="">
-        <item name="android:width">64dp</item>
-        <item name="android:height">32dp</item>
+        <item name="android:width">48dp</item>
+        <item name="android:height">24dp</item>
         <item name="marginHorizontal">4dp</item>
         <item name="shapeAppearance">@style/FeatureHomeBottomNavIndicatorShape</item>
         <item name="android:color">@color/feature_home_bottom_nav_indicator</item>

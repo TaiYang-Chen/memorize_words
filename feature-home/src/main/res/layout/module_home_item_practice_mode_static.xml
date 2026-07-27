@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View" />
+
+        <variable
+            name="featureHomeModeCardBg"
+            type="android.graphics.drawable.Drawable" />
 
         <variable
             name="featureHomeModeTitle"
@@ -27,78 +33,150 @@
         <variable
             name="featureHomeModeArrowIcon"
             type="android.graphics.drawable.Drawable" />
+
+        <variable
+            name="featureHomeModeTag"
+            type="String" />
+
+        <variable
+            name="featureHomeModeTagBg"
+            type="android.graphics.drawable.Drawable" />
+
+        <variable
+            name="featureHomeModeTagColor"
+            type="int" />
+
+        <variable
+            name="featureHomeModeBadge"
+            type="String" />
+
+        <variable
+            name="featureHomeModeBadgeBg"
+            type="android.graphics.drawable.Drawable" />
+
+        <variable
+            name="featureHomeModeBadgeColor"
+            type="int" />
+
+        <variable
+            name="featureHomeModeBadgeVisible"
+            type="boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingStart="@dimen/core_ui_dp_8"
-        android:paddingEnd="@dimen/core_ui_dp_8">
+        android:background="@{featureHomeModeCardBg}"
+        android:paddingStart="10dp"
+        android:paddingTop="9dp"
+        android:paddingEnd="9dp"
+        android:paddingBottom="8dp">
 
         <FrameLayout
             android:id="@+id/layoutModeIcon"
-            android:layout_width="@dimen/core_ui_dp_32"
-            android:layout_height="@dimen/core_ui_dp_32"
+            android:layout_width="@dimen/feature_home_practice_v2_mode_icon"
+            android:layout_height="@dimen/feature_home_practice_v2_mode_icon"
             android:background="@{featureHomeModeIconBg}"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:layout_width="@dimen/core_ui_dp_16"
-                android:layout_height="@dimen/core_ui_dp_16"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:layout_gravity="center"
+                android:importantForAccessibility="no"
                 android:src="@{featureHomeModeIcon}" />
         </FrameLayout>
 
         <TextView
             android:id="@+id/tvModeTitle"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/core_ui_dp_8"
-            android:layout_marginEnd="@dimen/core_ui_dp_4"
             android:ellipsize="end"
+            android:maxWidth="62dp"
+            android:includeFontPadding="false"
             android:maxLines="1"
             android:text="@{featureHomeModeTitle}"
-            android:textColor="#071436"
-            android:textSize="@dimen/core_ui_text_14"
+            android:textColor="@color/feature_home_practice_v2_text_primary"
+            android:textSize="@dimen/feature_home_practice_v2_card_title_text"
+            android:textScaleX="0.95"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/tvModeSubtitle"
-            app:layout_constraintEnd_toStartOf="@id/layoutModeArrow"
+            app:layout_constraintEnd_toStartOf="@id/tvModeBadge"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toEndOf="@id/layoutModeIcon"
-            app:layout_constraintTop_toTopOf="@id/layoutModeIcon"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="12.5dp"
+            android:layout_marginTop="2dp"
+            tools:text="听力" />
+
+        <TextView
+            android:id="@+id/tvModeBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="15dp"
+            android:background="@{featureHomeModeBadgeBg}"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:includeFontPadding="false"
+            android:maxWidth="48dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:text="@{featureHomeModeBadge}"
+            android:textColor="@{featureHomeModeBadgeColor}"
+            android:textSize="7sp"
+            android:textStyle="bold"
+            android:visibility="@{featureHomeModeBadgeVisible ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tvModeTitle"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="推荐"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/tvModeSubtitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/core_ui_dp_8"
-            android:layout_marginTop="@dimen/core_ui_dp_7"
-            android:layout_marginEnd="@dimen/core_ui_dp_4"
+            android:layout_marginTop="7dp"
             android:ellipsize="end"
-            android:maxLines="1"
+            android:maxLines="2"
             android:text="@{featureHomeModeSubtitle}"
-            android:textColor="#45648D"
-            android:textSize="@dimen/core_ui_text_11"
-            app:layout_constraintBottom_toBottomOf="@id/layoutModeIcon"
-            app:layout_constraintEnd_toStartOf="@id/layoutModeArrow"
-            app:layout_constraintStart_toEndOf="@id/layoutModeIcon"
-            app:layout_constraintTop_toBottomOf="@id/tvModeTitle" />
+            android:textColor="@color/feature_home_practice_v2_text_secondary"
+            android:textSize="9sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tvModeTitle"
+            app:layout_constraintTop_toBottomOf="@id/tvModeTitle"
+            tools:text="提升理解能力" />
+
+        <TextView
+            android:id="@+id/tvModeTag"
+            android:layout_width="wrap_content"
+            android:layout_height="18dp"
+            android:background="@{featureHomeModeTagBg}"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            android:text="@{featureHomeModeTag}"
+            android:textColor="@{featureHomeModeTagColor}"
+            android:textSize="8sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="高频使用" />
 
         <FrameLayout
             android:id="@+id/layoutModeArrow"
-            android:layout_width="@dimen/core_ui_dp_24"
-            android:layout_height="@dimen/core_ui_dp_24"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:background="@{featureHomeModeArrowBg}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintEnd_toEndOf="parent">
 
             <ImageView
-                android:layout_width="@dimen/core_ui_dp_12"
-                android:layout_height="@dimen/core_ui_dp_12"
+                android:layout_width="11dp"
+                android:layout_height="11dp"
                 android:layout_gravity="center"
+                android:importantForAccessibility="no"
                 android:src="@{featureHomeModeArrowIcon}" />
         </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
