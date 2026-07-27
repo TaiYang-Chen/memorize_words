@@ -1,7 +1,6 @@
 package com.chen.memorizewords.feature.home.ui.stats
 
 import android.graphics.Typeface
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -20,6 +19,7 @@ import com.chen.memorizewords.core.ui.ext.setTextSizeFromDimen
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.feature.home.R
 import com.chen.memorizewords.feature.home.databinding.ModuleHomeFragmentStatsBinding
+import com.chen.memorizewords.feature.home.ui.practice.PracticeLevelUi
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -63,10 +63,7 @@ class StatsFragment : BaseFragment<StatsViewModel, ModuleHomeFragmentStatsBindin
                     }
                 }
                 launch {
-                    viewModel.timeDistribution.collect { distribution ->
-                        databind.donutChartView.submitItems(distribution)
-                        renderDistributionLegend(distribution)
-                    }
+                    viewModel.levelUi.collect(::renderLevel)
                 }
                 launch {
                     viewModel.achievements.collect(::renderAchievements)
@@ -116,47 +113,11 @@ class StatsFragment : BaseFragment<StatsViewModel, ModuleHomeFragmentStatsBindin
             .show(fragmentManager, StatsDayDetailBottomSheetDialog.TAG)
     }
 
-    private fun renderDistributionLegend(items: List<StatsTimeDistributionUi>) {
-        databind.llDistributionLegend.removeAllViews()
-        items.forEach { item ->
-            databind.llDistributionLegend.addView(createDistributionLegendRow(item))
-        }
-    }
-
-    private fun createDistributionLegendRow(item: StatsTimeDistributionUi): View {
-        return LinearLayout(requireContext()).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                0,
-                1f
-            )
-            gravity = Gravity.CENTER_VERTICAL
-            orientation = LinearLayout.HORIZONTAL
-
-            addView(View(context).apply {
-                layoutParams = LinearLayout.LayoutParams(dimen(CoreUiR.dimen.core_ui_dp_6), dimen(CoreUiR.dimen.core_ui_dp_6)).apply {
-                    marginEnd = dimen(CoreUiR.dimen.core_ui_dp_7)
-                }
-                background = ovalDrawable(item.color)
-            })
-            addView(TextView(context).apply {
-                layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
-                text = item.label
-                setTextColor(0xFF39465F.toInt())
-                setTextSizeFromDimen(CoreUiR.dimen.core_ui_sp_10)
-                typeface = Typeface.DEFAULT_BOLD
-                includeFontPadding = false
-                maxLines = 1
-            })
-            addView(TextView(context).apply {
-                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                text = "${item.percent.coerceAtLeast(0)}%"
-                setTextColor(0xFF071436.toInt())
-                setTextSizeFromDimen(CoreUiR.dimen.core_ui_sp_11)
-                typeface = Typeface.DEFAULT_BOLD
-                includeFontPadding = false
-            })
-        }
+    private fun renderLevel(level: PracticeLevelUi) {
+        databind.statsLevelText.text = level.levelText
+        databind.statsBadgeLevelText.text = level.levelText
+        databind.statsXpCurrentText.text = getString(R.string.feature_home_stats_xp_current, level.xpProgress)
+        databind.statsXpProgress.progress = level.xpProgress
     }
 
     private fun renderAchievements(achievements: List<StatsAchievementUi>) {
@@ -173,11 +134,11 @@ class StatsFragment : BaseFragment<StatsViewModel, ModuleHomeFragmentStatsBindin
             orientation = LinearLayout.HORIZONTAL
 
             addView(ImageView(context).apply {
-                layoutParams = LinearLayout.LayoutParams(dimen(CoreUiR.dimen.core_ui_dp_34), dimen(CoreUiR.dimen.core_ui_dp_34)).apply {
-                    marginEnd = dimen(CoreUiR.dimen.core_ui_dp_8)
+                layoutParams = LinearLayout.LayoutParams(dimen(CoreUiR.dimen.core_ui_dp_24), dimen(CoreUiR.dimen.core_ui_dp_24)).apply {
+                    marginEnd = dimen(CoreUiR.dimen.core_ui_dp_6)
                 }
-                setImageResource(if (achievement.achieved) achievement.iconResId else R.drawable.feature_home_ic_achievement_locked)
-                alpha = if (achievement.achieved) 1f else 0.9f
+                setImageResource(achievement.iconResId)
+                alpha = if (achievement.achieved) 1f else 0.72f
                 contentDescription = null
             })
             addView(LinearLayout(context).apply {
@@ -188,17 +149,17 @@ class StatsFragment : BaseFragment<StatsViewModel, ModuleHomeFragmentStatsBindin
                     layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                     text = achievement.title
                     setTextColor(0xFF071436.toInt())
-                    setTextSizeFromDimen(CoreUiR.dimen.core_ui_sp_10)
+                    setTextSizeFromDimen(CoreUiR.dimen.core_ui_sp_9)
                     typeface = Typeface.DEFAULT_BOLD
                     maxLines = 1
                 })
                 addView(TextView(context).apply {
                     layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
-                        topMargin = dimen(CoreUiR.dimen.core_ui_dp_2)
+                        topMargin = 0
                     }
                     text = achievement.subtitle
                     setTextColor(0xFF8190A4.toInt())
-                    setTextSizeFromDimen(CoreUiR.dimen.core_ui_sp_8)
+                    setTextSize(7f)
                     maxLines = 1
                 })
             })
@@ -268,19 +229,19 @@ class StatsFragment : BaseFragment<StatsViewModel, ModuleHomeFragmentStatsBindin
             orientation = LinearLayout.HORIZONTAL
 
             addView(ImageView(context).apply {
-                layoutParams = LinearLayout.LayoutParams(dimen(CoreUiR.dimen.core_ui_dp_24), dimen(CoreUiR.dimen.core_ui_dp_24)).apply {
-                    marginEnd = dimen(CoreUiR.dimen.core_ui_dp_9)
+                layoutParams = LinearLayout.LayoutParams(dimen(CoreUiR.dimen.core_ui_dp_20), dimen(CoreUiR.dimen.core_ui_dp_20)).apply {
+                    marginEnd = dimen(CoreUiR.dimen.core_ui_dp_6)
                 }
                 background = requireContext().getDrawable(row.iconBackgroundResId)
                 setImageResource(row.iconResId)
-                setPadding(dimen(CoreUiR.dimen.core_ui_dp_5), dimen(CoreUiR.dimen.core_ui_dp_5), dimen(CoreUiR.dimen.core_ui_dp_5), dimen(CoreUiR.dimen.core_ui_dp_5))
+                setPadding(dimen(CoreUiR.dimen.core_ui_dp_4), dimen(CoreUiR.dimen.core_ui_dp_4), dimen(CoreUiR.dimen.core_ui_dp_4), dimen(CoreUiR.dimen.core_ui_dp_4))
                 contentDescription = null
             })
             addView(TextView(context).apply {
                 layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
                 text = row.label
                 setTextColor(0xFF60708A.toInt())
-                setTextSizeFromDimen(CoreUiR.dimen.core_ui_sp_10)
+                setTextSizeFromDimen(CoreUiR.dimen.core_ui_sp_8)
                 typeface = Typeface.DEFAULT_BOLD
                 maxLines = 1
             })
@@ -288,7 +249,7 @@ class StatsFragment : BaseFragment<StatsViewModel, ModuleHomeFragmentStatsBindin
                 layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 text = row.value
                 setTextColor(0xFF071436.toInt())
-                setTextSizeFromDimen(CoreUiR.dimen.core_ui_text_title)
+                setTextSizeFromDimen(CoreUiR.dimen.core_ui_sp_10)
                 typeface = Typeface.DEFAULT_BOLD
                 includeFontPadding = false
                 maxLines = 1
@@ -300,7 +261,7 @@ class StatsFragment : BaseFragment<StatsViewModel, ModuleHomeFragmentStatsBindin
                     }
                     text = row.unit
                     setTextColor(0xFF4F5E75.toInt())
-                    setTextSizeFromDimen(CoreUiR.dimen.core_ui_sp_9)
+                    setTextSizeFromDimen(CoreUiR.dimen.core_ui_sp_8)
                     typeface = Typeface.DEFAULT_BOLD
                     maxLines = 1
                 })
@@ -308,12 +269,6 @@ class StatsFragment : BaseFragment<StatsViewModel, ModuleHomeFragmentStatsBindin
         }
     }
 
-    private fun ovalDrawable(color: Int): GradientDrawable {
-        return GradientDrawable().apply {
-            shape = GradientDrawable.OVAL
-            setColor(color)
-        }
-    }
     private fun dimen(id: Int): Int {
         return requireContext().dimenPx(id)
     }

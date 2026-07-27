@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="feature_home_stats_page_horizontal">20dp</dimen>
+    <dimen name="feature_home_stats_header_height">76dp</dimen>
+    <dimen name="feature_home_stats_period_width">62dp</dimen>
+    <dimen name="feature_home_stats_period_height">28dp</dimen>
+    <dimen name="feature_home_stats_hero_height">166dp</dimen>
+    <dimen name="feature_home_stats_hero_top_height">109dp</dimen>
+    <dimen name="feature_home_stats_level_height">57dp</dimen>
+    <dimen name="feature_home_stats_hero_mascot_width">145dp</dimen>
+    <dimen name="feature_home_stats_hero_mascot_height">108dp</dimen>
+    <dimen name="feature_home_stats_xp_bar_width">110dp</dimen>
+    <dimen name="feature_home_stats_overview_card_height">78dp</dimen>
+    <dimen name="feature_home_stats_overview_icon_frame">30dp</dimen>
+    <dimen name="feature_home_stats_overview_icon_glyph">16dp</dimen>
+    <dimen name="feature_home_stats_overview_card_padding_start">11dp</dimen>
+    <dimen name="feature_home_stats_overview_icon_text_gap">8dp</dimen>
+    <dimen name="feature_home_stats_calendar_header_height">28dp</dimen>
+    <dimen name="feature_home_stats_calendar_card_height">152dp</dimen>
+    <dimen name="feature_home_stats_calendar_grid_height">98dp</dimen>
+    <dimen name="feature_home_stats_trend_card_height">126dp</dimen>
+    <dimen name="feature_home_stats_summary_card_height">142dp</dimen>
+</resources>

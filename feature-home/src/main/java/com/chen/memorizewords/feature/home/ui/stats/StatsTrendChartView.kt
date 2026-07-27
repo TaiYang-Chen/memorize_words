@@ -7,7 +7,8 @@ import android.graphics.Path
 import android.util.AttributeSet
 import android.view.View
 import com.chen.memorizewords.core.ui.ext.dpToPx
-import kotlin.math.max
+import java.util.Locale
+import kotlin.math.ceil
 
 class StatsTrendChartView @JvmOverloads constructor(
     context: Context,
@@ -16,29 +17,28 @@ class StatsTrendChartView @JvmOverloads constructor(
 
     private var points: List<StatsTrendPointUi> = emptyList()
     private val gridPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = 0x80EAF0F7.toInt()
-        strokeWidth = 1f.dpToPx(context)
+        color = 0xFFE7EDF4.toInt()
+        strokeWidth = 0.7f.dpToPx(context)
     }
     private val durationPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = 0xFF2F95FF.toInt()
-        strokeWidth = 1.8f.dpToPx(context)
+        color = 0xFF12C777.toInt()
+        strokeWidth = 1.6f.dpToPx(context)
         style = Paint.Style.STROKE
         strokeCap = Paint.Cap.ROUND
         strokeJoin = Paint.Join.ROUND
     }
     private val wordPaint = Paint(durationPaint).apply {
-        color = 0xFF48D167.toInt()
-    }
-    private val fillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = 0x183BA5F5
-        style = Paint.Style.FILL
+        color = 0xFF1687E8.toInt()
     }
     private val dotPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
     }
-    private val labelPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    private val axisPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = 0xFF72819A.toInt()
-        textSize = 11f.dpToPx(context)
+        textSize = 7.5f.dpToPx(context)
+    }
+    private val dayPaint = Paint(axisPaint).apply {
+        textSize = 8f.dpToPx(context)
         textAlign = Paint.Align.CENTER
     }
 
@@ -49,54 +49,103 @@ class StatsTrendChartView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        if (width <= 0 || height <= 0) return
+
         val safePoints = points.ifEmpty {
             listOf("一", "二", "三", "四", "五", "六", "日").map {
                 StatsTrendPointUi(it, 0f, 0)
             }
         }
-        val left = 4f.dpToPx(context)
-        val right = width - 4f.dpToPx(context)
-        val top = 8f.dpToPx(context)
-        val bottom = height - 20f.dpToPx(context)
-        val chartHeight = (bottom - top).coerceAtLeast(1f.dpToPx(context))
-        repeat(4) { index ->
-            val y = top + chartHeight * index / 3f
-            canvas.drawLine(left, y, right, y, gridPaint)
+        val scale = calculateTrendScale(safePoints)
+        val chartLeft = 23f.dpToPx(context)
+        val chartRight = width - 23f.dpToPx(context)
+        val chartTop = 3f.dpToPx(context)
+        val chartBottom = height - 14f.dpToPx(context)
+        val chartHeight = (chartBottom - chartTop).coerceAtLeast(1f.dpToPx(context))
+
+        repeat(3) { index ->
+            val fraction = index / 2f
+            val y = chartTop + chartHeight * fraction
+            canvas.drawLine(chartLeft, y, chartRight, y, gridPaint)
+
+            val durationValue = scale.durationMaxHours * (1f - fraction)
+            axisPaint.textAlign = Paint.Align.RIGHT
+            canvas.drawText(
+                formatDurationAxis(durationValue),
+                chartLeft - 5f.dpToPx(context),
+                axisBaseline(y, axisPaint),
+                axisPaint
+            )
+
+            val wordValue = (scale.wordMaxCount * (1f - fraction)).toInt()
+            axisPaint.textAlign = Paint.Align.LEFT
+            canvas.drawText(
+                wordValue.toString(),
+                chartRight + 5f.dpToPx(context),
+                axisBaseline(y, axisPaint),
+                axisPaint
+            )
         }
-        val step = if (safePoints.size <= 1) 0f else (right - left) / (safePoints.size - 1)
-        val maxDuration = max(1f, safePoints.maxOf { it.durationHours })
-        val maxWords = max(1, safePoints.maxOf { it.newWordCount })
+
+        val step = if (safePoints.size <= 1) 0f else {
+            (chartRight - chartLeft) / (safePoints.size - 1)
+        }
         val durationPath = Path()
         val wordPath = Path()
-        val fillPath = Path()
         safePoints.forEachIndexed { index, point ->
-            val x = left + step * index
-            val durationY = bottom - (point.durationHours / maxDuration) * chartHeight
-            val wordY = bottom - (point.newWordCount.toFloat() / maxWords.toFloat()) * chartHeight
+            val x = chartLeft + step * index
+            val durationY = chartBottom -
+                (point.durationHours.coerceAtLeast(0f) / scale.durationMaxHours) * chartHeight
+            val wordY = chartBottom -
+                (point.newWordCount.coerceAtLeast(0).toFloat() / scale.wordMaxCount) * chartHeight
+
             if (index == 0) {
                 durationPath.moveTo(x, durationY)
                 wordPath.moveTo(x, wordY)
-                fillPath.moveTo(x, bottom)
-                fillPath.lineTo(x, durationY)
             } else {
                 durationPath.lineTo(x, durationY)
                 wordPath.lineTo(x, wordY)
-                fillPath.lineTo(x, durationY)
             }
-            dotPaint.color = durationPaint.color
-            canvas.drawCircle(x, durationY, 2.6f.dpToPx(context), dotPaint)
-            dotPaint.color = 0xFFFFFFFF.toInt()
-            canvas.drawCircle(x, durationY, 1.2f.dpToPx(context), dotPaint)
-            dotPaint.color = wordPaint.color
-            canvas.drawCircle(x, wordY, 2.6f.dpToPx(context), dotPaint)
-            dotPaint.color = 0xFFFFFFFF.toInt()
-            canvas.drawCircle(x, wordY, 1.2f.dpToPx(context), dotPaint)
-            canvas.drawText(point.dayLabel, x, height - 5f.dpToPx(context), labelPaint)
+            drawPoint(canvas, x, durationY, durationPaint.color)
+            drawPoint(canvas, x, wordY, wordPaint.color)
+            canvas.drawText(point.dayLabel, x, height - 2.5f.dpToPx(context), dayPaint)
         }
-        fillPath.lineTo(right, bottom)
-        fillPath.close()
-        canvas.drawPath(fillPath, fillPaint)
         canvas.drawPath(durationPath, durationPaint)
         canvas.drawPath(wordPath, wordPaint)
     }
+
+    private fun drawPoint(canvas: Canvas, x: Float, y: Float, color: Int) {
+        dotPaint.color = color
+        canvas.drawCircle(x, y, 2.1f.dpToPx(context), dotPaint)
+        dotPaint.color = 0xFFFFFFFF.toInt()
+        canvas.drawCircle(x, y, 0.85f.dpToPx(context), dotPaint)
+    }
+
+    private fun axisBaseline(centerY: Float, paint: Paint): Float {
+        return centerY - (paint.descent() + paint.ascent()) / 2f
+    }
 }
+
+internal data class StatsTrendScale(
+    val durationMaxHours: Float,
+    val wordMaxCount: Float
+)
+
+internal fun calculateTrendScale(points: List<StatsTrendPointUi>): StatsTrendScale {
+    val durationMax = ceil(points.maxOfOrNull { it.durationHours.coerceAtLeast(0f) }?.toDouble() ?: 0.0)
+        .toFloat()
+        .coerceAtLeast(MIN_DURATION_AXIS_HOURS)
+    val rawWordMax = points.maxOfOrNull { it.newWordCount.coerceAtLeast(0) } ?: 0
+    val wordMax = (ceil(rawWordMax / WORD_AXIS_STEP.toDouble()) * WORD_AXIS_STEP)
+        .toFloat()
+        .coerceAtLeast(MIN_WORD_AXIS_COUNT)
+    return StatsTrendScale(durationMax, wordMax)
+}
+
+private fun formatDurationAxis(value: Float): String {
+    return if (value == 0f) "0" else String.format(Locale.US, "%.1f", value)
+}
+
+private const val MIN_DURATION_AXIS_HOURS = 2f
+private const val MIN_WORD_AXIS_COUNT = 20f
+private const val WORD_AXIS_STEP = 10

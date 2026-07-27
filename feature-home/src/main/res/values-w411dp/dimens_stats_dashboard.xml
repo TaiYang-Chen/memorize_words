@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="feature_home_stats_page_horizontal">20dp</dimen>
+    <dimen name="feature_home_stats_hero_mascot_width">170dp</dimen>
+    <dimen name="feature_home_stats_hero_mascot_height">124dp</dimen>
+    <dimen name="feature_home_stats_xp_bar_width">134dp</dimen>
+    <dimen name="feature_home_stats_overview_icon_frame">34dp</dimen>
+    <dimen name="feature_home_stats_overview_icon_glyph">18dp</dimen>
+    <dimen name="feature_home_stats_overview_card_padding_start">15dp</dimen>
+    <dimen name="feature_home_stats_overview_icon_text_gap">10dp</dimen>
+</resources>

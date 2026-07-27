@@ -15,301 +15,385 @@
         android:layout_height="match_parent"
         android:background="@drawable/feature_home_stats_page_bg_v2"
         android:orientation="vertical"
-        android:paddingTop="@dimen/page_margin"
-        android:paddingStart="@dimen/page_margin"
-        android:paddingEnd="@dimen/page_margin">
+        android:paddingStart="@dimen/feature_home_stats_page_horizontal"
+        android:paddingEnd="@dimen/feature_home_stats_page_horizontal">
 
-        <TextView
-            android:layout_marginTop="@dimen/title_margin"
-            android:id="@+id/feature_home_profile_title"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/home_stats_title"
-            android:textColor="#000"
-            android:textSize="@dimen/title_text_size"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="@dimen/feature_home_stats_header_height">
+
+            <TextView
+                android:id="@+id/statsTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="41dp"
+                android:includeFontPadding="false"
+                android:text="@string/home_stats_title"
+                android:textColor="#071A3A"
+                android:textSize="@dimen/core_ui_text_17"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@id/statsPeriod"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/statsPeriod"
+                android:layout_width="@dimen/feature_home_stats_period_width"
+                android:layout_height="@dimen/feature_home_stats_period_height"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/feature_home_stats_period_bg"
+                android:contentDescription="@string/feature_home_stats_period_week"
+                android:elevation="2dp"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:gravity="center"
+                android:onClick="@{() -> viewModel.onUnavailableFeatureClicked()}"
+                android:orientation="horizontal"
+                android:translationX="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:includeFontPadding="false"
+                    android:text="@string/feature_home_stats_period_week"
+                    android:textColor="#53637D"
+                    android:textSize="@dimen/core_ui_text_11"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:layout_width="9dp"
+                    android:layout_height="9dp"
+                    android:layout_marginStart="5dp"
+                    android:contentDescription="@null"
+                    android:rotation="90"
+                    android:src="@drawable/module_home_ic_right_black" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="@dimen/core_ui_dp_16"
             android:layout_weight="1"
             android:clipToPadding="false"
             android:fillViewport="true"
             android:overScrollMode="never"
-            android:paddingBottom="@dimen/core_ui_dp_18">
+            android:paddingBottom="12dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/feature_home_stats_hero_height"
                     android:background="@drawable/feature_home_stats_top_shell_bg"
                     android:clipChildren="false"
                     android:clipToPadding="false"
-                    android:elevation="@dimen/core_ui_dp_8"
-                    android:orientation="vertical"
-                    android:padding="@dimen/core_ui_dp_6">
+                    android:elevation="4dp">
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/core_ui_dp_120"
+                    <View
+                        android:id="@+id/statsHeroBackground"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/feature_home_stats_hero_top_height"
                         android:background="@drawable/feature_home_stats_hero_bg"
-                        android:clipChildren="false"
-                        android:clipToPadding="false"
-                        android:paddingStart="@dimen/core_ui_dp_18"
-                        android:paddingTop="@dimen/core_ui_dp_14"
-                        android:paddingEnd="0dp"
-                        android:paddingBottom="@dimen/core_ui_dp_13">
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                        <ImageView
-                            android:layout_width="@dimen/core_ui_dp_150"
-                            android:layout_height="@dimen/core_ui_dp_90"
-                            android:layout_marginBottom="@dimen/feature_home_stats_hero_mascot_overlap"
-                            android:contentDescription="@null"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/feature_home_stats_hero_mascot"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent" />
-
-                        <LinearLayout
-                            android:id="@+id/heroTitleRow"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
-
-                            <ImageView
-                                android:layout_width="@dimen/core_ui_dp_18"
-                                android:layout_height="@dimen/core_ui_dp_18"
-                                android:contentDescription="@null"
-                                android:src="@drawable/feature_home_ic_profile_flame" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/core_ui_dp_4"
-                                android:text="@string/feature_home_stats_streak_title"
-                                android:textColor="#253851"
-                                android:textSize="@dimen/core_ui_sp_10"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/heroDaysBlock"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            app:layout_constraintBottom_toTopOf="@id/tvDescription"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/heroTitleRow">
-
-                            <TextView
-                                android:id="@+id/tvAchievementDays"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:includeFontPadding="false"
-                                android:text="@{viewModel.continuousCheckInDaysText}"
-                                android:textColor="#19D18C"
-                                android:textSize="@dimen/core_ui_text_52"
-                                android:textStyle="bold"
-                                tools:text="2" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/core_ui_dp_7"
-                                android:layout_marginBottom="@dimen/core_ui_dp_6"
-                                android:text="@string/home_days_unit"
-                                android:textColor="#071436"
-                                android:textSize="@dimen/core_ui_text_26"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/tvDescription"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/feature_home_stats_pill_bg"
-                            android:gravity="center"
-                            android:orientation="horizontal"
-                            android:paddingStart="@dimen/core_ui_dp_12"
-                            android:paddingEnd="@dimen/core_ui_dp_12"
-                            android:paddingTop="@dimen/core_ui_dp_4"
-                            android:paddingBottom="@dimen/core_ui_dp_4"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/feature_home_stats_peer_rank"
-                                android:textColor="#60708A"
-                                android:textSize="@dimen/core_ui_sp_8"
-                                android:textStyle="bold" />
-
-                            <ImageView
-                                android:layout_width="@dimen/core_ui_dp_7"
-                                android:layout_height="@dimen/core_ui_dp_7"
-                                android:layout_marginStart="@dimen/core_ui_dp_4"
-                                android:contentDescription="@null"
-                                android:src="@drawable/module_home_ic_right" />
-                        </LinearLayout>
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="102dp"
+                        android:contentDescription="@null"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/feature_home_stats_hero_wave_extension"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/core_ui_dp_58"
+                        android:id="@+id/heroTitleRow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:paddingStart="@dimen/core_ui_dp_14"
-                        android:paddingEnd="@dimen/core_ui_dp_10">
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:layout_marginStart="18dp"
+                        android:layout_marginTop="12dp">
 
                         <ImageView
-                            android:layout_width="@dimen/core_ui_dp_32"
-                            android:layout_height="@dimen/core_ui_dp_32"
+                            android:layout_width="17dp"
+                            android:layout_height="17dp"
                             android:contentDescription="@null"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/feature_home_stats_level_badge" />
+                            android:src="@drawable/feature_home_ic_profile_flame" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:text="@string/feature_home_stats_streak_title"
+                            android:textColor="#31445F"
+                            android:textSize="@dimen/core_ui_text_12"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/heroDaysBlock"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="bottom"
+                        android:orientation="horizontal"
+                        app:layout_constraintStart_toStartOf="@id/heroTitleRow"
+                        app:layout_constraintTop_toBottomOf="@id/heroTitleRow">
+
+                        <TextView
+                            android:id="@+id/tvAchievementDays"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:includeFontPadding="false"
+                            android:maxLines="1"
+                            android:text="@{viewModel.continuousCheckInDaysText}"
+                            android:textColor="#14CF91"
+                            android:textSize="38sp"
+                            android:textStyle="bold"
+                            tools:text="0" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:layout_marginBottom="4dp"
+                            android:includeFontPadding="false"
+                            android:text="@string/home_days_unit"
+                            android:textColor="#071436"
+                            android:textSize="@dimen/core_ui_text_22"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/statsPeerRank"
+                        android:layout_width="wrap_content"
+                        android:layout_height="22dp"
+                        android:layout_marginStart="16dp"
+                        android:background="@drawable/feature_home_stats_pill_bg"
+                        android:contentDescription="@string/feature_home_stats_peer_rank"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackgroundBorderless"
+                        android:gravity="center"
+                        android:onClick="@{() -> viewModel.onUnavailableFeatureClicked()}"
+                        android:orientation="horizontal"
+                        android:paddingStart="9dp"
+                        android:paddingEnd="9dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/heroDaysBlock">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/feature_home_stats_peer_rank"
+                            android:textColor="#60708A"
+                            android:textSize="@dimen/core_ui_sp_8"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:layout_width="7dp"
+                            android:layout_height="7dp"
+                            android:layout_marginStart="4dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/module_home_ic_right" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/statsLevelStrip"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/feature_home_stats_level_height"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent">
+
+                        <FrameLayout
+                            android:layout_width="44dp"
+                            android:layout_height="44dp">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:contentDescription="@null"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/feature_home_stats_level_badge" />
+
+                            <TextView
+                                android:id="@+id/statsBadgeLevelText"
+                                android:layout_width="36dp"
+                                android:layout_height="14dp"
+                                android:layout_gravity="center_horizontal|bottom"
+                                android:layout_marginBottom="4dp"
+                                android:background="@drawable/feature_home_stats_badge_level_bg"
+                                android:gravity="center"
+                                android:includeFontPadding="false"
+                                android:textColor="#FFFFFF"
+                                android:textSize="7sp"
+                                android:textStyle="bold"
+                                tools:text="Lv.1" />
+                        </FrameLayout>
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/core_ui_dp_14"
+                            android:layout_marginStart="4dp"
                             android:layout_weight="1"
                             android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/feature_home_stats_level_title"
-                                android:textColor="#071436"
-                                android:textStyle="bold" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/core_ui_dp_10"
                                 android:gravity="center_vertical"
                                 android:orientation="horizontal">
-
-                                <ProgressBar
-                                    style="?android:attr/progressBarStyleHorizontal"
-                                    android:layout_width="0dp"
-                                    android:layout_height="@dimen/core_ui_dp_6"
-                                    android:layout_weight="1"
-                                    android:max="100"
-                                    android:progress="0"
-                                    android:progressDrawable="@drawable/feature_home_stats_xp_progress" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="@dimen/core_ui_dp_12"
-                                    android:text="0"
-                                    android:textColor="#16C98D"
-                                    android:textSize="@dimen/core_ui_text_11"
+                                    android:includeFontPadding="false"
+                                    android:text="@string/feature_home_stats_level_title"
+                                    android:textColor="#071436"
+                                    android:textSize="@dimen/core_ui_text_13"
                                     android:textStyle="bold" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text=" / 100 XP"
-                                    android:textColor="#64718A"
+                                    android:layout_marginStart="4dp"
+                                    android:text="@string/feature_home_stats_level_separator"
+                                    android:textColor="#8592A9"
+                                    android:textSize="@dimen/core_ui_text_12" />
+
+                                <TextView
+                                    android:id="@+id/statsLevelText"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:includeFontPadding="false"
+                                    android:textColor="#78869E"
+                                    android:textSize="@dimen/core_ui_text_12"
+                                    android:textStyle="bold"
+                                    tools:text="Lv.1" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="7dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ProgressBar
+                                    android:id="@+id/statsXpProgress"
+                                    style="?android:attr/progressBarStyleHorizontal"
+                                    android:layout_width="@dimen/feature_home_stats_xp_bar_width"
+                                    android:layout_height="6dp"
+                                    android:max="100"
+                                    android:progressDrawable="@drawable/feature_home_stats_xp_progress"
+                                    tools:progress="0" />
+
+                                <TextView
+                                    android:id="@+id/statsXpCurrentText"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="10dp"
+                                    android:includeFontPadding="false"
+                                    android:textColor="#14C98B"
+                                    android:textSize="@dimen/core_ui_text_11"
+                                    android:textStyle="bold"
+                                    tools:text="0" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="3dp"
+                                    android:includeFontPadding="false"
+                                    android:text="@string/feature_home_stats_xp_total"
+                                    android:textColor="#65728A"
                                     android:textSize="@dimen/core_ui_text_11" />
                             </LinearLayout>
                         </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/core_ui_dp_12"
-                            android:background="@drawable/feature_home_stats_level_button_bg"
-                            android:gravity="center"
-                            android:orientation="horizontal"
-                            android:paddingStart="@dimen/core_ui_dp_8"
-                            android:paddingTop="@dimen/core_ui_dp_4"
-                            android:paddingEnd="@dimen/core_ui_dp_8"
-                            android:paddingBottom="@dimen/core_ui_dp_4">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/feature_home_stats_view_level"
-                                android:textColor="#071436"
-                                android:textSize="@dimen/core_ui_text_11"
-                                android:textStyle="bold" />
-
-                            <ImageView
-                                android:layout_width="@dimen/core_ui_dp_8"
-                                android:layout_height="@dimen/core_ui_dp_8"
-                                android:layout_marginStart="@dimen/core_ui_dp_4"
-                                android:contentDescription="@null"
-                                android:src="@drawable/module_home_ic_right_black" />
-                        </LinearLayout>
                     </LinearLayout>
-                </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/statsHeroMascot"
+                        android:layout_width="@dimen/feature_home_stats_hero_mascot_width"
+                        android:layout_height="@dimen/feature_home_stats_hero_mascot_height"
+                        android:layout_marginEnd="2dp"
+                        android:layout_marginBottom="-8dp"
+                        android:contentDescription="@null"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/feature_home_stats_hero_mascot_v2"
+                        app:layout_constraintBottom_toBottomOf="@id/statsHeroBackground"
+                        app:layout_constraintEnd_toEndOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/core_ui_dp_24"
+                    android:layout_height="28dp"
+                    android:layout_marginTop="12dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <View
-                        android:layout_width="@dimen/core_ui_dp_5"
-                        android:layout_height="@dimen/core_ui_dp_20"
+                        android:layout_width="4dp"
+                        android:layout_height="18dp"
                         android:background="@drawable/feature_home_stats_overview_title_marker" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/core_ui_dp_12"
-                        android:text="数据概览"
+                        android:layout_marginStart="10dp"
+                        android:text="@string/feature_home_stats_overview_title"
                         android:textColor="#071436"
+                        android:textSize="@dimen/core_ui_text_14"
                         android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/core_ui_dp_92"
-                    android:layout_marginTop="@dimen/core_ui_dp_14"
+                    android:layout_height="@dimen/feature_home_stats_overview_card_height"
+                    android:layout_marginTop="6dp"
                     android:baselineAligned="false"
                     android:orientation="horizontal">
 
                     <LinearLayout
+                        android:id="@+id/statsOverviewLearnedCard"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginEnd="@dimen/core_ui_dp_4"
+                        android:layout_marginEnd="4dp"
                         android:layout_weight="1"
                         android:background="@drawable/feature_home_stats_overview_card_bg"
-                        android:clipToOutline="true"
-                        android:elevation="@dimen/core_ui_dp_5"
+                        android:contentDescription="@string/feature_home_stats_overview_learned"
+                        android:elevation="3dp"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackgroundBorderless"
                         android:gravity="center_vertical"
+                        android:onClick="@{() -> viewModel.onUnavailableFeatureClicked()}"
                         android:orientation="horizontal"
-                        android:paddingStart="@dimen/core_ui_dp_18"
-                        android:paddingEnd="@dimen/core_ui_dp_12">
+                        android:paddingStart="@dimen/feature_home_stats_overview_card_padding_start"
+                        android:paddingEnd="9dp">
 
                         <FrameLayout
-                            android:layout_width="@dimen/core_ui_dp_32"
-                            android:layout_height="@dimen/core_ui_dp_32"
+                            android:layout_width="@dimen/feature_home_stats_overview_icon_frame"
+                            android:layout_height="@dimen/feature_home_stats_overview_icon_frame"
                             android:background="@drawable/feature_home_stats_overview_icon_green_hex">
 
                             <ImageView
-                                android:layout_width="@dimen/core_ui_dp_16"
-                                android:layout_height="@dimen/core_ui_dp_16"
+                                android:layout_width="@dimen/feature_home_stats_overview_icon_glyph"
+                                android:layout_height="@dimen/feature_home_stats_overview_icon_glyph"
                                 android:layout_gravity="center"
                                 android:contentDescription="@null"
                                 android:src="@drawable/feature_home_ic_profile_book_open" />
@@ -318,7 +402,7 @@
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/core_ui_dp_16"
+                            android:layout_marginStart="@dimen/feature_home_stats_overview_icon_text_gap"
                             android:layout_weight="1"
                             android:orientation="vertical">
 
@@ -333,65 +417,79 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:includeFontPadding="false"
-                                    android:text="0"
                                     android:textColor="#071436"
-                                    android:textSize="@dimen/core_ui_text_24"
-                                    android:textStyle="bold" />
+                                    android:textSize="@dimen/core_ui_text_22"
+                                    android:textStyle="bold"
+                                    tools:text="21" />
 
                                 <TextView
                                     android:id="@+id/statsOverviewWordsUnit"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="@dimen/core_ui_dp_7"
-                                    android:text="词"
+                                    android:layout_marginStart="5dp"
                                     android:textColor="#4F5E75"
-                                    android:textSize="@dimen/core_ui_text_13"
-                                    android:textStyle="bold" />
+                                    android:textSize="@dimen/core_ui_text_11"
+                                    android:textStyle="bold"
+                                    tools:text="词" />
                             </LinearLayout>
 
                             <TextView
                                 android:id="@+id/statsOverviewWordsTitle"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/core_ui_dp_3"
-                                android:text="已学习"
+                                android:ellipsize="end"
+                                android:maxLines="1"
                                 android:textColor="#60708A"
-                                android:textSize="@dimen/core_ui_text_13"
-                                android:textStyle="bold" />
+                                android:textSize="@dimen/core_ui_text_11"
+                                android:textStyle="bold"
+                                tools:text="已学习" />
 
                             <TextView
                                 android:id="@+id/statsOverviewWordsChange"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/core_ui_dp_8"
-                                android:text="学习中 0 · 已掌握 0"
-                                android:textColor="#18C88E"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:textColor="#13C989"
                                 android:textSize="@dimen/core_ui_sp_8"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+                                tools:text="学习中 0 · 已掌握 21" />
                         </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="7dp"
+                            android:layout_height="11dp"
+                            android:layout_marginStart="3dp"
+                            android:contentDescription="@null"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/module_home_ic_right" />
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/statsOverviewLearningCard"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/core_ui_dp_4"
+                        android:layout_marginStart="4dp"
                         android:layout_weight="1"
                         android:background="@drawable/feature_home_stats_overview_card_bg"
-                        android:clipToOutline="true"
-                        android:elevation="@dimen/core_ui_dp_5"
+                        android:contentDescription="@string/feature_home_stats_overview_learning"
+                        android:elevation="3dp"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackgroundBorderless"
                         android:gravity="center_vertical"
+                        android:onClick="@{() -> viewModel.onUnavailableFeatureClicked()}"
                         android:orientation="horizontal"
-                        android:paddingStart="@dimen/core_ui_dp_18"
-                        android:paddingEnd="@dimen/core_ui_dp_12">
+                        android:paddingStart="@dimen/feature_home_stats_overview_card_padding_start"
+                        android:paddingEnd="9dp">
 
                         <FrameLayout
-                            android:layout_width="@dimen/core_ui_dp_32"
-                            android:layout_height="@dimen/core_ui_dp_32"
+                            android:layout_width="@dimen/feature_home_stats_overview_icon_frame"
+                            android:layout_height="@dimen/feature_home_stats_overview_icon_frame"
                             android:background="@drawable/feature_home_stats_overview_icon_orange_hex">
 
                             <ImageView
-                                android:layout_width="@dimen/core_ui_dp_16"
-                                android:layout_height="@dimen/core_ui_dp_16"
+                                android:layout_width="@dimen/feature_home_stats_overview_icon_glyph"
+                                android:layout_height="@dimen/feature_home_stats_overview_icon_glyph"
                                 android:layout_gravity="center"
                                 android:contentDescription="@null"
                                 android:src="@drawable/feature_home_ic_profile_flame" />
@@ -400,7 +498,7 @@
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/core_ui_dp_16"
+                            android:layout_marginStart="@dimen/feature_home_stats_overview_icon_text_gap"
                             android:layout_weight="1"
                             android:orientation="vertical">
 
@@ -415,73 +513,87 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:includeFontPadding="false"
-                                    android:text="0"
                                     android:textColor="#071436"
-                                    android:textSize="@dimen/core_ui_text_24"
-                                    android:textStyle="bold" />
+                                    android:textSize="@dimen/core_ui_text_22"
+                                    android:textStyle="bold"
+                                    tools:text="0" />
 
                                 <TextView
                                     android:id="@+id/statsOverviewStreakUnit"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="@dimen/core_ui_dp_7"
-                                    android:text="词"
+                                    android:layout_marginStart="5dp"
                                     android:textColor="#4F5E75"
-                                    android:textSize="@dimen/core_ui_text_13"
-                                    android:textStyle="bold" />
+                                    android:textSize="@dimen/core_ui_text_11"
+                                    android:textStyle="bold"
+                                    tools:text="词" />
                             </LinearLayout>
 
                             <TextView
                                 android:id="@+id/statsOverviewStreakTitle"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/core_ui_dp_3"
-                                android:text="学习中"
+                                android:ellipsize="end"
+                                android:maxLines="1"
                                 android:textColor="#60708A"
-                                android:textSize="@dimen/core_ui_text_13"
-                                android:textStyle="bold" />
+                                android:textSize="@dimen/core_ui_text_11"
+                                android:textStyle="bold"
+                                tools:text="学习中" />
 
                             <TextView
                                 android:id="@+id/statsOverviewStreakChange"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/core_ui_dp_8"
-                                android:text="当前词书"
-                                android:textColor="#D57637"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:textColor="#FB6900"
                                 android:textSize="@dimen/core_ui_sp_8"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+                                tools:text="当前词书" />
                         </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="7dp"
+                            android:layout_height="11dp"
+                            android:layout_marginStart="3dp"
+                            android:contentDescription="@null"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/module_home_ic_right" />
                     </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/core_ui_dp_92"
-                    android:layout_marginTop="@dimen/core_ui_dp_12"
+                    android:layout_height="@dimen/feature_home_stats_overview_card_height"
+                    android:layout_marginTop="8dp"
                     android:baselineAligned="false"
                     android:orientation="horizontal">
 
                     <LinearLayout
+                        android:id="@+id/statsOverviewMasteredCard"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginEnd="@dimen/core_ui_dp_4"
+                        android:layout_marginEnd="4dp"
                         android:layout_weight="1"
                         android:background="@drawable/feature_home_stats_overview_card_bg"
-                        android:clipToOutline="true"
-                        android:elevation="@dimen/core_ui_dp_5"
+                        android:contentDescription="@string/feature_home_stats_overview_mastered"
+                        android:elevation="3dp"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackgroundBorderless"
                         android:gravity="center_vertical"
+                        android:onClick="@{() -> viewModel.onUnavailableFeatureClicked()}"
                         android:orientation="horizontal"
-                        android:paddingStart="@dimen/core_ui_dp_18"
-                        android:paddingEnd="@dimen/core_ui_dp_12">
+                        android:paddingStart="@dimen/feature_home_stats_overview_card_padding_start"
+                        android:paddingEnd="9dp">
 
                         <FrameLayout
-                            android:layout_width="@dimen/core_ui_dp_32"
-                            android:layout_height="@dimen/core_ui_dp_32"
+                            android:layout_width="@dimen/feature_home_stats_overview_icon_frame"
+                            android:layout_height="@dimen/feature_home_stats_overview_icon_frame"
                             android:background="@drawable/feature_home_stats_overview_icon_blue_hex">
 
                             <ImageView
-                                android:layout_width="@dimen/core_ui_dp_16"
-                                android:layout_height="@dimen/core_ui_dp_16"
+                                android:layout_width="@dimen/feature_home_stats_overview_icon_glyph"
+                                android:layout_height="@dimen/feature_home_stats_overview_icon_glyph"
                                 android:layout_gravity="center"
                                 android:contentDescription="@null"
                                 android:src="@drawable/feature_home_stats_ic_check_circle" />
@@ -490,7 +602,7 @@
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/core_ui_dp_16"
+                            android:layout_marginStart="@dimen/feature_home_stats_overview_icon_text_gap"
                             android:layout_weight="1"
                             android:orientation="vertical">
 
@@ -505,65 +617,79 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:includeFontPadding="false"
-                                    android:text="0"
                                     android:textColor="#071436"
-                                    android:textSize="@dimen/core_ui_text_24"
-                                    android:textStyle="bold" />
+                                    android:textSize="@dimen/core_ui_text_22"
+                                    android:textStyle="bold"
+                                    tools:text="21" />
 
                                 <TextView
                                     android:id="@+id/statsOverviewDurationUnit"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="@dimen/core_ui_dp_7"
-                                    android:text="词"
+                                    android:layout_marginStart="5dp"
                                     android:textColor="#4F5E75"
-                                    android:textSize="@dimen/core_ui_text_13"
-                                    android:textStyle="bold" />
+                                    android:textSize="@dimen/core_ui_text_11"
+                                    android:textStyle="bold"
+                                    tools:text="词" />
                             </LinearLayout>
 
                             <TextView
                                 android:id="@+id/statsOverviewDurationTitle"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/core_ui_dp_3"
-                                android:text="已掌握"
+                                android:ellipsize="end"
+                                android:maxLines="1"
                                 android:textColor="#60708A"
-                                android:textSize="@dimen/core_ui_text_13"
-                                android:textStyle="bold" />
+                                android:textSize="@dimen/core_ui_text_11"
+                                android:textStyle="bold"
+                                tools:text="已掌握" />
 
                             <TextView
                                 android:id="@+id/statsOverviewDurationChange"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/core_ui_dp_8"
-                                android:text="当前词书"
-                                android:textColor="#168AF2"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:textColor="#2188F6"
                                 android:textSize="@dimen/core_ui_sp_8"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+                                tools:text="当前词书" />
                         </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="7dp"
+                            android:layout_height="11dp"
+                            android:layout_marginStart="3dp"
+                            android:contentDescription="@null"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/module_home_ic_right" />
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/statsOverviewAccuracyCard"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/core_ui_dp_4"
+                        android:layout_marginStart="4dp"
                         android:layout_weight="1"
                         android:background="@drawable/feature_home_stats_overview_card_bg"
-                        android:clipToOutline="true"
-                        android:elevation="@dimen/core_ui_dp_5"
+                        android:contentDescription="@string/feature_home_stats_overview_accuracy"
+                        android:elevation="3dp"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackgroundBorderless"
                         android:gravity="center_vertical"
+                        android:onClick="@{() -> viewModel.onUnavailableFeatureClicked()}"
                         android:orientation="horizontal"
-                        android:paddingStart="@dimen/core_ui_dp_18"
-                        android:paddingEnd="@dimen/core_ui_dp_12">
+                        android:paddingStart="@dimen/feature_home_stats_overview_card_padding_start"
+                        android:paddingEnd="9dp">
 
                         <FrameLayout
-                            android:layout_width="@dimen/core_ui_dp_32"
-                            android:layout_height="@dimen/core_ui_dp_32"
+                            android:layout_width="@dimen/feature_home_stats_overview_icon_frame"
+                            android:layout_height="@dimen/feature_home_stats_overview_icon_frame"
                             android:background="@drawable/feature_home_stats_overview_icon_purple_hex">
 
                             <ImageView
-                                android:layout_width="@dimen/core_ui_dp_16"
-                                android:layout_height="@dimen/core_ui_dp_16"
+                                android:layout_width="@dimen/feature_home_stats_overview_icon_glyph"
+                                android:layout_height="@dimen/feature_home_stats_overview_icon_glyph"
                                 android:layout_gravity="center"
                                 android:contentDescription="@null"
                                 android:src="@drawable/feature_home_ic_profile_menu_chart" />
@@ -572,7 +698,7 @@
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/core_ui_dp_16"
+                            android:layout_marginStart="@dimen/feature_home_stats_overview_icon_text_gap"
                             android:layout_weight="1"
                             android:orientation="vertical">
 
@@ -587,73 +713,83 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:includeFontPadding="false"
-                                    android:text="0.0"
                                     android:textColor="#071436"
-                                    android:textSize="@dimen/core_ui_text_24"
-                                    android:textStyle="bold" />
+                                    android:textSize="@dimen/core_ui_text_22"
+                                    android:textStyle="bold"
+                                    tools:text="0.0" />
 
                                 <TextView
                                     android:id="@+id/statsOverviewAccuracyUnit"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="@dimen/core_ui_dp_2"
-                                    android:text="%"
+                                    android:layout_marginStart="5dp"
                                     android:textColor="#071436"
-                                    android:textSize="@dimen/core_ui_text_15"
-                                    android:textStyle="bold" />
+                                    android:textSize="@dimen/core_ui_text_11"
+                                    android:textStyle="bold"
+                                    tools:text="%" />
                             </LinearLayout>
 
                             <TextView
                                 android:id="@+id/statsOverviewAccuracyTitle"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/core_ui_dp_3"
-                                android:text="答题正确率"
+                                android:ellipsize="end"
+                                android:maxLines="1"
                                 android:textColor="#60708A"
-                                android:textSize="@dimen/core_ui_text_13"
-                                android:textStyle="bold" />
+                                android:textSize="@dimen/core_ui_text_11"
+                                android:textStyle="bold"
+                                tools:text="答题正确率" />
 
                             <TextView
                                 android:id="@+id/statsOverviewAccuracyChange"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/core_ui_dp_8"
-                                android:text="当前词书累计"
-                                android:textColor="#8B5CF6"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:textColor="#8C42F5"
                                 android:textSize="@dimen/core_ui_sp_8"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+                                tools:text="当前词书累计" />
                         </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="7dp"
+                            android:layout_height="11dp"
+                            android:layout_marginStart="3dp"
+                            android:contentDescription="@null"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/module_home_ic_right" />
                     </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/core_ui_dp_24"
+                    android:layout_height="@dimen/feature_home_stats_calendar_header_height"
+                    android:layout_marginTop="10dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <View
-                        android:layout_width="@dimen/core_ui_dp_5"
-                        android:layout_height="@dimen/core_ui_dp_20"
+                        android:layout_width="4dp"
+                        android:layout_height="18dp"
                         android:background="@drawable/feature_home_stats_overview_title_marker" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/core_ui_dp_12"
+                        android:layout_marginStart="10dp"
                         android:layout_weight="1"
-                        android:text="学习日历"
+                        android:text="@string/feature_home_stats_calendar_title"
                         android:textColor="#071436"
+                        android:textSize="@dimen/core_ui_text_14"
                         android:textStyle="bold" />
 
                     <ImageView
                         android:id="@+id/statsPreviousMonthButton"
-                        android:layout_width="@dimen/core_ui_dp_24"
-                        android:layout_height="@dimen/core_ui_dp_24"
-                        android:layout_marginStart="@dimen/core_ui_dp_12"
-                        android:contentDescription="@null"
-                        android:padding="@dimen/core_ui_dp_6"
+                        android:layout_width="@dimen/feature_home_stats_calendar_header_height"
+                        android:layout_height="@dimen/feature_home_stats_calendar_header_height"
+                        android:contentDescription="@string/feature_home_stats_previous_month"
+                        android:padding="10dp"
                         android:rotationY="180"
                         android:src="@drawable/module_home_ic_right_black" />
 
@@ -661,304 +797,287 @@
                         android:id="@+id/statsMonthTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2026年6月"
+                        android:minWidth="74dp"
+                        android:gravity="center"
                         android:textColor="#65738C"
-                        android:textStyle="bold" />
+                        android:textSize="@dimen/core_ui_text_13"
+                        android:textStyle="bold"
+                        tools:text="2026年 7月" />
 
                     <TextView
                         android:id="@+id/statsBackToday"
                         android:layout_width="wrap_content"
-                        android:layout_height="@dimen/core_ui_dp_24"
-                        android:layout_marginStart="@dimen/core_ui_dp_8"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="4dp"
                         android:background="@drawable/feature_home_stats_pill_bg"
                         android:gravity="center"
-                        android:paddingStart="@dimen/core_ui_dp_10"
-                        android:paddingEnd="@dimen/core_ui_dp_10"
+                        android:paddingStart="7dp"
+                        android:paddingEnd="7dp"
                         android:text="@string/feature_home_stats_back_today"
                         android:textColor="#60708A"
-                        android:textSize="@dimen/core_ui_sp_10"
+                        android:textSize="@dimen/core_ui_sp_8"
                         android:textStyle="bold"
                         android:visibility="gone" />
 
                     <ImageView
                         android:id="@+id/statsNextMonthButton"
-                        android:layout_width="@dimen/core_ui_dp_24"
-                        android:layout_height="@dimen/core_ui_dp_24"
-                        android:contentDescription="@null"
-                        android:padding="@dimen/core_ui_dp_6"
+                        android:layout_width="@dimen/feature_home_stats_calendar_header_height"
+                        android:layout_height="@dimen/feature_home_stats_calendar_header_height"
+                        android:contentDescription="@string/feature_home_stats_next_month"
+                        android:padding="10dp"
                         android:src="@drawable/module_home_ic_right_black" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/core_ui_dp_12"
+                    android:layout_height="@dimen/feature_home_stats_calendar_card_height"
+                    android:layout_marginTop="4dp"
                     android:background="@drawable/feature_home_stats_calendar_card_bg"
-                    android:clipToOutline="true"
-                    android:elevation="@dimen/core_ui_dp_5"
+                    android:elevation="3dp"
                     android:orientation="vertical"
-                    android:paddingStart="@dimen/core_ui_dp_20"
-                    android:paddingTop="@dimen/core_ui_dp_16"
-                    android:paddingEnd="@dimen/core_ui_dp_20"
-                    android:paddingBottom="@dimen/core_ui_dp_14">
+                    android:paddingStart="10dp"
+                    android:paddingTop="8dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="7dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/core_ui_dp_20"
+                        android:layout_height="16dp"
                         android:orientation="horizontal">
 
-                        <TextView
-                            style="@style/FeatureHomeStatsWeekLabel"
-                            android:text="日" />
-
-                        <TextView
-                            style="@style/FeatureHomeStatsWeekLabel"
-                            android:text="一" />
-
-                        <TextView
-                            style="@style/FeatureHomeStatsWeekLabel"
-                            android:text="二" />
-
-                        <TextView
-                            style="@style/FeatureHomeStatsWeekLabel"
-                            android:text="三" />
-
-                        <TextView
-                            style="@style/FeatureHomeStatsWeekLabel"
-                            android:text="四" />
-
-                        <TextView
-                            style="@style/FeatureHomeStatsWeekLabel"
-                            android:text="五" />
-
-                        <TextView
-                            style="@style/FeatureHomeStatsWeekLabel"
-                            android:text="六" />
+                        <TextView style="@style/FeatureHomeStatsWeekLabel" android:text="@string/home_week_sun" />
+                        <TextView style="@style/FeatureHomeStatsWeekLabel" android:text="@string/home_week_mon" />
+                        <TextView style="@style/FeatureHomeStatsWeekLabel" android:text="@string/home_week_tue" />
+                        <TextView style="@style/FeatureHomeStatsWeekLabel" android:text="@string/home_week_wed" />
+                        <TextView style="@style/FeatureHomeStatsWeekLabel" android:text="@string/home_week_thu" />
+                        <TextView style="@style/FeatureHomeStatsWeekLabel" android:text="@string/home_week_fri" />
+                        <TextView style="@style/FeatureHomeStatsWeekLabel" android:text="@string/home_week_sat" />
                     </LinearLayout>
 
                     <com.chen.memorizewords.feature.home.ui.stats.StatsStaticMonthHeatmapView
                         android:id="@+id/statsMonthHeatmapView"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/core_ui_dp_130"
-                        android:layout_marginTop="@dimen/core_ui_dp_8" />
+                        android:layout_height="@dimen/feature_home_stats_calendar_grid_height"
+                        android:layout_marginTop="2dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_marginTop="@dimen/core_ui_dp_6"
+                        android:layout_marginTop="2dp"
                         android:layout_weight="1"
                         android:gravity="center"
                         android:orientation="horizontal">
 
-                        <View
-                            android:layout_width="@dimen/core_ui_dp_10"
-                            android:layout_height="@dimen/core_ui_dp_10"
-                            android:background="@drawable/feature_home_stats_legend_dot_none" />
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="horizontal">
 
-                        <TextView
-                            style="@style/FeatureHomeStatsLegend"
-                            android:layout_marginStart="@dimen/core_ui_dp_7"
-                            android:text="未学习"
-                            android:textSize="@dimen/core_ui_sp_8"
-                            android:textColor="#7A879A" />
+                            <View
+                                android:layout_width="8dp"
+                                android:layout_height="8dp"
+                                android:background="@drawable/feature_home_stats_legend_dot_none" />
 
-                        <View
-                            android:layout_width="@dimen/core_ui_dp_10"
-                            android:layout_height="@dimen/core_ui_dp_10"
-                            android:layout_marginStart="@dimen/core_ui_dp_24"
-                            android:background="@drawable/feature_home_stats_legend_dot_study" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:maxLines="1"
+                                android:text="@string/feature_home_stats_legend_not_learned"
+                                android:textColor="#7A879A"
+                                android:textSize="7sp" />
+                        </LinearLayout>
 
-                        <TextView
-                            style="@style/FeatureHomeStatsLegend"
-                            android:layout_marginStart="@dimen/core_ui_dp_7"
-                            android:text="学习"
-                            android:textSize="@dimen/core_ui_sp_8"
-                            android:textColor="#7A879A" />
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="horizontal">
 
-                        <View
-                            android:layout_width="@dimen/core_ui_dp_10"
-                            android:layout_height="@dimen/core_ui_dp_10"
-                            android:layout_marginStart="@dimen/core_ui_dp_24"
-                            android:background="@drawable/feature_home_stats_legend_dot_done" />
+                            <View
+                                android:layout_width="8dp"
+                                android:layout_height="8dp"
+                                android:background="@drawable/feature_home_stats_legend_dot_study" />
 
-                        <TextView
-                            style="@style/FeatureHomeStatsLegend"
-                            android:layout_marginStart="@dimen/core_ui_dp_7"
-                            android:text="完成任务"
-                            android:textSize="@dimen/core_ui_sp_8"
-                            android:textColor="#7A879A" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:maxLines="1"
+                                android:text="@string/feature_home_stats_legend_study"
+                                android:textColor="#7A879A"
+                                android:textSize="7sp" />
+                        </LinearLayout>
 
-                        <View
-                            android:layout_width="@dimen/core_ui_dp_10"
-                            android:layout_height="@dimen/core_ui_dp_10"
-                            android:layout_marginStart="@dimen/core_ui_dp_24"
-                            android:background="@drawable/feature_home_stats_legend_dot_over" />
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="horizontal">
 
-                        <TextView
-                            style="@style/FeatureHomeStatsLegend"
-                            android:layout_marginStart="@dimen/core_ui_dp_7"
-                            android:text="超额完成"
-                            android:textSize="@dimen/core_ui_sp_8"
-                            android:textColor="#7A879A" />
+                            <View
+                                android:layout_width="8dp"
+                                android:layout_height="8dp"
+                                android:background="@drawable/feature_home_stats_legend_dot_done" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:maxLines="1"
+                                android:text="@string/feature_home_stats_legend_task_done"
+                                android:textColor="#7A879A"
+                                android:textSize="7sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <View
+                                android:layout_width="8dp"
+                                android:layout_height="8dp"
+                                android:background="@drawable/feature_home_stats_legend_dot_over" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:maxLines="1"
+                                android:text="@string/feature_home_stats_legend_over_done"
+                                android:textColor="#7A879A"
+                                android:textSize="7sp" />
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/core_ui_dp_156"
-                    android:layout_marginTop="@dimen/core_ui_dp_14"
-                    android:baselineAligned="false"
-                    android:orientation="horizontal">
+                    android:layout_height="@dimen/feature_home_stats_trend_card_height"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/feature_home_stats_card_bg_v2"
+                    android:elevation="3dp"
+                    android:orientation="vertical"
+                    android:paddingStart="12dp"
+                    android:paddingTop="9dp"
+                    android:paddingEnd="12dp"
+                    android:paddingBottom="5dp">
 
                     <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginEnd="@dimen/core_ui_dp_7"
-                        android:layout_weight="1.35"
-                        android:background="@drawable/feature_home_stats_card_bg_v2"
-                        android:orientation="vertical"
-                        android:paddingStart="@dimen/core_ui_dp_12"
-                        android:paddingTop="@dimen/core_ui_dp_12"
-                        android:paddingEnd="@dimen/core_ui_dp_12"
-                        android:paddingBottom="@dimen/core_ui_dp_8">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="本周学习趋势"
-                                android:textColor="#071436"
-                                android:textSize="@dimen/core_ui_text_13"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="@dimen/core_ui_dp_44"
-                                android:layout_height="@dimen/core_ui_dp_24"
-                                android:background="@drawable/feature_home_stats_pill_bg"
-                                android:gravity="center"
-                                android:text="本周"
-                                android:textColor="#60708A"
-                                android:textSize="@dimen/core_ui_sp_10"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/core_ui_dp_18"
-                            android:layout_marginTop="@dimen/core_ui_dp_4"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <View
-                                android:layout_width="@dimen/core_ui_dp_16"
-                                android:layout_height="@dimen/core_ui_dp_3"
-                                android:background="@drawable/feature_home_stats_bar_duration" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/core_ui_dp_6"
-                                android:text="学习时长（小时）"
-                                android:textColor="#68758E"
-                                android:textSize="@dimen/core_ui_sp_9"
-                                android:textStyle="bold" />
-
-                            <View
-                                android:layout_width="@dimen/core_ui_dp_16"
-                                android:layout_height="@dimen/core_ui_dp_3"
-                                android:layout_marginStart="@dimen/core_ui_dp_16"
-                                android:background="@drawable/feature_home_stats_bar_word" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/core_ui_dp_6"
-                                android:text="新词数量（个）"
-                                android:textColor="#68758E"
-                                android:textSize="@dimen/core_ui_sp_9"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <com.chen.memorizewords.feature.home.ui.stats.StatsTrendChartView
-                            android:id="@+id/trendChartView"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_marginTop="@dimen/core_ui_dp_2"
-                            android:layout_weight="1" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/statsTimeDistributionCard"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/core_ui_dp_7"
-                        android:layout_weight="1"
-                        android:background="@drawable/feature_home_stats_card_bg_v2"
-                        android:orientation="vertical"
-                        android:paddingStart="@dimen/core_ui_dp_12"
-                        android:paddingTop="@dimen/core_ui_dp_12"
-                        android:paddingEnd="@dimen/core_ui_dp_12"
-                        android:paddingBottom="@dimen/core_ui_dp_10"
-                        android:visibility="gone">
+                        android:layout_width="match_parent"
+                        android:layout_height="22dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="学习时长分布"
+                            android:layout_weight="1"
+                            android:text="@string/feature_home_stats_trend_title"
                             android:textColor="#071436"
                             android:textSize="@dimen/core_ui_text_13"
                             android:textStyle="bold" />
 
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_marginTop="@dimen/core_ui_dp_4"
-                            android:layout_weight="1"
-                            android:gravity="center_horizontal"
-                            android:orientation="vertical">
+                            android:id="@+id/statsTrendDetail"
+                            android:layout_width="52dp"
+                            android:layout_height="22dp"
+                            android:background="@drawable/feature_home_stats_pill_bg"
+                            android:contentDescription="@string/feature_home_stats_detail"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackgroundBorderless"
+                            android:gravity="center"
+                            android:onClick="@{() -> viewModel.onUnavailableFeatureClicked()}"
+                            android:orientation="horizontal">
 
-                            <com.chen.memorizewords.feature.home.ui.stats.StatsDonutChartView
-                                android:id="@+id/donutChartView"
-                                android:layout_width="@dimen/core_ui_dp_62"
-                                android:layout_height="@dimen/core_ui_dp_62" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/feature_home_stats_detail"
+                                android:textColor="#60708A"
+                                android:textSize="@dimen/core_ui_sp_9"
+                                android:textStyle="bold" />
 
-                            <LinearLayout
-                                android:id="@+id/llDistributionLegend"
-                                android:layout_width="match_parent"
-                                android:layout_height="0dp"
-                                android:layout_marginTop="@dimen/core_ui_dp_2"
-                                android:layout_weight="1"
-                                android:gravity="center_vertical"
-                                android:orientation="vertical" />
+                            <ImageView
+                                android:layout_width="7dp"
+                                android:layout_height="7dp"
+                                android:layout_marginStart="3dp"
+                                android:contentDescription="@null"
+                                android:src="@drawable/module_home_ic_right" />
                         </LinearLayout>
                     </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="15dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="15dp"
+                            android:layout_height="3dp"
+                            android:background="@drawable/feature_home_stats_bar_duration" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:text="@string/feature_home_stats_trend_duration"
+                            android:textColor="#68758E"
+                            android:textSize="@dimen/core_ui_sp_8" />
+
+                        <View
+                            android:layout_width="15dp"
+                            android:layout_height="3dp"
+                            android:layout_marginStart="16dp"
+                            android:background="@drawable/feature_home_stats_bar_word" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:text="@string/feature_home_stats_trend_words"
+                            android:textColor="#68758E"
+                            android:textSize="@dimen/core_ui_sp_8" />
+                    </LinearLayout>
+
+                    <com.chen.memorizewords.feature.home.ui.stats.StatsTrendChartView
+                        android:id="@+id/trendChartView"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/core_ui_dp_164"
-                    android:layout_marginTop="@dimen/core_ui_dp_14"
+                    android:layout_height="@dimen/feature_home_stats_summary_card_height"
+                    android:layout_marginTop="8dp"
                     android:baselineAligned="false"
                     android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginEnd="@dimen/core_ui_dp_7"
-                        android:layout_weight="1.35"
+                        android:layout_marginEnd="4dp"
+                        android:layout_weight="1"
                         android:background="@drawable/feature_home_stats_card_bg_v2"
+                        android:elevation="3dp"
                         android:orientation="vertical"
-                        android:padding="@dimen/core_ui_dp_12">
+                        android:paddingStart="10dp"
+                        android:paddingTop="9dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="7dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="18dp"
                             android:gravity="center_vertical"
                             android:orientation="horizontal">
 
@@ -966,29 +1085,33 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="学习成就"
+                                android:text="@string/feature_home_stats_achievements_title"
                                 android:textColor="#071436"
                                 android:textSize="@dimen/core_ui_text_13"
                                 android:textStyle="bold" />
 
                             <LinearLayout
+                                android:id="@+id/statsAllAchievements"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:contentDescription="@string/feature_home_stats_all_achievements"
+                                android:focusable="true"
+                                android:foreground="?attr/selectableItemBackgroundBorderless"
                                 android:gravity="center_vertical"
+                                android:onClick="@{() -> viewModel.onUnavailableFeatureClicked()}"
                                 android:orientation="horizontal">
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="全部成就"
+                                    android:text="@string/feature_home_stats_all_achievements"
                                     android:textColor="#7D8AA0"
-                                    android:textSize="@dimen/core_ui_sp_10"
-                                    android:textStyle="bold" />
+                                    android:textSize="@dimen/core_ui_sp_8" />
 
                                 <ImageView
-                                    android:layout_width="@dimen/core_ui_dp_8"
-                                    android:layout_height="@dimen/core_ui_dp_8"
-                                    android:layout_marginStart="@dimen/core_ui_dp_4"
+                                    android:layout_width="7dp"
+                                    android:layout_height="7dp"
+                                    android:layout_marginStart="3dp"
                                     android:contentDescription="@null"
                                     android:src="@drawable/module_home_ic_right" />
                             </LinearLayout>
@@ -998,28 +1121,29 @@
                             android:id="@+id/llAchievements"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
-                            android:layout_marginTop="@dimen/core_ui_dp_10"
+                            android:layout_marginTop="5dp"
                             android:layout_weight="1"
-                            android:gravity="center_vertical"
                             android:orientation="vertical" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/core_ui_dp_7"
+                        android:layout_marginStart="4dp"
                         android:layout_weight="1"
                         android:background="@drawable/feature_home_stats_card_bg_v2"
+                        android:elevation="3dp"
                         android:orientation="vertical"
-                        android:paddingStart="@dimen/core_ui_dp_12"
-                        android:paddingTop="@dimen/core_ui_dp_12"
-                        android:paddingEnd="@dimen/core_ui_dp_12"
-                        android:paddingBottom="@dimen/core_ui_dp_10">
+                        android:paddingStart="10dp"
+                        android:paddingTop="9dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="7dp">
 
                         <TextView
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="学习报告"
+                            android:layout_height="18dp"
+                            android:gravity="center_vertical"
+                            android:text="@string/feature_home_stats_report_title"
                             android:textColor="#071436"
                             android:textSize="@dimen/core_ui_text_13"
                             android:textStyle="bold" />
@@ -1028,7 +1152,7 @@
                             android:id="@+id/llReportRows"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
-                            android:layout_marginTop="@dimen/core_ui_dp_10"
+                            android:layout_marginTop="5dp"
                             android:layout_weight="1"
                             android:orientation="vertical" />
                     </LinearLayout>

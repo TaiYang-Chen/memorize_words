@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_home_stats_period_week">本周</string>
+    <string name="feature_home_stats_unavailable">暂时未开放</string>
+    <string name="feature_home_stats_overview_title">数据概览</string>
+    <string name="feature_home_stats_overview_learned">已学习</string>
+    <string name="feature_home_stats_overview_learning">学习中</string>
+    <string name="feature_home_stats_overview_mastered">已掌握</string>
+    <string name="feature_home_stats_overview_accuracy">答题正确率</string>
+    <string name="feature_home_stats_current_book">当前词书</string>
+    <string name="feature_home_stats_current_book_total">当前词书累计</string>
+    <string name="feature_home_stats_calendar_title">学习日历</string>
+    <string name="feature_home_stats_legend_not_learned">未学习</string>
+    <string name="feature_home_stats_legend_study">学习</string>
+    <string name="feature_home_stats_legend_task_done">完成任务</string>
+    <string name="feature_home_stats_legend_over_done">超额完成</string>
+    <string name="feature_home_stats_trend_title">本周学习趋势</string>
+    <string name="feature_home_stats_detail">详情</string>
+    <string name="feature_home_stats_trend_duration">学习时长（小时）</string>
+    <string name="feature_home_stats_trend_words">新词数量（个）</string>
+    <string name="feature_home_stats_achievements_title">学习成就</string>
+    <string name="feature_home_stats_all_achievements">全部成就</string>
+    <string name="feature_home_stats_report_title">学习报告</string>
+    <string name="feature_home_stats_previous_month">上个月</string>
+    <string name="feature_home_stats_next_month">下个月</string>
+    <string name="feature_home_stats_xp_total" translatable="false">/ 100 XP</string>
+    <string name="feature_home_stats_xp_current" translatable="false">%1$d</string>
+    <string name="feature_home_stats_level_separator" translatable="false">/</string>
+</resources>

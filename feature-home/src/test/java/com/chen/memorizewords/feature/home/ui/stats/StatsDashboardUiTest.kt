@@ -4,6 +4,8 @@ import com.chen.memorizewords.domain.study.model.record.DailyDurationStats
 import com.chen.memorizewords.domain.study.model.record.DailyWordStats
 import com.chen.memorizewords.domain.study.model.record.CalendarDayStats
 import com.chen.memorizewords.core.common.resource.ResourceProvider
+import com.chen.memorizewords.domain.wordbook.model.WordBookInfo
+import com.chen.memorizewords.feature.home.ui.practice.PracticeUiMapper
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -168,7 +170,21 @@ class StatsDashboardUiTest {
 
     @Test
     fun buildReportRowsSummarizesWeek() {
+        val range = StatsWeekRange(
+            startDate = "2026-06-15",
+            endDate = "2026-06-21",
+            dates = listOf(
+                "2026-06-15",
+                "2026-06-16",
+                "2026-06-17",
+                "2026-06-18",
+                "2026-06-19",
+                "2026-06-20",
+                "2026-06-21"
+            )
+        )
         val rows = buildReportRows(
+            weekRange = range,
             wordStats = listOf(
                 DailyWordStats("2026-06-15", newCount = 3, reviewCount = 4),
                 DailyWordStats("2026-06-16", newCount = 2, reviewCount = 1)
@@ -182,9 +198,74 @@ class StatsDashboardUiTest {
         )
 
         assertEquals("3", rows[0].value)
-        assertEquals("10", rows[1].value)
+        assertEquals("2", rows[1].value)
         assertEquals("二", rows[2].value)
         assertTrue(rows[3].value == "2")
+    }
+
+    @Test
+    fun buildReportRowsMapsSparseBestDayByDateAndDeduplicatesActiveDays() {
+        val range = StatsWeekRange(
+            startDate = "2026-06-15",
+            endDate = "2026-06-21",
+            dates = listOf(
+                "2026-06-15",
+                "2026-06-16",
+                "2026-06-17",
+                "2026-06-18",
+                "2026-06-19",
+                "2026-06-20",
+                "2026-06-21"
+            )
+        )
+
+        val rows = buildReportRows(
+            weekRange = range,
+            wordStats = listOf(DailyWordStats("2026-06-18", newCount = 2, reviewCount = 0)),
+            durationStats = listOf(DailyDurationStats("2026-06-18", durationMs = 7_200_000L)),
+            streakDays = 1,
+            weekLabels = listOf("一", "二", "三", "四", "五", "六", "日")
+        )
+
+        assertEquals("1", rows[1].value)
+        assertEquals("四", rows[2].value)
+    }
+
+    @Test
+    fun buildAchievementsUsesRealProgressAndCurrentBookCompletion() {
+        val achievements = buildAchievements(
+            streakDays = 0,
+            totalWords = 47,
+            totalDurationMs = 9 * 3_600_000L,
+            currentWordBookInfo = WordBookInfo(totalWords = 100, masteredWords = 100)
+        )
+
+        assertEquals("连续学习 0 天", achievements[0].title)
+        assertEquals("再学习 1 天解锁", achievements[0].subtitle)
+        assertTrue(achievements[1].achieved)
+        assertEquals("还差 1 小时", achievements[2].subtitle)
+        assertEquals("还差 3 个", achievements[3].subtitle)
+    }
+
+    @Test
+    fun calculateTrendScaleUsesStableMinimumsAndRoundsUp() {
+        assertEquals(StatsTrendScale(2f, 20f), calculateTrendScale(emptyList()))
+
+        val scale = calculateTrendScale(
+            listOf(StatsTrendPointUi("一", durationHours = 2.2f, newWordCount = 21))
+        )
+
+        assertEquals(3f, scale.durationMaxHours)
+        assertEquals(30f, scale.wordMaxCount)
+    }
+
+    @Test
+    fun statsLevelReusesPracticeLevelRules() {
+        val level = PracticeUiMapper(FakeResourceProvider)
+            .buildPracticeLevel(250 * 60_000L)
+
+        assertEquals("Lv.3", level.levelText)
+        assertEquals(50, level.xpProgress)
     }
 
     private object FakeResourceProvider : ResourceProvider {

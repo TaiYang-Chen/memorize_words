@@ -1,8 +1,12 @@
 package com.chen.memorizewords.feature.home
 
+import android.animation.ArgbEvaluator
+import android.animation.ValueAnimator
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.SystemClock
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.ColorRes
@@ -35,6 +39,7 @@ class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBindi
 
     companion object {
         private const val EXIT_CONFIRM_WINDOW_MS = 2000L
+        private const val TAB_COLOR_TRANSITION_MS = 160L
     }
 
     override val viewModel: HomeViewModel by lazy {
@@ -52,6 +57,7 @@ class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBindi
     private val statsTag = "stats_fragment"
     private val profileTag = "profile_fragment"
     private var lastBackPressedAtMs: Long = 0L
+    private var statusBarColorAnimator: ValueAnimator? = null
 
     override fun createObserver() {
         lifecycleScope.launch {
@@ -101,7 +107,7 @@ class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBindi
         if (selectDefault) {
             showHome(immediate = true)
             databind.bottomNav.menu.findItem(R.id.menu_home).isChecked = true
-            updateStatusBarBackground(R.id.menu_home)
+            updateStatusBarBackground(R.id.menu_home, animate = false)
         }
         databind.bottomNav.setOnItemSelectedListener { item ->
             updateStatusBarBackground(item.itemId)
@@ -115,15 +121,35 @@ class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBindi
         }
         if (!selectDefault) {
             databind.bottomNav.post {
-                updateStatusBarBackground(databind.bottomNav.selectedItemId)
+                updateStatusBarBackground(databind.bottomNav.selectedItemId, animate = false)
             }
         }
     }
 
-    private fun updateStatusBarBackground(menuItemId: Int) {
-        databind.root.setBackgroundColor(
-            ContextCompat.getColor(this, statusBarBackgroundFor(menuItemId))
-        )
+    private fun updateStatusBarBackground(menuItemId: Int, animate: Boolean = true) {
+        val targetColor = ContextCompat.getColor(this, statusBarBackgroundFor(menuItemId))
+        val currentColor = (databind.root.background as? ColorDrawable)?.color ?: targetColor
+        statusBarColorAnimator?.cancel()
+        if (!animate || currentColor == targetColor) {
+            databind.root.setBackgroundColor(targetColor)
+            return
+        }
+
+        statusBarColorAnimator = ValueAnimator.ofObject(
+            ArgbEvaluator(),
+            currentColor,
+            targetColor
+        ).apply {
+            duration = TAB_COLOR_TRANSITION_MS
+            interpolator = AnimationUtils.loadInterpolator(
+                this@HomeActivity,
+                android.R.interpolator.fast_out_slow_in
+            )
+            addUpdateListener { animator ->
+                databind.root.setBackgroundColor(animator.animatedValue as Int)
+            }
+            start()
+        }
     }
 
     @ColorRes
@@ -189,12 +215,19 @@ class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBindi
         val statsFragment = fragmentManager.findFragmentByTag(statsTag)
         val profileFragment = fragmentManager.findFragmentByTag(profileTag)
         val target = fragmentManager.findFragmentByTag(tag) ?: factory()
+        if (target.isAdded && target.isVisible) return
 
         fragmentManager.beginTransaction().apply {
-            if (homeFragment != null) hide(homeFragment)
-            if (practiceFragment != null) hide(practiceFragment)
-            if (statsFragment != null) hide(statsFragment)
-            if (profileFragment != null) hide(profileFragment)
+            setReorderingAllowed(true)
+            if (!immediate) {
+                setCustomAnimations(
+                    R.anim.feature_home_tab_fade_in,
+                    R.anim.feature_home_tab_fade_out
+                )
+            }
+            listOfNotNull(homeFragment, practiceFragment, statsFragment, profileFragment)
+                .filter { it !== target && !it.isHidden }
+                .forEach(::hide)
             if (target.isAdded) {
                 show(target)
             } else {
@@ -207,6 +240,12 @@ class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBindi
                 commit()
             }
         }
+    }
+
+    override fun onDestroy() {
+        statusBarColorAnimator?.cancel()
+        statusBarColorAnimator = null
+        super.onDestroy()
     }
 
     override fun onNavigationRoute(event: UiEvent.Navigation.Route) {

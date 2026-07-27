@@ -26,7 +26,7 @@ class StatsStaticMonthHeatmapView @JvmOverloads constructor(
     private val dayTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         textAlign = Paint.Align.CENTER
         typeface = Typeface.DEFAULT_BOLD
-        textSize = 9f.dpToPx(context)
+        textSize = 8f.dpToPx(context)
     }
     private val cellRect = RectF()
     private var cells: List<CalendarDayCellUi> = emptyList()
@@ -92,12 +92,15 @@ class StatsStaticMonthHeatmapView @JvmOverloads constructor(
         super.onDraw(canvas)
         val columnWidth = width / COLUMN_COUNT.toFloat()
         val rowHeight = height / visibleRowCount.toFloat()
-        val cellSize = minOf(
-            (CELL_SIZE_DP).dpToPx(context),
-            columnWidth * 0.74f,
-            rowHeight * 0.96f
-        ).coerceAtLeast(8f.dpToPx(context))
-        val radius = 4f.dpToPx(context)
+        val cellWidth = minOf(
+            CELL_WIDTH_DP.dpToPx(context),
+            columnWidth * 0.72f
+        ).coerceAtLeast(16f.dpToPx(context))
+        val cellHeight = minOf(
+            CELL_HEIGHT_DP.dpToPx(context),
+            rowHeight * 0.84f
+        ).coerceAtLeast(12f.dpToPx(context))
+        val radius = 3.5f.dpToPx(context)
         val visibleCellCount = visibleRowCount * COLUMN_COUNT
 
         cells.take(visibleCellCount).forEachIndexed { dayIndex, cell ->
@@ -108,9 +111,9 @@ class StatsStaticMonthHeatmapView @JvmOverloads constructor(
             )
             val centerX = columnWidth * column + columnWidth / 2f
             val centerY = rowHeight * row + rowHeight / 2f
-            val left = centerX - cellSize / 2f
-            val top = centerY - cellSize / 2f
-            cellRect.set(left, top, left + cellSize, top + cellSize)
+            val left = centerX - cellWidth / 2f
+            val top = centerY - cellHeight / 2f
+            cellRect.set(left, top, left + cellWidth, top + cellHeight)
             canvas.drawRoundRect(cellRect, radius, radius, cellPaint)
             if (cell.isSelected) {
                 canvas.drawRoundRect(cellRect, radius, radius, selectedStrokePaint)
@@ -137,7 +140,7 @@ class StatsStaticMonthHeatmapView @JvmOverloads constructor(
             1 -> 0xFFD8F6E1.toInt()
             2 -> 0xFF23D394.toInt()
             3 -> 0xFF069371.toInt()
-            else -> 0xFFF0F3F7.toInt()
+            else -> 0xFFEEF2F7.toInt()
         }
     }
 
@@ -156,7 +159,8 @@ class StatsStaticMonthHeatmapView @JvmOverloads constructor(
         private const val COLUMN_COUNT = 7
         private const val ROW_COUNT = 6
         private const val DAY_COUNT = 42
-        private const val CELL_SIZE_DP = 22f
+        private const val CELL_WIDTH_DP = 22f
+        private const val CELL_HEIGHT_DP = 16f
     }
 }
 

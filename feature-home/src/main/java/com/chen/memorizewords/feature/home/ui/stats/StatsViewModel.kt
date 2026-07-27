@@ -19,6 +19,8 @@ import com.chen.memorizewords.domain.study.usecase.word.study.GetWeeklyWordStats
 import com.chen.memorizewords.domain.wordbook.model.WordBookInfo
 import com.chen.memorizewords.domain.wordbook.usecase.GetCurrentWordBookInfoFlowUseCase
 import com.chen.memorizewords.feature.home.R
+import com.chen.memorizewords.feature.home.ui.practice.PracticeLevelUi
+import com.chen.memorizewords.feature.home.ui.practice.PracticeUiMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.Calendar
 import javax.inject.Inject
@@ -52,7 +54,8 @@ class StatsViewModel @Inject constructor(
     private val getWeeklyDurationStatsUseCase: GetWeeklyDurationStatsUseCase,
     private val getMonthCalendarStatsUseCase: GetMonthCalendarStatsUseCase,
     getCurrentWordBookInfoFlowUseCase: GetCurrentWordBookInfoFlowUseCase,
-    resourceProvider: ResourceProvider
+    private val practiceUiMapper: PracticeUiMapper,
+    private val resourceProvider: ResourceProvider
 ) : BaseViewModel() {
 
     private val dateCalculator = StatsDateCalculator()
@@ -139,6 +142,15 @@ class StatsViewModel @Inject constructor(
         getStudyTotalDurationUseCase()
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0L)
 
+    val levelUi: StateFlow<PracticeLevelUi> =
+        totalStudyDurationMs
+            .map(practiceUiMapper::buildPracticeLevel)
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5_000),
+                practiceUiMapper.buildPracticeLevel(0L)
+            )
+
     val totalStudyWordsText: StateFlow<String> =
         getStudyTotalWordCountUseCase()
             .map { it.toString() }
@@ -215,13 +227,23 @@ class StatsViewModel @Inject constructor(
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), buildTimeDistribution(emptyList()))
 
     val achievements: StateFlow<List<StatsAchievementUi>> =
-        combine(continuousCheckInDays, totalStudyWords, totalStudyDurationMs) { streakDays, words, durationMs ->
-            buildAchievements(streakDays, words, durationMs)
+        combine(
+            continuousCheckInDays,
+            totalStudyWords,
+            totalStudyDurationMs,
+            currentWordBookInfo
+        ) { streakDays, words, durationMs, wordBookInfo ->
+            buildAchievements(streakDays, words, durationMs, wordBookInfo)
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     val reportRows: StateFlow<List<StatsReportRowUi>> =
-        combine(weekWordStats, weekDurationStats, continuousCheckInDays) { wordStats, durationStats, streakDays ->
-            buildReportRows(wordStats, durationStats, streakDays, formatter.weekLabels())
+        combine(
+            weekRange,
+            weekWordStats,
+            weekDurationStats,
+            continuousCheckInDays
+        ) { range, wordStats, durationStats, streakDays ->
+            buildReportRows(range, wordStats, durationStats, streakDays, formatter.weekLabels())
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     private val rawCalendarPagerPages: StateFlow<List<CalendarMonthPageUi>> =
@@ -294,6 +316,10 @@ class StatsViewModel @Inject constructor(
 
     fun selectDate(date: String) {
         _selectedDate.value = date
+    }
+
+    fun onUnavailableFeatureClicked() {
+        showToast(resourceProvider.getString(R.string.feature_home_stats_unavailable))
     }
 
     fun selectAllWords() {
@@ -388,42 +414,86 @@ internal fun buildTimeDistribution(_stats: List<DailyDurationStats>): List<Stats
 internal fun buildAchievements(
     streakDays: Int,
     totalWords: Int,
-    totalDurationMs: Long
+    totalDurationMs: Long,
+    currentWordBookInfo: WordBookInfo? = null
 ): List<StatsAchievementUi> {
-    val totalHours = totalDurationMs / 3_600_000L
+    val safeStreakDays = streakDays.coerceAtLeast(0)
+    val safeTotalWords = totalWords.coerceAtLeast(0)
+    val safeDurationMs = totalDurationMs.coerceAtLeast(0L)
+    val completedCurrentBook = currentWordBookInfo?.let { info ->
+        info.totalWords > 0 && info.masteredWords >= info.totalWords
+    } == true
+    val remainingHours = remainingWholeUnits(
+        current = safeDurationMs,
+        target = ACHIEVEMENT_DURATION_TARGET_MS,
+        unit = HOUR_MS
+    )
+    val remainingWords = (ACHIEVEMENT_WORD_TARGET - safeTotalWords).coerceAtLeast(0)
     return listOf(
-        StatsAchievementUi("连续学习2天", "保持节奏", R.drawable.feature_home_ic_achievement_streak, streakDays >= 2),
-        StatsAchievementUi("完成首个词书", "继续解锁", R.drawable.feature_home_ic_achievement_book, totalWords >= 50),
-        StatsAchievementUi("累计学习10小时", "专注积累", R.drawable.feature_home_ic_achievement_clock, totalHours >= 10),
-        StatsAchievementUi("新词突破50个", "词汇成长", R.drawable.feature_home_ic_achievement_star, totalWords >= 50)
+        StatsAchievementUi(
+            title = "连续学习 $safeStreakDays 天",
+            subtitle = if (safeStreakDays >= 1) "已解锁" else "再学习 1 天解锁",
+            iconResId = R.drawable.feature_home_ic_achievement_streak,
+            achieved = safeStreakDays >= 1
+        ),
+        StatsAchievementUi(
+            title = "完成首个词书",
+            subtitle = if (completedCurrentBook) "已解锁" else "继续加油",
+            iconResId = R.drawable.feature_home_ic_achievement_book,
+            achieved = completedCurrentBook
+        ),
+        StatsAchievementUi(
+            title = "累计学习 10 小时",
+            subtitle = if (remainingHours == 0L) "已解锁" else "还差 $remainingHours 小时",
+            iconResId = R.drawable.feature_home_ic_achievement_clock,
+            achieved = remainingHours == 0L
+        ),
+        StatsAchievementUi(
+            title = "新词突破 50 个",
+            subtitle = if (remainingWords == 0) "已解锁" else "还差 $remainingWords 个",
+            iconResId = R.drawable.feature_home_ic_achievement_star,
+            achieved = remainingWords == 0
+        )
     )
 }
 
 internal fun buildReportRows(
+    weekRange: StatsWeekRange,
     wordStats: List<DailyWordStats>,
     durationStats: List<DailyDurationStats>,
     streakDays: Int,
     weekLabels: List<String>
 ): List<StatsReportRowUi> {
     val totalDurationMs = durationStats.sumOf { it.durationMs }
-    val totalWords = wordStats.sumOf { it.newCount + it.reviewCount }
-    val bestIndex = durationStats
-        .withIndex()
-        .maxByOrNull { it.value.durationMs }
-        ?.index
+    val activeDates = buildSet {
+        wordStats
+            .filter { it.newCount > 0 || it.reviewCount > 0 }
+            .mapTo(this) { it.date }
+        durationStats
+            .filter { it.durationMs > 0L }
+            .mapTo(this) { it.date }
+    }
+    val bestDuration = durationStats.maxByOrNull { it.durationMs }
+    val bestDayIndex = bestDuration
+        ?.takeIf { it.durationMs > 0L }
+        ?.let { weekRange.dates.indexOf(it.date) }
         ?: -1
-    val bestDurationMs = durationStats.getOrNull(bestIndex)?.durationMs ?: 0L
-    val bestDay = if (bestIndex >= 0 && bestDurationMs > 0L) {
-        weekLabels.getOrElse(bestIndex) { "--" }
+    val bestDay = if (bestDayIndex >= 0) {
+        weekLabels.getOrElse(bestDayIndex) { "--" }
     } else {
         "--"
     }
     return listOf(
         StatsReportRowUi("本周学习时长", formatHoursValue(totalDurationMs), "小时", R.drawable.feature_home_ic_profile_clock, R.drawable.feature_home_stats_icon_blue_bg),
-        StatsReportRowUi("本周学习次数", totalWords.coerceAtLeast(0).toString(), "次", R.drawable.feature_home_ic_profile_book_open, R.drawable.feature_home_stats_icon_green_bg),
+        StatsReportRowUi("本周学习次数", activeDates.size.toString(), "次", R.drawable.feature_home_ic_profile_book_open, R.drawable.feature_home_stats_icon_green_bg),
         StatsReportRowUi("最佳学习日", bestDay, "", R.drawable.feature_home_ic_profile_report_calendar_star, R.drawable.feature_home_stats_icon_green_bg),
         StatsReportRowUi("连续打卡天数", streakDays.coerceAtLeast(0).toString(), "天", R.drawable.feature_home_ic_profile_flame, R.drawable.feature_home_stats_icon_orange_bg)
     )
+}
+
+private fun remainingWholeUnits(current: Long, target: Long, unit: Long): Long {
+    val remaining = (target - current).coerceAtLeast(0L)
+    return if (remaining == 0L) 0L else (remaining + unit - 1L) / unit
 }
 
 internal fun formatHoursValue(durationMs: Long): String {
@@ -455,3 +525,7 @@ internal fun shouldFollowBusinessMonth(
     return displayMonth.get(Calendar.YEAR) == previousCurrentBusinessDate.take(4).toInt() &&
         displayMonth.get(Calendar.MONTH) == previousCurrentBusinessDate.substring(5, 7).toInt() - 1
 }
+
+private const val HOUR_MS = 3_600_000L
+private const val ACHIEVEMENT_DURATION_TARGET_MS = 10L * HOUR_MS
+private const val ACHIEVEMENT_WORD_TARGET = 50
