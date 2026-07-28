@@ -11,7 +11,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/feature_home_v2_header_min_height"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/feature_home_v2_header_min_height"
         android:clipChildren="false"
         android:clipToPadding="false">
 
@@ -20,7 +21,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="3dp"
-            android:layout_marginTop="27dp"
+            android:layout_marginTop="12dp"
             android:ellipsize="end"
             android:includeFontPadding="false"
             android:maxLines="1"
@@ -36,7 +37,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="1dp"
             android:ellipsize="end"
             android:includeFontPadding="false"
             android:maxLines="1"
@@ -52,7 +53,7 @@
             android:layout_width="@dimen/feature_home_v2_header_action_size"
             android:layout_height="@dimen/feature_home_v2_header_action_size"
             android:layout_marginEnd="3dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="7dp"
             android:translationX="5dp"
             android:contentDescription="@string/feature_home_v2_notification_unavailable"
             android:focusable="true"
@@ -85,7 +86,7 @@
             android:padding="5dp"
             android:src="@drawable/feature_home_v2_ic_settings"
             android:translationX="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="7dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>

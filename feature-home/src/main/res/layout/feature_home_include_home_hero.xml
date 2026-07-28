@@ -11,39 +11,45 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/feature_home_v2_hero_root_height"
+        android:layout_height="wrap_content"
         android:clipChildren="false"
         android:clipToPadding="false">
 
         <com.chen.memorizewords.feature.home.ui.home.SoftShadowConstraintLayout
             android:id="@+id/heroCard"
             android:layout_width="0dp"
-            android:layout_height="@dimen/feature_home_v2_hero_card_height"
-            android:layout_marginTop="@dimen/feature_home_v2_hero_card_top"
-            android:background="@drawable/feature_home_v2_hero_card_inset_bg"
-            android:clipChildren="false"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/feature_home_v2_hero_min_height"
+            android:background="@drawable/feature_home_v2_hero_card_bg"
+            android:clipChildren="true"
             android:clipToPadding="false"
             android:elevation="5dp"
             android:outlineAmbientShadowColor="@color/feature_home_v2_shadow_hero_ambient"
             android:outlineProvider="background"
             android:outlineSpotShadowColor="@color/feature_home_v2_shadow_hero_spot"
-            android:paddingStart="@dimen/feature_home_v2_shadow_gutter"
-            android:paddingEnd="@dimen/feature_home_v2_shadow_gutter"
             app:feature_home_shadowAmbientColor="@color/feature_home_v2_shadow_hero_side"
             app:feature_home_shadowAmbientRadius="7dp"
             app:feature_home_shadowCornerRadius="@dimen/feature_home_v2_card_radius"
             app:feature_home_shadowFillColor="@color/feature_home_v2_surface"
-            app:feature_home_shadowHorizontalInset="@dimen/feature_home_v2_shadow_gutter"
+            app:feature_home_shadowHorizontalInset="1dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/heroMetricsGuide"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_begin="@dimen/feature_home_v2_metric_row_top" />
 
             <View
                 android:id="@+id/statusDot"
                 android:layout_width="6dp"
                 android:layout_height="6dp"
-                android:layout_marginStart="17dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginStart="19dp"
+                android:layout_marginTop="@dimen/feature_home_v2_hero_content_top"
                 android:background="@drawable/feature_home_v2_notification_dot"
                 android:backgroundTint="@color/feature_home_v2_green"
                 app:layout_constraintStart_toStartOf="parent"
@@ -53,7 +59,7 @@
                 android:id="@+id/tvStudyStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="7dp"
+                android:layout_marginStart="11dp"
                 android:text="@string/feature_home_v2_studying"
                 android:textColor="@color/feature_home_v2_text_secondary"
                 android:textSize="9sp"
@@ -62,11 +68,49 @@
                 app:layout_constraintTop_toTopOf="@id/statusDot" />
 
             <LinearLayout
+                android:id="@+id/targetPill"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/feature_home_v2_target_pill_height"
+                android:layout_marginStart="@dimen/feature_home_v2_target_pill_status_gap"
+                android:layout_marginEnd="@dimen/feature_home_v2_wordbook_mascot_gap"
+                android:background="@drawable/feature_home_v2_target_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="@id/tvStudyStatus"
+                app:layout_constraintEnd_toStartOf="@id/ivHeroMascot"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toEndOf="@id/tvStudyStatus"
+                app:layout_constraintTop_toTopOf="@id/tvStudyStatus">
+
+                <ImageView
+                    android:layout_width="13dp"
+                    android:layout_height="13dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/feature_home_v2_ic_target" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@{viewModel.targetMinutesText}"
+                    android:textColor="@color/feature_home_v2_orange"
+                    android:textSize="8sp"
+                    android:textStyle="bold"
+                    tools:text="目标 15 分钟" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/wordBookRow"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/feature_home_v2_wordbook_row_height"
-                android:layout_marginStart="17dp"
-                android:layout_marginTop="7dp"
+                android:layout_marginStart="19dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="@dimen/feature_home_v2_wordbook_mascot_gap"
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:contentDescription="@string/feature_home_v2_wordbook_action"
@@ -74,6 +118,9 @@
                 android:gravity="center_vertical"
                 android:onClick="@{() -> viewModel.toWordBookActivity()}"
                 android:orientation="horizontal"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toStartOf="@id/ivHeroMascot"
+                app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvStudyStatus">
 
@@ -81,7 +128,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:maxWidth="175dp"
+                    android:maxWidth="160dp"
                     android:maxLines="1"
                     android:text="@{viewModel.wordBookTitleText}"
                     android:textColor="@color/feature_home_v2_text_primary"
@@ -90,29 +137,39 @@
                     tools:text="CET4 四级词汇" />
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_marginStart="3dp"
                     android:background="@drawable/feature_home_v2_metric_green_icon_bg"
                     android:importantForAccessibility="no"
-                    android:padding="5dp"
+                    android:padding="6dp"
                     android:src="@drawable/feature_home_v2_ic_chevron_right" />
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/ivHeroMascot"
+                android:layout_width="@dimen/feature_home_v2_hero_mascot_width"
+                android:layout_height="@dimen/feature_home_v2_hero_mascot_height"
+                android:layout_marginTop="@dimen/feature_home_v2_hero_mascot_top"
+                android:layout_marginEnd="@dimen/feature_home_v2_hero_mascot_end"
+                android:contentDescription="@string/feature_home_v2_mascot_hero"
+                android:scaleType="fitCenter"
+                android:src="@drawable/feature_home_mascot_hero"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
                 android:id="@+id/metricRow"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/feature_home_v2_metric_row_height"
-                android:layout_marginStart="17dp"
-                android:layout_marginTop="7dp"
-                android:layout_marginEnd="17dp"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/feature_home_v2_metric_row_height"
                 android:baselineAligned="false"
                 android:clipChildren="false"
                 android:clipToPadding="false"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/wordBookRow">
+                app:layout_constraintTop_toTopOf="@id/heroMetricsGuide">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -126,11 +183,11 @@
                         android:layout_height="wrap_content"
                         android:text="@string/feature_home_v2_streak_label"
                         android:textColor="@color/feature_home_v2_text_secondary"
-                        android:textSize="8sp" />
+                        android:textSize="10sp" />
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
+                        android:layout_marginTop="7dp"
                         android:gravity="bottom"
                         android:orientation="horizontal">
                         <TextView
@@ -149,15 +206,15 @@
                             android:layout_marginBottom="2dp"
                             android:text="@string/feature_home_v2_day_unit"
                             android:textColor="@color/feature_home_v2_text_primary"
-                            android:textSize="9sp" />
+                            android:textSize="11sp" />
                     </LinearLayout>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
+                        android:layout_marginTop="6dp"
                         android:text="@string/feature_home_v2_streak_encouragement"
                         android:textColor="@color/feature_home_v2_text_primary"
-                        android:textSize="9sp" />
+                        android:textSize="11sp" />
                 </LinearLayout>
 
                 <View
@@ -169,7 +226,8 @@
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/feature_home_v2_metric_row_height"
                     android:layout_weight="1.2"
                     android:clipChildren="false"
                     android:clipToPadding="false"
@@ -183,11 +241,11 @@
                         android:layout_height="wrap_content"
                         android:text="@string/feature_home_v2_today_goal_label"
                         android:textColor="@color/feature_home_v2_text_secondary"
-                        android:textSize="8sp" />
+                        android:textSize="10sp" />
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
+                        android:layout_marginTop="7dp"
                         android:gravity="bottom"
                         android:orientation="horizontal">
                         <TextView
@@ -206,20 +264,21 @@
                             android:layout_marginBottom="2dp"
                             android:text="@{`/ ` + String.valueOf(viewModel.todayPlanTotalCount)}"
                             android:textColor="@color/feature_home_v2_text_primary"
-                            android:textSize="11sp"
+                            android:textSize="13sp"
                             android:textStyle="bold"
                             tools:text="/ 48" />
                     </LinearLayout>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
                         android:text="@string/feature_home_v2_word_unit"
                         android:textColor="@color/feature_home_v2_text_primary"
-                        android:textSize="9sp" />
+                        android:textSize="11sp" />
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="3dp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
                         <ProgressBar
@@ -262,11 +321,11 @@
                         android:layout_height="wrap_content"
                         android:text="@string/feature_home_v2_review_remaining_label"
                         android:textColor="@color/feature_home_v2_text_secondary"
-                        android:textSize="8sp" />
+                        android:textSize="10sp" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
+                        android:layout_marginTop="7dp"
                         android:includeFontPadding="false"
                         android:text="@{String.valueOf(viewModel.remainingReviewCount)}"
                         android:textColor="@color/feature_home_v2_green_dark"
@@ -276,10 +335,10 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
+                        android:layout_marginTop="5dp"
                         android:text="@string/feature_home_v2_word_unit"
                         android:textColor="@color/feature_home_v2_text_primary"
-                        android:textSize="9sp" />
+                        android:textSize="11sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -287,8 +346,9 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/feature_home_v2_primary_button_height"
                 android:layout_marginStart="20dp"
+                android:layout_marginTop="@dimen/feature_home_v2_primary_button_metric_gap"
                 android:layout_marginEnd="20dp"
-                android:layout_marginBottom="13dp"
+                android:layout_marginBottom="@dimen/feature_home_v2_primary_button_bottom"
                 android:background="@drawable/feature_home_v2_primary_button_bg"
                 android:clickable="true"
                 android:enabled="@{viewModel.learningButtonEnabled}"
@@ -299,7 +359,8 @@
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/metricRow">
                 <ImageView
                     android:layout_width="@dimen/feature_home_v2_primary_button_icon"
                     android:layout_height="@dimen/feature_home_v2_primary_button_icon"
@@ -316,57 +377,10 @@
                     android:maxLines="1"
                     android:text="@{viewModel.learnButtonText}"
                     android:textColor="@color/feature_home_v2_white"
-                    android:textSize="13sp"
+                    android:textSize="15sp"
                     android:textStyle="bold"
                     tools:text="开始学习" />
             </LinearLayout>
         </com.chen.memorizewords.feature.home.ui.home.SoftShadowConstraintLayout>
-
-        <LinearLayout
-            android:id="@+id/targetPill"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/feature_home_v2_target_pill_height"
-            android:layout_marginEnd="@dimen/feature_home_v2_target_pill_end"
-            android:layout_marginTop="@dimen/feature_home_v2_target_pill_top"
-            android:background="@drawable/feature_home_v2_target_bg"
-            android:elevation="7dp"
-            android:gravity="center_vertical"
-            android:outlineAmbientShadowColor="@color/feature_home_v2_shadow_warm_ambient"
-            android:outlineProvider="background"
-            android:outlineSpotShadowColor="@color/feature_home_v2_shadow_warm_spot"
-            android:orientation="horizontal"
-            android:paddingStart="6dp"
-            android:paddingEnd="6dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-            <ImageView
-                android:layout_width="13dp"
-                android:layout_height="13dp"
-                android:importantForAccessibility="no"
-                android:src="@drawable/feature_home_v2_ic_target" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="3dp"
-                android:text="@{viewModel.targetMinutesText}"
-                android:textColor="@color/feature_home_v2_orange"
-                android:textSize="8sp"
-                android:textStyle="bold"
-                tools:text="目标 15 分钟" />
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/ivHeroMascot"
-            android:layout_width="@dimen/feature_home_v2_hero_mascot_width"
-            android:layout_height="@dimen/feature_home_v2_hero_mascot_height"
-            android:layout_marginEnd="@dimen/feature_home_v2_hero_mascot_end"
-            android:contentDescription="@string/feature_home_v2_mascot_hero"
-            android:elevation="6dp"
-            android:outlineProvider="none"
-            android:scaleType="fitCenter"
-            android:src="@drawable/feature_home_mascot_hero"
-            android:translationY="@dimen/feature_home_v2_hero_mascot_translation_y"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

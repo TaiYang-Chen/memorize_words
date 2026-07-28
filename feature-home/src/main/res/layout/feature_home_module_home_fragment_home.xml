@@ -59,8 +59,7 @@
                 android:id="@+id/homeHeader"
                 layout="@layout/feature_home_include_home_header"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/feature_home_v2_header_min_height"
-                android:layout_marginStart="@dimen/feature_home_v2_shadow_gutter"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/feature_home_v2_shadow_gutter"
                 app:viewModel="@{viewModel}" />
 
@@ -109,8 +108,8 @@
                 android:id="@+id/homeHero"
                 layout="@layout/feature_home_include_home_hero"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/feature_home_v2_hero_root_height"
-                android:layout_marginTop="@dimen/feature_home_v2_hero_section_overlap"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/feature_home_v2_hero_section_gap"
                 app:viewModel="@{viewModel}" />
 
             <include

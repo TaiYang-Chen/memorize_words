@@ -2,7 +2,7 @@
 <resources>
     <dimen name="feature_home_v2_page_horizontal_padding">15dp</dimen>
     <dimen name="feature_home_v2_shadow_gutter">6dp</dimen>
-    <dimen name="feature_home_v2_page_top_padding">14dp</dimen>
+    <dimen name="feature_home_v2_page_top_padding">6dp</dimen>
     <dimen name="feature_home_v2_page_bottom_padding">18dp</dimen>
     <dimen name="feature_home_v2_section_gap_small">7dp</dimen>
     <dimen name="feature_home_v2_section_gap">10dp</dimen>
@@ -15,7 +15,7 @@
     <dimen name="feature_home_v2_border_width">1dp</dimen>
     <dimen name="feature_home_v2_divider_size">1dp</dimen>
 
-    <dimen name="feature_home_v2_header_min_height">67dp</dimen>
+    <dimen name="feature_home_v2_header_min_height">53dp</dimen>
     <dimen name="feature_home_v2_header_action_size">28dp</dimen>
     <dimen name="feature_home_v2_header_icon_size">19dp</dimen>
     <dimen name="feature_home_v2_notification_dot_size">6dp</dimen>
@@ -24,25 +24,26 @@
     <dimen name="feature_home_v2_banner_horizontal_padding">10dp</dimen>
     <dimen name="feature_home_v2_banner_vertical_padding">6dp</dimen>
 
-    <dimen name="feature_home_v2_hero_root_height">235dp</dimen>
-    <dimen name="feature_home_v2_hero_card_height">195dp</dimen>
-    <dimen name="feature_home_v2_hero_card_top">40dp</dimen>
-    <dimen name="feature_home_v2_hero_section_overlap">0dp</dimen>
-    <dimen name="feature_home_v2_hero_padding_horizontal">17dp</dimen>
-    <dimen name="feature_home_v2_hero_mascot_width">116dp</dimen>
-    <dimen name="feature_home_v2_hero_mascot_height">134dp</dimen>
-    <dimen name="feature_home_v2_hero_mascot_end">36dp</dimen>
-    <dimen name="feature_home_v2_hero_mascot_translation_y">-40dp</dimen>
-    <dimen name="feature_home_v2_wordbook_row_height">27dp</dimen>
+    <dimen name="feature_home_v2_hero_min_height">267dp</dimen>
+    <dimen name="feature_home_v2_hero_section_gap">10dp</dimen>
+    <dimen name="feature_home_v2_hero_content_top">28dp</dimen>
+    <dimen name="feature_home_v2_hero_mascot_width">80dp</dimen>
+    <dimen name="feature_home_v2_hero_mascot_height">92dp</dimen>
+    <dimen name="feature_home_v2_hero_mascot_top">10dp</dimen>
+    <dimen name="feature_home_v2_hero_mascot_end">20dp</dimen>
+    <dimen name="feature_home_v2_wordbook_mascot_gap">8dp</dimen>
+    <dimen name="feature_home_v2_wordbook_row_height">30dp</dimen>
     <dimen name="feature_home_v2_chevron_size">15dp</dimen>
-    <dimen name="feature_home_v2_metric_row_height">61dp</dimen>
-    <dimen name="feature_home_v2_metric_divider_height">48dp</dimen>
-    <dimen name="feature_home_v2_target_pill_height">22dp</dimen>
-    <dimen name="feature_home_v2_target_pill_top">81dp</dimen>
-    <dimen name="feature_home_v2_target_pill_end">11dp</dimen>
+    <dimen name="feature_home_v2_metric_row_top">112dp</dimen>
+    <dimen name="feature_home_v2_metric_row_height">82dp</dimen>
+    <dimen name="feature_home_v2_metric_divider_height">70dp</dimen>
+    <dimen name="feature_home_v2_target_pill_height">20dp</dimen>
+    <dimen name="feature_home_v2_target_pill_status_gap">14dp</dimen>
     <dimen name="feature_home_v2_progress_height">5dp</dimen>
-    <dimen name="feature_home_v2_primary_button_height">40dp</dimen>
-    <dimen name="feature_home_v2_primary_button_icon">18dp</dimen>
+    <dimen name="feature_home_v2_primary_button_height">44dp</dimen>
+    <dimen name="feature_home_v2_primary_button_icon">20dp</dimen>
+    <dimen name="feature_home_v2_primary_button_metric_gap">11dp</dimen>
+    <dimen name="feature_home_v2_primary_button_bottom">18dp</dimen>
 
     <dimen name="feature_home_v2_shortcuts_height">90dp</dimen>
     <dimen name="feature_home_v2_shortcut_icon_container">35dp</dimen>
@@ -77,11 +78,11 @@
     <dimen name="feature_home_v2_icon_small">14dp</dimen>
     <dimen name="feature_home_v2_touch_vertical_padding">7dp</dimen>
 
-    <dimen name="feature_home_v2_text_greeting">17sp</dimen>
+    <dimen name="feature_home_v2_text_greeting">22sp</dimen>
     <dimen name="feature_home_v2_text_section_title">13sp</dimen>
-    <dimen name="feature_home_v2_text_wordbook">15sp</dimen>
+    <dimen name="feature_home_v2_text_wordbook">19sp</dimen>
     <dimen name="feature_home_v2_text_card_title">13sp</dimen>
-    <dimen name="feature_home_v2_text_metric">18sp</dimen>
+    <dimen name="feature_home_v2_text_metric">22sp</dimen>
     <dimen name="feature_home_v2_text_body">12sp</dimen>
     <dimen name="feature_home_v2_text_label">11sp</dimen>
     <dimen name="feature_home_v2_text_caption">10sp</dimen>

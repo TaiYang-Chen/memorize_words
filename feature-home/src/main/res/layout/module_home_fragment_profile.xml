@@ -137,7 +137,7 @@
                         android:layout_height="@dimen/core_ui_dp_70"
                         android:contentDescription="@string/feature_home_profile_mascot"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/feature_home_profile_mascot"
+                        android:src="@drawable/feature_home_profile_mascot_v2"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent" />
 
