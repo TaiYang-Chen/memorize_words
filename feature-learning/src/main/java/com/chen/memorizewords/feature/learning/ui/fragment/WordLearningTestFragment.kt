@@ -274,6 +274,7 @@ class WordLearningTestFragment : Fragment() {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Row(
+                    modifier = Modifier.weight(1f),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(LearningTestDimensions.optionContentSpacing)
                 ) {
@@ -288,7 +289,8 @@ class WordLearningTestFragment : Fragment() {
                         text = option.content,
                         style = MaterialTheme.typography.bodyMedium,
                         color = textColor,
-                        maxLines = 2,
+                        modifier = Modifier.weight(1f),
+                        maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
                 }

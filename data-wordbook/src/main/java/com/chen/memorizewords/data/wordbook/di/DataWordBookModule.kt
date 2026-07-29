@@ -23,7 +23,10 @@ import com.chen.memorizewords.data.wordbook.repository.WordBookRepositoryImpl
 import com.chen.memorizewords.data.wordbook.repository.WordRepositoryImpl
 import com.chen.memorizewords.data.wordbook.repository.WorkManagerWordBookWorkCanceller
 import com.chen.memorizewords.data.wordbook.repository.bootstrap.WordBookSnapshotLocalStateStore
+import com.chen.memorizewords.data.wordbook.repository.bootstrap.StudyRecordSnapshotLocalStateStore
 import com.chen.memorizewords.data.wordbook.repository.learning.LearningCommandRepository
+import com.chen.memorizewords.data.wordbook.repository.learning.DailyStudyProjectionQueueImpl
+import com.chen.memorizewords.data.wordbook.repository.learning.StudyRecordQueryImpl
 import com.chen.memorizewords.data.wordbook.repository.learning.LearningSyncStateRepository
 import com.chen.memorizewords.data.wordbook.repository.learning.BookLearningWriteCoordinatorImpl
 import com.chen.memorizewords.data.wordbook.repository.learning.WordBookProgressResetRepositoryImpl
@@ -40,6 +43,9 @@ import com.chen.memorizewords.domain.study.repository.WordLearningStateStore
 import com.chen.memorizewords.domain.study.repository.learning.LearningCommandPort
 import com.chen.memorizewords.domain.study.repository.learning.LearningSyncStatePort
 import com.chen.memorizewords.domain.study.repository.learning.BookLearningWriteCoordinator
+import com.chen.memorizewords.domain.study.repository.record.DailyStudyProjectionQueue
+import com.chen.memorizewords.domain.study.repository.record.StudyRecordQuery
+import com.chen.memorizewords.domain.study.repository.StudyRecordSnapshotPort
 import com.chen.memorizewords.domain.wordbook.repository.LearningProgressRepository
 import com.chen.memorizewords.domain.wordbook.repository.WordBookContentReadinessPort
 import com.chen.memorizewords.domain.wordbook.repository.WordBookSnapshotLocalStatePort
@@ -102,6 +108,19 @@ abstract class DataWordBookModule {
     abstract fun bindLearningCommandPort(
         impl: LearningCommandRepository
     ): LearningCommandPort
+
+    @Binds
+    abstract fun bindDailyStudyProjectionQueue(
+        impl: DailyStudyProjectionQueueImpl
+    ): DailyStudyProjectionQueue
+
+    @Binds
+    abstract fun bindStudyRecordQuery(impl: StudyRecordQueryImpl): StudyRecordQuery
+
+    @Binds
+    abstract fun bindStudyRecordSnapshotPort(
+        impl: StudyRecordSnapshotLocalStateStore
+    ): StudyRecordSnapshotPort
 
     @Binds
     abstract fun bindLearningSyncStatePort(
@@ -212,6 +231,10 @@ object DataWordBookDatabaseModule {
 
     @Provides
     fun provideLearningOutboxDao(database: WordBookDatabase) = database.learningOutboxDao()
+
+    @Provides
+    fun provideDailyProgressProjectionTaskDao(database: WordBookDatabase) =
+        database.dailyProgressProjectionTaskDao()
 
     @Provides
     fun provideWordStudyRecordDao(database: WordBookDatabase) = database.wordStudyRecordDao()

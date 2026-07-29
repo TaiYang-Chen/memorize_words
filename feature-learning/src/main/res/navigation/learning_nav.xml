@@ -71,7 +71,11 @@
     <fragment
         android:id="@+id/learningCheckInFragment"
         android:name="com.chen.memorizewords.feature.learning.ui.checkin.LearningCheckInFragment"
-        android:label="@string/learning_nav_check_in_title" />
+        android:label="@string/learning_nav_check_in_title">
+        <argument
+            android:name="businessDate"
+            app:argType="string" />
+    </fragment>
 
     <fragment
         android:id="@+id/wordExamPracticeFragment"

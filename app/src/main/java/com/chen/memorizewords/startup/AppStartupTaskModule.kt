@@ -36,6 +36,13 @@ abstract class AppStartupTaskModule {
     @Binds
     @IntoSet
     @Singleton
+    abstract fun bindDailyStudyProjectionStartupTask(
+        impl: DailyStudyProjectionStartupTask
+    ): ApplicationStartupTask
+
+    @Binds
+    @IntoSet
+    @Singleton
     abstract fun bindForegroundWordBookStartupTask(
         impl: ForegroundWordBookStartupTask
     ): ApplicationStartupTask

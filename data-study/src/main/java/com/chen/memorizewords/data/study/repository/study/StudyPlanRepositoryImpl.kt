@@ -1,8 +1,7 @@
 ﻿package com.chen.memorizewords.data.study.repository.study
 
 import com.chen.memorizewords.data.study.local.mmkv.plan.StudyPlanDataSource
-import com.chen.memorizewords.core.common.coroutines.DirectSyncLauncher
-import com.chen.memorizewords.data.wordbook.remote.datasync.RemoteUserSyncDataSource
+import com.chen.memorizewords.domain.study.repository.sync.StudySyncPort
 import com.chen.memorizewords.domain.wordbook.model.study.StudyPlan
 import com.chen.memorizewords.domain.wordbook.repository.StudyPlanLocalStatePort
 import com.chen.memorizewords.domain.wordbook.repository.StudyPlanRepository
@@ -14,8 +13,7 @@ import javax.inject.Inject
 
 class StudyPlanRepositoryImpl @Inject constructor(
     private val studyPlanDataSource: StudyPlanDataSource,
-    private val remoteUserSyncDataSource: RemoteUserSyncDataSource,
-    private val directSyncLauncher: DirectSyncLauncher
+    private val studySyncPort: StudySyncPort
 ) : StudyPlanRepository, StudyPlanLocalStatePort {
 
     override suspend fun saveStudyPlan(studyPlan: StudyPlan) {
@@ -59,10 +57,6 @@ class StudyPlanRepositoryImpl @Inject constructor(
     }
 
     private fun upload(plan: StudyPlan) {
-        directSyncLauncher.launch(
-            operation = "study_plan",
-            orderingKey = "study_plan",
-            request = { remoteUserSyncDataSource.updateStudyPlan(plan) }
-        )
+        studySyncPort.scheduleStudyPlan(plan)
     }
 }

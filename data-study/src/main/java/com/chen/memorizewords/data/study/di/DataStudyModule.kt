@@ -6,12 +6,18 @@ import com.chen.memorizewords.core.database.NewArchitectureDatabase
 import com.chen.memorizewords.data.study.local.StudyDatabase
 import com.chen.memorizewords.data.study.local.mmkv.plan.StudyPlanDataSource
 import com.chen.memorizewords.data.study.local.mmkv.plan.StudyPlanDataSourceImpl
-import com.chen.memorizewords.data.study.repository.bootstrap.StudySnapshotLocalStateStore
-import com.chen.memorizewords.data.study.repository.record.LearningRecordRepositoryImpl
+import com.chen.memorizewords.data.study.repository.bootstrap.DailyStudySnapshotLocalStateStore
+import com.chen.memorizewords.data.study.repository.bootstrap.FavoritesSnapshotLocalStateStore
+import com.chen.memorizewords.data.study.repository.record.DailyStudyRepositoryImpl
+import com.chen.memorizewords.data.study.repository.record.BusinessDateProviderImpl
+import com.chen.memorizewords.data.study.repository.record.DailyStudyProjectionStoreImpl
 import com.chen.memorizewords.data.study.repository.study.FavoritesRepositoryImpl
 import com.chen.memorizewords.data.study.repository.study.StudyPlanRepositoryImpl
-import com.chen.memorizewords.domain.study.repository.StudySnapshotLocalStatePort
-import com.chen.memorizewords.domain.study.repository.record.LearningRecordRepository
+import com.chen.memorizewords.domain.study.repository.DailyStudySnapshotPort
+import com.chen.memorizewords.domain.study.repository.FavoritesSnapshotPort
+import com.chen.memorizewords.domain.study.repository.record.DailyStudyRepository
+import com.chen.memorizewords.domain.study.repository.record.BusinessDateProvider
+import com.chen.memorizewords.domain.study.repository.record.DailyStudyProjectionStore
 import com.chen.memorizewords.domain.study.repository.word.FavoritesRepository
 import com.chen.memorizewords.domain.wordbook.repository.StudyPlanLocalStatePort
 import com.chen.memorizewords.domain.wordbook.repository.StudyPlanRepository
@@ -36,17 +42,30 @@ abstract class DataStudyModule {
     ): StudyPlanLocalStatePort
 
     @Binds
-    abstract fun bindLearningRecordRepository(
-        impl: LearningRecordRepositoryImpl
-    ): LearningRecordRepository
+    abstract fun bindDailyStudyRepository(
+        impl: DailyStudyRepositoryImpl
+    ): DailyStudyRepository
+
+    @Binds
+    abstract fun bindBusinessDateProvider(impl: BusinessDateProviderImpl): BusinessDateProvider
+
+    @Binds
+    abstract fun bindDailyStudyProjectionStore(
+        impl: DailyStudyProjectionStoreImpl
+    ): DailyStudyProjectionStore
 
     @Binds
     abstract fun bindFavoritesRepository(impl: FavoritesRepositoryImpl): FavoritesRepository
 
     @Binds
-    abstract fun bindStudySnapshotLocalStatePort(
-        impl: StudySnapshotLocalStateStore
-    ): StudySnapshotLocalStatePort
+    abstract fun bindDailyStudySnapshotPort(
+        impl: DailyStudySnapshotLocalStateStore
+    ): DailyStudySnapshotPort
+
+    @Binds
+    abstract fun bindFavoritesSnapshotPort(
+        impl: FavoritesSnapshotLocalStateStore
+    ): FavoritesSnapshotPort
 }
 
 @Module

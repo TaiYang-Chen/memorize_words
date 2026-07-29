@@ -19,7 +19,9 @@ import com.chen.memorizewords.domain.study.model.record.CheckInRecord
 import com.chen.memorizewords.domain.study.model.record.CheckInType
 import com.chen.memorizewords.domain.study.model.record.DailyStudyRecords
 import com.chen.memorizewords.domain.study.repository.StudyDailyDurationSnapshot
-import com.chen.memorizewords.domain.study.repository.StudySnapshotLocalStatePort
+import com.chen.memorizewords.domain.study.repository.DailyStudySnapshotPort
+import com.chen.memorizewords.domain.study.repository.FavoritesSnapshotPort
+import com.chen.memorizewords.domain.study.repository.StudyRecordSnapshotPort
 import com.chen.memorizewords.domain.study.repository.learning.LearningSyncStatePort
 import com.chen.memorizewords.domain.sync.ServerBootstrapContributor
 import com.chen.memorizewords.domain.wordbook.model.study.progress.wordbook.WordBookProgress
@@ -43,7 +45,9 @@ class PrimaryServerBootstrapContributor @Inject constructor(
     private val studyPlanLocalStatePort: StudyPlanLocalStatePort,
     private val practiceSettingsLocalStatePort: PracticeSettingsLocalStatePort,
     private val floatingSettingsLocalStatePort: FloatingSettingsLocalStatePort,
-    private val studySnapshotLocalStatePort: StudySnapshotLocalStatePort,
+    private val studyRecordSnapshotPort: StudyRecordSnapshotPort,
+    private val dailyStudySnapshotPort: DailyStudySnapshotPort,
+    private val favoritesSnapshotPort: FavoritesSnapshotPort,
     private val practiceSnapshotLocalStatePort: PracticeSnapshotLocalStatePort,
     private val floatingSnapshotLocalStatePort: FloatingSnapshotLocalStatePort,
     private val wordBookSnapshotLocalStatePort: WordBookSnapshotLocalStatePort,
@@ -183,7 +187,7 @@ class PrimaryServerBootstrapContributor @Inject constructor(
                 }
             }
             bootstrapStep("overwriteStudyRecords") {
-                studySnapshotLocalStatePort.overwriteStudyRecordsFromRemote(
+                studyRecordSnapshotPort.overwriteStudyRecordsFromRemote(
                     studyRecords.map { it.toDomain() }
                 )
             }
@@ -198,7 +202,7 @@ class PrimaryServerBootstrapContributor @Inject constructor(
             }
         }
         bootstrapStep("overwriteFavorites") {
-            studySnapshotLocalStatePort.overwriteFavoritesFromRemote(favorites.map { it.toDomain() })
+            favoritesSnapshotPort.overwriteFavoritesFromRemote(favorites.map { it.toDomain() })
         }
         val dailyStudyDurations = bootstrapStep("getDailyStudyDurations") {
             loadPagedSnapshot { page, count ->
@@ -206,7 +210,7 @@ class PrimaryServerBootstrapContributor @Inject constructor(
             }
         }
         bootstrapStep("overwriteDailyStudyDurations") {
-            studySnapshotLocalStatePort.overwriteDailyDurationsFromRemote(
+            dailyStudySnapshotPort.overwriteDailyDurationsFromRemote(
                 dailyStudyDurations.map { it.toSnapshot() }
             )
         }
@@ -216,7 +220,7 @@ class PrimaryServerBootstrapContributor @Inject constructor(
             }
         }
         bootstrapStep("overwriteCheckInRecords") {
-            studySnapshotLocalStatePort.overwriteCheckInRecordsFromRemote(
+            dailyStudySnapshotPort.overwriteCheckInRecordsFromRemote(
                 checkInRecords.map { it.toDomain() }
             )
         }

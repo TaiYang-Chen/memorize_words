@@ -1,11 +1,11 @@
 package com.chen.memorizewords.domain.study.usecase.word.study
-import com.chen.memorizewords.domain.study.repository.record.LearningRecordRepository
+import com.chen.memorizewords.domain.study.repository.record.BusinessDateProvider
 import javax.inject.Inject
 
 class GetCurrentBusinessDateUseCase @Inject constructor(
-    private val learningRecordRepository: LearningRecordRepository
+    private val businessDateProvider: BusinessDateProvider
 ) {
     operator fun invoke(): String {
-        return learningRecordRepository.getCurrentBusinessDate()
+        return businessDateProvider.currentBusinessDate()
     }
 }

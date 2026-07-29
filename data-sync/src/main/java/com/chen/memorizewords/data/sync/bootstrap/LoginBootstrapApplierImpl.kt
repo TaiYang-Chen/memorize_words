@@ -6,7 +6,8 @@ import com.chen.memorizewords.domain.account.repository.LoginBootstrapApplier
 import com.chen.memorizewords.domain.account.repository.LocalAccountRepository
 import com.chen.memorizewords.domain.study.model.record.DailyStudyRecords
 import com.chen.memorizewords.domain.study.repository.StudyDailyDurationSnapshot
-import com.chen.memorizewords.domain.study.repository.StudySnapshotLocalStatePort
+import com.chen.memorizewords.domain.study.repository.DailyStudySnapshotPort
+import com.chen.memorizewords.domain.study.repository.StudyRecordSnapshotPort
 import com.chen.memorizewords.domain.sync.model.HomeStartupSnapshot
 import com.chen.memorizewords.domain.sync.model.LoginBootstrap
 import com.chen.memorizewords.domain.sync.model.LoginBootstrapDailyStudyDuration
@@ -26,7 +27,8 @@ class LoginBootstrapApplierImpl @Inject constructor(
     private val studyPlanLocalStatePort: StudyPlanLocalStatePort,
     private val currentWordBookLocalStatePort: CurrentWordBookLocalStatePort,
     private val wordBookSnapshotLocalStatePort: WordBookSnapshotLocalStatePort,
-    private val studySnapshotLocalStatePort: StudySnapshotLocalStatePort,
+    private val studyRecordSnapshotPort: StudyRecordSnapshotPort,
+    private val dailyStudySnapshotPort: DailyStudySnapshotPort,
     private val checkInConfigDataSource: CheckInConfigDataSource,
     private val localAccountRepository: LocalAccountRepository,
     private val homeStartupSnapshotRepository: HomeStartupSnapshotRepository,
@@ -48,13 +50,13 @@ class LoginBootstrapApplierImpl @Inject constructor(
         }
 
         if (bootstrap.todayStudyRecords.isNotEmpty()) {
-            studySnapshotLocalStatePort.upsertStudyRecordsFromRemote(
+            studyRecordSnapshotPort.upsertStudyRecordsFromRemote(
                 bootstrap.todayStudyRecords.map { it.toDomain() }
             )
         }
 
         bootstrap.todayStudyDuration?.let { duration ->
-            studySnapshotLocalStatePort.upsertDailyDurationsFromRemote(listOf(duration.toSnapshot()))
+            dailyStudySnapshotPort.upsertDailyDurationsFromRemote(listOf(duration.toSnapshot()))
         }
 
         bootstrap.checkInStatus?.let { status ->

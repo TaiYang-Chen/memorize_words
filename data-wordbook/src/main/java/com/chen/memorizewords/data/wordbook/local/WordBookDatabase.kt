@@ -11,6 +11,8 @@ import com.chen.memorizewords.data.wordbook.local.room.model.learning.event.Lear
 import com.chen.memorizewords.data.wordbook.local.room.model.learning.event.LearningEventEntity
 import com.chen.memorizewords.data.wordbook.local.room.model.learning.outbox.LearningOutboxDao
 import com.chen.memorizewords.data.wordbook.local.room.model.learning.outbox.LearningOutboxEntity
+import com.chen.memorizewords.data.wordbook.local.room.model.learning.projection.DailyProgressProjectionTaskDao
+import com.chen.memorizewords.data.wordbook.local.room.model.learning.projection.DailyProgressProjectionTaskEntity
 import com.chen.memorizewords.data.wordbook.local.room.model.learning.record.WordStudyRecordDao
 import com.chen.memorizewords.data.wordbook.local.room.model.learning.record.WordStudyRecordEntity
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.current.CurrentWordBookSelectionDao
@@ -59,6 +61,7 @@ import com.chen.memorizewords.data.wordbook.local.room.model.words.word.WordEnti
         WordLearningStateEntity::class,
         LearningEventEntity::class,
         LearningOutboxEntity::class,
+        DailyProgressProjectionTaskEntity::class,
         WordStudyRecordEntity::class,
         WordEntity::class,
         WordDefinitionEntity::class,
@@ -76,7 +79,7 @@ import com.chen.memorizewords.data.wordbook.local.room.model.words.word.WordEnti
         RootExampleEntity::class,
         RootWordEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 @TypeConverters(WordBookRoomConverters::class)
@@ -90,6 +93,7 @@ abstract class WordBookDatabase : RoomDatabase() {
     abstract fun wordLearningStateDao(): WordLearningStateDao
     abstract fun learningEventDao(): LearningEventDao
     abstract fun learningOutboxDao(): LearningOutboxDao
+    abstract fun dailyProgressProjectionTaskDao(): DailyProgressProjectionTaskDao
     abstract fun wordStudyRecordDao(): WordStudyRecordDao
     abstract fun wordDao(): WordDao
     abstract fun wordDefinitionDao(): WordDefinitionDao

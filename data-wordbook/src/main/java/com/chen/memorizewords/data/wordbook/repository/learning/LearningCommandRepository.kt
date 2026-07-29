@@ -2,6 +2,8 @@ package com.chen.memorizewords.data.wordbook.repository.learning
 
 import com.chen.memorizewords.data.wordbook.local.room.model.learning.event.LearningEventDao
 import com.chen.memorizewords.data.wordbook.local.room.model.learning.event.LearningEventEntity
+import com.chen.memorizewords.data.wordbook.local.room.model.learning.projection.DailyProgressProjectionTaskDao
+import com.chen.memorizewords.data.wordbook.local.room.model.learning.projection.DailyProgressProjectionTaskEntity
 import com.chen.memorizewords.data.wordbook.local.room.model.learning.record.WordStudyRecordDao
 import com.chen.memorizewords.data.wordbook.local.room.model.learning.record.WordStudyRecordEntity
 import com.chen.memorizewords.data.wordbook.local.room.model.study.progress.word.WordLearningStateDao
@@ -16,20 +18,12 @@ import com.chen.memorizewords.data.wordbook.repository.WordBookTransactionRunner
 import com.chen.memorizewords.domain.study.model.learning.LearningEventAction
 import com.chen.memorizewords.domain.study.model.learning.RecordLearningEventCommand
 import com.chen.memorizewords.domain.study.model.learning.RecordLearningEventResult
+import com.chen.memorizewords.domain.study.model.learning.createsDailyStudyRecord
 import com.chen.memorizewords.domain.study.model.progress.word.calculateSm2Review
 import com.chen.memorizewords.domain.study.repository.learning.LearningCommandPort
 import com.chen.memorizewords.domain.study.repository.learning.BookLearningWriteCoordinator
 import com.chen.memorizewords.domain.sync.LearningEventSyncPayload
-import com.chen.memorizewords.core.common.coroutines.DirectSyncLauncher
-import com.chen.memorizewords.data.sync.remote.learningsync.RemoteLearningSyncDataSource
-import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.LearningEventRequest
-import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.LearningEventResultDto
-import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.LearningProgressDto
-import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.LearningWordStateDto
-import com.chen.memorizewords.domain.study.model.progress.word.WordLearningState
-import com.chen.memorizewords.domain.study.repository.learning.LearningEventSyncResultSnapshot
-import com.chen.memorizewords.domain.study.repository.learning.LearningSyncStatePort
-import com.chen.memorizewords.domain.wordbook.model.study.progress.wordbook.WordBookProgress
+import com.chen.memorizewords.domain.study.repository.sync.LearningEventSyncPort
 import com.google.gson.Gson
 import java.util.UUID
 import java.util.concurrent.TimeUnit
@@ -38,6 +32,7 @@ import javax.inject.Inject
 class LearningCommandRepository @Inject constructor(
     private val transactionRunner: WordBookTransactionRunner,
     private val learningEventDao: LearningEventDao,
+    private val dailyProgressProjectionTaskDao: DailyProgressProjectionTaskDao,
     private val wordStudyRecordDao: WordStudyRecordDao,
     private val wordLearningStateDao: WordLearningStateDao,
     private val wordBookProgressDao: WordBookProgressDao,
@@ -47,9 +42,7 @@ class LearningCommandRepository @Inject constructor(
     private val wordDefinitionDao: WordDefinitionDao,
     private val gson: Gson,
     private val coordinator: BookLearningWriteCoordinator,
-    private val remoteLearningSyncDataSource: RemoteLearningSyncDataSource,
-    private val learningSyncStatePort: LearningSyncStatePort,
-    private val directSyncLauncher: DirectSyncLauncher
+    private val learningEventSyncPort: LearningEventSyncPort
 ) : LearningCommandPort {
 
     override suspend fun record(command: RecordLearningEventCommand): RecordLearningEventResult {
@@ -59,21 +52,7 @@ class LearningCommandRepository @Inject constructor(
             val committed = transactionRunner.runInTransaction {
                 recordInTransaction(command)
             }
-            // Register the direct upload before releasing the per-book write lock so network
-            // entry order always matches the committed clientSequence order. The launcher yields
-            // before executing the request, therefore no network work runs inside the transaction.
-            directSyncLauncher.launch(
-                operation = "learning_event",
-                orderingKey = "learning:${committed.payload.bookId}",
-                request = {
-                    remoteLearningSyncDataSource.recordLearningEvent(committed.payload.toRequest())
-                },
-                onSuccess = { response ->
-                    coordinator.withBookWrite(committed.payload.bookId) {
-                        learningSyncStatePort.applyLearningEventSyncResult(response.toSnapshot())
-                    }
-                }
-            )
+            learningEventSyncPort.schedule(committed.payload)
             committed
         }
         return committed.result
@@ -118,7 +97,13 @@ class LearningCommandRepository @Inject constructor(
         if (next != null && command.action.changesWordState()) {
             wordLearningStateDao.upsert(next)
         }
-        if (command.action.createsStudyRecord()) {
+        if (command.action.createsDailyStudyRecord) {
+            val dailyNewTarget = requireNotNull(command.dailyNewTarget) {
+                "dailyNewTarget is required for study record events"
+            }
+            val dailyReviewTarget = requireNotNull(command.dailyReviewTarget) {
+                "dailyReviewTarget is required for study record events"
+            }
             wordStudyRecordDao.upsert(
                 WordStudyRecordEntity(
                     date = command.businessDate,
@@ -126,6 +111,18 @@ class LearningCommandRepository @Inject constructor(
                     wordId = command.word.id,
                     definition = resolveDefinition(command.word.id),
                     isNewWord = command.isNewWordOverride ?: (previous == null)
+                )
+            )
+            dailyProgressProjectionTaskDao.insert(
+                DailyProgressProjectionTaskEntity(
+                    clientEventId = clientEventId,
+                    clientSequence = clientSequence,
+                    businessDate = command.businessDate,
+                    newCountAfter = wordStudyRecordDao.getNewWordCount(command.businessDate),
+                    reviewCountAfter = wordStudyRecordDao.getReviewWordCount(command.businessDate),
+                    dailyNewTarget = dailyNewTarget.coerceAtLeast(0),
+                    dailyReviewTarget = dailyReviewTarget.coerceAtLeast(0),
+                    createdAtMs = System.currentTimeMillis()
                 )
             )
         }
@@ -265,10 +262,6 @@ class LearningCommandRepository @Inject constructor(
             this == LearningEventAction.PRACTICE_RESULT_APPLIED
     }
 
-    private fun LearningEventAction.createsStudyRecord(): Boolean {
-        return incrementsLearnCount()
-    }
-
     private fun LearningEventAction.updatesProgress(): Boolean {
         return this != LearningEventAction.SKIPPED
     }
@@ -283,58 +276,4 @@ class LearningCommandRepository @Inject constructor(
 private data class CommittedLearningEvent(
     val result: RecordLearningEventResult,
     val payload: LearningEventSyncPayload
-)
-
-private fun LearningEventSyncPayload.toRequest(): LearningEventRequest = LearningEventRequest(
-    clientEventId = clientEventId,
-    deviceId = deviceId,
-    clientSequence = clientSequence,
-    bookId = bookId,
-    wordId = wordId,
-    action = action,
-    quality = quality,
-    correct = correct,
-    businessDate = businessDate,
-    occurredAtMs = occurredAt,
-    baseStateRevision = baseStateRevision,
-    payloadJson = payloadJson,
-    schemaVersion = schemaVersion
-)
-
-private fun LearningEventResultDto.toSnapshot(): LearningEventSyncResultSnapshot {
-    val progress = learningProgress ?: wordBookProgress
-    return LearningEventSyncResultSnapshot(
-        clientEventId = clientEventId,
-        conflict = conflict,
-        wordState = wordState?.toDomain(),
-        learningProgress = progress?.toDomain(),
-        serverStateRevision = wordState?.stateRevision ?: 0L
-    )
-}
-
-private fun LearningWordStateDto.toDomain(): WordLearningState = WordLearningState(
-    wordId = wordId,
-    bookId = bookId,
-    totalLearnCount = totalLearnCount,
-    lastLearnedAtMs = lastLearnedAtMs,
-    nextReviewAtMs = nextReviewAtMs,
-    masteryLevel = masteryLevel,
-    userStatus = userStatus,
-    repetition = repetition,
-    interval = interval,
-    efactor = efactor,
-    stateRevision = stateRevision
-)
-
-private fun LearningProgressDto.toDomain(): WordBookProgress = WordBookProgress(
-    wordBookId = bookId,
-    wordBookName = bookName,
-    learningCount = learnedCount,
-    masteredCount = masteredCount,
-    totalCount = totalCount,
-    correctCount = correctCount,
-    wrongCount = wrongCount,
-    studyDayCount = studyDayCount,
-    lastStudyDate = lastStudyDate.orEmpty(),
-    revision = revision
 )

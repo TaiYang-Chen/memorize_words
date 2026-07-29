@@ -123,8 +123,11 @@ class LearningMainFragment :
 
     override fun onNavigationRoute(event: UiEvent.Navigation.Route) {
         when (val target = event.target) {
-            LearningViewModel.Route.ToCheckIn -> {
-                navigateFromLearningMain(R.id.action_learningMainFragment_to_learningCheckInFragment)
+            is LearningViewModel.Route.ToCheckIn -> {
+                navigateFromLearningMain(
+                    R.id.action_learningMainFragment_to_learningCheckInFragment,
+                    bundleOf("businessDate" to target.businessDate)
+                )
             }
 
             is LearningViewModel.Route.ToLearningDone -> {

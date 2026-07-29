@@ -5,11 +5,11 @@ import com.chen.memorizewords.core.common.calendar.CheckInConfig
 import com.chen.memorizewords.core.common.calendar.CheckInConfigDataSource
 import com.chen.memorizewords.domain.account.model.user.User
 import com.chen.memorizewords.domain.account.repository.LocalAccountRepository
-import com.chen.memorizewords.domain.study.model.favorites.WordFavorites
 import com.chen.memorizewords.domain.study.model.record.CheckInRecord
 import com.chen.memorizewords.domain.study.model.record.DailyStudyRecords
+import com.chen.memorizewords.domain.study.repository.DailyStudySnapshotPort
 import com.chen.memorizewords.domain.study.repository.StudyDailyDurationSnapshot
-import com.chen.memorizewords.domain.study.repository.StudySnapshotLocalStatePort
+import com.chen.memorizewords.domain.study.repository.StudyRecordSnapshotPort
 import com.chen.memorizewords.domain.sync.model.HomeStartupSnapshot
 import com.chen.memorizewords.domain.sync.model.LoginBootstrap
 import com.chen.memorizewords.domain.sync.model.LoginBootstrapCheckInStatus
@@ -146,12 +146,14 @@ class LoginBootstrapApplierImplTest {
         snapshotRepository: FakeHomeStartupSnapshotRepository
     ): LoginBootstrapApplierImpl {
         val checkInConfigDataSource = FakeCheckInConfigDataSource()
+        val studySnapshotPort = FakeStudySnapshotPorts()
         return LoginBootstrapApplierImpl(
             onboardingRepository = FakeOnboardingRepository(),
             studyPlanLocalStatePort = FakeStudyPlanLocalStatePort(),
             currentWordBookLocalStatePort = FakeCurrentWordBookLocalStatePort(),
             wordBookSnapshotLocalStatePort = FakeWordBookSnapshotLocalStatePort(),
-            studySnapshotLocalStatePort = FakeStudySnapshotLocalStatePort(),
+            studyRecordSnapshotPort = studySnapshotPort,
+            dailyStudySnapshotPort = studySnapshotPort,
             checkInConfigDataSource = checkInConfigDataSource,
             localAccountRepository = FakeLocalAccountRepository(),
             homeStartupSnapshotRepository = snapshotRepository,
@@ -265,9 +267,7 @@ class LoginBootstrapApplierImplTest {
         override suspend fun upsertProgressFromRemote(progress: List<WordBookProgress>) = Unit
     }
 
-    private class FakeStudySnapshotLocalStatePort : StudySnapshotLocalStatePort {
-        override suspend fun overwriteFavoritesFromRemote(favorites: List<WordFavorites>) = Unit
-
+    private class FakeStudySnapshotPorts : StudyRecordSnapshotPort, DailyStudySnapshotPort {
         override suspend fun overwriteStudyRecordsFromRemote(records: List<DailyStudyRecords>) = Unit
 
         override suspend fun upsertStudyRecordsFromRemote(records: List<DailyStudyRecords>) = Unit

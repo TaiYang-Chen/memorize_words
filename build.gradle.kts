@@ -354,6 +354,108 @@ tasks.register("verifyDataModuleImportBoundaries") {
     }
 }
 
+tasks.register("verifyStudyLearningBoundaries") {
+    group = "verification"
+    description = "Verify ownership and UI boundaries for the durable daily-study projection loop."
+
+    doLast {
+        val violations = mutableListOf<String>()
+
+        fun scan(
+            roots: List<File>,
+            forbiddenTokens: List<String>
+        ) {
+            roots.filter(File::exists).forEach { root ->
+                val files = if (root.isFile) sequenceOf(root) else root.walkTopDown()
+                    .filter { file -> file.isFile && file.extension in setOf("kt", "java") }
+                files.forEach { file ->
+                    file.readLines().forEachIndexed { index, line ->
+                        if (forbiddenTokens.any(line::contains)) {
+                            violations += "${file.relativeTo(rootDir).invariantSeparatorsPath}:${index + 1}: $line"
+                        }
+                    }
+                }
+            }
+        }
+
+        scan(
+            roots = listOf(
+                rootDir.resolve("data-study/src/main/java/com/chen/memorizewords/data/study/repository/record"),
+                rootDir.resolve("data-study/src/main/java/com/chen/memorizewords/data/study/repository/bootstrap"),
+                rootDir.resolve("data-study/src/main/java/com/chen/memorizewords/data/study/repository/study/StudyPlanRepositoryImpl.kt")
+            ),
+            forbiddenTokens = listOf("import com.chen.memorizewords.data.wordbook.")
+        )
+        scan(
+            roots = listOf(
+                rootDir.resolve("data-wordbook/src/main/java/com/chen/memorizewords/data/wordbook/repository/learning"),
+                rootDir.resolve("data-wordbook/src/main/java/com/chen/memorizewords/data/wordbook/repository/bootstrap/StudyRecordSnapshotLocalStateStore.kt")
+            ),
+            forbiddenTokens = listOf(
+                "import com.chen.memorizewords.data.study.",
+                "import com.chen.memorizewords.data.sync."
+            )
+        )
+        scan(
+            roots = listOf(
+                rootDir.resolve("feature-learning/src/main/java/com/chen/memorizewords/feature/learning/ui/checkin"),
+                rootDir.resolve("feature-learning/src/main/java/com/chen/memorizewords/feature/learning/ui/learning")
+            ),
+            forbiddenTokens = listOf(
+                "AutoCheckInTodayIfEligibleUseCase",
+                "TodayCheckInEntryState",
+                "LearningRecordRepository"
+            )
+        )
+
+        val removedContracts = listOf(
+            rootDir.resolve("domain-study/src/main/java/com/chen/memorizewords/domain/study/repository/record/LearningRecordRepository.kt"),
+            rootDir.resolve("domain-study/src/main/java/com/chen/memorizewords/domain/study/usecase/word/study/AutoCheckInTodayIfEligibleUseCase.kt"),
+            rootDir.resolve("domain-wordbook/src/main/java/com/chen/memorizewords/domain/wordbook/usecase/SaveStudyCountUseCase.kt")
+        ).filter(File::exists)
+        removedContracts.forEach { file ->
+            violations += "${file.relativeTo(rootDir).invariantSeparatorsPath}: obsolete mixed/write-on-read contract still exists"
+        }
+
+        fun requireTokens(file: File, requiredTokens: List<String>) {
+            if (!file.exists()) {
+                violations += "${file.relativeTo(rootDir).invariantSeparatorsPath}: required closed-loop component is missing"
+                return
+            }
+            val content = file.readText()
+            requiredTokens.filterNot(content::contains).forEach { token ->
+                violations += "${file.relativeTo(rootDir).invariantSeparatorsPath}: missing required token '$token'"
+            }
+        }
+
+        requireTokens(
+            rootDir.resolve("domain-study/src/main/java/com/chen/memorizewords/domain/study/usecase/learning/RecordLearningEventUseCase.kt"),
+            listOf("writeCoordinator.withWrite", "toDailyPlanTargets", "projectEventLocked")
+        )
+        requireTokens(
+            rootDir.resolve("domain-study/src/main/java/com/chen/memorizewords/domain/study/usecase/plan/UpdateDailyStudyTargetsUseCase.kt"),
+            listOf("writeCoordinator.withWrite", "reconcileCurrentDayLocked")
+        )
+        requireTokens(
+            rootDir.resolve("domain-wordbook/src/main/java/com/chen/memorizewords/domain/wordbook/usecase/SaveStudyPlanUseCase.kt"),
+            listOf("writeCoordinator.withWrite", "reconcileCurrentDayLocked")
+        )
+        requireTokens(
+            rootDir.resolve("data-wordbook/src/main/java/com/chen/memorizewords/data/wordbook/repository/learning/LearningCommandRepository.kt"),
+            listOf("dailyProgressProjectionTaskDao.insert", "newCountAfter", "dailyNewTarget")
+        )
+
+        if (violations.isNotEmpty()) {
+            error(
+                buildString {
+                    appendLine("Found daily-study learning-loop boundary violations:")
+                    violations.forEach { appendLine(it) }
+                }
+            )
+        }
+    }
+}
+
 tasks.register("verifyFeatureApplicationLayerBoundaries") {
     group = "verification"
     description = "Fail when app/feature modules import domain application-layer types."
@@ -863,6 +965,7 @@ subprojects {
         dependsOn(rootProject.tasks.named("verifyFeatureModuleProjectDependencies"))
         dependsOn(rootProject.tasks.named("verifyNewArchitectureProjectDependencies"))
         dependsOn(rootProject.tasks.named("verifyDataModuleImportBoundaries"))
+        dependsOn(rootProject.tasks.named("verifyStudyLearningBoundaries"))
         dependsOn(rootProject.tasks.named("verifyFeatureApplicationLayerBoundaries"))
         dependsOn(rootProject.tasks.named("verifyDomainPackageLayoutConsistency"))
         dependsOn(rootProject.tasks.named("verifyDataPackageLayoutConsistency"))

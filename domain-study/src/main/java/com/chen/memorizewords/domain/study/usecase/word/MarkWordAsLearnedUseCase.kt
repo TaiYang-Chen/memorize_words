@@ -1,5 +1,6 @@
 package com.chen.memorizewords.domain.study.usecase.word
 import com.chen.memorizewords.domain.study.model.learning.LearningEventAction
+import com.chen.memorizewords.domain.study.model.learning.LearningActivityCommitResult
 import com.chen.memorizewords.domain.study.model.learning.RecordLearningEventCommand
 import com.chen.memorizewords.domain.study.usecase.learning.RecordLearningEventUseCase
 import com.chen.memorizewords.domain.word.model.word.Word
@@ -14,8 +15,8 @@ class MarkWordAsLearnedUseCase @Inject constructor(
         bookId: Long,
         word: Word,
         quality: Int
-    ) {
-        recordLearningEvent(
+    ): LearningActivityCommitResult {
+        return recordLearningEvent(
             RecordLearningEventCommand(
                 bookId = bookId,
                 word = word,

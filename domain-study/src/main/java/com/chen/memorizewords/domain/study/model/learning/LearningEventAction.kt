@@ -9,3 +9,15 @@ enum class LearningEventAction {
     SKIPPED,
     PRACTICE_RESULT_APPLIED
 }
+
+val LearningEventAction.createsDailyStudyRecord: Boolean
+    get() = when (this) {
+        LearningEventAction.LEARNED,
+        LearningEventAction.REVIEWED,
+        LearningEventAction.MASTERED,
+        LearningEventAction.PRACTICE_RESULT_APPLIED -> true
+
+        LearningEventAction.ANSWER_RECORDED,
+        LearningEventAction.UNMASTERED,
+        LearningEventAction.SKIPPED -> false
+    }

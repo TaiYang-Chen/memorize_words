@@ -352,6 +352,10 @@ class WordBookRepositoryImplTest {
 
         override fun learningOutboxDao(): LearningOutboxDao = throwingProxy()
 
+        override fun dailyProgressProjectionTaskDao():
+            com.chen.memorizewords.data.wordbook.local.room.model.learning.projection.DailyProgressProjectionTaskDao =
+            throwingProxy()
+
         override fun wordStudyRecordDao(): WordStudyRecordDao = throwingProxy()
 
         override fun wordDao(): WordDao = throwingProxy()

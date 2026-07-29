@@ -25,7 +25,6 @@ class LearningCheckInFragment :
     override fun initView(savedInstanceState: Bundle?) {
         databind.btnShareCheckIn.setOnClickListener { viewModel.onShareClicked() }
         databind.btnCheckInBackHome.setOnClickListener { viewModel.onBackHomeClicked() }
-        viewModel.initialize()
     }
 
     override fun createObserver() {

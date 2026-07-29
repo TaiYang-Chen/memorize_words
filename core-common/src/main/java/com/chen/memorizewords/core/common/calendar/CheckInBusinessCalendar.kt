@@ -1,5 +1,7 @@
 package com.chen.memorizewords.core.common.calendar
 
+import com.chen.memorizewords.core.common.time.AppClock
+import com.chen.memorizewords.core.common.time.SystemAppClock
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -31,7 +33,8 @@ interface CheckInConfigDataSource {
 }
 
 class CheckInBusinessCalendar(
-    private val checkInConfigDataSource: CheckInConfigDataSource
+    private val checkInConfigDataSource: CheckInConfigDataSource,
+    private val clock: AppClock = SystemAppClock()
 ) {
 
     fun currentBusinessDate(): String {
@@ -51,7 +54,7 @@ class CheckInBusinessCalendar(
     fun currentBusinessDate(config: CheckInConfig): String {
         val timezone = resolveTimezone(config.timezoneId)
         val shiftedTimestamp =
-            System.currentTimeMillis() - config.dayBoundaryOffsetMinutes.toLong() * 60_000L
+            clock.nowEpochMillis() - config.dayBoundaryOffsetMinutes.toLong() * 60_000L
         return formatDate(shiftedTimestamp, timezone)
     }
 
@@ -62,7 +65,7 @@ class CheckInBusinessCalendar(
         val safeCount = dayCount.coerceAtLeast(1)
         val timezone = resolveTimezone(config.timezoneId)
         val shiftedTimestamp =
-            System.currentTimeMillis() - config.dayBoundaryOffsetMinutes.toLong() * 60_000L
+            clock.nowEpochMillis() - config.dayBoundaryOffsetMinutes.toLong() * 60_000L
         val cursor = Calendar.getInstance(timezone).apply {
             timeInMillis = shiftedTimestamp
             set(Calendar.HOUR_OF_DAY, 0)
@@ -92,7 +95,7 @@ class CheckInBusinessCalendar(
         val timezone = resolveTimezone(config.timezoneId)
         val cursor = Calendar.getInstance(timezone).apply {
             timeInMillis =
-                System.currentTimeMillis() - config.dayBoundaryOffsetMinutes.toLong() * 60_000L
+                clock.nowEpochMillis() - config.dayBoundaryOffsetMinutes.toLong() * 60_000L
             set(Calendar.HOUR_OF_DAY, 0)
             set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)

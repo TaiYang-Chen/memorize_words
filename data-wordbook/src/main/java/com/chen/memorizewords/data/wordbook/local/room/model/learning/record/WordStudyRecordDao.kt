@@ -21,8 +21,14 @@ interface WordStudyRecordDao {
     @Query("SELECT COUNT(*) FROM word_study_records WHERE date = :date AND is_new_word = 1")
     fun getTodayNewWordCount(date: String): Flow<Int>
 
+    @Query("SELECT COUNT(*) FROM word_study_records WHERE date = :date AND is_new_word = 1")
+    suspend fun getNewWordCount(date: String): Int
+
     @Query("SELECT COUNT(*) FROM word_study_records WHERE date = :date AND is_new_word = 0")
     fun getTodayReviewWordCount(date: String): Flow<Int>
+
+    @Query("SELECT COUNT(*) FROM word_study_records WHERE date = :date AND is_new_word = 0")
+    suspend fun getReviewWordCount(date: String): Int
 
     @Query(
         """

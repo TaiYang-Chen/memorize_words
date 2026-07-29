@@ -2,6 +2,8 @@ package com.chen.memorizewords.data.sync.di
 
 import android.content.Context
 import com.chen.memorizewords.core.common.calendar.CheckInBusinessCalendar
+import com.chen.memorizewords.core.common.time.AppClock
+import com.chen.memorizewords.core.common.time.SystemAppClock
 import com.chen.memorizewords.data.sync.local.mmkv.checkin.CheckInConfigDataSource
 import com.chen.memorizewords.data.sync.local.mmkv.appupdate.AppUpdateLocalStateStore
 import com.chen.memorizewords.data.sync.local.mmkv.checkin.CheckInConfigDataSourceImpl
@@ -41,10 +43,15 @@ object DataModule {
     @Provides
     @Singleton
     fun provideCheckInBusinessCalendar(
-        checkInConfigDataSource: CheckInConfigDataSource
+        checkInConfigDataSource: CheckInConfigDataSource,
+        clock: AppClock
     ): CheckInBusinessCalendar {
-        return CheckInBusinessCalendar(checkInConfigDataSource)
+        return CheckInBusinessCalendar(checkInConfigDataSource, clock)
     }
+
+    @Provides
+    @Singleton
+    fun provideAppClock(): AppClock = SystemAppClock()
 
     @Provides
     @Singleton

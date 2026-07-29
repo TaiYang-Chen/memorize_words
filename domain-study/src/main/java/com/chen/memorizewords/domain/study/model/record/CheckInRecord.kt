@@ -11,15 +11,6 @@ data class CheckInRecord(
     val updatedAtMs: Long
 )
 
-data class TodayCheckInEntryState(
-    val businessDate: String,
-    val eligible: Boolean,
-    val alreadyCheckedIn: Boolean
-) {
-    val shouldNavigate: Boolean
-        get() = eligible && !alreadyCheckedIn
-}
-
 sealed class MakeUpCheckInException(message: String) : IllegalStateException(message) {
     data object FutureDate : MakeUpCheckInException("Can only make up previous dates")
     data object BalanceUnknown : MakeUpCheckInException("Makeup card balance unavailable")

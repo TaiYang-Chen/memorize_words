@@ -29,7 +29,8 @@ class ApplicationStartupManager @Inject constructor(
             SessionKickoutStartupTask.TASK_NAME to 0,
             PostLaunchStartupTask.TASK_NAME to 1,
             ForegroundSyncStartupTask.TASK_NAME to 2,
-            ForegroundWordBookStartupTask.TASK_NAME to 3
+            DailyStudyProjectionStartupTask.TASK_NAME to 3,
+            ForegroundWordBookStartupTask.TASK_NAME to 4
         )
     }
 }

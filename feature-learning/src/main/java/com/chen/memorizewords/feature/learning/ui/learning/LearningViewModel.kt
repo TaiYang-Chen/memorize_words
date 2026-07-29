@@ -7,8 +7,10 @@ import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.domain.word.query.WordReadFacade
 import com.chen.memorizewords.domain.study.orchestrator.learning.LearningSessionTypes
 import com.chen.memorizewords.domain.study.model.learning.LearningSessionEngine
+import com.chen.memorizewords.domain.study.model.learning.DailyProgressTransition
+import com.chen.memorizewords.domain.study.model.learning.LearningActivityCommitResult
 import com.chen.memorizewords.domain.study.service.StudyStatsFacade
-import com.chen.memorizewords.domain.study.model.record.TodayCheckInEntryState
+import com.chen.memorizewords.domain.study.usecase.learning.ReconcileDailyStudyProgressUseCase
 import com.chen.memorizewords.domain.wordbook.usecase.GetCurrentWordBookUseCase
 import com.chen.memorizewords.domain.wordbook.usecase.GetCurrentWordBookSelectionIdUseCase
 import com.chen.memorizewords.domain.wordbook.model.learning.LearningTestMode
@@ -25,12 +27,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -46,6 +49,7 @@ class LearningViewModel @Inject constructor(
     private val getCurrentWordBookSelectionIdUseCase: GetCurrentWordBookSelectionIdUseCase,
     private val studyStatsFacade: StudyStatsFacade,
     private val markWordAsLearned: MarkWordAsLearnedUseCase,
+    private val reconcileDailyStudyProgress: ReconcileDailyStudyProgressUseCase,
     private val resourceProvider: ResourceProvider,
 ) : BaseViewModel() {
 
@@ -108,7 +112,7 @@ class LearningViewModel @Inject constructor(
     }
 
     sealed interface Route {
-        data object ToCheckIn : Route
+        data class ToCheckIn(val businessDate: String) : Route
 
         data class ToWordExamPractice(
             val wordId: Long,
@@ -236,8 +240,8 @@ class LearningViewModel @Inject constructor(
         }
         val answeredWord = result.snapshot.currentWordId?.let(wordsById::get)
         if (answeredWord != null) {
-            viewModelScope.launch {
-                val bookId = resolveCurrentBookId() ?: return@launch
+            completionPersistenceGate.launch(viewModelScope) {
+                val bookId = resolveCurrentBookId() ?: return@launch null
                 recordWordAnswerResult(bookId, answeredWord, isCorrect)
             }
         }
@@ -442,7 +446,7 @@ class LearningViewModel @Inject constructor(
         trackingEnabled = false
 
         viewModelScope.launch {
-            completionPersistenceGate.awaitPending()
+            val activityCommits = completionPersistenceGate.awaitPending()
             val route = resolveLearningFinishRoute(
                 sessionTypeValue = sessionType,
                 sessionWordCount = sessionWordCount,
@@ -451,14 +455,15 @@ class LearningViewModel @Inject constructor(
                 wrongCount = snapshot?.wrongCount ?: 0,
                 studyDurationMs = studyDurationMs,
                 wordIds = words.map { it.id },
+                activityCommits = activityCommits,
                 addStudyDuration = { durationMs ->
                     withContext(Dispatchers.IO) {
                         studyStatsFacade.addStudyDuration(durationMs)
                     }
                 },
-                getTodayCheckInEntryState = {
+                reconcileDailyProgress = {
                     withContext(Dispatchers.IO) {
-                        studyStatsFacade.getTodayCheckInEntryState()
+                        reconcileDailyStudyProgress()
                     }
                 }
             )
@@ -492,7 +497,7 @@ class LearningViewModel @Inject constructor(
         markAsMastered: Boolean
     ) {
         completionPersistenceGate.launch(viewModelScope) {
-            val bookId = resolveCurrentBookId() ?: return@launch
+            val bookId = resolveCurrentBookId() ?: return@launch null
             if (markAsMastered) {
                 setWordAsMastered(
                     bookId,
@@ -540,41 +545,27 @@ internal fun resolveLearningAutoPlayWordKey(
 
 internal class LearningCompletionPersistenceGate {
     private val lock = Any()
-    private val pendingJobs = mutableSetOf<Job>()
+    private val pendingCommits = mutableListOf<Deferred<LearningActivityCommitResult?>>()
 
     fun launch(
         scope: CoroutineScope,
-        block: suspend () -> Unit
-    ): Job {
-        val job = scope.launch(start = CoroutineStart.LAZY) {
+        block: suspend () -> LearningActivityCommitResult?
+    ): Deferred<LearningActivityCommitResult?> {
+        val commit = scope.async(start = CoroutineStart.LAZY) {
             block()
         }
         synchronized(lock) {
-            pendingJobs += job
+            pendingCommits += commit
         }
-        job.invokeOnCompletion {
-            synchronized(lock) {
-                pendingJobs -= job
-            }
-        }
-        job.start()
-        return job
+        commit.start()
+        return commit
     }
 
-    suspend fun awaitPending() {
-        synchronized(lock) {
-            pendingJobs.toList()
-        }.joinAll()
-    }
-}
-
-internal fun shouldNavigateToCheckIn(
-    sessionType: LearningSessionType,
-    state: TodayCheckInEntryState
-): Boolean {
-    return when (sessionType) {
-        LearningSessionType.NEW,
-        LearningSessionType.REVIEW -> state.shouldNavigate
+    suspend fun awaitPending(): List<LearningActivityCommitResult> {
+        val snapshot = synchronized(lock) {
+            pendingCommits.toList().also { pendingCommits.clear() }
+        }
+        return snapshot.awaitAll().filterNotNull()
     }
 }
 
@@ -594,14 +585,17 @@ internal suspend fun resolveLearningFinishRoute(
     wrongCount: Int,
     studyDurationMs: Long,
     wordIds: List<Long>,
+    activityCommits: List<LearningActivityCommitResult>,
     addStudyDuration: suspend (Long) -> Unit,
-    getTodayCheckInEntryState: suspend () -> TodayCheckInEntryState
+    reconcileDailyProgress: suspend () -> DailyProgressTransition
 ): LearningViewModel.Route {
     addStudyDuration(studyDurationMs)
-    val sessionType = LearningSessionType.fromValue(sessionTypeValue)
-    val state = getTodayCheckInEntryState()
-    return if (shouldNavigateToCheckIn(sessionType, state)) {
-        LearningViewModel.Route.ToCheckIn
+    val finalTransition = reconcileDailyProgress()
+    val createdCheckIn = (activityCommits.map { it.dailyProgress } + finalTransition)
+        .filterIsInstance<DailyProgressTransition.CheckInCreated>()
+        .firstOrNull()
+    return if (createdCheckIn != null) {
+        LearningViewModel.Route.ToCheckIn(createdCheckIn.businessDate)
     } else {
         LearningViewModel.Route.ToLearningDone(
             wordIds = wordIds.toLongArray(),

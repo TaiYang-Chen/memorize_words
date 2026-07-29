@@ -1,26 +1,28 @@
 package com.chen.memorizewords.feature.learning.ui.checkin
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.domain.study.model.record.CheckInRecord
-import com.chen.memorizewords.domain.study.usecase.word.study.AutoCheckInTodayIfEligibleUseCase
 import com.chen.memorizewords.domain.study.usecase.word.study.GetContinuousCheckInDaysUseCase
 import com.chen.memorizewords.domain.study.usecase.word.study.GetStudyTotalDurationUseCase
 import com.chen.memorizewords.domain.study.usecase.word.study.GetStudyTotalWordCountUseCase
+import com.chen.memorizewords.domain.study.usecase.word.study.ObserveCheckInRecordUseCase
 import com.chen.memorizewords.feature.learning.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
 @HiltViewModel
 class LearningCheckInViewModel @Inject constructor(
-    private val autoCheckInTodayIfEligibleUseCase: AutoCheckInTodayIfEligibleUseCase,
+    savedStateHandle: SavedStateHandle,
+    observeCheckInRecord: ObserveCheckInRecordUseCase,
     getContinuousCheckInDaysUseCase: GetContinuousCheckInDaysUseCase,
     getStudyTotalDurationUseCase: GetStudyTotalDurationUseCase,
     getStudyTotalWordCountUseCase: GetStudyTotalWordCountUseCase,
@@ -53,8 +55,13 @@ class LearningCheckInViewModel @Inject constructor(
             get() = phase is Phase.Success
     }
 
-    private val phase = MutableStateFlow<Phase>(Phase.Loading)
-    private var initialized = false
+    private val businessDate = savedStateHandle.get<String>(BUSINESS_DATE_KEY).orEmpty()
+    private val phase = observeCheckInRecord(businessDate)
+        .map { record -> record?.let(Phase::Success) ?: Phase.Exit }
+        .onEach { currentPhase ->
+            if (currentPhase == Phase.Exit) finish()
+        }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, Phase.Loading)
 
     val uiState: StateFlow<UiState> =
         combine(
@@ -96,27 +103,6 @@ class LearningCheckInViewModel @Inject constructor(
             )
         )
 
-    fun initialize() {
-        if (initialized) return
-        initialized = true
-        viewModelScope.launch {
-            autoCheckInTodayIfEligibleUseCase()
-                .onSuccess { record ->
-                    if (record == null) {
-                        phase.value = Phase.Exit
-                        finish()
-                    } else {
-                        phase.value = Phase.Success(record)
-                    }
-                }
-                .onFailure {
-                    phase.value = Phase.Exit
-                    showToast(resourceProvider.getString(R.string.learning_check_in_failed))
-                    finish()
-                }
-        }
-    }
-
     fun onShareClicked() {
         val successState = uiState.value.phase as? Phase.Success ?: return
         navigateRoute(
@@ -145,5 +131,9 @@ class LearningCheckInViewModel @Inject constructor(
         } else {
             resourceProvider.getString(R.string.learning_check_in_total_duration_minutes, totalMinutes)
         }
+    }
+
+    private companion object {
+        const val BUSINESS_DATE_KEY = "businessDate"
     }
 }

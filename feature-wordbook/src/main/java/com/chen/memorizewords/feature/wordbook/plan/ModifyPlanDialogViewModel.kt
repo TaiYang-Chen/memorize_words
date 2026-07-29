@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.common.resource.ResourceProvider
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.core.ui.vm.UiEvent
-import com.chen.memorizewords.domain.wordbook.usecase.SaveStudyCountUseCase
+import com.chen.memorizewords.domain.study.usecase.plan.UpdateDailyStudyTargetsUseCase
 import com.chen.memorizewords.feature.wordbook.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class ModifyPlanDialogViewModel @Inject constructor(
-    private val saveStudyCountUseCase: SaveStudyCountUseCase,
+    private val updateDailyStudyTargets: UpdateDailyStudyTargetsUseCase,
     private val resourceProvider: ResourceProvider
 ) : BaseViewModel() {
 
@@ -110,7 +110,7 @@ class ModifyPlanDialogViewModel @Inject constructor(
         reviewCount: Int
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            saveStudyCountUseCase(newCount, reviewCount)
+            updateDailyStudyTargets(newCount, reviewCount)
             emitEvent(
                 UiEvent.Toast(
                     resourceProvider.getString(R.string.module_wordbook_modify_plan_update_success)

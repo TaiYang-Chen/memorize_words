@@ -11,7 +11,9 @@ data class RecordLearningEventCommand(
     val isNewWordOverride: Boolean? = null,
     val businessDate: String,
     val occurredAt: Long = System.currentTimeMillis(),
-    val payloadJson: String? = null
+    val payloadJson: String? = null,
+    val dailyNewTarget: Int? = null,
+    val dailyReviewTarget: Int? = null
 )
 
 data class RecordLearningEventResult(
@@ -20,4 +22,9 @@ data class RecordLearningEventResult(
     val bookId: Long,
     val stateRevision: Long,
     val progressRevision: Long
+)
+
+data class LearningActivityCommitResult(
+    val learningEvent: RecordLearningEventResult,
+    val dailyProgress: DailyProgressTransition
 )

@@ -1,18 +1,20 @@
 package com.chen.memorizewords.domain.study.usecase.word.study
 import com.chen.memorizewords.domain.study.model.record.DailyStudyDetail
-import com.chen.memorizewords.domain.study.repository.record.LearningRecordRepository
+import com.chen.memorizewords.domain.study.repository.record.DailyStudyRepository
+import com.chen.memorizewords.domain.study.repository.record.StudyRecordQuery
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 
 class GetDayStudyDetailUseCase @Inject constructor(
-    private val learningRecordRepository: LearningRecordRepository
+    private val studyRecordQuery: StudyRecordQuery,
+    private val dailyStudyRepository: DailyStudyRepository
 ) {
     operator fun invoke(date: String): Flow<DailyStudyDetail> {
         return combine(
-            learningRecordRepository.getDailyStudyWordRecords(date),
-            learningRecordRepository.getDailyStudySummary(date),
-            learningRecordRepository.getDayCheckInDetail(date)
+            studyRecordQuery.getDailyStudyWordRecords(date),
+            dailyStudyRepository.getDailyStudySummary(date),
+            dailyStudyRepository.getDayCheckInDetail(date)
         ) { records, summary, checkInDetail ->
             val newWords = records.filter { it.isNewWord }
             val reviewWords = records.filterNot { it.isNewWord }

@@ -1,25 +1,27 @@
 package com.chen.memorizewords.data.study.repository.local
 
 import androidx.room.withTransaction
-import com.chen.memorizewords.core.common.calendar.CheckInBusinessCalendar
+import com.chen.memorizewords.core.common.time.AppClock
 import com.chen.memorizewords.data.study.local.StudyDatabase
 import com.chen.memorizewords.data.study.local.room.model.study.checkin.CheckInRecordDao
 import com.chen.memorizewords.data.study.local.room.model.study.checkin.CheckInRecordEntity
 import com.chen.memorizewords.data.study.local.room.model.study.daily.DailyStudyDurationDao
 import com.chen.memorizewords.data.study.local.room.model.study.daily.DailyStudyDurationEntity
 import javax.inject.Inject
+import com.chen.memorizewords.domain.study.repository.record.BusinessDateProvider
 
 class StudyRecordLocalStore @Inject constructor(
     private val studyDatabase: StudyDatabase,
     private val dailyStudyDurationDao: DailyStudyDurationDao,
     private val checkInRecordDao: CheckInRecordDao,
-    private val checkInBusinessCalendar: CheckInBusinessCalendar
+    private val businessDateProvider: BusinessDateProvider,
+    private val clock: AppClock
 ) {
     suspend fun addStudyDuration(durationMs: Long): LocalWriteResult {
         if (durationMs <= 0L) return LocalWriteResult()
-        val date = checkInBusinessCalendar.currentBusinessDate()
+        val date = businessDateProvider.currentBusinessDate()
         val snapshot = studyDatabase.withTransaction {
-            val updatedAtMs = System.currentTimeMillis()
+            val updatedAtMs = clock.nowEpochMillis()
             dailyStudyDurationDao.addDuration(
                 date = date,
                 durationMs = durationMs,
@@ -36,12 +38,4 @@ class StudyRecordLocalStore @Inject constructor(
         }
         return LocalWriteResult(checkInRecord = entity)
     }
-}
-
-internal fun buildDailyStudyDurationBizKey(date: String): String {
-    return "daily_study_duration:$date"
-}
-
-internal fun buildCheckInRecordBizKey(date: String): String {
-    return "checkin_record:$date"
 }

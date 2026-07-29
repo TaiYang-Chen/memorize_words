@@ -1,5 +1,8 @@
 package com.chen.memorizewords.feature.learning.ui.learning
 
+import com.chen.memorizewords.domain.study.model.learning.DailyProgressTransition
+import com.chen.memorizewords.domain.study.model.learning.LearningActivityCommitResult
+import com.chen.memorizewords.domain.study.model.learning.RecordLearningEventResult
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.CompletableDeferred
@@ -20,11 +23,13 @@ class LearningCompletionPersistenceGateTest {
             persistenceStarted.complete(Unit)
             releasePersistence.await()
             events += "persist-mastered-finished"
+            commit("event-mastered")
         }
 
         persistenceStarted.await()
         val awaitJob = launch {
-            gate.awaitPending()
+            val commits = gate.awaitPending()
+            events += commits.single().learningEvent.clientEventId
             events += "navigate-finished"
         }
 
@@ -40,6 +45,7 @@ class LearningCompletionPersistenceGateTest {
             listOf(
                 "persist-mastered-started",
                 "persist-mastered-finished",
+                "event-mastered",
                 "navigate-finished"
             ),
             events
@@ -58,11 +64,13 @@ class LearningCompletionPersistenceGateTest {
             persistenceStarted.complete(Unit)
             releasePersistence.await()
             events += "persist-learned-finished"
+            commit("event-learned")
         }
 
         persistenceStarted.await()
         val awaitJob = launch {
-            gate.awaitPending()
+            val commits = gate.awaitPending()
+            events += commits.single().learningEvent.clientEventId
             events += "navigate-finished"
         }
 
@@ -78,9 +86,21 @@ class LearningCompletionPersistenceGateTest {
             listOf(
                 "persist-learned-started",
                 "persist-learned-finished",
+                "event-learned",
                 "navigate-finished"
             ),
             events
         )
     }
+
+    private fun commit(eventId: String) = LearningActivityCommitResult(
+        learningEvent = RecordLearningEventResult(
+            clientEventId = eventId,
+            wordId = 1L,
+            bookId = 1L,
+            stateRevision = 1L,
+            progressRevision = 1L
+        ),
+        dailyProgress = DailyProgressTransition.NotEligible("2026-07-29")
+    )
 }
