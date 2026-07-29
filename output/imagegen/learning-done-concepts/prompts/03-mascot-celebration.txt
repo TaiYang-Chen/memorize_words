@@ -1,0 +1,40 @@
+Use case: ui-mockup
+Asset type: shippable Android vocabulary-learning completion screen, full app screenshot
+Input images: Image 1 is the edit target and source of all interface content. Image 2 is the approved brand learning-partner mascot reference and supporting insert; preserve its green identity, face, white hoodie, backpack, A badge, and gold trophy.
+Primary request: Completely redesign the learning-completion page from Image 1 as concept 03, a warm but disciplined brand-mascot celebration screen. Output only the Android app viewport in a 1088x2400 portrait canvas. Remove the desktop Android Emulator title bar from Image 1, but keep a plausible Android status bar and bottom gesture navigation bar. Do not show a phone frame or desktop.
+
+Layout: Use a real 360dp-wide Android layout. Keep a compact top toolbar with close, centered 学习完成, and share. Create one shallow full-width mint celebration band below the toolbar, not a floating card. Put the 新词学习 badge, 学习完成 title, and original subtitle on the left. Place a small, high-fidelity version of the trophy mascot from Image 2 on the right, occupying no more than 34% of the screen width and no more than 22% of the viewport height. The mascot must not cover any text or metric and must appear only once. Under the band, make 11 and 100% the strongest result values, with 0 m and grade A beside them in a compact flat summary. Put 答题次数 1, 错误次数 0, and 学习效率 11.0 词/分 in one concise row. Start the word list early enough that bind and gear are fully visible. Use lightly tinted list rows with restrained 10dp corners and clear chevrons. At the bottom, show a small 返回首页 text action and one full-width emerald 继续学习 button, with enough scroll padding that neither word row is covered.
+
+Style/medium: polished native Android educational app UI; friendly and energetic without becoming childish; clean sans-serif typography; practical 48dp controls; flat surfaces.
+Color palette: soft mint, white, deep navy, vivid emerald, trophy gold, and a small orange accent. No gradients.
+
+Text, render verbatim with no substitutions, no missing characters, and no extra interface copy:
+"学习完成" (render exactly twice: toolbar and result title)
+"新词学习"
+"本组新词学习已完成，继续保持节奏，再学一组。"
+"完成词数"
+"11"
+"正确率"
+"100%"
+"本次时长"
+"0 m"
+"学习质量"
+"A"
+"答题次数"
+"1"
+"错误次数"
+"0"
+"学习效率"
+"11.0 词/分"
+"本次学习单词"
+"bind"
+"/baɪnd/"
+"v. 绑, 约束, 装订, 包扎, 使结合"
+"gear"
+"/ɡɪə/"
+"n. 齿轮, 装备"
+"继续学习"
+"返回首页"
+
+Critical constraints: Preserve the mascot identity from Image 2 rather than inventing a different character. Preserve all listed business content from Image 1. Keep the mascot secondary to the result data. All text must fit and both visible word rows must remain unobstructed. Use familiar close, share, and chevron icons.
+Avoid: emulator chrome, device mockup, watermark, mascot redesign, second mascot, oversized character, mascot behind text, mascot holding unrelated objects, scattered confetti, gradients, decorative blobs, nested cards, excessive pills, childish bubble lettering, clipped Chinese, extra copy or values.

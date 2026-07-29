@@ -1,0 +1,40 @@
+Use case: ui-mockup
+Asset type: shippable Android vocabulary-learning completion screen, full app screenshot
+Input images: Image 1 is the edit target and the source of all business content.
+Primary request: Completely redesign the learning-completion page from Image 1 as concept 01, a compact data-first result screen. Output only the Android app viewport in a 1088x2400 portrait canvas. Remove the desktop Android Emulator title bar from Image 1, but keep a plausible Android status bar and bottom gesture navigation bar. Do not show a phone frame or surrounding desktop.
+
+Layout: Treat the screen as a practical 360dp-wide Android UI. Use a quiet 56dp top toolbar with close icon, centered title, and share icon. Below it, build one compact unframed result hero: left-aligned badge, title, and subtitle, with a clear circular 100% accuracy ring on the right. Under the hero, show 11 completed words, 0 m duration, and grade A in one calm three-column strip. Put answered count, wrong count, and efficiency in one compact secondary row using labels and values, not nested cards. Start the word list before the middle of the screen so both bind and gear are fully visible. Use thin separators and restrained surfaces rather than many rounded cards. At the bottom, use a fixed action area that never covers the list: a lightweight text action for 返回首页 and one dominant filled 继续学习 button.
+
+Style/medium: polished production-ready native Android UI, not concept art; clean sans-serif typography; stable spacing; 48dp touch targets; restrained 8-12dp corner radii.
+Color palette: near-white background, deep navy text, emerald green primary, a small blue data accent, and a very small warm orange accent. Flat colors only, no gradients.
+
+Text, render verbatim with no substitutions, no missing characters, and no extra interface copy:
+"学习完成" (render exactly twice: toolbar and result title)
+"新词学习"
+"本组新词学习已完成，继续保持节奏，再学一组。"
+"完成词数"
+"11"
+"正确率"
+"100%"
+"本次时长"
+"0 m"
+"学习质量"
+"A"
+"答题次数"
+"1"
+"错误次数"
+"0"
+"学习效率"
+"11.0 词/分"
+"本次学习单词"
+"bind"
+"/baɪnd/"
+"v. 绑, 约束, 装订, 包扎, 使结合"
+"gear"
+"/ɡɪə/"
+"n. 齿轮, 装备"
+"继续学习"
+"返回首页"
+
+Critical constraints: Preserve every listed datum and action. Make the hierarchy immediately scannable on a narrow screen. Keep all text inside its container. The fixed action area must not overlap any word row. Use familiar close, share, and chevron icons with transparent backgrounds. No illustration or mascot in this concept.
+Avoid: emulator window chrome, device mockup, watermark, gradients, purple-dominated palette, giant empty hero, nested cards, excessive pills, floating decorative blobs, clipped text, fake charts, invented metrics, extra buttons, duplicated values, illegible Chinese, distorted Latin text.

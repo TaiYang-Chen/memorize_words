@@ -1,0 +1,40 @@
+Use case: ui-mockup
+Asset type: shippable Android vocabulary-learning completion screen, full app screenshot
+Input images: Image 1 is the edit target and the source of all business content.
+Primary request: Completely redesign the learning-completion page from Image 1 as concept 02, a refined editorial learning report. Output only the Android app viewport in a 1088x2400 portrait canvas. Remove the desktop Android Emulator title bar from Image 1, while keeping a plausible Android status bar and bottom gesture navigation bar. Do not show a device frame.
+
+Layout: Treat the screen as a real 360dp-wide Android interface. Keep a slim toolbar with close, centered 学习完成, and share. Do not use a large hero card. Build a typographic report opening with the 新词学习 label, a confident 学习完成 heading, the original subtitle, and a large 11 paired with 完成词数. Organize 100%, 0 m, and A as a clean report table with strong numbers, small labels, and hairline separators. Place 答题次数 1, 错误次数 0, and 学习效率 11.0 词/分 in a second aligned table row. Present 本次学习单词 as an editorial list: white background, generous baselines, thin separators, bold English word, subdued phonetic text, Chinese definition, and a small right chevron. Both bind and gear must be fully visible above the actions. Use a low fixed action bar with two practical actions side by side: an outlined 返回首页 action and a wider filled 继续学习 action. Reserve bottom content padding so no list row is covered.
+
+Style/medium: sophisticated production-ready Android report UI; sharp typography and spacing; mostly unframed sections; no decorative illustration; no concept-art rendering.
+Color palette: white and very pale cool gray, deep navy text, emerald green for positive values, muted blue for secondary data, and restrained coral red only for the wrong count. No gradients.
+
+Text, render verbatim with no substitutions, no missing characters, and no extra interface copy:
+"学习完成" (render exactly twice: toolbar and result heading)
+"新词学习"
+"本组新词学习已完成，继续保持节奏，再学一组。"
+"完成词数"
+"11"
+"正确率"
+"100%"
+"本次时长"
+"0 m"
+"学习质量"
+"A"
+"答题次数"
+"1"
+"错误次数"
+"0"
+"学习效率"
+"11.0 词/分"
+"本次学习单词"
+"bind"
+"/baɪnd/"
+"v. 绑, 约束, 装订, 包扎, 使结合"
+"gear"
+"/ɡɪə/"
+"n. 齿轮, 装备"
+"继续学习"
+"返回首页"
+
+Critical constraints: Preserve every listed metric and action. Make it look implementable with standard Android layouts and text views. Maintain readable contrast and at least 48dp action heights. No content may be hidden behind the bottom action bar. Use familiar transparent-background icons only.
+Avoid: emulator chrome, phone mockup, watermark, gradients, mascot, trophy, medal, confetti, big rounded cards, nested cards, excessive chips, large empty areas, ornamental serif display text, clipped labels, invented copy, text distortion.

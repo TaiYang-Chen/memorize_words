@@ -11,9 +11,17 @@
         android:layout_width="@dimen/core_ui_dp_12"
         android:layout_height="@dimen/core_ui_dp_12"
         android:layout_gravity="top|start"
-        android:background="@drawable/module_learning_bg_popup_card"
-        android:elevation="@dimen/core_ui_dp_6"
+        android:background="@drawable/module_learning_bg_popup_arrow"
         android:rotation="45" />
+
+    <View
+        android:id="@+id/arrow_bottom"
+        android:layout_width="@dimen/core_ui_dp_12"
+        android:layout_height="@dimen/core_ui_dp_12"
+        android:layout_gravity="bottom|start"
+        android:background="@drawable/module_learning_bg_popup_arrow"
+        android:rotation="45"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/card_container"
@@ -22,24 +30,24 @@
         android:layout_marginTop="@dimen/core_ui_dp_6"
         android:layout_marginBottom="@dimen/core_ui_dp_6"
         android:background="@drawable/module_learning_bg_popup_card"
-        android:elevation="@dimen/core_ui_dp_8"
         android:orientation="vertical"
-        android:padding="@dimen/core_ui_dp_14">
+        android:padding="@dimen/feature_learning_word_popup_card_padding">
 
         <TextView
             android:id="@+id/tv_word"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
+            android:includeFontPadding="false"
             android:maxLines="1"
-            android:textColor="#111827"
-            android:textSize="@dimen/core_ui_text_20"
+            android:textColor="#0F172A"
+            android:textSize="@dimen/feature_learning_word_popup_title_size"
             android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/core_ui_dp_10"
+            android:layout_marginTop="@dimen/core_ui_dp_8"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -48,30 +56,27 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:includeFontPadding="false"
                 android:textColor="#475569"
-                android:textSize="@dimen/core_ui_text_13" />
+                android:textSize="@dimen/feature_learning_word_popup_phonetic_size" />
 
-            <TextView
+            <ImageView
                 android:id="@+id/btn_speak_us"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/module_learning_bg_popup_chip"
+                android:layout_width="@dimen/feature_learning_word_popup_speaker_width"
+                android:layout_height="@dimen/feature_learning_word_popup_speaker_height"
+                android:background="@android:color/transparent"
                 android:clickable="true"
+                android:contentDescription="@string/word_quick_popup_play_us"
                 android:focusable="true"
-                android:paddingStart="@dimen/core_ui_dp_10"
-                android:paddingTop="@dimen/core_ui_dp_6"
-                android:paddingEnd="@dimen/core_ui_dp_10"
-                android:paddingBottom="@dimen/core_ui_dp_6"
-                android:text="美"
-                android:textColor="#334155"
-                android:textSize="@dimen/core_ui_text_12"
-                android:textStyle="bold" />
+                android:scaleType="center"
+                android:src="@drawable/module_learning_ic_volume_up_gray"
+                android:tint="#1E293B" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/core_ui_dp_6"
+            android:layout_marginTop="@dimen/core_ui_dp_4"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -80,24 +85,21 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:includeFontPadding="false"
                 android:textColor="#475569"
-                android:textSize="@dimen/core_ui_text_13" />
+                android:textSize="@dimen/feature_learning_word_popup_phonetic_size" />
 
-            <TextView
+            <ImageView
                 android:id="@+id/btn_speak_uk"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/module_learning_bg_popup_chip"
+                android:layout_width="@dimen/feature_learning_word_popup_speaker_width"
+                android:layout_height="@dimen/feature_learning_word_popup_speaker_height"
+                android:background="@android:color/transparent"
                 android:clickable="true"
+                android:contentDescription="@string/word_quick_popup_play_uk"
                 android:focusable="true"
-                android:paddingStart="@dimen/core_ui_dp_10"
-                android:paddingTop="@dimen/core_ui_dp_6"
-                android:paddingEnd="@dimen/core_ui_dp_10"
-                android:paddingBottom="@dimen/core_ui_dp_6"
-                android:text="英"
-                android:textColor="#334155"
-                android:textSize="@dimen/core_ui_text_12"
-                android:textStyle="bold" />
+                android:scaleType="center"
+                android:src="@drawable/module_learning_ic_volume_up_gray"
+                android:tint="#1E293B" />
         </LinearLayout>
 
         <ProgressBar
@@ -114,8 +116,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/core_ui_dp_10"
+            android:includeFontPadding="false"
             android:textColor="#6B7280"
-            android:textSize="@dimen/core_ui_text_13"
+            android:textSize="@dimen/feature_learning_word_popup_phonetic_size"
             android:visibility="gone" />
 
         <TextView
@@ -123,37 +126,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/core_ui_dp_10"
+            android:includeFontPadding="false"
             android:lineSpacingExtra="@dimen/core_ui_dp_1"
             android:maxLines="4"
-            android:textColor="#1F2937"
-            android:textSize="@dimen/core_ui_text_14" />
+            android:textColor="#111827"
+            android:textSize="@dimen/feature_learning_word_popup_meaning_size" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/core_ui_dp_1"
+            android:layout_marginTop="@dimen/core_ui_dp_12"
+            android:background="#E5E7EB" />
 
         <TextView
             android:id="@+id/btn_view_full"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/core_ui_dp_14"
-            android:background="@drawable/module_learning_select_radius_black"
+            android:layout_height="@dimen/feature_learning_word_popup_action_height"
+            android:background="@drawable/module_learning_bg_popup_text_action"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
-            android:paddingTop="@dimen/core_ui_dp_9"
-            android:paddingBottom="@dimen/core_ui_dp_9"
+            android:includeFontPadding="false"
             android:text="查看完整释义"
-            android:textColor="#FFFFFF"
-            android:textSize="@dimen/core_ui_text_14"
-            android:textStyle="bold" />
+            android:textColor="#0F172A"
+            android:textSize="@dimen/feature_learning_word_popup_action_size"
+            android:textStyle="normal" />
 
     </LinearLayout>
-
-    <View
-        android:id="@+id/arrow_bottom"
-        android:layout_width="@dimen/core_ui_dp_12"
-        android:layout_height="@dimen/core_ui_dp_12"
-        android:layout_gravity="bottom|start"
-        android:background="@drawable/module_learning_bg_popup_card"
-        android:elevation="@dimen/core_ui_dp_6"
-        android:rotation="45"
-        android:visibility="gone" />
 
 </FrameLayout>

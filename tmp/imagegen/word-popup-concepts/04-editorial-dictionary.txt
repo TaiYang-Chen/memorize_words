@@ -1,0 +1,15 @@
+Use case: ui-mockup
+Asset type: shippable Android vocabulary-learning popup concept, full-screen screenshot
+Input image: Image 1 is the edit target.
+Primary request: Redesign ONLY the existing white word-detail popup card in the lower-middle area into concept 04, a modern editorial dictionary layout. Keep the popup attached to exactly the same anchor point and keep roughly the same outer footprint.
+Popup design: pure white card, restrained 10 dp corner radius, crisp cool-gray 1 dp border, absolutely no shadow, no elevation, no glow. Use generous left alignment and a slim blue vertical accent rule inside the card beside the linguistic content. Put the bold word title first. Show two tidy pronunciation rows with locale labels, phonetic text, and conventional dark navy loudspeaker icons aligned at the far right. Speaker icons must be directly on white with completely transparent backgrounds: no circle, square, pill, chip, fill, border, or button surface. Treat "n." as a small blue part-of-speech marker followed by the Chinese definition with a strong baseline. At the bottom, use a simple dark-navy text action with a small right chevron and a thin top divider, not a large filled button.
+Text, render verbatim with no substitutions and no extra text:
+"presence"
+"美 /ˈprezəns/"
+"英 /ˈprezəns/"
+"n. 出席, 面前, 存在, 仪态, 风度"
+"查看完整释义"
+Typography: polished modern dictionary typography using Android sans-serif; title bold; tight optical alignment; exact Chinese and Latin characters.
+Color palette: white, deep navy, cool gray, and restrained bright blue accent only.
+Critical invariants: Change only the popup card and its contents. Preserve the complete page outside the card, status bar, top toolbar, underlying vocabulary content, gray 12 percent dim overlay, visible anchor marker, and bottom next-word button as closely as possible. The area outside the card must stay uniformly dimmed. No popup shadow anywhere.
+Avoid: gradients, purple, decorative illustration, glass effects, blur, card shadow, outer glow, background behind speaker icons, extra controls, spelling errors, distorted text, device frame, watermark.

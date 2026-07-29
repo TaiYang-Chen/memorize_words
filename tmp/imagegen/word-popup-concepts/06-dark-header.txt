@@ -1,0 +1,17 @@
+Use case: ui-mockup
+Asset type: shippable Android vocabulary-learning popup concept, full-screen screenshot
+Input image: Image 1 is the edit target.
+Primary request: Redesign ONLY the existing white word-detail popup card in the lower-middle area into concept 06, a dark-header dictionary popup. Keep the popup attached to exactly the same anchor point and keep roughly the same outer footprint.
+Popup design: one flat card with a pure white body, 12 dp corner radius, thin cool-gray 1 dp outline, absolutely no shadow, no elevation, no glow. The top quarter is a solid deep-navy header band that follows the card's top corners, with no gradient. Put the bold white word title on the left of this band. On the right, place two compact locale labels with conventional white loudspeaker icons as pronunciation actions. Each speaker icon has a completely transparent background: no circle, square, pill, chip, fill, border, or button surface. In the white body, show the two phonetic strings with locale labels in a clean two-row block, then the definition. Finish with a compact deep-navy text action centered at the bottom, separated by a fine gray hairline; do not add another filled button.
+Text, render verbatim with no substitutions and no extra text:
+"presence"
+"美"
+"英"
+"美 /ˈprezəns/"
+"英 /ˈprezəns/"
+"n. 出席, 面前, 存在, 仪态, 风度"
+"查看完整释义"
+Typography: practical Android sans-serif; bold white title in header; compact highly legible body; exact Chinese and Latin characters.
+Color palette: solid deep navy, pure white, neutral gray, and a very small restrained blue accent only.
+Critical invariants: Change only the popup card and its contents. Preserve the complete page outside the card, status bar, top toolbar, underlying vocabulary content, gray 12 percent dim overlay, visible anchor marker, and bottom next-word button as closely as possible. The area outside the card must stay uniformly dimmed. No popup shadow anywhere.
+Avoid: gradients, purple, decorative illustration, glass effects, blur, card shadow, outer glow, any background behind speaker icons, extra controls, spelling errors, distorted text, device frame, watermark.

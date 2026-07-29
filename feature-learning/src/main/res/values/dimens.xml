@@ -60,4 +60,15 @@
     <dimen name="feature_learning_shadowing_feedback_title_size">15sp</dimen>
     <dimen name="feature_learning_shadowing_feedback_body_size">13sp</dimen>
     <dimen name="feature_learning_shadowing_feedback_meta_size">12sp</dimen>
+
+    <dimen name="feature_learning_word_popup_max_card_width">360dp</dimen>
+    <dimen name="feature_learning_word_popup_screen_margin">16dp</dimen>
+    <dimen name="feature_learning_word_popup_card_padding">14dp</dimen>
+    <dimen name="feature_learning_word_popup_title_size">20sp</dimen>
+    <dimen name="feature_learning_word_popup_phonetic_size">13sp</dimen>
+    <dimen name="feature_learning_word_popup_speaker_width">32dp</dimen>
+    <dimen name="feature_learning_word_popup_speaker_height">28dp</dimen>
+    <dimen name="feature_learning_word_popup_meaning_size">14sp</dimen>
+    <dimen name="feature_learning_word_popup_action_height">36dp</dimen>
+    <dimen name="feature_learning_word_popup_action_size">14sp</dimen>
 </resources>

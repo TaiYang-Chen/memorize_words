@@ -1,6 +1,7 @@
 package com.chen.memorizewords.feature.learning.ui.fragment
 
 import android.app.Activity
+import android.content.Context
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
@@ -9,13 +10,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.MeasureSpec
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.PopupWindow
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.chen.memorizewords.core.ui.ext.dpToPx
 import com.chen.memorizewords.domain.word.model.word.Word
 import com.chen.memorizewords.feature.learning.R
-import kotlin.math.max
 import kotlin.math.min
 
 class WordQuickPopupController(
@@ -25,8 +26,12 @@ class WordQuickPopupController(
     private val onViewFull: (word: Word) -> Unit,
     private val onDismissed: () -> Unit
 ) {
-    private val maxPopupWidth = 360.dpToPx(activity)
-    private val horizontalMargin = 16.dpToPx(activity)
+    private val maxCardWidth = activity.resources.getDimensionPixelSize(
+        R.dimen.feature_learning_word_popup_max_card_width
+    )
+    private val screenMargin = activity.resources.getDimensionPixelSize(
+        R.dimen.feature_learning_word_popup_screen_margin
+    )
     private val edgePadding = 8.dpToPx(activity)
     private val anchorGap = 0
 
@@ -77,8 +82,8 @@ class WordQuickPopupController(
         val tvStatus = view.findViewById<TextView>(R.id.tv_status)
         val tvMeaning = view.findViewById<TextView>(R.id.tv_meaning)
         val progress = view.findViewById<ProgressBar>(R.id.progress_loading)
-        val btnSpeakUs = view.findViewById<TextView>(R.id.btn_speak_us)
-        val btnSpeakUk = view.findViewById<TextView>(R.id.btn_speak_uk)
+        val btnSpeakUs = view.findViewById<View>(R.id.btn_speak_us)
+        val btnSpeakUk = view.findViewById<View>(R.id.btn_speak_uk)
         val btnViewFull = view.findViewById<TextView>(R.id.btn_view_full)
 
         val lookup = state.result
@@ -146,7 +151,7 @@ class WordQuickPopupController(
         val decorView = activity.window.decorView
 
         val visibleRect = Rect(0, 0, decorView.width, decorView.height)
-        val popupWidth = min(maxPopupWidth, visibleRect.width() - horizontalMargin * 2)
+        val popupWidth = min(maxCardWidth, visibleRect.width() - screenMargin * 2)
 
         contentView.measure(
             MeasureSpec.makeMeasureSpec(popupWidth, MeasureSpec.EXACTLY),
@@ -164,8 +169,8 @@ class WordQuickPopupController(
 
         val rawX = anchorRect.centerX() - popupWidth / 2
         val x = rawX.coerceIn(
-            visibleRect.left + horizontalMargin,
-            visibleRect.right - popupWidth - horizontalMargin
+            visibleRect.left + screenMargin,
+            visibleRect.right - popupWidth - screenMargin
         )
 
         val desiredY = if (showBelow) {
@@ -186,7 +191,17 @@ class WordQuickPopupController(
             popup.showAtLocation(decorView, Gravity.NO_GRAVITY, x, y)
         }
 
+        applyBackgroundDim(contentView)
         updateArrow(contentView, anchorRect, x, popupWidth, showBelow)
+    }
+
+    private fun applyBackgroundDim(contentView: View) {
+        val popupContainer = contentView.rootView
+        val layoutParams = popupContainer.layoutParams as? WindowManager.LayoutParams ?: return
+        layoutParams.flags = layoutParams.flags or WindowManager.LayoutParams.FLAG_DIM_BEHIND
+        layoutParams.dimAmount = POPUP_BACKGROUND_DIM_AMOUNT
+        val windowManager = activity.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        windowManager.updateViewLayout(popupContainer, layoutParams)
     }
 
     private fun updateArrow(
@@ -203,8 +218,9 @@ class WordQuickPopupController(
 
         val targetArrow = if (showBelow) arrowTop else arrowBottom
         val targetArrowWidth = if (targetArrow.width > 0) targetArrow.width else 12.dpToPx(activity)
-        val leftLimit = horizontalMargin
-        val rightLimit = popupWidth - horizontalMargin
+        val arrowCenterInset = edgePadding * 2
+        val leftLimit = arrowCenterInset
+        val rightLimit = popupWidth - arrowCenterInset
         val centerInside = (anchorRect.centerX() - popupX).coerceIn(leftLimit, rightLimit)
         val lp = targetArrow.layoutParams as? android.widget.FrameLayout.LayoutParams ?: return
         lp.leftMargin = (centerInside - targetArrowWidth / 2).coerceIn(
@@ -212,5 +228,9 @@ class WordQuickPopupController(
             popupWidth - targetArrowWidth - edgePadding
         )
         targetArrow.layoutParams = lp
+    }
+
+    private companion object {
+        const val POPUP_BACKGROUND_DIM_AMOUNT = 0.12f
     }
 }

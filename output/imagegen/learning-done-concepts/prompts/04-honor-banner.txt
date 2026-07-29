@@ -1,0 +1,40 @@
+Use case: ui-mockup
+Asset type: shippable Android vocabulary-learning completion screen, full app screenshot
+Input images: Image 1 is the edit target and the source of all business content.
+Primary request: Completely redesign the learning-completion page from Image 1 as concept 04, a premium achievement screen with a dark honor banner and bright readable body. Output only the Android app viewport in a 1088x2400 portrait canvas. Remove the desktop Android Emulator title bar from Image 1, but preserve a plausible Android status bar and bottom gesture navigation bar. Do not show a phone frame or desktop.
+
+Layout: Treat the screen as a practical 360dp-wide native Android UI. Make the status area, toolbar, and result hero one continuous flat deep-navy top band covering no more than 31% of the viewport. Use white close and share icons, centered 学习完成 toolbar title, a small gold medal symbol, the 新词学习 badge, the main 学习完成 title, and the original subtitle. Integrate the key metrics 11, 100%, 0 m, and grade A directly into the lower part of this band with thin separators; do not place cards inside the banner. Below it, use a bright white body. Put 答题次数 1, 错误次数 0, and 学习效率 11.0 词/分 in one neat horizontal summary. Then show 本次学习单词 with clean, lightly outlined rows so bind and gear are both fully visible. Use a compact fixed white bottom action area with an outlined 返回首页 action and a larger emerald 继续学习 button; reserve padding so the list is never covered.
+
+Style/medium: premium but restrained production-ready Android results UI; bold hierarchy, flat geometry, crisp sans-serif typography, conventional icons, 48dp controls, 8-12dp radii.
+Color palette: deep navy top band, pure white body, emerald primary action, warm gold achievement accent, muted blue-gray secondary text, coral red only for the wrong count. Absolutely no gradients.
+
+Text, render verbatim with no substitutions, no missing characters, and no extra interface copy:
+"学习完成" (render exactly twice: toolbar and result title)
+"新词学习"
+"本组新词学习已完成，继续保持节奏，再学一组。"
+"完成词数"
+"11"
+"正确率"
+"100%"
+"本次时长"
+"0 m"
+"学习质量"
+"A"
+"答题次数"
+"1"
+"错误次数"
+"0"
+"学习效率"
+"11.0 词/分"
+"本次学习单词"
+"bind"
+"/baɪnd/"
+"v. 绑, 约束, 装订, 包扎, 使结合"
+"gear"
+"/ɡɪə/"
+"n. 齿轮, 装备"
+"继续学习"
+"返回首页"
+
+Critical constraints: Keep the dark color limited to the top band so the full screen does not become a one-note dark theme. Preserve every listed metric and action. Ensure exact alignment and high contrast. Both word rows must be visible and no bottom control may overlap content. Use familiar transparent-background close, share, and chevron icons.
+Avoid: emulator window chrome, device mockup, watermark, gradients, all-dark screen, black background, neon glow, oversized medal, giant empty hero, nested cards, purple, glass effects, extra achievements, invented streaks, clipped text, distorted Chinese, duplicated values.

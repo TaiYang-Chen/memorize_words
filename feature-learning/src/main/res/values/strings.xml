@@ -119,6 +119,8 @@
     <string name="practice_audio_loop_no_book_selected">当前未选择词书</string>
     <string name="practice_audio_loop_book_fallback">词书 #%1$d</string>
     <string name="word_detail_unavailable">单词详情暂不可用</string>
+    <string name="word_quick_popup_play_us">播放美式发音</string>
+    <string name="word_quick_popup_play_uk">播放英式发音</string>
     <string name="learning_nav_main_title">学习</string>
     <string name="learning_nav_done_title">学习完成</string>
     <string name="learning_nav_check_in_title">打卡结果</string>
