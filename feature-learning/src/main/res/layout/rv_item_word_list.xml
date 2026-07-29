@@ -4,14 +4,13 @@
     android:id="@+id/rootCard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/core_ui_dp_10"
-    android:background="@drawable/module_learning_selector_summary_word_item"
+    android:background="@drawable/feature_learning_selector_done_honor_word_item"
     android:gravity="center_vertical"
     android:minHeight="@dimen/core_ui_dp_72"
     android:orientation="horizontal"
-    android:paddingStart="@dimen/core_ui_dp_18"
+    android:paddingStart="@dimen/core_ui_dp_16"
     android:paddingTop="@dimen/core_ui_dp_10"
-    android:paddingEnd="@dimen/core_ui_dp_14"
+    android:paddingEnd="@dimen/core_ui_dp_12"
     android:paddingBottom="@dimen/core_ui_dp_10">
 
     <LinearLayout
@@ -32,10 +31,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/core_ui_dp_8"
                 android:ellipsize="end"
-                android:fontFamily="serif"
+                android:fontFamily="sans-serif"
                 android:includeFontPadding="false"
+                android:maxWidth="@dimen/core_ui_dp_160"
                 android:maxLines="1"
-                android:textColor="#07111F"
+                android:textColor="@color/feature_learning_done_text_primary"
                 android:textSize="@dimen/core_ui_text_18"
                 android:textStyle="bold"
                 tools:text="serene" />
@@ -48,7 +48,7 @@
                 android:ellipsize="end"
                 android:includeFontPadding="false"
                 android:maxLines="1"
-                android:textColor="#4B5563"
+                android:textColor="@color/feature_learning_done_text_secondary"
                 android:textSize="@dimen/core_ui_text_13"
                 tools:text="/se'ri:n/" />
         </LinearLayout>
@@ -61,7 +61,7 @@
             android:ellipsize="end"
             android:includeFontPadding="false"
             android:maxLines="1"
-            android:textColor="#111827"
+            android:textColor="@color/feature_learning_done_text_primary"
             android:textSize="@dimen/core_ui_text_14"
             tools:text="adj. calm, peaceful" />
     </LinearLayout>
@@ -73,7 +73,7 @@
         android:layout_marginStart="@dimen/core_ui_dp_10"
         android:gravity="center"
         android:text="&#8250;"
-        android:textColor="#9AA0A6"
-        android:textSize="@dimen/core_ui_text_28"
+        android:textColor="@color/feature_learning_done_text_secondary"
+        android:textSize="@dimen/core_ui_text_26"
         tools:text=">" />
 </LinearLayout>

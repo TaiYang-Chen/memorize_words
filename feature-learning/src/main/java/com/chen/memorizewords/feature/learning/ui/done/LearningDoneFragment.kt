@@ -1,7 +1,9 @@
 package com.chen.memorizewords.feature.learning.ui.done
 
 import android.os.Bundle
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -17,7 +19,6 @@ import com.chen.memorizewords.core.ui.vm.UiEvent
 import com.chen.memorizewords.feature.learning.LinearSpacingItemDecoration
 import com.chen.memorizewords.feature.learning.R
 import com.chen.memorizewords.feature.learning.databinding.FragmentLearningDoneBinding
-import com.chen.memorizewords.core.navigation.LearningEntry
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.launch
@@ -34,6 +35,9 @@ class LearningDoneFragment :
     lateinit var routeNavigator: RouteNavigator
 
     private val args: LearningDoneFragmentArgs by navArgs()
+
+    private var previousStatusBarColor: Int? = null
+    private var previousLightStatusBars: Boolean? = null
 
     private val adapter = WordPagingAdapter { item ->
         findNavController().navigate(
@@ -93,6 +97,35 @@ class LearningDoneFragment :
                 }
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val window = requireActivity().window
+        val insetsController = WindowCompat.getInsetsController(window, window.decorView)
+        if (previousStatusBarColor == null) {
+            previousStatusBarColor = window.statusBarColor
+            previousLightStatusBars = insetsController.isAppearanceLightStatusBars
+        }
+        window.statusBarColor = ContextCompat.getColor(
+            requireContext(),
+            R.color.feature_learning_done_navy
+        )
+        insetsController.isAppearanceLightStatusBars = false
+    }
+
+    override fun onStop() {
+        val window = activity?.window
+        if (window != null) {
+            previousStatusBarColor?.let { window.statusBarColor = it }
+            previousLightStatusBars?.let {
+                WindowCompat.getInsetsController(window, window.decorView)
+                    .isAppearanceLightStatusBars = it
+            }
+        }
+        previousStatusBarColor = null
+        previousLightStatusBars = null
+        super.onStop()
     }
 
     override fun onNavigationRoute(event: UiEvent.Navigation.Route) {

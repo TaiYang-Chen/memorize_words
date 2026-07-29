@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="feature_learning_done_navy">#062F5F</color>
+    <color name="feature_learning_done_white">#FFFFFF</color>
+    <color name="feature_learning_done_text_primary">#081B35</color>
+    <color name="feature_learning_done_text_secondary">#526176</color>
+    <color name="feature_learning_done_header_secondary">#DCE7F3</color>
+    <color name="feature_learning_done_header_divider">#64809C</color>
+    <color name="feature_learning_done_divider">#E2E7EC</color>
+    <color name="feature_learning_done_outline">#D9E0E7</color>
+    <color name="feature_learning_done_surface_pressed">#F3F6F8</color>
+    <color name="feature_learning_done_green">#00856F</color>
+    <color name="feature_learning_done_green_pressed">#006D5C</color>
+    <color name="feature_learning_done_orange">#FF9D52</color>
+    <color name="feature_learning_done_orange_text">#6F3500</color>
+    <color name="feature_learning_done_secondary_pressed">#FFF6EC</color>
+    <color name="feature_learning_done_gold">#DFA21A</color>
+    <color name="feature_learning_done_gold_soft">#FFF0C7</color>
+    <color name="feature_learning_done_gold_stroke">#F3C75E</color>
+    <color name="feature_learning_done_wrong">#D91523</color>
+</resources>
