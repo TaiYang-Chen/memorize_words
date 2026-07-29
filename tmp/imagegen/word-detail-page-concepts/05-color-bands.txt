@@ -1,0 +1,22 @@
+Use case: ui-mockup
+Asset type: polished Android vocabulary-learning detail screen
+Input images: Image 1 is the sole edit target and the sole source of truth for all visible content, controls, data, and interaction affordances.
+Primary request: Redesign only the visual presentation of Image 1 into a friendly color-coded learning layout. Keep the same app screen, same content, same controls, same visible state, and same interaction flow.
+
+Style direction: Color bands. Keep a white main canvas and use restrained full-width pale color bands to distinguish the existing content areas: cool blue for the word and pronunciation area, fresh green for examples, and warm orange for word forms. Add a small violet accent only to the existing top action row. Use crisp dark text, readable spacing, and low-radius surfaces. Sections remain full-width and unframed rather than nested cards. The bottom action stays a strong dark command.
+
+Content invariants:
+- Keep exactly one back icon, progress text "0/5", and exactly four top actions labeled "收藏", "已掌握", "真题", "分享".
+- Keep the main word exactly "bloom".
+- Render the phonetic exactly "/ˈbɫum/".
+- Render the definitions exactly: "n. 花, 开花, 青春, 钢块" and "v. 开花, 焕发青春, 茂盛, 使茂盛, 把...轧成钢坯".
+- Render the three example pairs exactly: "The rose had a bright red bloom." / "那朵玫瑰有一朵鲜红的花。"; "We saw the first bloom in the garden today." / "我们今天在花园里看到了第一朵花。"; "The tree is full of bloom in spring." / "这棵树在春天开满了花。".
+- Render word forms in this exact order: "复数 | blooms | 花, 开花, 青春, 钢块"; "现在分词 | blooming | 使茂盛, 把...轧成钢坯"; "第三人称单数 | blooms | 使茂盛, 把...轧成钢坯"; "过去分词 | bloomed | 使茂盛, 把...轧成钢坯"; "过去式 | bloomed | 使茂盛, 把...轧成钢坯".
+- Keep the segmented pronunciation selector "美" and "英", with "美" selected, followed by the phonetic text exactly as shown in Image 1 and one blue speaker icon.
+- Keep exactly two definition rows with "n." and "v." and the exact Chinese definitions from Image 1.
+- Keep the existing section heading "例句" and exactly three existing English/Chinese example pairs, each with one speaker icon.
+- Keep the existing section heading "词形变化" and the visible word-form rows from Image 1.
+- Keep the fixed bottom command exactly "下一个".
+- Preserve the existing order and all existing interaction affordances.
+
+Critical constraints: Change only layout, colors, typography, spacing, dividers, and visual hierarchy. Render every existing Chinese character, English word, phonetic symbol, and number verbatim. Do not paraphrase, translate, shorten, duplicate, correct, or invent any content. Color may organize existing sections but must not create new labels or imply new functions. No extra controls, headings, badges, menus, tabs, search, notes, difficulty, source, memory tip, roots, synonyms, antonyms, illustration, logo, watermark, device frame, emulator title bar, Android status bar, or concept title. No gradients, bokeh, decorative blobs, heavy shadows, or glass effects. No text overlap or clipping.

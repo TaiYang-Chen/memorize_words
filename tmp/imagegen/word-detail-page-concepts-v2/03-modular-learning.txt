@@ -1,0 +1,21 @@
+Use case: ui-mockup
+Asset type: production-ready Android vocabulary-learning detail screen, 1088x2400 portrait
+Input images: Image 1 is a content and functionality reference only. Ignore its current styling and rebuild the layout from scratch while preserving exact content and controls.
+
+Design goal: Modular learning. Create a fresh, friendly, sophisticated learning UI with clear color-coded zones, strong accessibility, and comfortable repeat-use ergonomics. It should feel modern and warm without becoming childish, illustrative, or card-heavy.
+
+Composition: Compact white top bar. Place the word, pronunciation selector, phonetic, definitions, and speaker in one pale-blue full-width hero band with an 8px corner radius. Place examples in an unframed pale-mint full-width band with clear reading rows and stable speaker alignment. Place word forms in a pale-peach full-width band with a disciplined three-column table. Use generous inner padding, consistent 8-point spacing, and no cards inside bands. Fixed bottom action sits on white with a strong dark fill.
+
+Typography: Rounded but professional sans serif, strong word title, medium-weight English sentences, calm Chinese translations, compact metadata. No playful bubble type.
+Palette: white #FFFFFF, navy #14233B, clear blue #2478F2, pale blue #EDF5FF, emerald #11A76F, pale mint #ECF9F2, orange #F57735, pale peach #FFF2E8, restrained violet #7047C8 for top actions only.
+
+Exact visible content, render verbatim:
+- Back icon; "0/5"; actions "收藏", "已掌握", "真题", "分享".
+- "bloom"; "美", "英" with "美" selected; "/ˈbɫum/"; one pronunciation speaker.
+- "n. 花, 开花, 青春, 钢块"
+- "v. 开花, 焕发青春, 茂盛, 使茂盛, 把...轧成钢坯"
+- "例句" and exactly three pairs: "The rose had a bright red bloom." / "那朵玫瑰有一朵鲜红的花。"; "We saw the first bloom in the garden today." / "我们今天在花园里看到了第一朵花。"; "The tree is full of bloom in spring." / "这棵树在春天开满了花。". One speaker per English sentence.
+- "词形变化"; exact ordered rows: "复数 | blooms | 花, 开花, 青春, 钢块"; "现在分词 | blooming | 使茂盛, 把...轧成钢坯"; "第三人称单数 | blooms | 使茂盛, 把...轧成钢坯"; "过去分词 | bloomed | 使茂盛, 把...轧成钢坯"; "过去式 | bloomed | 使茂盛, 把...轧成钢坯".
+- Bottom command "下一个".
+
+Non-negotiable constraints: Color only organizes existing information and must not imply new controls. No added text, tabs, menus, badges, notes, search, difficulty, source, memory tip, roots, synonyms, illustration, mascot, logo, watermark, device frame, emulator title, or status bar. Do not misspell, paraphrase, reorder, duplicate, truncate, or invent content. No gradients, decorative blobs, bokeh, glass, heavy shadows, nested cards, or overlap.

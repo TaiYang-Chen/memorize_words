@@ -65,7 +65,7 @@ fun TextView.setClickableWords(sentence: String?, listener: OnWordClickListener?
 
             override fun updateDrawState(ds: TextPaint) {
                 super.updateDrawState(ds)
-                ds.color = "#414141".toColorInt()
+                ds.color = this@setClickableWords.currentTextColor
                 ds.isUnderlineText = false
             }
         }

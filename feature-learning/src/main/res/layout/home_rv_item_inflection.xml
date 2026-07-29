@@ -15,35 +15,28 @@
         android:background="@drawable/module_learning_bg_radius_fff"
         android:gravity="center"
         android:orientation="horizontal"
-        android:padding="@dimen/core_ui_dp_10">
+        android:paddingStart="@dimen/core_ui_dp_10"
+        android:paddingTop="@dimen/core_ui_dp_8"
+        android:paddingEnd="@dimen/core_ui_dp_10"
+        android:paddingBottom="@dimen/core_ui_dp_8">
 
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:text="@{data.formText}"
+            android:textColor="#133856"
+            android:textSize="@dimen/core_ui_text_15"
+            tools:text="pipelines" />
 
         <TextView
             android:layout_width="@dimen/core_ui_dp_90"
             android:layout_height="wrap_content"
             android:text="@{data.formType.displayName}"
             android:textColor="#2984f7"
-            tools:text="复数复数复数" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@{data.formText}"
-            android:textColor="#133856"
-            tools:text="utilities" />
-
-        <TextView
-            android:id="@+id/tv_form_definition"
-            android:layout_width="@dimen/core_ui_dp_130"
-            android:layout_height="wrap_content"
-            android:text="@{data.formDefinition}"
-            android:textColor="#5f7185"
-            android:singleLine="true"
-            android:maxLines="1"
             android:gravity="end"
-            android:textSize="@dimen/core_ui_text_13"
-            tools:text="实用工具；公用事业" />
+            android:textSize="@dimen/core_ui_text_14"
+            tools:text="复数" />
     </LinearLayout>
 </layout>

@@ -1,0 +1,15 @@
+Use case: precise-object-edit
+Asset type: final Android vocabulary-learning UI concept correction
+Input images: Image 1 is the edit target.
+Primary request: Correct only the two factual text details listed below. Preserve the entire visual design, layout, colors, typography, spacing, icons, dividers, all other text, and image dimensions exactly as Image 1.
+
+Correction 1: The phonetic string beside the 美/英 selector must read exactly "/ˈbɫum/" with the primary stress symbol before b. Do not add a colon, length mark, apostrophe, extra letter, or extra phonetic row.
+
+Correction 2: In the 词形变化 table, keep exactly five rows in this exact order:
+1. 复数 | blooms | 花, 开花, 青春, 钢块
+2. 现在分词 | blooming | 使茂盛, 把...轧成钢坯
+3. 第三人称单数 | blooms | 使茂盛, 把...轧成钢坯
+4. 过去分词 | bloomed | 使茂盛, 把...轧成钢坯
+5. 过去式 | bloomed | 使茂盛, 把...轧成钢坯
+
+Critical invariants: Change nothing else. Keep "0/5", "收藏", "已掌握", "真题", "分享", "bloom", "美", "英", both definition rows, "例句", all three existing English/Chinese example pairs, all speaker icons, "词形变化", and "下一个" exactly unchanged. Do not add, remove, duplicate, paraphrase, translate, or restyle any content. No new controls, labels, headings, badges, watermark, device frame, emulator title bar, or status bar.

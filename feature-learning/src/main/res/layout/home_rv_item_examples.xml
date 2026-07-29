@@ -23,7 +23,7 @@
             android:id="@+id/text_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/core_ui_dp_16"
+            android:layout_marginEnd="@dimen/core_ui_dp_12"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -33,7 +33,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-medium"
-                android:textColor="#000"
+                android:lineSpacingExtra="@dimen/core_ui_dp_2"
+                android:textColor="@color/feature_learning_text_primary"
                 android:textSize="@dimen/core_ui_text_16"
                 app:clickableWords="@{data.englishSentence}"
                 app:onWordClickListener="@{click}"
@@ -44,10 +45,12 @@
                 android:id="@+id/chinese_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/core_ui_dp_4"
                 android:fontFamily="sans-serif"
                 android:lineSpacingExtra="@dimen/core_ui_dp_2"
                 android:text="@{data.chineseTranslation}"
-                android:textColor="#000"
+                android:textColor="@color/feature_learning_text_secondary"
+                android:textSize="@dimen/core_ui_text_14"
                 tools:text="他表现出对压力的极强适应能力。" />
         </LinearLayout>
 
@@ -56,7 +59,7 @@
             android:id="@+id/speaker_icon"
             android:layout_width="@dimen/core_ui_dp_24"
             android:layout_height="@dimen/core_ui_dp_24"
-            android:layout_marginEnd="@dimen/core_ui_dp_12"
+            android:layout_marginEnd="@dimen/core_ui_dp_8"
             android:padding="@dimen/core_ui_dp_3"
             android:src="@drawable/module_learning_ic_volume_up_gray" />
     </LinearLayout>
