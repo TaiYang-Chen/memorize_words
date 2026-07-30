@@ -1,0 +1,9 @@
+id,start,end,duration_sec,filename,required,capture_acceptance
+A01,00:00,00:06,6,A01_hook_word_follows.mp4,yes,"Other App visible; pet exists from frame one; a real learned-word card opens before second three"
+A02,00:06,00:15,9,A02_source_and_pain.mp4,yes,"Same Other App remains visible; pet docks; overlays state that the card comes from learned words and does not read the screen"
+B01,00:15,00:22,7,B01_experiment_setup.mp4,yes,"Exactly one genuinely learned target word is selected; it matches the hook; the shared uncut source recording is retained"
+B02,00:22,00:30,8,B02_experiment_result.mp4,yes,"Continuous transition to another app proves the same target word appears; no screen-reading claim or reordered event"
+B03,00:30,00:47,17,B03_learning_loop.mp4,yes,"One continuous learning session proves a wrong word appears again; a real word-detail entry follows"
+C01,00:47,01:03,16,C01_card_controls.mp4,yes,"Real cross-App results show drag, dock, next word, favorite, copy, and detail without relying on menu screenshots"
+E01,01:03,01:10,7,E01_use_boundaries.mp4,yes,"Overlay permission and truthful experience/network boundary text are visible; no payment screen"
+E02,01:10,01:25,15,E02_cta_end.mp4,yes,"Pet and home screen share the frame; final brand and Android beta CTA are visible; public CTA asks only for the test keyword and a scenario question"

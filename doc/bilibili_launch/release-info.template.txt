@@ -1,0 +1,10 @@
+# Copy this file to release-info.txt, then replace every remaining bracketed value.
+APP_NAME=炫羲单词
+VERSION_NAME=[版本号]
+VERSION_CODE=[版本代码]
+APK_PATH=[签名候选 APK 相对仓库根目录的路径]
+SHA256=[64 位 SHA-256 校验值]
+DOWNLOAD_URL=[固定下载地址]
+BUILD_COMMIT=[Git 提交号]
+BUILD_DATE=[YYYY-MM-DD]
+

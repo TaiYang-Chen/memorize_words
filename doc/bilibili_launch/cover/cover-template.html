@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1920, initial-scale=1">
+  <title>炫羲单词 Bilibili Cover</title>
+  <style>
+    :root {
+      --ink: #141716;
+      --paper: #f4f6f1;
+      --white: #ffffff;
+      --blue: #315ee8;
+      --coral: #ff684f;
+      --yellow: #ffd44f;
+      --muted: #626b66;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 1920px;
+      height: 1080px;
+      margin: 0;
+      overflow: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", sans-serif;
+    }
+
+    .cover {
+      position: relative;
+      width: 1920px;
+      height: 1080px;
+      isolation: isolate;
+      background:
+        linear-gradient(90deg, rgba(20, 23, 22, 0.045) 1px, transparent 1px),
+        linear-gradient(rgba(20, 23, 22, 0.045) 1px, transparent 1px),
+        var(--paper);
+      background-size: 64px 64px;
+    }
+
+    .top-rule {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 18px;
+      background: var(--ink);
+    }
+
+    .accent-block {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 34px;
+      height: 410px;
+      background: var(--coral);
+    }
+
+    .copy {
+      position: absolute;
+      z-index: 4;
+      left: 88px;
+      top: 106px;
+      width: 870px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      min-height: 60px;
+      padding: 0 24px;
+      border: 3px solid var(--ink);
+      background: var(--yellow);
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      margin: 46px 0 28px;
+      font-size: 128px;
+      line-height: 1.04;
+      font-weight: 950;
+      letter-spacing: 0;
+    }
+
+    h1 .highlight {
+      display: inline-block;
+      position: relative;
+      color: var(--blue);
+    }
+
+    h1 .highlight::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      left: -12px;
+      right: -12px;
+      bottom: 5px;
+      height: 28px;
+      background: var(--yellow);
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-top: 42px;
+    }
+
+    .brand-name {
+      max-width: 680px;
+      overflow-wrap: anywhere;
+      font-size: 39px;
+      line-height: 1.2;
+      font-weight: 850;
+      letter-spacing: 0;
+    }
+
+    .supporting-copy {
+      margin: 22px 0 0;
+      font-size: 29px;
+      line-height: 1.35;
+      font-weight: 750;
+      letter-spacing: 0;
+    }
+
+    .visual {
+      position: absolute;
+      z-index: 2;
+      top: 52px;
+      right: 42px;
+      width: 880px;
+      height: 980px;
+    }
+
+    .blue-panel {
+      position: absolute;
+      top: 94px;
+      right: 0;
+      width: 760px;
+      height: 836px;
+      border: 4px solid var(--ink);
+      background: var(--blue);
+      box-shadow: 20px 20px 0 var(--ink);
+    }
+
+    .phone {
+      position: absolute;
+      z-index: 3;
+      top: 0;
+      left: 84px;
+      width: 540px;
+      height: 950px;
+      padding: 18px;
+      border: 6px solid var(--ink);
+      border-radius: 54px;
+      background: var(--ink);
+      box-shadow: 0 26px 54px rgba(20, 23, 22, 0.28);
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      z-index: 6;
+      top: 15px;
+      left: 50%;
+      width: 142px;
+      height: 29px;
+      border-radius: 0 0 18px 18px;
+      background: var(--ink);
+      transform: translateX(-50%);
+    }
+
+    .screen {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      border-radius: 35px;
+      background: #dfe4df;
+    }
+
+    #app-shot {
+      position: absolute;
+      z-index: 2;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .shot-placeholder {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-content: center;
+      gap: 24px;
+      padding: 72px;
+      border: 5px dashed rgba(20, 23, 22, 0.4);
+      background: #e7ebe6;
+      color: var(--ink);
+      text-align: center;
+    }
+
+    .shot-placeholder strong {
+      font-size: 38px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .shot-placeholder span {
+      color: var(--muted);
+      font-size: 25px;
+      line-height: 1.45;
+      letter-spacing: 0;
+    }
+
+    .draft-banner {
+      position: absolute;
+      z-index: 20;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 74px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-top: 4px solid var(--ink);
+      background: var(--coral);
+      color: var(--white);
+      font-size: 30px;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+  </style>
+</head>
+<body>
+  <main class="cover" aria-label="Bilibili cover draft">
+    <div class="top-rule"></div>
+    <div class="accent-block"></div>
+
+    <section class="copy">
+      <div class="eyebrow">词源：已学词</div>
+      <h1>背过的词<br><span class="highlight">跟着我刷手机</span></h1>
+      <div class="brand-row">
+        <div class="brand-name">炫羲单词</div>
+      </div>
+      <p class="supporting-copy">桌宠在其他 App 上展示已学词</p>
+    </section>
+
+    <section class="visual" aria-label="real phone screenshot area">
+      <div class="blue-panel"></div>
+      <div class="phone">
+        <div class="screen">
+          <div id="shot-placeholder" class="shot-placeholder">
+            <strong>替换实机截图</strong>
+            <span>cover/cross-app-screenshot.png<br>必须同时看到其他 App、桌宠和真实已学词卡</span>
+          </div>
+          <img id="app-shot" src="cross-app-screenshot.png" alt="真实跨 App 桌宠与已学词卡截图">
+        </div>
+      </div>
+    </section>
+
+    <div id="draft-banner" class="draft-banner">DRAFT · 替换真实实机截图后再导出</div>
+  </main>
+
+  <script>
+    const screenshot = document.getElementById("app-shot");
+    const placeholder = document.getElementById("shot-placeholder");
+    const draftBanner = document.getElementById("draft-banner");
+    const finalRequested = new URLSearchParams(window.location.search).get("final") === "1";
+
+
+    function markScreenshotLoaded() {
+      placeholder.hidden = true;
+      screenshot.hidden = false;
+      if (finalRequested) {
+        draftBanner.hidden = true;
+      }
+    }
+
+    function markScreenshotMissing() {
+      screenshot.hidden = true;
+      placeholder.hidden = false;
+      draftBanner.hidden = false;
+    }
+
+    screenshot.addEventListener("load", markScreenshotLoaded);
+    screenshot.addEventListener("error", markScreenshotMissing);
+
+    if (screenshot.complete) {
+      if (screenshot.naturalWidth > 0) {
+        markScreenshotLoaded();
+      } else {
+        markScreenshotMissing();
+      }
+    }
+  </script>
+</body>
+</html>
