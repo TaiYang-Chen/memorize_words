@@ -259,4 +259,10 @@ class UserDataSyncRequest @Inject constructor(
             apiService.checkInMembership()
                 .await<ApiResponse<MembershipCheckInRewardDto>, MembershipCheckInRewardDto>()
         }
+
+    suspend fun redeemMembershipCode(code: String): NetworkResult<MembershipRedeemResultDto> =
+        requestExecutor.executeAuthenticated {
+            apiService.redeemMembershipCode(MembershipRedeemRequest(code))
+                .await<ApiResponse<MembershipRedeemResultDto>, MembershipRedeemResultDto>()
+        }
 }

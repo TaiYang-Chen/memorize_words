@@ -2,8 +2,10 @@ package com.chen.memorizewords.data.sync.repository.membership
 
 import com.chen.memorizewords.data.sync.remote.datasync.RemoteUserSyncDataSource
 import com.chen.memorizewords.data.sync.remoteapi.api.datasync.MembershipCheckInRewardDto
+import com.chen.memorizewords.data.sync.remoteapi.api.datasync.MembershipRedeemResultDto
 import com.chen.memorizewords.data.sync.remoteapi.api.datasync.MembershipStatusDto
 import com.chen.memorizewords.domain.account.model.membership.MembershipCheckInReward
+import com.chen.memorizewords.domain.account.model.membership.MembershipRedeemResult
 import com.chen.memorizewords.domain.account.model.membership.MembershipStatus
 import com.chen.memorizewords.domain.account.policy.currentMembershipTimeMillis
 import com.chen.memorizewords.domain.account.policy.normalizeMembershipStatus
@@ -60,6 +62,13 @@ class MembershipRepositoryImpl @Inject constructor(
         val reward = remoteUserSyncDataSource.checkInMembership().getOrThrow().toDomain()
         saveStatus(userId, reward.membership)
         reward
+    }
+
+    override suspend fun redeem(code: String): Result<MembershipRedeemResult> = runCatching {
+        val userId = currentUserId()
+        val result = remoteUserSyncDataSource.redeemMembershipCode(code).getOrThrow().toDomain()
+        saveStatus(userId, result.membership)
+        result
     }
 
     private suspend fun currentUserId(): Long {
@@ -140,11 +149,17 @@ private fun MembershipStatusDto.toDomain(): MembershipStatus {
     return MembershipStatus(
         level = level,
         active = active,
-        validUntilDate = validUntilDate,
         validUntilAtMs = validUntilAtMs,
         remainingDays = remainingDays,
         totalGrantedDays = totalGrantedDays,
         todayCheckedIn = todayCheckedIn
+    )
+}
+
+private fun MembershipRedeemResultDto.toDomain(): MembershipRedeemResult {
+    return MembershipRedeemResult(
+        grantDays = grantDays,
+        membership = membership.toDomain()
     )
 }
 

@@ -3,6 +3,7 @@ package com.chen.memorizewords.feature.home.ui.profile
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -32,6 +33,12 @@ class ProMembershipActivity :
         databind.featureHomeBtnOpenMember.setOnClickListener {
             viewModel.checkIn()
         }
+        databind.featureHomeEtMemberRedeemCode.doAfterTextChanged { editable ->
+            viewModel.onRedeemCodeChanged(editable?.toString().orEmpty())
+        }
+        databind.featureHomeBtnMemberRedeem.setOnClickListener {
+            viewModel.redeemCode()
+        }
     }
 
     override fun createObserver() {
@@ -46,6 +53,13 @@ class ProMembershipActivity :
                     databind.featureHomeBtnOpenMember.text = state.buttonText
                     databind.featureHomeBtnOpenMember.isEnabled = state.checkInEnabled
                     databind.featureHomeBtnOpenMember.alpha = if (state.checkInEnabled) 1f else 0.55f
+                    databind.featureHomeBtnMemberRedeem.text = state.redeemButtonText
+                    databind.featureHomeBtnMemberRedeem.isEnabled = state.redeemEnabled
+                    databind.featureHomeBtnMemberRedeem.alpha = if (state.redeemEnabled) 1f else 0.55f
+                    if (databind.featureHomeEtMemberRedeemCode.text.toString() != state.redeemCode) {
+                        databind.featureHomeEtMemberRedeemCode.setText(state.redeemCode)
+                        databind.featureHomeEtMemberRedeemCode.setSelection(state.redeemCode.length)
+                    }
                 }
             }
         }

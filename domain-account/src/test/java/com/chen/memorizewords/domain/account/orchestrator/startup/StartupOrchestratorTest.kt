@@ -227,7 +227,6 @@ private class FakeMembershipRepository(
     private val status = when (access) {
         MembershipFeatureAccess.ALLOWED -> MembershipStatus(
             active = true,
-            validUntilDate = "2099-12-31",
             validUntilAtMs = 4_102_444_740_000L
         )
         MembershipFeatureAccess.MEMBERSHIP_REQUIRED -> MembershipStatus(active = false)
@@ -237,4 +236,5 @@ private class FakeMembershipRepository(
     override suspend fun getCachedStatus() = status
     override suspend fun refreshStatus() = error("Not used")
     override suspend fun checkIn() = error("Not used")
+    override suspend fun redeem(code: String) = error("Not used")
 }

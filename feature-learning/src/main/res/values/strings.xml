@@ -95,6 +95,7 @@
     <string name="practice_word_picker_clear_selection">清空</string>
     <string name="practice_word_picker_selected_count_default">0 已选</string>
     <string name="practice_word_picker_selected_count">%1$d 已选</string>
+    <string name="practice_word_picker_selected_marker">已选</string>
     <string name="practice_word_picker_confirm">确定</string>
     <string name="practice_word_picker_exit">退出</string>
     <string name="practice_word_picker_confirm_empty">请至少选择一个单词</string>

@@ -7,6 +7,7 @@ import com.chen.memorizewords.domain.account.model.membership.MembershipStatus
 import com.chen.memorizewords.domain.account.usecase.membership.CheckInMembershipUseCase
 import com.chen.memorizewords.domain.account.usecase.membership.ObserveMembershipStatusUseCase
 import com.chen.memorizewords.domain.account.usecase.membership.RefreshMembershipStatusUseCase
+import com.chen.memorizewords.domain.account.usecase.membership.RedeemMembershipCodeUseCase
 import com.chen.memorizewords.domain.practice.usage.ObservePracticeUsageUseCase
 import com.chen.memorizewords.domain.practice.usage.PracticeUsageState
 import com.chen.memorizewords.domain.practice.usage.RefreshPracticeUsageUseCase
@@ -25,24 +26,33 @@ class ProMembershipViewModel @Inject constructor(
     observeMembershipStatusUseCase: ObserveMembershipStatusUseCase,
     private val refreshMembershipStatusUseCase: RefreshMembershipStatusUseCase,
     private val checkInMembershipUseCase: CheckInMembershipUseCase,
+    private val redeemMembershipCodeUseCase: RedeemMembershipCodeUseCase,
     observePracticeUsageUseCase: ObservePracticeUsageUseCase,
     private val refreshPracticeUsageUseCase: RefreshPracticeUsageUseCase,
     private val resourceProvider: ResourceProvider
 ) : BaseViewModel() {
 
     private val checkingIn = MutableStateFlow(false)
+    private val redeeming = MutableStateFlow(false)
+    private val redeemCodeText = MutableStateFlow("")
     private val membershipStatus = observeMembershipStatusUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
     private val practiceUsage = observePracticeUsageUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), PracticeUsageState.Unknown)
 
     val uiState: StateFlow<ProMembershipUiState> =
-        combine(membershipStatus, checkingIn, practiceUsage) { status, isCheckingIn, usage ->
-            buildUiState(status, isCheckingIn, usage)
+        combine(
+            membershipStatus,
+            checkingIn,
+            redeeming,
+            redeemCodeText,
+            practiceUsage
+        ) { status, isCheckingIn, isRedeeming, redeemCode, usage ->
+            buildUiState(status, isCheckingIn, isRedeeming, redeemCode, usage)
         }.stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5_000),
-            buildUiState(null, false, PracticeUsageState.Unknown)
+            buildUiState(null, false, false, "", PracticeUsageState.Unknown)
         )
 
     init {
@@ -53,7 +63,7 @@ class ProMembershipViewModel @Inject constructor(
     }
 
     fun checkIn() {
-        if (checkingIn.value || membershipStatus.value?.todayCheckedIn == true) return
+        if (checkingIn.value || redeeming.value || membershipStatus.value?.todayCheckedIn == true) return
         viewModelScope.launch {
             checkingIn.value = true
             try {
@@ -79,9 +89,47 @@ class ProMembershipViewModel @Inject constructor(
         }
     }
 
+    fun onRedeemCodeChanged(code: String) {
+        if (redeemCodeText.value != code) {
+            redeemCodeText.value = code
+        }
+    }
+
+    fun redeemCode() {
+        val code = redeemCodeText.value.trim()
+        if (code.isBlank() || checkingIn.value || redeeming.value) return
+
+        viewModelScope.launch {
+            redeeming.value = true
+            try {
+                redeemMembershipCodeUseCase(code)
+                    .onSuccess { result ->
+                        redeemCodeText.value = ""
+                        refreshPracticeUsageUseCase()
+                        showToast(
+                            resourceProvider.getString(
+                                R.string.feature_home_membership_redeem_success,
+                                result.grantDays
+                            )
+                        )
+                    }
+                    .onFailure { error ->
+                        showToast(
+                            error.message?.takeIf { it.isNotBlank() }
+                                ?: resourceProvider.getString(R.string.feature_home_membership_redeem_failed)
+                        )
+                    }
+            } finally {
+                redeeming.value = false
+            }
+        }
+    }
+
     private fun buildUiState(
         status: MembershipStatus?,
         checkingIn: Boolean,
+        redeeming: Boolean,
+        redeemCode: String,
         usageState: PracticeUsageState
     ): ProMembershipUiState {
         val active = status?.active == true
@@ -117,7 +165,14 @@ class ProMembershipViewModel @Inject constructor(
             subtitle = subtitle,
             note = resourceProvider.getString(R.string.feature_home_membership_note),
             buttonText = buttonText,
-            checkInEnabled = !todayCheckedIn && !checkingIn,
+            checkInEnabled = !todayCheckedIn && !checkingIn && !redeeming,
+            redeemCode = redeemCode,
+            redeemButtonText = if (redeeming) {
+                resourceProvider.getString(R.string.feature_home_membership_redeeming_button)
+            } else {
+                resourceProvider.getString(R.string.feature_home_membership_redeem_button)
+            },
+            redeemEnabled = redeemCode.trim().isNotEmpty() && !checkingIn && !redeeming,
             evaluationBenefitText = evaluation?.let {
                 resourceProvider.getString(
                     R.string.feature_home_membership_evaluation_policy,
@@ -143,6 +198,9 @@ data class ProMembershipUiState(
     val note: String,
     val buttonText: String,
     val checkInEnabled: Boolean,
+    val redeemCode: String,
+    val redeemButtonText: String,
+    val redeemEnabled: Boolean,
     val evaluationBenefitText: String,
     val evaluationUsageText: String
 )

@@ -22,7 +22,6 @@ class MembershipStatusCacheTest {
         val userOneStatus = MembershipStatus(
             level = "PRO",
             active = true,
-            validUntilDate = "2026-06-24",
             validUntilAtMs = VALID_UNTIL_FUTURE,
             remainingDays = 1,
             totalGrantedDays = 3,
@@ -31,7 +30,6 @@ class MembershipStatusCacheTest {
         val userTwoStatus = MembershipStatus(
             level = "PRO",
             active = false,
-            validUntilDate = null,
             remainingDays = 0,
             totalGrantedDays = 0,
             todayCheckedIn = false
@@ -51,7 +49,6 @@ class MembershipStatusCacheTest {
             MembershipStatus(
                 level = "PRO",
                 active = true,
-                validUntilDate = "2026-06-23",
                 validUntilAtMs = VALID_UNTIL_PAST,
                 remainingDays = 1,
                 totalGrantedDays = 3,
@@ -63,7 +60,6 @@ class MembershipStatusCacheTest {
 
         assertEquals(false, status?.active)
         assertEquals(0, status?.remainingDays)
-        assertEquals("2026-06-23", status?.validUntilDate)
     }
 
     @Test
@@ -73,7 +69,6 @@ class MembershipStatusCacheTest {
             MembershipStatus(
                 level = "PRO",
                 active = true,
-                validUntilDate = "2026-06-24",
                 validUntilAtMs = VALID_UNTIL_FUTURE,
                 remainingDays = 9,
                 totalGrantedDays = 3,
@@ -94,7 +89,6 @@ class MembershipStatusCacheTest {
             MembershipStatus(
                 level = "PRO",
                 active = true,
-                validUntilDate = "2026-06-24",
                 remainingDays = 1,
                 totalGrantedDays = 3,
                 todayCheckedIn = true

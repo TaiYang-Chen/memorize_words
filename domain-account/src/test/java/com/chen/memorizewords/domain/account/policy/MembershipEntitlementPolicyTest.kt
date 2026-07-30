@@ -15,7 +15,6 @@ class MembershipEntitlementPolicyTest {
             feature = MembershipFeature.FLOATING_REVIEW,
             status = MembershipStatus(
                 active = true,
-                validUntilDate = "2026-06-24",
                 validUntilAtMs = VALID_UNTIL_FUTURE,
                 remainingDays = 1
             ),
@@ -52,7 +51,6 @@ class MembershipEntitlementPolicyTest {
         val normalized = normalizeMembershipStatus(
             status = MembershipStatus(
                 active = true,
-                validUntilDate = "2026-06-23",
                 validUntilAtMs = VALID_UNTIL_PAST,
                 remainingDays = 1
             ),
@@ -73,7 +71,6 @@ class MembershipEntitlementPolicyTest {
         val normalized = normalizeMembershipStatus(
             status = MembershipStatus(
                 active = true,
-                validUntilDate = "2026-06-24",
                 validUntilAtMs = VALID_UNTIL_FUTURE,
                 remainingDays = 7
             ),
@@ -95,7 +92,6 @@ class MembershipEntitlementPolicyTest {
         val normalized = normalizeMembershipStatus(
             status = MembershipStatus(
                 active = true,
-                validUntilDate = "2026-06-24",
                 remainingDays = 1
             ),
             currentTimeMillis = NOW

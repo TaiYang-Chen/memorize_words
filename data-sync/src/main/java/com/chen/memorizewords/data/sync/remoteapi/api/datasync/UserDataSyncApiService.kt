@@ -201,7 +201,6 @@ data class CheckInRecordDto(
 data class MembershipStatusDto(
     val level: String,
     val active: Boolean,
-    val validUntilDate: String?,
     val validUntilAtMs: Long? = null,
     val remainingDays: Int,
     val totalGrantedDays: Int,
@@ -213,6 +212,17 @@ data class MembershipCheckInRewardDto(
     val granted: Boolean,
     val grantDays: Int,
     val rewardDate: String,
+    val membership: MembershipStatusDto
+)
+
+@JsonClass(generateAdapter = false)
+data class MembershipRedeemRequest(
+    val code: String
+)
+
+@JsonClass(generateAdapter = false)
+data class MembershipRedeemResultDto(
+    val grantDays: Int,
     val membership: MembershipStatusDto
 )
 
@@ -243,6 +253,7 @@ interface UserDataSyncApiService {
         const val PATH_CHECKIN_RECORD_ITEM = "me/checkin/records/{date}"
         const val PATH_MEMBERSHIP = "me/membership"
         const val PATH_MEMBERSHIP_CHECKIN = "me/membership/checkin"
+        const val PATH_MEMBERSHIP_REDEEM = "me/membership/redeem"
     }
 
     @GET(PATH_STUDY_PLAN)
@@ -422,4 +433,7 @@ interface UserDataSyncApiService {
 
     @POST(PATH_MEMBERSHIP_CHECKIN)
     fun checkInMembership(): Call<ApiResponse<MembershipCheckInRewardDto>>
+
+    @POST(PATH_MEMBERSHIP_REDEEM)
+    fun redeemMembershipCode(@Body request: MembershipRedeemRequest): Call<ApiResponse<MembershipRedeemResultDto>>
 }

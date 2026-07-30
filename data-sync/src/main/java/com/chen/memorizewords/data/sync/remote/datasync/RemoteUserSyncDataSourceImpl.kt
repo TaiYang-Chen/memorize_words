@@ -13,6 +13,7 @@ import com.chen.memorizewords.data.sync.remoteapi.api.datasync.CheckInStatusDto
 import com.chen.memorizewords.data.sync.remoteapi.api.datasync.DailyStudyDurationDto
 import com.chen.memorizewords.data.sync.remoteapi.api.datasync.FavoriteDto
 import com.chen.memorizewords.data.sync.remoteapi.api.datasync.MembershipCheckInRewardDto
+import com.chen.memorizewords.data.sync.remoteapi.api.datasync.MembershipRedeemResultDto
 import com.chen.memorizewords.data.sync.remoteapi.api.datasync.MembershipStatusDto
 import com.chen.memorizewords.data.sync.remoteapi.api.datasync.OnboardingStateDto
 import com.chen.memorizewords.data.sync.remoteapi.api.datasync.PendingWordBookUpdateDto
@@ -262,5 +263,9 @@ class RemoteUserSyncDataSourceImpl @Inject constructor(
 
     override suspend fun checkInMembership(): Result<MembershipCheckInRewardDto> {
         return remoteResultAdapter.toResult { request.checkInMembership() }
+    }
+
+    override suspend fun redeemMembershipCode(code: String): Result<MembershipRedeemResultDto> {
+        return remoteResultAdapter.toResult { request.redeemMembershipCode(code) }
     }
 }

@@ -138,6 +138,60 @@
                     android:textSize="@dimen/core_ui_text_14" />
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/core_ui_dp_18"
+                android:background="@drawable/feature_home_bg_profile_panel"
+                android:orientation="vertical"
+                android:padding="@dimen/core_ui_dp_18">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/feature_home_membership_redeem_title"
+                    android:textColor="#0F172A"
+                    android:textSize="@dimen/core_ui_text_16"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/core_ui_dp_12"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/feature_home_et_member_redeem_code"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/core_ui_dp_48"
+                        android:layout_weight="1"
+                        android:autofillHints=""
+                        android:background="@drawable/feature_home_bg_profile_panel"
+                        android:hint="@string/feature_home_membership_redeem_hint"
+                        android:imeOptions="actionDone"
+                        android:inputType="textNoSuggestions"
+                        android:maxLength="64"
+                        android:paddingHorizontal="@dimen/core_ui_dp_12"
+                        android:singleLine="true"
+                        android:textColor="#0F172A"
+                        android:textColorHint="#94A3B8"
+                        android:textSize="@dimen/core_ui_text_14" />
+
+                    <TextView
+                        android:id="@+id/feature_home_btn_member_redeem"
+                        android:layout_width="@dimen/core_ui_dp_80"
+                        android:layout_height="@dimen/core_ui_dp_48"
+                        android:layout_marginStart="@dimen/core_ui_dp_10"
+                        android:background="@drawable/feature_home_bg_profile_primary_button"
+                        android:gravity="center"
+                        android:text="@string/feature_home_membership_redeem_button"
+                        android:textColor="#0F172A"
+                        android:textSize="@dimen/core_ui_text_15"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/feature_home_tv_member_note"
                 android:layout_width="match_parent"

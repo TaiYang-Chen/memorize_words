@@ -490,6 +490,8 @@ class PracticeViewModelTest {
                 )
             )
 
+        override suspend fun redeem(code: String) = error("Not used")
+
         fun emit(value: MembershipStatus?) {
             status.value = value
         }
@@ -498,7 +500,6 @@ class PracticeViewModelTest {
             return if (active) {
                 MembershipStatus(
                     active = true,
-                    validUntilDate = "2099-12-31",
                     validUntilAtMs = 4_102_444_740_000L
                 )
             } else {
