@@ -5,6 +5,14 @@
     android:clipChildren="false"
     android:clipToPadding="false">
 
+    <FrameLayout
+        android:id="@+id/module_floating_review_card_surface"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="top|start"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+
     <LinearLayout
         android:id="@+id/module_floating_review_card_panel"
         android:layout_width="match_parent"
@@ -255,4 +263,5 @@
         android:layout_height="@dimen/module_floating_review_tail_height"
         android:layout_gravity="bottom|start"
         android:contentDescription="@null" />
+    </FrameLayout>
 </FrameLayout>

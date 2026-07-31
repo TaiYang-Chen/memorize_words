@@ -1,8 +1,5 @@
 package com.chen.memorizewords.feature.floatingreview.ui.floating
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.animation.ValueAnimator
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -23,30 +20,21 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
-import android.view.ViewGroup
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
-import android.widget.FrameLayout
 import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.ScrollView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.chen.memorizewords.core.sprite.FloatingPetRenderHost
 import com.chen.memorizewords.core.sprite.SpritePackId
 import com.chen.memorizewords.core.ui.ext.dpToPx
-import coil.load
 import com.chen.memorizewords.core.navigation.FloatingWordActions
 import com.chen.memorizewords.core.navigation.FloatingWordEntryExtras
 import com.chen.memorizewords.domain.account.model.membership.MembershipFeature
 import com.chen.memorizewords.domain.account.model.membership.MembershipFeatureAccess
 import com.chen.memorizewords.domain.account.usecase.membership.ResolveMembershipFeatureAccessUseCase
 import com.chen.memorizewords.domain.floating.model.FloatingDockState
-import com.chen.memorizewords.domain.floating.model.FloatingWordFieldConfig
-import com.chen.memorizewords.domain.floating.model.FloatingWordFieldType
 import com.chen.memorizewords.domain.floating.model.FloatingWordOrderType
 import com.chen.memorizewords.domain.floating.model.FloatingWordSettings
 import com.chen.memorizewords.domain.floating.model.FloatingWordSourceType
@@ -74,12 +62,10 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
 import kotlin.math.abs
 import kotlin.math.roundToInt
-import kotlin.coroutines.resume
 
 internal data class FloatingCardActionState(
     val refreshEnabled: Boolean,
@@ -347,20 +333,8 @@ class FloatingWordService : Service() {
 
         private const val CHANNEL_ID = "floating_word_review_channel"
         private const val NOTIFICATION_ID = 5321
-        private const val EMPTY_PLACEHOLDER = "-"
         private const val RUNTIME_HEALTH_CHECK_INTERVAL_MS = 60_000L
         private const val CARD_HEIGHT_TRANSITION_DURATION_MS = 240L
-    }
-
-    private sealed interface CardRenderState {
-        data class Status(val messageRes: Int) : CardRenderState
-
-        data class WordContent(
-            val word: Word,
-            val definitions: List<WordDefinitions>,
-            val examples: List<WordExample>,
-            val settings: FloatingWordSettings
-        ) : CardRenderState
     }
 
     @Inject
@@ -383,21 +357,19 @@ class FloatingWordService : Service() {
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val dockManager = FloatingDockManager()
-    private val speechLayoutEngine = FloatingSpeechLayoutEngine()
+    private val cardGeometryEngine = FloatingCardGeometryEngine()
     private lateinit var windowManager: WindowManager
+    private lateinit var cardRenderer: FloatingCardRenderer
 
     private var ballView: View? = null
     private var cardView: View? = null
     private var ballParams: WindowManager.LayoutParams? = null
     private var characterPackRevisionJob: Job? = null
-    private var cardParams: WindowManager.LayoutParams? = null
+    private var cardCoordinator: FloatingCardCoordinator? = null
     private var settingsJob: Job? = null
     private var runtimeHealthJob: Job? = null
     private var cardLoadJob: Job? = null
-    private var cardHeightAnimator: ValueAnimator? = null
-    private var cardMeasureView: View? = null
     private var renderedCardState: CardRenderState? = null
-    private var lockedCardPlacement: FloatingSpeechPlacement? = null
     private var cardLoadInProgress = false
     private var notificationUpdateJob: Job? = null
     private var notificationUpdateGeneration = 0L
@@ -440,6 +412,7 @@ class FloatingWordService : Service() {
     override fun onCreate() {
         super.onCreate()
         windowManager = getSystemService(WindowManager::class.java)
+        cardRenderer = FloatingCardRenderer(this)
         ensureChannel()
         settingsJob = serviceScope.launch {
             floatingWordController.observeSettings().collect { settings ->
@@ -606,10 +579,10 @@ class FloatingWordService : Service() {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        cancelCardHeightAnimation()
-        lockedCardPlacement = null
-        reconcileBallPosition(persistIfNeeded = true)
-        relayoutRenderedCard(animate = false)
+        cardCoordinator?.cancelForConfigurationChange()
+        cardRenderer.clearMeasurementView()
+        reconcileBallPosition(persistIfNeeded = true, updateCard = false)
+        relayoutRenderedCard(animate = false, reselectPlacement = true, remeasure = true)
     }
 
     override fun onDestroy() {
@@ -1068,7 +1041,7 @@ class FloatingWordService : Service() {
     private fun ensureViews(packId: SpritePackId) {
         if (
             ballView?.isAttachedToWindow == true &&
-            cardView?.isAttachedToWindow == true
+            cardCoordinator?.attached == true
         ) return
         if (ballView != null || cardView != null) removeViews()
 
@@ -1079,11 +1052,26 @@ class FloatingWordService : Service() {
         }
         val newBallParams = createBallLayoutParams()
         val newCardParams = createCardLayoutParams()
+        val newCardCoordinator = FloatingCardCoordinator(
+            root = newCardView,
+            windowPort = AndroidFloatingCardWindowPort(
+                windowManager = windowManager,
+                root = newCardView,
+                params = newCardParams
+            ),
+            geometryEngine = cardGeometryEngine,
+            durationMillis = CARD_HEIGHT_TRANSITION_DURATION_MS,
+            interpolator = AnimationUtils.loadInterpolator(
+                this,
+                android.R.interpolator.fast_out_slow_in
+            ),
+            scope = serviceScope
+        )
         var cardAttached = false
         var ballAttached = false
 
         try {
-            windowManager.addView(newCardView, newCardParams)
+            newCardCoordinator.attach()
             cardAttached = true
             windowManager.addView(newBallView, newBallParams)
             ballAttached = true
@@ -1091,7 +1079,7 @@ class FloatingWordService : Service() {
             ballView = newBallView
             cardView = newCardView
             ballParams = newBallParams
-            cardParams = newCardParams
+            cardCoordinator = newCardCoordinator
 
             val renderHost = newBallView as? FloatingPetRenderHost
                 ?: error("Floating ball layout must use FloatingPetRenderHost as its root")
@@ -1110,23 +1098,25 @@ class FloatingWordService : Service() {
             if (ballAttached || newBallView.isAttachedToWindow) {
                 removeWindowViewSafely(newBallView)
             }
-            if (cardAttached || newCardView.isAttachedToWindow) {
-                removeWindowViewSafely(newCardView)
+            if (cardAttached || newCardCoordinator.attached) {
+                newCardCoordinator.detach()
             }
             ballView = null
             cardView = null
             ballParams = null
-            cardParams = null
+            cardCoordinator = null
             lastMovementBounds = null
-            cardMeasureView = null
+            cardRenderer.clearMeasurementView()
             renderedCardState = null
-            lockedCardPlacement = null
             ballGestureDetector = null
             throw failure
         }
     }
 
-    private fun reconcileBallPosition(persistIfNeeded: Boolean) {
+    private fun reconcileBallPosition(
+        persistIfNeeded: Boolean,
+        updateCard: Boolean = true
+    ) {
         val params = ballParams ?: return
         val movementBounds = getMovementBounds(currentSettings)
         val position = resolveBallPositionForSettings(
@@ -1145,7 +1135,7 @@ class FloatingWordService : Service() {
         }
         updateLocalBallState(position, resolvedDockState)
         lastMovementBounds = movementBounds
-        if (isCardVisible()) {
+        if (updateCard && isCardVisible()) {
             updateFloatingSpeechLayout()
         }
         if (shouldPersist) {
@@ -1169,22 +1159,20 @@ class FloatingWordService : Service() {
         pendingNotificationContent = null
 
         val oldBallView = ballView
-        val oldCardView = cardView
+        val oldCardCoordinator = cardCoordinator
         ballView = null
         cardView = null
         ballParams = null
-        cardParams = null
+        cardCoordinator = null
         lastMovementBounds = null
-        cancelCardHeightAnimation()
-        cardMeasureView = null
+        cardRenderer.clearMeasurementView()
         renderedCardState = null
-        lockedCardPlacement = null
         ballGestureDetector = null
         isDragging = false
         lastBallTapEventTimeMillis = null
         runCatching { floatingPetController.detach() }
         oldBallView?.let(::removeWindowViewSafely)
-        oldCardView?.let(::removeWindowViewSafely)
+        oldCardCoordinator?.detach()
     }
 
     private fun removeWindowViewSafely(view: View) {
@@ -1274,7 +1262,6 @@ class FloatingWordService : Service() {
             gestureDetector?.onTouchEvent(event)
             when (event.actionMasked) {
                 MotionEvent.ACTION_DOWN -> {
-                    if (isCardVisible()) cancelCardHeightAnimation()
                     isDragging = false
                     touchDownX = event.rawX
                     touchDownY = event.rawY
@@ -1338,9 +1325,8 @@ class FloatingWordService : Service() {
             y = params.y
         )
         isDragging = false
-        lockedCardPlacement = null
-        applyBallPosition(result.position)
-        relayoutRenderedCard(animate = false)
+        applyBallPosition(result.position, updateCard = false)
+        relayoutRenderedCard(animate = true, reselectPlacement = true, remeasure = false)
         persistBallPosition(result.position, result.dockState)
         floatingPetController.playEvent(PetEvent.DRAG_ENDED)
     }
@@ -1365,12 +1351,15 @@ class FloatingWordService : Service() {
         floatingPetController.playEvent(PetEvent.PET_TAP)
     }
 
-    private fun applyBallPosition(position: FloatingBallPosition) {
+    private fun applyBallPosition(
+        position: FloatingBallPosition,
+        updateCard: Boolean = true
+    ) {
         val params = ballParams ?: return
         params.x = position.x
         params.y = position.y
         ballView?.let { windowManager.updateViewLayout(it, params) }
-        if (isCardVisible()) updateFloatingSpeechLayout()
+        if (updateCard && isCardVisible()) updateFloatingSpeechLayout()
     }
 
     private fun bindCardActions() {
@@ -1400,8 +1389,7 @@ class FloatingWordService : Service() {
         val wasRequestedVisible = cardRequestedVisible
         cardRequestedVisible = false
         cancelPendingCardLoad()
-        lockedCardPlacement = null
-        cardView?.visibility = View.GONE
+        cardCoordinator?.hide()
         if (wasVisible || wasRequestedVisible) floatingPetController.setCardVisible(false)
     }
 
@@ -1522,16 +1510,10 @@ class FloatingWordService : Service() {
     private fun showCard() {
         val wasVisible = isCardVisible()
         cardRequestedVisible = true
-        val card = cardView
-        if (!wasVisible) relayoutRenderedCard(animate = false)
-        card?.visibility = View.VISIBLE
-        if (!wasVisible) floatingPetController.setCardVisible(true)
-        card?.post {
-            if (cardRequestedVisible && cardView === card) {
-                reconcileBallPosition(persistIfNeeded = false)
-                relayoutRenderedCard(animate = false)
-            }
+        if (!wasVisible) {
+            cardCoordinator?.show(currentCardGeometryInput())
         }
+        if (!wasVisible) floatingPetController.setCardVisible(true)
         if (hasCurrentWordForCurrentSequence() && cardPresentationRefreshPending) {
             refreshCurrentCardPresentation()
         }
@@ -1567,7 +1549,6 @@ class FloatingWordService : Service() {
         cardRequestGeneration++
         cardLoadJob?.cancel()
         cardLoadJob = null
-        cancelCardHeightAnimation()
         setCardLoadInProgress(false)
     }
 
@@ -1652,7 +1633,9 @@ class FloatingWordService : Service() {
         val cardVisible = isCardVisible()
         if (cardVisible) {
             if (change.cardOpacityChanged) applyCardOpacity()
-            if (change.cardGapChanged) relayoutRenderedCard(animate = true)
+            if (change.cardGapChanged) {
+                updateFloatingSpeechLayout(recomputeHeightLimit = true)
+            }
         }
         when (
             resolveFloatingCardSettingsAction(
@@ -1693,23 +1676,30 @@ class FloatingWordService : Service() {
 
     private suspend fun commitCardState(state: CardRenderState, animate: Boolean) {
         val width = resolveCurrentCardWidth()
-        val naturalHeight = measureCardState(state, width)
-        applyCardStateToVisibleView(state)
+        val naturalHeight = cardRenderer.measure(state, width)
         renderedCardState = state
-        transitionCardToNaturalHeight(naturalHeight, animate)
+        cardCoordinator?.commitContent(
+            input = currentCardGeometryInput(naturalHeight, width),
+            animate = animate
+        ) {
+            applyCardStateToVisibleView(state)
+        }
     }
 
     private fun commitCardStateImmediately(state: CardRenderState) {
         val width = resolveCurrentCardWidth()
-        val naturalHeight = measureCardState(state, width)
-        applyCardStateToVisibleView(state)
+        val naturalHeight = cardRenderer.measure(state, width)
         renderedCardState = state
-        applyNaturalCardHeightImmediately(naturalHeight)
+        cardCoordinator?.commitContentImmediately(
+            input = currentCardGeometryInput(naturalHeight, width)
+        ) {
+            applyCardStateToVisibleView(state)
+        }
     }
 
     private fun applyCardStateToVisibleView(state: CardRenderState) {
         val target = cardView ?: return
-        val hasWordContent = renderCardStateInto(target, state, loadImages = true)
+        val hasWordContent = cardRenderer.render(target, state, loadImages = true)
         currentDefinitions = when {
             state is CardRenderState.WordContent && hasWordContent -> state.definitions
             else -> emptyList()
@@ -1718,268 +1708,7 @@ class FloatingWordService : Service() {
             cardPresentationRefreshPending = false
             if (hasWordContent) refreshFavoriteState(state.word)
         }
-        target.findViewById<ScrollView>(R.id.module_floating_review_content_scroll)
-            ?.scrollTo(0, 0)
         setCardLoadInProgress(cardLoadInProgress)
-    }
-
-    private fun renderCardStateInto(
-        target: View,
-        state: CardRenderState,
-        loadImages: Boolean
-    ): Boolean {
-        return when (state) {
-            is CardRenderState.Status -> {
-                renderStatusCardInto(target, state.messageRes)
-                false
-            }
-
-            is CardRenderState.WordContent -> renderCardInto(
-                target = target,
-                word = state.word,
-                definitions = state.definitions,
-                examples = state.examples,
-                settings = state.settings,
-                loadImages = loadImages
-            )
-        }
-    }
-
-    private fun renderStatusCardInto(target: View, messageRes: Int) {
-        target.findViewById<TextView>(R.id.module_floating_review_tv_word)?.apply {
-            text = getString(messageRes)
-            visibility = View.VISIBLE
-        }
-        target.findViewById<View>(R.id.module_floating_review_phonetic_row)?.visibility = View.GONE
-        target.findViewById<View>(R.id.module_floating_review_phonetic_divider)?.visibility = View.GONE
-        val container = target.findViewById<LinearLayout>(
-            R.id.module_floating_review_floating_fields_container
-        ) ?: return
-        container.removeAllViews()
-        applyCardActionState(resolveCardActionState(hasWord = false), target)
-    }
-
-    private fun renderCardInto(
-        target: View,
-        word: Word,
-        definitions: List<WordDefinitions>,
-        examples: List<WordExample>,
-        settings: FloatingWordSettings,
-        loadImages: Boolean
-    ): Boolean {
-        val container = target.findViewById<LinearLayout>(
-            R.id.module_floating_review_floating_fields_container
-        ) ?: return false
-        container.removeAllViews()
-        val configs = settings.fieldConfigs.filter { it.enabled }
-        if (configs.isEmpty()) {
-            renderStatusCardInto(target, R.string.module_floating_review_empty)
-            return false
-        }
-        val enabledTypes = configs.map { it.type }.toSet()
-        renderHeader(target, word, enabledTypes)
-        renderPhonetics(target, word, enabledTypes)
-        renderDefinitions(container, definitions, enabledTypes, configs)
-        renderExtraFields(container, word, definitions, examples, configs, loadImages)
-        applyCardActionState(resolveCardActionState(hasWord = true), target)
-        return true
-    }
-
-    private fun applyCardActionState(state: FloatingCardActionState, target: View? = cardView) {
-        target?.findViewById<View>(R.id.module_floating_review_btn_favorite)?.apply {
-            isEnabled = state.favoriteEnabled
-            alpha = if (state.favoriteEnabled) 1f else 0.38f
-        }
-        target?.findViewById<View>(R.id.module_floating_review_btn_refresh)?.apply {
-            isEnabled = state.refreshEnabled
-            alpha = if (state.refreshEnabled) 1f else 0.38f
-        }
-        target?.findViewById<View>(R.id.module_floating_review_btn_copy)?.apply {
-            isEnabled = state.copyEnabled
-            alpha = if (state.copyEnabled) 1f else 0.38f
-        }
-    }
-
-    private fun renderHeader(target: View, word: Word, enabledTypes: Set<FloatingWordFieldType>) {
-        target.findViewById<TextView>(R.id.module_floating_review_tv_word)?.apply {
-            text = word.word
-            visibility = if (FloatingWordFieldType.WORD in enabledTypes) View.VISIBLE else View.GONE
-        }
-    }
-
-    private fun renderPhonetics(target: View, word: Word, enabledTypes: Set<FloatingWordFieldType>) {
-        val row = target.findViewById<View>(R.id.module_floating_review_phonetic_row) ?: return
-        val divider = target.findViewById<View>(R.id.module_floating_review_phonetic_divider)
-        val uk = word.phoneticUK?.takeIf { it.isNotBlank() }
-        val us = word.phoneticUS?.takeIf { it.isNotBlank() }
-        val showRow = FloatingWordFieldType.PHONETIC in enabledTypes && (uk != null || us != null)
-        row.visibility = if (showRow) View.VISIBLE else View.GONE
-        divider?.visibility = if (showRow) View.VISIBLE else View.GONE
-        if (!showRow) return
-
-        bindPhoneticGroup(
-            target = target,
-            groupId = R.id.module_floating_review_phonetic_uk_group,
-            textId = R.id.module_floating_review_tv_phonetic_uk,
-            value = uk
-        )
-        bindPhoneticGroup(
-            target = target,
-            groupId = R.id.module_floating_review_phonetic_us_group,
-            textId = R.id.module_floating_review_tv_phonetic_us,
-            value = us
-        )
-    }
-
-    private fun bindPhoneticGroup(target: View, groupId: Int, textId: Int, value: String?) {
-        val group = target.findViewById<View>(groupId) ?: return
-        group.visibility = if (value == null) View.GONE else View.VISIBLE
-        target.findViewById<TextView>(textId)?.text = value.orEmpty()
-    }
-
-    private fun renderDefinitions(
-        container: LinearLayout,
-        definitions: List<WordDefinitions>,
-        enabledTypes: Set<FloatingWordFieldType>,
-        configs: List<FloatingWordFieldConfig>
-    ) {
-        val showMeaning = FloatingWordFieldType.MEANING in enabledTypes
-        val showPartOfSpeech = FloatingWordFieldType.PART_OF_SPEECH in enabledTypes
-        if (!showMeaning && !showPartOfSpeech) return
-
-        val text = buildDefinitionLines(
-            definitions = definitions,
-            showPartOfSpeech = showPartOfSpeech || showMeaning,
-            showMeaning = showMeaning
-        )
-        if (text.isBlank()) return
-        val definitionTextSize = resolveFontSize(configs, FloatingWordFieldType.MEANING, 16)
-            .coerceAtLeast(16)
-        container.addView(
-            buildTextView(
-                text = text,
-                textSizeSp = definitionTextSize.toFloat(),
-                color = 0xFF111827.toInt(),
-                bold = false
-            ).apply {
-                includeFontPadding = false
-                setLineSpacing(10.dpToPx(this@FloatingWordService).toFloat(), 1f)
-            }
-        )
-    }
-
-    private fun renderExtraFields(
-        container: LinearLayout,
-        word: Word,
-        definitions: List<WordDefinitions>,
-        examples: List<WordExample>,
-        configs: List<FloatingWordFieldConfig>,
-        loadImages: Boolean
-    ) {
-        configs
-            .filter { it.type in setOf(FloatingWordFieldType.EXAMPLE, FloatingWordFieldType.NOTE, FloatingWordFieldType.IMAGE) }
-            .forEach { config ->
-                val view = when (config.type) {
-                    FloatingWordFieldType.EXAMPLE -> buildTextView(
-                        buildExampleText(examples),
-                        config.fontSizeSp.toFloat(),
-                        0xFF334155.toInt(),
-                        false
-                    )
-
-                    FloatingWordFieldType.NOTE -> buildTextView(
-                        word.notes.orEmpty(),
-                        config.fontSizeSp.toFloat(),
-                        0xFF334155.toInt(),
-                        false
-                    )
-
-                    FloatingWordFieldType.IMAGE -> buildImageView(
-                        url = word.mnemonicImageUrl,
-                        sizeDp = config.fontSizeSp,
-                        loadImage = loadImages
-                    )
-                    else -> null
-                }
-
-                view?.takeIf { hasRenderableContent(it) }?.let {
-                    val layoutParams = (it.layoutParams as? LinearLayout.LayoutParams)
-                        ?: LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT
-                        )
-                    layoutParams.topMargin = if (container.childCount > 0) 8.dpToPx(this) else 0
-                    it.layoutParams = layoutParams
-                    container.addView(it)
-                }
-            }
-    }
-
-    private fun buildTextView(
-        text: String,
-        textSizeSp: Float,
-        color: Int,
-        bold: Boolean
-    ): TextView {
-        val content = text.ifBlank { EMPTY_PLACEHOLDER }
-        val isPlaceholder = content == EMPTY_PLACEHOLDER
-        return TextView(this).apply {
-            this.text = content
-            setTextColor(if (isPlaceholder) 0xFF94A3B8.toInt() else color)
-            this.textSize = textSizeSp
-            includeFontPadding = false
-            if (bold) setTypeface(typeface, android.graphics.Typeface.BOLD)
-        }
-    }
-
-    private fun buildImageView(url: String?, sizeDp: Int, loadImage: Boolean): View {
-        if (url.isNullOrBlank()) {
-            return buildTextView(EMPTY_PLACEHOLDER, 12f, 0xFF64748B.toInt(), false)
-        }
-        val height = (sizeDp.coerceAtLeast(80)).dpToPx(this)
-        return ImageView(this).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                height
-            )
-            scaleType = ImageView.ScaleType.CENTER_CROP
-            if (loadImage) load(url)
-        }
-    }
-
-    private fun hasRenderableContent(view: View): Boolean {
-        return (view as? TextView)?.text?.toString() != EMPTY_PLACEHOLDER
-    }
-
-    private fun resolveFontSize(
-        configs: List<FloatingWordFieldConfig>,
-        type: FloatingWordFieldType,
-        fallback: Int
-    ): Int {
-        return configs.firstOrNull { it.type == type }?.fontSizeSp ?: fallback
-    }
-
-    private fun buildDefinitionLines(
-        definitions: List<WordDefinitions>,
-        showPartOfSpeech: Boolean,
-        showMeaning: Boolean
-    ): String {
-        if (definitions.isEmpty()) return ""
-        return definitions.take(2).joinToString("\n") { definition ->
-            when {
-                showPartOfSpeech && showMeaning ->
-                    "${formatPartOfSpeech(definition.partOfSpeech.abbr)} ${definition.meaningChinese}"
-                showPartOfSpeech -> formatPartOfSpeech(definition.partOfSpeech.abbr)
-                showMeaning -> definition.meaningChinese
-                else -> ""
-            }
-        }
-    }
-
-    private fun formatPartOfSpeech(value: String): String {
-        val trimmed = value.trim()
-        if (trimmed.isBlank()) return trimmed
-        return if (trimmed.endsWith(".")) trimmed else "$trimmed."
     }
 
     private fun refreshFavoriteState(word: Word) {
@@ -2043,7 +1772,7 @@ class FloatingWordService : Service() {
 
     private fun copyCurrentWord() {
         val word = currentWord ?: return
-        val text = buildCopyText(word, currentDefinitions)
+        val text = cardRenderer.buildCopyText(word, currentDefinitions)
         val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
         clipboardManager?.setPrimaryClip(
             ClipData.newPlainText(word.word, text)
@@ -2053,81 +1782,6 @@ class FloatingWordService : Service() {
             getString(R.string.module_floating_review_copied),
             Toast.LENGTH_SHORT
         ).show()
-    }
-
-    private fun buildCopyText(
-        word: Word,
-        definitions: List<WordDefinitions>
-    ): String {
-        return buildList {
-            add(word.word)
-            buildPhoneticText(word).takeIf { it.isNotBlank() }?.let(::add)
-            buildDefinitionLines(
-                definitions = definitions,
-                showPartOfSpeech = true,
-                showMeaning = true
-            ).takeIf { it.isNotBlank() }?.let(::add)
-        }.joinToString("\n")
-    }
-
-    private fun buildPhoneticText(word: Word): String {
-        val us = word.phoneticUS?.takeIf { it.isNotBlank() }
-        val uk = word.phoneticUK?.takeIf { it.isNotBlank() }
-        return when {
-            us != null && uk != null -> getString(
-                R.string.module_floating_review_phonetic_both,
-                us,
-                uk
-            )
-            us != null -> getString(R.string.module_floating_review_phonetic_us_only, us)
-            uk != null -> getString(R.string.module_floating_review_phonetic_uk_only, uk)
-            else -> ""
-        }
-    }
-
-    private fun buildMeaningText(definitions: List<WordDefinitions>): String {
-        if (definitions.isEmpty()) return ""
-        return definitions.take(2).joinToString("\n") { definition ->
-            "${definition.partOfSpeech.abbr} ${definition.meaningChinese}"
-        }
-    }
-
-    private fun buildPartOfSpeechText(definitions: List<WordDefinitions>): String {
-        if (definitions.isEmpty()) return ""
-        return definitions.map { it.partOfSpeech.abbr }.distinct().joinToString(" ")
-    }
-
-    private fun buildExampleText(examples: List<WordExample>): String {
-        val example = examples.firstOrNull() ?: return ""
-        val zh = example.chineseTranslation?.takeIf { it.isNotBlank() }
-        return if (zh != null) "${example.englishSentence}\n$zh" else example.englishSentence
-    }
-
-    private fun measureCardState(state: CardRenderState, cardWidth: Int): Int {
-        val measurementView = cardMeasureView ?: LayoutInflater.from(this)
-            .inflate(R.layout.module_floating_review_view_floating_card, null)
-            .also { view ->
-                val panel = view.findViewById<View>(R.id.module_floating_review_card_panel)
-                (panel.layoutParams as? FrameLayout.LayoutParams)?.let { params ->
-                    params.height = ViewGroup.LayoutParams.WRAP_CONTENT
-                    panel.layoutParams = params
-                }
-                val scroll = view.findViewById<ScrollView>(
-                    R.id.module_floating_review_content_scroll
-                )
-                (scroll.layoutParams as? LinearLayout.LayoutParams)?.let { params ->
-                    params.height = ViewGroup.LayoutParams.WRAP_CONTENT
-                    params.weight = 0f
-                    scroll.layoutParams = params
-                }
-                cardMeasureView = view
-            }
-        renderCardStateInto(measurementView, state, loadImages = false)
-        measurementView.measure(
-            View.MeasureSpec.makeMeasureSpec(cardWidth, View.MeasureSpec.EXACTLY),
-            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-        )
-        return measurementView.measuredHeight.coerceAtLeast(1)
     }
 
     private fun resolveCurrentCardWidth(): Int {
@@ -2144,175 +1798,51 @@ class FloatingWordService : Service() {
         )
     }
 
-    private fun relayoutRenderedCard(animate: Boolean) {
-        val state = renderedCardState ?: return
+    private fun relayoutRenderedCard(
+        animate: Boolean,
+        reselectPlacement: Boolean = false,
+        remeasure: Boolean = true
+    ) {
+        val coordinator = cardCoordinator ?: return
         val width = resolveCurrentCardWidth()
-        val naturalHeight = measureCardState(state, width)
-        if (animate) {
-            serviceScope.launch {
-                transitionCardToNaturalHeight(naturalHeight, animate = true)
-            }
+        val naturalHeight = if (remeasure) {
+            renderedCardState?.let { cardRenderer.measure(it, width) }
+                ?: coordinator.currentNaturalHeight
         } else {
-            applyNaturalCardHeightImmediately(naturalHeight)
+            coordinator.currentNaturalHeight
+        }
+        serviceScope.launch {
+            coordinator.relayout(
+                input = currentCardGeometryInput(naturalHeight, width),
+                animate = animate,
+                reselectPlacement = reselectPlacement
+            )
         }
     }
 
-    private fun updateFloatingSpeechLayout() {
-        val params = cardParams ?: return
-        val width = resolveCurrentCardWidth()
-        if (params.width != width) lockedCardPlacement = null
-        val placement = resolveOrLockCardPlacement()
-        applyCardWindowGeometry(
-            cardWidth = width,
-            cardHeight = params.height.coerceAtLeast(1),
-            placement = placement
+    private fun updateFloatingSpeechLayout(recomputeHeightLimit: Boolean = false) {
+        val coordinator = cardCoordinator ?: return
+        coordinator.moveAnchor(
+            input = currentCardGeometryInput(coordinator.currentNaturalHeight),
+            recomputeHeightLimit = recomputeHeightLimit
         )
     }
 
-    private fun applyNaturalCardHeightImmediately(naturalHeight: Int) {
-        cancelCardHeightAnimation()
-        val width = resolveCurrentCardWidth()
-        if (cardParams?.width != width) lockedCardPlacement = null
-        val placement = resolveOrLockCardPlacement()
-        val targetHeight = resolveTargetCardHeight(naturalHeight, width, placement)
-        applyCardWindowGeometry(width, targetHeight, placement)
-    }
-
-    private suspend fun transitionCardToNaturalHeight(
-        naturalHeight: Int,
-        animate: Boolean
-    ) {
-        val params = cardParams ?: return
-        val width = resolveCurrentCardWidth()
-        if (params.width != width) lockedCardPlacement = null
-        val placement = resolveOrLockCardPlacement()
-        val targetHeight = resolveTargetCardHeight(naturalHeight, width, placement)
-        val startHeight = params.height.coerceAtLeast(1)
-        val animationsEnabled = Build.VERSION.SDK_INT < Build.VERSION_CODES.O ||
-            ValueAnimator.areAnimatorsEnabled()
-        if (
-            !animate ||
-            !animationsEnabled ||
-            !isCardVisible() ||
-            startHeight == targetHeight
-        ) {
-            cancelCardHeightAnimation()
-            applyCardWindowGeometry(width, targetHeight, placement)
-            return
-        }
-
-        cancelCardHeightAnimation()
-        suspendCancellableCoroutine { continuation ->
-            var cancelled = false
-            val animator = ValueAnimator.ofInt(startHeight, targetHeight).apply {
-                duration = CARD_HEIGHT_TRANSITION_DURATION_MS
-                interpolator = AnimationUtils.loadInterpolator(
-                    this@FloatingWordService,
-                    android.R.interpolator.fast_out_slow_in
-                )
-                addUpdateListener { valueAnimator ->
-                    if (
-                        !cardRequestedVisible ||
-                        cardView?.isAttachedToWindow != true
-                    ) {
-                        cancel()
-                        return@addUpdateListener
-                    }
-                    applyCardWindowGeometry(
-                        cardWidth = width,
-                        cardHeight = valueAnimator.animatedValue as Int,
-                        placement = placement
-                    )
-                }
-                addListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationCancel(animation: Animator) {
-                        cancelled = true
-                    }
-
-                    override fun onAnimationEnd(animation: Animator) {
-                        if (cardHeightAnimator === animation) cardHeightAnimator = null
-                        if (!cancelled && cardRequestedVisible) {
-                            applyCardWindowGeometry(width, targetHeight, placement)
-                        }
-                        if (continuation.isActive) continuation.resume(Unit)
-                    }
-                })
-            }
-            cardHeightAnimator = animator
-            continuation.invokeOnCancellation {
-                if (animator.isStarted) animator.cancel()
-            }
-            animator.start()
-        }
-    }
-
-    private fun cancelCardHeightAnimation() {
-        val animator = cardHeightAnimator ?: return
-        cardHeightAnimator = null
-        animator.cancel()
-    }
-
-    private fun resolveOrLockCardPlacement(): FloatingSpeechPlacement {
-        lockedCardPlacement?.let { return it }
-        val placement = speechLayoutEngine.resolvePlacementForMinimumHeight(
+    private fun currentCardGeometryInput(
+        naturalHeight: Int = cardCoordinator?.currentNaturalHeight
+            ?: resources.getDimensionPixelSize(R.dimen.module_floating_review_card_min_height),
+        cardWidth: Int = resolveCurrentCardWidth()
+    ): FloatingCardGeometryInput {
+        return FloatingCardGeometryInput(
             safeArea = getSafeDisplayRect().toFloatingSpeechSafeArea(),
             petBounds = currentPetBounds(),
-            minimumCardHeightPx = resources.getDimensionPixelSize(
+            cardWidth = cardWidth,
+            naturalHeight = naturalHeight,
+            minimumHeight = resources.getDimensionPixelSize(
                 R.dimen.module_floating_review_card_min_height
             ),
             config = currentSpeechLayoutConfig()
         )
-        lockedCardPlacement = placement
-        return placement
-    }
-
-    private fun resolveTargetCardHeight(
-        naturalHeight: Int,
-        cardWidth: Int,
-        placement: FloatingSpeechPlacement
-    ): Int {
-        val availableHeight = speechLayoutEngine.availableHeight(
-            safeArea = getSafeDisplayRect().toFloatingSpeechSafeArea(),
-            petBounds = currentPetBounds(),
-            config = currentSpeechLayoutConfig(),
-            placement = placement
-        )
-        return resolveFloatingCardTargetHeight(
-            naturalHeightPx = naturalHeight,
-            minimumHeightPx = resources.getDimensionPixelSize(
-                R.dimen.module_floating_review_card_min_height
-            ),
-            cardWidthPx = cardWidth,
-            placementAvailableHeightPx = availableHeight
-        )
-    }
-
-    private fun applyCardWindowGeometry(
-        cardWidth: Int,
-        cardHeight: Int,
-        placement: FloatingSpeechPlacement
-    ) {
-        val params = cardParams ?: return
-        val card = cardView ?: return
-        val layout = speechLayoutEngine.resolveAnchored(
-            safeArea = getSafeDisplayRect().toFloatingSpeechSafeArea(),
-            petBounds = currentPetBounds(),
-            cardSize = FloatingSpeechCardSize(cardWidth, cardHeight),
-            config = currentSpeechLayoutConfig(),
-            placement = placement
-        )
-        applyFloatingSpeechTailLayout(layout)
-        val changed = params.width != cardWidth ||
-            params.height != cardHeight ||
-            params.x != layout.cardX ||
-            params.y != layout.cardY
-        params.width = cardWidth
-        params.height = cardHeight
-        params.x = layout.cardX
-        params.y = layout.cardY
-        if (changed && card.isAttachedToWindow) {
-            runCatching { windowManager.updateViewLayout(card, params) }
-        }
     }
 
     private fun currentPetBounds(): FloatingSpeechPetBounds {
@@ -2348,52 +1878,10 @@ class FloatingWordService : Service() {
         return FloatingSpeechSafeArea(left, top, right, bottom)
     }
 
-    private fun applyFloatingSpeechTailLayout(layout: FloatingSpeechLayout) {
-        val card = cardView ?: return
-        val panel = card.findViewById<View>(R.id.module_floating_review_card_panel) ?: return
-        val tail = card.findViewById<FloatingSpeechTailView>(
-            R.id.module_floating_review_card_tail
-        ) ?: return
-        val tailWidth = resources.getDimensionPixelSize(R.dimen.module_floating_review_tail_width)
-        val tailHeight = resources.getDimensionPixelSize(R.dimen.module_floating_review_tail_height)
-        val panelOffset = resources.getDimensionPixelSize(
-            R.dimen.module_floating_review_tail_panel_offset
-        )
-        (panel.layoutParams as? FrameLayout.LayoutParams)?.let { panelParams ->
-            val targetTop = if (layout.placement == FloatingSpeechPlacement.BELOW_PET) panelOffset else 0
-            val targetBottom = if (layout.placement == FloatingSpeechPlacement.ABOVE_PET) panelOffset else 0
-            if (panelParams.topMargin != targetTop || panelParams.bottomMargin != targetBottom) {
-                panelParams.topMargin = targetTop
-                panelParams.bottomMargin = targetBottom
-                panel.layoutParams = panelParams
-            }
-        }
-
-        (tail.layoutParams as? FrameLayout.LayoutParams)?.let { tailParams ->
-            val targetLeftMargin = layout.tailCenterX - (tailWidth * 0.82f).roundToInt()
-            val targetGravity = Gravity.START or when (layout.placement) {
-                FloatingSpeechPlacement.ABOVE_PET -> Gravity.BOTTOM
-                FloatingSpeechPlacement.BELOW_PET -> Gravity.TOP
-            }
-            if (tailParams.width != tailWidth ||
-                tailParams.height != tailHeight ||
-                tailParams.leftMargin != targetLeftMargin ||
-                tailParams.gravity != targetGravity
-            ) {
-                tailParams.width = tailWidth
-                tailParams.height = tailHeight
-                tailParams.leftMargin = targetLeftMargin
-                tailParams.gravity = targetGravity
-                tail.layoutParams = tailParams
-            }
-        }
-        tail.placement = layout.placement
-    }
-
-    private fun isCardVisible(): Boolean = cardView?.visibility == View.VISIBLE
+    private fun isCardVisible(): Boolean = cardCoordinator?.visible == true
 
     private fun applyCardOpacity() {
-        cardView?.alpha = resolveCardAlpha(currentSettings.cardOpacityPercent)
+        cardCoordinator?.setAlpha(resolveCardAlpha(currentSettings.cardOpacityPercent))
     }
 
     private fun applyBallOpacity() {
