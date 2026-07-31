@@ -3,7 +3,7 @@ package com.chen.memorizewords.navigation
 import com.chen.memorizewords.domain.account.orchestrator.startup.StartupFloatingAutoStartReader
 import com.chen.memorizewords.domain.account.orchestrator.startup.StartupOnboardingStateReader
 import com.chen.memorizewords.domain.account.repository.LocalAccountRepository
-import com.chen.memorizewords.domain.floating.repository.FloatingWordSettingsRepository
+import com.chen.memorizewords.domain.floating.repository.FloatingDevicePreferencesRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -38,10 +38,9 @@ class WordBookStartupOnboardingStateReader @Inject constructor(
 
 @Singleton
 class FloatingStartupAutoStartReader @Inject constructor(
-    private val floatingWordSettingsRepository: FloatingWordSettingsRepository
+    private val devicePreferencesRepository: FloatingDevicePreferencesRepository
 ) : StartupFloatingAutoStartReader {
     override suspend fun isAutoStartEnabled(): Boolean {
-        val settings = floatingWordSettingsRepository.getSettings()
-        return settings.enabled && settings.autoStartOnAppLaunch
+        return devicePreferencesRepository.get().autoStartOnAppLaunch
     }
 }

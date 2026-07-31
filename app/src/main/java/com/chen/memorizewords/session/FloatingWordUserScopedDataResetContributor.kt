@@ -1,13 +1,10 @@
 package com.chen.memorizewords.session
 
-import android.content.Context
-import com.chen.memorizewords.core.navigation.FloatingWordActions
-import com.chen.memorizewords.core.navigation.FloatingWordEntry
 import com.chen.memorizewords.domain.account.UserScopedDataResetContributor
+import com.chen.memorizewords.domain.floating.service.FloatingRuntimeController
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoSet
 import javax.inject.Inject
@@ -15,17 +12,13 @@ import javax.inject.Singleton
 
 @Singleton
 class FloatingWordUserScopedDataResetContributor @Inject constructor(
-    @ApplicationContext private val context: Context,
-    private val floatingWordEntry: FloatingWordEntry
+    private val floatingRuntimeController: FloatingRuntimeController
 ) : UserScopedDataResetContributor {
 
     override val resetPriority: Int = PRIORITY_STOP_BEFORE_DATA_CLEAR
 
     override suspend fun clearUserScopedData() {
-        floatingWordEntry.dispatchServiceAction(
-            context = context,
-            action = FloatingWordActions.ACTION_STOP
-        )
+        floatingRuntimeController.requestStop()
     }
 
     private companion object {

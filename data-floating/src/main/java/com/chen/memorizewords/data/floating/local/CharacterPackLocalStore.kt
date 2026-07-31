@@ -392,7 +392,8 @@ class CharacterPackLocalStore internal constructor(
             errorMessage = "Character runtime validation failed; restored last-known-good version",
             errorCode = CharacterPackDownloadError.INSTALLATION,
             selectAfterInstall = false,
-            activationRequestId = null
+            runtimeSessionId = null,
+            runtimeRevision = null
         )
         val downloads = if (failedDownload == null) {
             persistedState.downloads
@@ -422,7 +423,8 @@ class CharacterPackLocalStore internal constructor(
             current?.downloadRequestId != downloadRequestId ||
             current.status != CharacterPackDownloadStatus.COMPLETED ||
             current.selectAfterInstall ||
-            current.activationRequestId != null ||
+            current.runtimeSessionId != null ||
+            current.runtimeRevision != null ||
             installed == null ||
             installed.pendingRuntimeValidation ||
             !isInstalledDirectoryForRequest(
@@ -454,7 +456,8 @@ class CharacterPackLocalStore internal constructor(
             errorMessage = null,
             errorCode = null,
             selectAfterInstall = false,
-            activationRequestId = null
+            runtimeSessionId = null,
+            runtimeRevision = null
         )
         val downloads = persistedState.downloads.toMutableMap().apply {
             put(packId, cancelled)
@@ -630,7 +633,8 @@ class CharacterPackLocalStore internal constructor(
 
     private fun normalizeDownload(download: CharacterPackDownloadState): CharacterPackDownloadState {
         val requestId = download.downloadRequestId?.takeIf(::isValidRequestId)
-        val activationRequestId = download.activationRequestId?.takeIf(::isValidRequestId)
+        val runtimeSessionId = download.runtimeSessionId?.takeIf(::isValidRequestId)
+        val runtimeRevision = download.runtimeRevision?.takeIf { it >= 0L }
         val totalBytes = download.totalBytes.coerceIn(0L, MAX_PACKAGE_BYTES)
         val active = download.status == CharacterPackDownloadStatus.QUEUED ||
             download.status == CharacterPackDownloadStatus.DOWNLOADING ||
@@ -640,7 +644,9 @@ class CharacterPackLocalStore internal constructor(
                 requestId == null ||
                     download.packVersion <= 0 ||
                     totalBytes <= 0L ||
-                    (download.activationRequestId != null && activationRequestId == null)
+                    (download.runtimeSessionId != null &&
+                        (runtimeSessionId == null || runtimeRevision == null)) ||
+                    (download.runtimeRevision != null && runtimeSessionId == null)
                 )
         ) {
             return download.copy(
@@ -652,13 +658,15 @@ class CharacterPackLocalStore internal constructor(
                 errorMessage = "下载任务已失效，请重新下载",
                 errorCode = CharacterPackDownloadError.UNKNOWN,
                 selectAfterInstall = false,
-                activationRequestId = null
+                runtimeSessionId = null,
+                runtimeRevision = null
             )
         }
         val downloadedBytes = download.downloadedBytes.coerceIn(0L, totalBytes)
         return download.copy(
             downloadRequestId = requestId,
-            activationRequestId = activationRequestId,
+            runtimeSessionId = runtimeSessionId,
+            runtimeRevision = runtimeRevision,
             packVersion = download.packVersion.coerceAtLeast(0),
             downloadedBytes = downloadedBytes,
             totalBytes = totalBytes,

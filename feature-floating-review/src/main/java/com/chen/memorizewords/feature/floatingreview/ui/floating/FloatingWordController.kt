@@ -4,6 +4,7 @@ import com.chen.memorizewords.domain.floating.model.FloatingDockState
 import com.chen.memorizewords.domain.floating.service.FloatingReviewFacade
 import com.chen.memorizewords.domain.floating.service.FloatingWordCardContent
 import com.chen.memorizewords.domain.floating.model.FloatingWordSettings
+import com.chen.memorizewords.domain.floating.model.FloatingWordSourceSnapshot
 import com.chen.memorizewords.domain.study.usecase.word.study.IsFavoriteUseCase
 import com.chen.memorizewords.domain.study.usecase.word.study.ToggleFavoriteUseCase
 import com.chen.memorizewords.domain.word.model.word.Word
@@ -28,8 +29,10 @@ class FloatingWordController @Inject constructor(
         floatingReviewFacade.recordDisplay(wordId)
     }
 
-    suspend fun loadWords(settings: FloatingWordSettings): List<Word> =
-        floatingReviewFacade.loadWords(settings)
+    suspend fun loadWordSource(settings: FloatingWordSettings): FloatingWordSourceSnapshot =
+        floatingReviewFacade.loadWordSource(settings)
+
+    suspend fun loadWord(wordId: Long): Word? = floatingReviewFacade.loadWord(wordId)
 
     suspend fun loadCardContent(
         word: Word,

@@ -4,25 +4,25 @@ import com.chen.memorizewords.domain.account.auth.AuthStateProvider
 import com.chen.memorizewords.domain.account.model.membership.MembershipFeature
 import com.chen.memorizewords.domain.account.model.membership.MembershipFeatureAccess
 import com.chen.memorizewords.domain.account.usecase.membership.ResolveMembershipFeatureAccessUseCase
-import com.chen.memorizewords.domain.floating.model.FloatingActivationEligibility
-import com.chen.memorizewords.domain.floating.service.FloatingActivationEligibilityChecker
+import com.chen.memorizewords.domain.floating.model.FloatingRuntimeEligibility
+import com.chen.memorizewords.domain.floating.service.FloatingRuntimeEligibilityChecker
 import javax.inject.Inject
 
-class AccountFloatingActivationEligibilityChecker @Inject constructor(
+class AccountFloatingRuntimeEligibilityChecker @Inject constructor(
     private val authStateProvider: AuthStateProvider,
     private val resolveMembershipFeatureAccess: ResolveMembershipFeatureAccessUseCase
-) : FloatingActivationEligibilityChecker {
-    override suspend fun checkEligibility(): FloatingActivationEligibility {
+) : FloatingRuntimeEligibilityChecker {
+    override suspend fun checkEligibility(): FloatingRuntimeEligibility {
         if (!authStateProvider.isAuthenticated()) {
-            return FloatingActivationEligibility.AUTHENTICATION_REQUIRED
+            return FloatingRuntimeEligibility.AUTHENTICATION_REQUIRED
         }
         return if (
             resolveMembershipFeatureAccess(MembershipFeature.FLOATING_REVIEW) ==
             MembershipFeatureAccess.ALLOWED
         ) {
-            FloatingActivationEligibility.ELIGIBLE
+            FloatingRuntimeEligibility.ELIGIBLE
         } else {
-            FloatingActivationEligibility.MEMBERSHIP_REQUIRED
+            FloatingRuntimeEligibility.MEMBERSHIP_REQUIRED
         }
     }
 }

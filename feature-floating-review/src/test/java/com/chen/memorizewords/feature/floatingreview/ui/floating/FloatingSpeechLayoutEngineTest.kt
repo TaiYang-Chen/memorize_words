@@ -275,7 +275,7 @@ class FloatingSpeechLayoutEngineTest {
             hiddenWidth = 116
         )
         val position = resolveBallPositionForSettings(
-            settings = com.chen.memorizewords.domain.floating.model.FloatingWordSettings(
+            preferences = com.chen.memorizewords.domain.floating.model.FloatingDevicePreferences(
                 floatingBallX = 90,
                 floatingBallY = 410
             ),

@@ -3,7 +3,6 @@ package com.chen.memorizewords.data.floating.reset
 import com.chen.memorizewords.data.floating.local.FloatingDatabase
 import com.chen.memorizewords.domain.account.UserScopedDataResetContributor
 import com.chen.memorizewords.domain.floating.FloatingSettingsLocalStatePort
-import com.chen.memorizewords.domain.floating.repository.FloatingActivationStateRepository
 import com.chen.memorizewords.domain.floating.model.CharacterPackDownloadStatus
 import com.chen.memorizewords.domain.floating.repository.CharacterPackRepository
 import dagger.Binds
@@ -21,7 +20,6 @@ import kotlinx.coroutines.withContext
 class DataFloatingUserScopedDataResetContributor @Inject constructor(
     private val database: FloatingDatabase,
     private val floatingSettingsLocalStatePort: FloatingSettingsLocalStatePort,
-    private val floatingActivationStateRepository: FloatingActivationStateRepository,
     private val characterPackRepository: CharacterPackRepository
 ) : UserScopedDataResetContributor {
     override suspend fun clearUserScopedData() {
@@ -41,7 +39,6 @@ class DataFloatingUserScopedDataResetContributor @Inject constructor(
                 }
             database.clearAllTables()
             floatingSettingsLocalStatePort.clearLocalState()
-            floatingActivationStateRepository.clearPending()
         }
     }
 }

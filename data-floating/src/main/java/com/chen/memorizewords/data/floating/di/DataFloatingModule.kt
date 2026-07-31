@@ -5,7 +5,8 @@ import com.chen.memorizewords.core.database.DestructiveRoomDatabaseFactory
 import com.chen.memorizewords.core.database.NewArchitectureDatabase
 import com.chen.memorizewords.data.floating.repository.bootstrap.FloatingSnapshotLocalStateStore
 import com.chen.memorizewords.data.floating.local.FloatingDatabase
-import com.chen.memorizewords.data.floating.local.FloatingActivationStateStore
+import com.chen.memorizewords.data.floating.repository.FloatingRuntimeSessionRepositoryImpl
+import com.chen.memorizewords.data.floating.local.FloatingDevicePreferencesStore
 import com.chen.memorizewords.data.floating.repository.FloatingWordDisplayRecordRepositoryImpl
 import com.chen.memorizewords.data.floating.repository.FloatingWordSettingsRepositoryImpl
 import com.chen.memorizewords.data.floating.repository.CharacterPackRepositoryImpl
@@ -18,9 +19,8 @@ import com.chen.memorizewords.domain.floating.FloatingSettingsLocalStatePort
 import com.chen.memorizewords.domain.floating.repository.FloatingWordDisplayRecordRepository
 import com.chen.memorizewords.domain.floating.repository.FloatingWordSettingsRepository
 import com.chen.memorizewords.domain.floating.repository.CharacterPackRepository
-import com.chen.memorizewords.domain.floating.repository.FloatingActivationStateRepository
-import com.chen.memorizewords.domain.floating.service.FloatingActivationEventReporter
-import com.chen.memorizewords.data.floating.repository.LogcatFloatingActivationEventReporter
+import com.chen.memorizewords.domain.floating.repository.FloatingDevicePreferencesRepository
+import com.chen.memorizewords.domain.floating.repository.FloatingRuntimeSessionRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -66,14 +66,15 @@ abstract class DataFloatingModule {
     ): CharacterPackRepository
 
     @Binds
-    abstract fun bindFloatingActivationStateRepository(
-        impl: FloatingActivationStateStore
-    ): FloatingActivationStateRepository
+    abstract fun bindFloatingDevicePreferencesRepository(
+        impl: FloatingDevicePreferencesStore
+    ): FloatingDevicePreferencesRepository
 
     @Binds
-    abstract fun bindFloatingActivationEventReporter(
-        impl: LogcatFloatingActivationEventReporter
-    ): FloatingActivationEventReporter
+    abstract fun bindFloatingRuntimeSessionRepository(
+        impl: FloatingRuntimeSessionRepositoryImpl
+    ): FloatingRuntimeSessionRepository
+
 }
 
 @Module
@@ -83,13 +84,20 @@ object DataFloatingDatabaseModule {
     @Singleton
     fun provideFloatingDatabase(@ApplicationContext context: Context): FloatingDatabase {
         return DestructiveRoomDatabaseFactory(
-            databaseName = NewArchitectureDatabase.contextName("floating")
-        ).build(context, FloatingDatabase::class.java)
+            databaseName = NewArchitectureDatabase.contextName("floating"),
+            migrations = arrayOf(FloatingDatabase.MIGRATION_1_2)
+        ).build(context, FloatingDatabase::class.java) {
+            enableMultiInstanceInvalidation()
+        }
     }
 
     @Provides
     fun provideFloatingWordDisplayRecordDao(database: FloatingDatabase) =
         database.floatingWordDisplayRecordDao()
+
+    @Provides
+    fun provideFloatingRuntimeSessionDao(database: FloatingDatabase) =
+        database.floatingRuntimeSessionDao()
 
     @Provides
     @Singleton

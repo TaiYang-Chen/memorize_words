@@ -2,7 +2,6 @@ package com.chen.memorizewords.core.navigation
 
 import android.content.Context
 import android.content.Intent
-import androidx.core.content.ContextCompat
 
 data class LearningSessionRequest(
     val initialLearnedCount: Int = 0,
@@ -59,65 +58,11 @@ interface PracticeEntry {
 }
 
 interface FloatingWordEntry {
-    fun createServiceIntent(
-        context: Context,
-        action: String,
-        activationRequestId: String? = null
-    ): Intent
     fun createSettingsIntent(
         context: Context,
         destination: FloatingWordDestination = FloatingWordDestination.SETTINGS,
-        activationRequestId: String? = null,
         returnDestination: FloatingWordReturnDestination = FloatingWordReturnDestination.DEFAULT
     ): Intent
-
-    fun dispatchServiceAction(
-        context: Context,
-        action: String,
-        activationRequestId: String? = null
-    ) {
-        tryDispatchServiceAction(context, action, activationRequestId)
-    }
-
-    fun tryDispatchServiceAction(
-        context: Context,
-        action: String,
-        activationRequestId: String? = null,
-        characterPackId: String? = null,
-        downloadRequestId: String? = null
-    ): Boolean {
-        val intent = createServiceIntent(context, action, activationRequestId).apply {
-            if (action == FloatingWordActions.ACTION_APPLY_CHARACTER_PACK) {
-                characterPackId?.let {
-                    putExtra(FloatingWordEntryExtras.EXTRA_CHARACTER_PACK_ID, it)
-                }
-                downloadRequestId?.let {
-                    putExtra(FloatingWordEntryExtras.EXTRA_DOWNLOAD_REQUEST_ID, it)
-                }
-            }
-        }
-        return when (action) {
-            FloatingWordActions.ACTION_START -> {
-                ContextCompat.startForegroundService(context, intent)
-                true
-            }
-
-            FloatingWordActions.ACTION_STOP ->
-                context.stopService(intent)
-
-            else -> {
-                try {
-                    context.startService(intent) != null
-                } catch (_: IllegalStateException) {
-                    // Apply/refresh actions are best effort when the service is no longer running.
-                    false
-                } catch (_: SecurityException) {
-                    // A revoked platform permission must not crash the calling screen.
-                    false
-                }
-            }
-        }
-    }
 }
 
 interface WeChatAuthResultHandler {
@@ -176,7 +121,7 @@ object PracticeEntryExtras {
 object FloatingWordActions {
     const val ACTION_START = "floating_word_start"
     const val ACTION_STOP = "floating_word_stop"
-    const val ACTION_APPLY_CHARACTER_PACK = "floating_word_apply_character_pack"
+    const val ACTION_RECONFIGURE = "floating_word_reconfigure"
 }
 
 enum class FloatingWordDestination {
@@ -196,8 +141,8 @@ enum class CharacterSelectionMode {
 object FloatingWordEntryExtras {
     const val EXTRA_DESTINATION = "floating_destination"
     const val EXTRA_CHARACTER_MODE = "floating_character_mode"
-    const val EXTRA_ACTIVATION_REQUEST_ID = "floating_activation_request_id"
-    const val EXTRA_CHARACTER_PACK_ID = "floating_character_pack_id"
-    const val EXTRA_DOWNLOAD_REQUEST_ID = "floating_download_request_id"
     const val EXTRA_RETURN_DESTINATION = "floating_return_destination"
+    const val EXTRA_RUNTIME_SESSION_ID = "floating_runtime_session_id"
+    const val EXTRA_RUNTIME_REVISION = "floating_runtime_revision"
+    const val EXTRA_RUNTIME_CONFIG_VERSION = "floating_runtime_config_version"
 }

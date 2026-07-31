@@ -3,6 +3,7 @@ package com.chen.memorizewords.data.wordbook.repository.learning
 import com.chen.memorizewords.data.wordbook.local.room.model.study.progress.word.WordLearningStateDao
 import com.chen.memorizewords.data.wordbook.local.room.model.study.progress.word.WordLearningStateEntity
 import com.chen.memorizewords.data.wordbook.local.room.model.study.progress.word.toDomain
+import com.chen.memorizewords.data.wordbook.repository.wordbook.chunkedSql
 import com.chen.memorizewords.domain.study.model.progress.word.WordLearningState
 import com.chen.memorizewords.domain.study.repository.WordLearningRepository
 import com.chen.memorizewords.domain.study.repository.WordLearningStateStore
@@ -17,7 +18,9 @@ class WordLearningStateRepositoryImpl @Inject constructor(
         ids: List<Long>
     ): Map<Long, WordLearningState> {
         if (ids.isEmpty()) return emptyMap()
-        val entities: List<WordLearningStateEntity> = dao.getLearningStatesByIds(wordBookId, ids)
+        val queryIds = ids.asSequence().filter { it > 0L }.distinct().toList()
+        val entities: List<WordLearningStateEntity> = queryIds.chunkedSql()
+            .flatMap { chunk -> dao.getLearningStatesByIds(wordBookId, chunk) }
         return entities.map { entity -> entity.toDomain() }.associateBy { it.wordId }
     }
 

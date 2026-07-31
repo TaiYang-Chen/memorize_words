@@ -1,23 +1,16 @@
 package com.chen.memorizewords.feature.home.ui.practice
 
 import android.app.Activity
-import android.app.ForegroundServiceStartNotAllowedException
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Bundle
-import android.os.Build
 import android.provider.Settings
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.View
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
@@ -29,7 +22,6 @@ import com.chen.memorizewords.core.ui.dialog.prefabricated.ShowConfirmBottomDial
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.core.ui.vm.UiEvent
 import com.chen.memorizewords.domain.practice.PracticeEntryType
-import com.chen.memorizewords.domain.floating.model.FloatingActivationPhase
 import com.chen.memorizewords.domain.practice.PracticeMode
 import com.chen.memorizewords.domain.practice.usage.EvaluationUsage
 import com.chen.memorizewords.domain.practice.usage.PracticeUsageState
@@ -37,17 +29,11 @@ import com.chen.memorizewords.feature.home.R
 import com.chen.memorizewords.feature.home.databinding.ModuleHomeFragmentPracticeBinding
 import com.chen.memorizewords.core.navigation.FloatingWordEntry
 import com.chen.memorizewords.core.navigation.FloatingWordDestination
-import com.chen.memorizewords.core.navigation.FloatingWordActions
 import com.chen.memorizewords.core.navigation.FloatingWordReturnDestination
 import com.chen.memorizewords.core.navigation.PracticeEntry
 import com.chen.memorizewords.feature.home.ui.profile.ProMembershipActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-import coil.dispose
-import coil.load
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.button.MaterialButton
-import java.util.Locale
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -65,12 +51,9 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
 
     private var pendingMode: PracticeMode? = null
     private var pendingSelectedIds: LongArray? = null
-    private var latestFloatingEnabled: Boolean = false
+    private var latestFloatingRuntimeUi = FloatingRuntimeUi()
     private var ignoreSwitchUpdate: Boolean = false
     private var latestEvaluationUsage: EvaluationUsage? = null
-    private var floatingSetupDialog: BottomSheetDialog? = null
-    private var floatingSetupView: View? = null
-    private var floatingSetupRequestId: String? = null
     private var pendingQuotaMode: PracticeMode? = null
     private var pendingQuotaSelectedIds: LongArray? = null
     private var pendingQuotaRandomCount: Int = 0
@@ -94,7 +77,6 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
     ) {
         val granted = Settings.canDrawOverlays(requireContext())
         viewModel.onFloatingPermissionResult(granted)
-        if (!granted) updateFloatingSwitch(false)
     }
 
     override fun initView(savedInstanceState: Bundle?) {
@@ -114,8 +96,7 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
         databind.switchFloatingCard.setOnCheckedChangeListener { _, isChecked ->
             if (ignoreSwitchUpdate) return@setOnCheckedChangeListener
             if (isChecked) {
-                updateFloatingSwitch(false)
-                viewModel.onFloatingSwitchChecked(Settings.canDrawOverlays(requireContext()))
+                viewModel.onFloatingSwitchChecked()
             } else {
                 viewModel.onFloatingEnabledChanged(false)
             }
@@ -129,7 +110,6 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
                 launchOverlayPermissionSettings()
             } else {
                 viewModel.onFloatingPermissionDialogCancelled()
-                updateFloatingSwitch(false)
             }
         }
         parentFragmentManager.setFragmentResultListener(
@@ -161,10 +141,7 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
                     viewModel.dashboardUi.collect(::renderDashboard)
                 }
                 launch {
-                    viewModel.floatingEnabled.collect { enabled ->
-                        latestFloatingEnabled = enabled
-                        updateFloatingSwitch(enabled)
-                    }
+                    viewModel.floatingRuntimeUi.collect(::renderFloatingRuntime)
                 }
                 launch {
                     viewModel.practiceUsageState.collect(::renderPracticeUsage)
@@ -174,12 +151,6 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
                         recordAdapter.submitList(records)
                         databind.layoutPracticeRecordsEmpty.isVisible = records.isEmpty()
                         databind.rvPracticeRecords.isVisible = records.isNotEmpty()
-                    }
-                }
-                launch {
-                    viewModel.floatingSetupUi.collect { ui ->
-                        renderFloatingSetup(ui)
-                        syncFloatingSetupDialog(ui)
                     }
                 }
             }
@@ -243,19 +214,14 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
         super.onResume()
         viewModel.refreshPracticeUsage()
         if (view != null) {
-            updateFloatingSwitch(latestFloatingEnabled)
-            viewModel.onFloatingHostResumed(
-                canDrawOverlays = Settings.canDrawOverlays(requireContext())
-            )
+            renderFloatingRuntime(latestFloatingRuntimeUi)
+            viewModel.onFloatingHostResumed()
         }
     }
 
     override fun onNavigationRoute(event: UiEvent.Navigation.Route) {
         when (val target = event.target) {
             is PracticeViewModel.Route.ToPracticeMode -> showSelectionSheet(target.mode)
-            is PracticeViewModel.Route.DispatchFloatingAction -> {
-                dispatchFloatingAction(target)
-            }
             PracticeViewModel.Route.ToFloatingSettings -> {
                 startActivity(
                     floatingWordEntry.createSettingsIntent(
@@ -264,13 +230,11 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
                     )
                 )
             }
-            is PracticeViewModel.Route.ToCharacterSelection -> {
-                floatingSetupDialog?.dismiss()
+            PracticeViewModel.Route.ToCharacterSelection -> {
                 startActivity(
                     floatingWordEntry.createSettingsIntent(
                         context = requireContext(),
                         destination = FloatingWordDestination.CHARACTER_SELECTION,
-                        activationRequestId = target.activationRequestId,
                         returnDestination = FloatingWordReturnDestination.PRACTICE
                     )
                 )
@@ -279,57 +243,9 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
                 startActivity(ProMembershipActivity.createIntent(requireContext()))
             }
             PracticeViewModel.Route.RequestFloatingOverlayPermission -> {
-                updateFloatingSwitch(false)
-                floatingSetupDialog?.dismiss()
                 showOverlayPermissionDialog()
             }
-            is PracticeViewModel.Route.ContinueDownloadedActivation -> {
-                floatingSetupDialog?.dismiss()
-                viewModel.continueDownloadedActivation(
-                    requestId = target.activationRequestId,
-                    canDrawOverlays = Settings.canDrawOverlays(requireContext())
-                )
-            }
         }
-    }
-
-    private fun dispatchFloatingAction(target: PracticeViewModel.Route.DispatchFloatingAction) {
-        try {
-            floatingWordEntry.dispatchServiceAction(
-                context = requireContext(),
-                action = target.action,
-                activationRequestId = target.activationRequestId
-            )
-        } catch (failure: RuntimeException) {
-            if (!isExpectedFloatingServiceStartFailure(failure)) throw failure
-            if (target.action == FloatingWordActions.ACTION_START) {
-                viewModel.onForegroundServiceStartRejected(target.activationRequestId)
-            }
-            showFloatingDispatchFailureIfNeeded(target.action)
-        }
-    }
-    private fun isExpectedFloatingServiceStartFailure(failure: RuntimeException): Boolean =
-        failure is IllegalStateException ||
-            failure is SecurityException ||
-            (
-                Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
-                    Android12ForegroundServiceStartFailure.isForegroundServiceStartNotAllowed(failure)
-                )
-
-    private object Android12ForegroundServiceStartFailure {
-        @RequiresApi(Build.VERSION_CODES.S)
-        fun isForegroundServiceStartNotAllowed(failure: RuntimeException): Boolean =
-            failure is ForegroundServiceStartNotAllowedException
-    }
-
-
-    private fun showFloatingDispatchFailureIfNeeded(action: String) {
-        if (action != FloatingWordActions.ACTION_START) return
-        Toast.makeText(
-            requireContext(),
-            R.string.feature_home_floating_start_failed,
-            Toast.LENGTH_SHORT
-        ).show()
     }
 
     private fun showSelectionSheet(mode: PracticeMode) {
@@ -418,183 +334,17 @@ class PracticeFragment : BaseFragment<PracticeViewModel, ModuleHomeFragmentPract
             .show(childFragmentManager, tag)
     }
 
-    private fun updateFloatingSwitch(enabled: Boolean) {
-        val effectiveEnabled = enabled && Settings.canDrawOverlays(requireContext())
+    private fun renderFloatingRuntime(ui: FloatingRuntimeUi) {
+        latestFloatingRuntimeUi = ui
         ignoreSwitchUpdate = true
-        databind.switchFloatingCard.isChecked = effectiveEnabled
-        databind.switchFloatingCard.isEnabled = !viewModel.floatingSetupUi.value.isBusy
+        databind.switchFloatingCard.isChecked = ui.checked
+        databind.switchFloatingCard.isEnabled = ui.switchEnabled
+        databind.tvFloatingSubtitle.text = ui.subtitle
         ignoreSwitchUpdate = false
-    }
-
-    private fun showFloatingPetSetup(ui: FloatingPetSetupUi) {
-        if (!ui.shouldShowSetupDialog) return
-        if (floatingSetupDialog?.isShowing == true) {
-            renderFloatingSetup(ui)
-            return
-        }
-        val content = layoutInflater.inflate(
-            R.layout.feature_home_dialog_floating_pet_setup,
-            null,
-            false
-        )
-        floatingSetupRequestId = ui.requestId
-        viewModel.recordFloatingSetupShown(floatingSetupRequestId)
-        val dialog = BottomSheetDialog(requireContext()).apply {
-            setContentView(content)
-            setOnCancelListener {
-                if (!viewModel.floatingSetupUi.value.isBusy) {
-                    viewModel.cancelFloatingSetup(floatingSetupRequestId)
-                }
-            }
-            setOnDismissListener {
-                floatingSetupDialog = null
-                floatingSetupView = null
-                floatingSetupRequestId = null
-            }
-        }
-        content.findViewById<MaterialButton>(R.id.btnFloatingDownloadEnable)
-            .setOnClickListener {
-                val ui = viewModel.floatingSetupUi.value
-                val requestId = floatingSetupRequestId ?: ui.requestId
-                if (ui.hasCharacter) {
-                    viewModel.downloadResolvedCharacter(requestId)
-                } else {
-                    viewModel.retryFloatingCatalog(
-                        canDrawOverlays = Settings.canDrawOverlays(requireContext()),
-                        expectedRequestId = requestId
-                    )
-                }
-            }
-        content.findViewById<MaterialButton>(R.id.btnFloatingChooseCharacter)
-            .setOnClickListener { viewModel.openCharacterSelection(floatingSetupRequestId) }
-        content.findViewById<MaterialButton>(R.id.btnFloatingNotNow)
-            .setOnClickListener {
-                viewModel.cancelFloatingSetup(floatingSetupRequestId)
-                dialog.dismiss()
-            }
-        floatingSetupDialog = dialog
-        floatingSetupView = content
-        renderFloatingSetup(ui)
-        dialog.show()
-    }
-
-    private fun renderFloatingSetup(ui: FloatingPetSetupUi) {
-        if (view != null) {
-            databind.switchFloatingCard.isEnabled = !ui.isBusy
-            databind.tvFloatingSubtitle.text = when (ui.phase) {
-                FloatingActivationPhase.QUEUED ->
-                    getString(R.string.feature_home_floating_download_queued)
-                FloatingActivationPhase.DOWNLOADING ->
-                    getString(R.string.feature_home_floating_downloading, ui.progress)
-                FloatingActivationPhase.INSTALLING ->
-                    getString(R.string.feature_home_floating_installing)
-                FloatingActivationPhase.READY ->
-                    getString(R.string.feature_home_floating_ready)
-                else -> getString(R.string.feature_home_floating_subtitle)
-            }
-        }
-
-        floatingSetupRequestId = ui.requestId
-
-        val content = floatingSetupView ?: return
-        val characterCard = content.findViewById<View>(R.id.cardFloatingCharacter)
-        val preview = content.findViewById<ImageView>(R.id.ivFloatingCharacterPreview)
-        val name = content.findViewById<TextView>(R.id.tvFloatingCharacterName)
-        val description = content.findViewById<TextView>(R.id.tvFloatingCharacterDescription)
-        val size = content.findViewById<TextView>(R.id.tvFloatingCharacterSize)
-        val defaultBadge = content.findViewById<TextView>(R.id.tvFloatingCharacterDefaultBadge)
-        val progress = content.findViewById<ProgressBar>(R.id.progressFloatingCharacter)
-        val status = content.findViewById<TextView>(R.id.tvFloatingCharacterStatus)
-        val primary = content.findViewById<MaterialButton>(R.id.btnFloatingDownloadEnable)
-        val choose = content.findViewById<MaterialButton>(R.id.btnFloatingChooseCharacter)
-        val notNow = content.findViewById<MaterialButton>(R.id.btnFloatingNotNow)
-
-        characterCard.visibility = if (ui.hasCharacter) View.VISIBLE else View.GONE
-        name.text = ui.packName
-        description.text = ui.description
-        description.visibility = if (ui.description.isBlank()) View.GONE else View.VISIBLE
-        size.text = formatBytes(ui.sizeBytes)
-        defaultBadge.visibility = if (ui.isDefault) View.VISIBLE else View.GONE
-        val fallbackPreview = R.drawable.feature_home_bg_floating_ball
-        if (!ui.previewUrl.isNullOrBlank()) {
-            preview.load(ui.previewUrl) {
-                crossfade(true)
-                placeholder(fallbackPreview)
-                error(fallbackPreview)
-                fallback(fallbackPreview)
-            }
-        } else {
-            preview.dispose()
-            preview.setImageResource(fallbackPreview)
-        }
-
-        progress.visibility = if (ui.isBusy) View.VISIBLE else View.GONE
-        progress.progress = ui.progress
-        status.visibility = if (
-            ui.isBusy ||
-            ui.phase == FloatingActivationPhase.FAILED ||
-            !ui.hasCharacter
-        ) View.VISIBLE else View.GONE
-        status.text = when (ui.phase) {
-            FloatingActivationPhase.QUEUED ->
-                getString(R.string.feature_home_floating_download_queued)
-            FloatingActivationPhase.DOWNLOADING ->
-                getString(R.string.feature_home_floating_downloading, ui.progress)
-            FloatingActivationPhase.INSTALLING ->
-                getString(R.string.feature_home_floating_installing)
-            FloatingActivationPhase.FAILED ->
-                ui.errorMessage ?: getString(R.string.feature_home_floating_download_failed)
-            else -> if (!ui.hasCharacter) {
-                getString(R.string.feature_home_floating_no_character)
-            } else {
-                ""
-            }
-        }
-        primary.isEnabled = !ui.isBusy
-        primary.text = when {
-            !ui.hasCharacter -> getString(R.string.feature_home_floating_retry_catalog)
-            ui.phase == FloatingActivationPhase.FAILED ->
-                getString(R.string.feature_home_floating_retry)
-            else -> getString(
-                R.string.feature_home_floating_download_enable,
-                formatBytes(ui.sizeBytes)
-            )
-        }
-        choose.isEnabled = !ui.isBusy
-        notNow.text = if (ui.isBusy) {
-            getString(R.string.feature_home_floating_cancel_download)
-        } else {
-            getString(R.string.feature_home_floating_not_now)
-        }
-        floatingSetupDialog?.setCancelable(!ui.isBusy)
-        floatingSetupDialog?.setCanceledOnTouchOutside(!ui.isBusy)
-
-    }
-
-    private fun syncFloatingSetupDialog(ui: FloatingPetSetupUi) {
-        if (!ui.shouldShowSetupDialog) {
-            if (floatingSetupDialog?.isShowing == true) floatingSetupDialog?.dismiss()
-            return
-        }
-        if (
-            parentFragmentManager.findFragmentByTag(TAG_OVERLAY_PERMISSION) == null &&
-            viewLifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)
-        ) {
-            showFloatingPetSetup(ui)
-        }
-    }
-
-    private fun formatBytes(bytes: Long): String {
-        if (bytes <= 0L) return "--"
-        return String.format(Locale.getDefault(), "%.1f MB", bytes / (1024.0 * 1024.0))
     }
 
     override fun onDestroyView() {
         databind.rvPracticeRecords.adapter = null
-        floatingSetupDialog?.dismiss()
-        floatingSetupDialog = null
-        floatingSetupView = null
-        floatingSetupRequestId = null
         super.onDestroyView()
     }
 

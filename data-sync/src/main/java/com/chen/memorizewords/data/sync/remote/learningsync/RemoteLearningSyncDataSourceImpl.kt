@@ -140,22 +140,23 @@ class RemoteLearningSyncDataSourceImpl @Inject constructor(
         return remoteResultAdapter.toResult {
             request.updateFloatingSettings(
                 FloatingSettingsSyncRequest(
-                    enabled = settings.enabled,
+                    // The server DTO still carries these legacy runtime fields. Runtime is local.
+                    enabled = false,
                     sourceType = settings.sourceType.name,
                     orderType = settings.orderType.name,
                     fieldConfigs = configs,
                     selectedWordIds = settings.selectedWordIds,
-                    floatingBallX = settings.floatingBallX,
-                    floatingBallY = settings.floatingBallY,
-                    autoStartOnBoot = settings.autoStartOnBoot,
-                    autoStartOnAppLaunch = settings.autoStartOnAppLaunch,
+                    floatingBallX = 0,
+                    floatingBallY = 0,
+                    autoStartOnBoot = false,
+                    autoStartOnAppLaunch = false,
                     ballSizePercent = settings.ballSizePercent,
                     ballOpacityPercent = settings.ballOpacityPercent,
                     cardOpacityPercent = settings.cardOpacityPercent,
                     cardGapDp = settings.cardGapDp,
                     selectedCharacterPackId = settings.selectedCharacterPackId,
-                    dockConfig = settings.dockConfig.toDto(),
-                    dockState = settings.dockState?.toDto()
+                    dockConfig = null,
+                    dockState = null
                 )
             )
         }
@@ -206,7 +207,6 @@ fun PracticeSettingsDto.toDomain(): PracticeSettings {
 
 fun FloatingSettingsDto.toDomain(): FloatingWordSettings {
     return FloatingWordSettings(
-        enabled = enabled,
         sourceType = runCatching { FloatingWordSourceType.valueOf(sourceType) }
             .getOrDefault(FloatingWordSourceType.CURRENT_BOOK),
         orderType = runCatching { FloatingWordOrderType.valueOf(orderType) }
@@ -214,17 +214,11 @@ fun FloatingSettingsDto.toDomain(): FloatingWordSettings {
         fieldConfigs = fieldConfigs.mapNotNull { it.toDomainOrNull() }
             .ifEmpty { FloatingWordSettings.defaultFieldConfigs() },
         selectedWordIds = selectedWordIds,
-        floatingBallX = floatingBallX,
-        floatingBallY = floatingBallY,
-        autoStartOnBoot = autoStartOnBoot,
-        autoStartOnAppLaunch = autoStartOnAppLaunch,
         ballSizePercent = ballSizePercent,
         ballOpacityPercent = ballOpacityPercent,
         cardOpacityPercent = cardOpacityPercent,
         cardGapDp = cardGapDp,
-        selectedCharacterPackId = selectedCharacterPackId,
-        dockConfig = dockConfig?.toDomain() ?: FloatingDockConfig(),
-        dockState = dockState?.toDomainOrNull()
+        selectedCharacterPackId = selectedCharacterPackId
     )
 }
 

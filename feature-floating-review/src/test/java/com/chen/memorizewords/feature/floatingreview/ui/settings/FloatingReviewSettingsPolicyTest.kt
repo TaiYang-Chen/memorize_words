@@ -63,22 +63,18 @@ class FloatingReviewSettingsPolicyTest {
     }
 
     @Test
-    fun `ball position and auto start do not change card content responsibilities`() {
+    fun `ball appearance does not change card content responsibilities`() {
         val previous = FloatingWordSettings()
         val updated = previous.copy(
-            autoStartOnAppLaunch = true,
             ballSizePercent = 75,
-            ballOpacityPercent = 80,
-            floatingBallX = 24,
-            floatingBallY = 48
+            ballOpacityPercent = 80
         )
 
         val change = resolveFloatingSettingsChange(previous, updated)
 
-        assertTrue(change.autoStartChanged)
         assertTrue(change.ballSizeChanged)
         assertTrue(change.ballOpacityChanged)
-        assertTrue(change.ballPositionChanged)
+        assertFalse(change.ballPositionChanged)
         assertFalse(change.wordSequenceChanged)
         assertFalse(change.fieldConfigsChanged)
     }

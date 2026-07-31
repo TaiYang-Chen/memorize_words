@@ -85,7 +85,16 @@ class FloatingReviewSettingsFragment :
     override fun createObserver() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.settings.collect(::renderSettings)
+                launch { viewModel.settings.collect(::renderSettings) }
+                launch {
+                    viewModel.devicePreferences.collect { preferences ->
+                        if (ignoreViewUpdates) return@collect
+                        ignoreViewUpdates = true
+                        view?.findViewById<SwitchMaterial>(R.id.switchFloatingAutoStart)?.isChecked =
+                            preferences.autoStartOnAppLaunch
+                        ignoreViewUpdates = false
+                    }
+                }
             }
         }
     }
@@ -201,8 +210,6 @@ class FloatingReviewSettingsFragment :
             R.string.module_floating_review_selected_count,
             updated.selectedWordIds.size
         )
-        root.findViewById<SwitchMaterial>(R.id.switchFloatingAutoStart).isChecked =
-            updated.autoStartOnAppLaunch
         root.findViewById<SeekBar>(R.id.seekBallSize).progress =
             updated.ballSizePercent.coerceIn(
                 MIN_BALL_SIZE_PERCENT,

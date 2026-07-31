@@ -29,6 +29,7 @@ import com.chen.memorizewords.data.wordbook.local.room.model.words.word.toUserMe
 import com.chen.memorizewords.data.wordbook.remote.wordbook.RemoteWordBookDataSource
 import com.chen.memorizewords.data.wordbook.repository.wordbook.sanitizeWordExamples
 import com.chen.memorizewords.data.wordbook.repository.wordbook.sanitizeWordForms
+import com.chen.memorizewords.data.wordbook.repository.wordbook.chunkedSql
 import com.chen.memorizewords.domain.word.model.word.Word
 import com.chen.memorizewords.domain.word.model.word.WordDefinitions
 import com.chen.memorizewords.domain.word.model.word.WordExample
@@ -56,7 +57,9 @@ class WordRepositoryImpl @Inject constructor(
 
     override suspend fun getWordsByIds(ids: List<Long>): List<Word> {
         if (ids.isEmpty()) return emptyList()
-        val wordsById = wordDao.getWithRelationsByIds(ids)
+        val queryIds = ids.asSequence().filter { it > 0L }.distinct().toList()
+        val wordsById = queryIds.chunkedSql()
+            .flatMap { chunk -> wordDao.getWithRelationsByIds(chunk) }
             .associate { relation -> relation.word.id to relation.toDomain() }
         return ids.mapNotNull(wordsById::get)
     }

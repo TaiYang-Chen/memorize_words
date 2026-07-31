@@ -293,23 +293,54 @@ class CharacterPackLocalStoreTest {
     }
 
     @Test
-    fun `management acknowledgement cannot consume activation completion`() {
+    fun `management acknowledgement cannot consume runtime-owned completion`() {
         val store = CharacterPackLocalStore(FakeCharacterPackKeyValueStore(), gson)
         val requestId = UUID.randomUUID().toString()
-        val activationRequestId = UUID.randomUUID().toString()
-        val activationCompletion = queuedDownload("green_pet", requestId).copy(
+        val runtimeSessionId = UUID.randomUUID().toString()
+        val runtimeCompletion = queuedDownload("green_pet", requestId).copy(
             status = CharacterPackDownloadStatus.COMPLETED,
             progress = 100,
             downloadedBytes = 1_000L,
-            activationRequestId = activationRequestId
+            runtimeSessionId = runtimeSessionId,
+            runtimeRevision = 2L
         )
-        assertTrue(store.putDownload(activationCompletion))
+        assertTrue(store.putDownload(runtimeCompletion))
 
         assertEquals(
             CharacterPackConditionalWriteResult.STALE,
             store.removeManagementCompletionIfCurrent("green_pet", requestId)
         )
-        assertEquals(activationCompletion, store.download("green_pet"))
+        assertEquals(runtimeCompletion, store.download("green_pet"))
+    }
+
+    @Test
+    fun `runtime-owned download preserves session and revision across a restart`() {
+        val keyValueStore = FakeCharacterPackKeyValueStore()
+        val store = CharacterPackLocalStore(keyValueStore, gson)
+        val runtimeOwned = queuedDownload("green_pet", UUID.randomUUID().toString()).copy(
+            runtimeSessionId = UUID.randomUUID().toString(),
+            runtimeRevision = 7L
+        )
+
+        assertTrue(store.putDownload(runtimeOwned))
+
+        val restarted = CharacterPackLocalStore(keyValueStore, gson)
+        assertEquals(runtimeOwned, restarted.download("green_pet"))
+    }
+
+    @Test
+    fun `active runtime-owned download without revision is rejected`() {
+        val store = CharacterPackLocalStore(FakeCharacterPackKeyValueStore(), gson)
+        val malformed = queuedDownload("green_pet", UUID.randomUUID().toString()).copy(
+            runtimeSessionId = UUID.randomUUID().toString()
+        )
+
+        assertTrue(store.putDownload(malformed))
+
+        val recovered = store.download("green_pet")
+        assertEquals(CharacterPackDownloadStatus.FAILED, recovered?.status)
+        assertNull(recovered?.runtimeSessionId)
+        assertNull(recovered?.runtimeRevision)
     }
 
     @Test
@@ -368,7 +399,8 @@ class CharacterPackLocalStoreTest {
                     status = CharacterPackDownloadStatus.DOWNLOADING,
                     totalBytes = Long.MAX_VALUE,
                     progress = 250,
-                    activationRequestId = "also-invalid"
+                    runtimeSessionId = "also-invalid",
+                    runtimeRevision = 1L
                 )
             )
         )
@@ -376,7 +408,7 @@ class CharacterPackLocalStoreTest {
         val recovered = store.download("green_pet")
         assertEquals(CharacterPackDownloadStatus.FAILED, recovered?.status)
         assertNull(recovered?.downloadRequestId)
-        assertNull(recovered?.activationRequestId)
+        assertNull(recovered?.runtimeSessionId)
         assertEquals(CharacterPackLocalStore.MAX_PACKAGE_BYTES, recovered?.totalBytes)
         assertEquals(0, recovered?.progress)
     }
@@ -461,7 +493,8 @@ class CharacterPackLocalStoreTest {
             progress = 100,
             downloadedBytes = 1_000L,
             selectAfterInstall = true,
-            activationRequestId = UUID.randomUUID().toString()
+            runtimeSessionId = UUID.randomUUID().toString(),
+            runtimeRevision = 3L
         )
         assertTrue(store.putInstalled(pending))
         assertTrue(store.putDownload(completed))
@@ -484,7 +517,7 @@ class CharacterPackLocalStoreTest {
             store.download("green_pet")?.status
         )
         assertEquals(false, store.download("green_pet")?.selectAfterInstall)
-        assertNull(store.download("green_pet")?.activationRequestId)
+        assertNull(store.download("green_pet")?.runtimeSessionId)
     }
 
     @Test

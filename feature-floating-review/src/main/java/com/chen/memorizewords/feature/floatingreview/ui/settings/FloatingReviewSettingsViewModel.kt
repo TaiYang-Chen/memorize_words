@@ -3,10 +3,13 @@ package com.chen.memorizewords.feature.floatingreview.ui.settings
 import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.domain.floating.service.FloatingReviewFacade
+import com.chen.memorizewords.domain.floating.service.FloatingRuntimeController
 import com.chen.memorizewords.domain.floating.model.FloatingWordFieldConfig
 import com.chen.memorizewords.domain.floating.model.FloatingWordOrderType
 import com.chen.memorizewords.domain.floating.model.FloatingWordSettings
 import com.chen.memorizewords.domain.floating.model.FloatingWordSourceType
+import com.chen.memorizewords.domain.floating.model.FloatingDevicePreferences
+import com.chen.memorizewords.domain.floating.repository.FloatingDevicePreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
@@ -16,12 +19,18 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class FloatingReviewSettingsViewModel @Inject constructor(
-    private val floatingReviewFacade: FloatingReviewFacade
+    private val floatingReviewFacade: FloatingReviewFacade,
+    private val devicePreferencesRepository: FloatingDevicePreferencesRepository,
+    private val runtimeController: FloatingRuntimeController
 ) : BaseViewModel() {
 
     val settings: StateFlow<FloatingWordSettings> =
         floatingReviewFacade.observeSettings()
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), FloatingWordSettings())
+
+    val devicePreferences = devicePreferencesRepository.observe()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000),
+            FloatingDevicePreferences())
 
     fun onSourceTypeChanged(sourceType: FloatingWordSourceType) {
         updateSettings { it.copy(sourceType = sourceType) }
@@ -41,7 +50,9 @@ class FloatingReviewSettingsViewModel @Inject constructor(
     }
 
     fun onAutoStartChanged(enabled: Boolean) {
-        updateSettings { it.copy(autoStartOnAppLaunch = enabled) }
+        viewModelScope.launch {
+            devicePreferencesRepository.update { it.copy(autoStartOnAppLaunch = enabled) }
+        }
     }
 
     fun onCardOpacityChanged(cardOpacityPercent: Int) {
@@ -70,6 +81,7 @@ class FloatingReviewSettingsViewModel @Inject constructor(
             val requested = transform(current)
             if (requested == current) return@launch
             floatingReviewFacade.updateSettings(transform)
+            runtimeController.requestReconfigure()
         }
     }
 }

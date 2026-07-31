@@ -86,13 +86,21 @@ class FloatingPetController @Inject constructor(
         }
     }
 
-    fun attach(view: FloatingPetRenderHost, packId: SpritePackId) {
+    /**
+     * Attaches the render host. Runtime startup can defer loading so one correlated command owns
+     * the first-frame acknowledgement instead of racing an implicit load with a forced reload.
+     */
+    fun attach(
+        view: FloatingPetRenderHost,
+        packId: SpritePackId,
+        loadImmediately: Boolean = true
+    ) {
         checkMainThread()
         if (released) return
         attachmentGeneration++
         this.view = view
         submittedPackId = null
-        switchPack(packId)
+        if (loadImmediately) switchPack(packId)
     }
 
     fun setCardVisible(visible: Boolean) {

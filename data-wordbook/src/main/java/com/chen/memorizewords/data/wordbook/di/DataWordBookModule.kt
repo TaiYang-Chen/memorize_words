@@ -24,6 +24,7 @@ import com.chen.memorizewords.data.wordbook.repository.WordRepositoryImpl
 import com.chen.memorizewords.data.wordbook.repository.WorkManagerWordBookWorkCanceller
 import com.chen.memorizewords.data.wordbook.repository.bootstrap.WordBookSnapshotLocalStateStore
 import com.chen.memorizewords.data.wordbook.repository.bootstrap.StudyRecordSnapshotLocalStateStore
+import com.chen.memorizewords.data.wordbook.repository.floating.FloatingWordSourceRepositoryImpl
 import com.chen.memorizewords.data.wordbook.repository.learning.LearningCommandRepository
 import com.chen.memorizewords.data.wordbook.repository.learning.DailyStudyProjectionQueueImpl
 import com.chen.memorizewords.data.wordbook.repository.learning.StudyRecordQueryImpl
@@ -39,6 +40,7 @@ import com.chen.memorizewords.data.wordbook.repository.wordbook.WordBookContentR
 import com.chen.memorizewords.data.wordbook.repository.wordbook.update.WordBookUpdateCoordinatorImpl
 import com.chen.memorizewords.domain.wordbook.repository.CurrentWordBookLocalStatePort
 import com.chen.memorizewords.domain.study.repository.WordLearningRepository
+import com.chen.memorizewords.domain.floating.repository.FloatingWordSourceRepository
 import com.chen.memorizewords.domain.study.repository.WordLearningStateStore
 import com.chen.memorizewords.domain.study.repository.learning.LearningCommandPort
 import com.chen.memorizewords.domain.study.repository.learning.LearningSyncStatePort
@@ -70,6 +72,11 @@ import retrofit2.Retrofit
 abstract class DataWordBookModule {
     @Binds
     abstract fun bindWordRepository(impl: WordRepositoryImpl): WordRepository
+
+    @Binds
+    abstract fun bindFloatingWordSourceRepository(
+        impl: FloatingWordSourceRepositoryImpl
+    ): FloatingWordSourceRepository
 
     @Binds
     abstract fun bindWordBookRepository(impl: WordBookRepositoryImpl): WordBookRepository

@@ -3,12 +3,12 @@ package com.chen.memorizewords.feature.floatingreview.navigation
 import android.content.Context
 import android.content.Intent
 import com.chen.memorizewords.feature.floatingreview.FloatingReviewActivity
-import com.chen.memorizewords.feature.floatingreview.ui.floating.FloatingWordService
 import com.chen.memorizewords.core.navigation.FloatingWordEntry
 import com.chen.memorizewords.core.navigation.FloatingWordDestination
 import com.chen.memorizewords.core.navigation.FloatingWordEntryExtras
 import com.chen.memorizewords.core.navigation.CharacterSelectionMode
 import com.chen.memorizewords.core.navigation.FloatingWordReturnDestination
+import com.chen.memorizewords.domain.floating.service.FloatingRuntimeServiceGateway
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -23,27 +23,19 @@ abstract class FloatingReviewEntryModule {
     @Binds
     @Singleton
     abstract fun bindFloatingWordEntry(impl: DefaultFloatingWordEntry): FloatingWordEntry
+
+    @Binds
+    @Singleton
+    abstract fun bindFloatingRuntimeServiceGateway(
+        impl: FloatingRuntimeServiceGatewayImpl
+    ): FloatingRuntimeServiceGateway
 }
 
 @Singleton
 class DefaultFloatingWordEntry @Inject constructor() : FloatingWordEntry {
-    override fun createServiceIntent(
-        context: Context,
-        action: String,
-        activationRequestId: String?
-    ): Intent {
-        return Intent(context, FloatingWordService::class.java).apply {
-            this.action = action
-            activationRequestId?.let {
-                putExtra(FloatingWordEntryExtras.EXTRA_ACTIVATION_REQUEST_ID, it)
-            }
-        }
-    }
-
     override fun createSettingsIntent(
         context: Context,
         destination: FloatingWordDestination,
-        activationRequestId: String?,
         returnDestination: FloatingWordReturnDestination
     ): Intent {
         return Intent(context, FloatingReviewActivity::class.java).apply {
@@ -56,7 +48,6 @@ class DefaultFloatingWordEntry @Inject constructor() : FloatingWordEntry {
                     CharacterSelectionMode.MANAGE.name
                 }
             )
-            putExtra(FloatingWordEntryExtras.EXTRA_ACTIVATION_REQUEST_ID, activationRequestId)
             putExtra(FloatingWordEntryExtras.EXTRA_RETURN_DESTINATION, returnDestination.name)
         }
     }

@@ -69,5 +69,7 @@ data class CharacterPackDownloadState(
     val errorMessage: String? = null,
     val errorCode: CharacterPackDownloadError? = null,
     val selectAfterInstall: Boolean = false,
-    val activationRequestId: String? = null
+    val runtimeSessionId: String? = null,
+    /** Revision at which the Controller queued the runtime-owned download. */
+    val runtimeRevision: Long? = null
 )

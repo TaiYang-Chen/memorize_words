@@ -1,8 +1,5 @@
 package com.chen.memorizewords.domain.floating.model
 data class FloatingWordSettings(
-    val enabled: Boolean = false,
-    val autoStartOnBoot: Boolean = false,
-    val autoStartOnAppLaunch: Boolean = false,
     val ballSizePercent: Int = 60,
     val ballOpacityPercent: Int = 100,
     val cardOpacityPercent: Int = 100,
@@ -11,11 +8,7 @@ data class FloatingWordSettings(
     val sourceType: FloatingWordSourceType = FloatingWordSourceType.CURRENT_BOOK,
     val orderType: FloatingWordOrderType = FloatingWordOrderType.RANDOM,
     val fieldConfigs: List<FloatingWordFieldConfig> = defaultFieldConfigs(),
-    val selectedWordIds: List<Long> = emptyList(),
-    val floatingBallX: Int = 0,
-    val floatingBallY: Int = 0,
-    val dockConfig: FloatingDockConfig = FloatingDockConfig(),
-    val dockState: FloatingDockState? = null
+    val selectedWordIds: List<Long> = emptyList()
 ) {
     companion object {
         fun defaultFieldConfigs(): List<FloatingWordFieldConfig> {

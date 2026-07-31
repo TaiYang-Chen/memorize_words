@@ -1,15 +1,13 @@
 package com.chen.memorizewords.domain.floating.service
-import com.chen.memorizewords.domain.floating.model.FloatingDockState
 import com.chen.memorizewords.domain.floating.model.FloatingWordFieldType
-import com.chen.memorizewords.domain.floating.model.FloatingWordOrderType
 import com.chen.memorizewords.domain.floating.model.FloatingWordSettings
-import com.chen.memorizewords.domain.floating.model.FloatingWordSourceType
+import com.chen.memorizewords.domain.floating.model.FloatingWordSourceSnapshot
 import com.chen.memorizewords.domain.word.model.word.Word
 import com.chen.memorizewords.domain.word.model.word.WordDefinitions
 import com.chen.memorizewords.domain.word.model.word.WordExample
-import com.chen.memorizewords.domain.wordbook.repository.WordBookRepository
-import com.chen.memorizewords.domain.study.repository.WordLearningRepository
 import com.chen.memorizewords.domain.floating.repository.FloatingWordDisplayRecordRepository
+import com.chen.memorizewords.domain.floating.repository.FloatingDevicePreferencesRepository
+import com.chen.memorizewords.domain.floating.repository.FloatingWordSourceRepository
 import com.chen.memorizewords.domain.floating.repository.FloatingWordSettingsRepository
 import com.chen.memorizewords.domain.word.repository.WordRepository
 import javax.inject.Inject
@@ -17,10 +15,10 @@ import kotlinx.coroutines.flow.Flow
 
 class FloatingReviewFacade @Inject constructor(
     private val floatingWordSettingsRepository: FloatingWordSettingsRepository,
+    private val floatingDevicePreferencesRepository: FloatingDevicePreferencesRepository,
     private val floatingWordDisplayRecordRepository: FloatingWordDisplayRecordRepository,
-    private val wordLearningRepository: WordLearningRepository,
-    private val wordRepository: WordRepository,
-    private val wordBookRepository: WordBookRepository
+    private val floatingWordSourceRepository: FloatingWordSourceRepository,
+    private val wordRepository: WordRepository
 ) {
     fun observeSettings(): Flow<FloatingWordSettings> = floatingWordSettingsRepository.observeSettings()
 
@@ -34,40 +32,26 @@ class FloatingReviewFacade @Inject constructor(
         transform: (FloatingWordSettings) -> FloatingWordSettings
     ): FloatingWordSettings = floatingWordSettingsRepository.updateSettings(transform)
 
-    suspend fun updateBallPosition(x: Int, y: Int, dockState: FloatingDockState?) {
-        floatingWordSettingsRepository.updateBallPosition(x, y, dockState)
+    suspend fun updateBallPosition(
+        x: Int,
+        y: Int,
+        dockState: com.chen.memorizewords.domain.floating.model.FloatingDockState?
+    ) {
+        floatingDevicePreferencesRepository.update { preferences ->
+            preferences.copy(floatingBallX = x, floatingBallY = y, dockState = dockState)
+        }
     }
 
     suspend fun recordDisplay(wordId: Long) {
         floatingWordDisplayRecordRepository.recordDisplay(wordId)
     }
 
-    suspend fun loadWords(settings: FloatingWordSettings): List<Word> {
-        return when (settings.sourceType) {
-            FloatingWordSourceType.CURRENT_BOOK -> {
-                val currentBookId = wordBookRepository.getCurrentWordBookSelectionId()
-                    ?.takeIf { it > 0L }
-                    ?: return emptyList()
-                val learnedIds = wordLearningRepository.getLearnedWordIdsByBook(currentBookId)
-                buildOrderedWords(
-                    wordIds = learnedIds,
-                    orderType = settings.orderType,
-                    bookId = if (settings.orderType == FloatingWordOrderType.MEMORY_CURVE) {
-                        currentBookId
-                    } else {
-                        null
-                    }
-                )
-            }
+    suspend fun loadWordSource(settings: FloatingWordSettings): FloatingWordSourceSnapshot =
+        floatingWordSourceRepository.loadSnapshot(settings)
 
-            FloatingWordSourceType.SELF_SELECT -> {
-                buildOrderedWords(
-                    wordIds = settings.selectedWordIds,
-                    orderType = settings.orderType,
-                    bookId = wordBookRepository.getCurrentWordBookSelectionId()?.takeIf { it > 0L }
-                )
-            }
-        }
+    suspend fun loadWord(wordId: Long): Word? {
+        if (wordId <= 0L) return null
+        return wordRepository.getWordById(wordId)
     }
 
     suspend fun loadCardContent(
@@ -91,33 +75,6 @@ class FloatingReviewFacade @Inject constructor(
         return FloatingWordCardContent(definitions = definitions, examples = examples)
     }
 
-    private suspend fun buildOrderedWords(
-        wordIds: List<Long>,
-        orderType: FloatingWordOrderType,
-        bookId: Long?
-    ): List<Word> {
-        if (wordIds.isEmpty()) return emptyList()
-
-        val orderedIds = if (orderType == FloatingWordOrderType.MEMORY_CURVE && bookId != null) {
-            val states = wordLearningRepository.getLearningStatesByIds(bookId, wordIds)
-            wordIds.sortedBy { states[it]?.nextReviewAtMs ?: Long.MAX_VALUE }
-        } else {
-            wordIds
-        }
-
-        val words = wordRepository.getWordsByIds(orderedIds)
-        val wordMap = words.associateBy { it.id }
-        val orderedWords = orderedIds.mapNotNull { wordMap[it] }
-
-        return when (orderType) {
-            FloatingWordOrderType.RANDOM -> orderedWords
-            FloatingWordOrderType.MEMORY_CURVE -> orderedWords
-            FloatingWordOrderType.ALPHABETIC_ASC -> orderedWords.sortedBy { it.normalizedWord }
-            FloatingWordOrderType.ALPHABETIC_DESC -> orderedWords.sortedByDescending { it.normalizedWord }
-            FloatingWordOrderType.LENGTH_ASC -> orderedWords.sortedBy { it.word.length }
-            FloatingWordOrderType.LENGTH_DESC -> orderedWords.sortedByDescending { it.word.length }
-        }
-    }
 }
 
 data class FloatingWordCardContent(

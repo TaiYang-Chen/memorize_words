@@ -55,6 +55,7 @@
     <string name="module_floating_review_field_image">图片</string>
     <string name="module_floating_review_notification_channel">悬浮复习卡</string>
     <string name="module_floating_review_notification_title">悬浮复习卡运行中</string>
+    <string name="module_floating_review_notification_starting">正在启动悬浮精灵</string>
     <string name="module_floating_review_notification_ready">点击悬浮球开始复习</string>
     <string name="module_floating_review_detail">查看详情</string>
     <string name="module_floating_review_empty">暂无可复习单词</string>

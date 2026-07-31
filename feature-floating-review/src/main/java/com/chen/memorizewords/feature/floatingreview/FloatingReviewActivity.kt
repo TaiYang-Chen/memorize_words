@@ -38,10 +38,7 @@ class FloatingReviewActivity : AppCompatActivity() {
             navHost.navController.navigate(
                 R.id.characterPackFragment,
                 bundleOf(
-                    FloatingWordEntryExtras.EXTRA_CHARACTER_MODE to CharacterSelectionMode.ACTIVATE.name,
-                    FloatingWordEntryExtras.EXTRA_ACTIVATION_REQUEST_ID to intent.getStringExtra(
-                        FloatingWordEntryExtras.EXTRA_ACTIVATION_REQUEST_ID
-                    )
+                    FloatingWordEntryExtras.EXTRA_CHARACTER_MODE to CharacterSelectionMode.ACTIVATE.name
                 )
             )
         }

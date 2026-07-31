@@ -139,12 +139,17 @@ class CharacterPackRepositoryImpl @Inject constructor(
     override suspend fun startDownload(
         item: CharacterPackCatalogItem,
         selectAfterInstall: Boolean,
-        activationRequestId: String?
+        runtimeSessionId: String?,
+        runtimeRevision: Long?
     ): Result<Unit> = mutationMutex.withLock {
+        val hasRuntimeOwnership = runtimeSessionId != null || runtimeRevision != null
         if (
             !CharacterPackLocalStore.isValidCatalogItem(item) ||
-            (activationRequestId != null &&
-                !CharacterPackLocalStore.isValidRequestId(activationRequestId))
+            (hasRuntimeOwnership &&
+                (runtimeSessionId == null ||
+                    runtimeRevision == null ||
+                    runtimeRevision < 0L ||
+                    !CharacterPackLocalStore.isValidRequestId(runtimeSessionId)))
         ) {
             if (CharacterPackLocalStore.isSafePackId(item.packId)) {
                 val persisted = store.putDownload(
@@ -156,7 +161,8 @@ class CharacterPackRepositoryImpl @Inject constructor(
                         errorMessage = "角色下载信息无效，请刷新后重试",
                         errorCode = CharacterPackDownloadError.INVALID_PACKAGE,
                         selectAfterInstall = selectAfterInstall,
-                        activationRequestId = activationRequestId
+                        runtimeSessionId = runtimeSessionId,
+                        runtimeRevision = runtimeRevision
                     )
                 )
                 if (!persisted) return@withLock Result.failure(CharacterPackPersistenceException())
@@ -182,7 +188,8 @@ class CharacterPackRepositoryImpl @Inject constructor(
                         CharacterPackWork.KEY_PACKAGE_SHA256 to item.packageSha256,
                         CharacterPackWork.KEY_PACKAGE_SIZE to item.packageSizeBytes,
                         CharacterPackWork.KEY_SELECT_AFTER_INSTALL to selectAfterInstall,
-                        CharacterPackWork.KEY_ACTIVATION_REQUEST_ID to activationRequestId
+                        CharacterPackWork.KEY_RUNTIME_SESSION_ID to runtimeSessionId,
+                        CharacterPackWork.KEY_RUNTIME_REVISION to runtimeRevision
                     )
                 )
                 .addTag(CharacterPackWork.tag(item.packId))
@@ -198,7 +205,8 @@ class CharacterPackRepositoryImpl @Inject constructor(
             status = CharacterPackDownloadStatus.QUEUED,
             totalBytes = item.packageSizeBytes,
             selectAfterInstall = selectAfterInstall,
-            activationRequestId = activationRequestId
+            runtimeSessionId = runtimeSessionId,
+            runtimeRevision = runtimeRevision
         )
         return@withLock try {
             withContext(Dispatchers.IO) {
@@ -318,7 +326,8 @@ class CharacterPackRepositoryImpl @Inject constructor(
                 createDownloadWork(
                     item = item,
                     selectAfterInstall = current.selectAfterInstall,
-                    activationRequestId = current.activationRequestId,
+                    runtimeSessionId = current.runtimeSessionId,
+                    runtimeRevision = current.runtimeRevision,
                     workId = workId
                 )
             ).awaitCompletionBlocking()
@@ -331,7 +340,8 @@ class CharacterPackRepositoryImpl @Inject constructor(
     private fun createDownloadWork(
         item: CharacterPackCatalogItem,
         selectAfterInstall: Boolean,
-        activationRequestId: String?,
+        runtimeSessionId: String?,
+        runtimeRevision: Long?,
         workId: UUID
     ): OneTimeWorkRequest = OneTimeWorkRequestBuilder<CharacterPackDownloadWorker>()
         .setId(workId)
@@ -349,7 +359,8 @@ class CharacterPackRepositoryImpl @Inject constructor(
                 CharacterPackWork.KEY_PACKAGE_SHA256 to item.packageSha256,
                 CharacterPackWork.KEY_PACKAGE_SIZE to item.packageSizeBytes,
                 CharacterPackWork.KEY_SELECT_AFTER_INSTALL to selectAfterInstall,
-                CharacterPackWork.KEY_ACTIVATION_REQUEST_ID to activationRequestId
+                CharacterPackWork.KEY_RUNTIME_SESSION_ID to runtimeSessionId,
+                CharacterPackWork.KEY_RUNTIME_REVISION to runtimeRevision
             )
         )
         .addTag(CharacterPackWork.tag(item.packId))
@@ -637,7 +648,8 @@ internal object CharacterPackWork {
     const val KEY_PACKAGE_SHA256 = "package_sha256"
     const val KEY_PACKAGE_SIZE = "package_size"
     const val KEY_SELECT_AFTER_INSTALL = "select_after_install"
-    const val KEY_ACTIVATION_REQUEST_ID = "activation_request_id"
+    const val KEY_RUNTIME_SESSION_ID = "runtime_session_id"
+    const val KEY_RUNTIME_REVISION = "runtime_revision"
     const val KEY_PROGRESS = "progress"
 
     /**

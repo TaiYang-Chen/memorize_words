@@ -70,7 +70,7 @@ class CharacterPackReloadPolicyTest {
             downloadRequestId = completedRequestId,
             status = CharacterPackDownloadStatus.COMPLETED,
             selectAfterInstall = false,
-            activationRequestId = null
+            runtimeSessionId = null
         ),
         sortOrder = 0
     )

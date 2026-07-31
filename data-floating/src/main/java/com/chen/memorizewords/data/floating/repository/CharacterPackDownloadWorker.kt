@@ -17,9 +17,11 @@ import com.chen.memorizewords.data.floating.local.CharacterPackLocalStore
 import com.chen.memorizewords.domain.floating.model.CharacterPackDownloadError
 import com.chen.memorizewords.domain.floating.model.CharacterPackDownloadState
 import com.chen.memorizewords.domain.floating.model.CharacterPackDownloadStatus
+import com.chen.memorizewords.domain.floating.model.FloatingRuntimeError
+import com.chen.memorizewords.domain.floating.model.FloatingRuntimeEvent
 import com.chen.memorizewords.domain.floating.model.InstalledCharacterPack
-import com.chen.memorizewords.domain.floating.service.FloatingActivationEvent
-import com.chen.memorizewords.domain.floating.service.FloatingActivationEventReporter
+import com.chen.memorizewords.domain.floating.repository.FloatingRuntimeSessionRepository
+import com.chen.memorizewords.domain.floating.service.FloatingRuntimeReporter
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -68,13 +70,21 @@ class CharacterPackDownloadWorker(
             CharacterPackWork.KEY_SELECT_AFTER_INSTALL,
             false
         )
-        val activationRequestId = inputData.getString(CharacterPackWork.KEY_ACTIVATION_REQUEST_ID)
+        val runtimeSessionId = inputData.getString(CharacterPackWork.KEY_RUNTIME_SESSION_ID)
+        val runtimeRevision = inputData
+            .getLong(CharacterPackWork.KEY_RUNTIME_REVISION, -1L)
+            .takeIf { it >= 0L }
         val downloadRequestId = id.toString()
         val entryPoint = EntryPointAccessors.fromApplication(
             applicationContext,
             CharacterPackWorkerEntryPoint::class.java
         )
         val store = entryPoint.store()
+        val runtimeOwner = runtimeOwner(
+            sessionId = runtimeSessionId,
+            revision = runtimeRevision,
+            packId = packId
+        )
         val expectedManifestSchemaVersion = requestedManifestSchemaVersion
             .takeIf { it in SUPPORTED_MANIFEST_SCHEMA_VERSIONS }
             ?: store.catalog().firstOrNull {
@@ -88,7 +98,8 @@ class CharacterPackDownloadWorker(
             status = CharacterPackDownloadStatus.DOWNLOADING,
             totalBytes = expectedSize,
             selectAfterInstall = selectAfterInstall,
-            activationRequestId = activationRequestId
+            runtimeSessionId = runtimeSessionId,
+            runtimeRevision = runtimeRevision
         )
         val packageHttpUrl = packageUrl.toHttpUrlOrNull()
         if (
@@ -98,8 +109,9 @@ class CharacterPackDownloadWorker(
             packageHttpUrl?.isHttps != true ||
             !expectedSha256.matches(Regex("[a-fA-F0-9]{64}")) ||
             expectedSize !in 1..CharacterPackLocalStore.MAX_PACKAGE_BYTES ||
-            (activationRequestId != null &&
-                !CharacterPackLocalStore.isValidRequestId(activationRequestId))
+            (runtimeSessionId != null &&
+                !CharacterPackLocalStore.isValidRequestId(runtimeSessionId)) ||
+            ((runtimeSessionId == null) != (runtimeRevision == null))
         ) {
             if (!CharacterPackLocalStore.isSafePackId(packId)) return Result.failure()
             return fail(
@@ -111,11 +123,14 @@ class CharacterPackDownloadWorker(
         }
 
         when (store.updateDownloadIfCurrent(packId, downloadRequestId, baseState)) {
-            CharacterPackConditionalWriteResult.UPDATED -> Unit
+            CharacterPackConditionalWriteResult.UPDATED -> reportRuntime(
+                entryPoint,
+                runtimeOwner,
+                FloatingRuntimeEvent.DownloadProgress(0)
+            )
             CharacterPackConditionalWriteResult.STALE -> return Result.success()
             CharacterPackConditionalWriteResult.PERSISTENCE_FAILED -> return Result.failure()
         }
-        reportEventSafely(entryPoint, FloatingActivationEvent.DOWNLOAD_STARTED, baseState)
 
         val taskRoot = File(applicationContext.cacheDir, "character_packs/$packId/$downloadRequestId")
         val zipFile = File(taskRoot, "package.zip.part")
@@ -140,7 +155,9 @@ class CharacterPackDownloadWorker(
                 url = packageUrl,
                 target = zipFile,
                 store = store,
-                state = baseState
+                state = baseState,
+                entryPoint = entryPoint,
+                runtimeOwner = runtimeOwner
             )
             if (zipFile.length() != expectedSize) {
                 throw CharacterPackValidationException("Character package size mismatch")
@@ -162,6 +179,7 @@ class CharacterPackDownloadWorker(
                     progress = 100
                 )
             )
+            reportRuntime(entryPoint, runtimeOwner, FloatingRuntimeEvent.Installing)
             if (!packRoot.mkdirs() && !packRoot.isDirectory) {
                 throw CharacterPackInstallationException("Unable to create character directory")
             }
@@ -265,20 +283,13 @@ class CharacterPackDownloadWorker(
                     throw CharacterPackPersistenceException()
             }
             installationCommitted = true
+            reportRuntime(entryPoint, runtimeOwner, FloatingRuntimeEvent.InstallationReady)
             cleanupReplacedVersions(
                 previous = previouslyInstalled,
                 installed = installed,
                 packRoot = packRoot
             )
 
-            reportEventSafely(
-                entryPoint = entryPoint,
-                event = FloatingActivationEvent.DOWNLOAD_SUCCEEDED,
-                state = completedState,
-                extraAttributes = mapOf(
-                    "selectionDeferredToForeground" to completedState.selectAfterInstall.toString()
-                )
-            )
             Result.success()
         } catch (cancelled: CancellationException) {
             throw cancelled
@@ -320,7 +331,9 @@ class CharacterPackDownloadWorker(
         url: String,
         target: File,
         store: CharacterPackLocalStore,
-        state: CharacterPackDownloadState
+        state: CharacterPackDownloadState,
+        entryPoint: CharacterPackWorkerEntryPoint,
+        runtimeOwner: RuntimeDownloadOwner?
     ) {
         val request = Request.Builder()
             .url(url)
@@ -403,11 +416,11 @@ class CharacterPackDownloadWorker(
                             val now = android.os.SystemClock.elapsedRealtime()
                             if (now - lastReport >= PROGRESS_INTERVAL_MS) {
                                 lastReport = now
-                                report(store, state, downloaded, total)
+                                report(entryPoint, runtimeOwner, store, state, downloaded, total)
                             }
                         }
                         output.fd.sync()
-                        report(store, state, downloaded, total)
+                        report(entryPoint, runtimeOwner, store, state, downloaded, total)
                     }
                 }
             }
@@ -416,7 +429,9 @@ class CharacterPackDownloadWorker(
         }
     }
 
-    private fun report(
+    private suspend fun report(
+        entryPoint: CharacterPackWorkerEntryPoint,
+        runtimeOwner: RuntimeDownloadOwner?,
         store: CharacterPackLocalStore,
         state: CharacterPackDownloadState,
         downloaded: Long,
@@ -435,6 +450,11 @@ class CharacterPackDownloadWorker(
                 totalBytes = total,
                 progress = progress
             )
+        )
+        reportRuntime(
+            entryPoint,
+            runtimeOwner,
+            FloatingRuntimeEvent.DownloadProgress(progress)
         )
         setProgressAsync(workDataOf(CharacterPackWork.KEY_PROGRESS to progress))
     }
@@ -588,7 +608,7 @@ class CharacterPackDownloadWorker(
         return digest.digest().joinToString("") { byte -> "%02x".format(Locale.US, byte) }
     }
 
-    private fun fail(
+    private suspend fun fail(
         entryPoint: CharacterPackWorkerEntryPoint,
         store: CharacterPackLocalStore,
         state: CharacterPackDownloadState,
@@ -604,42 +624,19 @@ class CharacterPackDownloadWorker(
             store.updateDownloadIfCurrent(state.packId, state.downloadRequestId.orEmpty(), failedState)
         ) {
             CharacterPackConditionalWriteResult.UPDATED -> {
-                reportEventSafely(
-                    entryPoint = entryPoint,
-                    event = FloatingActivationEvent.DOWNLOAD_FAILED,
-                    state = failedState,
-                    extraAttributes = mapOf("error" to failure.first.name)
+                reportRuntime(
+                    entryPoint,
+                    runtimeOwner(
+                        sessionId = state.runtimeSessionId,
+                        revision = state.runtimeRevision,
+                        packId = state.packId
+                    ),
+                    FloatingRuntimeEvent.Failed(FloatingRuntimeError.DOWNLOAD_FAILED)
                 )
                 Result.failure()
             }
             CharacterPackConditionalWriteResult.STALE -> Result.success()
             CharacterPackConditionalWriteResult.PERSISTENCE_FAILED -> Result.failure()
-        }
-    }
-
-    private fun eventAttributes(state: CharacterPackDownloadState): Map<String, String> {
-        return buildMap {
-            put("packId", state.packId)
-            put("packVersion", state.packVersion.toString())
-            put("downloadRequestId", state.downloadRequestId.orEmpty())
-            state.activationRequestId?.let { requestId ->
-                put("requestId", requestId)
-                put("activationRequestId", requestId)
-            }
-        }
-    }
-
-    private fun reportEventSafely(
-        entryPoint: CharacterPackWorkerEntryPoint,
-        event: FloatingActivationEvent,
-        state: CharacterPackDownloadState,
-        extraAttributes: Map<String, String> = emptyMap()
-    ) {
-        runCatching {
-            entryPoint.activationEventReporter().report(
-                event,
-                eventAttributes(state) + extraAttributes
-            )
         }
     }
 
@@ -669,6 +666,44 @@ class CharacterPackDownloadWorker(
         if (store.download(state.packId)?.downloadRequestId != state.downloadRequestId) {
             throw ObsoleteCharacterPackWorkException()
         }
+    }
+
+    private suspend fun reportRuntime(
+        entryPoint: CharacterPackWorkerEntryPoint,
+        owner: RuntimeDownloadOwner?,
+        event: FloatingRuntimeEvent
+    ) {
+        owner ?: return
+        try {
+            val current = entryPoint.runtimeSessionRepository().getSnapshot().session ?: return
+            if (
+                current.sessionId != owner.sessionId ||
+                current.targetPackId != owner.packId ||
+                current.revision < owner.initialRevision
+            ) {
+                return
+            }
+            entryPoint.runtimeReporter().transition(
+                sessionId = current.sessionId,
+                expectedRevision = current.revision,
+                event = event
+            )
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (_: Exception) {
+            // The package transaction remains durable; foreground reconciliation can resume it.
+        }
+    }
+
+    private fun runtimeOwner(
+        sessionId: String?,
+        revision: Long?,
+        packId: String
+    ): RuntimeDownloadOwner? {
+        if (sessionId == null || revision == null || !CharacterPackLocalStore.isValidRequestId(sessionId)) {
+            return null
+        }
+        return RuntimeDownloadOwner(sessionId, revision, packId)
     }
 
     private fun cleanupReplacedVersions(
@@ -786,6 +821,12 @@ class CharacterPackDownloadWorker(
             SpritePackManifest.KTX2_SCHEMA_VERSION
         )
     }
+
+    private data class RuntimeDownloadOwner(
+        val sessionId: String,
+        val initialRevision: Long,
+        val packId: String
+    )
 }
 
 @EntryPoint
@@ -793,11 +834,14 @@ class CharacterPackDownloadWorker(
 interface CharacterPackWorkerEntryPoint {
     fun store(): CharacterPackLocalStore
 
+    fun runtimeSessionRepository(): FloatingRuntimeSessionRepository
+
+    fun runtimeReporter(): FloatingRuntimeReporter
+
     @CharacterPackHttpClient
     fun characterPackHttpClient(): OkHttpClient
 
     fun contractValidator(): SpritePackContractValidator
-    fun activationEventReporter(): FloatingActivationEventReporter
 }
 
 private class CharacterPackValidationException(

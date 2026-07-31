@@ -107,7 +107,6 @@ class DataSyncLearningOutboxHandler @Inject constructor(
                 val selectedIdsType = object : TypeToken<List<Long>>() {}.type
                 remoteLearningSyncDataSource.updateFloatingSettings(
                     FloatingWordSettings(
-                        enabled = payload.enabled,
                         sourceType = runCatching { FloatingWordSourceType.valueOf(payload.sourceType) }
                             .getOrDefault(FloatingWordSourceType.CURRENT_BOOK),
                         orderType = runCatching { FloatingWordOrderType.valueOf(payload.orderType) }
@@ -121,23 +120,13 @@ class DataSyncLearningOutboxHandler @Inject constructor(
                         selectedWordIds = runCatching {
                             gson.fromJson<List<Long>>(payload.selectedWordIdsJson, selectedIdsType)
                         }.getOrNull().orEmpty(),
-                        floatingBallX = payload.floatingBallX,
-                        floatingBallY = payload.floatingBallY,
-                        autoStartOnBoot = payload.autoStartOnBoot,
-                        autoStartOnAppLaunch = payload.autoStartOnAppLaunch,
                         ballSizePercent = payload.ballSizePercent,
                         ballOpacityPercent = payload.ballOpacityPercent,
                         cardOpacityPercent = payload.cardOpacityPercent,
                         cardGapDp = payload.cardGapDp,
                         selectedCharacterPackId = resolveFloatingCharacterPackId(
                             payload.selectedCharacterPackId
-                        ),
-                        dockConfig = payload.dockConfigJson?.let {
-                            gson.fromJson(it, FloatingDockConfig::class.java)
-                        } ?: FloatingDockConfig(),
-                        dockState = payload.dockStateJson?.let {
-                            gson.fromJson(it, FloatingDockState::class.java)
-                        }
+                        )
                     )
                 ).getOrThrow()
             }

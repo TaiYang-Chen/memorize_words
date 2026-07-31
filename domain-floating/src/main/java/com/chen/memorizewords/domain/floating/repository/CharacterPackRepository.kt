@@ -17,7 +17,8 @@ interface CharacterPackRepository {
     suspend fun startDownload(
         item: CharacterPackCatalogItem,
         selectAfterInstall: Boolean,
-        activationRequestId: String? = null
+        runtimeSessionId: String? = null,
+        runtimeRevision: Long? = null
     ): Result<Unit>
     suspend fun acknowledgeManagementDownloadCompletion(
         packId: String,

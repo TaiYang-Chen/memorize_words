@@ -49,7 +49,7 @@ internal object CharacterPackReloadPolicy {
                 download.downloadRequestId?.takeIf { requestId ->
                     download.status == CharacterPackDownloadStatus.COMPLETED &&
                         !download.selectAfterInstall &&
-                        download.activationRequestId == null
+                        download.runtimeSessionId == null
                 }?.let { requestId ->
                     CompletedCharacterPackDownload(item.packId, requestId)
                 }

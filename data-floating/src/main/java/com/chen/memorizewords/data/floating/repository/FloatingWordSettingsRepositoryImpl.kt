@@ -1,10 +1,9 @@
 package com.chen.memorizewords.data.floating.repository
 
 import com.chen.memorizewords.core.common.coroutines.DirectSyncLauncher
+import com.chen.memorizewords.data.floating.local.FloatingLegacyStorageKeys
 import com.chen.memorizewords.data.sync.remote.learningsync.RemoteLearningSyncDataSource
 import com.chen.memorizewords.domain.floating.FloatingSettingsLocalStatePort
-import com.chen.memorizewords.domain.floating.model.FloatingDockConfig
-import com.chen.memorizewords.domain.floating.model.FloatingDockState
 import com.chen.memorizewords.domain.floating.model.FloatingWordFieldConfig
 import com.chen.memorizewords.domain.floating.model.FloatingWordOrderType
 import com.chen.memorizewords.domain.floating.model.FloatingWordSettings
@@ -15,15 +14,9 @@ import com.google.gson.reflect.TypeToken
 import com.tencent.mmkv.MMKV
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.merge
-import kotlinx.coroutines.isActive
 
 internal const val DEFAULT_BALL_OPACITY_PERCENT = 100
 internal const val DEFAULT_CARD_OPACITY_PERCENT = 100
@@ -42,11 +35,6 @@ internal fun normalizeCardGapDp(value: Int): Int =
     value.coerceIn(MIN_CARD_GAP_DP, MAX_CARD_GAP_DP)
 internal fun normalizeCharacterPackId(value: String?): String? =
     value?.trim()?.takeIf { it.matches(Regex("[a-z0-9][a-z0-9_-]{0,63}")) }
-internal fun sanitizeDockState(
-    dockState: FloatingDockState?,
-    dockConfig: FloatingDockConfig
-): FloatingDockState? = dockState?.normalized(dockConfig)
-
 internal fun normalizeFieldConfigs(
     configs: List<FloatingWordFieldConfig>
 ): List<FloatingWordFieldConfig> {
@@ -59,7 +47,6 @@ internal fun normalizeFieldConfigs(
 }
 
 internal fun normalizeFloatingWordSettings(settings: FloatingWordSettings): FloatingWordSettings {
-    val normalizedDockConfig = settings.dockConfig.normalized()
     return settings.copy(
         fieldConfigs = normalizeFieldConfigs(settings.fieldConfigs),
         ballSizePercent = normalizeBallSizePercent(settings.ballSizePercent),
@@ -67,9 +54,7 @@ internal fun normalizeFloatingWordSettings(settings: FloatingWordSettings): Floa
         cardOpacityPercent = normalizeCardOpacityPercent(settings.cardOpacityPercent),
         cardGapDp = normalizeCardGapDp(settings.cardGapDp),
         selectedCharacterPackId =
-            normalizeCharacterPackId(settings.selectedCharacterPackId) ?: "green_pet",
-        dockConfig = normalizedDockConfig,
-        dockState = sanitizeDockState(settings.dockState, normalizedDockConfig)
+            normalizeCharacterPackId(settings.selectedCharacterPackId) ?: "green_pet"
     )
 }
 
@@ -83,24 +68,17 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
 
     companion object {
         private const val KEY_ENABLED = "floating_word_enabled"
-        private const val KEY_AUTO_START_ON_BOOT = "floating_word_auto_start_on_boot"
-        private const val KEY_AUTO_START_ON_APP_LAUNCH = "floating_word_auto_start_on_app_launch"
         private const val KEY_SOURCE_TYPE = "floating_word_source_type"
         private const val KEY_ORDER_TYPE = "floating_word_order_type"
         private const val KEY_FIELD_CONFIGS = "floating_word_field_configs"
         private const val KEY_SELECTED_IDS = "floating_word_selected_ids"
-        private const val KEY_BALL_X = "floating_word_ball_x"
-        private const val KEY_BALL_Y = "floating_word_ball_y"
-        private const val KEY_DOCK_CONFIG = "floating_word_dock_config"
-        private const val KEY_DOCK_STATE = "floating_word_dock_state"
         private const val KEY_BALL_SIZE_PERCENT = "floating_word_ball_size_percent"
         private const val KEY_BALL_OPACITY_PERCENT = "floating_word_ball_opacity_percent"
         private const val KEY_CARD_OPACITY_PERCENT = "floating_word_card_opacity_percent"
         private const val KEY_CARD_GAP_DP = "floating_word_card_gap_dp"
         private const val LEGACY_CHARACTER_PACK_ID = "green_pet"
         private const val KEY_SELECTED_CHARACTER_PACK_ID = "floating_word_selected_character_pack_id"
-        private const val KEY_SETTINGS_PAYLOAD = "floating_word_settings_payload_v2"
-        private const val EXTERNAL_PROCESS_REFRESH_INTERVAL_MS = 750L
+        private const val KEY_SETTINGS_PAYLOAD = FloatingLegacyStorageKeys.SETTINGS_PAYLOAD
     }
 
     private val fieldConfigType = object : TypeToken<List<FloatingWordFieldConfig>>() {}.type
@@ -109,15 +87,7 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
     private val storageLockDepth = ThreadLocal<Int>()
     private val state = MutableStateFlow(readFromLocal())
 
-    override fun observeSettings(): Flow<FloatingWordSettings> = merge(
-        state.asStateFlow(),
-        flow {
-            while (currentCoroutineContext().isActive) {
-                delay(EXTERNAL_PROCESS_REFRESH_INTERVAL_MS)
-                emit(getSettings())
-            }
-        }
-    ).distinctUntilChanged()
+    override fun observeSettings(): Flow<FloatingWordSettings> = state.asStateFlow()
 
     override suspend fun getSettings(): FloatingWordSettings {
         val latest = readFromLocal()
@@ -161,32 +131,11 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
         return updated
     }
 
-    override suspend fun updateBallPosition(x: Int, y: Int, dockState: FloatingDockState?) {
-        updateSettings { latest ->
-            latest.copy(
-                floatingBallX = x,
-                floatingBallY = y,
-                dockState = dockState
-            )
-        }
-    }
-
     override fun overwriteFromRemote(settings: FloatingWordSettings) {
         val normalized = normalizeSettings(settings)
         withStorageLock {
-            val current = readFromLocalLocked(migrateLegacy = true)
-            val merged = if (
-                normalized.enabled &&
-                    normalized.selectedCharacterPackId == null &&
-                    current.enabled &&
-                    current.selectedCharacterPackId == LEGACY_CHARACTER_PACK_ID
-            ) {
-                normalized.copy(selectedCharacterPackId = LEGACY_CHARACTER_PACK_ID)
-            } else {
-                normalized
-            }
-            persistSettingsLocked(merged)
-            state.value = merged
+            persistSettingsLocked(normalized)
+            state.value = normalized
         }
     }
 
@@ -210,7 +159,7 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
             }.getOrNull()?.let { return it }
         }
 
-        val hasLegacyState = legacyKeys().any(mmkv::containsKey)
+        val hasLegacyState = legacyContentKeys().any(mmkv::containsKey)
         val legacy = readLegacySettingsLocked()
         if (migrateLegacy && (hasLegacyState || !payload.isNullOrEmpty())) {
             persistSettingsLocked(legacy)
@@ -225,8 +174,6 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
             mmkv.decodeString(KEY_ORDER_TYPE, FloatingWordOrderType.RANDOM.name)
         val fieldConfigsJson = mmkv.decodeString(KEY_FIELD_CONFIGS, null)
         val selectedIdsJson = mmkv.decodeString(KEY_SELECTED_IDS, null)
-        val dockConfigJson = mmkv.decodeString(KEY_DOCK_CONFIG, null)
-        val dockStateJson = mmkv.decodeString(KEY_DOCK_STATE, null)
 
         val sourceType = runCatching {
             FloatingWordSourceType.valueOf(sourceTypeName.orEmpty())
@@ -240,25 +187,13 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
         val selectedIds = runCatching {
             gson.fromJson<List<Long>>(selectedIdsJson, longListType)
         }.getOrNull() ?: emptyList()
-        val dockConfig = runCatching {
-            gson.fromJson(dockConfigJson, FloatingDockConfig::class.java)
-        }.getOrNull() ?: FloatingDockConfig()
-        val dockState = runCatching {
-            gson.fromJson(dockStateJson, FloatingDockState::class.java)
-        }.getOrNull()
-
         val legacyEnabled = mmkv.decodeBool(KEY_ENABLED, false)
         return normalizeFloatingWordSettings(
             FloatingWordSettings(
-                enabled = legacyEnabled,
-                autoStartOnBoot = mmkv.decodeBool(KEY_AUTO_START_ON_BOOT, false),
-                autoStartOnAppLaunch = mmkv.decodeBool(KEY_AUTO_START_ON_APP_LAUNCH, false),
                 sourceType = sourceType,
                 orderType = orderType,
                 fieldConfigs = fieldConfigs,
                 selectedWordIds = selectedIds,
-                floatingBallX = mmkv.decodeInt(KEY_BALL_X, 0),
-                floatingBallY = mmkv.decodeInt(KEY_BALL_Y, 0),
                 ballSizePercent = mmkv.decodeInt(
                     KEY_BALL_SIZE_PERCENT,
                     DEFAULT_BALL_SIZE_PERCENT
@@ -276,9 +211,7 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
                     DEFAULT_CARD_GAP_DP
                 ),
                 selectedCharacterPackId = mmkv.decodeString(KEY_SELECTED_CHARACTER_PACK_ID)
-                    ?: if (legacyEnabled) LEGACY_CHARACTER_PACK_ID else null,
-                dockConfig = dockConfig,
-                dockState = dockState
+                    ?: if (legacyEnabled) LEGACY_CHARACTER_PACK_ID else null
             )
         )
     }
@@ -288,6 +221,7 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
     }
 
     private fun persistSettingsLocked(settings: FloatingWordSettings) {
+        preserveLegacyDevicePayloadLocked()
         val payload = try {
             gson.toJson(settings)
         } catch (error: Exception) {
@@ -299,22 +233,26 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
         removeLegacyKeysLocked()
     }
 
-    private fun removeLegacyKeysLocked() {
-        legacyKeys().forEach(mmkv::removeValueForKey)
+    private fun preserveLegacyDevicePayloadLocked() {
+        val legacyPayload = mmkv.decodeString(KEY_SETTINGS_PAYLOAD, null) ?: return
+        if (!FloatingLegacyStorageKeys.containsDevicePreferences(legacyPayload)) return
+        check(
+            mmkv.encode(FloatingLegacyStorageKeys.DEVICE_PREFERENCES_BACKUP, legacyPayload)
+        ) {
+            "Failed to preserve floating device preferences for migration"
+        }
     }
 
-    private fun legacyKeys(): List<String> = listOf(
+    private fun removeLegacyKeysLocked() {
+        legacyContentKeys().forEach(mmkv::removeValueForKey)
+    }
+
+    private fun legacyContentKeys(): List<String> = listOf(
         KEY_ENABLED,
-        KEY_AUTO_START_ON_BOOT,
-        KEY_AUTO_START_ON_APP_LAUNCH,
         KEY_SOURCE_TYPE,
         KEY_ORDER_TYPE,
         KEY_FIELD_CONFIGS,
         KEY_SELECTED_IDS,
-        KEY_BALL_X,
-        KEY_BALL_Y,
-        KEY_DOCK_CONFIG,
-        KEY_DOCK_STATE,
         KEY_BALL_SIZE_PERCENT,
         KEY_BALL_OPACITY_PERCENT,
         KEY_CARD_OPACITY_PERCENT,
