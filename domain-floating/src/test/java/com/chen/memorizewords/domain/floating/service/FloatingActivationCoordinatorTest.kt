@@ -304,6 +304,41 @@ class FloatingActivationCoordinatorTest {
     }
 
     @Test
+    fun `manual disable clears activation and auto start while preserving selected character`() =
+        runBlocking {
+            val selectedPackId = "pack-a"
+            val settings = FakeSettingsRepository(
+                FloatingWordSettings(
+                    enabled = true,
+                    autoStartOnBoot = true,
+                    autoStartOnAppLaunch = true,
+                    selectedCharacterPackId = selectedPackId
+                )
+            )
+            val pending = FakeActivationStateRepository(
+                PendingFloatingActivation(
+                    requestId = "035fa599-5c9c-42b5-a0ae-dd4d4c9f2851",
+                    targetPackId = selectedPackId,
+                    source = FloatingActivationSource.HOME,
+                    createdAtMs = 1L
+                )
+            )
+            val coordinator = coordinator(
+                FakeCharacterPackRepository(),
+                settings,
+                pending
+            )
+
+            coordinator.disableFloating()
+
+            assertNull(pending.current)
+            assertFalse(settings.current.enabled)
+            assertFalse(settings.current.autoStartOnBoot)
+            assertFalse(settings.current.autoStartOnAppLaunch)
+            assertEquals(selectedPackId, settings.current.selectedCharacterPackId)
+        }
+
+    @Test
     fun `effective availability and service startup checks never scan fallback packs`() = runBlocking {
         val fallback = installed("pack-b")
         val packs = FakeCharacterPackRepository(installed = mapOf(fallback.packId to fallback))

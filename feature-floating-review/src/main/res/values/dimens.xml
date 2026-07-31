@@ -3,7 +3,10 @@
     <dimen name="module_floating_review_ball_size">44dp</dimen>
     <dimen name="feature_floating_review_pet_width">156dp</dimen>
     <dimen name="feature_floating_review_pet_height">187dp</dimen>
-    <dimen name="module_floating_review_card_width">242dp</dimen>
+    <dimen name="module_floating_review_card_width">320dp</dimen>
+    <dimen name="module_floating_review_card_min_height">192dp</dimen>
+    <dimen name="module_floating_review_card_header_height">58dp</dimen>
+    <dimen name="module_floating_review_card_phonetic_height">44dp</dimen>
     <dimen name="module_floating_review_card_gap">40dp</dimen>
     <dimen name="module_floating_review_card_edge_margin">12dp</dimen>
     <dimen name="module_floating_review_tail_width">34dp</dimen>

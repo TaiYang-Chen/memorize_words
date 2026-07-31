@@ -2,12 +2,10 @@ package com.chen.memorizewords.feature.floatingreview.ui.settings
 
 import android.app.Activity
 import android.os.Bundle
-import android.provider.Settings
 import android.view.View
 import android.widget.RadioButton
 import android.widget.SeekBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -17,8 +15,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.navigation.fragment.findNavController
-import com.chen.memorizewords.core.navigation.FloatingWordActions
-import com.chen.memorizewords.core.navigation.FloatingWordEntry
 import com.chen.memorizewords.core.navigation.PracticeEntry
 import com.chen.memorizewords.core.navigation.FloatingWordEntryExtras
 import com.chen.memorizewords.core.navigation.CharacterSelectionMode
@@ -28,7 +24,6 @@ import com.chen.memorizewords.domain.floating.model.FloatingWordFieldType
 import com.chen.memorizewords.domain.floating.model.FloatingWordOrderType
 import com.chen.memorizewords.domain.floating.model.FloatingWordSettings
 import com.chen.memorizewords.domain.floating.model.FloatingWordSourceType
-import com.chen.memorizewords.domain.floating.service.FloatingActivationCoordinator
 import com.chen.memorizewords.feature.floatingreview.R
 import com.chen.memorizewords.feature.floatingreview.FloatingReviewActivity
 import com.chen.memorizewords.feature.floatingreview.databinding.ModuleFloatingReviewFragmentSettingsBinding
@@ -67,17 +62,9 @@ class FloatingReviewSettingsFragment :
     @Inject
     lateinit var practiceEntry: PracticeEntry
 
-    @Inject
-    lateinit var floatingWordEntry: FloatingWordEntry
-
-    @Inject
-    lateinit var floatingActivationCoordinator: FloatingActivationCoordinator
-
     private var settings: FloatingWordSettings = FloatingWordSettings()
     private lateinit var adapter: FloatingWordFieldConfigAdapter
     private var ignoreViewUpdates: Boolean = false
-    private var previewServiceStartedTemporarily: Boolean = false
-    private var hasShownPreviewPermissionToast: Boolean = false
 
     private val pickWordsLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -103,36 +90,12 @@ class FloatingReviewSettingsFragment :
         }
     }
 
-    override fun onNavigationRoute(event: UiEvent.Navigation.Route) {
-        val target =
-            event.target as? FloatingReviewSettingsViewModel.Route.DispatchFloatingAction ?: return
-        if (target.action == FloatingWordActions.ACTION_PREVIEW_CARD) {
-            ensureFloatingPreview()
-        } else {
-            floatingWordEntry.dispatchServiceAction(requireContext(), target.action)
-        }
-    }
-
     override fun consumeUiEvent(event: UiEvent): Boolean {
         if (event is UiEvent.Navigation.Back) {
             (activity as? FloatingReviewActivity)?.returnToOrigin()
             return true
         }
         return false
-    }
-
-    override fun onStop() {
-        if (
-            previewServiceStartedTemporarily &&
-            !settings.enabled
-        ) {
-            floatingWordEntry.dispatchServiceAction(
-                requireContext(),
-                FloatingWordActions.ACTION_STOP
-            )
-            previewServiceStartedTemporarily = false
-        }
-        super.onStop()
     }
 
     private fun bindView(view: View) {
@@ -314,41 +277,6 @@ class FloatingReviewSettingsFragment :
         val layout = view?.findViewById<View>(R.id.layoutPickWords) ?: return
         layout.visibility =
             if (settings.sourceType == FloatingWordSourceType.SELF_SELECT) View.VISIBLE else View.GONE
-    }
-
-    private fun ensureFloatingPreview() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            if (!floatingActivationCoordinator.hasUsablePack()) {
-                Toast.makeText(
-                    requireContext(),
-                    R.string.module_floating_review_character_missing_preview,
-                    Toast.LENGTH_SHORT
-                ).show()
-                return@launch
-            }
-            startFloatingPreview()
-        }
-    }
-
-    private fun startFloatingPreview() {
-        val context = context ?: return
-        if (!Settings.canDrawOverlays(context)) {
-            if (!hasShownPreviewPermissionToast) {
-                hasShownPreviewPermissionToast = true
-                Toast.makeText(
-                    context,
-                    R.string.module_floating_review_preview_permission_required,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            return
-        }
-
-        if (!settings.enabled && !previewServiceStartedTemporarily) {
-            previewServiceStartedTemporarily = true
-        }
-
-        floatingWordEntry.dispatchServiceAction(context, FloatingWordActions.ACTION_PREVIEW_CARD)
     }
 
     private fun bindOrderClick(view: View, containerId: Int, orderType: FloatingWordOrderType) {

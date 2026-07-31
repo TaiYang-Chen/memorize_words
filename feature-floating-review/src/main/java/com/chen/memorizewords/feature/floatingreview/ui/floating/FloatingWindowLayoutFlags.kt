@@ -11,5 +11,6 @@ internal fun floatingBallWindowFlags(): Int {
 
 internal fun floatingCardWindowFlags(): Int {
     return WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+        WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
 }

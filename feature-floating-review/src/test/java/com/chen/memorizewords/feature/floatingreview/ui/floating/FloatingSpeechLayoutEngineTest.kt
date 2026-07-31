@@ -95,6 +95,132 @@ class FloatingSpeechLayoutEngineTest {
     }
 
     @Test
+    fun `locked above placement keeps panel gap through every animation height`() {
+        listOf(40, 0, -20).forEach { gap ->
+            val gapConfig = config.copy(clearancePx = gap)
+            listOf(300, 280, 260, 240, 220).forEach { height ->
+                val layout = engine.resolveAnchored(
+                    safeArea = safeArea,
+                    petBounds = FloatingSpeechPetBounds(80, 430, 156, 187),
+                    cardSize = FloatingSpeechCardSize(cardSize.width, height),
+                    config = gapConfig,
+                    placement = FloatingSpeechPlacement.ABOVE_PET
+                )
+
+                assertEquals(430 - gap, layout.cardY + height - config.tailSlotHeightPx)
+            }
+        }
+    }
+
+    @Test
+    fun `locked below placement keeps panel gap through every animation height`() {
+        listOf(40, 0, -20).forEach { gap ->
+            val gapConfig = config.copy(clearancePx = gap)
+            listOf(220, 240, 260, 280, 300).forEach { height ->
+                val layout = engine.resolveAnchored(
+                    safeArea = safeArea,
+                    petBounds = FloatingSpeechPetBounds(80, 60, 156, 187),
+                    cardSize = FloatingSpeechCardSize(cardSize.width, height),
+                    config = gapConfig,
+                    placement = FloatingSpeechPlacement.BELOW_PET
+                )
+
+                assertEquals(60 + 187 + gap, layout.cardY + config.tailSlotHeightPx)
+            }
+        }
+    }
+
+    @Test
+    fun `available height prevents anchored animation from reaching a safe edge clamp`() {
+        val pet = FloatingSpeechPetBounds(80, 430, 156, 187)
+        val aboveAvailable = engine.availableHeight(
+            safeArea,
+            pet,
+            config,
+            FloatingSpeechPlacement.ABOVE_PET
+        )
+        val belowAvailable = engine.availableHeight(
+            safeArea,
+            pet,
+            config,
+            FloatingSpeechPlacement.BELOW_PET
+        )
+
+        assertEquals(430 - config.clearancePx + config.tailSlotHeightPx - 36, aboveAvailable)
+        assertEquals(748 - (430 + 187 + config.clearancePx - config.tailSlotHeightPx), belowAvailable)
+    }
+
+    @Test
+    fun `placement locks below only when the minimum card cannot fit above`() {
+        assertEquals(
+            FloatingSpeechPlacement.ABOVE_PET,
+            engine.resolvePlacementForMinimumHeight(
+                safeArea,
+                FloatingSpeechPetBounds(80, 430, 156, 187),
+                minimumCardHeightPx = 192,
+                config = config
+            )
+        )
+        assertEquals(
+            FloatingSpeechPlacement.BELOW_PET,
+            engine.resolvePlacementForMinimumHeight(
+                safeArea,
+                FloatingSpeechPetBounds(80, 60, 156, 187),
+                minimumCardHeightPx = 192,
+                config = config
+            )
+        )
+    }
+
+    @Test
+    fun `card width uses the preferred width until the safe area becomes narrow`() {
+        assertEquals(320, resolveFloatingCardWidth(safeArea, 320, 12))
+        assertEquals(
+            216,
+            resolveFloatingCardWidth(
+                safeArea.copy(right = 240),
+                preferredWidthPx = 320,
+                edgeMarginPx = 12
+            )
+        )
+    }
+
+    @Test
+    fun `natural card height is capped by aspect ratio and anchored side`() {
+        assertEquals(
+            360,
+            resolveFloatingCardTargetHeight(
+                naturalHeightPx = 600,
+                minimumHeightPx = 192,
+                cardWidthPx = 320,
+                placementAvailableHeightPx = 360
+            )
+        )
+        assertEquals(
+            480,
+            resolveFloatingCardTargetHeight(
+                naturalHeightPx = 600,
+                minimumHeightPx = 192,
+                cardWidthPx = 320,
+                placementAvailableHeightPx = 700
+            )
+        )
+    }
+
+    @Test
+    fun `minimum card height is soft when the anchored side is smaller`() {
+        assertEquals(
+            150,
+            resolveFloatingCardTargetHeight(
+                naturalHeightPx = 300,
+                minimumHeightPx = 192,
+                cardWidthPx = 320,
+                placementAvailableHeightPx = 150
+            )
+        )
+    }
+
+    @Test
     fun `scaled pet size changes the pet center used by the card and tail`() {
         val normal = resolveForPet(x = 80, y = 430, width = 156, height = 187)
         val scaled = resolveForPet(x = 80, y = 430, width = 203, height = 243)

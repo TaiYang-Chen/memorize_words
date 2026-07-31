@@ -16,5 +16,14 @@ class FloatingWindowLayoutFlagsTest {
         assertTrue(flags hasFlag WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
     }
 
+    @Test
+    fun `floating card window enables hardware acceleration for height transitions`() {
+        val flags = floatingCardWindowFlags()
+
+        assertTrue(flags hasFlag WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
+        assertTrue(flags hasFlag WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN)
+        assertTrue(flags hasFlag WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
+    }
+
     private infix fun Int.hasFlag(flag: Int): Boolean = this and flag == flag
 }

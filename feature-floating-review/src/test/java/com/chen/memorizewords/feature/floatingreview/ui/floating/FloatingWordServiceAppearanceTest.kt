@@ -89,56 +89,12 @@ class FloatingWordServiceAppearanceTest {
     }
 
     @Test
-    fun `temporary preview may ignore disabled setting but not runtime requirements`() {
-        val preview = FloatingServiceHealthSnapshot(
-            settingsEnabled = false,
-            overlayPermissionGranted = true,
-            membershipAllowed = true,
-            characterPackUsable = true
-        )
-
-        assertTrue(
-            shouldKeepFloatingServiceRunning(
-                snapshot = preview,
-                runMode = FloatingServiceRunMode.TEMPORARY_PREVIEW
-            )
-        )
-        assertFalse(
-            shouldKeepFloatingServiceRunning(
-                snapshot = preview.copy(overlayPermissionGranted = false),
-                runMode = FloatingServiceRunMode.TEMPORARY_PREVIEW
-            )
-        )
-        assertFalse(
-            shouldKeepFloatingServiceRunning(
-                snapshot = preview.copy(membershipAllowed = false),
-                runMode = FloatingServiceRunMode.TEMPORARY_PREVIEW
-            )
-        )
-        assertFalse(
-            shouldKeepFloatingServiceRunning(
-                snapshot = preview.copy(characterPackUsable = false),
-                runMode = FloatingServiceRunMode.TEMPORARY_PREVIEW
-            )
-        )
-    }
-
-    @Test
     fun `floating started is reported only for a fully attached enabled session`() {
         assertTrue(
             shouldReportFloatingStarted(
                 alreadyReported = false,
                 reportInProgress = false,
                 runMode = FloatingServiceRunMode.ENABLED,
-                ballViewAttached = true,
-                cardViewAttached = true
-            )
-        )
-        assertFalse(
-            shouldReportFloatingStarted(
-                alreadyReported = false,
-                reportInProgress = false,
-                runMode = FloatingServiceRunMode.TEMPORARY_PREVIEW,
                 ballViewAttached = true,
                 cardViewAttached = true
             )
@@ -205,21 +161,21 @@ class FloatingWordServiceAppearanceTest {
     }
 
     @Test
-    fun `appearance-only request stops a cold service without changing an active start`() {
+    fun `non-starting request stops a cold service without changing an active start`() {
         assertTrue(
-            shouldStopColdAppearanceRequest(
+            shouldStopColdNonStartingRequest(
                 ballViewAttached = false,
                 lifecycleOperationInProgress = false
             )
         )
         assertFalse(
-            shouldStopColdAppearanceRequest(
+            shouldStopColdNonStartingRequest(
                 ballViewAttached = true,
                 lifecycleOperationInProgress = false
             )
         )
         assertFalse(
-            shouldStopColdAppearanceRequest(
+            shouldStopColdNonStartingRequest(
                 ballViewAttached = false,
                 lifecycleOperationInProgress = true
             )
@@ -227,15 +183,103 @@ class FloatingWordServiceAppearanceTest {
     }
 
     @Test
-    fun `character pack apply is appearance-only and cannot cold-start floating`() {
+    fun `character pack apply is non-starting and cannot cold-start floating`() {
         assertTrue(
-            isFloatingAppearanceOnlyAction(FloatingWordActions.ACTION_APPLY_BALL_APPEARANCE)
+            isFloatingNonStartingAction(FloatingWordActions.ACTION_APPLY_CHARACTER_PACK)
+        )
+        assertFalse(isFloatingNonStartingAction(FloatingWordActions.ACTION_START))
+        assertFalse(isFloatingNonStartingAction(null))
+    }
+
+    @Test
+    fun `stale word sequence is not reused when opening a card`() {
+        assertTrue(
+            canReuseCurrentFloatingWord(
+                hasCurrentWord = true,
+                wordSequenceRefreshPending = false,
+                loadedSequenceMatches = true
+            )
+        )
+        assertFalse(
+            canReuseCurrentFloatingWord(
+                hasCurrentWord = true,
+                wordSequenceRefreshPending = true,
+                loadedSequenceMatches = true
+            )
+        )
+        assertFalse(
+            canReuseCurrentFloatingWord(
+                hasCurrentWord = true,
+                wordSequenceRefreshPending = false,
+                loadedSequenceMatches = false
+            )
+        )
+    }
+
+    @Test
+    fun `card settings changes defer work while the card is hidden`() {
+        assertEquals(
+            FloatingCardSettingsAction.NONE,
+            resolveFloatingCardSettingsAction(
+                cardVisible = false,
+                hasCurrentWord = true,
+                wordSequenceChanged = true,
+                fieldConfigsChanged = true
+            )
+        )
+    }
+
+    @Test
+    fun `visible card keeps its word for a sequence change and redraws for field changes`() {
+        assertEquals(
+            FloatingCardSettingsAction.NONE,
+            resolveFloatingCardSettingsAction(
+                cardVisible = true,
+                hasCurrentWord = true,
+                wordSequenceChanged = true,
+                fieldConfigsChanged = false
+            )
+        )
+        assertEquals(
+            FloatingCardSettingsAction.RENDER_CURRENT,
+            resolveFloatingCardSettingsAction(
+                cardVisible = true,
+                hasCurrentWord = true,
+                wordSequenceChanged = false,
+                fieldConfigsChanged = true
+            )
+        )
+        assertEquals(
+            FloatingCardSettingsAction.LOAD_NEXT,
+            resolveFloatingCardSettingsAction(
+                cardVisible = true,
+                hasCurrentWord = false,
+                wordSequenceChanged = true,
+                fieldConfigsChanged = false
+            )
+        )
+    }
+
+    @Test
+    fun `loaded character pack is reused only when its revision and renderer are ready`() {
+        assertFalse(
+            shouldReloadFloatingCharacterPack(
+                revisionMatches = true,
+                packReady = true
+            )
         )
         assertTrue(
-            isFloatingAppearanceOnlyAction(FloatingWordActions.ACTION_APPLY_CHARACTER_PACK)
+            shouldReloadFloatingCharacterPack(
+                revisionMatches = false,
+                packReady = true
+            )
         )
-        assertFalse(isFloatingAppearanceOnlyAction(FloatingWordActions.ACTION_START))
-        assertFalse(isFloatingAppearanceOnlyAction(null))
+        assertTrue(
+            shouldReloadFloatingCharacterPack(
+                revisionMatches = true,
+                packReady = false
+            )
+        )
     }
 
     @Test
