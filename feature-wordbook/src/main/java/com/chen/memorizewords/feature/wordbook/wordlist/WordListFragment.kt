@@ -20,6 +20,7 @@ import com.chen.memorizewords.core.ui.R as CoreUiR
 import com.chen.memorizewords.core.ui.ext.dimenPx
 import com.chen.memorizewords.core.ui.ext.setTextSizeFromDimen
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
+import com.chen.memorizewords.core.ui.insets.configurePhoneDialogForIme
 import com.chen.memorizewords.core.ui.vm.UiEffect
 import com.chen.memorizewords.domain.word.model.enums.WordFilter
 import com.chen.memorizewords.domain.word.model.enums.WordSortType
@@ -229,6 +230,7 @@ class WordListFragment : BaseFragment<WordListViewModel, FragmentWordListBinding
             })
         }
         dialog.setContentView(container)
+        dialog.configurePhoneDialogForIme()
         dialog.show()
     }
 

@@ -8,12 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.doOnPreDraw
-import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Lifecycle
 import com.chen.memorizewords.core.ui.R
+import com.chen.memorizewords.core.ui.dialog.PhoneDialogFragment
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 
-class LoadingDialogFragment : DialogFragment() {
+class LoadingDialogFragment : PhoneDialogFragment() {
 
     private var messageText: String = BaseViewModel.DEFAULT_LOADING_MESSAGE
     private var firstFrameDrawn = false

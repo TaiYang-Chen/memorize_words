@@ -11,6 +11,8 @@ enum class FloatingRuntimePhase {
     AWAITING_CHARACTER,
     DOWNLOADING,
     INSTALLING,
+    /** Package transaction committed; the main-process foreground coordinator may start it. */
+    READY_TO_START,
     STARTING,
     RUNNING,
     STOPPING,
@@ -64,7 +66,7 @@ sealed interface FloatingRuntimeEvent {
     data class DownloadQueued(val progress: Int = 0) : FloatingRuntimeEvent
     data class DownloadProgress(val progress: Int) : FloatingRuntimeEvent
     data object Installing : FloatingRuntimeEvent
-    /** The package transaction committed; Controller may now dispatch the renderer start. */
+    /** The package transaction committed; the main-process coordinator may now start rendering. */
     data object InstallationReady : FloatingRuntimeEvent
     data class StartDispatched(val deadlineAtMs: Long) : FloatingRuntimeEvent
     data object RendererReady : FloatingRuntimeEvent

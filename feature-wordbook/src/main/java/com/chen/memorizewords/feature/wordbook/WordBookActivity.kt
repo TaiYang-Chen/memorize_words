@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -33,7 +32,6 @@ class WordBookActivity : BaseVmDbActivity<BaseViewModel, ActivityWordBookBinding
     }
 
     override fun initView(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
         if (savedInstanceState == null) {
             initializeNavigation(intent)
         }

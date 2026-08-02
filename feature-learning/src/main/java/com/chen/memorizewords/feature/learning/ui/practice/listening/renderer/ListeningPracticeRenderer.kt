@@ -20,11 +20,9 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.gridlayout.widget.GridLayout
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chen.memorizewords.core.ui.ext.dpToPx
 import com.chen.memorizewords.domain.practice.ListeningAnswerAreaPosition
@@ -85,8 +83,6 @@ internal class ListeningPracticeRenderer(
     private val spellingLetterButtons = mutableMapOf<Long, MaterialButton>()
     private var spellingDeleteButton: MaterialButton? = null
     private val baseScrollBottomPadding = binding.scrollContent.paddingBottom
-    private val baseBottomActionsBottomPadding = binding.layoutBottomActions.paddingBottom
-    private var navigationBarBottomInset: Int = 0
 
     init {
         initStudyLists()
@@ -123,19 +119,10 @@ internal class ListeningPracticeRenderer(
     }
 
     private fun initInsets() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
-            navigationBarBottomInset =
-                insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
-            binding.layoutBottomActions.updatePadding(
-                bottom = baseBottomActionsBottomPadding + navigationBarBottomInset
-            )
-            updateScrollContentBottomPadding()
-            insets
-        }
         binding.layoutBottomActions.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
             updateScrollContentBottomPadding()
         }
-        ViewCompat.requestApplyInsets(binding.root)
+        updateScrollContentBottomPadding()
     }
 
     private fun initAccessibility() {

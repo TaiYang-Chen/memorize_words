@@ -92,10 +92,13 @@
 
         <TextView
             android:id="@+id/btn_select_all"
-            android:layout_width="@dimen/core_ui_dp_96"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="?attr/selectableItemBackground"
+            android:ellipsize="end"
             android:gravity="center_vertical|start"
+            android:maxLines="1"
+            android:minWidth="@dimen/core_ui_dp_48"
             android:text="@string/practice_word_picker_select_all_visible"
             android:textColor="#6B7280"
             android:textSize="@dimen/core_ui_text_14"
@@ -123,10 +126,13 @@
 
         <TextView
             android:id="@+id/btn_clear"
-            android:layout_width="@dimen/core_ui_dp_96"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="?attr/selectableItemBackground"
+            android:ellipsize="end"
             android:gravity="center_vertical|end"
+            android:maxLines="1"
+            android:minWidth="@dimen/core_ui_dp_48"
             android:text="@string/practice_word_picker_clear_selection"
             android:textColor="#6B7280"
             android:textSize="@dimen/core_ui_text_14"

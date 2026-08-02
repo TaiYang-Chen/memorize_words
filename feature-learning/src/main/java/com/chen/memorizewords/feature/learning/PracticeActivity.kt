@@ -2,7 +2,6 @@ package com.chen.memorizewords.feature.learning
 
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.os.bundleOf
 import com.chen.memorizewords.domain.practice.PracticeEntryType
@@ -16,11 +15,12 @@ import com.chen.memorizewords.feature.learning.ui.practice.SpellingCompletionRes
 import com.chen.memorizewords.feature.learning.ui.practice.SpellingPracticeDoneFragment
 import com.chen.memorizewords.feature.learning.ui.practice.SpellingPracticeFragment
 import com.chen.memorizewords.core.navigation.PracticeEntryExtras
+import com.chen.memorizewords.core.ui.activity.PhoneEdgeToEdgeActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class PracticeActivity : AppCompatActivity() {
+class PracticeActivity : PhoneEdgeToEdgeActivity() {
 
     companion object {
         const val EXTRA_PRACTICE_MODE = PracticeEntryExtras.EXTRA_PRACTICE_MODE

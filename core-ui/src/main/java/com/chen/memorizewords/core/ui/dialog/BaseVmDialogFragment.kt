@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -19,7 +18,7 @@ import com.chen.memorizewords.core.ui.vm.UiEffect
 import com.chen.memorizewords.core.ui.vm.UiEvent
 import kotlinx.coroutines.launch
 
-abstract class BaseVmDialogFragment<VM : BaseViewModel> : DialogFragment() {
+abstract class BaseVmDialogFragment<VM : BaseViewModel> : PhoneDialogFragment() {
 
     protected abstract val viewModel: VM
 

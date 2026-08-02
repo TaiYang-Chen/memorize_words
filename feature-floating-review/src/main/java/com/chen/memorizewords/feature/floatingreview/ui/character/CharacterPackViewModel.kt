@@ -152,7 +152,8 @@ class CharacterPackViewModel @Inject constructor(
             val runtimeOwnsDownload = runtime?.targetPackId == item.packId &&
                 runtime.phase in setOf(
                     FloatingRuntimePhase.DOWNLOADING,
-                    FloatingRuntimePhase.INSTALLING
+                    FloatingRuntimePhase.INSTALLING,
+                    FloatingRuntimePhase.READY_TO_START
                 )
             if (runtimeOwnsDownload) runtimeController.requestStop()
             else repository.cancelDownload(item.packId)

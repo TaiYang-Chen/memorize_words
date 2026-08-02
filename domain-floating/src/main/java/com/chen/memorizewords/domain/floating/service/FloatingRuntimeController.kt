@@ -1,7 +1,7 @@
 package com.chen.memorizewords.domain.floating.service
 
-import com.chen.memorizewords.core.common.coroutines.ApplicationScope
 import com.chen.memorizewords.domain.floating.model.CharacterPackResolution
+import com.chen.memorizewords.domain.floating.model.CharacterPackDownloadStatus
 import com.chen.memorizewords.domain.floating.model.FloatingRuntimeEligibility
 import com.chen.memorizewords.domain.floating.model.FloatingRuntimeError
 import com.chen.memorizewords.domain.floating.model.FloatingRuntimeEvent
@@ -16,18 +16,14 @@ import com.chen.memorizewords.domain.floating.repository.FloatingWordSettingsRep
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 /**
- * Sole lifecycle owner for the floating experience. UI, startup and character management invoke
- * this controller; only the injected gateway is allowed to dispatch foreground-service commands.
+ * Lifecycle transition owner for the floating experience. UI and character management invoke it;
+ * main-process startup owns foreground recovery and the injected gateway dispatches service commands.
  */
 @Singleton
 class FloatingRuntimeController @Inject constructor(
@@ -37,18 +33,11 @@ class FloatingRuntimeController @Inject constructor(
     private val settingsRepository: FloatingWordSettingsRepository,
     private val characterPackRepository: CharacterPackRepository,
     private val eligibilityChecker: FloatingRuntimeEligibilityChecker,
-    private val serviceGateway: FloatingRuntimeServiceGateway,
-    @ApplicationScope private val applicationScope: CoroutineScope
+    private val serviceGateway: FloatingRuntimeServiceGateway
 ) {
     private val transitionMutex = Mutex()
-    private var runtimeJob: Job? = null
     private var orphanRuntimeReconciled = false
-
-    init {
-        runtimeJob = applicationScope.launch {
-            runtimeRepository.observe().collect(::onRuntimeChanged)
-        }
-    }
+    private var lastDispatchedStart: StartDispatch? = null
 
     fun observeRuntime(): Flow<FloatingRuntimeSnapshot> = runtimeRepository.observe()
 
@@ -104,7 +93,8 @@ class FloatingRuntimeController @Inject constructor(
             FloatingRuntimePhase.AWAITING_PERMISSION,
             FloatingRuntimePhase.AWAITING_CHARACTER,
             FloatingRuntimePhase.DOWNLOADING,
-            FloatingRuntimePhase.INSTALLING
+            FloatingRuntimePhase.INSTALLING,
+            FloatingRuntimePhase.READY_TO_START
         )
         if (current.phase == FloatingRuntimePhase.DOWNLOADING || current.phase == FloatingRuntimePhase.INSTALLING) {
             current.targetPackId?.let { packId -> runCatching { characterPackRepository.cancelDownload(packId) } }
@@ -193,30 +183,30 @@ class FloatingRuntimeController @Inject constructor(
             FloatingRuntimePhase.AWAITING_PERMISSION -> {
                 if (serviceGateway.canDrawOverlays()) startServiceIfReady(current)
             }
-            FloatingRuntimePhase.DOWNLOADING,
-            FloatingRuntimePhase.INSTALLING -> {
-                val packId = current.targetPackId
-                if (packId != null && characterPackRepository.isInstalledUsable(packId)) {
-                    startServiceIfReady(current)
-                }
-            }
+            FloatingRuntimePhase.DOWNLOADING -> Unit
+            FloatingRuntimePhase.INSTALLING -> recoverLegacyInstallingSession(current)
+            FloatingRuntimePhase.READY_TO_START -> startServiceIfReady(current)
             FloatingRuntimePhase.STARTING -> {
                 val deadline = current.startDeadlineAtMs
-                if (deadline != null && deadline <= System.currentTimeMillis()) {
-                    reporter.transition(
-                        current.sessionId,
-                        current.revision,
-                        FloatingRuntimeEvent.Failed(FloatingRuntimeError.RENDER_TIMEOUT)
-                    )
-                } else {
-                    val startResult = serviceGateway.dispatchStart(current)
-                    if (startResult.isFailure) {
+                when {
+                    deadline == null -> {
+                        val restarted = reporter.transition(
+                            current.sessionId,
+                            current.revision,
+                            FloatingRuntimeEvent.StartDispatched(
+                                System.currentTimeMillis() + START_TIMEOUT_MS
+                            )
+                        )
+                        if (restarted != null) dispatchStartIfNeeded(restarted)
+                    }
+                    deadline <= System.currentTimeMillis() -> {
                         reporter.transition(
                             current.sessionId,
                             current.revision,
-                            FloatingRuntimeEvent.Failed(FloatingRuntimeError.FOREGROUND_SERVICE_REJECTED)
+                            FloatingRuntimeEvent.Failed(FloatingRuntimeError.RENDER_TIMEOUT)
                         )
                     }
+                    else -> dispatchStartIfNeeded(current)
                 }
             }
             FloatingRuntimePhase.RUNNING -> {
@@ -331,8 +321,15 @@ class FloatingRuntimeController @Inject constructor(
     }
 
     private suspend fun startServiceIfReady(session: FloatingRuntimeSession) {
-        val packId = session.targetPackId ?: return
-        if (!characterPackRepository.isInstalledUsable(packId)) return
+        val packId = session.targetPackId
+        if (packId == null || !characterPackRepository.isInstalledUsable(packId)) {
+            reporter.transition(
+                session.sessionId,
+                session.revision,
+                FloatingRuntimeEvent.Failed(FloatingRuntimeError.CHARACTER_UNAVAILABLE)
+            )
+            return
+        }
         if (!serviceGateway.canDrawOverlays()) {
             reporter.transition(
                 session.sessionId,
@@ -346,11 +343,97 @@ class FloatingRuntimeController @Inject constructor(
             session.revision,
             FloatingRuntimeEvent.StartDispatched(System.currentTimeMillis() + START_TIMEOUT_MS)
         ) ?: return
-        val startResult = serviceGateway.dispatchStart(starting)
+        dispatchStartIfNeeded(starting)
+    }
+
+    private suspend fun recoverLegacyInstallingSession(session: FloatingRuntimeSession) {
+        val packId = session.targetPackId
+        if (packId == null) {
+            reporter.transition(
+                session.sessionId,
+                session.revision,
+                FloatingRuntimeEvent.Failed(FloatingRuntimeError.CHARACTER_UNAVAILABLE)
+            )
+            return
+        }
+        val download = characterPackRepository.observeDownloads().first()[packId]
+        val ownsDownload = download?.runtimeSessionId == session.sessionId
+        when {
+            ownsDownload && download?.status == CharacterPackDownloadStatus.COMPLETED -> {
+                advanceCommittedInstallation(session, packId)
+            }
+            ownsDownload && download?.status in setOf(
+                CharacterPackDownloadStatus.FAILED,
+                CharacterPackDownloadStatus.CANCELLED
+            ) -> {
+                reporter.transition(
+                    session.sessionId,
+                    session.revision,
+                    FloatingRuntimeEvent.Failed(FloatingRuntimeError.DOWNLOAD_FAILED)
+                )
+            }
+            ownsDownload -> Unit
+            characterPackRepository.isInstalledUsable(packId) -> {
+                // Older releases did not always persist the runtime download owner. A usable
+                // target package is sufficient to recover that durable session safely.
+                advanceCommittedInstallation(session, packId)
+            }
+            download?.status == CharacterPackDownloadStatus.COMPLETED -> {
+                reporter.transition(
+                    session.sessionId,
+                    session.revision,
+                    FloatingRuntimeEvent.Failed(FloatingRuntimeError.CHARACTER_UNAVAILABLE)
+                )
+            }
+            download?.status in setOf(
+                CharacterPackDownloadStatus.FAILED,
+                CharacterPackDownloadStatus.CANCELLED
+            ) -> {
+                reporter.transition(
+                    session.sessionId,
+                    session.revision,
+                    FloatingRuntimeEvent.Failed(FloatingRuntimeError.DOWNLOAD_FAILED)
+                )
+            }
+            else -> {
+                reporter.transition(
+                    session.sessionId,
+                    session.revision,
+                    FloatingRuntimeEvent.Failed(FloatingRuntimeError.CHARACTER_UNAVAILABLE)
+                )
+            }
+        }
+    }
+
+    private suspend fun advanceCommittedInstallation(
+        session: FloatingRuntimeSession,
+        packId: String
+    ) {
+        if (!characterPackRepository.isInstalledUsable(packId)) {
+            reporter.transition(
+                session.sessionId,
+                session.revision,
+                FloatingRuntimeEvent.Failed(FloatingRuntimeError.CHARACTER_UNAVAILABLE)
+            )
+            return
+        }
+        val ready = reporter.transition(
+            session.sessionId,
+            session.revision,
+            FloatingRuntimeEvent.InstallationReady
+        ) ?: return
+        startServiceIfReady(ready)
+    }
+
+    private suspend fun dispatchStartIfNeeded(session: FloatingRuntimeSession) {
+        val dispatch = StartDispatch(session.sessionId, session.revision)
+        if (lastDispatchedStart == dispatch) return
+        lastDispatchedStart = dispatch
+        val startResult = serviceGateway.dispatchStart(session)
         if (startResult.isFailure) {
             reporter.transition(
-                starting.sessionId,
-                starting.revision,
+                session.sessionId,
+                session.revision,
                 FloatingRuntimeEvent.Failed(FloatingRuntimeError.FOREGROUND_SERVICE_REJECTED)
             )
         }
@@ -406,26 +489,10 @@ class FloatingRuntimeController @Inject constructor(
         }
     }
 
-    private fun onRuntimeChanged(snapshot: FloatingRuntimeSnapshot) {
-        val observed = snapshot.session ?: return
-        if (observed.phase != FloatingRuntimePhase.INSTALLING) return
-        applicationScope.launch {
-            transitionMutex.withLock {
-                val current = runtimeRepository.getSnapshot().session ?: return@withLock
-                if (
-                    current.sessionId != observed.sessionId ||
-                    current.revision != observed.revision ||
-                    current.phase != FloatingRuntimePhase.INSTALLING
-                ) {
-                    return@withLock
-                }
-                val packId = current.targetPackId ?: return@withLock
-                if (characterPackRepository.isInstalledUsable(packId)) {
-                    startServiceIfReady(current)
-                }
-            }
-        }
-    }
+    private data class StartDispatch(
+        val sessionId: String,
+        val revision: Long
+    )
 
     private companion object {
         const val START_TIMEOUT_MS = 20_000L

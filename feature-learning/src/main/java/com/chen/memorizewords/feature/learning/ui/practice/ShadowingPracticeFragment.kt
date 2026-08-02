@@ -932,12 +932,12 @@ class ShadowingPracticeFragment :
 
     private fun waveformTargetPeakCount(): Int {
         val viewWidth = databind.waveformView.width
-        val displayWidth = if (viewWidth > 0) {
+        val contentWidth = if (viewWidth > 0) {
             viewWidth - databind.waveformView.paddingLeft - databind.waveformView.paddingRight
         } else {
-            resources.displayMetrics.widthPixels - 48.dpToPx(requireContext())
+            databind.root.width - 48.dpToPx(requireContext())
         }
-        return displayWidth.coerceAtLeast(160)
+        return contentWidth.coerceAtLeast(160)
     }
 
     private fun showToast(message: String) {

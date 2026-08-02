@@ -27,7 +27,7 @@ class MemorizeWordsApplication : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
-        if (isFloatingProcess()) return
+        if (!shouldStartMainProcessStartupTasks(getProcessNameCompat())) return
 
         val resetReport = LocalAssetResetter.resetLegacyAssetsIfNeeded(this)
         Log.i("LocalAssetResetter", resetReport.summary())
@@ -39,11 +39,6 @@ class MemorizeWordsApplication : Application(), Configuration.Provider {
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder().build()
 
-    private fun isFloatingProcess(): Boolean {
-        val processName = getProcessNameCompat()
-        return processName?.endsWith(":floating") == true
-    }
-
     private fun getProcessNameCompat(): String? {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             getProcessName()
@@ -54,6 +49,9 @@ class MemorizeWordsApplication : Application(), Configuration.Provider {
         }
     }
 }
+
+internal fun shouldStartMainProcessStartupTasks(processName: String?): Boolean =
+    processName?.endsWith(":floating") != true
 
 @EntryPoint
 @InstallIn(SingletonComponent::class)

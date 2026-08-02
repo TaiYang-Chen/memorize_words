@@ -3,7 +3,6 @@ package com.chen.memorizewords.feature.floatingreview
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.NavHostFragment
 import com.chen.memorizewords.core.navigation.CharacterSelectionMode
@@ -12,11 +11,12 @@ import com.chen.memorizewords.core.navigation.FloatingWordEntryExtras
 import com.chen.memorizewords.core.navigation.FloatingWordReturnDestination
 import com.chen.memorizewords.core.navigation.HomeDestination
 import com.chen.memorizewords.core.navigation.HomeEntry
+import com.chen.memorizewords.core.ui.activity.PhoneEdgeToEdgeActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class FloatingReviewActivity : AppCompatActivity() {
+class FloatingReviewActivity : PhoneEdgeToEdgeActivity() {
 
     @Inject
     lateinit var homeEntry: HomeEntry

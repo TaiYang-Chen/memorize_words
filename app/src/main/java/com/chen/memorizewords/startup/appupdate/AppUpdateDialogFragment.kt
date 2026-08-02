@@ -12,15 +12,15 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.os.bundleOf
-import androidx.fragment.app.DialogFragment
 import com.chen.memorizewords.R
 import com.chen.memorizewords.core.ui.R as CoreUiR
 import com.chen.memorizewords.core.ui.ext.dimenPx
 import com.chen.memorizewords.core.ui.ext.dimenPxFloat
 import com.chen.memorizewords.core.ui.ext.setTextSizeFromDimen
+import com.chen.memorizewords.core.ui.dialog.PhoneDialogFragment
 import java.util.Locale
 
-class AppUpdateDialogFragment : DialogFragment(R.layout.app_dialog_update) {
+class AppUpdateDialogFragment : PhoneDialogFragment(R.layout.app_dialog_update) {
     interface Listener {
         fun onAppUpdateLater(info: DialogInfo)
         fun onAppUpdateNow(info: DialogInfo)

@@ -240,7 +240,7 @@ internal fun FloatingDockConfigDto.toDomain(): FloatingDockConfig {
         snapAnimationDurationMs = snapAnimationDurationMs,
         tapExpandsCardAfterUnsnap = tapExpandsCardAfterUnsnap,
         initialDockEdge = parseDockEdge(initialDockEdge) ?: FloatingDockEdge.RIGHT
-    )
+    ).normalized()
 }
 
 internal fun FloatingDockStateDto.toDomainOrNull(): FloatingDockState? {
@@ -252,14 +252,15 @@ internal fun FloatingDockStateDto.toDomainOrNull(): FloatingDockState? {
 }
 
 internal fun FloatingDockConfig.toDto(): FloatingDockConfigDto {
+    val normalized = normalized()
     return FloatingDockConfigDto(
-        snapTriggerDistanceDp = snapTriggerDistanceDp,
-        halfHiddenEnabled = halfHiddenEnabled,
-        allowedEdges = allowedEdges.map { it.name },
-        edgePriority = edgePriority.map { it.name },
-        snapAnimationDurationMs = snapAnimationDurationMs,
-        tapExpandsCardAfterUnsnap = tapExpandsCardAfterUnsnap,
-        initialDockEdge = initialDockEdge.name
+        snapTriggerDistanceDp = normalized.snapTriggerDistanceDp,
+        halfHiddenEnabled = normalized.halfHiddenEnabled,
+        allowedEdges = normalized.allowedEdges.map { it.name },
+        edgePriority = normalized.edgePriority.map { it.name },
+        snapAnimationDurationMs = normalized.snapAnimationDurationMs,
+        tapExpandsCardAfterUnsnap = normalized.tapExpandsCardAfterUnsnap,
+        initialDockEdge = normalized.initialDockEdge.name
     )
 }
 

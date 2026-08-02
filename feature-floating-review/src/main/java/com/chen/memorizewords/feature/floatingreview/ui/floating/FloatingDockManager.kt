@@ -3,10 +3,10 @@ package com.chen.memorizewords.feature.floatingreview.ui.floating
 import com.chen.memorizewords.domain.floating.model.FloatingDockConfig
 import com.chen.memorizewords.domain.floating.model.FloatingDockEdge
 import com.chen.memorizewords.domain.floating.model.FloatingDockState
-import kotlin.math.abs
 import kotlin.math.roundToInt
 
-data class FloatingAvailableArea(
+/** Physical display coordinates used exclusively to constrain the pet render frame. */
+data class FloatingPhysicalDisplayBounds(
     val left: Int,
     val top: Int,
     val right: Int,
@@ -24,9 +24,7 @@ data class FloatingMovementBounds(
     val freeRight: Int,
     val freeBottom: Int,
     val dockedLeft: Int,
-    val dockedRight: Int,
-    val visibleWidth: Int,
-    val hiddenWidth: Int
+    val dockedRight: Int
 )
 
 data class FloatingDockResult(
@@ -37,25 +35,21 @@ data class FloatingDockResult(
 class FloatingDockManager {
 
     fun createBounds(
-        safeArea: FloatingAvailableArea,
+        physicalDisplayBounds: FloatingPhysicalDisplayBounds,
         ballWidthPx: Int,
-        ballHeightPx: Int,
-        config: FloatingDockConfig
+        ballHeightPx: Int
     ): FloatingMovementBounds {
-        val normalizedConfig = config.normalized()
-        val visibleWidth = resolveVisibleWidthPx(ballWidthPx, normalizedConfig)
-        val hiddenWidth = (ballWidthPx - visibleWidth).coerceAtLeast(0)
-        val freeRight = (safeArea.right - ballWidthPx).coerceAtLeast(safeArea.left)
-        val freeBottom = (safeArea.bottom - ballHeightPx).coerceAtLeast(safeArea.top)
+        val freeRight = (physicalDisplayBounds.right - ballWidthPx)
+            .coerceAtLeast(physicalDisplayBounds.left)
+        val freeBottom = (physicalDisplayBounds.bottom - ballHeightPx)
+            .coerceAtLeast(physicalDisplayBounds.top)
         return FloatingMovementBounds(
-            freeLeft = safeArea.left,
-            freeTop = safeArea.top,
+            freeLeft = physicalDisplayBounds.left,
+            freeTop = physicalDisplayBounds.top,
             freeRight = freeRight,
             freeBottom = freeBottom,
-            dockedLeft = safeArea.left - hiddenWidth,
-            dockedRight = safeArea.right - visibleWidth,
-            visibleWidth = visibleWidth,
-            hiddenWidth = hiddenWidth
+            dockedLeft = physicalDisplayBounds.left,
+            dockedRight = freeRight
         )
     }
 
@@ -80,16 +74,6 @@ class FloatingDockManager {
         return FloatingDockResult(position = position, dockState = normalizedState)
     }
 
-    fun resolveRestingState(
-        bounds: FloatingMovementBounds,
-        config: FloatingDockConfig,
-        snapTriggerDistancePx: Int,
-        x: Int,
-        y: Int
-    ): FloatingDockResult {
-        return resolveFreeRestingState(bounds, x, y)
-    }
-
     fun resolveFreeRestingState(
         bounds: FloatingMovementBounds,
         x: Int,
@@ -97,41 +81,6 @@ class FloatingDockManager {
     ): FloatingDockResult {
         val clamped = clampToFree(bounds, x, y)
         return FloatingDockResult(position = clamped, dockState = null)
-    }
-
-    fun dockToNearestEdge(
-        bounds: FloatingMovementBounds,
-        config: FloatingDockConfig,
-        x: Int,
-        y: Int
-    ): FloatingDockResult {
-        val clamped = clampToFree(bounds, x, y)
-        val edge = nearestDockEdge(bounds, config, clamped)
-        if (edge == null) {
-            return FloatingDockResult(position = clamped, dockState = null)
-        }
-        val dockState = FloatingDockState(
-            dockedEdge = edge,
-            crossAxisPercent = crossAxisPercent(bounds, clamped.y)
-        )
-        return resolveDocked(bounds, config, dockState)
-            ?: FloatingDockResult(position = clamped, dockState = null)
-    }
-
-    fun buildInitialState(
-        bounds: FloatingMovementBounds,
-        config: FloatingDockConfig
-    ): FloatingDockResult {
-        val normalizedConfig = config.normalized()
-        val state = FloatingDockState(
-            dockedEdge = normalizedConfig.initialDockEdge,
-            crossAxisPercent = 0.5f
-        )
-        return resolveDocked(bounds, normalizedConfig, state)
-            ?: FloatingDockResult(
-                position = clampToFree(bounds, bounds.freeRight, ((bounds.freeTop + bounds.freeBottom) / 2f).roundToInt()),
-                dockState = null
-            )
     }
 
     fun resolveAnchoredFreePosition(
@@ -159,31 +108,6 @@ class FloatingDockManager {
         return FloatingBallPosition(x = mappedX, y = mappedY)
     }
 
-    fun revealDockedPosition(
-        bounds: FloatingMovementBounds,
-        config: FloatingDockConfig,
-        dockState: FloatingDockState
-    ): FloatingBallPosition? {
-        val normalizedState = dockState.normalized(config) ?: return null
-        val y = lerp(bounds.freeTop, bounds.freeBottom, normalizedState.crossAxisPercent)
-        val x = when (normalizedState.dockedEdge) {
-            FloatingDockEdge.LEFT -> bounds.freeLeft
-            FloatingDockEdge.RIGHT -> bounds.freeRight
-            else -> return null
-        }
-        return FloatingBallPosition(x = x, y = y)
-    }
-
-    fun resolveVisibleWidthPx(
-        ballSizePx: Int,
-        config: FloatingDockConfig
-    ): Int {
-        if (ballSizePx <= 0) return 0
-        val normalizedConfig = config.normalized()
-        if (!normalizedConfig.halfHiddenEnabled) return ballSizePx
-        return (ballSizePx / 2f).roundToInt().coerceIn(1, ballSizePx)
-    }
-
     private fun resolveDockedPosition(
         bounds: FloatingMovementBounds,
         dockState: FloatingDockState
@@ -195,30 +119,6 @@ class FloatingDockManager {
             else -> return null
         }
         return FloatingBallPosition(x = x, y = y)
-    }
-
-    private fun nearestDockEdge(
-        bounds: FloatingMovementBounds,
-        config: FloatingDockConfig,
-        position: FloatingBallPosition
-    ): FloatingDockEdge? {
-        val normalizedConfig = config.normalized()
-        return normalizedConfig.edgePriority.minWithOrNull(
-            compareBy<FloatingDockEdge> { distanceToEdge(bounds, position, it) }
-                .thenBy { normalizedConfig.edgePriority.indexOf(it) }
-        )
-    }
-
-    private fun distanceToEdge(
-        bounds: FloatingMovementBounds,
-        position: FloatingBallPosition,
-        edge: FloatingDockEdge
-    ): Int {
-        return when (edge) {
-            FloatingDockEdge.LEFT -> abs(position.x - bounds.freeLeft)
-            FloatingDockEdge.RIGHT -> abs(bounds.freeRight - position.x)
-            else -> Int.MAX_VALUE
-        }
     }
 
     private fun crossAxisPercent(bounds: FloatingMovementBounds, y: Int): Float {

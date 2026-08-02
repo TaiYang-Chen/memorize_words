@@ -44,7 +44,7 @@ object FloatingRuntimeReducer {
                 startDeadlineAtMs = null
             )
             FloatingRuntimeEvent.InstallationReady -> current.copy(
-                phase = FloatingRuntimePhase.INSTALLING,
+                phase = FloatingRuntimePhase.READY_TO_START,
                 progress = 100,
                 startDeadlineAtMs = null
             )
@@ -79,7 +79,8 @@ object FloatingRuntimeReducer {
     fun canHandle(phase: FloatingRuntimePhase, event: FloatingRuntimeEvent): Boolean {
         return when (event) {
             is FloatingRuntimeEvent.Resolved -> phase == FloatingRuntimePhase.RESOLVING
-            FloatingRuntimeEvent.PermissionRequired,
+            FloatingRuntimeEvent.PermissionRequired -> phase == FloatingRuntimePhase.RESOLVING ||
+                phase == FloatingRuntimePhase.READY_TO_START
             FloatingRuntimeEvent.CharacterRequired -> phase == FloatingRuntimePhase.RESOLVING
             is FloatingRuntimeEvent.DownloadQueued -> phase == FloatingRuntimePhase.RESOLVING
             is FloatingRuntimeEvent.DownloadProgress ->
@@ -88,8 +89,7 @@ object FloatingRuntimeReducer {
             FloatingRuntimeEvent.InstallationReady -> phase == FloatingRuntimePhase.INSTALLING
             is FloatingRuntimeEvent.StartDispatched -> phase == FloatingRuntimePhase.RESOLVING ||
                 phase == FloatingRuntimePhase.AWAITING_PERMISSION ||
-                phase == FloatingRuntimePhase.DOWNLOADING ||
-                phase == FloatingRuntimePhase.INSTALLING ||
+                phase == FloatingRuntimePhase.READY_TO_START ||
                 phase == FloatingRuntimePhase.STARTING
             FloatingRuntimeEvent.RendererReady -> phase == FloatingRuntimePhase.STARTING
             FloatingRuntimeEvent.StopRequested -> phase != FloatingRuntimePhase.IDLE &&

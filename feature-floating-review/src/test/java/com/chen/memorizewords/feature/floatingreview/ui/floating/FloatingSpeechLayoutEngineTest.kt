@@ -269,10 +269,8 @@ class FloatingSpeechLayoutEngineTest {
             freeTop = 24,
             freeRight = 240,
             freeBottom = 520,
-            dockedLeft = -120,
-            dockedRight = 320,
-            visibleWidth = 40,
-            hiddenWidth = 116
+            dockedLeft = 0,
+            dockedRight = 240
         )
         val position = resolveBallPositionForSettings(
             preferences = com.chen.memorizewords.domain.floating.model.FloatingDevicePreferences(

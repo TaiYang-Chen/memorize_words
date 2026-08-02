@@ -10,12 +10,19 @@ import kotlin.test.assertNull
 class FloatingDockManagerTest {
 
     private val manager = FloatingDockManager()
-    private val config = FloatingDockConfig(snapTriggerDistanceDp = 24)
+    private val config = FloatingDockConfig(
+        snapTriggerDistanceDp = 24,
+        halfHiddenEnabled = true
+    )
     private val bounds = manager.createBounds(
-        safeArea = FloatingAvailableArea(left = 0, top = 10, right = 300, bottom = 610),
+        physicalDisplayBounds = FloatingPhysicalDisplayBounds(
+            left = 0,
+            top = 10,
+            right = 300,
+            bottom = 610
+        ),
         ballWidthPx = 80,
-        ballHeightPx = 100,
-        config = config
+        ballHeightPx = 100
     )
 
     @Test
@@ -55,7 +62,10 @@ class FloatingDockManagerTest {
     }
 
     @Test
-    fun `existing dock state still resolves to half hidden position`() {
+    fun `legacy half hidden dock state resolves to a fully visible edge position`() {
+        assertEquals(bounds.freeLeft, bounds.dockedLeft)
+        assertEquals(bounds.freeRight, bounds.dockedRight)
+
         val result = manager.resolveDocked(
             bounds = bounds,
             config = config,
@@ -67,13 +77,38 @@ class FloatingDockManagerTest {
 
         assertEquals(
             FloatingDockResult(
-                position = FloatingBallPosition(x = bounds.dockedRight, y = 260),
+                position = FloatingBallPosition(x = bounds.freeRight, y = 260),
                 dockState = FloatingDockState(
                     dockedEdge = FloatingDockEdge.RIGHT,
                     crossAxisPercent = 0.5f
                 )
             ),
             result
+        )
+    }
+
+    @Test
+    fun `physical display right edge is reachable with the full pet window visible`() {
+        val physicalBounds = manager.createBounds(
+            physicalDisplayBounds = FloatingPhysicalDisplayBounds(
+                left = 0,
+                top = 0,
+                right = 1080,
+                bottom = 2400
+            ),
+            ballWidthPx = 215,
+            ballHeightPx = 258
+        )
+
+        assertEquals(865, physicalBounds.freeRight)
+        assertEquals(865, physicalBounds.dockedRight)
+        assertEquals(
+            FloatingBallPosition(x = 864, y = 0),
+            manager.resolveFreeRestingState(physicalBounds, x = 864, y = 0).position
+        )
+        assertEquals(
+            FloatingBallPosition(x = 865, y = 0),
+            manager.resolveFreeRestingState(physicalBounds, x = 866, y = 0).position
         )
     }
 }

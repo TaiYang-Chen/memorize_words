@@ -16,10 +16,9 @@ import com.chen.memorizewords.core.ui.dialog.prefabricated.ShowSingleConfirmDial
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.core.ui.vm.UiEffect
 import com.chen.memorizewords.core.ui.vm.UiEvent
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.launch
 
-abstract class BaseVmBottomSheetDialogFragment<VM : BaseViewModel> : BottomSheetDialogFragment() {
+abstract class BaseVmBottomSheetDialogFragment<VM : BaseViewModel> : PhoneBottomSheetDialogFragment() {
 
     protected abstract val viewModel: VM
 

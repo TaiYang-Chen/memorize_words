@@ -20,7 +20,6 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
-import android.view.WindowInsets
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import android.widget.ImageButton
@@ -29,6 +28,8 @@ import androidx.core.app.NotificationCompat
 import com.chen.memorizewords.core.sprite.FloatingPetRenderHost
 import com.chen.memorizewords.core.sprite.SpritePackId
 import com.chen.memorizewords.core.ui.ext.dpToPx
+import com.chen.memorizewords.core.ui.insets.PhoneOverlayViewport
+import com.chen.memorizewords.core.ui.insets.phoneOverlayViewport
 import com.chen.memorizewords.core.navigation.FloatingWordActions
 import com.chen.memorizewords.core.navigation.FloatingWordEntryExtras
 import com.chen.memorizewords.domain.account.model.membership.MembershipFeature
@@ -292,6 +293,7 @@ class FloatingWordService : Service() {
     private var activeRuntimeSessionId: String? = null
     private var activeRuntimeRevision: Long? = null
     private var activeRuntimePackId: String? = null
+    private var pendingStartCommand: FloatingRuntimeCommand? = null
 
     private var isDragging = false
     private var lastBallTapEventTimeMillis: Long? = null
@@ -301,6 +303,7 @@ class FloatingWordService : Service() {
     private var dragStartBallY = 0
     private var ballGestureDetector: GestureDetector? = null
     private var lastMovementBounds: FloatingMovementBounds? = null
+    private var lastOverlayViewport: PhoneOverlayViewport? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -327,11 +330,6 @@ class FloatingWordService : Service() {
     }
 
     private fun startRuntime(command: FloatingRuntimeCommand, startId: Int) {
-        lifecycleOperationJob?.cancel()
-        runtimeHealthJob?.cancel()
-        stopping = false
-        operationGeneration++
-        val requestGeneration = operationGeneration
         try {
             startForeground(
                 NOTIFICATION_ID,
@@ -339,19 +337,36 @@ class FloatingWordService : Service() {
             )
         } catch (_: RuntimeException) {
             serviceScope.launch {
-                failRuntime(command, FloatingRuntimeError.FOREGROUND_SERVICE_REJECTED)
-                stopFloating(requestGeneration = requestGeneration, startId = startId)
+                failCurrentStartIfNeeded(command, startId)
             }
             return
         }
+        serviceScope.launch {
+            val current = runtimeSessionRepository.getSnapshot().session
+            if (!isCurrentStartCommand(command, current)) return@launch
+            beginRuntimeStart(command, startId)
+        }
+    }
+
+    private fun beginRuntimeStart(command: FloatingRuntimeCommand, startId: Int) {
+        val previousLifecycleOperation = lifecycleOperationJob
+        val previousRuntimeHealth = runtimeHealthJob
+        pendingStartCommand = command
         lifecycleOperationJob = serviceScope.launch {
             val session = runtimeSessionFor(command, FloatingRuntimePhase.STARTING) ?: run {
-                stopFloating(requestGeneration = requestGeneration, startId = startId)
+                clearPendingStartCommand(command)
                 return@launch
             }
+            if (!isPendingStartCommand(command)) return@launch
+            previousLifecycleOperation?.cancel()
+            previousRuntimeHealth?.cancel()
+            stopping = false
+            operationGeneration++
+            val requestGeneration = operationGeneration
             activeRuntimeSessionId = session.sessionId
             activeRuntimeRevision = session.revision
             activeRuntimePackId = session.targetPackId
+            clearPendingStartCommand(command)
             try {
                 if (!canUseFloatingReview()) {
                     failRuntime(command, FloatingRuntimeError.MEMBERSHIP_REQUIRED)
@@ -371,6 +386,44 @@ class FloatingWordService : Service() {
                 failRuntime(command, FloatingRuntimeError.RENDER_FAILED)
                 stopFloating(requestGeneration = requestGeneration, startId = startId)
             }
+        }
+    }
+
+    private suspend fun failCurrentStartIfNeeded(
+        command: FloatingRuntimeCommand,
+        startId: Int
+    ) {
+        val current = runtimeSessionRepository.getSnapshot().session
+        if (!isCurrentStartCommand(command, current)) return
+        failRuntime(command, FloatingRuntimeError.FOREGROUND_SERVICE_REJECTED)
+        if (activeRuntimeSessionId == null || activeRuntimeSessionId == command.sessionId) {
+            stopFloating(startId = startId)
+        }
+    }
+
+    private fun isCurrentStartCommand(
+        command: FloatingRuntimeCommand,
+        runtimeSession: FloatingRuntimeSession?
+    ): Boolean {
+        val pending = pendingStartCommand
+        return resolveFloatingStartCommandAction(
+            runtimeSession = runtimeSession,
+            commandSessionId = command.sessionId,
+            commandRevision = command.revision,
+            activeSessionId = activeRuntimeSessionId,
+            activeRevision = activeRuntimeRevision,
+            pendingSessionId = pending?.sessionId,
+            pendingRevision = pending?.revision
+        ) == FloatingStartCommandAction.START
+    }
+
+    private fun isPendingStartCommand(command: FloatingRuntimeCommand): Boolean =
+        pendingStartCommand?.sessionId == command.sessionId &&
+            pendingStartCommand?.revision == command.revision
+
+    private fun clearPendingStartCommand(command: FloatingRuntimeCommand) {
+        if (isPendingStartCommand(command)) {
+            pendingStartCommand = null
         }
     }
 
@@ -567,6 +620,7 @@ class FloatingWordService : Service() {
         activeRuntimeSessionId = null
         activeRuntimeRevision = null
         activeRuntimePackId = null
+        pendingStartCommand = null
         if (startId == null) stopSelf() else stopSelf(startId)
     }
 
@@ -808,6 +862,7 @@ class FloatingWordService : Service() {
             cardView = newCardView
             ballParams = newBallParams
             cardCoordinator = newCardCoordinator
+            installViewportInvalidationListener(newBallView)
 
             val renderHost = newBallView as? FloatingPetRenderHost
                 ?: error("Floating ball layout must use FloatingPetRenderHost as its root")
@@ -835,6 +890,7 @@ class FloatingWordService : Service() {
             ballParams = null
             cardCoordinator = null
             lastMovementBounds = null
+            lastOverlayViewport = null
             cardRenderer.clearMeasurementView()
             renderedCardState = null
             ballGestureDetector = null
@@ -847,7 +903,8 @@ class FloatingWordService : Service() {
         updateCard: Boolean = true
     ) {
         val params = ballParams ?: return
-        val movementBounds = getMovementBounds(currentDevicePreferences)
+        val viewport = getOverlayViewport()
+        val movementBounds = getMovementBounds(viewport)
         val position = resolveBallPositionForSettings(
             preferences = currentDevicePreferences,
             bounds = movementBounds,
@@ -858,6 +915,7 @@ class FloatingWordService : Service() {
         val resolvedDockState = currentDevicePreferences.dockState
             ?.normalized(currentDevicePreferences.dockConfig)
         val positionChanged = params.x != position.x || params.y != position.y
+        lastOverlayViewport = viewport
         params.x = position.x
         params.y = position.y
         if (positionChanged) {
@@ -890,6 +948,7 @@ class FloatingWordService : Service() {
         ballParams = null
         cardCoordinator = null
         lastMovementBounds = null
+        lastOverlayViewport = null
         cardRenderer.clearMeasurementView()
         renderedCardState = null
         ballGestureDetector = null
@@ -932,7 +991,7 @@ class FloatingWordService : Service() {
         } else {
             WindowManager.LayoutParams.TYPE_PHONE
         }
-        val safeArea = getSafeDisplayRect().toFloatingSpeechSafeArea()
+        val safeArea = getOverlayViewport().contentSafeBounds.toFloatingSpeechSafeArea()
         val edgeMargin = resources.getDimensionPixelSize(
             R.dimen.module_floating_review_card_edge_margin
         )
@@ -1024,6 +1083,23 @@ class FloatingWordService : Service() {
         }
     }
 
+    private fun installViewportInvalidationListener(view: View) {
+        view.setOnApplyWindowInsetsListener { _, insets ->
+            view.post {
+                if (ballView === view && !isDragging) {
+                    reconcileForViewportChange()
+                }
+            }
+            insets
+        }
+        view.requestApplyInsets()
+    }
+
+    private fun reconcileForViewportChange() {
+        if (getOverlayViewport() == lastOverlayViewport) return
+        reconcileBallPosition(persistIfNeeded = true)
+    }
+
     private fun updateDraggedBallPosition(
         params: WindowManager.LayoutParams,
         dx: Float,
@@ -1045,7 +1121,7 @@ class FloatingWordService : Service() {
     private fun settleDraggedBall() {
         val params = ballParams ?: return
         val result = dockManager.resolveFreeRestingState(
-            bounds = getMovementBounds(currentDevicePreferences),
+            bounds = getMovementBounds(),
             x = params.x,
             y = params.y
         )
@@ -1489,7 +1565,7 @@ class FloatingWordService : Service() {
     }
 
     private fun resolveCurrentCardWidth(): Int {
-        val safeArea = getSafeDisplayRect().toFloatingSpeechSafeArea()
+        val safeArea = getOverlayViewport().contentSafeBounds.toFloatingSpeechSafeArea()
         val edgeMargin = resources.getDimensionPixelSize(
             R.dimen.module_floating_review_card_edge_margin
         )
@@ -1538,7 +1614,7 @@ class FloatingWordService : Service() {
         cardWidth: Int = resolveCurrentCardWidth()
     ): FloatingCardGeometryInput {
         return FloatingCardGeometryInput(
-            safeArea = getSafeDisplayRect().toFloatingSpeechSafeArea(),
+            safeArea = getOverlayViewport().contentSafeBounds.toFloatingSpeechSafeArea(),
             petBounds = currentPetBounds(),
             cardWidth = cardWidth,
             naturalHeight = naturalHeight,
@@ -1635,19 +1711,20 @@ class FloatingWordService : Service() {
             currentDevicePreferences.dockState != null
     }
 
-    private fun getMovementBounds(preferences: FloatingDevicePreferences): FloatingMovementBounds {
-        val safeArea = getSafeDisplayRect()
+    private fun getMovementBounds(
+        viewport: PhoneOverlayViewport = getOverlayViewport()
+    ): FloatingMovementBounds {
+        val physicalArea = viewport.physicalBounds
         val (petWidth, petHeight) = getPetWindowSize()
         return dockManager.createBounds(
-            safeArea = FloatingAvailableArea(
-                left = safeArea.left,
-                top = safeArea.top,
-                right = safeArea.right,
-                bottom = safeArea.bottom
+            physicalDisplayBounds = FloatingPhysicalDisplayBounds(
+                left = physicalArea.left,
+                top = physicalArea.top,
+                right = physicalArea.right,
+                bottom = physicalArea.bottom
             ),
             ballWidthPx = petWidth,
-            ballHeightPx = petHeight,
-            config = preferences.dockConfig
+            ballHeightPx = petHeight
         )
     }
 
@@ -1658,50 +1735,11 @@ class FloatingWordService : Service() {
         return Pair((width * scale).roundToInt(), (height * scale).roundToInt())
     }
 
-    private fun getSafeDisplayRect(): Rect {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val metrics = windowManager.currentWindowMetrics
-            val bounds = metrics.bounds
-            val insets = metrics.windowInsets.getInsetsIgnoringVisibility(
-                WindowInsets.Type.statusBars() or
-                    WindowInsets.Type.navigationBars() or
-                    WindowInsets.Type.displayCutout()
-            )
-            return Rect(
-                bounds.left + insets.left,
-                bounds.top + insets.top,
-                bounds.right - insets.right,
-                bounds.bottom - insets.bottom
-            )
-        }
-
-        val display = windowManager.defaultDisplay
-        val metrics = android.util.DisplayMetrics()
-        @Suppress("DEPRECATION")
-        display.getRealMetrics(metrics)
-        val rootInsets = ballView?.rootWindowInsets
-        val leftInset = 0
-        val rightInset = 0
-        val topInset = rootInsets?.systemWindowInsetTop
-            ?.takeIf { it > 0 }
-            ?: getSystemDimension("status_bar_height")
-        val bottomInset = listOf(
-            rootInsets?.stableInsetBottom ?: 0,
-            rootInsets?.systemWindowInsetBottom ?: 0,
-            getSystemDimension("navigation_bar_height")
-        ).maxOrNull() ?: 0
-        return Rect(
-            leftInset,
-            topInset,
-            metrics.widthPixels - rightInset,
-            metrics.heightPixels - bottomInset
+    private fun getOverlayViewport(): PhoneOverlayViewport {
+        return windowManager.phoneOverlayViewport(
+            resources = resources,
+            rootWindowInsets = ballView?.rootWindowInsets
         )
-    }
-
-    private fun getSystemDimension(name: String): Int {
-        val resourceId = resources.getIdentifier(name, "dimen", "android")
-        if (resourceId == 0) return 0
-        return resources.getDimensionPixelSize(resourceId)
     }
 
     private fun ensureChannel() {

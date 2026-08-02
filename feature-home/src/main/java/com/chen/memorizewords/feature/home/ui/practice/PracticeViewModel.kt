@@ -266,6 +266,7 @@ class PracticeViewModel @Inject constructor(
             )
             FloatingRuntimePhase.INSTALLING ->
                 resourceProvider.getString(R.string.feature_home_floating_installing)
+            FloatingRuntimePhase.READY_TO_START,
             FloatingRuntimePhase.STARTING -> resourceProvider.getString(R.string.feature_home_floating_starting)
             FloatingRuntimePhase.RUNNING -> resourceProvider.getString(R.string.feature_home_floating_running)
             FloatingRuntimePhase.STOPPING -> resourceProvider.getString(R.string.feature_home_floating_stopping)

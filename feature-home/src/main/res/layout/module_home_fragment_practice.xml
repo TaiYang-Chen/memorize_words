@@ -134,6 +134,13 @@
                         app:feature_home_shadowFillColor="@color/feature_home_practice_v2_goal_surface"
                         app:feature_home_shadowHorizontalInset="@dimen/feature_home_practice_v2_shadow_gutter">
 
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guidelinePracticeGoalStats"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.31" />
+
                     <ImageView
                         android:id="@+id/ivPracticeGoalIcon"
                         android:layout_width="14dp"
@@ -238,20 +245,21 @@
                         android:layout_width="1dp"
                         android:layout_height="57dp"
                         android:background="@color/feature_home_practice_v2_divider"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/guidelinePracticeGoalStats"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:layout_marginStart="103dp"
                         android:layout_marginTop="39dp" />
 
                     <LinearLayout
                         android:id="@+id/layoutPracticeMiniStats"
-                        android:layout_width="104dp"
+                        android:layout_width="0dp"
                         android:layout_height="61dp"
                         android:baselineAligned="false"
+                        android:layout_marginEnd="8dp"
                         android:orientation="horizontal"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/layoutStartTodayStatic"
+                        app:layout_constraintStart_toStartOf="@id/guidelinePracticeGoalStats"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:layout_marginStart="115dp"
+                        android:layout_marginStart="12dp"
                         android:layout_marginTop="42dp">
 
                         <LinearLayout
@@ -351,31 +359,42 @@
                     </LinearLayout>
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tvPracticeKeepGoing"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="end"
                         android:includeFontPadding="false"
+                        android:maxLines="1"
                         android:text="@string/feature_home_practice_static_keep_going"
                         android:textColor="@color/feature_home_practice_v2_text_secondary"
                         android:textSize="8sp"
+                        app:layout_constraintEnd_toStartOf="@id/layoutStartTodayStatic"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:layout_marginStart="@dimen/feature_home_practice_v2_keep_going_start"
-                        android:layout_marginTop="95dp" />
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="108dp" />
 
                     <LinearLayout
                         android:id="@+id/layoutStartTodayStatic"
-                        android:layout_width="@dimen/feature_home_practice_v2_goal_button_width"
+                        android:layout_width="wrap_content"
                         android:layout_height="@dimen/feature_home_practice_v2_goal_button_height"
                         android:background="@drawable/feature_home_v2_primary_button_bg"
                         android:contentDescription="@string/feature_home_practice_v2_start_today"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackgroundBorderless"
                         android:gravity="center"
+                        android:minWidth="72dp"
                         android:onClick="@{() -> viewModel.onUnavailableFeatureClicked()}"
                         android:orientation="horizontal"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/layoutPracticeMiniStats"
                         android:layout_marginEnd="12dp"
+                        android:layout_marginStart="8dp"
                         android:layout_marginBottom="9dp">
 
                         <FrameLayout

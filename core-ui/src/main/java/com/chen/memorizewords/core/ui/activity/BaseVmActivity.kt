@@ -3,7 +3,6 @@ package com.chen.memorizewords.core.ui.activity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -17,7 +16,7 @@ import com.chen.memorizewords.core.ui.vm.UiEffect
 import com.chen.memorizewords.core.ui.vm.UiEvent
 import kotlinx.coroutines.launch
 
-abstract class BaseVmActivity<VM : BaseViewModel> : AppCompatActivity() {
+abstract class BaseVmActivity<VM : BaseViewModel> : PhoneEdgeToEdgeActivity() {
 
     protected abstract val viewModel: VM
 

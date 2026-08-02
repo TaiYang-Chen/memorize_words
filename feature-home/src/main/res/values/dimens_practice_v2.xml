@@ -11,8 +11,6 @@
     <dimen name="feature_home_practice_v2_goal_mascot_width">92dp</dimen>
     <dimen name="feature_home_practice_v2_goal_mascot_height">101dp</dimen>
     <dimen name="feature_home_practice_v2_goal_mascot_end_margin">18dp</dimen>
-    <dimen name="feature_home_practice_v2_keep_going_start">132dp</dimen>
-    <dimen name="feature_home_practice_v2_goal_button_width">116dp</dimen>
     <dimen name="feature_home_practice_v2_goal_button_height">35dp</dimen>
     <dimen name="feature_home_practice_v2_goal_progress_width">64dp</dimen>
     <dimen name="feature_home_practice_v2_mode_height">89dp</dimen>

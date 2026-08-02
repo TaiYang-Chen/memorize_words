@@ -8,10 +8,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
-import androidx.fragment.app.DialogFragment
+import com.chen.memorizewords.core.ui.dialog.PhoneDialogFragment
 import com.chen.memorizewords.feature.home.R
 
-class BoostNewWordsDialogFragment : DialogFragment(R.layout.dialog_home_boost_new_words) {
+class BoostNewWordsDialogFragment : PhoneDialogFragment(R.layout.dialog_home_boost_new_words) {
 
     companion object {
         const val TAG = "BoostNewWordsDialogFragment"

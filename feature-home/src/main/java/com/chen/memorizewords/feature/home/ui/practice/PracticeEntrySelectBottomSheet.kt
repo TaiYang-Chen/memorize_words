@@ -7,13 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import com.chen.memorizewords.feature.home.R
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.chen.memorizewords.core.ui.bottomsheetdialogfragment.PhoneBottomSheetDialogFragment
 
 class PracticeEntrySelectBottomSheet(
     private val defaultRandomCount: Int,
     private val onRandomSelected: (Int) -> Unit,
     private val onSelfSelected: () -> Unit
-) : BottomSheetDialogFragment() {
+) : PhoneBottomSheetDialogFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,

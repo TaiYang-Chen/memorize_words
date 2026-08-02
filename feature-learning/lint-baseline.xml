@@ -51,17 +51,6 @@
         errorLine1="    &lt;color name=&quot;primary_blue&quot;>#008FFF&lt;/color>"
         errorLine2="           ~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/res/values-sw411dp/colors.xml"
-            line="3"
-            column="12"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`primary_blue`&apos; does not start with the project&apos;s resource prefix &apos;`feature_learning_`&apos;; rename to &apos;`feature_learning_primary_blue`&apos; ?"
-        errorLine1="    &lt;color name=&quot;primary_blue&quot;>#008FFF&lt;/color>"
-        errorLine2="           ~~~~~~~~~~~~~~~~~~~">
-        <location
             file="src/main/res/values/colors.xml"
             line="3"
             column="12"/>

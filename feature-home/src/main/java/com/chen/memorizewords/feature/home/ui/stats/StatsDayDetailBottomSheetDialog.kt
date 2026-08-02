@@ -2,7 +2,6 @@ package com.chen.memorizewords.feature.home.ui.stats
 
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -55,15 +54,7 @@ class StatsDayDetailBottomSheetDialog :
         val bottomSheet = dialog
             ?.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
             ?: return
-        bottomSheet.post {
-            val maxHeight = (resources.displayMetrics.heightPixels * 0.9f).toInt()
-            if (bottomSheet.height > maxHeight) {
-                bottomSheet.layoutParams = bottomSheet.layoutParams.apply {
-                    height = maxHeight
-                    width = ViewGroup.LayoutParams.MATCH_PARENT
-                }
-            }
-        }
+        capPhoneBottomSheetHeight(bottomSheet, fraction = 0.9f)
     }
 
     override fun createObserver() {

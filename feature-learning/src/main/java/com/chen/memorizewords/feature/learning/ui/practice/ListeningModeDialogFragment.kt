@@ -13,11 +13,11 @@ import com.chen.memorizewords.core.ui.ext.dpToPx
 import com.chen.memorizewords.domain.practice.ListeningAnswerAreaPosition
 import com.chen.memorizewords.feature.learning.R
 import com.chen.memorizewords.feature.learning.databinding.DialogListeningModePickerBinding
+import com.chen.memorizewords.core.ui.bottomsheetdialogfragment.PhoneBottomSheetDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlin.math.roundToInt
 
-class ListeningModeDialogFragment : BottomSheetDialogFragment() {
+class ListeningModeDialogFragment : PhoneBottomSheetDialogFragment() {
 
     companion object {
         const val TAG = "listening_mode_dialog"

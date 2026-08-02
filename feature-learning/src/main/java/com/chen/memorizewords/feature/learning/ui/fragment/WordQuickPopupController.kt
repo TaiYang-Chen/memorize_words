@@ -15,6 +15,7 @@ import android.widget.PopupWindow
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.chen.memorizewords.core.ui.ext.dpToPx
+import com.chen.memorizewords.core.ui.insets.phoneSafeDrawingBounds
 import com.chen.memorizewords.domain.word.model.word.Word
 import com.chen.memorizewords.feature.learning.R
 import kotlin.math.min
@@ -150,7 +151,7 @@ class WordQuickPopupController(
         val contentView = popupView ?: return
         val decorView = activity.window.decorView
 
-        val visibleRect = Rect(0, 0, decorView.width, decorView.height)
+        val visibleRect = decorView.phoneSafeDrawingBounds(includeIme = true)
         val popupWidth = min(maxCardWidth, visibleRect.width() - screenMargin * 2)
 
         contentView.measure(

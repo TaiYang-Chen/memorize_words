@@ -14,10 +14,10 @@ import com.chen.memorizewords.feature.learning.R
 import com.chen.memorizewords.feature.learning.databinding.DialogPracticeAudioLoopSettingsBinding
 import com.chen.memorizewords.feature.learning.ui.practice.audioLoop.AudioLoopPlaybackStore
 import com.chen.memorizewords.feature.learning.ui.practice.audioLoop.AudioLoopServicePlayerState
+import com.chen.memorizewords.core.ui.bottomsheetdialogfragment.PhoneBottomSheetDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class AudioLoopSettingsDialogFragment : BottomSheetDialogFragment() {
+class AudioLoopSettingsDialogFragment : PhoneBottomSheetDialogFragment() {
 
     companion object {
         const val TAG = "audio_loop_settings_dialog"
@@ -54,9 +54,7 @@ class AudioLoopSettingsDialogFragment : BottomSheetDialogFragment() {
             ?.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
             ?: return
         bottomSheet.setBackgroundResource(android.R.color.transparent)
-        bottomSheet.layoutParams = bottomSheet.layoutParams.apply {
-            height = (resources.displayMetrics.heightPixels * 0.92f).toInt()
-        }
+        setPhoneBottomSheetHeightFraction(bottomSheet, fraction = 0.92f)
         BottomSheetBehavior.from(bottomSheet).apply {
             skipCollapsed = true
             state = BottomSheetBehavior.STATE_EXPANDED

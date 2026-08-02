@@ -49,8 +49,13 @@ class FloatingRuntimeReducerTest {
         assertEquals("blue_pet", installing.targetPackId)
 
         val ready = reduce(installing, FloatingRuntimeEvent.InstallationReady)
-        assertEquals(FloatingRuntimePhase.INSTALLING, ready.phase)
+        assertEquals(FloatingRuntimePhase.READY_TO_START, ready.phase)
         assertEquals(5L, ready.revision)
+        assertEquals(null, ready.startDeadlineAtMs)
+
+        val starting = reduce(ready, FloatingRuntimeEvent.StartDispatched(30_000L))
+        assertEquals(FloatingRuntimePhase.STARTING, starting.phase)
+        assertEquals(30_000L, starting.startDeadlineAtMs)
     }
 
     @Test
@@ -71,6 +76,12 @@ class FloatingRuntimeReducerTest {
             FloatingRuntimeReducer.canHandle(
                 FloatingRuntimePhase.INSTALLING,
                 FloatingRuntimeEvent.DownloadProgress(10)
+            )
+        )
+        assertFalse(
+            FloatingRuntimeReducer.canHandle(
+                FloatingRuntimePhase.INSTALLING,
+                FloatingRuntimeEvent.StartDispatched(30_000L)
             )
         )
         assertFalse(

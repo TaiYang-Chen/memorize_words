@@ -10,7 +10,6 @@ import android.widget.CheckBox
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -25,12 +24,13 @@ import com.chen.memorizewords.feature.learning.R
 import com.chen.memorizewords.feature.learning.databinding.ActivityPracticeWordPickerBinding
 import com.chen.memorizewords.feature.learning.ui.practice.PracticeWordPickerViewModel
 import com.chen.memorizewords.core.navigation.PracticeEntryExtras
+import com.chen.memorizewords.core.ui.activity.PhoneEdgeToEdgeActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class PracticeWordPickerActivity : AppCompatActivity() {
+class PracticeWordPickerActivity : PhoneEdgeToEdgeActivity() {
 
     companion object {
         const val EXTRA_SELECTED_WORD_IDS = PracticeEntryExtras.EXTRA_SELECTED_WORD_IDS

@@ -68,6 +68,11 @@ class SpellingPracticeFragment :
     private var isPracticeDetailVisible: Boolean = false
     private var practiceDetailWordId: Long = -1L
     private var completionNavigated: Boolean = false
+    private var latestAnswerSlots = emptyList<SpellingPracticeViewModel.AnswerSlot>()
+    private var latestLetterItems = emptyList<SpellingPracticeViewModel.LetterItem>()
+    private var answerSlotsLayoutPending = false
+    private var keyboardLayoutPending = false
+    private var renderedKeyboardContentWidth = -1
 
     override fun setLayout(): Int = R.layout.fragment_practice_spelling
 
@@ -100,6 +105,11 @@ class SpellingPracticeFragment :
         )
         databind.layoutHandwritingHandle.setOnTouchListener(::onHandwritingHandleTouch)
         databind.handwritingContainer.isVisible = false
+        databind.gridLetters.addOnLayoutChangeListener { _, left, _, right, _, oldLeft, _, oldRight, _ ->
+            if (right - left != oldRight - oldLeft && latestLetterItems.isNotEmpty()) {
+                renderLetters(latestLetterItems)
+            }
+        }
         databind.etAnswer.doAfterTextChangedCompat { text ->
             if (!isUpdatingAnswerText) {
                 viewModel.onKeyboardInputChanged(text)
@@ -123,6 +133,11 @@ class SpellingPracticeFragment :
         slotViews.clear()
         letterButtons.clear()
         deleteButton = null
+        latestAnswerSlots = emptyList()
+        latestLetterItems = emptyList()
+        answerSlotsLayoutPending = false
+        keyboardLayoutPending = false
+        renderedKeyboardContentWidth = -1
         super.onDestroyView()
     }
 
@@ -386,6 +401,7 @@ class SpellingPracticeFragment :
     }
 
     private fun renderSlots(slots: List<SpellingPracticeViewModel.AnswerSlot>) {
+        latestAnswerSlots = slots.toList()
         val container = databind.layoutSlots
         if (slots.isEmpty()) {
             container.removeAllViews()
@@ -398,23 +414,23 @@ class SpellingPracticeFragment :
             compactSlots -> 2.dpToPx(requireContext())
             else -> 4.dpToPx(requireContext())
         }
-        val availableWidth = (container.width.takeIf { it > 0 } ?: resources.displayMetrics.widthPixels) -
+        val availableWidth = container.width -
             container.paddingStart -
             container.paddingEnd
+        if (availableWidth <= 0) {
+            requestAnswerSlotsLayout()
+            return
+        }
         val slotWidth = ((availableWidth - margin * 2 * slots.size) / slots.size)
-            .coerceIn(if (compactSlots) 12.dpToPx(requireContext()) else 22.dpToPx(requireContext()), if (compactSlots) 22.dpToPx(requireContext()) else 34.dpToPx(requireContext()))
+            .coerceAtLeast(1)
+            .coerceAtMost(if (compactSlots) 22.dpToPx(requireContext()) else 34.dpToPx(requireContext()))
         val slotHeight = if (compactSlots) 30.dpToPx(requireContext()) else 38.dpToPx(requireContext())
         if (slotViews.size != slots.size) {
             container.removeAllViews()
             slotViews.clear()
             repeat(slots.size) {
                 val textView = TextView(requireContext()).apply {
-                    textSize = when {
-                        slotWidth < 16.dpToPx(requireContext()) -> 12f
-                        compactSlots -> 14f
-                        slotWidth < 26.dpToPx(requireContext()) -> 15f
-                        else -> 18f
-                    }
+                    textSize = slotTextSize(slotWidth, compactSlots)
                     gravity = Gravity.CENTER
                     includeFontPadding = false
                     typeface = android.graphics.Typeface.DEFAULT_BOLD
@@ -435,12 +451,7 @@ class SpellingPracticeFragment :
             } ?: LinearLayout.LayoutParams(slotWidth, slotHeight).apply {
                 setMargins(margin, 0, margin, 0)
             }
-            view.textSize = when {
-                slotWidth < 16.dpToPx(requireContext()) -> 12f
-                compactSlots -> 14f
-                slotWidth < 26.dpToPx(requireContext()) -> 15f
-                else -> 18f
-            }
+            view.textSize = slotTextSize(slotWidth, compactSlots)
             view.text = slot.letter
             view.setTextColor(
                 Color.parseColor(
@@ -471,14 +482,24 @@ class SpellingPracticeFragment :
     }
 
     private fun renderLetters(letters: List<SpellingPracticeViewModel.LetterItem>) {
+        latestLetterItems = letters.toList()
         if (letters.isEmpty()) {
             databind.gridLetters.removeAllViews()
             letterButtons.clear()
             deleteButton = null
+            renderedKeyboardContentWidth = -1
             return
         }
-        val columnCount = resolveLetterColumnCount(letters.size + 1)
+        val keyboardContentWidth = databind.gridLetters.width -
+            databind.gridLetters.paddingStart -
+            databind.gridLetters.paddingEnd
+        if (keyboardContentWidth <= 0) {
+            requestKeyboardLayout()
+            return
+        }
+        val columnCount = resolveLetterColumnCount(letters.size + 1, keyboardContentWidth)
         val needsRebuild = letterButtons.size != letters.size ||
+            renderedKeyboardContentWidth != keyboardContentWidth ||
             letterButtons.zip(letters).any { (button, item) ->
                 button.text?.toString() != item.letter.toString()
             }
@@ -491,10 +512,13 @@ class SpellingPracticeFragment :
                 }
             } + createDeleteButton()
             rowItems.chunked(columnCount).forEach { rowButtons ->
-                databind.gridLetters.addView(createKeyboardRow(rowButtons))
+                databind.gridLetters.addView(
+                    createKeyboardRow(rowButtons, keyboardContentWidth, columnCount)
+                )
             }
             deleteButton = rowItems.lastOrNull()
         }
+        renderedKeyboardContentWidth = keyboardContentWidth
         letters.forEachIndexed { index, item ->
             val button = letterButtons[index]
             button.text = item.letter.toString()
@@ -505,7 +529,11 @@ class SpellingPracticeFragment :
         deleteButton?.setOnClickListener { viewModel.onDelete() }
     }
 
-    private fun createKeyboardRow(buttons: List<MaterialButton>): LinearLayout {
+    private fun createKeyboardRow(
+        buttons: List<MaterialButton>,
+        contentWidth: Int,
+        columnCount: Int
+    ): LinearLayout {
         return LinearLayout(requireContext()).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.START
@@ -514,7 +542,7 @@ class SpellingPracticeFragment :
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
             buttons.forEach { button ->
-                addView(button, createKeyLayoutParams())
+                addView(button, createKeyLayoutParams(contentWidth, columnCount))
             }
         }
     }
@@ -555,17 +583,22 @@ class SpellingPracticeFragment :
         }
     }
 
-    private fun resolveLetterColumnCount(itemCount: Int): Int {
-        return 5
+    private fun resolveLetterColumnCount(itemCount: Int, availableWidth: Int): Int {
+        val cellMargin = 4.dpToPx(requireContext())
+        val minCellWidth = 42.dpToPx(requireContext())
+        val maxColumns = minOf(5, itemCount.coerceAtLeast(1))
+        val columnsThatFit = ((availableWidth + cellMargin * 2) /
+            (minCellWidth + cellMargin * 2)).coerceAtLeast(1)
+        return minOf(maxColumns, columnsThatFit)
     }
 
-    private fun createKeyLayoutParams(): LinearLayout.LayoutParams {
-        val columnCount = resolveLetterColumnCount(0)
-        val horizontalPadding = 36.dpToPx(requireContext())
+    private fun createKeyLayoutParams(
+        availableWidth: Int,
+        columnCount: Int
+    ): LinearLayout.LayoutParams {
         val cellMargin = 4.dpToPx(requireContext())
-        val availableWidth = resources.displayMetrics.widthPixels - horizontalPadding
         val width = ((availableWidth - cellMargin * 2 * columnCount) / columnCount)
-            .coerceAtLeast(42.dpToPx(requireContext()))
+            .coerceAtLeast(1)
         return LinearLayout.LayoutParams(width, 45.dpToPx(requireContext())).apply {
             this.width = width
             setMargins(cellMargin, 4.dpToPx(requireContext()), cellMargin, 4.dpToPx(requireContext()))
@@ -717,9 +750,39 @@ class SpellingPracticeFragment :
     }
 
     private fun maxDrawerHeight(): Int {
-        val rootHeight = databind.root.height.takeIf { it > 0 }
-            ?: resources.displayMetrics.heightPixels
+        val rootHeight = databind.root.height
+        if (rootHeight <= 0) {
+            return 190.dpToPx(requireContext())
+        }
         return (rootHeight * 0.45f).toInt().coerceAtLeast(96.dpToPx(requireContext()))
+    }
+
+    private fun requestAnswerSlotsLayout() {
+        if (answerSlotsLayoutPending) return
+        answerSlotsLayoutPending = true
+        databind.layoutSlots.post {
+            answerSlotsLayoutPending = false
+            if (!isAdded || view == null) return@post
+            renderSlots(latestAnswerSlots)
+        }
+    }
+
+    private fun requestKeyboardLayout() {
+        if (keyboardLayoutPending) return
+        keyboardLayoutPending = true
+        databind.gridLetters.post {
+            keyboardLayoutPending = false
+            if (!isAdded || view == null) return@post
+            renderLetters(latestLetterItems)
+        }
+    }
+
+    private fun slotTextSize(slotWidth: Int, compactSlots: Boolean): Float = when {
+        slotWidth < 12.dpToPx(requireContext()) -> 10f
+        slotWidth < 16.dpToPx(requireContext()) -> 12f
+        compactSlots -> 14f
+        slotWidth < 26.dpToPx(requireContext()) -> 15f
+        else -> 18f
     }
 }
 

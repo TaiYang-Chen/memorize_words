@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.OptIn
-import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
@@ -18,6 +17,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import com.chen.memorizewords.feature.home.R
 import com.chen.memorizewords.feature.home.databinding.FeatureHomeActivityQrScanBinding
+import com.chen.memorizewords.core.ui.activity.PhoneEdgeToEdgeActivity
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
@@ -27,7 +27,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
 
-class QrScanActivity : AppCompatActivity() {
+class QrScanActivity : PhoneEdgeToEdgeActivity() {
 
     private lateinit var binding: FeatureHomeActivityQrScanBinding
     private lateinit var cameraExecutor: ExecutorService

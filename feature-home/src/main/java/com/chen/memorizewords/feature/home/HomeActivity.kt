@@ -6,15 +6,13 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.SystemClock
+import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.chen.memorizewords.core.navigation.AppLaunchEntry
@@ -23,6 +21,8 @@ import com.chen.memorizewords.core.navigation.HomeDestination
 import com.chen.memorizewords.core.navigation.HomeEntryExtras
 import com.chen.memorizewords.core.navigation.RouteNavigator
 import com.chen.memorizewords.core.ui.activity.BaseVmDbActivity
+import com.chen.memorizewords.core.ui.insets.PhoneInsetSide
+import com.chen.memorizewords.core.ui.insets.applyPhoneWindowInsets
 import com.chen.memorizewords.core.ui.vm.UiEvent
 import com.chen.memorizewords.feature.home.databinding.ModuleHomeActivityHomeBinding
 import com.chen.memorizewords.feature.home.ui.home.HomeFragment
@@ -83,17 +83,27 @@ class HomeActivity : BaseVmDbActivity<HomeViewModel, ModuleHomeActivityHomeBindi
         viewModel.checkAutoLogin()
     }
 
+    override fun applyContentWindowInsets(content: View) {
+        content.applyPhoneWindowInsets(
+            sides = setOf(
+                PhoneInsetSide.START,
+                PhoneInsetSide.TOP,
+                PhoneInsetSide.END
+            ),
+            includeIme = false
+        )
+        databind.bottomNav.applyPhoneWindowInsets(
+            sides = setOf(PhoneInsetSide.BOTTOM),
+            includeIme = false
+        )
+    }
+
     private fun configureSystemBars() {
         window.statusBarColor = Color.TRANSPARENT
         window.navigationBarColor = Color.WHITE
         WindowCompat.getInsetsController(window, window.decorView).apply {
             isAppearanceLightStatusBars = true
             isAppearanceLightNavigationBars = true
-        }
-        ViewCompat.setOnApplyWindowInsetsListener(databind.homeFragmentContainer) { view, insets ->
-            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
-            view.updatePadding(top = statusBarInsets.top)
-            insets
         }
     }
 

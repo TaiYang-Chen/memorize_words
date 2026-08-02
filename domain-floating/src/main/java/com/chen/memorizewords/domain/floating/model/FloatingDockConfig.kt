@@ -1,7 +1,8 @@
 package com.chen.memorizewords.domain.floating.model
 data class FloatingDockConfig(
     val snapTriggerDistanceDp: Int = 24,
-    val halfHiddenEnabled: Boolean = true,
+    /** Retained for serialized legacy data; runtime always keeps the pet fully on screen. */
+    val halfHiddenEnabled: Boolean = false,
     val allowedEdges: List<FloatingDockEdge> = defaultAllowedEdges(),
     val edgePriority: List<FloatingDockEdge> = defaultAllowedEdges(),
     val snapAnimationDurationMs: Long = 220L,
@@ -24,6 +25,7 @@ data class FloatingDockConfig(
             ?: FloatingDockEdge.RIGHT
         return copy(
             snapTriggerDistanceDp = snapTriggerDistanceDp.coerceAtLeast(0),
+            halfHiddenEnabled = false,
             allowedEdges = allowed,
             edgePriority = priority,
             snapAnimationDurationMs = snapAnimationDurationMs.coerceAtLeast(0L),
