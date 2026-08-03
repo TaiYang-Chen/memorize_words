@@ -30,5 +30,4 @@ class SessionTimer(
         return totalDurationMs
     }
 
-    fun elapsedTotal(): Long = totalDurationMs
 }

@@ -553,16 +553,6 @@ class ListeningPracticeViewModel @Inject constructor(
         moveToNextQuestion()
     }
 
-    fun onStudyPhoneticToggle() {
-        if (currentScreen != ListeningScreenState.STUDY) return
-        val current = _uiState.value
-        val toggledType = when (current.studyPronunciationType) {
-            PronunciationType.US -> PronunciationType.UK
-            PronunciationType.UK -> PronunciationType.US
-        }
-        onStudyPronunciationSelected(toggledType)
-    }
-
     fun onStudyPronunciationSelected(pronunciationType: PronunciationType) {
         if (currentScreen != ListeningScreenState.STUDY) return
         val card = activeCard ?: return

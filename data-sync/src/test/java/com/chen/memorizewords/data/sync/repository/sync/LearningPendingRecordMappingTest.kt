@@ -39,7 +39,7 @@ class LearningPendingRecordMappingTest {
         assertEquals("failed", record.sourceId)
         assertEquals(FailureQueueEventType.LEARNING_EVENT, record.bizType)
         assertEquals(FailedSyncState.RETRY_WAITING.name, record.state)
-        assertEquals(SyncOutboxFailureKind.NETWORK.name, record.failureKind)
+        assertEquals("NETWORK", record.failureKind)
         assertEquals(2, record.retryCount)
     }
 }

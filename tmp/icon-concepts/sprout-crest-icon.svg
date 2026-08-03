@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" fill="none">
+  <rect width="1024" height="1024" rx="208" fill="#E8F7F0"/>
+  <!-- Backpack form, derived from the pet's navy straps. -->
+  <path d="M244 679C244 548 352 442 486 442H538C672 442 780 548 780 679V755C780 805 740 845 690 845H334C284 845 244 805 244 755V679Z" fill="#071A3A"/>
+  <!-- Green head silhouette; facial features are deliberately absent. -->
+  <path d="M312 574C312 407 404 303 512 303C620 303 712 407 712 574V630H312V574Z" fill="#15CB8F"/>
+  <!-- The double leaf crown is a structural part of the emblem, not a separate plant. -->
+  <path d="M488 309C416 283 362 224 354 148C432 145 491 188 512 257C533 188 592 145 670 148C662 224 608 283 536 309H488Z" fill="#6FE3B8"/>
+  <!-- A simplified hoodie: the V collar becomes a distinct, scalable internal shape. -->
+  <path d="M334 606H690V760C690 789 666 813 637 813H387C358 813 334 789 334 760V606Z" fill="#FFFDF7"/>
+  <path d="M334 606L512 724L690 606V650L512 768L334 650V606Z" fill="#F3EAFE"/>
+  <!-- The character's chest patch becomes the only vocabulary cue. -->
+  <path d="M532 698L579 790H544L534 767H503L493 790H458L505 698H532ZM518 735L511 754H527L518 735Z" fill="#8C42F5"/>
+  <path d="M244 679C244 548 352 442 486 442" stroke="#071A3A" stroke-width="42" stroke-linecap="round"/>
+  <path d="M780 679C780 548 672 442 538 442" stroke="#071A3A" stroke-width="42" stroke-linecap="round"/>
+</svg>

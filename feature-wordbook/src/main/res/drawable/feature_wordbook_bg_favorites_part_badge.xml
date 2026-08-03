@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <solid android:color="@color/feature_wordbook_favorites_badge_background" />
-    <stroke
-        android:width="@dimen/core_ui_dp_1"
-        android:color="@color/feature_wordbook_favorites_badge_stroke" />
-    <corners android:radius="@dimen/core_ui_dp_999" />
-</shape>

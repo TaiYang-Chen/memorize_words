@@ -27,16 +27,6 @@ internal class ListeningUiMapper(
         }
     }
 
-    fun resolveMode(modeName: String?): ListeningPracticeMode {
-        return runCatching {
-            ListeningPracticeMode.valueOf(modeName.orEmpty())
-        }.getOrDefault(ListeningPracticeMode.MEANING)
-    }
-
-    fun screenTitle(progressText: String): String {
-        return "\u542c\u529b\u6d4b\u8bd5\uff08$progressText\uff09"
-    }
-
     fun progressText(completed: Int, total: Int): String {
         return resourceProvider.getString(
             R.string.practice_listening_progress_format,
@@ -50,13 +40,6 @@ internal class ListeningUiMapper(
             R.string.practice_listening_review_progress_format,
             reviewCount,
             total
-        )
-    }
-
-    fun modeBadge(mode: ListeningPracticeMode): String {
-        return resourceProvider.getString(
-            R.string.practice_listening_mode_badge,
-            displayName(mode)
         )
     }
 

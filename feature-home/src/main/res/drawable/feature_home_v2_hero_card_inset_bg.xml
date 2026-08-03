@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<inset xmlns:android="http://schemas.android.com/apk/res/android"
-    android:drawable="@drawable/feature_home_v2_hero_card_bg"
-    android:insetLeft="@dimen/feature_home_v2_shadow_gutter"
-    android:insetRight="@dimen/feature_home_v2_shadow_gutter" />

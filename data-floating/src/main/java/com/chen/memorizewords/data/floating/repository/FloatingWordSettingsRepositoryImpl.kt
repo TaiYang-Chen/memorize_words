@@ -1,16 +1,12 @@
 package com.chen.memorizewords.data.floating.repository
 
 import com.chen.memorizewords.core.common.coroutines.DirectSyncLauncher
-import com.chen.memorizewords.data.floating.local.FloatingLegacyStorageKeys
 import com.chen.memorizewords.data.sync.remote.learningsync.RemoteLearningSyncDataSource
 import com.chen.memorizewords.domain.floating.FloatingSettingsLocalStatePort
 import com.chen.memorizewords.domain.floating.model.FloatingWordFieldConfig
-import com.chen.memorizewords.domain.floating.model.FloatingWordOrderType
 import com.chen.memorizewords.domain.floating.model.FloatingWordSettings
-import com.chen.memorizewords.domain.floating.model.FloatingWordSourceType
 import com.chen.memorizewords.domain.floating.repository.FloatingWordSettingsRepository
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.tencent.mmkv.MMKV
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -67,22 +63,9 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
 ) : FloatingWordSettingsRepository, FloatingSettingsLocalStatePort {
 
     companion object {
-        private const val KEY_ENABLED = "floating_word_enabled"
-        private const val KEY_SOURCE_TYPE = "floating_word_source_type"
-        private const val KEY_ORDER_TYPE = "floating_word_order_type"
-        private const val KEY_FIELD_CONFIGS = "floating_word_field_configs"
-        private const val KEY_SELECTED_IDS = "floating_word_selected_ids"
-        private const val KEY_BALL_SIZE_PERCENT = "floating_word_ball_size_percent"
-        private const val KEY_BALL_OPACITY_PERCENT = "floating_word_ball_opacity_percent"
-        private const val KEY_CARD_OPACITY_PERCENT = "floating_word_card_opacity_percent"
-        private const val KEY_CARD_GAP_DP = "floating_word_card_gap_dp"
-        private const val LEGACY_CHARACTER_PACK_ID = "green_pet"
-        private const val KEY_SELECTED_CHARACTER_PACK_ID = "floating_word_selected_character_pack_id"
-        private const val KEY_SETTINGS_PAYLOAD = FloatingLegacyStorageKeys.SETTINGS_PAYLOAD
+        private const val KEY_SETTINGS_PAYLOAD = "floating_word_settings_payload_v2"
     }
 
-    private val fieldConfigType = object : TypeToken<List<FloatingWordFieldConfig>>() {}.type
-    private val longListType = object : TypeToken<List<Long>>() {}.type
     private val localMonitor = Any()
     private val storageLockDepth = ThreadLocal<Int>()
     private val state = MutableStateFlow(readFromLocal())
@@ -100,7 +83,7 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
     override suspend fun saveSettings(settings: FloatingWordSettings) {
         val normalized = normalizeSettings(settings)
         val changed = withStorageLock {
-            val latest = readFromLocalLocked(migrateLegacy = true)
+            val latest = readFromLocalLocked()
             if (latest == normalized) {
                 state.value = latest
                 false
@@ -118,7 +101,7 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
     ): FloatingWordSettings {
         var changed = false
         val updated = withStorageLock {
-            val latest = readFromLocalLocked(migrateLegacy = true)
+            val latest = readFromLocalLocked()
             val target = normalizeSettings(transform(latest))
             if (target != latest) {
                 persistSettingsLocked(target)
@@ -142,78 +125,22 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
     override fun clearLocalState() {
         withStorageLock {
             mmkv.removeValueForKey(KEY_SETTINGS_PAYLOAD)
-            removeLegacyKeysLocked()
             state.value = FloatingWordSettings()
         }
     }
 
     private fun readFromLocal(): FloatingWordSettings = withStorageLock {
-        readFromLocalLocked(migrateLegacy = true)
+        readFromLocalLocked()
     }
 
-    private fun readFromLocalLocked(migrateLegacy: Boolean): FloatingWordSettings {
+    private fun readFromLocalLocked(): FloatingWordSettings {
         val payload = mmkv.decodeString(KEY_SETTINGS_PAYLOAD, null)
         if (!payload.isNullOrBlank()) {
             runCatching {
                 normalizeSettings(gson.fromJson(payload, FloatingWordSettings::class.java))
             }.getOrNull()?.let { return it }
         }
-
-        val hasLegacyState = legacyContentKeys().any(mmkv::containsKey)
-        val legacy = readLegacySettingsLocked()
-        if (migrateLegacy && (hasLegacyState || !payload.isNullOrEmpty())) {
-            persistSettingsLocked(legacy)
-        }
-        return legacy
-    }
-
-    private fun readLegacySettingsLocked(): FloatingWordSettings {
-        val sourceTypeName =
-            mmkv.decodeString(KEY_SOURCE_TYPE, FloatingWordSourceType.CURRENT_BOOK.name)
-        val orderTypeName =
-            mmkv.decodeString(KEY_ORDER_TYPE, FloatingWordOrderType.RANDOM.name)
-        val fieldConfigsJson = mmkv.decodeString(KEY_FIELD_CONFIGS, null)
-        val selectedIdsJson = mmkv.decodeString(KEY_SELECTED_IDS, null)
-
-        val sourceType = runCatching {
-            FloatingWordSourceType.valueOf(sourceTypeName.orEmpty())
-        }.getOrDefault(FloatingWordSourceType.CURRENT_BOOK)
-        val orderType = runCatching {
-            FloatingWordOrderType.valueOf(orderTypeName.orEmpty())
-        }.getOrDefault(FloatingWordOrderType.RANDOM)
-        val fieldConfigs = runCatching {
-            gson.fromJson<List<FloatingWordFieldConfig>>(fieldConfigsJson, fieldConfigType)
-        }.getOrNull() ?: FloatingWordSettings.defaultFieldConfigs()
-        val selectedIds = runCatching {
-            gson.fromJson<List<Long>>(selectedIdsJson, longListType)
-        }.getOrNull() ?: emptyList()
-        val legacyEnabled = mmkv.decodeBool(KEY_ENABLED, false)
-        return normalizeFloatingWordSettings(
-            FloatingWordSettings(
-                sourceType = sourceType,
-                orderType = orderType,
-                fieldConfigs = fieldConfigs,
-                selectedWordIds = selectedIds,
-                ballSizePercent = mmkv.decodeInt(
-                    KEY_BALL_SIZE_PERCENT,
-                    DEFAULT_BALL_SIZE_PERCENT
-                ),
-                ballOpacityPercent = mmkv.decodeInt(
-                    KEY_BALL_OPACITY_PERCENT,
-                    DEFAULT_BALL_OPACITY_PERCENT
-                ),
-                cardOpacityPercent = mmkv.decodeInt(
-                    KEY_CARD_OPACITY_PERCENT,
-                    DEFAULT_CARD_OPACITY_PERCENT
-                ),
-                cardGapDp = mmkv.decodeInt(
-                    KEY_CARD_GAP_DP,
-                    DEFAULT_CARD_GAP_DP
-                ),
-                selectedCharacterPackId = mmkv.decodeString(KEY_SELECTED_CHARACTER_PACK_ID)
-                    ?: if (legacyEnabled) LEGACY_CHARACTER_PACK_ID else null
-            )
-        )
+        return normalizeSettings(FloatingWordSettings())
     }
 
     private fun normalizeSettings(settings: FloatingWordSettings): FloatingWordSettings {
@@ -221,7 +148,6 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
     }
 
     private fun persistSettingsLocked(settings: FloatingWordSettings) {
-        preserveLegacyDevicePayloadLocked()
         val payload = try {
             gson.toJson(settings)
         } catch (error: Exception) {
@@ -230,35 +156,7 @@ class FloatingWordSettingsRepositoryImpl @Inject constructor(
         check(mmkv.encode(KEY_SETTINGS_PAYLOAD, payload)) {
             "Failed to persist floating settings"
         }
-        removeLegacyKeysLocked()
     }
-
-    private fun preserveLegacyDevicePayloadLocked() {
-        val legacyPayload = mmkv.decodeString(KEY_SETTINGS_PAYLOAD, null) ?: return
-        if (!FloatingLegacyStorageKeys.containsDevicePreferences(legacyPayload)) return
-        check(
-            mmkv.encode(FloatingLegacyStorageKeys.DEVICE_PREFERENCES_BACKUP, legacyPayload)
-        ) {
-            "Failed to preserve floating device preferences for migration"
-        }
-    }
-
-    private fun removeLegacyKeysLocked() {
-        legacyContentKeys().forEach(mmkv::removeValueForKey)
-    }
-
-    private fun legacyContentKeys(): List<String> = listOf(
-        KEY_ENABLED,
-        KEY_SOURCE_TYPE,
-        KEY_ORDER_TYPE,
-        KEY_FIELD_CONFIGS,
-        KEY_SELECTED_IDS,
-        KEY_BALL_SIZE_PERCENT,
-        KEY_BALL_OPACITY_PERCENT,
-        KEY_CARD_OPACITY_PERCENT,
-        KEY_CARD_GAP_DP,
-        KEY_SELECTED_CHARACTER_PACK_ID
-    )
 
     private fun <T> withStorageLock(block: () -> T): T = synchronized(localMonitor) {
         val depth = storageLockDepth.get() ?: 0

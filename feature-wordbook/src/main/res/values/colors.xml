@@ -23,9 +23,6 @@
     <color name="feature_wordbook_study_plan_progress_track">#E8EDF3</color>
     <color name="feature_wordbook_study_plan_progress_mastered">#FDBA74</color>
     <color name="feature_wordbook_study_plan_progress_learning">#FB923C</color>
-    <color name="module_wordbook_study_mode_description">#71808B</color>
-    <color name="module_wordbook_study_mode_badge_text">#5F88A2</color>
-    <color name="module_wordbook_study_mode_icon_tint">#33424D</color>
     <color name="feature_wordbook_shop_page_background">#FFFFFF</color>
     <color name="feature_wordbook_shop_search_background">#F5F7FA</color>
     <color name="feature_wordbook_shop_search_icon">#98A2B3</color>

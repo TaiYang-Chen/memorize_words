@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" fill="none">
+  <rect width="1024" height="1024" rx="220" fill="#E8F7F0"/>
+
+  <!-- The pet's sprout is recast as two bookmark tabs. -->
+  <path d="M484 351C368 332 302 255 317 145C429 162 488 235 510 325L484 351Z" fill="#15CB8F"/>
+  <path d="M540 351C656 332 722 255 707 145C595 162 536 235 514 325L540 351Z" fill="#6FE3B8"/>
+
+  <!-- A compact navy study pack, based on the mascot's backpack. -->
+  <path d="M166 714V481C166 358 266 258 389 258H635C758 258 858 358 858 481V714C858 810 780 888 684 888H340C244 888 166 810 166 714Z" fill="#071A3A"/>
+
+  <!-- The central object is a vocabulary card, deliberately not a green head. -->
+  <path d="M280 648V337C280 318 295 303 314 303H626L744 421V648H280Z" fill="#15CB8F"/>
+  <path d="M626 303V393C626 409 639 422 655 422H744L626 303Z" fill="#6FE3B8"/>
+  <rect x="350" y="404" width="214" height="44" rx="22" fill="#FFFDF7"/>
+  <rect x="350" y="482" width="318" height="32" rx="16" fill="#A7E7D0"/>
+  <rect x="350" y="540" width="202" height="32" rx="16" fill="#A7E7D0"/>
+  <!-- A small purple tab picks up the hoodie patch color without relying on a letter. -->
+  <path d="M632 459H684C704 459 720 475 720 495V547H668C648 547 632 531 632 511V459Z" fill="#8C42F5"/>
+
+  <!-- The white V panel quotes the mascot's hoodie rather than drawing the mascot itself. -->
+  <path d="M242 581C242 548 269 521 302 521H722C755 521 782 548 782 581V742C782 802 733 851 673 851H351C291 851 242 802 242 742V581Z" fill="#FFFDF7"/>
+  <path d="M280 548L512 700L744 548V610L512 762L280 610V548Z" fill="#F3EAFE"/>
+  <path d="M280 548L512 700L744 548" stroke="#DDE8E4" stroke-width="14" stroke-linejoin="round"/>
+  <path d="M642 711H704C724 711 740 727 740 747V809H678C658 809 642 793 642 773V711Z" fill="#8C42F5"/>
+  <path d="M668 741H714V787H668L686 764L668 741Z" fill="#FFFDF7"/>
+</svg>

@@ -9,8 +9,6 @@ import com.chen.memorizewords.data.practice.local.room.model.practice.session.Pr
 import com.chen.memorizewords.data.practice.local.room.model.practice.session.PracticeSessionWordEntity
 import com.chen.memorizewords.core.common.coroutines.DirectSyncLauncher
 import com.chen.memorizewords.data.sync.remote.learningsync.RemoteLearningSyncDataSource
-import com.chen.memorizewords.domain.practice.PracticeEntryType
-import com.chen.memorizewords.domain.practice.PracticeMode
 import com.chen.memorizewords.domain.practice.PracticeSessionRecord
 import com.chen.memorizewords.domain.practice.PracticeSessionRecordRepository
 import javax.inject.Inject
@@ -111,7 +109,3 @@ internal fun List<Long>.toWordEntities(sessionId: Long): List<PracticeSessionWor
         )
     }
 }
-
-internal fun parsePracticeMode(value: String): PracticeMode = PracticeMode.valueOf(value)
-
-internal fun parsePracticeEntryType(value: String): PracticeEntryType = PracticeEntryType.valueOf(value)

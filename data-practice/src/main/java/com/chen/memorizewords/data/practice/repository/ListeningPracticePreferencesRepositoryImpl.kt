@@ -116,5 +116,4 @@ class ListeningPracticePreferencesRepositoryImpl @Inject constructor(
         store.remove(KEY_MODE_SWITCH_HINT_SHOWN)
     }
 
-    fun getDefaultListeningPracticeModeName(): String = DEFAULT_LISTENING_MODE_NAME
 }

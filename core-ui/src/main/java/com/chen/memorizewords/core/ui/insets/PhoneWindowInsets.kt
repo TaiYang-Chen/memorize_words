@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.Dialog
 import android.graphics.Rect
 import android.view.View
-import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import androidx.core.graphics.Insets
@@ -25,13 +24,6 @@ enum class PhoneInsetSide {
 }
 
 private data class OriginalPadding(
-    val start: Int,
-    val top: Int,
-    val end: Int,
-    val bottom: Int
-)
-
-private data class OriginalMargins(
     val start: Int,
     val top: Int,
     val end: Int,
@@ -117,37 +109,6 @@ fun View.applyPhoneWindowInsets(
 }
 
 /**
- * Adds safe drawing insets to margins, preserving margins supplied by the layout.
- */
-fun View.applyPhoneWindowInsetMargins(
-    sides: Set<PhoneInsetSide>,
-    includeIme: Boolean = true,
-    includeSystemGestures: Boolean = false
-) {
-    val original = originalMargins() ?: return
-    ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
-        val safeInsets = insets.phoneSafeInsets(
-            includeIme = includeIme,
-            includeSystemGestures = includeSystemGestures
-        )
-        val relativeInsets = safeInsets.toPhoneRelativeInsets(
-            sides = sides,
-            layoutDirection = view.layoutDirection
-        )
-        val params = view.layoutParams as? ViewGroup.MarginLayoutParams
-        if (params != null) {
-            params.marginStart = original.start + relativeInsets.start
-            params.topMargin = original.top + relativeInsets.top
-            params.marginEnd = original.end + relativeInsets.end
-            params.bottomMargin = original.bottom + relativeInsets.bottom
-            view.layoutParams = params
-        }
-        insets
-    }
-    ViewCompat.requestApplyInsets(this)
-}
-
-/**
  * Returns this view's drawable bounds after subtracting the protected window edges.
  *
  * This is intended for positioned transient surfaces, such as a [android.widget.PopupWindow].
@@ -220,16 +181,4 @@ private fun View.originalPadding(): OriginalPadding {
             end = paddingEnd,
             bottom = paddingBottom
         ).also { setTag(R.id.core_ui_original_padding, it) }
-}
-
-private fun View.originalMargins(): OriginalMargins? {
-    return (getTag(R.id.core_ui_original_margins) as? OriginalMargins)
-        ?: (layoutParams as? ViewGroup.MarginLayoutParams)?.let { params ->
-            OriginalMargins(
-                start = params.marginStart,
-                top = params.topMargin,
-                end = params.marginEnd,
-                bottom = params.bottomMargin
-            ).also { setTag(R.id.core_ui_original_margins, it) }
-        }
 }

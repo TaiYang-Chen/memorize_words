@@ -504,10 +504,6 @@ class HomeViewModel @Inject constructor(
         navigateRoute(Route.ToPracticeTab)
     }
 
-    fun onProfileClicked() {
-        navigateRoute(Route.ToProfileTab)
-    }
-
     fun onSettingsClicked() {
         navigate(AppRoute.Auth(deepLink = AuthEntryDestination.USER_PROFILE_DEEP_LINK))
     }
@@ -586,19 +582,6 @@ class HomeViewModel @Inject constructor(
             return
         }
         navigateToNewLearning(bookId, plan, selectedCount)
-    }
-
-    fun toLearningNewActivity() {
-        currentWordBookBlockedMessage()?.let { message ->
-            showToast(message)
-            return
-        }
-        val bookInfo = wordBookInfo.value
-        if (bookInfo == null) {
-            showToast(resourceProvider.getString(R.string.home_practice_no_book))
-            return
-        }
-        navigateToNewLearning(bookInfo.bookId, studyPlan.value, studyPlan.value.dailyNewCount)
     }
 
     fun toLearningReviewActivity() {
@@ -1007,10 +990,6 @@ private fun calculateSnapshotAccuracyRate(correctCount: Int, wrongCount: Int): F
     if (total <= 0) return 0f
     val rate = correctCount * 100f / total.toFloat()
     return (rate * 10f).roundToInt() / 10f
-}
-
-internal fun resolveReviewWordCount(plan: StudyPlan): Int {
-    return plan.dailyReviewCount.coerceAtLeast(0)
 }
 
 internal data class ReviewLearningProgress(

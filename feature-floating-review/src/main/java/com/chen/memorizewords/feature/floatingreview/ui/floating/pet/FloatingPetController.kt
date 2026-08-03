@@ -113,11 +113,6 @@ class FloatingPetController @Inject constructor(
         }
     }
 
-    fun playOptionalAction(actionId: String) {
-        checkMainThread()
-        if (!released) commands.trySend(FloatingPetCommand.PlayOptionalAction(actionId))
-    }
-
     fun playEvent(event: PetEvent) {
         checkMainThread()
         if (!released) commands.trySend(FloatingPetCommand.PlayEvent(event))
@@ -127,14 +122,6 @@ class FloatingPetController @Inject constructor(
         checkMainThread()
         if (released || packId == submittedPackId) return
         if (commands.trySend(FloatingPetCommand.SwitchPack(packId)).isSuccess) {
-            submittedPackId = packId
-        }
-    }
-
-    fun forceReloadPack(packId: SpritePackId) {
-        checkMainThread()
-        if (released) return
-        if (commands.trySend(FloatingPetCommand.SwitchPack(packId, forceReload = true)).isSuccess) {
             submittedPackId = packId
         }
     }
@@ -211,7 +198,6 @@ class FloatingPetController @Inject constructor(
                 renderRequestedVisibility()
             }
             is FloatingPetCommand.PlayEvent -> handlePetEvent(command.event)
-            is FloatingPetCommand.PlayOptionalAction -> playOptional(command.actionId)
             is FloatingPetCommand.SwitchPack -> loadPack(
                 packId = command.packId,
                 forceReload = command.forceReload,
@@ -712,17 +698,6 @@ class FloatingPetController @Inject constructor(
             FloatingPetPlaybackState.OPTIONAL -> queueEvent(event)
             else -> Unit
         }
-    }
-
-    private fun playOptional(actionId: String) {
-        if (
-            state != FloatingPetPlaybackState.IDLE &&
-            state != FloatingPetPlaybackState.VISIBLE_LOOP &&
-            state != FloatingPetPlaybackState.OPTIONAL
-        ) return
-        val activeSession = session ?: return
-        val clipId = actionPolicy.resolveOptionalAction(activeSession.manifest, actionId) ?: return
-        playOptionalClip(activeSession, clipId)
     }
 
     private fun playOptionalClip(

@@ -2,7 +2,6 @@ package com.chen.memorizewords.core.sprite
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
 import android.widget.FrameLayout
 
 /**
@@ -16,24 +15,4 @@ class FloatingPetRenderHost @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
-    internal fun installRenderer(rendererView: View) {
-        checkMainThread()
-        if (childCount == 1 && getChildAt(0) === rendererView) return
-        removeAllViews()
-        addView(
-            rendererView,
-            LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-        )
-    }
-
-    internal fun uninstallRenderer(rendererView: View) {
-        checkMainThread()
-        if (rendererView.parent === this) removeView(rendererView)
-    }
-
-    private fun checkMainThread() {
-        check(android.os.Looper.myLooper() == android.os.Looper.getMainLooper()) {
-            "FloatingPetRenderHost must be updated on the main thread"
-        }
-    }
 }

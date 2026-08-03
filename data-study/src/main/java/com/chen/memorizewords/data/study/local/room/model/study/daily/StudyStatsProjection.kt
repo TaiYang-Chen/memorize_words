@@ -1,11 +1,5 @@
 package com.chen.memorizewords.data.study.local.room.model.study.daily
 
-data class DailyWordStatsProjection(
-    val date: String,
-    val newCount: Int,
-    val reviewCount: Int
-)
-
 data class DailyDurationStatsProjection(
     val date: String,
     val durationMs: Long
@@ -17,13 +11,6 @@ data class CalendarDayStatsProjection(
     val hasCheckIn: Boolean,
     val isNewPlanCompleted: Boolean,
     val isReviewPlanCompleted: Boolean
-)
-
-data class DailyStudyWordRecordProjection(
-    val wordId: Long,
-    val word: String,
-    val definition: String,
-    val isNewWord: Boolean
 )
 
 data class DailyStudySummaryProjection(

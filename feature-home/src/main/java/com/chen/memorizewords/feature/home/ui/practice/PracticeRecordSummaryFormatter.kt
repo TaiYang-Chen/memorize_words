@@ -52,15 +52,3 @@ internal fun PracticeSessionRecord.buildSpellingSummary(
         submitCount
     )
 }
-
-internal fun PracticeSessionRecord.buildSpellingSummaryBrief(
-    resourceProvider: ResourceProvider
-): String {
-    if ((mode != PracticeMode.SPELLING && mode != PracticeMode.EXAM) || questionCount <= 0) return ""
-    val metrics = toCompletionMetrics()
-    return resourceProvider.getString(
-        R.string.practice_record_spelling_summary_brief,
-        metrics.completionRate,
-        buildSettledAccuracyText(resourceProvider)
-    )
-}

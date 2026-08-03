@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" fill="none">
+  <rect width="1024" height="1024" rx="220" fill="#E8F7F0"/>
+
+  <!-- The companion's sprout becomes an off-centre bookmark clasp. -->
+  <path d="M390 272C300 242 242 170 258 82C350 95 405 158 422 243L390 272Z" fill="#15CB8F"/>
+  <path d="M444 274C526 230 604 156 601 63C505 84 445 148 414 236L444 274Z" fill="#6FE3B8"/>
+
+  <!-- Rear layer: one deep-navy vocabulary tab, not a backpack. -->
+  <path d="M328 172H690C736 172 774 210 774 256V776C774 822 736 860 690 860H328C282 860 244 822 244 776V256C244 210 282 172 328 172Z" fill="#071A3A"/>
+
+  <!-- Front layer: a single warm-white bookmark with an intentional V cut. -->
+  <path d="M335 209H644C678 209 706 237 706 271V744C706 778 678 806 644 806H540L512 772L484 806H335C301 806 273 778 273 744V271C273 237 301 209 335 209Z" fill="#FFFDF7"/>
+  <path d="M273 672H706V744C706 778 678 806 644 806H540L512 772L484 806H335C301 806 273 778 273 744V672Z" fill="#F3EAFE"/>
+
+  <!-- Non-legible word strokes, sized to survive the launcher grid. -->
+  <rect x="343" y="348" width="196" height="44" rx="22" fill="#071A3A"/>
+  <rect x="343" y="434" width="291" height="32" rx="16" fill="#BBD6CC"/>
+  <rect x="343" y="494" width="236" height="32" rx="16" fill="#BBD6CC"/>
+
+  <!-- Purple edge tab from the mascot's sweatshirt patch. -->
+  <path d="M648 286H706V440H648C625 440 606 421 606 398V328C606 305 625 286 648 286Z" fill="#8C42F5"/>
+  <path d="M648 313H679V413H648C641 413 634 406 634 399V327C634 319 641 313 648 313Z" fill="#FFFDF7"/>
+</svg>

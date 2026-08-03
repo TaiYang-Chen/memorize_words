@@ -18,5 +18,4 @@ data class WordBookInfo(
     val startedWords = learningWords + masteredWords
     val learnedWords = startedWords
     val remainWords = (totalWords - startedWords).coerceAtLeast(0)
-    fun remainDays(count: Int) = remainWords / count
 }

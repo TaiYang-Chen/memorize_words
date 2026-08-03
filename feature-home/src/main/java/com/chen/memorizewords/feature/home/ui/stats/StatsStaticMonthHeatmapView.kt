@@ -39,23 +39,6 @@ class StatsStaticMonthHeatmapView @JvmOverloads constructor(
         invalidate()
     }
 
-    fun submitStatuses(newStatuses: List<Int>) {
-        cells = newStatuses
-            .take(DAY_COUNT)
-            .mapIndexed { index, status ->
-                CalendarDayCellUi(
-                    date = "",
-                    dayText = (index + 1).toString(),
-                    isCurrentMonth = true,
-                    isToday = false,
-                    isSelected = false,
-                    status = status.toCalendarStudyStatus()
-                )
-            }
-        visibleRowCount = ROW_COUNT
-        invalidate()
-    }
-
     fun setOnDayClickListener(listener: ((CalendarDayCellUi) -> Unit)?) {
         onDayClick = listener
         isClickable = listener != null
@@ -180,14 +163,5 @@ private fun CalendarStudyStatus.toHeatmapStatus(): Int {
         CalendarStudyStatus.REVIEW_DONE -> 2
         CalendarStudyStatus.ALL_DONE -> 3
         CalendarStudyStatus.NONE -> 0
-    }
-}
-
-private fun Int.toCalendarStudyStatus(): CalendarStudyStatus {
-    return when (this) {
-        1 -> CalendarStudyStatus.STUDIED
-        2 -> CalendarStudyStatus.NEW_DONE
-        3 -> CalendarStudyStatus.ALL_DONE
-        else -> CalendarStudyStatus.NONE
     }
 }

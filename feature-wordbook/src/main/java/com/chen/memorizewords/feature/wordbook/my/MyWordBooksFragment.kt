@@ -82,13 +82,6 @@ class MyWordBooksFragment :
     override fun onNavigationRoute(event: UiEvent.Navigation.Route) {
         val navController = findNavController()
         when (event.target) {
-            MyWordBooksViewModel.Route.ToMyWordBooks -> {
-                val actionId = R.id.action_studyPlan_to_myWordBooks
-                if (navController.currentDestination?.getAction(actionId) != null) {
-                    navController.navigate(actionId)
-                }
-            }
-
             MyWordBooksViewModel.Route.ToShop -> {
                 navController.navigate(R.id.action_myWordBooks_to_shop)
             }

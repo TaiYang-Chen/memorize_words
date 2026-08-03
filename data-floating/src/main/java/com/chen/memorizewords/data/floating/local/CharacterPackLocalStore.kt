@@ -78,40 +78,16 @@ class CharacterPackLocalStore internal constructor(
     )
 
     private val stateType = object : TypeToken<PersistedCharacterPackState>() {}.type
-    private val catalogType = object : TypeToken<List<CharacterPackCatalogItem>>() {}.type
-    private val installedType = object : TypeToken<Map<String, InstalledCharacterPack>>() {}.type
-    private val downloadsType = object : TypeToken<Map<String, CharacterPackDownloadState>>() {}.type
 
-    private val initialState = keyValueStore.withProcessLock {
+    private var persistedState = keyValueStore.withProcessLock {
         refreshFromOuterProcess()
-        readStateWithSource()
+        readState()
     }
-    private var persistedState = initialState.state
     private val catalogState = MutableStateFlow(
         catalogForObservation(persistedState.catalog, persistedState.resolvedAppliedPack)
     )
     private val installedState = MutableStateFlow(persistedState.installed)
     private val downloadsState = MutableStateFlow(persistedState.downloads)
-
-    init {
-        if (initialState.shouldMigrate) {
-            // A single v2 payload makes future reads atomic across catalog, installation and
-            // download state. Re-read while holding the process lock: another process may have
-            // completed the migration after this instance performed its initial read, and that
-            // newer v2 state must never be overwritten with an older legacy snapshot.
-            keyValueStore.withProcessLock {
-                refreshFromOuterProcess()
-                val latest = readStateWithSource()
-                if (latest.shouldMigrate) {
-                    // If persistence fails, keep serving the normalized legacy data and allow the
-                    // next successful mutation to complete the migration.
-                    if (!persist(latest.state)) publish(latest.state)
-                } else {
-                    publish(latest.state)
-                }
-            }
-        }
-    }
 
     fun observeCatalog(): Flow<List<CharacterPackCatalogItem>> = observeState(catalogState)
     fun observeInstalled(): Flow<Map<String, InstalledCharacterPack>> = observeState(installedState)
@@ -200,14 +176,6 @@ class CharacterPackLocalStore internal constructor(
         val updated = persistedState.installed.toMutableMap().apply {
             put(item.packId, item)
         }.toMap()
-        persist(persistedState.copy(installed = updated))
-    }
-
-    @Synchronized
-    fun removeInstalled(packId: String): Boolean = keyValueStore.withProcessLock {
-        if (!isSafePackId(packId)) return@withProcessLock false
-        refreshFromDisk()
-        val updated = persistedState.installed.toMutableMap().apply { remove(packId) }.toMap()
         persist(persistedState.copy(installed = updated))
     }
 
@@ -466,14 +434,6 @@ class CharacterPackLocalStore internal constructor(
     }
 
     @Synchronized
-    fun removeDownload(packId: String): Boolean = keyValueStore.withProcessLock {
-        if (!isSafePackId(packId)) return@withProcessLock false
-        refreshFromDisk()
-        val updated = persistedState.downloads.toMutableMap().apply { remove(packId) }.toMap()
-        persist(persistedState.copy(downloads = updated))
-    }
-
-    @Synchronized
     fun removePack(packId: String): Boolean = keyValueStore.withProcessLock {
         if (!isSafePackId(packId)) return@withProcessLock false
         refreshFromDisk()
@@ -551,64 +511,19 @@ class CharacterPackLocalStore internal constructor(
         downloadsState.value = state.downloads
     }
 
-    private fun readState(): CharacterPackState = readStateWithSource().state
-
-    private fun readStateWithSource(): StateReadResult {
+    private fun readState(): CharacterPackState {
         val encodedState = decodeStringSafely(KEY_STATE)
-        if (encodedState != null) {
-            val state = try {
-                val decoded = gson.fromJson<PersistedCharacterPackState>(encodedState, stateType)
-                normalizeState(decoded)
-            } catch (_: Exception) {
-                CharacterPackState()
-            }
-            return StateReadResult(state = state, shouldMigrate = false)
+        return try {
+            encodedState ?: return CharacterPackState()
+            normalizeState(gson.fromJson(encodedState, stateType))
+        } catch (_: Exception) {
+            CharacterPackState()
         }
-        return readLegacyState()
-    }
-
-    private fun readLegacyState(): StateReadResult {
-        val encodedCatalog = decodeStringSafely(KEY_CATALOG)
-        val encodedInstalled = decodeStringSafely(KEY_INSTALLED)
-        val encodedDownloads = decodeStringSafely(KEY_DOWNLOADS)
-        val catalog = decodeLegacy<List<CharacterPackCatalogItem>>(
-            encodedCatalog,
-            catalogType
-        ).orEmpty()
-        val installed = decodeLegacy<Map<String, InstalledCharacterPack>>(
-            encodedInstalled,
-            installedType
-        ).orEmpty()
-        val downloads = decodeLegacy<Map<String, CharacterPackDownloadState>>(
-            encodedDownloads,
-            downloadsType
-        ).orEmpty()
-        return StateReadResult(
-            state = normalizeState(
-                PersistedCharacterPackState(
-                    catalog = catalog,
-                    installed = installed,
-                    downloads = downloads
-                )
-            ),
-            shouldMigrate = encodedCatalog != null ||
-                encodedInstalled != null ||
-                encodedDownloads != null
-        )
     }
 
     private fun decodeStringSafely(key: String): String? {
         return try {
             keyValueStore.decodeString(key)
-        } catch (_: Exception) {
-            null
-        }
-    }
-
-    private fun <T> decodeLegacy(encoded: String?, type: java.lang.reflect.Type): T? {
-        return try {
-            encoded ?: return null
-            gson.fromJson<T>(encoded, type)
         } catch (_: Exception) {
             null
         }
@@ -686,11 +601,6 @@ class CharacterPackLocalStore internal constructor(
         val downloads: Map<String, CharacterPackDownloadState> = emptyMap()
     )
 
-    private data class StateReadResult(
-        val state: CharacterPackState,
-        val shouldMigrate: Boolean
-    )
-
     private data class PersistedCharacterPackState(
         val catalog: List<CharacterPackCatalogItem>? = null,
         val resolvedAppliedPack: CharacterPackCatalogItem? = null,
@@ -715,9 +625,6 @@ class CharacterPackLocalStore internal constructor(
         private val INSTALLED_DIRECTORY = Regex("([1-9][0-9]*)-$UUID_PATTERN")
 
         private const val KEY_STATE = "character_pack_state_v2"
-        private const val KEY_CATALOG = "character_pack_catalog_v1"
-        private const val KEY_INSTALLED = "character_pack_installed_v1"
-        private const val KEY_DOWNLOADS = "character_pack_downloads_v1"
 
         fun isSafePackId(value: String): Boolean =
             value.matches(Regex("[a-z0-9][a-z0-9_-]{0,63}"))

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" fill="none">
+  <rect width="1024" height="1024" rx="220" fill="#E8F7F0"/>
+
+  <!-- Character cue 1: the sprout becomes two large bookmark tabs. -->
+  <path d="M487 357C374 343 293 273 281 151C397 148 477 222 510 326L487 357Z" fill="#15CB8F"/>
+  <path d="M537 357C650 343 731 273 743 151C627 148 547 222 514 326L537 357Z" fill="#6FE3B8"/>
+
+  <!-- Character cue 2: the navy backpack is the primary, not a character head. -->
+  <path d="M166 714V481C166 358 266 258 389 258H635C758 258 858 358 858 481V714C858 810 780 888 684 888H340C244 888 166 810 166 714Z" fill="#071A3A"/>
+
+  <!-- Vocabulary card, kept deliberately typographic without showing any real word. -->
+  <path d="M280 363C280 330 307 303 340 303H684C717 303 744 330 744 363V648H280V363Z" fill="#15CB8F"/>
+  <rect x="350" y="400" width="214" height="44" rx="22" fill="#FFFDF7"/>
+  <rect x="350" y="478" width="318" height="32" rx="16" fill="#A7E7D0"/>
+  <rect x="350" y="536" width="202" height="32" rx="16" fill="#A7E7D0"/>
+  <!-- The purple corner tag inherits the mascot's sweatshirt patch without using a letter. -->
+  <path d="M638 378H690C710 378 726 394 726 414V466H674C654 466 638 450 638 430V378Z" fill="#8C42F5"/>
+
+  <!-- Character cue 3: the white hoodie becomes a clean protective front pocket. -->
+  <path d="M242 581C242 548 269 521 302 521H722C755 521 782 548 782 581V742C782 802 733 851 673 851H351C291 851 242 802 242 742V581Z" fill="#FFFDF7"/>
+  <path d="M280 548L512 700L744 548V610L512 762L280 610V548Z" fill="#F3EAFE"/>
+  <path d="M280 548L512 700L744 548" stroke="#DDE8E4" stroke-width="14" stroke-linejoin="round"/>
+  <!-- Character cue 4: a small purple woven patch, intentionally geometric. -->
+  <path d="M642 711H704C724 711 740 727 740 747V809H678C658 809 642 793 642 773V711Z" fill="#8C42F5"/>
+  <path d="M668 741H714V787H668L686 764L668 741Z" fill="#FFFDF7"/>
+</svg>

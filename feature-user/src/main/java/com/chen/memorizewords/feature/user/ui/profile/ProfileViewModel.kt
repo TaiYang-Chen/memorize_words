@@ -91,10 +91,6 @@ class ProfileViewModel @Inject constructor(
         startBindWechat()
     }
 
-    fun changeWeChart() {
-        changeWechat()
-    }
-
     fun changeQQ() {
         startBindQq()
     }

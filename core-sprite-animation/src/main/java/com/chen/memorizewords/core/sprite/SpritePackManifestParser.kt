@@ -29,28 +29,6 @@ class SpritePackManifestParser(
         return manifest
     }
 
-    private fun parseLegacyManifest(root: JsonObject): SpritePackManifest {
-        val atlasObject = root.requiredObject("atlas")
-        val atlas = SpriteAtlasSpec(
-            fileName = atlasObject.requiredString("file"),
-            width = atlasObject.requiredInt("width"),
-            height = atlasObject.requiredInt("height"),
-            frameWidth = atlasObject.requiredInt("frameWidth"),
-            frameHeight = atlasObject.requiredInt("frameHeight"),
-            columns = atlasObject.requiredInt("columns"),
-            frameCount = atlasObject.requiredInt("frameCount")
-        )
-        return SpritePackManifest(
-            schemaVersion = SpritePackManifest.LEGACY_SCHEMA_VERSION,
-            packId = SpritePackId(root.requiredString("packId")),
-            packVersion = root.requiredInt("packVersion"),
-            atlas = atlas,
-            clips = parseClips(root.requiredObject("clips"), requireTexture = false),
-            semanticBindings = parseBindings(root.requiredObject("semanticBindings")),
-            fallbackClipId = SpriteClipId(root.requiredString("fallbackClip"))
-        )
-    }
-
     private fun parseKtx2Manifest(root: JsonObject): SpritePackManifest {
         val textures = root.requiredObject("textures").entrySet().associate { (key, value) ->
             val id = SpriteTextureId(key)
@@ -190,28 +168,6 @@ class SpritePackValidator(
         manifest.clips.forEach { (mapKey, clip) -> validateClip(manifest, mapKey, clip) }
         validateBindings("Semantic", manifest.semanticBindings, manifest.clips)
         validateBindings("Event", manifest.eventBindings, manifest.clips)
-    }
-
-    private fun validateLegacyAtlas(manifest: SpritePackManifest) {
-        val atlas = manifest.atlas
-        requireManifest(manifest.textures.isEmpty()) {
-            "Schema v1 must use its implicit WebP atlas"
-        }
-        requireManifest(atlas.fileName.matches(SAFE_FILE_NAME)) { "Unsafe atlas file name" }
-        requireManifest(atlas.width in 1..constraints.maxAtlasEdge) { "Atlas width is invalid" }
-        requireManifest(atlas.height in 1..constraints.maxAtlasEdge) { "Atlas height is invalid" }
-        requireManifest(atlas.frameWidth in 1..constraints.maxFrameEdge) { "Frame width is invalid" }
-        requireManifest(atlas.frameHeight in 1..constraints.maxFrameEdge) { "Frame height is invalid" }
-        requireManifest(atlas.frameCount in 1..constraints.maxFrameCount) { "Frame count is invalid" }
-        requireManifest(atlas.columns in 1..atlas.frameCount) {
-            "Atlas columns must be within the frame count"
-        }
-        requireManifest(atlas.columns.toLong() * atlas.frameWidth <= atlas.width.toLong()) {
-            "Atlas columns exceed width"
-        }
-        requireManifest(atlas.rows.toLong() * atlas.frameHeight <= atlas.height.toLong()) {
-            "Atlas rows exceed height"
-        }
     }
 
     private fun validateKtx2Textures(manifest: SpritePackManifest) {

@@ -67,16 +67,6 @@ sealed interface AppUpdateStatus {
     data class Deferred(val releaseId: Long, val untilMillis: Long) : AppUpdateStatus
 }
 
-sealed interface AppUpdateAction {
-    data object Check : AppUpdateAction
-    data object UpdateNow : AppUpdateAction
-    data object InstallNow : AppUpdateAction
-    data object RemindLater : AppUpdateAction
-    data object IgnoreVersion : AppUpdateAction
-    data object ViewReleaseLog : AppUpdateAction
-    data object Retry : AppUpdateAction
-}
-
 data class AppUpdateDismissRecord(
     val releaseId: Long,
     val dismissedAtMillis: Long

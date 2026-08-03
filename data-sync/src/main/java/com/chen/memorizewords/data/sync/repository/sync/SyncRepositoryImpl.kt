@@ -165,8 +165,8 @@ internal fun mapFailedSyncPendingRecords(
                 retryCount = entity.attemptCount,
                 lastError = entity.lastError,
                 failureKind = when (entity.state) {
-                    FailedSyncState.BLOCKED -> SyncOutboxFailureKind.UNKNOWN.name
-                    else -> SyncOutboxFailureKind.NETWORK.name
+                    FailedSyncState.BLOCKED -> "UNKNOWN"
+                    else -> "NETWORK"
                 },
                 lastAttemptAt = if (entity.attemptCount > 0) entity.updatedAtMs else 0L,
                 nextRetryAt = if (entity.state == FailedSyncState.RETRY_WAITING) {

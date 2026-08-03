@@ -5,7 +5,6 @@ import androidx.room.InvalidationTracker
 import com.chen.memorizewords.core.common.paging.PageSlice
 import com.chen.memorizewords.data.wordbook.local.WordBookDatabase
 import com.chen.memorizewords.data.wordbook.local.room.model.learning.event.LearningEventDao
-import com.chen.memorizewords.data.wordbook.local.room.model.learning.outbox.LearningOutboxDao
 import com.chen.memorizewords.data.wordbook.local.room.model.learning.record.WordStudyRecordDao
 import com.chen.memorizewords.data.wordbook.local.room.model.wordbook.syncstate.WordBookSyncStateDao
 import com.chen.memorizewords.data.wordbook.remote.datasync.RemoteUserSyncDataSource
@@ -349,8 +348,6 @@ class WordBookRepositoryImplTest {
         override fun wordLearningStateDao(): WordLearningStateDao = throwingProxy()
 
         override fun learningEventDao(): LearningEventDao = throwingProxy()
-
-        override fun learningOutboxDao(): LearningOutboxDao = throwingProxy()
 
         override fun dailyProgressProjectionTaskDao():
             com.chen.memorizewords.data.wordbook.local.room.model.learning.projection.DailyProgressProjectionTaskDao =

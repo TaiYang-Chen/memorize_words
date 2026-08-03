@@ -9,7 +9,3 @@ class ObservePracticeUsageUseCase @Inject constructor(private val repository: Pr
 class RefreshPracticeUsageUseCase @Inject constructor(private val repository: PracticeUsageRepository) {
     suspend operator fun invoke() = repository.refresh()
 }
-
-class ClearPracticeUsageUseCase @Inject constructor(private val repository: PracticeUsageRepository) {
-    suspend operator fun invoke() = repository.clear()
-}

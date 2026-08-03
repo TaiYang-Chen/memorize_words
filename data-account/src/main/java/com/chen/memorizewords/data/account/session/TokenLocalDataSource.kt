@@ -42,7 +42,6 @@ class TokenLocalDataSource(private val mmkv: MMKV) : SessionLocalDataSource {
         sessionFlow.value = null
     }
 }
-
 private object TokenCipher {
     private const val KEY_ALIAS = "memorize_words_session_tokens"
     private const val ANDROID_KEY_STORE = "AndroidKeyStore"
@@ -88,16 +87,5 @@ private object TokenCipher {
                 .build()
         )
         return generator.generateKey()
-    }
-}
-
-object MMKVInitializer {
-    private var initialized = false
-
-    fun initialize(context: Context) {
-        if (!initialized) {
-            MMKV.initialize(context)
-            initialized = true
-        }
     }
 }

@@ -42,9 +42,6 @@ class StudyPlanSettingViewModel @Inject constructor(
     companion object {
         const val ACTION_RESET_BOOK_WORDS = "reset_book_words"
 
-        fun availableStudyModes(): List<StudyModeUiModel> =
-            listOf(studyModeUiModelFor(LearningTestMode.MEANING_CHOICE))
-
         fun studyModeUiModelFor(mode: LearningTestMode): StudyModeUiModel {
             return when (mode) {
                 LearningTestMode.MEANING_CHOICE -> StudyModeUiModel(

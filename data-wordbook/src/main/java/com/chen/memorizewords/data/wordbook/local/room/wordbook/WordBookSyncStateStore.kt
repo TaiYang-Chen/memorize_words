@@ -21,8 +21,6 @@ class WordBookSyncStateStore @Inject constructor(
         stateByBookId[bookId]
     }
 
-    fun getRemoteVersion(bookId: Long): Long = getState(bookId)?.remoteVersion ?: 0L
-
     fun updateRemoteVersions(versionByBookId: Map<Long, Long>) = synchronized(lock) {
         ensureCacheLoadedLocked()
         if (versionByBookId.isEmpty()) return
@@ -36,8 +34,6 @@ class WordBookSyncStateStore @Inject constructor(
             runDb { dao.upsertAll(merged) }
         }
     }
-
-    fun getPendingTargetVersion(bookId: Long): Long = getState(bookId)?.pendingTargetVersion ?: 0L
 
     fun setPendingTargetVersion(bookId: Long, version: Long) = synchronized(lock) {
         upsert(bookId) { it.copy(pendingTargetVersion = version.takeIf { value -> value > 0L }) }
@@ -53,12 +49,6 @@ class WordBookSyncStateStore @Inject constructor(
 
     fun setIgnoredVersion(bookId: Long, version: Long) = synchronized(lock) {
         upsert(bookId) { it.copy(ignoredVersion = version.takeIf { value -> value > 0L }) }
-    }
-
-    fun getLastPromptedVersion(bookId: Long): Long = getState(bookId)?.lastPromptedVersion ?: 0L
-
-    fun setLastPromptedVersion(bookId: Long, version: Long) = synchronized(lock) {
-        upsert(bookId) { it.copy(lastPromptedVersion = version.takeIf { value -> value > 0L }) }
     }
 
     fun getdeferredUntilMs(bookId: Long): Long = getState(bookId)?.deferredUntilMs ?: 0L

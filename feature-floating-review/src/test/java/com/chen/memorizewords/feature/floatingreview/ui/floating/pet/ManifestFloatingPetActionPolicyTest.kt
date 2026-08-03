@@ -53,16 +53,6 @@ class ManifestFloatingPetActionPolicyTest {
     }
 
     @Test
-    fun `standard loop cannot be invoked through the optional action API`() {
-        assertNull(
-            ManifestFloatingPetActionPolicy().resolveOptionalAction(
-                manifest,
-                StandardPetAction.CARD_VISIBLE.semanticKey
-            )
-        )
-    }
-
-    @Test
     fun `resolves event action from dedicated event bindings`() {
         assertEquals(
             tap,

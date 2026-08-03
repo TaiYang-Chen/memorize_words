@@ -10,7 +10,6 @@
     <string name="feature_home_common_back">返回</string>
 
     <string name="home_stats_title">学习统计</string>
-    <string name="home_learning_calendar">学习日历</string>
     <string name="home_week_mon">一</string>
     <string name="home_week_tue">二</string>
     <string name="home_week_wed">三</string>
@@ -18,22 +17,8 @@
     <string name="home_week_fri">五</string>
     <string name="home_week_sat">六</string>
     <string name="home_week_sun">日</string>
-    <string name="home_calendar_legend_studied">已学习</string>
-    <string name="home_calendar_legend_new_done">新词完成</string>
-    <string name="home_calendar_legend_review_done">复习完成</string>
-    <string name="home_calendar_legend_all_done">全部完成</string>
-    <string name="home_calendar_legend_checked_in">已打卡</string>
-    <string name="home_learning_achievements">学习成就</string>
-    <string name="home_days">天数</string>
     <string name="home_minutes_unit">分钟</string>
     <string name="home_days_unit">天</string>
-    <string name="home_duration">时长</string>
-    <string name="home_words">词数</string>
-    <string name="home_weekly_word_bars">周词量柱状图</string>
-    <string name="home_filter_all">全部</string>
-    <string name="home_filter_new">新词</string>
-    <string name="home_filter_review">复习</string>
-    <string name="home_weekly_duration_bars">周时长柱状图</string>
     <string name="feature_home_stats_total_days">总学习天数</string>
     <string name="feature_home_stats_keep_going">坚持就是胜利，你是最棒的！</string>
     <string name="feature_home_stats_total_duration">累计时长</string>
@@ -61,7 +46,6 @@
     <string name="home_plan_remaining_review_only">新词计划已完成，剩余复习%1$d词</string>
     <string name="home_plan_remaining_new_only">复习计划已完成，剩余新学%1$d词</string>
     <string name="home_plan_completed">今日计划已完成</string>
-    <string name="home_plan_not_started">今日尚未开始学习</string>
     <string name="home_sync_banner_offline">当前离线，还有 %1$d 条数据待上传</string>
     <string name="home_sync_banner_pending">还有 %1$d 条数据待上传，系统会自动重试</string>
     <string name="home_sync_banner_blocked">还有 %1$d 条数据待上传，当前需要处理异常后才能继续上传</string>
@@ -76,14 +60,6 @@
     <string name="home_logout_cancel_action">取消</string>
     <string name="home_logout_risk_title">同步风险提示</string>
     <string name="home_logout_risk_message">当前有学习数据尚未同步，继续退出可能导致记录丢失，是否继续？</string>
-    <string name="home_practice_overview">练习概览</string>
-    <string name="home_practice_today_duration">今日练习时间</string>
-    <string name="home_practice_increase">较昨日增加</string>
-    <string name="home_practice_total_duration">累计练习时间</string>
-    <string name="home_practice_streak_days">坚持练习天数</string>
-    <string name="home_practice_records">练习记录</string>
-    <string name="home_practice_records_empty">暂时还没有练习记录，\n选择您想练习的模式，\n开启今日的沉浸式学习旅程。</string>
-    <string name="home_practice_record_today">今日</string>
     <string name="home_practice_mode_listening">听力</string>
     <string name="home_practice_mode_shadowing">跟读</string>
     <string name="home_practice_mode_spelling">拼写</string>
@@ -97,7 +73,6 @@
     <string name="home_practice_entry_self">自选%1$d个</string>
     <string name="home_practice_entry_random">随机%1$d个</string>
     <string name="home_practice_record_title">%1$s · %2$s</string>
-    <string name="home_practice_record_duration">练习时长 %1$s</string>
     <string name="home_practice_no_book">请先选择词书</string>
     <string name="home_practice_no_words">当前没有可练习的单词</string>
     <string name="feature_home_floating_section_title">桌面悬浮球</string>

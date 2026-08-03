@@ -113,39 +113,6 @@
 
     <issue
         id="ResourceName"
-        message="Resource named &apos;`module_wordbook_study_mode_description`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_study_mode_description`&apos; ?"
-        errorLine1="    &lt;color name=&quot;module_wordbook_study_mode_description&quot;>#71808B&lt;/color>"
-        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/colors.xml"
-            line="26"
-            column="12"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_wordbook_study_mode_badge_text`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_study_mode_badge_text`&apos; ?"
-        errorLine1="    &lt;color name=&quot;module_wordbook_study_mode_badge_text&quot;>#5F88A2&lt;/color>"
-        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/colors.xml"
-            line="27"
-            column="12"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_wordbook_study_mode_icon_tint`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_study_mode_icon_tint`&apos; ?"
-        errorLine1="    &lt;color name=&quot;module_wordbook_study_mode_icon_tint&quot;>#33424D&lt;/color>"
-        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/colors.xml"
-            line="28"
-            column="12"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
         message="Resource named &apos;`dialog_wordbook_modify_plan`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_dialog_wordbook_modify_plan`&apos; ?"
         errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
         errorLine2=" ~~~~~~">
@@ -284,72 +251,6 @@
         <location
             file="src/main/res/drawable/module_wordbook_bg_plan_tag.xml"
             line="1"
-            column="2"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_wordbook_bg_study_mode_badge`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_bg_study_mode_badge`&apos; ?"
-        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
-        errorLine2=" ~~~~~">
-        <location
-            file="src/main/res/drawable/module_wordbook_bg_study_mode_badge.xml"
-            line="2"
-            column="2"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_wordbook_bg_study_mode_card_normal`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_bg_study_mode_card_normal`&apos; ?"
-        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
-        errorLine2=" ~~~~~">
-        <location
-            file="src/main/res/drawable/module_wordbook_bg_study_mode_card_normal.xml"
-            line="2"
-            column="2"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_wordbook_bg_study_mode_card_selected`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_bg_study_mode_card_selected`&apos; ?"
-        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
-        errorLine2=" ~~~~~">
-        <location
-            file="src/main/res/drawable/module_wordbook_bg_study_mode_card_selected.xml"
-            line="2"
-            column="2"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_wordbook_bg_study_mode_corner`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_bg_study_mode_corner`&apos; ?"
-        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:shape=&quot;oval&quot;>"
-        errorLine2=" ~~~~~">
-        <location
-            file="src/main/res/drawable/module_wordbook_bg_study_mode_corner.xml"
-            line="2"
-            column="2"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_wordbook_bg_study_mode_icon_normal`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_bg_study_mode_icon_normal`&apos; ?"
-        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
-        errorLine2=" ~~~~~">
-        <location
-            file="src/main/res/drawable/module_wordbook_bg_study_mode_icon_normal.xml"
-            line="2"
-            column="2"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_wordbook_bg_study_mode_icon_selected`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_bg_study_mode_icon_selected`&apos; ?"
-        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
-        errorLine2=" ~~~~~">
-        <location
-            file="src/main/res/drawable/module_wordbook_bg_study_mode_icon_selected.xml"
-            line="2"
             column="2"/>
     </issue>
 
@@ -927,39 +828,6 @@
 
     <issue
         id="ResourceName"
-        message="Resource named &apos;`module_wordbook_study_mode_all`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_study_mode_all`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_wordbook_study_mode_all&quot;>全部模式&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="24"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_wordbook_study_mode_sheet_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_study_mode_sheet_title`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_wordbook_study_mode_sheet_title&quot;>选择学习模式&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="25"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_wordbook_study_mode_current_default`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_study_mode_current_default`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_wordbook_study_mode_current_default&quot;>当前默认&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="26"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
         message="Resource named &apos;`module_wordbook_study_mode_meaning_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_study_mode_meaning_title`&apos; ?"
         errorLine1="    &lt;string name=&quot;module_wordbook_study_mode_meaning_title&quot;>释义选择&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
@@ -1253,17 +1121,6 @@
             file="src/main/res/layout/include_study_plan_setting_book.xml"
             line="264"
             column="14"/>
-    </issue>
-
-    <issue
-        id="SmallSp"
-        message="Avoid using sizes smaller than `11sp`: `10sp`"
-        errorLine1="            android:textSize=&quot;10sp&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/feature_wordbook_item_study_mode_card.xml"
-            line="74"
-            column="13"/>
     </issue>
 
     <issue

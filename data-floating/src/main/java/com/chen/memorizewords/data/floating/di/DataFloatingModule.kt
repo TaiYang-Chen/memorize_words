@@ -84,8 +84,7 @@ object DataFloatingDatabaseModule {
     @Singleton
     fun provideFloatingDatabase(@ApplicationContext context: Context): FloatingDatabase {
         return DestructiveRoomDatabaseFactory(
-            databaseName = NewArchitectureDatabase.contextName("floating"),
-            migrations = arrayOf(FloatingDatabase.MIGRATION_1_2)
+            databaseName = NewArchitectureDatabase.contextName("floating")
         ).build(context, FloatingDatabase::class.java) {
             enableMultiInstanceInvalidation()
         }

@@ -123,13 +123,6 @@ internal class HomeTextFormatter(
         return Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY)
     }
 
-    fun defaultLearnPlanText(): Spanned {
-        return Html.fromHtml(
-            resourceProvider.getString(R.string.home_plan_not_started),
-            Html.FROM_HTML_MODE_LEGACY
-        )
-    }
-
     fun formatSyncBannerText(state: SyncBannerState): String {
         return when (state) {
             SyncBannerState.Hidden -> ""

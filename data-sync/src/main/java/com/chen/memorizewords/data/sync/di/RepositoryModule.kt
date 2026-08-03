@@ -2,7 +2,6 @@ package com.chen.memorizewords.data.sync.di
 
 import com.chen.memorizewords.data.sync.repository.download.DownloadRepositoryImpl
 import com.chen.memorizewords.data.sync.remote.appupdate.AppUpdateRepositoryImpl
-import com.chen.memorizewords.data.sync.repository.sync.DataSyncConflictPolicy
 import com.chen.memorizewords.data.sync.repository.sync.DataSyncLogoutFlusher
 import com.chen.memorizewords.data.sync.repository.sync.DataSyncPostLoginBootstrapResetter
 import com.chen.memorizewords.data.sync.repository.membership.MembershipRepositoryImpl
@@ -11,7 +10,6 @@ import com.chen.memorizewords.data.sync.bootstrap.HomeStartupSnapshotStore
 import com.chen.memorizewords.data.sync.bootstrap.LoginBootstrapApplierImpl
 import com.chen.memorizewords.domain.account.repository.LoginBootstrapApplier
 import com.chen.memorizewords.domain.sync.PostLoginBootstrapResetter
-import com.chen.memorizewords.domain.sync.SyncConflictPolicy
 import com.chen.memorizewords.domain.sync.SyncLogoutFlusher
 import com.chen.memorizewords.domain.wordbook.repository.download.DownloadRepository
 import com.chen.memorizewords.domain.sync.repository.HomeStartupSnapshotRepository
@@ -29,9 +27,6 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindSyncRepository(impl: SyncRepositoryImpl): SyncRepository
-
-    @Binds
-    abstract fun bindSyncConflictPolicy(impl: DataSyncConflictPolicy): SyncConflictPolicy
 
     @Binds
     abstract fun bindSyncLogoutFlusher(impl: DataSyncLogoutFlusher): SyncLogoutFlusher

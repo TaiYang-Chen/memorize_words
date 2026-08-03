@@ -26,8 +26,6 @@ class StudyPlanSettingFragment :
     companion object {
         const val REQUEST_KEY_MODIFY_PLAN = "request_modify_plan"
         const val KEY_PLAN_UPDATED = "key_plan_updated"
-        const val REQUEST_KEY_STUDY_MODE = "request_study_mode"
-        const val KEY_SELECTED_STUDY_MODE = "key_selected_study_mode"
         const val REQUEST_KEY_WORD_ORDER = "request_word_order"
         const val KEY_SELECTED_WORD_ORDER = "key_selected_word_order"
     }
@@ -36,17 +34,6 @@ class StudyPlanSettingFragment :
         databind.lifecycleOwner = viewLifecycleOwner
         databind.viewmodel = viewModel
         databind.wordBookCardState = viewModel.wordBookCardState.value
-        parentFragmentManager.setFragmentResultListener(
-            REQUEST_KEY_STUDY_MODE,
-            viewLifecycleOwner
-        ) { _, bundle ->
-            val mode = runCatching {
-                LearningTestMode.valueOf(
-                    bundle.getString(KEY_SELECTED_STUDY_MODE).orEmpty()
-                )
-            }.getOrNull() ?: return@setFragmentResultListener
-            viewModel.onSelectTestMode(mode)
-        }
         parentFragmentManager.setFragmentResultListener(
             REQUEST_KEY_WORD_ORDER,
             viewLifecycleOwner
@@ -88,15 +75,6 @@ class StudyPlanSettingFragment :
                 }
             }
         }
-    }
-
-    private fun showStudyModePicker() {
-        if (parentFragmentManager.findFragmentByTag(StudyModePickerBottomSheetDialogFragment.TAG) != null) {
-            return
-        }
-        StudyModePickerBottomSheetDialogFragment
-            .newInstance(viewModel.planCountCardState.value.testMode)
-            .show(parentFragmentManager, StudyModePickerBottomSheetDialogFragment.TAG)
     }
 
     private fun showWordOrderPicker() {

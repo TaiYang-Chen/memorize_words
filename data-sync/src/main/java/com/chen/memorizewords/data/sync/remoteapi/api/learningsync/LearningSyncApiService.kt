@@ -168,60 +168,29 @@ data class FloatingFieldConfigDto(
 )
 
 @JsonClass(generateAdapter = false)
-data class FloatingDockConfigDto(
-    val snapTriggerDistanceDp: Int,
-    val halfHiddenEnabled: Boolean,
-    val allowedEdges: List<String>,
-    val edgePriority: List<String>,
-    val snapAnimationDurationMs: Long,
-    val tapExpandsCardAfterUnsnap: Boolean,
-    val initialDockEdge: String
-)
-
-@JsonClass(generateAdapter = false)
-data class FloatingDockStateDto(
-    val dockedEdge: String? = null,
-    val crossAxisPercent: Float = 0.5f
-)
-
-@JsonClass(generateAdapter = false)
 data class FloatingSettingsSyncRequest(
-    val enabled: Boolean,
     val sourceType: String,
     val orderType: String,
     val fieldConfigs: List<FloatingFieldConfigDto>,
     val selectedWordIds: List<Long>,
-    val floatingBallX: Int,
-    val floatingBallY: Int,
-    val autoStartOnBoot: Boolean,
-    val autoStartOnAppLaunch: Boolean,
     val ballSizePercent: Int,
-    val ballOpacityPercent: Int = 100,
+    val ballOpacityPercent: Int,
     val cardOpacityPercent: Int,
     val cardGapDp: Int,
-    val selectedCharacterPackId: String? = null,
-    val dockConfig: FloatingDockConfigDto? = null,
-    val dockState: FloatingDockStateDto? = null
+    val selectedCharacterPackId: String?
 )
 
 @JsonClass(generateAdapter = false)
 data class FloatingSettingsDto(
-    val enabled: Boolean,
     val sourceType: String,
     val orderType: String,
     val fieldConfigs: List<FloatingFieldConfigDto>,
     val selectedWordIds: List<Long>,
-    val floatingBallX: Int,
-    val floatingBallY: Int,
-    val autoStartOnBoot: Boolean,
-    val autoStartOnAppLaunch: Boolean,
     val ballSizePercent: Int,
-    val ballOpacityPercent: Int = 100,
-    val cardOpacityPercent: Int = 100,
+    val ballOpacityPercent: Int,
+    val cardOpacityPercent: Int,
     val cardGapDp: Int,
-    val selectedCharacterPackId: String? = null,
-    val dockConfig: FloatingDockConfigDto? = null,
-    val dockState: FloatingDockStateDto? = null
+    val selectedCharacterPackId: String?
 )
 
 @JsonClass(generateAdapter = false)

@@ -48,12 +48,6 @@ open class BaseViewModel : ViewModel() {
         }
     }
 
-    fun updateLoadingMessage(message: String) {
-        if (_loadingState.value.isLoading) {
-            _loadingState.value = LoadingUiState(isLoading = true, message = message)
-        }
-    }
-
     protected fun launchWithLoading(
         message: String = DEFAULT_LOADING_MESSAGE,
         block: suspend CoroutineScope.() -> Unit

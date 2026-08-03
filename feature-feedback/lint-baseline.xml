@@ -91,39 +91,6 @@
 
     <issue
         id="ResourceName"
-        message="Resource named &apos;`module_feedback_tab_indicator`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_tab_indicator`&apos; ?"
-        errorLine1="    &lt;color name=&quot;module_feedback_tab_indicator&quot;>#007AFF&lt;/color>"
-        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/colors.xml"
-            line="11"
-            column="12"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_feedback_tab_text_selected`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_tab_text_selected`&apos; ?"
-        errorLine1="    &lt;color name=&quot;module_feedback_tab_text_selected&quot;>#111827&lt;/color>"
-        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/colors.xml"
-            line="12"
-            column="12"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_feedback_tab_text_unselected`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_tab_text_unselected`&apos; ?"
-        errorLine1="    &lt;color name=&quot;module_feedback_tab_text_unselected&quot;>#A0A8B8&lt;/color>"
-        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/colors.xml"
-            line="13"
-            column="12"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
         message="Resource named &apos;`module_feedback_about_page_bg`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_page_bg`&apos; ?"
         errorLine1="    &lt;color name=&quot;module_feedback_about_page_bg&quot;>#FFF&lt;/color>"
         errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
@@ -976,17 +943,6 @@
         errorLine2=" ~~~~~~~~~~~">
         <location
             file="src/main/res/layout/module_feedback_item_feedback_image.xml"
-            line="2"
-            column="2"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_feedback_item_tab_text`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_item_tab_text`&apos; ?"
-        errorLine1="&lt;TextView xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
-        errorLine2=" ~~~~~~~~">
-        <location
-            file="src/main/res/layout/module_feedback_item_tab_text.xml"
             line="2"
             column="2"/>
     </issue>

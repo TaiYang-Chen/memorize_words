@@ -117,7 +117,3 @@ private fun aliyunCacheFormat(
         else -> "mp3"
     }
 }
-
-internal fun localeFromTag(tag: String): Locale {
-    return Locale.forLanguageTag(tag).takeIf { it.language.isNotBlank() } ?: Locale.US
-}

@@ -212,28 +212,6 @@
 
     <issue
         id="ResourceName"
-        message="Resource named &apos;`item_calendar_day`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_item_calendar_day`&apos; ?"
-        errorLine1="&lt;FrameLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
-        errorLine2=" ~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/item_calendar_day.xml"
-            line="2"
-            column="2"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`item_calendar_month_page`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_item_calendar_month_page`&apos; ?"
-        errorLine1="&lt;com.chen.memorizewords.feature.home.ui.stats.CalendarMonthGridView xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
-        errorLine2=" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/item_calendar_month_page.xml"
-            line="2"
-            column="2"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
         message="Resource named &apos;`item_practice_record`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_item_practice_record`&apos; ?"
         errorLine1="&lt;layout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
         errorLine2=" ~~~~~~">
@@ -773,28 +751,6 @@
 
     <issue
         id="ResourceName"
-        message="Resource named &apos;`module_home_stats_day_bg_selected`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_stats_day_bg_selected`&apos; ?"
-        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
-        errorLine2=" ~~~~~">
-        <location
-            file="src/main/res/drawable/module_home_stats_day_bg_selected.xml"
-            line="2"
-            column="2"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_home_stats_day_today_dot`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_stats_day_today_dot`&apos; ?"
-        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
-        errorLine2=" ~~~~~">
-        <location
-            file="src/main/res/drawable/module_home_stats_day_today_dot.xml"
-            line="2"
-            column="2"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
         message="Resource named &apos;`module_home_stats_filter_selector`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_stats_filter_selector`&apos; ?"
         errorLine1="&lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
         errorLine2=" ~~~~~~~~">
@@ -903,16 +859,6 @@
             column="13"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_learning_calendar`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_learning_calendar`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_learning_calendar&quot;>学习日历&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="12"
-            column="13"/>
-    </issue>
 
     <issue
         id="ResourceName"
@@ -991,82 +937,12 @@
             column="13"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_calendar_legend_studied`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_calendar_legend_studied`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_calendar_legend_studied&quot;>已学习&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="20"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_calendar_legend_new_done`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_calendar_legend_new_done`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_calendar_legend_new_done&quot;>新词完成&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="21"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_calendar_legend_review_done`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_calendar_legend_review_done`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_calendar_legend_review_done&quot;>复习完成&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="22"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_calendar_legend_all_done`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_calendar_legend_all_done`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_calendar_legend_all_done&quot;>全部完成&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="23"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_calendar_legend_checked_in`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_calendar_legend_checked_in`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_calendar_legend_checked_in&quot;>已打卡&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="24"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_learning_achievements`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_learning_achievements`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_learning_achievements&quot;>学习成就&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="25"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_days`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_days`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_days&quot;>天数&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="26"
-            column="13"/>
-    </issue>
 
     <issue
         id="ResourceName"
@@ -1090,82 +966,12 @@
             column="13"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_duration`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_duration`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_duration&quot;>时长&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="29"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_words`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_words`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_words&quot;>词数&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="30"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_weekly_word_bars`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_weekly_word_bars`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_weekly_word_bars&quot;>周词量柱状图&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="31"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_filter_all`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_filter_all`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_filter_all&quot;>全部&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="32"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_filter_new`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_filter_new`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_filter_new&quot;>新词&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="33"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_filter_review`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_filter_review`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_filter_review&quot;>复习&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="34"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_weekly_duration_bars`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_weekly_duration_bars`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_weekly_duration_bars&quot;>周时长柱状图&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="35"
-            column="13"/>
-    </issue>
 
     <issue
         id="ResourceName"
@@ -1279,17 +1085,6 @@
 
     <issue
         id="ResourceName"
-        message="Resource named &apos;`home_plan_not_started`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_plan_not_started`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_plan_not_started&quot;>今日尚未开始学习&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="60"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ResourceName"
         message="Resource named &apos;`home_sync_banner_offline`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_sync_banner_offline`&apos; ?"
         errorLine1="    &lt;string name=&quot;home_sync_banner_offline&quot;>当前离线，还有 %1$d 条数据待上传&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
@@ -1376,49 +1171,9 @@
             column="13"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_logout_confirm_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_logout_confirm_title`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_logout_confirm_title&quot;>确认退出登录&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="69"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_logout_confirm_message`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_logout_confirm_message`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_logout_confirm_message&quot;>退出后需要重新登录，是否继续？&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="70"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_logout_confirm_action`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_logout_confirm_action`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_logout_confirm_action&quot;>退出登录&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="71"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_logout_cancel_action`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_logout_cancel_action`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_logout_cancel_action&quot;>取消&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="72"
-            column="13"/>
-    </issue>
 
     <issue
         id="ResourceName"
@@ -1442,93 +1197,13 @@
             column="13"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_practice_overview`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_practice_overview`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_practice_overview&quot;>练习概览&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="75"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_practice_today_duration`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_practice_today_duration`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_practice_today_duration&quot;>今日练习时间&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="76"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_practice_increase`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_practice_increase`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_practice_increase&quot;>较昨日增加&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="77"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_practice_total_duration`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_practice_total_duration`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_practice_total_duration&quot;>累计练习时间&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="78"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_practice_streak_days`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_practice_streak_days`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_practice_streak_days&quot;>坚持练习天数&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="79"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_practice_records`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_practice_records`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_practice_records&quot;>练习记录&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="80"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_practice_records_empty`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_practice_records_empty`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_practice_records_empty&quot;>暂时还没有练习记录，\n选择您想练习的模式，\n开启今日的沉浸式学习旅程。&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="81"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_practice_record_today`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_practice_record_today`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_practice_record_today&quot;>今日&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="82"
-            column="13"/>
-    </issue>
 
     <issue
         id="ResourceName"
@@ -1618,16 +1293,6 @@
             column="13"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_practice_record_duration`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_practice_record_duration`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_practice_record_duration&quot;>练习时长 %1$s&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="96"
-            column="13"/>
-    </issue>
 
     <issue
         id="ResourceName"
@@ -1662,16 +1327,6 @@
             column="13"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_day_detail_makeup_button_with_count`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_makeup_button_with_count`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_day_detail_makeup_button_with_count&quot;>补签(%1$d张)&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings_checkin.xml"
-            line="4"
-            column="13"/>
-    </issue>
 
     <issue
         id="ResourceName"
@@ -2003,16 +1658,6 @@
             column="13"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_back_today`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_back_today`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_back_today&quot;>今天&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings_stats_calendar.xml"
-            line="3"
-            column="13"/>
-    </issue>
 
     <issue
         id="ResourceName"
@@ -2036,27 +1681,7 @@
             column="13"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_day_detail_new_words`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_new_words`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_day_detail_new_words&quot;>新学词条&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings_stats_calendar.xml"
-            line="6"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_day_detail_review_words`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_review_words`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_day_detail_review_words&quot;>复习词条&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings_stats_calendar.xml"
-            line="7"
-            column="13"/>
-    </issue>
 
     <issue
         id="ResourceName"
@@ -2080,93 +1705,13 @@
             column="13"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_day_detail_new_count`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_new_count`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_day_detail_new_count&quot;>新学 %1$d&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings_stats_calendar.xml"
-            line="10"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_day_detail_review_count`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_review_count`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_day_detail_review_count&quot;>复习 %1$d&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings_stats_calendar.xml"
-            line="11"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_day_detail_duration`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_duration`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_day_detail_duration&quot;>学习时长 %1$s&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings_stats_calendar.xml"
-            line="12"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_day_detail_plan_all_done`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_plan_all_done`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_day_detail_plan_all_done&quot;>新学计划、复习计划均已完成&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings_stats_calendar.xml"
-            line="13"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_day_detail_plan_new_done`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_plan_new_done`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_day_detail_plan_new_done&quot;>新学计划已完成，复习未完成&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings_stats_calendar.xml"
-            line="14"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_day_detail_plan_review_done`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_plan_review_done`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_day_detail_plan_review_done&quot;>复习计划已完成，新学未完成&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings_stats_calendar.xml"
-            line="15"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_day_detail_plan_none_done`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_plan_none_done`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_day_detail_plan_none_done&quot;>当天计划未全部完成&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings_stats_calendar.xml"
-            line="16"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`home_day_detail_date`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_day_detail_date`&apos; ?"
-        errorLine1="    &lt;string name=&quot;home_day_detail_date&quot;>%1$s 学习详情&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings_stats_calendar.xml"
-            line="17"
-            column="13"/>
-    </issue>
 
     <issue
         id="ResourceName"
@@ -2561,61 +2106,6 @@
     <issue
         id="DrawAllocation"
         message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
-        errorLine1="        val oval = RectF(left, top, left + size, top + size)"
-        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/com/chen/memorizewords/feature/home/ui/stats/StatsDonutChartView.kt"
-            line="40"
-            column="20"/>
-    </issue>
-
-    <issue
-        id="DrawAllocation"
-        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
-        errorLine1="                StatsTimeDistributionUi(&quot;&quot;, 25, 0xFFFFC533.toInt()),"
-        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/com/chen/memorizewords/feature/home/ui/stats/StatsDonutChartView.kt"
-            line="44"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="DrawAllocation"
-        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
-        errorLine1="                StatsTimeDistributionUi(&quot;&quot;, 25, 0xFF70D96B.toInt()),"
-        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/com/chen/memorizewords/feature/home/ui/stats/StatsDonutChartView.kt"
-            line="45"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="DrawAllocation"
-        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
-        errorLine1="                StatsTimeDistributionUi(&quot;&quot;, 25, 0xFF3BA5F5.toInt()),"
-        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/com/chen/memorizewords/feature/home/ui/stats/StatsDonutChartView.kt"
-            line="46"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="DrawAllocation"
-        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
-        errorLine1="                StatsTimeDistributionUi(&quot;&quot;, 25, 0xFF8B5CF6.toInt())"
-        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/com/chen/memorizewords/feature/home/ui/stats/StatsDonutChartView.kt"
-            line="47"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="DrawAllocation"
-        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
         errorLine1="                StatsTrendPointUi(it, 0f, 0)"
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -2655,17 +2145,6 @@
             file="src/main/java/com/chen/memorizewords/feature/home/ui/stats/StatsTrendChartView.kt"
             line="71"
             column="24"/>
-    </issue>
-
-    <issue
-        id="NotifyDataSetChanged"
-        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
-        errorLine1="        notifyDataSetChanged()"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/com/chen/memorizewords/feature/home/ui/stats/CalendarMonthPagerAdapter.kt"
-            line="18"
-            column="9"/>
     </issue>
 
     <issue
@@ -4765,6 +4244,50 @@
         <location
             file="src/main/res/values/strings.xml"
             line="56"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_logout_confirm_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_logout_confirm_title`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_logout_confirm_title&quot;>确认退出登录&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="57"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_logout_confirm_message`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_logout_confirm_message`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_logout_confirm_message&quot;>退出后需要重新登录，是否继续？&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="58"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_logout_confirm_action`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_logout_confirm_action`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_logout_confirm_action&quot;>退出登录&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="59"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ResourceName"
+        message="Resource named &apos;`home_logout_cancel_action`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_home_logout_cancel_action`&apos; ?"
+        errorLine1="    &lt;string name=&quot;home_logout_cancel_action&quot;>取消&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="60"
             column="13"/>
     </issue>
 

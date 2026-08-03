@@ -9,7 +9,6 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,7 +17,6 @@ class FailedSyncWorkScheduler @Inject constructor(
     @ApplicationContext context: Context
 ) : FailedSyncScheduler {
     private val workManager = WorkManager.getInstance(context.applicationContext)
-    private val legacyCleanupStarted = AtomicBoolean(false)
 
     override fun scheduleDrain() {
         workManager.enqueueUniqueWork(
@@ -56,7 +54,6 @@ class FailedSyncWorkScheduler @Inject constructor(
     }
 
     override fun ensurePeriodic() {
-        cleanupLegacyWorkOnce()
         workManager.enqueueUniquePeriodicWork(
             WORK_PERIODIC,
             ExistingPeriodicWorkPolicy.KEEP,
@@ -69,42 +66,6 @@ class FailedSyncWorkScheduler @Inject constructor(
     override fun cancelAll() {
         listOf(WORK_DRAIN, WORK_RECOVERY, WORK_PERIODIC).forEach(workManager::cancelUniqueWork)
         listOf(TAG_DRAIN, TAG_RECOVERY, TAG_RETRY, TAG_PERIODIC).forEach(workManager::cancelAllWorkByTag)
-        cancelLegacyFailedQueueWork()
-    }
-
-    private fun cancelLegacySyncWork() {
-        listOf(
-            SyncWorkConstants.WORK_SYNC_OUTBOX_DRAIN,
-            SyncWorkConstants.WORK_SYNC_OUTBOX_IMMEDIATE_DRAIN,
-            SyncWorkConstants.WORK_SYNC_OUTBOX_RETRY,
-            SyncWorkConstants.WORK_SYNC_OUTBOX_PERIODIC
-        ).forEach(workManager::cancelUniqueWork)
-        listOf(
-            SyncWorkConstants.TAG_SYNC_OUTBOX_DRAIN,
-            SyncWorkConstants.TAG_SYNC_OUTBOX_IMMEDIATE_DRAIN,
-            SyncWorkConstants.TAG_SYNC_OUTBOX_RETRY,
-            SyncWorkConstants.TAG_SYNC_OUTBOX_PERIODIC
-        ).forEach(workManager::cancelAllWorkByTag)
-    }
-
-    private fun cleanupLegacyWorkOnce() {
-        if (!legacyCleanupStarted.compareAndSet(false, true)) return
-        cancelLegacySyncWork()
-        cancelLegacyFailedQueueWork()
-    }
-
-    private fun cancelLegacyFailedQueueWork() {
-        listOf(
-            LEGACY_WORK_DRAIN,
-            LEGACY_WORK_RECOVERY,
-            LEGACY_WORK_PERIODIC
-        ).forEach(workManager::cancelUniqueWork)
-        listOf(
-            LEGACY_TAG_DRAIN,
-            LEGACY_TAG_RECOVERY,
-            LEGACY_TAG_RETRY,
-            LEGACY_TAG_PERIODIC
-        ).forEach(workManager::cancelAllWorkByTag)
     }
 
     private fun request(tag: String, delayMs: Long = 0L, input: Data = Data.EMPTY) =
@@ -123,13 +84,6 @@ class FailedSyncWorkScheduler @Inject constructor(
         const val TAG_RECOVERY = "failed_sync_recovery_v2"
         const val TAG_RETRY = "failed_sync_retry_v2"
         const val TAG_PERIODIC = "failed_sync_periodic_v2"
-        const val LEGACY_WORK_DRAIN = "failed_sync_drain"
-        const val LEGACY_WORK_RECOVERY = "failed_sync_recovery"
-        const val LEGACY_WORK_PERIODIC = "failed_sync_periodic"
-        const val LEGACY_TAG_DRAIN = "failed_sync_drain"
-        const val LEGACY_TAG_RECOVERY = "failed_sync_recovery"
-        const val LEGACY_TAG_RETRY = "failed_sync_retry"
-        const val LEGACY_TAG_PERIODIC = "failed_sync_periodic"
         const val RETRY_BUCKET_MS = 30_000L
     }
 }

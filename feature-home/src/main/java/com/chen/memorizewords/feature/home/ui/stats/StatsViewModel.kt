@@ -120,11 +120,6 @@ class StatsViewModel @Inject constructor(
         getTodayStudyDurationUseCase()
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0L)
 
-    private val todayWordCount: StateFlow<Int> =
-        combine(todayNewWordCount, todayReviewWordCount) { newCount, reviewCount ->
-            newCount + reviewCount
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
-
     private val currentWordBookInfo: StateFlow<WordBookInfo?> =
         getCurrentWordBookInfoFlowUseCase()
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
@@ -320,18 +315,6 @@ class StatsViewModel @Inject constructor(
 
     fun onUnavailableFeatureClicked() {
         showToast(resourceProvider.getString(R.string.feature_home_stats_unavailable))
-    }
-
-    fun selectAllWords() {
-        _wordFilter.value = WeeklyWordFilter.ALL
-    }
-
-    fun selectNewWords() {
-        _wordFilter.value = WeeklyWordFilter.NEW
-    }
-
-    fun selectReviewWords() {
-        _wordFilter.value = WeeklyWordFilter.REVIEW
     }
 
     private fun shiftDisplayMonth(delta: Int) {

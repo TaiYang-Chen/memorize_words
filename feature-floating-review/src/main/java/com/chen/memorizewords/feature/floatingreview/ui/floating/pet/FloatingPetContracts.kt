@@ -32,7 +32,6 @@ enum class PetEvent(val wireName: String) {
 sealed interface FloatingPetCommand {
     data class SetCardVisible(val visible: Boolean) : FloatingPetCommand
     data class PlayEvent(val event: PetEvent) : FloatingPetCommand
-    data class PlayOptionalAction(val actionId: String) : FloatingPetCommand
     data class SwitchPack(
         val packId: SpritePackId,
         val forceReload: Boolean = false,
@@ -48,11 +47,6 @@ interface FloatingPetActionPolicy {
         action: StandardPetAction
     ): SpriteClipId
 
-    fun resolveOptionalAction(
-        manifest: SpritePackManifest,
-        actionId: String
-    ): SpriteClipId?
-
     fun resolveEventAction(
         manifest: SpritePackManifest,
         event: PetEvent
@@ -65,24 +59,10 @@ class ManifestFloatingPetActionPolicy : FloatingPetActionPolicy {
         action: StandardPetAction
     ): SpriteClipId = manifest.semanticBindings[action.semanticKey] ?: manifest.fallbackClipId
 
-    override fun resolveOptionalAction(
-        manifest: SpritePackManifest,
-        actionId: String
-    ): SpriteClipId? = if (actionId in STANDARD_ACTION_KEYS) {
-        null
-    } else {
-        manifest.semanticBindings[actionId]
-    }
-
     override fun resolveEventAction(
         manifest: SpritePackManifest,
         event: PetEvent
     ): SpriteClipId? = manifest.eventBindings[event.wireName]
-
-    private companion object {
-        val STANDARD_ACTION_KEYS = StandardPetAction.values()
-            .mapTo(mutableSetOf(), StandardPetAction::semanticKey)
-    }
 }
 
 enum class FloatingPetPlaybackState {

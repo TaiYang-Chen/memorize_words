@@ -21,9 +21,6 @@
     <string name="module_wordbook_nav_study_plan_title">学习计划</string>
     <string name="module_wordbook_nav_word_list_title">单词列表</string>
     <string name="module_wordbook_nav_favorites_title">收藏夹</string>
-    <string name="module_wordbook_study_mode_all">全部模式</string>
-    <string name="module_wordbook_study_mode_sheet_title">选择学习模式</string>
-    <string name="module_wordbook_study_mode_current_default">当前默认</string>
     <string name="module_wordbook_study_mode_meaning_title">释义选择</string>
     <string name="module_wordbook_study_mode_meaning_desc">根据中文或英文释义选择正确单词，适合初次学习时使用。</string>
     <string name="module_wordbook_study_mode_spelling_title">拼写测试</string>

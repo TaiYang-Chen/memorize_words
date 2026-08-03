@@ -1,0 +1,11 @@
+Design one premium flat Android launcher icon for a modern Chinese vocabulary-learning app. Output exactly one finished app icon, not a logo sheet, not a mockup, not multiple options.
+
+The attached product has a green desktop-pet mascot, but do not draw any mascot, animal, face, head, body, book, backpack, or letter. Translate only the mascot's visual DNA into one proprietary brand emblem.
+
+Exact construction: a pale mint rounded-square tile. In the center, build one compact asymmetric emblem from three interlocking flat planes. The main plane is a bold deep-navy rounded speech-token silhouette, substantial and geometric rather than cute. Its upper-left edge transforms seamlessly into two short asymmetric jade-green leaf tips; the leaves must be part of the silhouette, not a plant placed on top, and must not resemble ears or antennae. Cut one crisp warm-white V-shaped negative space through the lower middle, subtly recalling the mascot's white hoodie collar. Inset one very small violet rectangular tab into the lower-right edge, recalling the mascot's purple chest patch. Add no other objects or decorations.
+
+Visual hierarchy: one memorable silhouette first, leaf tips second, violet tab third. The emblem fills about 66 percent of the canvas with generous optical padding. Use deliberate asymmetry and strong negative space. It must remain recognizable at 48 px.
+
+Use only these flat solid colors: pale mint #E8F7F0, deep navy #071A3A, jade green #15CB8F, light green #6FE3B8, warm white #FFFDF7, violet #8C42F5.
+
+Professional global software-brand identity, precise vector geometry, bold simple masses, clean optical balance. No blue background, no gradients, no shadows, no highlights, no gloss, no 3D, no texture, no outline, no readable text, no letters, no punctuation, no watermark, no border, no nested app tile, no childish educational clip-art. 1024x1024.

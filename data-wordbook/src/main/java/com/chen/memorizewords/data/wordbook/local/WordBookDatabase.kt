@@ -9,8 +9,6 @@ import com.chen.memorizewords.data.wordbook.local.room.model.study.progress.word
 import com.chen.memorizewords.data.wordbook.local.room.model.study.progress.wordbook.WordBookProgressEntity
 import com.chen.memorizewords.data.wordbook.local.room.model.learning.event.LearningEventDao
 import com.chen.memorizewords.data.wordbook.local.room.model.learning.event.LearningEventEntity
-import com.chen.memorizewords.data.wordbook.local.room.model.learning.outbox.LearningOutboxDao
-import com.chen.memorizewords.data.wordbook.local.room.model.learning.outbox.LearningOutboxEntity
 import com.chen.memorizewords.data.wordbook.local.room.model.learning.projection.DailyProgressProjectionTaskDao
 import com.chen.memorizewords.data.wordbook.local.room.model.learning.projection.DailyProgressProjectionTaskEntity
 import com.chen.memorizewords.data.wordbook.local.room.model.learning.record.WordStudyRecordDao
@@ -60,7 +58,6 @@ import com.chen.memorizewords.data.wordbook.local.room.model.words.word.WordEnti
         WordBookProgressEntity::class,
         WordLearningStateEntity::class,
         LearningEventEntity::class,
-        LearningOutboxEntity::class,
         DailyProgressProjectionTaskEntity::class,
         WordStudyRecordEntity::class,
         WordEntity::class,
@@ -79,7 +76,7 @@ import com.chen.memorizewords.data.wordbook.local.room.model.words.word.WordEnti
         RootExampleEntity::class,
         RootWordEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = true
 )
 @TypeConverters(WordBookRoomConverters::class)
@@ -92,7 +89,6 @@ abstract class WordBookDatabase : RoomDatabase() {
     abstract fun wordBookProgressDao(): WordBookProgressDao
     abstract fun wordLearningStateDao(): WordLearningStateDao
     abstract fun learningEventDao(): LearningEventDao
-    abstract fun learningOutboxDao(): LearningOutboxDao
     abstract fun dailyProgressProjectionTaskDao(): DailyProgressProjectionTaskDao
     abstract fun wordStudyRecordDao(): WordStudyRecordDao
     abstract fun wordDao(): WordDao

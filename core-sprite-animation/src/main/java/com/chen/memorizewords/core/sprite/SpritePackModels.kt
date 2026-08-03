@@ -177,15 +177,6 @@ data class SpriteClipSpec(
             return 1_000_000_000L / framesPerSecond
         }
 
-    fun frameIndices(reverse: Boolean = false): IntArray {
-        return IntArray(frameCount) { offset ->
-            if (reverse) {
-                endFrameExclusive - 1 - offset
-            } else {
-                startFrame + offset
-            }
-        }
-    }
 }
 
 data class SpritePackManifest(

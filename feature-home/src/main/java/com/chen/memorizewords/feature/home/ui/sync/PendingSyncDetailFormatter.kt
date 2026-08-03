@@ -152,20 +152,15 @@ class PendingSyncDetailFormatter @Inject constructor(
 
             FailureQueueEventType.FLOATING_SETTINGS -> buildFields(
                 rootObject,
-                label("\u542f\u7528\u72b6\u6001", "enabled"),
                 label("\u6765\u6e90\u7c7b\u578b", "sourceType"),
                 label("\u6392\u5e8f\u65b9\u5f0f", "orderType"),
                 label("\u5b57\u6bb5\u914d\u7f6e", "fieldConfigs"),
                 label("\u5df2\u9009\u5355\u8bcd ID", "selectedWordIds"),
-                label("\u60ac\u6d6e\u7403 X", "floatingBallX"),
-                label("\u60ac\u6d6e\u7403 Y", "floatingBallY"),
-                label("\u5f00\u673a\u542f\u52a8", "autoStartOnBoot"),
-                label("\u5e94\u7528\u542f\u52a8\u65f6\u5f00\u542f", "autoStartOnAppLaunch"),
+                label("\u60ac\u6d6e\u7403\u5c3a\u5bf8", "ballSizePercent"),
                 label("\u60ac\u6d6e\u7403\u900f\u660e\u5ea6", "ballOpacityPercent"),
                 label("\u5361\u7247\u900f\u660e\u5ea6", "cardOpacityPercent"),
                 label("\u5c0f\u4eba\u4e0e\u5f39\u6846\u95f4\u9694", "cardGapDp"),
-                label("\u505c\u9760\u914d\u7f6e", "dockConfig"),
-                label("\u505c\u9760\u72b6\u6001", "dockState")
+                label("\u89d2\u8272\u5305 ID", "selectedCharacterPackId")
             )
 
             FailureQueueEventType.FLOATING_DISPLAY_RECORD -> buildFields(

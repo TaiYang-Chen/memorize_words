@@ -319,23 +319,6 @@ class ShadowingPracticeViewModel @Inject constructor(
         )
     }
 
-    fun retryCurrentWord() {
-        val runtime = currentRuntime() ?: return
-        if (
-            _uiState.value.loading ||
-            _uiState.value.stage == ShadowingStage.RECORDING ||
-            evaluatingAttemptId != null
-        ) {
-            return
-        }
-        _uiState.value = buildUiState(
-            runtime = runtime,
-            stage = ShadowingStage.WAITING,
-            loading = false,
-            autoPlaySequenceId = _uiState.value.autoPlaySequenceId
-        )
-    }
-
     fun nextWord() {
         if (
             _uiState.value.loading ||

@@ -237,9 +237,6 @@ object DataWordBookDatabaseModule {
     fun provideLearningEventDao(database: WordBookDatabase) = database.learningEventDao()
 
     @Provides
-    fun provideLearningOutboxDao(database: WordBookDatabase) = database.learningOutboxDao()
-
-    @Provides
     fun provideDailyProgressProjectionTaskDao(database: WordBookDatabase) =
         database.dailyProgressProjectionTaskDao()
 

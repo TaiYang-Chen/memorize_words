@@ -1,12 +1,7 @@
 package com.chen.memorizewords.data.floating.repository
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.BitmapRegionDecoder
-import android.graphics.Rect
 import com.chen.memorizewords.core.sprite.SpriteAtlasSource
-import com.chen.memorizewords.core.sprite.SpriteAtlasSpec
 import com.chen.memorizewords.core.sprite.SpritePack
 import com.chen.memorizewords.core.sprite.SpritePackId
 import com.chen.memorizewords.core.sprite.SpritePackManifestParser
@@ -65,25 +60,4 @@ class DownloadedSpritePackSource @Inject constructor(
         return SpritePack(manifest, compatibilitySource, textureSources)
     }
 
-}
-internal object CharacterPackAtlasDecoderValidator {
-    fun validate(atlasFile: File, atlas: SpriteAtlasSpec, decodeLastFrame: Boolean) {
-        atlasFile.inputStream().buffered().use { input ->
-            val decoder = requireNotNull(BitmapRegionDecoder.newInstance(input, false))
-            try {
-                require(decoder.width == atlas.width && decoder.height == atlas.height)
-                decodeFrame(decoder, atlas, 0)
-                if (decodeLastFrame && atlas.frameCount > 1) decodeFrame(decoder, atlas, atlas.frameCount - 1)
-            } finally { decoder.recycle() }
-        }
-    }
-    private fun decodeFrame(decoder: BitmapRegionDecoder, atlas: SpriteAtlasSpec, frameIndex: Int) {
-        val column = frameIndex % atlas.columns
-        val row = frameIndex / atlas.columns
-        val region = Rect(column * atlas.frameWidth, row * atlas.frameHeight,
-            (column + 1) * atlas.frameWidth, (row + 1) * atlas.frameHeight)
-        val options = BitmapFactory.Options().apply { inPreferredConfig = Bitmap.Config.ARGB_8888 }
-        val frame = requireNotNull(decoder.decodeRegion(region, options))
-        if (!frame.isRecycled) frame.recycle()
-    }
 }

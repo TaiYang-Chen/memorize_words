@@ -1,9 +1,6 @@
 package com.chen.memorizewords.data.sync.remote.learningsync
 
 import com.chen.memorizewords.core.network.remote.RemoteResultAdapter
-import com.chen.memorizewords.domain.floating.model.FloatingDockConfig
-import com.chen.memorizewords.domain.floating.model.FloatingDockEdge
-import com.chen.memorizewords.domain.floating.model.FloatingDockState
 import com.chen.memorizewords.domain.floating.model.FloatingWordDisplayRecord
 import com.chen.memorizewords.domain.floating.model.FloatingWordFieldConfig
 import com.chen.memorizewords.domain.floating.model.FloatingWordFieldType
@@ -16,8 +13,6 @@ import com.chen.memorizewords.domain.practice.PracticeSessionRecord
 import com.chen.memorizewords.domain.practice.PracticeSettings
 import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.FloatingDisplayRecordDto
 import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.FloatingDisplayRecordSyncRequest
-import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.FloatingDockConfigDto
-import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.FloatingDockStateDto
 import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.FloatingFieldConfigDto
 import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.FloatingSettingsDto
 import com.chen.memorizewords.data.sync.remoteapi.api.learningsync.FloatingSettingsSyncRequest
@@ -140,23 +135,15 @@ class RemoteLearningSyncDataSourceImpl @Inject constructor(
         return remoteResultAdapter.toResult {
             request.updateFloatingSettings(
                 FloatingSettingsSyncRequest(
-                    // The server DTO still carries these legacy runtime fields. Runtime is local.
-                    enabled = false,
                     sourceType = settings.sourceType.name,
                     orderType = settings.orderType.name,
                     fieldConfigs = configs,
                     selectedWordIds = settings.selectedWordIds,
-                    floatingBallX = 0,
-                    floatingBallY = 0,
-                    autoStartOnBoot = false,
-                    autoStartOnAppLaunch = false,
                     ballSizePercent = settings.ballSizePercent,
                     ballOpacityPercent = settings.ballOpacityPercent,
                     cardOpacityPercent = settings.cardOpacityPercent,
                     cardGapDp = settings.cardGapDp,
-                    selectedCharacterPackId = settings.selectedCharacterPackId,
-                    dockConfig = null,
-                    dockState = null
+                    selectedCharacterPackId = settings.selectedCharacterPackId
                 )
             )
         }
@@ -229,48 +216,4 @@ internal fun FloatingFieldConfigDto.toDomainOrNull(): FloatingWordFieldConfig? {
         enabled = enabled,
         fontSizeSp = fontSizeSp
     )
-}
-
-internal fun FloatingDockConfigDto.toDomain(): FloatingDockConfig {
-    return FloatingDockConfig(
-        snapTriggerDistanceDp = snapTriggerDistanceDp,
-        halfHiddenEnabled = halfHiddenEnabled,
-        allowedEdges = allowedEdges.mapNotNull(::parseDockEdge),
-        edgePriority = edgePriority.mapNotNull(::parseDockEdge),
-        snapAnimationDurationMs = snapAnimationDurationMs,
-        tapExpandsCardAfterUnsnap = tapExpandsCardAfterUnsnap,
-        initialDockEdge = parseDockEdge(initialDockEdge) ?: FloatingDockEdge.RIGHT
-    ).normalized()
-}
-
-internal fun FloatingDockStateDto.toDomainOrNull(): FloatingDockState? {
-    val edge = dockedEdge?.let(::parseDockEdge) ?: return null
-    return FloatingDockState(
-        dockedEdge = edge,
-        crossAxisPercent = crossAxisPercent
-    )
-}
-
-internal fun FloatingDockConfig.toDto(): FloatingDockConfigDto {
-    val normalized = normalized()
-    return FloatingDockConfigDto(
-        snapTriggerDistanceDp = normalized.snapTriggerDistanceDp,
-        halfHiddenEnabled = normalized.halfHiddenEnabled,
-        allowedEdges = normalized.allowedEdges.map { it.name },
-        edgePriority = normalized.edgePriority.map { it.name },
-        snapAnimationDurationMs = normalized.snapAnimationDurationMs,
-        tapExpandsCardAfterUnsnap = normalized.tapExpandsCardAfterUnsnap,
-        initialDockEdge = normalized.initialDockEdge.name
-    )
-}
-
-internal fun FloatingDockState.toDto(): FloatingDockStateDto {
-    return FloatingDockStateDto(
-        dockedEdge = dockedEdge?.name,
-        crossAxisPercent = crossAxisPercent
-    )
-}
-
-private fun parseDockEdge(name: String): FloatingDockEdge? {
-    return runCatching { FloatingDockEdge.valueOf(name) }.getOrNull()
 }

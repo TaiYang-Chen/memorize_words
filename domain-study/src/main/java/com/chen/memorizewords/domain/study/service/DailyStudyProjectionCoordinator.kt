@@ -21,9 +21,6 @@ class DailyStudyProjectionCoordinator @Inject constructor(
     private val studyPlanRepository: StudyPlanRepository,
     private val businessDateProvider: BusinessDateProvider
 ) {
-    suspend fun projectEvent(clientEventId: String): DailyProgressTransition =
-        writeCoordinator.withWrite { projectEventLocked(clientEventId) }
-
     suspend fun projectEventLocked(clientEventId: String): DailyProgressTransition {
         val task = projectionQueue.getById(clientEventId)
             ?: return DailyProgressTransition.RecoveryRequired(businessDateProvider.currentBusinessDate())

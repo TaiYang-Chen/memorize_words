@@ -37,24 +37,6 @@ internal fun baiduLanguageTag(locale: String): String {
     return "zh"
 }
 
-internal fun baiduVoicePerson(voice: String, locale: String): String {
-    val normalizedVoice = voice.trim().lowercase(Locale.US)
-    if (normalizedVoice.toIntOrNull() != null) {
-        return normalizedVoice
-    }
-    return if (baiduLanguageTag(locale) == "zh") {
-        when (normalizedVoice) {
-            "male" -> "1"
-            else -> "0"
-        }
-    } else {
-        when (normalizedVoice) {
-            "male" -> "4106"
-            else -> "4100"
-        }
-    }
-}
-
 internal fun baiduAudioEncoding(format: SpeechAudioFormat): String {
     val encoding = format.encoding.lowercase(Locale.US)
     val mimeType = format.mimeType.lowercase(Locale.US)

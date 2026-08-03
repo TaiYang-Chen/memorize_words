@@ -5,8 +5,6 @@ import com.chen.memorizewords.domain.practice.speech.SpeechAudioOutput
 import com.chen.memorizewords.domain.practice.speech.SpeechAudioSuccess
 import com.chen.memorizewords.domain.practice.speech.SpeechResult
 import java.io.File
-import kotlin.coroutines.resume
-import kotlinx.coroutines.suspendCancellableCoroutine
 
 fun SpeechResult.audioOutputOrNull(): SpeechAudioOutput? {
     return (this as? SpeechAudioSuccess)?.audioOutput
@@ -37,30 +35,6 @@ fun MediaPlayer.prepareSpeechOutputAsync(
     }.getOrElse {
         onError(this)
         false
-    }
-}
-
-suspend fun playSpeechOutputSuspending(output: SpeechAudioOutput) {
-    suspendCancellableCoroutine<Unit> { continuation ->
-        val player = MediaPlayer()
-        val started = player.prepareSpeechOutputAsync(
-            output = output,
-            onPrepared = {
-                it.setOnCompletionListener {
-                    runCatching { player.release() }
-                    if (continuation.isActive) continuation.resume(Unit)
-                }
-                it.start()
-            },
-            onError = {
-                runCatching { player.release() }
-                if (continuation.isActive) continuation.resume(Unit)
-            }
-        )
-        if (!started && continuation.isActive) {
-            continuation.resume(Unit)
-        }
-        continuation.invokeOnCancellation { runCatching { player.release() } }
     }
 }
 

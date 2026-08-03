@@ -1,0 +1,9 @@
+Create one finished premium flat Android launcher icon for the Chinese vocabulary app "Xuanxi Words". Output one icon only, not a logo sheet and not a mockup.
+
+Start from a completely new concept. Do not use any speech bubble, V-collar emblem, book, card, backpack, plant icon, mascot silhouette, or previous concept.
+
+Create one proprietary woven brand mark that subtly suggests the letter X for "Xuanxi" without looking like a typeset letter. Construct it from exactly two broad, tapered, interlocking flat ribbons crossing diagonally. The back ribbon is deep navy. The front ribbon is jade green. The crossing must feel engineered and intentional, with one small warm-white geometric cut at the overlap so the weave is immediately legible. Transform only the upper terminal of the green ribbon into a restrained two-tip split inspired by the mascot's two-leaf sprout; the split must stay within the ribbon geometry and must not look like a separate leaf, plant, ears, or antennae. Inset one tiny violet rectangular splice into the lower terminal of the navy ribbon, inspired by the mascot's purple patch.
+
+The result must be one strong compact silhouette, visually balanced but not perfectly symmetrical. It should fill 64-68 percent of the canvas and remain unmistakable at 48 px. Use a pale mint rounded-square tile background #E8F7F0. Use only flat solid colors: deep navy #071A3A, jade green #15CB8F, light green #6FE3B8 only for the small split terminal, warm white #FFFDF7, violet #8C42F5.
+
+Professional global software-brand identity, bold vector masses, precise optical geometry, calm and modern rather than cute. No gradients, shadows, highlights, gloss, bevel, 3D, texture, outlines, thin lines, text, readable letters, punctuation, watermark, border, nested tile, blue background, orange, face, eyes, body, character, book, bag, flashcard, speech bubble, quotation marks, arrows, infinity symbol, flower, or childish educational clip-art. 1024x1024.

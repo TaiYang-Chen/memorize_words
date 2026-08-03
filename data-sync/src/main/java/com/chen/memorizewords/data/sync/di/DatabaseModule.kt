@@ -26,8 +26,5 @@ object DatabaseModule {
     }
 
     @Provides
-    fun provideSyncOutboxDao(syncDatabase: SyncDatabase) = syncDatabase.syncOutboxDao()
-
-    @Provides
     fun provideFailedSyncEventDao(syncDatabase: SyncDatabase) = syncDatabase.failedSyncEventDao()
 }

@@ -23,27 +23,6 @@ class CharacterPackLocalStoreTest {
     private val gson = Gson()
 
     @Test
-    fun `legacy migration does not overwrite v2 state written by another process`() {
-        val legacyPack = installed("legacy_pet")
-        val newerPack = installed("newer_pet")
-        val keyValueStore = FakeCharacterPackKeyValueStore(
-            mutableMapOf(KEY_INSTALLED_LEGACY to gson.toJson(mapOf(legacyPack.packId to legacyPack)))
-        ).apply {
-            beforeLock = { lockNumber ->
-                if (lockNumber == 2) {
-                    values[KEY_STATE] = persistedStateJson(installed = mapOf(newerPack.packId to newerPack))
-                }
-            }
-        }
-
-        val store = CharacterPackLocalStore(keyValueStore, gson)
-
-        assertEquals(setOf(newerPack.packId), store.installedPacks().keys)
-        assertEquals(newerPack, store.installed(newerPack.packId))
-        assertNull(store.installed(legacyPack.packId))
-    }
-
-    @Test
     fun `read modify write merges changes made by another store instance`() {
         val keyValueStore = FakeCharacterPackKeyValueStore()
         val firstProcess = CharacterPackLocalStore(keyValueStore, gson)
@@ -577,18 +556,6 @@ class CharacterPackLocalStoreTest {
         )
     }
 
-    private fun persistedStateJson(
-        catalog: List<CharacterPackCatalogItem> = emptyList(),
-        installed: Map<String, InstalledCharacterPack> = emptyMap(),
-        downloads: Map<String, CharacterPackDownloadState> = emptyMap()
-    ): String = gson.toJson(
-        mapOf(
-            "catalog" to catalog,
-            "installed" to installed,
-            "downloads" to downloads
-        )
-    )
-
     private fun installedForRequest(
         packId: String,
         requestId: String,
@@ -638,7 +605,6 @@ class CharacterPackLocalStoreTest {
 
     private companion object {
         const val KEY_STATE = "character_pack_state_v2"
-        const val KEY_INSTALLED_LEGACY = "character_pack_installed_v1"
     }
 }
 

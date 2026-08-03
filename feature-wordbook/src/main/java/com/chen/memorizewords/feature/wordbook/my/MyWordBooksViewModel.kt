@@ -4,7 +4,6 @@ import androidx.lifecycle.viewModelScope
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.core.ui.vm.UiEvent
 import com.chen.memorizewords.domain.wordbook.model.WordBookInfo
-import com.chen.memorizewords.domain.wordbook.model.WordBookUpdateUiState
 import com.chen.memorizewords.domain.wordbook.service.WordBookUpdateCoordinator
 import com.chen.memorizewords.domain.wordbook.usecase.DeleteMyWordBookUseCase
 import com.chen.memorizewords.domain.wordbook.usecase.GetMyWordBooksWithProgressUseCase
@@ -28,7 +27,6 @@ class MyWordBooksViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     sealed interface Route {
-        data object ToMyWordBooks : Route
         data object ToShop : Route
         data object ToCreate : Route
     }
@@ -51,22 +49,10 @@ class MyWordBooksViewModel @Inject constructor(
                 initialValue = emptyList()
             )
 
-    val updateUiState: StateFlow<WordBookUpdateUiState> =
-        updateCoordinator.observeUiState()
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = WordBookUpdateUiState()
-            )
-
     fun onPageStarted() {
         viewModelScope.launch {
             updateCoordinator.onWordBookPageEntered()
         }
-    }
-
-    fun onPickMyWordBooks() {
-        navigateRoute(Route.ToMyWordBooks)
     }
 
     fun onPickShopFragment() {
@@ -121,56 +107,6 @@ class MyWordBooksViewModel @Inject constructor(
                     }
                     showToast(message)
                 }
-        }
-    }
-
-    fun onUpdateNowClick() {
-        viewModelScope.launch {
-            updateCoordinator.confirmUpdate()
-        }
-    }
-
-    fun onRemindLaterClick() {
-        viewModelScope.launch {
-            updateCoordinator.remindLater()
-        }
-    }
-
-    fun onIgnoreVersionClick() {
-        viewModelScope.launch {
-            updateCoordinator.ignoreVersion()
-        }
-    }
-
-    fun onToggleDetails() {
-        viewModelScope.launch {
-            if (updateUiState.value.detailsVisible) {
-                updateCoordinator.dismissDetails()
-            } else {
-                updateCoordinator.showDetails()
-            }
-        }
-    }
-
-    fun onToggleSettings() {
-        viewModelScope.launch {
-            if (updateUiState.value.settingsVisible) {
-                updateCoordinator.dismissSettings()
-            } else {
-                updateCoordinator.showSettings()
-            }
-        }
-    }
-
-    fun onForegroundAlertsChanged(enabled: Boolean) {
-        viewModelScope.launch {
-            updateCoordinator.updateForegroundAlertsEnabled(enabled)
-        }
-    }
-
-    fun onSilentUpdateChanged(enabled: Boolean) {
-        viewModelScope.launch {
-            updateCoordinator.updateSilentUpdateEnabled(enabled)
         }
     }
 

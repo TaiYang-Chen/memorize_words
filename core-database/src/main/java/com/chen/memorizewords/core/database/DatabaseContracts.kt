@@ -5,10 +5,6 @@ data class DatabaseConfig(
     val destructiveUpgrade: Boolean
 )
 
-interface DatabaseTransactionRunner {
-    suspend fun <T> transaction(block: suspend () -> T): T
-}
-
 object NewArchitectureDatabase {
     const val NAME = "memorize_words_arch_v1.db"
     val config = DatabaseConfig(name = NAME, destructiveUpgrade = true)

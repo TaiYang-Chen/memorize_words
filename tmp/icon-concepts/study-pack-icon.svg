@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" fill="none">
+  <rect width="1024" height="1024" rx="218" fill="#E8F7F0"/>
+
+  <!-- The mascot's two leaves become two bookmark tabs, not a head or face. -->
+  <path d="M484 386C391 374 320 304 322 202C418 202 485 260 508 348L484 386Z" fill="#15CB8F"/>
+  <path d="M516 386C609 374 680 304 678 202C582 202 515 260 492 348L516 386Z" fill="#6FE3B8"/>
+
+  <!-- A vocabulary card sits inside the pack. The three marks are deliberately non-textual. -->
+  <rect x="286" y="282" width="452" height="366" rx="62" fill="#FFFDF7"/>
+  <rect x="362" y="384" width="202" height="42" rx="21" fill="#071A3A"/>
+  <rect x="362" y="464" width="294" height="32" rx="16" fill="#C5D7D2"/>
+  <rect x="362" y="526" width="150" height="32" rx="16" fill="#C5D7D2"/>
+  <rect x="602" y="370" width="70" height="70" rx="24" fill="#8C42F5"/>
+
+  <!-- Navy backpack body, simplified from the companion's shoulder pack. -->
+  <path d="M180 720V488C180 360 284 256 412 256H612C740 256 844 360 844 488V720C844 808 773 880 685 880H339C251 880 180 808 180 720Z" fill="#071A3A"/>
+  <path d="M354 306V260C354 194 407 140 473 140H551C617 140 670 194 670 260V306" stroke="#071A3A" stroke-width="40" stroke-linecap="round"/>
+
+  <!-- Reinsert the card above the body after the pack silhouette. -->
+  <rect x="286" y="282" width="452" height="366" rx="62" fill="#FFFDF7"/>
+  <rect x="362" y="384" width="202" height="42" rx="21" fill="#071A3A"/>
+  <rect x="362" y="464" width="294" height="32" rx="16" fill="#C5D7D2"/>
+  <rect x="362" y="526" width="150" height="32" rx="16" fill="#C5D7D2"/>
+  <rect x="602" y="370" width="70" height="70" rx="24" fill="#8C42F5"/>
+
+  <!-- Hoodie-inspired front pocket: the V fold replaces any literal book or face. -->
+  <path d="M246 592C246 563 269 540 298 540H726C755 540 778 563 778 592V738C778 794 732 840 676 840H348C292 840 246 794 246 738V592Z" fill="#FFFDF7"/>
+  <path d="M286 562L512 710L738 562V610L512 758L286 610V562Z" fill="#F3EAFE"/>
+  <path d="M286 562L512 710L738 562" stroke="#E3E9E7" stroke-width="14" stroke-linejoin="round"/>
+
+  <!-- Purple woven patch, taken from the mascot's hoodie. -->
+  <path d="M641 690H711C727 690 740 703 740 719V789H670C654 789 641 776 641 760V690Z" fill="#8C42F5"/>
+  <path d="M676 719L704 762H684L680 753H668L664 762H644L672 719H676ZM674 738L670 746H678L674 738Z" fill="#FFFDF7"/>
+</svg>
