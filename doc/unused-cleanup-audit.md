@@ -129,3 +129,38 @@ review is reproducible.
 - Resource candidate list: empty after static-reference and Data Binding/style-chain
   validation; release shrink false positives are recorded above rather than deleted.
 - Deleted symbol residual scan: no deleted fully-qualified symbol remains.
+
+## Android Resource Deduplication (2026-08-04)
+
+### Scope And Changes
+
+- Rechecked every tracked and newly added `src/*/(res|assets)` resource across all
+  source sets. Application resources are not dynamically resolved by name; the only
+  `getIdentifier` call remains scoped to Android system dimensions.
+- Removed 25 obsolete duplicate files and added 6 canonical shared files, for a net
+  reduction of 19 files. This includes the planned 24 removals plus
+  `feature_home_v2_task_inset_bg`: after its inner background was mapped to the
+  existing surface background, it became an exact duplicate of
+  `feature_home_v2_surface_inset_bg`.
+- Kept the density-qualified launcher assets intentionally. Only the duplicate
+  unqualified `mipmap/ic_launcher.png` was removed.
+- Removed 141 duplicate scalar declarations with zero graph and textual references:
+  Feedback 8, Floating Review 1, Home 45, Learning 34, Onboarding 25, User 4, and
+  Wordbook 24. Referenced equal-value tokens were retained.
+- Consolidated seven Audio Loop styles into three settings styles (net minus four),
+  resolved the cross-module `string/profile` collision with separate Home and User
+  title resources, and removed only the 33 matching deleted-resource lint-baseline
+  entries.
+
+### Verification
+
+| Check | Final result |
+| --- | --- |
+| Resource file hashing | 713 source `res/assets` files, 644 file resources; 0 byte, XML-structure, and PNG-pixel duplicate groups. |
+| Cross-module resource names | 2,784 non-ID declarations; 0 duplicate `type/name` conflicts. |
+| Duplicate scalar references | 2,108 scalar declarations; all 493 declarations in 188 equal-value groups have a graph reference and a `git grep -w` reference. |
+| Deleted-name scan | No old resource or style name remains in Kotlin, Java, or XML. |
+| Debug and unit build | `:app:assembleDebug` and `:feature-home:testDebugUnitTest` passed with `-Pksp.incremental=false`; this avoids an existing corrupt incremental KSP cache without deleting local caches. |
+| Release resource shrink | `:app:assembleRelease -Pmemorize.releaseApiBaseUrl=https://cleanup.invalid/ -Pksp.incremental=false` passed. Existing `umeng-common` stack-map warnings remain the only R8 warnings. |
+| Final APK resource table | All six canonical shared IDs are present; 173 removed IDs are absent (the retained launcher density variants are excluded); Home and User titles resolve to `个人中心` and `个人信息` respectively. |
+| Affected lint tasks | No `IconDuplicatesConfig` remains. Floating Review 49 errors/10 warnings, Learning 17/2, User 5/1, and Wordbook 13/18 reproduce their existing counts. Feedback has one unrelated `UseKtx` warning. |

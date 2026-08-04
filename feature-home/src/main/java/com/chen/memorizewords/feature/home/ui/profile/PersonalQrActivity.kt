@@ -17,6 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import coil.load
 import coil.transform.CircleCropTransformation
+import com.chen.memorizewords.core.ui.R as CoreUiR
 import com.chen.memorizewords.core.ui.activity.BaseVmDbActivity
 import com.chen.memorizewords.feature.home.R
 import com.chen.memorizewords.feature.home.databinding.FeatureHomeActivityPersonalQrBinding
@@ -85,9 +86,9 @@ class PersonalQrActivity :
         )
         databind.featureHomeIvQrAvatar.load(state.avatarLoadSource()) {
             crossfade(true)
-            placeholder(R.drawable.feature_home_ic_avatar_placeholder)
-            error(R.drawable.feature_home_ic_avatar_placeholder)
-            fallback(R.drawable.feature_home_ic_avatar_placeholder)
+            placeholder(CoreUiR.drawable.core_ui_ic_avatar_placeholder)
+            error(CoreUiR.drawable.core_ui_ic_avatar_placeholder)
+            fallback(CoreUiR.drawable.core_ui_ic_avatar_placeholder)
             transformations(CircleCropTransformation())
             listener(
                 onSuccess = { _, result ->

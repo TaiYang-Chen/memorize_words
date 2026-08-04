@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import coil.load
+import com.chen.memorizewords.core.ui.R as CoreUiR
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.core.ui.vm.BaseViewModel
 import com.chen.memorizewords.feature.user.R
@@ -24,13 +25,13 @@ class AvatarPreviewFragment :
         databind.viewModel = viewModel
         val source = args.avatarSource
         if (source.isBlank()) {
-            databind.ivAvatar.setImageResource(R.drawable.module_user_ic_avatar_placeholder)
+            databind.ivAvatar.setImageResource(CoreUiR.drawable.core_ui_ic_avatar_placeholder)
             viewModel.showToast(getString(R.string.module_user_profile_no_avatar))
             return
         }
         databind.ivAvatar.load(source) {
-            placeholder(R.drawable.module_user_ic_avatar_placeholder)
-            error(R.drawable.module_user_ic_avatar_placeholder)
+            placeholder(CoreUiR.drawable.core_ui_ic_avatar_placeholder)
+            error(CoreUiR.drawable.core_ui_ic_avatar_placeholder)
         }
     }
 }

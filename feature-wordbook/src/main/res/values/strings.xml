@@ -59,7 +59,6 @@
     <string name="feature_wordbook_create_submit">&#21019;&#24314;</string>
     <string name="feature_wordbook_create_submitting">&#21019;&#24314;&#20013;...</string>
     <string name="feature_wordbook_create_success">&#21019;&#24314;&#25104;&#21151;</string>
-    <string name="feature_wordbook_create_error_title_required">&#35831;&#36755;&#20837;&#35789;&#20070;&#21517;&#31216;</string>
     <string name="feature_wordbook_create_error_words_required">&#35831;&#33267;&#23569;&#36755;&#20837; 1 &#20010;&#21333;&#35789;</string>
     <string name="feature_wordbook_create_error_word_too_long">&#21333;&#20010;&#21333;&#35789;&#19981;&#33021;&#36229;&#36807; 80 &#20010;&#23383;&#31526;</string>
     <string name="feature_wordbook_create_error_words_too_many">&#26368;&#22810;&#19968;&#27425;&#21019;&#24314; 1000 &#20010;&#21333;&#35789;</string>

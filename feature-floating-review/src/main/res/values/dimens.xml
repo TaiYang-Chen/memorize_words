@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="module_floating_review_ball_size">44dp</dimen>
     <dimen name="feature_floating_review_pet_width">156dp</dimen>
     <dimen name="feature_floating_review_pet_height">187dp</dimen>
     <dimen name="module_floating_review_card_width">320dp</dimen>

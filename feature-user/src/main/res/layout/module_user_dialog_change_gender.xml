@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/core_ui_dp_1"
                 android:gravity="center"
-                android:text="@string/profile"
+                android:text="@string/feature_user_profile_title"
                 android:textColor="#000"
                 android:textSize="@dimen/core_ui_text_16"
                 android:textStyle="bold"

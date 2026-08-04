@@ -195,7 +195,7 @@
             android:layout_margin="@dimen/core_ui_dp_16"
             android:gravity="center"
             android:textColor="#fff"
-            android:stateListAnimator="@animator/module_learning_btn_scale_animator"
+            android:stateListAnimator="@animator/core_ui_button_scale_animator"
             android:background="@drawable/module_learning_select_radius_black"
             android:onClick="@{()->viewModel.toNext()}"
             android:text="@{viewModel.uiState.buttonText}"

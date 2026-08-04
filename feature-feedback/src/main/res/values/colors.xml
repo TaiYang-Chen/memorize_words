@@ -18,7 +18,6 @@
     <color name="module_feedback_about_stroke">#ECE7E1</color>
     <color name="module_feedback_about_divider">#F0ECE6</color>
     <color name="module_feedback_about_header_divider">#F1ECE6</color>
-    <color name="module_feedback_about_version_bg">#FDFCFA</color>
     <color name="module_feedback_about_version_stroke">#DDD7D0</color>
     <color name="module_feedback_about_mission_badge_bg">#CAE7F7</color>
     <color name="module_feedback_about_mission_orb">#F8F5F0</color>

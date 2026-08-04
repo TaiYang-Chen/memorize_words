@@ -16,25 +16,11 @@
 
     <dimen name="feature_onboarding_section_spacing_compact">12dp</dimen>
     <dimen name="feature_onboarding_section_spacing_large">20dp</dimen>
-    <dimen name="feature_onboarding_card_spacing_compact">10dp</dimen>
 
     <dimen name="feature_onboarding_goal_card_min_height">92dp</dimen>
-    <dimen name="feature_onboarding_goal_card_padding_horizontal">18dp</dimen>
-    <dimen name="feature_onboarding_goal_card_padding_vertical">14dp</dimen>
-    <dimen name="feature_onboarding_goal_card_title_text_size">14sp</dimen>
-    <dimen name="feature_onboarding_goal_card_value_margin_top">10dp</dimen>
     <dimen name="feature_onboarding_goal_card_value_text_size">20sp</dimen>
-    <dimen name="feature_onboarding_goal_card_unit_margin_start">6dp</dimen>
-    <dimen name="feature_onboarding_goal_card_unit_margin_bottom">2dp</dimen>
-    <dimen name="feature_onboarding_goal_card_unit_text_size">12sp</dimen>
     <dimen name="feature_onboarding_goal_panel_corner_radius">20dp</dimen>
     <dimen name="feature_onboarding_goal_panel_padding">18dp</dimen>
-    <dimen name="feature_onboarding_goal_panel_icon_size">24dp</dimen>
-    <dimen name="feature_onboarding_goal_panel_icon_inner_size">24dp</dimen>
-    <dimen name="feature_onboarding_goal_panel_header_spacing">12dp</dimen>
-    <dimen name="feature_onboarding_goal_panel_subtitle_margin_top">4dp</dimen>
-    <dimen name="feature_onboarding_goal_panel_title_text_size">18sp</dimen>
-    <dimen name="feature_onboarding_goal_panel_subtitle_text_size">14sp</dimen>
     <dimen name="feature_onboarding_goal_control_height">64dp</dimen>
     <dimen name="feature_onboarding_goal_control_corner_radius">16dp</dimen>
     <dimen name="feature_onboarding_goal_control_padding_horizontal">8dp</dimen>
@@ -78,10 +64,6 @@
     <dimen name="feature_onboarding_book_description_end_spacing">8dp</dimen>
     <dimen name="feature_onboarding_book_description_text_size">15sp</dimen>
 
-    <dimen name="feature_onboarding_book_badge_height">26dp</dimen>
     <dimen name="feature_onboarding_book_badge_min_width">56dp</dimen>
-    <dimen name="feature_onboarding_book_badge_padding_horizontal">10dp</dimen>
-    <dimen name="feature_onboarding_book_badge_text_size">12sp</dimen>
     <dimen name="feature_onboarding_book_learner_spacing">10dp</dimen>
-    <dimen name="feature_onboarding_book_learner_text_size">12sp</dimen>
 </resources>

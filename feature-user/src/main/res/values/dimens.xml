@@ -2,9 +2,6 @@
 <resources>
     <dimen name="feature_user_profile_screen_bottom_padding">28dp</dimen>
     <dimen name="feature_user_profile_toolbar_horizontal_padding">20dp</dimen>
-    <dimen name="feature_user_profile_toolbar_top_padding">8dp</dimen>
-    <dimen name="feature_user_profile_toolbar_bottom_padding">8dp</dimen>
-    <dimen name="feature_user_profile_toolbar_icon_size">22dp</dimen>
     <dimen name="feature_user_profile_title_size">17sp</dimen>
     <dimen name="feature_user_profile_avatar_top_margin">44dp</dimen>
     <dimen name="feature_user_profile_avatar_size">92dp</dimen>

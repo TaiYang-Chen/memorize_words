@@ -64,7 +64,7 @@
 
                         <View style="@style/FeatureLearningAudioLoopSettingsAccent" />
 
-                        <LinearLayout style="@style/FeatureLearningAudioLoopSettingsSectionTextGroup">
+                        <LinearLayout style="@style/FeatureLearningAudioLoopSettingsTextGroup">
 
                             <TextView
                                 style="@style/FeatureLearningAudioLoopSettingsSectionTitle"
@@ -88,14 +88,14 @@
                                 style="@style/FeatureLearningAudioLoopSettingsRowIcon"
                                 android:text="W" />
 
-                            <LinearLayout style="@style/FeatureLearningAudioLoopSettingsModeTextGroup">
+                            <LinearLayout style="@style/FeatureLearningAudioLoopSettingsTextGroup">
 
                                 <TextView
-                                    style="@style/FeatureLearningAudioLoopSettingsModeTitle"
+                                    style="@style/FeatureLearningAudioLoopSettingsItemTitle"
                                     android:text="@string/feature_learning_audio_loop_mode_word_only" />
 
                                 <TextView
-                                    style="@style/FeatureLearningAudioLoopSettingsModeDesc"
+                                    style="@style/FeatureLearningAudioLoopSettingsItemDesc"
                                     android:text="@string/feature_learning_audio_loop_mode_word_only_desc" />
                             </LinearLayout>
 
@@ -114,14 +114,14 @@
                                 style="@style/FeatureLearningAudioLoopSettingsRowIcon"
                                 android:text="CN" />
 
-                            <LinearLayout style="@style/FeatureLearningAudioLoopSettingsModeTextGroup">
+                            <LinearLayout style="@style/FeatureLearningAudioLoopSettingsTextGroup">
 
                                 <TextView
-                                    style="@style/FeatureLearningAudioLoopSettingsModeTitle"
+                                    style="@style/FeatureLearningAudioLoopSettingsItemTitle"
                                     android:text="@string/feature_learning_audio_loop_mode_word_with_meaning" />
 
                                 <TextView
-                                    style="@style/FeatureLearningAudioLoopSettingsModeDesc"
+                                    style="@style/FeatureLearningAudioLoopSettingsItemDesc"
                                     android:text="@string/feature_learning_audio_loop_mode_word_with_meaning_desc" />
                             </LinearLayout>
 
@@ -140,14 +140,14 @@
                                 style="@style/FeatureLearningAudioLoopSettingsRowIcon"
                                 android:text="Ex" />
 
-                            <LinearLayout style="@style/FeatureLearningAudioLoopSettingsModeTextGroup">
+                            <LinearLayout style="@style/FeatureLearningAudioLoopSettingsTextGroup">
 
                                 <TextView
-                                    style="@style/FeatureLearningAudioLoopSettingsModeTitle"
+                                    style="@style/FeatureLearningAudioLoopSettingsItemTitle"
                                     android:text="@string/feature_learning_audio_loop_mode_word_with_example" />
 
                                 <TextView
-                                    style="@style/FeatureLearningAudioLoopSettingsModeDesc"
+                                    style="@style/FeatureLearningAudioLoopSettingsItemDesc"
                                     android:text="@string/feature_learning_audio_loop_mode_word_with_example_desc" />
                             </LinearLayout>
 
@@ -166,14 +166,14 @@
                                 style="@style/FeatureLearningAudioLoopSettingsRowIcon"
                                 android:text="Di" />
 
-                            <LinearLayout style="@style/FeatureLearningAudioLoopSettingsModeTextGroup">
+                            <LinearLayout style="@style/FeatureLearningAudioLoopSettingsTextGroup">
 
                                 <TextView
-                                    style="@style/FeatureLearningAudioLoopSettingsModeTitle"
+                                    style="@style/FeatureLearningAudioLoopSettingsItemTitle"
                                     android:text="@string/feature_learning_audio_loop_mode_dictation" />
 
                                 <TextView
-                                    style="@style/FeatureLearningAudioLoopSettingsModeDesc"
+                                    style="@style/FeatureLearningAudioLoopSettingsItemDesc"
                                     android:text="@string/feature_learning_audio_loop_mode_dictation_desc" />
                             </LinearLayout>
 
@@ -192,14 +192,14 @@
                                 style="@style/FeatureLearningAudioLoopSettingsRowIcon"
                                 android:text="All" />
 
-                            <LinearLayout style="@style/FeatureLearningAudioLoopSettingsModeTextGroup">
+                            <LinearLayout style="@style/FeatureLearningAudioLoopSettingsTextGroup">
 
                                 <TextView
-                                    style="@style/FeatureLearningAudioLoopSettingsModeTitle"
+                                    style="@style/FeatureLearningAudioLoopSettingsItemTitle"
                                     android:text="@string/feature_learning_audio_loop_mode_full_detail" />
 
                                 <TextView
-                                    style="@style/FeatureLearningAudioLoopSettingsModeDesc"
+                                    style="@style/FeatureLearningAudioLoopSettingsItemDesc"
                                     android:text="@string/feature_learning_audio_loop_mode_full_detail_desc" />
                             </LinearLayout>
 
@@ -219,7 +219,7 @@
 
                         <View style="@style/FeatureLearningAudioLoopSettingsAccent" />
 
-                        <LinearLayout style="@style/FeatureLearningAudioLoopSettingsSectionTextGroup">
+                        <LinearLayout style="@style/FeatureLearningAudioLoopSettingsTextGroup">
 
                             <TextView
                                 style="@style/FeatureLearningAudioLoopSettingsSectionTitle"
@@ -412,7 +412,7 @@
 
                         <View style="@style/FeatureLearningAudioLoopSettingsAccent" />
 
-                        <LinearLayout style="@style/FeatureLearningAudioLoopSettingsSectionTextGroup">
+                        <LinearLayout style="@style/FeatureLearningAudioLoopSettingsTextGroup">
 
                             <TextView
                                 style="@style/FeatureLearningAudioLoopSettingsSectionTitle"
@@ -436,14 +436,14 @@
                                 style="@style/FeatureLearningAudioLoopSettingsRowIcon"
                                 android:text="Lp" />
 
-                            <LinearLayout style="@style/FeatureLearningAudioLoopSettingsSwitchTextGroup">
+                            <LinearLayout style="@style/FeatureLearningAudioLoopSettingsTextGroup">
 
                                 <TextView
-                                    style="@style/FeatureLearningAudioLoopSettingsSwitchTitle"
+                                    style="@style/FeatureLearningAudioLoopSettingsItemTitle"
                                     android:text="@string/feature_learning_audio_loop_settings_loop" />
 
                                 <TextView
-                                    style="@style/FeatureLearningAudioLoopSettingsSwitchDesc"
+                                    style="@style/FeatureLearningAudioLoopSettingsItemDesc"
                                     android:text="@string/feature_learning_audio_loop_settings_loop_desc" />
                             </LinearLayout>
 
@@ -462,14 +462,14 @@
                                 style="@style/FeatureLearningAudioLoopSettingsRowIcon"
                                 android:text="Rd" />
 
-                            <LinearLayout style="@style/FeatureLearningAudioLoopSettingsSwitchTextGroup">
+                            <LinearLayout style="@style/FeatureLearningAudioLoopSettingsTextGroup">
 
                                 <TextView
-                                    style="@style/FeatureLearningAudioLoopSettingsSwitchTitle"
+                                    style="@style/FeatureLearningAudioLoopSettingsItemTitle"
                                     android:text="@string/feature_learning_audio_loop_settings_random" />
 
                                 <TextView
-                                    style="@style/FeatureLearningAudioLoopSettingsSwitchDesc"
+                                    style="@style/FeatureLearningAudioLoopSettingsItemDesc"
                                     android:text="@string/feature_learning_audio_loop_settings_random_desc" />
                             </LinearLayout>
 
@@ -488,14 +488,14 @@
                                 style="@style/FeatureLearningAudioLoopSettingsRowIcon"
                                 android:text="On" />
 
-                            <LinearLayout style="@style/FeatureLearningAudioLoopSettingsSwitchTextGroup">
+                            <LinearLayout style="@style/FeatureLearningAudioLoopSettingsTextGroup">
 
                                 <TextView
-                                    style="@style/FeatureLearningAudioLoopSettingsSwitchTitle"
+                                    style="@style/FeatureLearningAudioLoopSettingsItemTitle"
                                     android:text="@string/feature_learning_audio_loop_settings_keep_screen" />
 
                                 <TextView
-                                    style="@style/FeatureLearningAudioLoopSettingsSwitchDesc"
+                                    style="@style/FeatureLearningAudioLoopSettingsItemDesc"
                                     android:text="@string/feature_learning_audio_loop_settings_keep_screen_desc" />
                             </LinearLayout>
 
@@ -514,14 +514,14 @@
                                 style="@style/FeatureLearningAudioLoopSettingsRowIcon"
                                 android:text="Ph" />
 
-                            <LinearLayout style="@style/FeatureLearningAudioLoopSettingsSwitchTextGroup">
+                            <LinearLayout style="@style/FeatureLearningAudioLoopSettingsTextGroup">
 
                                 <TextView
-                                    style="@style/FeatureLearningAudioLoopSettingsSwitchTitle"
+                                    style="@style/FeatureLearningAudioLoopSettingsItemTitle"
                                     android:text="@string/feature_learning_audio_loop_settings_phonetic" />
 
                                 <TextView
-                                    style="@style/FeatureLearningAudioLoopSettingsSwitchDesc"
+                                    style="@style/FeatureLearningAudioLoopSettingsItemDesc"
                                     android:text="@string/feature_learning_audio_loop_settings_phonetic_desc" />
                             </LinearLayout>
 
@@ -540,14 +540,14 @@
                                 style="@style/FeatureLearningAudioLoopSettingsRowIcon"
                                 android:text="CN" />
 
-                            <LinearLayout style="@style/FeatureLearningAudioLoopSettingsSwitchTextGroup">
+                            <LinearLayout style="@style/FeatureLearningAudioLoopSettingsTextGroup">
 
                                 <TextView
-                                    style="@style/FeatureLearningAudioLoopSettingsSwitchTitle"
+                                    style="@style/FeatureLearningAudioLoopSettingsItemTitle"
                                     android:text="@string/feature_learning_audio_loop_settings_meaning" />
 
                                 <TextView
-                                    style="@style/FeatureLearningAudioLoopSettingsSwitchDesc"
+                                    style="@style/FeatureLearningAudioLoopSettingsItemDesc"
                                     android:text="@string/feature_learning_audio_loop_settings_meaning_desc" />
                             </LinearLayout>
 

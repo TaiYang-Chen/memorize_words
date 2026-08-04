@@ -14,7 +14,6 @@
     <string name="feature_home_v2_review_remaining_label">复习剩余</string>
     <string name="feature_home_v2_word_unit">个单词</string>
     <string name="feature_home_v2_day_unit">天</string>
-    <string name="feature_home_v2_start_learning">开始学习</string>
     <string name="feature_home_v2_shortcut_review">复习单词</string>
     <string name="feature_home_v2_shortcut_review_subtitle">巩固记忆</string>
     <string name="feature_home_v2_shortcut_plan">调整计划</string>
@@ -43,10 +42,7 @@
     <string name="feature_home_v2_preview_book">雅思核心词汇</string>
     <string name="feature_home_v2_preview_streak">已连续学习 12 天</string>
     <string name="feature_home_v2_preview_progress">15 / 45</string>
-    <string name="feature_home_v2_preview_target">目标 30 分钟</string>
     <string name="feature_home_v2_preview_review">还需复习 30 个单词</string>
     <string name="feature_home_v2_preview_level" translatable="false">Lv. 2</string>
-    <string name="feature_home_v2_preview_xp" translatable="false">45 / 100 XP</string>
     <string name="feature_home_v2_preview_xp_remaining">距离升级还差 55 XP</string>
-    <string name="feature_home_v2_preview_task_status">进行中</string>
 </resources>

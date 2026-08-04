@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="module_feedback_padding_small">8dp</dimen>
-    <dimen name="module_feedback_padding">16dp</dimen>
-    <dimen name="module_feedback_padding_large">24dp</dimen>
     <dimen name="module_feedback_avatar_size">120dp</dimen>
-    <dimen name="module_feedback_icon_size">20dp</dimen>
-    <dimen name="module_feedback_card_radius">16dp</dimen>
 
     <dimen name="module_feedback_about_header_height">56dp</dimen>
-    <dimen name="module_feedback_about_header_icon_touch">40dp</dimen>
-    <dimen name="module_feedback_about_horizontal_margin">20dp</dimen>
-    <dimen name="module_feedback_about_content_bottom_padding">32dp</dimen>
     <dimen name="module_feedback_about_hero_top_margin">48dp</dimen>
     <dimen name="module_feedback_about_hero_logo_card_size">88dp</dimen>
     <dimen name="module_feedback_about_hero_logo_card_radius">18dp</dimen>

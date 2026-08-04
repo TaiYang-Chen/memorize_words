@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="profile">个人信息</string>
-
     <string name="module_user_login_title">欢迎登录</string>
     <string name="module_user_login_go_register">没有账号？立即注册</string>
     <string name="module_user_login_account_hint">请输入账户/邮箱/手机号</string>
@@ -21,7 +19,6 @@
     <string name="module_user_register_account_invalid">账号只能包含英文和数字，且必须包含字母</string>
     <string name="module_user_register_loading">注册中...</string>
     <string name="module_user_register_success">注册成功</string>
-    <string name="module_user_sms_code_hint">请输入验证码</string>
     <string name="module_user_back_to_password_login">返回账号密码登录</string>
 
     <string name="module_user_common_back">返回</string>

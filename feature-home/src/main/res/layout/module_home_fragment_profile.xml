@@ -41,7 +41,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@string/profile"
+                android:text="@string/feature_home_profile_title"
                 android:textColor="#000"
                 android:textSize="@dimen/title_text_size"
                 android:textStyle="bold"
@@ -152,7 +152,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/feature_home_tv_profile_streak"
-                        tools:src="@drawable/feature_home_ic_avatar_placeholder" />
+                        tools:src="@drawable/core_ui_ic_avatar_placeholder" />
 
                     <TextView
                         android:id="@+id/tv_user_name"
@@ -411,7 +411,7 @@
                     android:paddingTop="@dimen/core_ui_dp_12"
                     android:paddingEnd="@dimen/core_ui_dp_15"
                     android:paddingBottom="@dimen/core_ui_dp_10"
-                    android:stateListAnimator="@animator/btn_scale_animator">
+                    android:stateListAnimator="@animator/core_ui_button_scale_animator">
 
                     <TextView
                         android:id="@+id/feature_home_profile_pro_crown"
@@ -460,7 +460,7 @@
                         android:background="@drawable/feature_home_bg_profile_pro_button"
                         android:gravity="center"
                         android:onClick="@{()->viewModel.toMembership()}"
-                        android:stateListAnimator="@animator/btn_scale_animator"
+                        android:stateListAnimator="@animator/core_ui_button_scale_animator"
                         android:text="@{viewModel.membershipActionText}"
                         android:textColor="#4A2600"
                         android:textSize="@dimen/core_ui_text_12"

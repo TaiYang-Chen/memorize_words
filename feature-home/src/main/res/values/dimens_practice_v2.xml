@@ -14,7 +14,6 @@
     <dimen name="feature_home_practice_v2_goal_button_height">35dp</dimen>
     <dimen name="feature_home_practice_v2_goal_progress_width">64dp</dimen>
     <dimen name="feature_home_practice_v2_mode_height">89dp</dimen>
-    <dimen name="feature_home_practice_v2_mode_gap">8dp</dimen>
     <dimen name="feature_home_practice_v2_mode_icon">41dp</dimen>
     <dimen name="feature_home_practice_v2_recommend_tile_height">44dp</dimen>
     <dimen name="feature_home_practice_v2_growth_height">74dp</dimen>
@@ -24,6 +23,5 @@
     <dimen name="feature_home_practice_v2_section_title_text">11sp</dimen>
     <dimen name="feature_home_practice_v2_card_title_text">12sp</dimen>
     <dimen name="feature_home_practice_v2_body_text">10sp</dimen>
-    <dimen name="feature_home_practice_v2_label_text">9sp</dimen>
     <dimen name="feature_home_practice_v2_caption_text">8sp</dimen>
 </resources>

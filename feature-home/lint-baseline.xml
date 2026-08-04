@@ -12,16 +12,6 @@
             column="2"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`btn_scale_animator`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_btn_scale_animator`&apos; ?"
-        errorLine1="&lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
-        errorLine2=" ~~~~~~~~">
-        <location
-            file="src/main/res/animator/btn_scale_animator.xml"
-            line="2"
-            column="2"/>
-    </issue>
 
     <issue
         id="ResourceName"
@@ -716,27 +706,7 @@
             column="2"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_home_select_border_gray`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_select_border_gray`&apos; ?"
-        errorLine1="&lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
-        errorLine2=" ~~~~~~~~">
-        <location
-            file="src/main/res/drawable/module_home_select_border_gray.xml"
-            line="2"
-            column="2"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_home_select_radius_black`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_module_home_select_radius_black`&apos; ?"
-        errorLine1="&lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
-        errorLine2=" ~~~~~~~~">
-        <location
-            file="src/main/res/drawable/module_home_select_radius_black.xml"
-            line="2"
-            column="2"/>
-    </issue>
 
     <issue
         id="ResourceName"
@@ -793,16 +763,6 @@
             column="13"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`profile`&apos; does not start with the project&apos;s resource prefix &apos;`feature_home_`&apos;; rename to &apos;`feature_home_profile`&apos; ?"
-        errorLine1="    &lt;string name=&quot;profile&quot;>个人中心&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="4"
-            column="13"/>
-    </issue>
 
     <issue
         id="ResourceName"

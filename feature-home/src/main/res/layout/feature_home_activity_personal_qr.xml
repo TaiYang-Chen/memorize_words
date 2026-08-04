@@ -66,7 +66,7 @@
             android:background="@drawable/bg_avatar_ring"
             android:padding="@dimen/core_ui_dp_4"
             android:scaleType="centerCrop"
-            tools:src="@drawable/feature_home_ic_avatar_placeholder" />
+            tools:src="@drawable/core_ui_ic_avatar_placeholder" />
 
         <TextView
             android:id="@+id/feature_home_tv_qr_nickname"

@@ -199,16 +199,6 @@
             column="12"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_feedback_about_version_bg`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_version_bg`&apos; ?"
-        errorLine1="    &lt;color name=&quot;module_feedback_about_version_bg&quot;>#FDFCFA&lt;/color>"
-        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/colors.xml"
-            line="25"
-            column="12"/>
-    </issue>
 
     <issue
         id="ResourceName"
@@ -265,27 +255,7 @@
             column="12"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_feedback_padding`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_padding`&apos; ?"
-        errorLine1="    &lt;dimen name=&quot;module_feedback_padding&quot;>16dp&lt;/dimen>"
-        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/dimens.xml"
-            line="4"
-            column="12"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_feedback_padding_large`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_padding_large`&apos; ?"
-        errorLine1="    &lt;dimen name=&quot;module_feedback_padding_large&quot;>24dp&lt;/dimen>"
-        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/dimens.xml"
-            line="5"
-            column="12"/>
-    </issue>
 
     <issue
         id="ResourceName"
@@ -298,27 +268,7 @@
             column="12"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_feedback_icon_size`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_icon_size`&apos; ?"
-        errorLine1="    &lt;dimen name=&quot;module_feedback_icon_size&quot;>20dp&lt;/dimen>"
-        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/dimens.xml"
-            line="7"
-            column="12"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_feedback_card_radius`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_card_radius`&apos; ?"
-        errorLine1="    &lt;dimen name=&quot;module_feedback_card_radius&quot;>16dp&lt;/dimen>"
-        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/dimens.xml"
-            line="8"
-            column="12"/>
-    </issue>
 
     <issue
         id="ResourceName"
@@ -331,38 +281,8 @@
             column="12"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_feedback_about_header_icon_touch`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_header_icon_touch`&apos; ?"
-        errorLine1="    &lt;dimen name=&quot;module_feedback_about_header_icon_touch&quot;>40dp&lt;/dimen>"
-        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/dimens.xml"
-            line="11"
-            column="12"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_feedback_about_horizontal_margin`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_horizontal_margin`&apos; ?"
-        errorLine1="    &lt;dimen name=&quot;module_feedback_about_horizontal_margin&quot;>20dp&lt;/dimen>"
-        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/dimens.xml"
-            line="12"
-            column="12"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_feedback_about_content_bottom_padding`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_about_content_bottom_padding`&apos; ?"
-        errorLine1="    &lt;dimen name=&quot;module_feedback_about_content_bottom_padding&quot;>32dp&lt;/dimen>"
-        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/dimens.xml"
-            line="13"
-            column="12"/>
-    </issue>
 
     <issue
         id="ResourceName"
@@ -826,16 +746,6 @@
             column="2"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_feedback_ic_add_image`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_ic_add_image`&apos; ?"
-        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
-        errorLine2=" ~~~~~~">
-        <location
-            file="src/main/res/drawable/module_feedback_ic_add_image.xml"
-            line="1"
-            column="2"/>
-    </issue>
 
     <issue
         id="ResourceName"
@@ -903,16 +813,6 @@
             column="2"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_feedback_ic_mail`&apos; does not start with the project&apos;s resource prefix &apos;`feature_feedback_`&apos;; rename to &apos;`feature_feedback_module_feedback_ic_mail`&apos; ?"
-        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
-        errorLine2=" ~~~~~~">
-        <location
-            file="src/main/res/drawable/module_feedback_ic_mail.xml"
-            line="1"
-            column="2"/>
-    </issue>
 
     <issue
         id="ResourceName"

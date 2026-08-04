@@ -31,7 +31,6 @@
     <string name="practice_please_record_first">请先完成录音</string>
     <string name="practice_tts_not_ready">语音引擎尚未就绪，请稍后重试</string>
     <string name="practice_stop_recording">停止录音</string>
-    <string name="practice_start_recording">开始录音</string>
     <string name="practice_score_format">总分 %1$d / 发音 %2$d / 流利度 %3$d</string>
     <string name="practice_my_pronunciation">我的发音: %1$s</string>
     <string name="practice_next_question">下一题</string>
@@ -107,16 +106,11 @@
     <string name="practice_mode_title_audio_loop">随身听</string>
     <string name="practice_word_picker_search_empty">未找到匹配的单词</string>
     <string name="practice_stop_recording_first">请先停止录音</string>
-    <string name="practice_audio_loop_notification_channel">随身听播放</string>
-    <string name="practice_audio_loop_notification_title">随身听运行中</string>
-    <string name="practice_audio_loop_notification_ready">准备开始播放</string>
-    <string name="practice_audio_loop_notification_playing">正在播放：%1$s</string>
     <string name="practice_listening_feedback_correct">回答正确</string>
     <string name="practice_listening_feedback_wrong">回答错误</string>
     <string name="practice_listening_feedback_completed">本轮听力已完成</string>
     <string name="practice_listening_feedback_empty">暂无可练习题目</string>
     <string name="practice_shadowing_scoring_unavailable">暂时无法评分</string>
-    <string name="practice_shadowing_empty">暂无可练习单词</string>
     <string name="practice_audio_loop_no_book_selected">当前未选择词书</string>
     <string name="practice_audio_loop_book_fallback">词书 #%1$d</string>
     <string name="word_detail_unavailable">单词详情暂不可用</string>

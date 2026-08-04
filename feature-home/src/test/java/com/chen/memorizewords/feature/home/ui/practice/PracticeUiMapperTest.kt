@@ -1,6 +1,7 @@
 package com.chen.memorizewords.feature.home.ui.practice
 
 import com.chen.memorizewords.core.common.resource.ResourceProvider
+import com.chen.memorizewords.core.ui.R as CoreUiR
 import com.chen.memorizewords.domain.practice.PracticeDailyDurationStats
 import com.chen.memorizewords.domain.practice.PracticeEntryType
 import com.chen.memorizewords.domain.practice.PracticeMode
@@ -131,7 +132,7 @@ class PracticeUiMapperTest {
                 R.drawable.feature_home_ic_practice_mic,
                 R.drawable.feature_home_ic_practice_edit,
                 R.drawable.feature_home_ic_practice_play,
-                R.drawable.feature_home_ic_practice_exam
+                CoreUiR.drawable.core_ui_ic_test_document
             ),
             mapped.map { it.iconRes }
         )

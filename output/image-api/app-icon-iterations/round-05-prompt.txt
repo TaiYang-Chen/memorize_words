@@ -1,0 +1,11 @@
+Act as a senior global brand-identity designer. Create one finished premium flat Android launcher icon for a modern Chinese vocabulary memorization app. Output exactly one icon, not a logo sheet, not a mockup, and not a presentation board.
+
+The product helps users learn, review, and permanently retain words. The visual personality is focused, intelligent, fresh, friendly, and modern, but not childish or school-like. Invent one original, ownable central symbol that communicates "a word becoming retained knowledge" through shape and visual logic. Use one dominant silhouette and no more than three supporting shapes. The symbol must feel intentional and brandable rather than like a generic education pictogram.
+
+You have creative freedom over the symbol and composition. Do not reuse any previous direction: no mascot, no leaf or sprout, no plant, no speech bubble, no open book, no backpack, no flashcard stack, no letter A, no letter X, no Chinese character 词, no quotation marks, no circular arrow, no infinity sign, and no abstract pebble with a band.
+
+Use the app's actual palette: jade green #15CB8F as the dominant brand color, pale mint #E8F7F0, deep ink navy #071A3A, warm white #FFFDF7, and violet #8C42F5 only as an optional small accent. Do not use blue as the main color. Choose either a jade-green tile or a pale-mint tile based on which gives the strongest icon.
+
+Pure flat vector design with solid color blocks, crisp geometry, strong negative space, excellent optical balance, a memorable silhouette, and generous launcher-safe padding. It must still look deliberate and recognizable at 48 px. Mature leading consumer-software aesthetic, visually simple but not empty.
+
+No gradients, shadows, highlights, glow, gloss, bevel, 3D, texture, thin decorative lines, readable words, watermark, border, nested app tile, photorealism, cute character, face, eyes, body, classroom objects, graduation cap, light bulb, trophy, star, brain, puzzle piece, or childish educational clip-art. 1024x1024.

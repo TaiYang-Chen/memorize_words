@@ -881,16 +881,6 @@
             column="2"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_learning_btn_scale_animator`&apos; does not start with the project&apos;s resource prefix &apos;`feature_learning_`&apos;; rename to &apos;`feature_learning_module_learning_btn_scale_animator`&apos; ?"
-        errorLine1="&lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
-        errorLine2=" ~~~~~~~~">
-        <location
-            file="src/main/res/animator/module_learning_btn_scale_animator.xml"
-            line="2"
-            column="2"/>
-    </issue>
 
     <issue
         id="ResourceName"
@@ -1519,16 +1509,6 @@
             column="13"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`practice_start_recording`&apos; does not start with the project&apos;s resource prefix &apos;`feature_learning_`&apos;; rename to &apos;`feature_learning_practice_start_recording`&apos; ?"
-        errorLine1="    &lt;string name=&quot;practice_start_recording&quot;>开始录音&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="34"
-            column="13"/>
-    </issue>
 
     <issue
         id="ResourceName"
@@ -2311,49 +2291,9 @@
             column="13"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`practice_audio_loop_notification_channel`&apos; does not start with the project&apos;s resource prefix &apos;`feature_learning_`&apos;; rename to &apos;`feature_learning_practice_audio_loop_notification_channel`&apos; ?"
-        errorLine1="    &lt;string name=&quot;practice_audio_loop_notification_channel&quot;>随身听播放&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="109"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`practice_audio_loop_notification_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_learning_`&apos;; rename to &apos;`feature_learning_practice_audio_loop_notification_title`&apos; ?"
-        errorLine1="    &lt;string name=&quot;practice_audio_loop_notification_title&quot;>随身听运行中&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="110"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`practice_audio_loop_notification_ready`&apos; does not start with the project&apos;s resource prefix &apos;`feature_learning_`&apos;; rename to &apos;`feature_learning_practice_audio_loop_notification_ready`&apos; ?"
-        errorLine1="    &lt;string name=&quot;practice_audio_loop_notification_ready&quot;>准备开始播放&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="111"
-            column="13"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`practice_audio_loop_notification_playing`&apos; does not start with the project&apos;s resource prefix &apos;`feature_learning_`&apos;; rename to &apos;`feature_learning_practice_audio_loop_notification_playing`&apos; ?"
-        errorLine1="    &lt;string name=&quot;practice_audio_loop_notification_playing&quot;>正在播放：%1$s&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="112"
-            column="13"/>
-    </issue>
 
     <issue
         id="ResourceName"
@@ -2410,16 +2350,6 @@
             column="13"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`practice_shadowing_empty`&apos; does not start with the project&apos;s resource prefix &apos;`feature_learning_`&apos;; rename to &apos;`feature_learning_practice_shadowing_empty`&apos; ?"
-        errorLine1="    &lt;string name=&quot;practice_shadowing_empty&quot;>暂无可练习单词&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="118"
-            column="13"/>
-    </issue>
 
     <issue
         id="ResourceName"
@@ -3125,16 +3055,6 @@
             column="13"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`practice_listening_study_examples_title`&apos; does not start with the project&apos;s resource prefix &apos;`feature_learning_`&apos;; rename to &apos;`feature_learning_practice_listening_study_examples_title`&apos; ?"
-        errorLine1="    &lt;string name=&quot;practice_listening_study_examples_title&quot;>例句&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings_listening.xml"
-            line="35"
-            column="13"/>
-    </issue>
 
     <issue
         id="ResourceName"

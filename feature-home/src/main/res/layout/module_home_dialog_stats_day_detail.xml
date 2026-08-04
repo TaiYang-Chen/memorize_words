@@ -71,7 +71,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/core_ui_dp_14"
-                    android:background="@drawable/feature_home_stats_day_detail_empty_bg"
+                    android:background="@drawable/feature_home_stats_day_detail_surface_bg"
                     android:gravity="center"
                     android:padding="@dimen/core_ui_dp_12"
                     android:text="@string/home_day_detail_empty"
@@ -171,7 +171,7 @@
                         android:layout_width="0dp"
                         android:layout_height="@dimen/core_ui_dp_104"
                         android:layout_weight="1"
-                        android:background="@drawable/feature_home_stats_day_detail_metric_bg"
+                        android:background="@drawable/feature_home_stats_day_detail_surface_bg"
                         android:gravity="center"
                         android:orientation="vertical">
 
@@ -207,7 +207,7 @@
                         android:layout_height="@dimen/core_ui_dp_104"
                         android:layout_marginStart="@dimen/core_ui_dp_10"
                         android:layout_weight="1"
-                        android:background="@drawable/feature_home_stats_day_detail_metric_bg"
+                        android:background="@drawable/feature_home_stats_day_detail_surface_bg"
                         android:gravity="center"
                         android:orientation="vertical">
 
@@ -243,7 +243,7 @@
                         android:layout_height="@dimen/core_ui_dp_104"
                         android:layout_marginStart="@dimen/core_ui_dp_10"
                         android:layout_weight="1"
-                        android:background="@drawable/feature_home_stats_day_detail_metric_bg"
+                        android:background="@drawable/feature_home_stats_day_detail_surface_bg"
                         android:gravity="center"
                         android:orientation="vertical">
 
@@ -326,7 +326,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/core_ui_dp_12"
-                        android:background="@drawable/feature_home_stats_day_detail_word_group_bg"
+                        android:background="@drawable/feature_home_stats_day_detail_surface_bg"
                         android:gravity="center"
                         android:padding="@dimen/core_ui_dp_18"
                         android:text="@string/home_day_detail_new_empty"
@@ -339,7 +339,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/core_ui_dp_12"
-                        android:background="@drawable/feature_home_stats_day_detail_word_group_bg"
+                        android:background="@drawable/feature_home_stats_day_detail_surface_bg"
                         android:orientation="vertical">
 
                         <androidx.recyclerview.widget.RecyclerView
@@ -396,7 +396,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/core_ui_dp_12"
-                        android:background="@drawable/feature_home_stats_day_detail_word_group_bg"
+                        android:background="@drawable/feature_home_stats_day_detail_surface_bg"
                         android:gravity="center"
                         android:padding="@dimen/core_ui_dp_18"
                         android:text="@string/home_day_detail_review_empty"
@@ -409,7 +409,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/core_ui_dp_12"
-                        android:background="@drawable/feature_home_stats_day_detail_word_group_bg"
+                        android:background="@drawable/feature_home_stats_day_detail_surface_bg"
                         android:orientation="vertical">
 
                         <androidx.recyclerview.widget.RecyclerView

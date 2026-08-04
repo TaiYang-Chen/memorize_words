@@ -19,13 +19,13 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/module_home_select_radius_black"
+            android:background="@drawable/feature_home_select_radius_black"
             android:clickable="true"
             android:enabled="@{viewModel.learningButtonEnabled}"
             android:gravity="center"
             android:onClick="@{() -> viewModel.onStartLearningClick()}"
             android:padding="@dimen/core_ui_dp_16"
-            android:stateListAnimator="@animator/btn_scale_animator"
+            android:stateListAnimator="@animator/core_ui_button_scale_animator"
             android:text="@{viewModel.learnButtonText}"
             android:textColor="#fff"
             tools:text="&#x5F00;&#x59CB;&#x5B66;&#x4E60;" />
@@ -41,12 +41,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/core_ui_dp_8"
                 android:layout_weight="1"
-                android:background="@drawable/module_home_select_border_gray"
+                android:background="@drawable/feature_home_select_border_gray"
                 android:gravity="center"
                 android:onClick="@{() -> viewModel.toLearningReviewActivity()}"
                 android:orientation="horizontal"
                 android:padding="@dimen/core_ui_dp_12"
-                android:stateListAnimator="@animator/module_learning_btn_scale_animator">
+                android:stateListAnimator="@animator/core_ui_button_scale_animator">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -68,12 +68,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/core_ui_dp_8"
                 android:layout_weight="1"
-                android:background="@drawable/module_home_select_border_gray"
+                android:background="@drawable/feature_home_select_border_gray"
                 android:gravity="center"
                 android:onClick="@{() -> viewModel.toWordBookActivity()}"
                 android:orientation="horizontal"
                 android:padding="@dimen/core_ui_dp_12"
-                android:stateListAnimator="@animator/module_learning_btn_scale_animator">
+                android:stateListAnimator="@animator/core_ui_button_scale_animator">
 
                 <ImageView
                     android:layout_width="wrap_content"

@@ -257,7 +257,7 @@
                                     android:id="@+id/btnDailyNewDecrease"
                                     android:layout_width="@dimen/feature_onboarding_goal_control_button_size"
                                     android:layout_height="@dimen/feature_onboarding_goal_control_button_size"
-                                    android:background="@drawable/feature_onboarding_bg_goal_control_button_decrease"
+                        android:background="@drawable/feature_onboarding_bg_goal_stepper_button"
                                     android:contentDescription="@string/feature_onboarding_decrease_new_words"
                                     android:padding="@dimen/feature_onboarding_goal_button_padding"
                                     android:scaleType="centerInside"
@@ -291,7 +291,7 @@
                                     android:id="@+id/btnDailyNewIncrease"
                                     android:layout_width="@dimen/feature_onboarding_goal_control_button_size"
                                     android:layout_height="@dimen/feature_onboarding_goal_control_button_size"
-                                    android:background="@drawable/feature_onboarding_bg_goal_control_button_increase"
+                        android:background="@drawable/feature_onboarding_bg_goal_stepper_button"
                                     android:contentDescription="@string/feature_onboarding_increase_new_words"
                                     android:padding="@dimen/feature_onboarding_goal_button_padding"
                                     android:scaleType="centerInside"
@@ -353,7 +353,7 @@
                                     android:id="@+id/btnDailyReviewDecrease"
                                     android:layout_width="@dimen/feature_onboarding_goal_control_button_size"
                                     android:layout_height="@dimen/feature_onboarding_goal_control_button_size"
-                                    android:background="@drawable/feature_onboarding_bg_goal_control_button_decrease"
+                        android:background="@drawable/feature_onboarding_bg_goal_stepper_button"
                                     android:contentDescription="@string/feature_onboarding_decrease_review_words"
                                     android:padding="@dimen/feature_onboarding_goal_button_padding"
                                     android:scaleType="centerInside"
@@ -387,7 +387,7 @@
                                     android:id="@+id/btnDailyReviewIncrease"
                                     android:layout_width="@dimen/feature_onboarding_goal_control_button_size"
                                     android:layout_height="@dimen/feature_onboarding_goal_control_button_size"
-                                    android:background="@drawable/feature_onboarding_bg_goal_control_button_increase"
+                        android:background="@drawable/feature_onboarding_bg_goal_stepper_button"
                                     android:contentDescription="@string/feature_onboarding_increase_review_words"
                                     android:padding="@dimen/feature_onboarding_goal_button_padding"
                                     android:scaleType="centerInside"
@@ -440,8 +440,8 @@
                                 android:layout_width="@dimen/feature_onboarding_test_mode_icon_size"
                                 android:layout_height="@dimen/feature_onboarding_test_mode_icon_size"
                                 android:duplicateParentState="true"
-                                android:src="@drawable/feature_onboarding_ic_test_mode_meaning"
-                                app:tint="@color/feature_onboarding_test_mode_icon_tint" />
+                                android:src="@drawable/core_ui_ic_test_document"
+                                app:tint="@color/feature_onboarding_test_mode_content_color" />
 
                             <TextView
                                 android:id="@+id/tvMeaningMode"
@@ -450,7 +450,7 @@
                                 android:layout_marginTop="@dimen/feature_onboarding_test_mode_text_margin_top"
                                 android:duplicateParentState="true"
                                 android:text="@string/feature_onboarding_test_mode_meaning"
-                                android:textColor="@color/feature_onboarding_test_mode_text_color"
+                                android:textColor="@color/feature_onboarding_test_mode_content_color"
                                 android:textSize="@dimen/feature_onboarding_test_mode_text_size"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -476,7 +476,7 @@
                                 android:layout_height="@dimen/feature_onboarding_test_mode_icon_size"
                                 android:duplicateParentState="true"
                                 android:src="@drawable/feature_onboarding_ic_test_mode_spelling"
-                                app:tint="@color/feature_onboarding_test_mode_icon_tint" />
+                                app:tint="@color/feature_onboarding_test_mode_content_color" />
 
                             <TextView
                                 android:id="@+id/tvSpellingMode"
@@ -485,7 +485,7 @@
                                 android:layout_marginTop="@dimen/feature_onboarding_test_mode_text_margin_top"
                                 android:duplicateParentState="true"
                                 android:text="@string/feature_onboarding_test_mode_spelling"
-                                android:textColor="@color/feature_onboarding_test_mode_text_color"
+                                android:textColor="@color/feature_onboarding_test_mode_content_color"
                                 android:textSize="@dimen/feature_onboarding_test_mode_text_size"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -511,7 +511,7 @@
                                 android:layout_height="@dimen/feature_onboarding_test_mode_icon_size"
                                 android:duplicateParentState="true"
                                 android:src="@drawable/feature_onboarding_ic_test_mode_listening"
-                                app:tint="@color/feature_onboarding_test_mode_icon_tint" />
+                                app:tint="@color/feature_onboarding_test_mode_content_color" />
 
                             <TextView
                                 android:id="@+id/tvListeningMode"
@@ -520,7 +520,7 @@
                                 android:layout_marginTop="@dimen/feature_onboarding_test_mode_text_margin_top"
                                 android:duplicateParentState="true"
                                 android:text="@string/feature_onboarding_test_mode_listening"
-                                android:textColor="@color/feature_onboarding_test_mode_text_color"
+                                android:textColor="@color/feature_onboarding_test_mode_content_color"
                                 android:textSize="@dimen/feature_onboarding_test_mode_text_size"
                                 android:textStyle="bold" />
                         </LinearLayout>

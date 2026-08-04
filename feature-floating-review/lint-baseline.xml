@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <issues format="6" by="lint 8.12.3" type="baseline" client="gradle" dependencies="false" name="AGP (8.12.3)" variant="all" version="8.12.3">
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_floating_review_ball_size`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_ball_size`&apos; ?"
-        errorLine1="    &lt;dimen name=&quot;module_floating_review_ball_size&quot;>44dp&lt;/dimen>"
-        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/dimens.xml"
-            line="3"
-            column="12"/>
-    </issue>
 
     <issue
         id="ResourceName"
@@ -287,16 +277,6 @@
             column="2"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_floating_review_ic_arrow_back`&apos; does not start with the project&apos;s resource prefix &apos;`feature_floating_review_`&apos;; rename to &apos;`feature_floating_review_module_floating_review_ic_arrow_back`&apos; ?"
-        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
-        errorLine2=" ~~~~~~">
-        <location
-            file="src/main/res/drawable/module_floating_review_ic_arrow_back.xml"
-            line="1"
-            column="2"/>
-    </issue>
 
     <issue
         id="ResourceName"

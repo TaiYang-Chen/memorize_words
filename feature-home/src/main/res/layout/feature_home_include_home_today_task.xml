@@ -12,7 +12,7 @@
     <com.chen.memorizewords.feature.home.ui.home.SoftShadowConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/feature_home_v2_task_height"
-        android:background="@drawable/feature_home_v2_task_inset_bg"
+        android:background="@drawable/feature_home_v2_surface_inset_bg"
         android:elevation="3dp"
         android:outlineAmbientShadowColor="@color/feature_home_v2_shadow_surface_ambient"
         android:outlineProvider="background"

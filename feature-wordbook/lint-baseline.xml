@@ -89,27 +89,7 @@
             column="15"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_wordbook_window_back`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_window_back`&apos; ?"
-        errorLine1="    &lt;color name=&quot;module_wordbook_window_back&quot;>#FFFFFF&lt;/color>"
-        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/colors.xml"
-            line="3"
-            column="12"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_wordbook_light_gray`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_light_gray`&apos; ?"
-        errorLine1="    &lt;color name=&quot;module_wordbook_light_gray&quot;>#F5F7FA&lt;/color>"
-        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/colors.xml"
-            line="4"
-            column="12"/>
-    </issue>
 
     <issue
         id="ResourceName"
@@ -540,38 +520,8 @@
             column="2"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_wordbook_toggle_background`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_toggle_background`&apos; ?"
-        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
-        errorLine2=" ~~~~~">
-        <location
-            file="src/main/res/drawable/module_wordbook_toggle_background.xml"
-            line="2"
-            column="2"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_wordbook_toggle_item_selector`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_toggle_item_selector`&apos; ?"
-        errorLine1="&lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
-        errorLine2=" ~~~~~~~~">
-        <location
-            file="src/main/res/drawable/module_wordbook_toggle_item_selector.xml"
-            line="2"
-            column="2"/>
-    </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_wordbook_toggle_text_selector`&apos; does not start with the project&apos;s resource prefix &apos;`feature_wordbook_`&apos;; rename to &apos;`feature_wordbook_module_wordbook_toggle_text_selector`&apos; ?"
-        errorLine1="&lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
-        errorLine2=" ~~~~~~~~">
-        <location
-            file="src/main/res/drawable/module_wordbook_toggle_text_selector.xml"
-            line="1"
-            column="2"/>
-    </issue>
 
     <issue
         id="ResourceName"

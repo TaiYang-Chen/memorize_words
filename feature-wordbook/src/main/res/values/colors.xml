@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="module_wordbook_window_back">#FFFFFF</color>
-    <color name="module_wordbook_light_gray">#F5F7FA</color>
     <color name="feature_wordbook_study_plan_page_background">#FFFFFF</color>
     <color name="feature_wordbook_study_plan_card_background">#FFFFFF</color>
     <color name="feature_wordbook_study_plan_section_background">#F5F7FA</color>
-    <color name="feature_wordbook_study_plan_section_stroke">#E8EDF3</color>
     <color name="feature_wordbook_study_plan_text_primary">#111827</color>
     <color name="feature_wordbook_study_plan_text_secondary">#667085</color>
     <color name="feature_wordbook_study_plan_text_tertiary">#98A2B3</color>
@@ -32,14 +29,10 @@
     <color name="feature_wordbook_shop_tab_text_selected">#111827</color>
     <color name="feature_wordbook_shop_tab_text_unselected">#A0A8B8</color>
     <color name="feature_wordbook_shop_state_text">#7D8795</color>
-    <color name="feature_wordbook_shop_card_background">#FFFFFF</color>
     <color name="feature_wordbook_shop_card_title">#111827</color>
     <color name="feature_wordbook_shop_card_description">#667085</color>
     <color name="feature_wordbook_shop_card_meta">#98A2B3</color>
     <color name="feature_wordbook_shop_card_ripple">#12007AFF</color>
-    <color name="feature_wordbook_shop_card_stroke">#E8EDF3</color>
-    <color name="feature_wordbook_shop_cover_frame_background">#F5F7FA</color>
-    <color name="feature_wordbook_shop_cover_frame_stroke">#E8EDF3</color>
     <color name="feature_wordbook_shop_cover_fallback_tint">#98A2B3</color>
     <color name="feature_wordbook_shop_badge_background">#F2F7FF</color>
     <color name="feature_wordbook_shop_badge_text">#4E7CD1</color>

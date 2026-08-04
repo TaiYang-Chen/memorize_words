@@ -15,6 +15,7 @@ import coil.transform.CircleCropTransformation
 import com.chen.memorizewords.core.navigation.AppRoute
 import com.chen.memorizewords.core.navigation.RouteNavigator
 import com.chen.memorizewords.core.session.logout.SessionLogoutCoordinator
+import com.chen.memorizewords.core.ui.R as CoreUiR
 import com.chen.memorizewords.core.ui.session.logout.SessionLogoutHost
 import com.chen.memorizewords.core.ui.fragment.BaseFragment
 import com.chen.memorizewords.core.ui.vm.UiEvent
@@ -86,9 +87,9 @@ class ProfileFragment : BaseFragment<ProfileViewModel, ModuleHomeFragmentProfile
                     databind.ivAvatar.load(user.avatarLoadSource()) {
                         crossfade(true)
                         transformations(CircleCropTransformation())
-                        placeholder(R.drawable.feature_home_ic_avatar_placeholder)
-                        error(R.drawable.feature_home_ic_avatar_placeholder)
-                        fallback(R.drawable.feature_home_ic_avatar_placeholder)
+                        placeholder(CoreUiR.drawable.core_ui_ic_avatar_placeholder)
+                        error(CoreUiR.drawable.core_ui_ic_avatar_placeholder)
+                        fallback(CoreUiR.drawable.core_ui_ic_avatar_placeholder)
                         listener(
                             onSuccess = { _, result ->
                                 cacheRemoteAvatarIfNeeded(user, result.drawable)

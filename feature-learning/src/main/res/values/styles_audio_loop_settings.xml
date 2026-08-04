@@ -21,7 +21,7 @@
         <item name="android:background">@drawable/feature_learning_bg_audio_loop_settings_accent</item>
     </style>
 
-    <style name="FeatureLearningAudioLoopSettingsSectionTextGroup">
+    <style name="FeatureLearningAudioLoopSettingsTextGroup">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginStart">@dimen/core_ui_dp_12</item>
@@ -65,15 +65,7 @@
         <item name="android:paddingEnd">@dimen/core_ui_dp_8</item>
     </style>
 
-    <style name="FeatureLearningAudioLoopSettingsModeTextGroup">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginStart">@dimen/core_ui_dp_12</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:orientation">vertical</item>
-    </style>
-
-    <style name="FeatureLearningAudioLoopSettingsModeTitle">
+    <style name="FeatureLearningAudioLoopSettingsItemTitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/feature_learning_audio_loop_text_primary</item>
@@ -81,7 +73,7 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="FeatureLearningAudioLoopSettingsModeDesc">
+    <style name="FeatureLearningAudioLoopSettingsItemDesc">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/core_ui_dp_2</item>
@@ -169,32 +161,6 @@
         <item name="android:orientation">horizontal</item>
         <item name="android:paddingStart">@dimen/core_ui_dp_12</item>
         <item name="android:paddingEnd">@dimen/core_ui_dp_10</item>
-    </style>
-
-    <style name="FeatureLearningAudioLoopSettingsSwitchTextGroup">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginStart">@dimen/core_ui_dp_12</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:orientation">vertical</item>
-    </style>
-
-    <style name="FeatureLearningAudioLoopSettingsSwitchTitle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/feature_learning_audio_loop_text_primary</item>
-        <item name="android:textSize">@dimen/core_ui_text_15</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="FeatureLearningAudioLoopSettingsSwitchDesc">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">@dimen/core_ui_dp_2</item>
-        <item name="android:textColor">@color/feature_learning_audio_loop_text_secondary</item>
-        <item name="android:textSize">@dimen/core_ui_text_12</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="FeatureLearningAudioLoopSettingsSwitch">

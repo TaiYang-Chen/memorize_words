@@ -2,7 +2,7 @@
 <resources>
     <string name="home_logout_loading">退出登录中...</string>
     <string name="title">炫羲单词</string>
-    <string name="profile">个人中心</string>
+    <string name="feature_home_profile_title">个人中心</string>
     <string name="home_nav_home">首页</string>
     <string name="home_nav_practice">练习</string>
     <string name="home_nav_stats">统计</string>
@@ -22,9 +22,6 @@
     <string name="feature_home_stats_total_days">总学习天数</string>
     <string name="feature_home_stats_keep_going">坚持就是胜利，你是最棒的！</string>
     <string name="feature_home_stats_total_duration">累计时长</string>
-    <string name="feature_home_stats_mastered_words">已掌握</string>
-    <string name="feature_home_stats_hours_unit">小时</string>
-    <string name="feature_home_stats_words_unit">词</string>
     <string name="feature_home_stats_back_today">回到今天</string>
     <string name="feature_home_stats_weekly_words_title">周词量统计</string>
     <string name="feature_home_stats_weekly_duration_title">周时长统计</string>
@@ -90,10 +87,8 @@
     <string name="feature_home_floating_permission_confirm">去授权</string>
     <string name="feature_home_floating_permission_cancel">暂不开启</string>
     <string name="feature_home_floating_character_preview">桌宠角色预览</string>
-    <string name="feature_home_floating_recommended">推荐</string>
     <string name="feature_home_floating_download_enable">下载并开启 · %1$s</string>
     <string name="feature_home_floating_choose_other">看看其他角色</string>
-    <string name="feature_home_floating_not_now">暂不开启</string>
     <string name="feature_home_floating_cancel_download">取消下载</string>
     <string name="feature_home_floating_download_queued">等待可用网络，Wi-Fi 和移动网络均可下载</string>
     <string name="feature_home_floating_downloading">角色下载中 %1$d%%</string>
@@ -128,7 +123,6 @@
     <string name="feature_home_pending_sync_raw_payload">原始 JSON</string>
     <string name="feature_home_pending_sync_parse_failed">字段解析失败，仅展示原始内容</string>
     <string name="feature_home_profile_scan">扫一扫</string>
-    <string name="feature_home_profile_user_info">个人信息</string>
     <string name="feature_home_profile_member_center">签到会员</string>
     <string name="feature_home_profile_personal_qr">个人二维码</string>
     <string name="feature_home_profile_hero_streak">已连续学习 %1$d 天</string>
@@ -136,16 +130,13 @@
     <string name="feature_home_profile_empty_account_id">--</string>
     <string name="feature_home_profile_account_id">编号：%1$s</string>
     <string name="feature_home_profile_mascot">学习伙伴</string>
-    <string name="feature_home_profile_stat_check_in">连续打卡</string>
     <string name="feature_home_profile_stat_study_days">学习天数</string>
-    <string name="feature_home_profile_stat_words">已背单词</string>
     <string name="feature_home_profile_common_functions">常用功能</string>
     <string name="feature_home_profile_favorites">我的收藏</string>
     <string name="feature_home_profile_feedback">意见反馈</string>
     <string name="feature_home_profile_about">关于我们</string>
     <string name="feature_home_profile_member_status_normal">普通用户</string>
     <string name="feature_home_profile_member_status_subtitle">签到后可领取限时体验权益</string>
-    <string name="feature_home_profile_member_open">去签到</string>
     <string name="feature_home_profile_member_payment_pending_title">暂不接支付</string>
     <string name="feature_home_profile_member_payment_pending_message">会员支付能力当前不可用，当前仅展示权益和入口闭环。</string>
     <string name="feature_home_profile_member_benefits">体验权益</string>
@@ -177,12 +168,10 @@
     <string name="feature_home_profile_qr_payload_host" translatable="false">user</string>
     <string name="feature_home_profile_qr_payload_path" translatable="false">/card</string>
     <string name="feature_home_profile_learning_report_hint">学习报告请先在底部统计页查看</string>
-    <string name="feature_home_profile_vocab_rookie" translatable="false">Vocabulary Rookie</string>
     <string name="feature_home_profile_static_account_id">编号： 42422180</string>
     <string name="feature_home_profile_static_streak">已连续学习 2 天</string>
     <string name="feature_home_profile_static_streak_prefix">已连续学习</string>
     <string name="feature_home_profile_level" translatable="false">Lv.2</string>
-    <string name="feature_home_profile_xp" translatable="false">45 / 100 XP</string>
     <string name="feature_home_profile_card_days">连续打卡</string>
     <string name="feature_home_profile_card_words">已背单词</string>
     <string name="feature_home_profile_card_hours">学习时长</string>
@@ -193,27 +182,20 @@
     <string name="feature_home_profile_vs_yesterday_hours">较昨日 +1.5h</string>
     <string name="feature_home_profile_vs_yesterday_hours_dynamic">较昨日 %1$s</string>
     <string name="feature_home_profile_upgrade_pro">签到领取体验权益</string>
-    <string name="feature_home_profile_unlock_pro">每天签到可免费获得 1 天体验会员</string>
-    <string name="feature_home_profile_open_now">去签到</string>
     <string name="feature_home_profile_pro_books">专项词库</string>
     <string name="feature_home_profile_pro_bubble">悬浮球</string>
     <string name="feature_home_profile_pro_stats">高级统计</string>
     <string name="feature_home_profile_pro_ai">跟读纠音</string>
     <string name="feature_home_profile_pro_more">更多体验</string>
     <string name="feature_home_profile_achievements">我的成就</string>
-    <string name="feature_home_profile_all_achievements">全部成就</string>
     <string name="feature_home_profile_achievement_streak">连续学习2天</string>
     <string name="feature_home_profile_achievement_book">完成首本词书</string>
     <string name="feature_home_profile_achievement_hours">累计学习15小时</string>
     <string name="feature_home_profile_achievement_words">新词突破15个</string>
     <string name="feature_home_profile_achievement_total">累计学习30小时</string>
-    <string name="feature_home_profile_unfinished">未完成</string>
     <string name="feature_home_profile_week_report">本周学习报告</string>
     <string name="feature_home_profile_view_detail">查看详情</string>
-    <string name="feature_home_profile_report_time">学习时长</string>
-    <string name="feature_home_profile_report_words">已掌握</string>
     <string name="feature_home_profile_report_best_day">最佳学习日</string>
-    <string name="feature_home_profile_report_streak">连续学习</string>
     <string name="feature_home_profile_vs_last_week_time">较上周 +6.2h</string>
     <string name="feature_home_profile_vs_last_week_words">较上周 +8</string>
     <string name="feature_home_profile_vs_last_week_days">较上周 +1</string>

@@ -40,7 +40,7 @@
                     android:contentDescription="@string/module_floating_review_back"
                     android:onClick="@{()->viewModel.back()}"
                     android:padding="@dimen/core_ui_dp_7"
-                    android:src="@drawable/module_floating_review_ic_arrow_back" />
+                    android:src="@drawable/ic_arrow_back" />
 
                 <TextView
                     android:layout_width="wrap_content"

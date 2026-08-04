@@ -32,7 +32,6 @@
     <string name="practice_listening_study_status_review">复习题答错后已重置进度，需要重新连续答对 %2$d 次。当前进度 %1$d/%2$d</string>
     <string name="practice_listening_continue_practice">下一词</string>
     <string name="practice_listening_study_definitions_title">核心释义</string>
-    <string name="practice_listening_study_examples_title">例句</string>
 
     <string name="practice_listening_report_title">本轮听力测试报告</string>
     <string name="practice_listening_report_hint">所有单词已完成当前轮次测试，下面是这次听力测试的结果概览。</string>

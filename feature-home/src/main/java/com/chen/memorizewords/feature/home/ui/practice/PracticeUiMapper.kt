@@ -1,6 +1,7 @@
 package com.chen.memorizewords.feature.home.ui.practice
 
 import com.chen.memorizewords.core.common.resource.ResourceProvider
+import com.chen.memorizewords.core.ui.R as CoreUiR
 import com.chen.memorizewords.domain.practice.PracticeDailyDurationStats
 import com.chen.memorizewords.domain.practice.PracticeEntryType
 import com.chen.memorizewords.domain.practice.PracticeMode
@@ -226,7 +227,7 @@ class PracticeUiMapper @Inject constructor(
             PracticeMode.SHADOWING -> R.drawable.feature_home_ic_practice_mic
             PracticeMode.SPELLING -> R.drawable.feature_home_ic_practice_edit
             PracticeMode.AUDIO_LOOP -> R.drawable.feature_home_ic_practice_play
-            PracticeMode.EXAM -> R.drawable.feature_home_ic_practice_exam
+            PracticeMode.EXAM -> CoreUiR.drawable.core_ui_ic_test_document
         }
     }
 

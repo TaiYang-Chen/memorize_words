@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="feature_onboarding_page_background">#FFFFFF</color>
-    <color name="feature_onboarding_header_label">#111827</color>
     <color name="feature_onboarding_header_title">#111827</color>
     <color name="feature_onboarding_header_subtitle">#666666</color>
     <color name="feature_onboarding_select_page_background">#FFFFFF</color>
@@ -18,7 +17,6 @@
     <color name="feature_onboarding_tab_text_unselected">#A0A8B8</color>
     <color name="feature_onboarding_section_title">#111827</color>
     <color name="feature_onboarding_goal_title">#334155</color>
-    <color name="feature_onboarding_goal_value">#111827</color>
     <color name="feature_onboarding_goal_unit">#6B7280</color>
     <color name="feature_onboarding_goal_hint">#8A94A6</color>
     <color name="feature_onboarding_goal_card_background">#F7F9FC</color>
@@ -32,15 +30,10 @@
     <color name="feature_onboarding_goal_button_subtle">#F2F5FA</color>
     <color name="feature_onboarding_goal_button_subtle_pressed">#E2EAF4</color>
     <color name="feature_onboarding_goal_button_subtle_icon">#111827</color>
-    <color name="feature_onboarding_goal_button_accent">#007AFF</color>
     <color name="feature_onboarding_goal_button_accent_pressed">#0062CC</color>
-    <color name="feature_onboarding_goal_button_accent_icon">#FFFFFF</color>
-    <color name="feature_onboarding_goal_icon_background">#F2F7FF</color>
-    <color name="feature_onboarding_goal_icon_tint">#007AFF</color>
     <color name="feature_onboarding_action_blue">#007AFF</color>
     <color name="feature_onboarding_action_blue_pressed">#1F007AFF</color>
     <color name="feature_onboarding_action_disabled_background">#D9DDE5</color>
-    <color name="feature_onboarding_test_mode_selected_background">#F2F7FF</color>
     <color name="feature_onboarding_test_mode_stroke">#E6EBF2</color>
     <color name="feature_onboarding_test_mode_text_default">#5D6878</color>
     <color name="feature_onboarding_book_cover_background">#9EB0CF</color>

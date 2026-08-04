@@ -177,16 +177,6 @@
             column="2"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_user_ic_avatar_placeholder`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_ic_avatar_placeholder`&apos; ?"
-        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
-        errorLine2=" ~~~~~~">
-        <location
-            file="src/main/res/drawable/module_user_ic_avatar_placeholder.xml"
-            line="2"
-            column="2"/>
-    </issue>
 
     <issue
         id="ResourceName"
@@ -199,16 +189,6 @@
             column="2"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_user_ic_right`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_ic_right`&apos; ?"
-        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
-        errorLine2=" ~~~~~~">
-        <location
-            file="src/main/res/drawable/module_user_ic_right.xml"
-            line="1"
-            column="2"/>
-    </issue>
 
     <issue
         id="ResourceName"
@@ -287,16 +267,6 @@
             column="2"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`profile`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_profile`&apos; ?"
-        errorLine1="    &lt;string name=&quot;profile&quot;>个人信息&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="3"
-            column="13"/>
-    </issue>
 
     <issue
         id="ResourceName"
@@ -507,16 +477,6 @@
             column="13"/>
     </issue>
 
-    <issue
-        id="ResourceName"
-        message="Resource named &apos;`module_user_sms_code_hint`&apos; does not start with the project&apos;s resource prefix &apos;`feature_user_`&apos;; rename to &apos;`feature_user_module_user_sms_code_hint`&apos; ?"
-        errorLine1="    &lt;string name=&quot;module_user_sms_code_hint&quot;>请输入验证码&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values/strings.xml"
-            line="24"
-            column="13"/>
-    </issue>
 
     <issue
         id="ResourceName"
